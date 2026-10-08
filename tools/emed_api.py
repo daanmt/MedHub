@@ -44,6 +44,9 @@ cosmetico: a lente 2 confere emed_id e gabarito, nao a banca. Alternativas: 27/3
 captura; as 3 restantes estao assim NA FONTE (sanitized_body == body: 'a.buso', 'Indice', 'gravi-
 dade') -- a captura por LLM no Chrome as tinha limpado; o script e fiel. Figura: `<img>` no
 enunciado ou alternativa marca `figura`, a imagem nao viaja.
+s221 (08/10/2026, P22): a imagem do ENUNCIADO viaja como URL em `figuras` (lida do `statement`, o HTML;
+o `statement_text` e texto puro e nunca trouxe `<img>` -- a marca `figura` saia em 0 de 2.322 docs).
+Quem baixa e embute e o `emed_banco.py --exportar` (`figuras_img`, data URI), nunca este script.
 """
 from __future__ import annotations
 
@@ -73,10 +76,10 @@ CATALOGO_INSTITUICAO = "63b07b3e-c200-4b3d-b9e6-742a096ae26e"
 #: O que um doc gravado pode carregar: o escopo publico (whitelist do operador/`/ai-eng`) ...
 CHAVES_PUBLICAS = ("emed_id", "num", "banca", "ano", "enunciado", "alternativas", "gabarito", "tags")
 #: ... e os metadados do pipeline, que nao vem da API (`figura` e derivado do enunciado).
-CHAVES_META = ("lista", "tarefa", "capturado_em", "executor", "figura")
+CHAVES_META = ("lista", "tarefa", "capturado_em", "executor", "figura", "figuras")
 #: O que `extrair` devolve (antes de virar doc): `gabaritos` e a lista, para a recusa contar.
 CHAVES_EXTRAIDAS = ("emed_id", "banca", "ano", "enunciado", "alternativas", "gabaritos", "tags", "figura",
-                    "alt_so_figura", "spoiler")
+                    "figuras", "alt_so_figura", "spoiler")
 #: Formas que o hub NAO desenha e que saem DECLARADAS por numero, como a discursiva (s218, 07/10/2026):
 #: 5 listas da Fase 1 -- t833 t376 t110 t805 t826, ~200 questoes -- eram recusadas inteiras por 1-2
 #: questoes assim. Motivo -> rotulo da declaracao. O resto (texto vazio SEM imagem, 1/3/6+
@@ -106,11 +109,14 @@ class _Texto(HTMLParser):
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
-        self.partes, self.figura = [], False
+        self.partes, self.figura, self.srcs = [], False, []
 
     def handle_starttag(self, tag, attrs):
         if tag == "img":
             self.figura = True
+            src = dict(attrs).get("src") or ""
+            if src.startswith("https://"):
+                self.srcs.append(src)
         elif tag == "br" or tag in self.QUEBRA:
             self.partes.append("\n")
 
@@ -131,6 +137,14 @@ def html_para_texto(valor):
     p.close()
     linhas = [re.sub(r"[ \t ]+", " ", ln).strip() for ln in "".join(p.partes).split("\n")]
     return "\n".join(ln for ln in linhas if ln), p.figura
+
+
+def figuras_do_html(valor):
+    """URLs https das `<img>` de um campo HTML, na ordem, sem repetir. PURA."""
+    p = _Texto()
+    p.feed(str(valor or ""))
+    p.close()
+    return list(dict.fromkeys(p.srcs))
 
 
 def uma_linha(texto):
@@ -202,6 +216,9 @@ def extrair(item):
     ref = str(item.get("id", "?")) if isinstance(item, dict) else "?"
     emed_id = str(_campo(item, "id", ref))
     enunciado, figura = html_para_texto(_campo(item, "statement_text", ref))
+    # s221 (P22): o `<img>` mora no `statement` (HTML); o `statement_text` e texto puro
+    figuras = figuras_do_html(item.get("statement"))
+    figura = figura or bool(figuras)
     alternativas, gabaritos, so_figura = [], [], False
     # a discursiva REAL vem SEM a chave, com `answer_type` DISCURSIVE (t3 Q24, 27/09/2026); objetiva
     # sem a chave segue sendo recusa
@@ -223,7 +240,8 @@ def extrair(item):
     banca, ano = _banca_ano(exames, ref)
     return {"emed_id": emed_id, "banca": banca, "ano": ano, "enunciado": enunciado,
             "alternativas": alternativas, "gabaritos": gabaritos,
-            "tags": _tags(item.get("topics")), "figura": figura, "alt_so_figura": so_figura,
+            "tags": _tags(item.get("topics")), "figura": figura, "figuras": figuras,
+            "alt_so_figura": so_figura,
             "spoiler": _algum_exame_spoiler(exames)}
 
 
@@ -367,6 +385,8 @@ def montar_docs(qs, lista, tarefa, agora=None, pular=()):
                "capturado_em": agora, "executor": "emed_api"}
         if q["figura"]:
             doc["figura"] = True
+        if q.get("figuras"):
+            doc["figuras"] = list(q["figuras"])
         docs.append(doc)
     return docs
 

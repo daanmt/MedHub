@@ -2496,6 +2496,9 @@ _CHAVES_DOC_EMED = frozenset(CAMPOS_HASH_EMED) | {"lista", "tarefa", "num", "cap
 #: captura: ficam fora de `extras` e do `hash`, senão o doc re-ingerido contaria como
 #: `atualizada` e a solução do hub viraria conteúdo da questão.
 CHAVES_SOLUCAO_DOC = frozenset({"solucao_medhub", "divergente", "fontes_medhub", "objetivo"})
+#: s221 (P22): a imagem embutida pelo `--exportar` (data URI) e derivada da URL em `figuras`:
+#: viaja so no doc do hub, fora do hash e de `extras` -- como a solucao.
+CHAVES_MIDIA_DOC = frozenset({"figuras_img"})
 
 CONFIANCAS_EMED = ("solida", "duvida", "chute")
 
@@ -2638,6 +2641,7 @@ def emed_extras_json(doc):
     import json as _json
     extras = {k: v for k, v in doc.items()
               if k not in _CHAVES_DOC_EMED and k not in CHAVES_SOLUCAO_DOC
+              and k not in CHAVES_MIDIA_DOC
               and not str(k).startswith("_")
               and v is not None and v != ""}
     return _json.dumps(extras, sort_keys=True, ensure_ascii=False) if extras else ""

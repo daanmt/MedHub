@@ -56,7 +56,7 @@ MARCADOR_GRAVACAO = ROOT / "tmp" / "hub" / "ultima_gravacao_hub.json"
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
 #: pagina SEMPRE desenha.
-BLOCOS = ("dia", "semana", "ritmo", "blocos")
+BLOCOS = ("dia", "ritmo", "semana", "blocos")
 #: O 5o bloco, Documentacao (s212): sempre no JSON (lista, vazia sem documento), na pagina so com
 #: documento -- por isso fora de `BLOCOS`.
 BLOCO_DOCS = "docs"
@@ -718,8 +718,9 @@ def render_html(d):
     fallback = "atualizado em %s, %s" % (_dm(gerado[:10]), gerado[11:16])
     corpo = "\n".join([
         _sec("dia", _html_dia(d["dia"], d["data"])),
-        _sec("semana", _html_semana(d["semana"])),
+        # s221 (pedido dele, 08/10): o Ritmo sobe para logo abaixo de "Hoje"
         _sec("ritmo", _html_ritmo(d["ritmo"])),
+        _sec("semana", _html_semana(d["semana"])),
         _sec("blocos", _html_blocos(d["blocos"])),
     ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"

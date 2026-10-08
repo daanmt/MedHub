@@ -358,6 +358,86 @@ def questoes_no_hub_por_tarefa(questoes=None):
     return contagem
 
 
+#: s221 (P22): de onde a imagem pode vir -- as duas CDNs publicas do EMED (200 sem token, medido em
+#: 08/10: o bucket S3 `images/<uuid>/<uuid>-400.png` e a CloudFront `image-file/<id>.png`).
+HOSTS_FIGURA = ("estrategia-prod-questoes.s3.amazonaws.com", "d3typq4v571ghb.cloudfront.net")
+PASTA_FIGURAS = os.path.join(ROOT, "tmp", "emed_figuras")
+#: A figura vai ao hub em WebP de ate 900 px, qualidade 80: medido em 08/10 sobre 141 figuras, 13,4 MB
+#: crus -> 1,9 MB (max 52 KB). Crua, a lista com figura pesava ate 875 KB por questao no banco do hub.
+LARGURA_FIGURA, QUALIDADE_FIGURA = 900, 80
+
+
+def _baixar(url, timeout=30):
+    import urllib.request
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read(), (r.headers.get("Content-Type") or "").split(";")[0].strip()
+
+
+def comprimir_figura(dados):
+    """bytes da imagem -> (bytes, mime) em WebP <= `LARGURA_FIGURA` px, fundo branco no lugar da
+    transparencia. Sem Pillow (ou imagem ilegivel) devolve None: quem chama embute a crua."""
+    try:
+        import io
+        from PIL import Image
+        im = Image.open(io.BytesIO(dados))
+        if im.mode in ("P", "RGBA", "LA"):
+            im = im.convert("RGBA")
+            fundo = Image.new("RGB", im.size, "white")
+            fundo.paste(im, mask=im.split()[-1])
+            im = fundo
+        else:
+            im = im.convert("RGB")
+        if im.width > LARGURA_FIGURA:
+            im = im.resize((LARGURA_FIGURA, round(im.height * LARGURA_FIGURA / im.width)))
+        out = io.BytesIO()
+        im.save(out, "WEBP", quality=QUALIDADE_FIGURA)
+        return out.getvalue(), "image/webp"
+    except Exception:
+        return None
+
+
+def figura_data_uri(url, cache=PASTA_FIGURAS, baixar=_baixar):
+    """data URI da imagem de `url` (host em `HOSTS_FIGURA`), ou None. Tenta antes a variante de
+    800 px (`-400.` -> `-800.`, mais legivel para ECG e radiografia no celular) e cai na original;
+    embute em WebP (`comprimir_figura`). Cache em disco por sha1 da URL (`<sha1>.raw` = o download,
+    `<sha1>.mime` = o tipo dele): re-exportar nao baixa de novo."""
+    import base64
+    import hashlib
+    import urllib.parse
+    if urllib.parse.urlparse(url).netloc not in HOSTS_FIGURA:
+        return None
+    os.makedirs(cache, exist_ok=True)
+    chave = hashlib.sha1(url.encode("utf-8")).hexdigest()
+    cru, mime = os.path.join(cache, chave + ".raw"), os.path.join(cache, chave + ".mime")
+    if os.path.exists(cru) and os.path.exists(mime):
+        with open(cru, "rb") as fh:
+            dados = fh.read()
+        with open(mime, encoding="utf-8") as fh:
+            tipo = fh.read().strip()
+    else:
+        dados = tipo = None
+        candidatas = ([url.replace("-400.", "-800.")] if "-400." in url else []) + [url]
+        for alvo in candidatas:
+            try:
+                d, t = baixar(alvo)
+            except Exception:
+                continue
+            if t.startswith("image/") and d:
+                dados, tipo = d, t
+                break
+        if dados is None:
+            return None
+        with open(cru, "wb") as fh:
+            fh.write(dados)
+        with open(mime, "w", encoding="utf-8") as fh:
+            fh.write(tipo)
+    menor = comprimir_figura(dados)
+    if menor:
+        dados, tipo = menor
+    return f"data:{tipo};base64," + base64.b64encode(dados).decode("ascii")
+
+
 def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
     `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
@@ -366,6 +446,7 @@ def cmd_exportar(args):
     spoiler = [q["num"] for q in todas if fora_do_hub(q)]
     linhas = [q for q in todas if q["num"] not in spoiler]
     solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
+    falhas = []
     pasta = os.path.join(args.out, "questoes")
     os.makedirs(pasta, exist_ok=True)
     pasta_l = os.path.join(args.out, "listas")
@@ -379,6 +460,13 @@ def cmd_exportar(args):
             doc.update(json.loads(q.get("extras") or "{}"))
         except ValueError:
             pass
+        if doc.get("figuras") and not getattr(args, "sem_figuras", False):
+            # s221 (P22): a figura do enunciado vai EMBUTIDA no doc do hub (decisao dele: opcao B)
+            imgs = [figura_data_uri(u) for u in doc["figuras"]]
+            if all(imgs):
+                doc["figuras_img"] = imgs
+            else:
+                falhas.append(f"{q['lista']}_{q['num']}")
         sol = solucoes.get(q["num"])
         if sol:     # s199: a solução do hub viaja no doc; fora do hash e de `extras`
             # s200: a v2 (cadeia de elos) vai como OBJETO -- a página desenha a cadeia e marca
@@ -392,7 +480,8 @@ def cmd_exportar(args):
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)
     print(f"{len(linhas)} arquivos em {pasta} + listas/{args.exportar}.json"
-          + (f"; spoiler UERJ fora: {sorted(spoiler, key=int)}" if spoiler else ""))
+          + (f"; spoiler UERJ fora: {sorted(spoiler, key=int)}" if spoiler else "")
+          + (f"; FIGURA NAO BAIXADA (o hub mostra o aviso): {falhas}" if falhas else ""))
     return 0
 
 
@@ -747,6 +836,8 @@ def main(argv=None):
     ap.add_argument("--exportar", metavar="LISTA", help="re-semeia OUT/questoes/*.json")
     ap.add_argument("--out", metavar="DIR", default=OUT_PADRAO,
                     help="pasta de saida do --exportar (default tmp/emed_export)")
+    ap.add_argument("--sem-figuras", action="store_true",
+                    help="--exportar sem baixar/embutir a imagem do enunciado (s221, P22)")
     ap.add_argument("--erros", metavar="LISTA",
                     help="erradas e nao-solidas da lista em integra, com a declaracao por elo "
                          "(insumo do /analisar-questao)")

@@ -462,3 +462,62 @@ def test_golden_t3_saude_do_idoso():
         pytest.skip("t3 ausente do ipub.db: lente 2 nao verificada")
     c = emed_api.conferir(docs, banco)
     assert (len(c["iguais"]), c["divergentes"], c["so_no_banco"], c["so_na_api"]) == (30, {}, [], [])
+
+
+def test_figura_do_enunciado_vem_do_statement_html_e_viaja_como_url():
+    """s221 (P22): o `<img>` real mora no `statement` (HTML); o `statement_text` e texto puro. A URL
+    https viaja em `figuras` (ordem, sem repetir); src relativo nao viaja; o texto segue do `statement_text`."""
+    url = "https://estrategia-prod-questoes.s3.amazonaws.com/images/X/X-400.png"
+    item = _item("e1")
+    item["statement"] = (f'<div>Perfil glicêmico abaixo:<br><img src="{url}"><img src="{url}">'
+                         '<img src="relativa.png"></div>')
+    q = emed_api.extrair(item)
+    assert q["figuras"] == [url] and q["figura"] is True
+    assert "Paciente e1" in q["enunciado"]
+    doc = emed_api.montar_docs([q], "t1", 1)[0]
+    assert doc["figuras"] == [url] and doc["figura"] is True
+    assert set(doc) <= set(emed_api.CHAVES_PUBLICAS) | set(emed_api.CHAVES_META) | {"gabarito"}
+    sem = emed_api.montar_docs([emed_api.extrair(_item("e2"))], "t1", 1)[0]
+    assert "figuras" not in sem and "figura" not in sem
+
+
+def test_figura_data_uri_prefere_800_cai_na_original_cacheia_e_recusa_host_estranho(tmp_path):
+    """s221 (P22): o `--exportar` embute a figura; host fora do bucket do EMED nao e baixado."""
+    url = "https://estrategia-prod-questoes.s3.amazonaws.com/images/X/X-400.png"
+    pedidos = []
+
+    def falso(alvo):
+        pedidos.append(alvo)
+        if "-800." in alvo:
+            raise OSError("403")
+        return b"PNGDATA", "image/png"
+
+    uri = emed_banco.figura_data_uri(url, cache=str(tmp_path), baixar=falso)
+    # bytes que nao sao imagem de verdade: a compressao desiste e a crua e embutida
+    assert uri.startswith("data:image/png;base64,") and pedidos == [url.replace("-400.", "-800."), url]
+    assert emed_banco.figura_data_uri(url, cache=str(tmp_path), baixar=falso) == uri and len(pedidos) == 2
+    assert emed_banco.figura_data_uri("https://evil.example/x.png", cache=str(tmp_path), baixar=falso) is None
+
+
+def test_figuras_img_fica_fora_de_extras_e_do_hash():
+    """O data URI e derivado da URL: doc exportado com `figuras_img` tem o mesmo hash do banco."""
+    doc = {"banca": "B", "gabarito": "A", "emed_id": "1", "enunciado": "e", "alternativas": "A) x",
+           "figuras": ["https://h/x.png"]}
+    com = dict(doc, figuras_img=["data:image/png;base64,AAAA"])
+    assert db.emed_hash_questao(doc) == db.emed_hash_questao(com)
+    assert "figuras_img" not in db.emed_extras_json(com)
+
+
+
+def test_comprimir_figura_vira_webp_ate_900px_com_fundo_branco():
+    """s221 (P22): a figura crua pesava ate 875 KB por questao; o hub recebe WebP <= 900 px."""
+    import io
+    from PIL import Image
+    im = Image.new("RGBA", (1800, 600), (255, 0, 0, 0))
+    buf = io.BytesIO()
+    im.save(buf, "PNG")
+    dados, tipo = emed_banco.comprimir_figura(buf.getvalue())
+    out = Image.open(io.BytesIO(dados))
+    assert tipo == "image/webp" and out.size == (900, 300)
+    assert out.convert("RGB").getpixel((10, 10)) == (255, 255, 255)
+    assert emed_banco.comprimir_figura(b"nao e imagem") is None

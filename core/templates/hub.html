@@ -296,6 +296,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-modo{margin:4px 0 10px}
 .qz-modo button small{font-weight:500;color:var(--tinta3);margin-left:4px}
 .qz-figura{margin:4px 0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);color:var(--tinta2)}
+/* s221 (P22): a figura do enunciado embutida (data URI); toque amplia (rola na horizontal) */
+.qz-figs{display:grid;gap:10px;margin:6px 0 12px;min-width:0}
+.qz-fig{margin:0;min-width:0;overflow-x:auto;border:1px solid var(--linha);border-radius:10px;-webkit-overflow-scrolling:touch}
+.qz-fig img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;cursor:zoom-in}
+.qz-fig.zoom img{max-width:none;width:200%;cursor:zoom-out}
+.qz-fig figcaption{font-size:.74em;color:var(--tinta3);padding:4px 8px}
 .qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:44px}
 .qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
 .qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
@@ -392,6 +398,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       <div class="qz-corpo" id="qz-questao" hidden>
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
         <p class="qz-enun" id="qz-enun"></p>
+        <div class="qz-figs" id="qz-figs" hidden></div>
         <p class="qd-aviso qz-figura" id="qz-figura" hidden></p>
         <div class="qz-alts" id="qz-alts" role="radiogroup" aria-label="Alternativas"></div>
         <div id="qz-antes">
@@ -2089,7 +2096,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-tags").textContent = qzAssunto(q.tags, lq.tema);
     $("qz-enun").innerHTML = qzGrifoHtml(q.enunciado || "", qzGrifosDe(q).enun);
     // s201: o caderno em PDF vira texto; a figura (ECG, imagem) nao vem junto -- a pagina avisa onde ela esta
-    $("qz-figura").hidden = !q.figura; $("qz-figura").textContent = q.figura ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + (q.pagina || "?") + "." : "";
+    // s221 (P22): a figura da lista do EMED vem embutida (`figuras_img`, data URI); o aviso fica so para a que nao veio
+    var qzImgs = (q.figuras_img || []).filter(function(u){ return typeof u === "string" && u.indexOf("data:image/") === 0; });
+    $("qz-figs").innerHTML = qzImgs.map(function(u, k){
+      return '<figure class="qz-fig"><img alt="Figura ' + (k + 1) + ' do enunciado" src="' + u + '">'
+        + '<figcaption>Figura ' + (k + 1) + ' · toque para ampliar</figcaption></figure>';
+    }).join("");
+    $("qz-figs").hidden = !qzImgs.length;
+    var qzSemImg = q.figura && !qzImgs.length;
+    $("qz-figura").hidden = !qzSemImg;
+    $("qz-figura").textContent = !qzSemImg ? "" : (q.pagina ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + q.pagina + "."
+      : "Esta questão tem uma figura que não chegou ao hub: veja no EMED.");
     $("qz-alts").innerHTML = qzAltsHtml(q, null, false, qzGrifosDe(q));
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
     $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
@@ -2463,6 +2480,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         .then(function(){ st.className = "qz-status ok"; st.textContent = "Veredito gravado."; })
         .catch(function(err){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((err && err.code) || "erro") + ")."; }); });
   }
+  $("qz-figs").addEventListener("click", function(e){
+    var f = e.target.closest ? e.target.closest(".qz-fig") : null; if(f){ f.classList.toggle("zoom"); }
+  });
   document.addEventListener("keydown", function(e){
     if(raiz.getAttribute("data-aba") !== "questoes" || $("qz-player").hidden || $("qz-questao").hidden){ return; }
     var tag = (e.target.tagName || "").toLowerCase(); if(tag === "textarea" || tag === "input" || tag === "select"){ return; }

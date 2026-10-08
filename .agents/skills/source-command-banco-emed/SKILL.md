@@ -86,6 +86,7 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | `--podar DIR` | Read-only: lista os `doc_id` **seguros** para apagar do artifact (questão: hash igual ao do banco; resposta: `respondido_em` igual). Escreve `DIR/podar_<colecao>.json` (`ids`, `n`, `nao_seguros`). A exclusão em si é `ArtifactData batch delete` (<= 50 por lote), feita pelo agente. |
 | `--colecao {questoes,respostas}` | Coleção alvo do `--podar` (default `questoes`). |
 | `--exportar LISTA` | Escreve `OUT/questoes/<lista>_<num>.json` no formato do doc, para re-semear o buffer (`ArtifactData batch set` com `file_path`). |
+| `--sem-figuras` | Com `--exportar`: não baixa nem embute a figura. **Default (s221, P22, opção B dele):** questão com `figuras` (URL das CDNs públicas do EMED, `HOSTS_FIGURA`) sai com `figuras_img` = data URI em WebP <= 900 px (cache em `tmp/emed_figuras`), fora do hash e de `extras`; o hub desenha abaixo do enunciado (toque amplia). Figura que não baixa é listada e o hub mostra o aviso. Doc do hub <= 256 KiB: medido máx. 100 KB. |
 | `--out DIR` | Pasta do `--exportar` (default `tmp/emed_export`). |
 | `--erros LISTA` | Erradas **e não-sólidas** (s211: a dúvida certa entra) da lista em íntegra: letra x gabarito, confiança, tempo, racional, **objetivo**, `modo`, **cada elo com o estado DECLARADO** (`[Não]`, `[sem declaração]`; certa e sólida sem `elos` = `[presumido Sim]`), o **CONFLITO** determinístico (elo `descartar` da letra marcada declarado Sim), o motivo de `cadeia_defeito`, os **trechos grifados** (texto, não offsets), as riscadas e o par da dúvida, enunciado, alternativas, Solução MedHub (a cadeia numerada; v3 com `tipo` e `habilidade`), solução e fórum. É o insumo do `/analisar-questao`. ⚰️ *02/10/2026 (s211): "o elo em que a letra marcada cai" e "executou o(s) elo(s)" (a leitura pelas letras) só saem para solução v2 SEM declaração, rotulados `legado:`.* |
 | `--elos [LISTA]` | (s211) Uma linha por elo DECLARADO diferente de Sim: lista, questão, índice, estado, a `habilidade` (v3) ou o texto do elo (v2), objetivo; ordem `nao` -> `incerteza` -> `desatencao`. Sem LISTA, todas; `--json` = o mesmo em JSON. Read-only. |
@@ -157,6 +158,8 @@ risco da conta declarado e assumido; o que mudou: o agente não lê o token do n
 | `--expect N` | Questões **achadas** na lista (discursivas incluídas), confirmado pelo operador. Obrigatório com `--apply`. |
 | `--apply` | Grava os docs em `--out`. Sem ele: dry-run (busca, valida, resume; nada gravado). |
 | `--out DIR` | Pasta de saída (default `tmp/emed_api/<lista>`; recebe `questoes/`). |
+
+> **Figura (s221, P22):** a URL da `<img>` do enunciado sai em `figuras` (lida do `statement`, o HTML -- o `statement_text` é texto puro e nunca trouxe imagem; até a s220 a marca `figura` saía em 0 de 2.322 docs). Quem baixa e embute é o `emed_banco.py --exportar`, nunca este script. Alternativa feita só de imagem segue declarada (`alt_so_figura`).
 | `--token-arquivo F` | Arquivo gitignored com a sessão (default `.emed_token`). |
 | `--pausa S` | Segundos entre páginas (default 2; `per_page` 20, o máximo da UI). |
 | `--esquema` | Imprime só a árvore de chaves e tipos da 1ª página (nenhum valor) e sai -- para manter o mapa de campos. |

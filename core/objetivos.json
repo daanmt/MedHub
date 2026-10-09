@@ -351,6 +351,87 @@
         "Tireoidectomia e complicações",
         "Seguimento e radioiodo"
       ]
+    },
+    {
+      "tema": "Medicina de Família e Comunidade",
+      "listas": [
+        "t1"
+      ],
+      "objetivos": [
+        "Princípios da MFC (atributos da APS)",
+        "Método clínico centrado na pessoa",
+        "Abordagem familiar (genograma, ecomapa, ciclo de vida)",
+        "Ferramentas de abordagem familiar (FIRO, PRACTICE, APGAR)",
+        "Projeto terapêutico singular e clínica ampliada",
+        "Relação médico-pessoa e comunicação",
+        "Abordagem comunitária e território",
+        "Prevenção quaternária e demora permitida"
+      ]
+    },
+    {
+      "tema": "Saúde do Idoso",
+      "listas": [
+        "t3"
+      ],
+      "objetivos": [
+        "Avaliação multidimensional e funcionalidade (AVD/AIVD)",
+        "Síndromes geriátricas (quedas, incontinência, imobilidade)",
+        "Demência e delirium",
+        "Fragilidade e sarcopenia",
+        "Polifarmácia e iatrogenia (Beers)",
+        "Rastreamento e prevenção no idoso",
+        "Violência contra o idoso e aspectos legais",
+        "Fisiologia do envelhecimento",
+        "Cuidados paliativos e comunicação de más notícias"
+      ]
+    },
+    {
+      "tema": "Doenças glomerulares",
+      "listas": [
+        "t68"
+      ],
+      "objetivos": [
+        "Síndrome nefrítica x nefrótica",
+        "Glomerulonefrite pós-estreptocócica",
+        "Síndrome nefrótica na criança (lesão mínima)",
+        "Causas de nefrótica no adulto (membranosa, GESF)",
+        "Complicações da síndrome nefrótica (trombose, infecção)",
+        "Glomerulonefrite rapidamente progressiva",
+        "Nefropatia por IgA e nefrite lúpica",
+        "Indicação de biópsia e tratamento"
+      ]
+    },
+    {
+      "tema": "Doença de Kawasaki",
+      "listas": [
+        "t651"
+      ],
+      "objetivos": [
+        "Critérios diagnósticos (forma clássica)",
+        "Kawasaki incompleto",
+        "Diagnóstico diferencial",
+        "Exames laboratoriais e ecocardiograma",
+        "Tratamento (IGIV + AAS)",
+        "Kawasaki refratário",
+        "Complicações coronarianas e seguimento",
+        "SIM-P (síndrome inflamatória multissistêmica)"
+      ]
+    },
+    {
+      "tema": "Doenças neuromusculares",
+      "listas": [
+        "t141"
+      ],
+      "objetivos": [
+        "Localização: nervo x junção x músculo x neurônio motor",
+        "Síndrome de Guillain-Barré",
+        "Polineuropatias (diabética, outras)",
+        "Mononeuropatias e compressivas",
+        "Miastenia gravis e crise miastênica",
+        "Miopatias inflamatórias e outras",
+        "Esclerose lateral amiotrófica",
+        "Exames: ENMG, liquor, CK"
+      ]
     }
   ]
 }

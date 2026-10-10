@@ -18,7 +18,14 @@ Rodar o hook real dentro da suíte recursa (o hook roda a suíte, que roda o tes
 commita) -- por isso `main()` in-process com `run_command` substituído + invariante do git em
 subprocess; o commit real é verificado à parte (DoD 5a). Bancos sintéticos em tmp_path; o
 ipub.db real e o ledger real nunca são tocados.
+
+Part-2a (seção 5): o fixture `db_sintetico` do conftest entrega o schema canônico; o autouse
+isola o runtime do harness (ledger_self, watermark) em tmp_path; os 4 testes que liam o banco
+vivo e voltavam verdes sem medir, quando faltava o ipub.db, agora pulam com motivo `VIVO:`.
 """
+import hashlib
+import importlib
+import re
 import sqlite3
 import subprocess
 import sys
@@ -26,14 +33,22 @@ import types
 from datetime import date, timedelta
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
 
 import auto_check  # noqa: E402
 import consistencia_check  # noqa: E402
+import ledger_self  # noqa: E402
+from tools.utils import state_utils  # noqa: E402
 
 _CONSISTENCIA_REAL = consistencia_check.run_checks
+# Os caminhos REAIS do runtime do harness, lidos na coleta -- antes de qualquer fixture. Desde a
+# part-2a o autouse do conftest os aponta para tmp_path DENTRO de cada teste; o teste do git
+# (seção 4) é sobre os reais, então os guarda aqui.
+_RUNTIME_REAL = (*ledger_self._paths(), state_utils.WATERMARK_PATH)
 _SUITE =[sys.executable, "-m", "pytest", "tools/", "-q"]
 
 _DDL_PLANO_DIA = """
@@ -212,12 +227,12 @@ def test_runtime_do_harness_fora_do_git():
 
     Limite declarado: prova os 3 caminhos conhecidos; não prova que não exista um 4º escritor
     -- o DoD 5a (`git status --porcelain` logo depois do commit real) cobre isso empiricamente.
-    """
-    import ledger_self
-    from tools.utils import state_utils
 
+    Part-2a: os caminhos vêm de `_RUNTIME_REAL` (lidos na coleta), porque dentro do teste o
+    autouse do conftest já os isolou em tmp_path.
+    """
     problemas = []
-    for p in [*ledger_self._paths(), state_utils.WATERMARK_PATH]:
+    for p in _RUNTIME_REAL:
         rel = Path(p).resolve().relative_to(ROOT).as_posix()
         rastreado = subprocess.run(
             ["git", "-C", str(ROOT), "ls-files", "--error-unmatch", "--", rel],
@@ -227,4 +242,97 @@ def test_runtime_do_harness_fora_do_git():
         ignorado = subprocess.run(["git", "-C", str(ROOT), "check-ignore", "-q", "--", rel])
         if ignorado.returncode != 0:
             problemas.append(f"{rel}: git check-ignore não casa (rastreado ou fora do .gitignore)")
+    assert not problemas, "\n".join(problemas)
+
+
+# --------------------------------------------------------------------------------------
+# 5. Part-2a: banco sintético compartilhado, runtime isolado, vivos que pulam com motivo
+# --------------------------------------------------------------------------------------
+
+# Os 4 testes que leem o ipub.db real. Antes da part-2a, sem o banco, voltavam PASSED sem ter
+# medido nada (print "[SKIP]" + return, ou `if not exists: return`, ou o sensor devolvendo None).
+_VIVOS = (
+    ("test_comprimento_total", "test_populacao_viva_do_baralho"),
+    ("test_cards_rendimento", "test_populacao_viva_tem_a_forma_esperada"),
+    ("test_deixis_sem_contexto", "test_passivo_no_banco_real_continua_zero"),
+    ("test_erros_orfaos", "test_db_real_nao_ganha_orfao_novo"),
+)
+
+
+def _sob(caminho, base):
+    return Path(caminho).resolve().is_relative_to(Path(base).resolve())
+
+
+def _md5(caminho):
+    caminho = Path(caminho)
+    return hashlib.md5(caminho.read_bytes()).hexdigest() if caminho.is_file() else None
+
+
+def test_db_sintetico_tem_schema_canonico(db_sintetico, tmp_path):
+    """DoD 1. As tabelas esperadas saem do FONTE do `init_db`, não de uma lista copiada: se o
+    schema canônico ganhar tabela, o fixture (que chama `init_db.init_db()`) e este teste
+    acompanham juntos."""
+    from app.utils import db
+    import init_db
+    fonte = (ROOT / "tools" / "init_db.py").read_text(encoding="utf-8")
+    esperadas = set(re.findall(r"CREATE TABLE IF NOT EXISTS (\w+)", fonte))
+    assert {"flashcards", "fsrs_cards", "taxonomia_cronograma"} <= esperadas, \
+        f"o regex não achou o schema do init_db: {sorted(esperadas)}"
+    assert _sob(db_sintetico, tmp_path), f"db_sintetico fora do tmp_path: {db_sintetico}"
+    assert Path(db.DB_PATH).resolve() == Path(db_sintetico).resolve(), db.DB_PATH
+    assert Path(init_db.DB_PATH).resolve() == Path(db_sintetico).resolve(), init_db.DB_PATH
+    con = sqlite3.connect(f"file:{Path(db_sintetico).as_posix()}?mode=ro", uri=True)
+    try:
+        tabelas = {r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        n_tax = con.execute("SELECT COUNT(*) FROM taxonomia_cronograma").fetchone()[0]
+    finally:
+        con.close()
+    assert not esperadas - tabelas, f"faltam no db_sintetico: {sorted(esperadas - tabelas)}"
+    assert n_tax == 1, "seed mínimo: 1 linha em taxonomia_cronograma"
+
+
+def test_suite_nao_escreve_runtime_real(tmp_path):
+    """DoD 2. O autouse do conftest isola o runtime do harness: `ledger_self` (nos DOIS nomes
+    de módulo -- `state_utils` importa `ledger_self`, os testes importam `tools.ledger_self`) e
+    o watermark de card. As asserções de caminho vêm ANTES do `record`: sem o isolamento, o
+    teste falha sem ter escrito no ledger real."""
+    mods = [importlib.import_module(n) for n in ("ledger_self", "tools.ledger_self")]
+    for mod in mods:
+        for p in mod._paths():
+            assert _sob(p, tmp_path), f"{mod.__name__}._paths() fora do tmp_path: {p}"
+    assert _sob(state_utils.WATERMARK_PATH, tmp_path), \
+        f"state_utils.WATERMARK_PATH fora do tmp_path: {state_utils.WATERMARK_PATH}"
+
+    real = ROOT / "history" / mods[0].JSONL_NAME
+    antes = _md5(real)
+    mods[0].record("x", [{"alvo": "a"}])
+    jsonl, _ = mods[0]._paths()
+    assert jsonl.is_file() and _sob(jsonl, tmp_path), f"o .jsonl não nasceu no tmp_path: {jsonl}"
+    assert _md5(real) == antes, "o ledger real mudou durante o teste"
+
+
+def test_vivos_pulam_com_motivo_sem_banco(tmp_path, monkeypatch):
+    """DoD 4. Com o caminho do banco real apontado para um arquivo inexistente, cada um dos 4
+    tem de PULAR com motivo `VIVO:` (não voltar verde) e não pode criar o arquivo -- o
+    `sqlite3.connect` cria banco vazio, então a guarda vem antes de qualquer conexão."""
+    problemas = []
+    for nome_mod, nome_fn in _VIVOS:
+        mod = importlib.import_module(nome_mod)
+        fn = getattr(mod, nome_fn)
+        if not any(m.name == "vivo" for m in getattr(fn, "pytestmark", [])):
+            problemas.append(f"{nome_mod}::{nome_fn}: sem @pytest.mark.vivo")
+        ausente = tmp_path / nome_mod / "ipub.db"
+        # raising=False: antes do fix a constante não existe -- o vermelho tem de ser a ASSERÇÃO.
+        monkeypatch.setattr(mod, "REAL_DB", ausente, raising=False)
+        try:
+            fn()
+        except pytest.skip.Exception as e:
+            if "VIVO" not in str(e):
+                problemas.append(f"{nome_mod}::{nome_fn}: pulou sem o prefixo VIVO ({e})")
+        except Exception as e:  # noqa: BLE001 -- qualquer outra saída é defeito a listar
+            problemas.append(f"{nome_mod}::{nome_fn}: levantou {type(e).__name__}: {e}")
+        else:
+            problemas.append(f"{nome_mod}::{nome_fn}: voltou sem pular (verde decorativo)")
+        if ausente.exists() or ausente.parent.exists():
+            problemas.append(f"{nome_mod}::{nome_fn}: criou {ausente}")
     assert not problemas, "\n".join(problemas)

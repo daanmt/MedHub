@@ -15,6 +15,9 @@ quais nao pagam aluguel), e dizer o contrario seria cobertura aparente.
 import os
 import sqlite3
 import sys
+from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +27,10 @@ except Exception:
     pass
 
 import cards_rendimento as cr                                   # noqa: E402
+
+# O banco que o teste VIVO mede (part-2a). Constante de módulo para o harness poder apontá-la
+# para um arquivo inexistente e provar que, sem banco, o teste pula com motivo.
+REAL_DB = Path(__file__).resolve().parents[1] / "ipub.db"
 
 
 def _db(tmp_path, linhas):
@@ -98,16 +105,21 @@ def test_e_READ_ONLY(tmp_path):
     assert antes == depois
 
 
+@pytest.mark.vivo
 def test_populacao_viva_tem_a_forma_esperada():
     """Re-mede o baralho real. Ratchet frouxo: o sensor nao pode zerar em silencio
-    (seria sensor desligado passando por limpo) nem acusar meio baralho."""
-    try:
-        cand, res = cr.medir()
-    except Exception as e:                                       # pragma: no cover
-        print(f"  [SKIP] ipub.db indisponivel: {e}")
-        return
-    if not res["revisados"]:                                     # pragma: no cover
-        return
+    (seria sensor desligado passando por limpo) nem acusar meio baralho.
+
+    Pula com motivo sem banco (`VIVO:`), com a guarda antes de abrir conexão (part-2a). O
+    gêmeo hermético -- o sensor mordendo num banco sintético -- é
+    `test_pega_o_card_que_consome_e_nao_retem`, lá em cima."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- forma da população real de candidatos "
+                    "(0 < pct <= 20) não medida")
+    cand, res = cr.medir(str(REAL_DB))
+    if not res["revisados"]:
+        pytest.skip("VIVO: ipub.db sem card revisado -- forma da população de candidatos "
+                    "não medida")
     print(f"  populacao: {res['candidatos']}/{res['revisados']} ({res['pct']}%), "
           f"mediana {res['mediana_stability']}d")
     assert 0 < res["pct"] <= 20, res

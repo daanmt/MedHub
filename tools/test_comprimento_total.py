@@ -33,6 +33,9 @@ da fila de reforja (`--descartar` e desfecho legitimo, nao falha).
 """
 import os
 import sys
+from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +46,10 @@ except Exception:
 
 from app.utils import card_checks as cc                       # noqa: E402
 from app.utils import card_atomicity as aca                   # noqa: E402
+
+# O banco que o teste VIVO mede (part-2a). Constante de módulo para o harness poder apontá-la
+# para um arquivo inexistente e provar que, sem banco, o teste pula com motivo.
+REAL_DB = Path(__file__).resolve().parents[1] / "ipub.db"
 
 # --- EVIDENCIA CONGELADA: o lote de 6 cards que o operador drenou em 18/09/2026 -------
 # Comprimentos medidos NAQUELE dia. Sao fato historico e nao se re-medem: se um destes
@@ -197,26 +204,65 @@ def test_o_corte_e_parametro_nomeado_e_nao_constante_enterrada():
 
 # --- populacao VIVA (re-mede; nao congela) ---------------------------------------------
 
+def _acusados_na_populacao(db_path):
+    """(cards ativos, ids acusados) lidos de `db_path` pelo MESMO leitor da fila de reforja
+    (`db.cards_ativos_para_predicado`) e julgados pelo MESMO predicado. O vivo e o gêmeo
+    hermético passam por aqui -- um caminho só.
+
+    `db.DB_PATH` é trocado só durante a leitura: o banco medido é o banco que a guarda
+    conferiu, e não o que um teste anterior tenha deixado em `db.DB_PATH` (há suítes que o
+    atribuem à mão)."""
+    from app.utils import db
+    anterior = db.DB_PATH
+    db.DB_PATH = str(db_path)
+    try:
+        cards = db.cards_ativos_para_predicado()
+    finally:
+        db.DB_PATH = anterior
+    return cards, [c["id"] for c in cards if cc.checar_comprimento_total(c)]
+
+
+@pytest.mark.vivo
 def test_populacao_viva_do_baralho():
     """Re-mede sobre o ipub.db real. NAO asserta um numero exato -- o baralho cresce e a
-    reforja encolhe cards. Asserta a FORMA: o gate tem que ser raro (topo do baralho) e
-    nao pode zerar em silencio, que seria sensor desligado se passando por limpo."""
-    try:
-        from app.utils import db
-        cards = db.cards_ativos_para_predicado()
-    except Exception as e:                       # pragma: no cover
-        print(f"  [SKIP] ipub.db indisponivel: {e}")
-        return
-    if not cards:                                # pragma: no cover
-        print("  [SKIP] baralho vazio")
-        return
-    acusados = [c["id"] for c in cards if cc.checar_comprimento_total(c)]
+    reforja encolhe cards. Asserta a FORMA: o gate tem que ser raro (topo do baralho).
+
+    Pula com motivo sem banco (`VIVO:`), e a guarda vem ANTES de qualquer conexão: o
+    `sqlite3.connect` do leitor criaria um ipub.db vazio na raiz (part-2a). Que o sensor
+    morde é o gêmeo hermético logo abaixo que prova, em qualquer checkout."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- fração do baralho real acima do "
+                    "CORTE_COMPRIMENTO_TOTAL não medida")
+    cards, acusados = _acusados_na_populacao(REAL_DB)
+    if not cards:
+        pytest.skip("VIVO: ipub.db sem card ativo -- fração do baralho acima do corte não medida")
     frac = len(acusados) / len(cards)
     print(f"  populacao: {len(acusados)}/{len(cards)} cards acima de "
           f"{cc.CORTE_COMPRIMENTO_TOTAL} chars ({100 * frac:.1f}%)")
     assert frac <= 0.10, (
         f"{100 * frac:.1f}% do baralho acusado -- o corte derivado mirava o topo ~2%. "
         f"Ou o baralho mudou de forma, ou o corte saiu da banda.")
+
+
+def test_gemeo_hermetico_da_populacao_acusa_o_card_longo_plantado(db_sintetico):
+    """Gêmeo hermético do vivo acima (part-2a): mesmo leitor, mesmo predicado, banco
+    sintético com o defeito plantado. #1 longo e ativo (acusado); #2 curto (fora); #3 longo
+    mas aposentado (`needs_qualitative = 2`, fora do leitor de ativos)."""
+    from app.utils import db
+    longo = "Vinheta clínica. " * 70                       # 1190 chars > corte
+    assert len(longo) >= cc.CORTE_COMPRIMENTO_TOTAL
+    conn = db.get_connection()
+    try:
+        for cid, contexto, nq in ((1, longo, 0), (2, "Homem de 40 anos.", 0), (3, longo, 2)):
+            conn.execute("INSERT INTO flashcards (id, tema_id, frente_contexto, frente_pergunta, "
+                         "verso_resposta, needs_qualitative) VALUES (?, 1, ?, ?, ?, ?)",
+                         (cid, contexto, "Qual a conduta?", "A conduta correta.", nq))
+        conn.commit()
+    finally:
+        conn.close()
+    cards, acusados = _acusados_na_populacao(db_sintetico)
+    assert [c["id"] for c in cards] == [1, 2], "o leitor de ativos deixa o aposentado de fora"
+    assert acusados == [1], f"o sensor tem de acusar o card longo plantado: {acusados}"
 
 
 def test_banda_viva_re_derivada_dos_cards_marcados():
@@ -234,16 +280,6 @@ def test_banda_viva_re_derivada_dos_cards_marcados():
 
 
 if __name__ == "__main__":
-    import traceback
-    falhas = 0
-    for nome, fn in sorted(globals().items()):
-        if nome.startswith("test_") and callable(fn):
-            try:
-                fn()
-                print(f"  ok  {nome}")
-            except Exception:
-                falhas += 1
-                print(f"  FALHOU  {nome}")
-                traceback.print_exc()
-    print(f"\n{'FALHAS: ' + str(falhas) if falhas else 'todos passaram'}")
-    sys.exit(1 if falhas else 0)
+    # Standalone via pytest (part-2a): o gêmeo pede o fixture `db_sintetico` do conftest e o
+    # vivo pula com `pytest.skip`, que o laço caseiro anterior não sabia tratar.
+    raise SystemExit(pytest.main([__file__, "-q"]))

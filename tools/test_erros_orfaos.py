@@ -14,6 +14,7 @@ viva no fim, que e deliberado e documentado).
 Executavel standalone (python tools/test_erros_orfaos.py) e coletavel pelo pytest.
 """
 import sqlite3
+from pathlib import Path
 
 import pytest
 
@@ -22,6 +23,10 @@ from tools.utils.state_utils import (
     PISO_ERROS_ORFAOS,
     check_erros_orfaos,
 )
+
+# O banco que o teste VIVO mede (part-2a). Constante de módulo para o harness poder apontá-la
+# para um arquivo inexistente e provar que, sem banco, o teste pula com motivo.
+REAL_DB = Path(__file__).resolve().parents[1] / "ipub.db"
 
 SCHEMA = """
 CREATE TABLE sessoes_bulk (
@@ -164,10 +169,18 @@ def test_piso_do_contrato_e_3():
 # Regressao viva sobre o banco real
 # --------------------------------------------------------------------------
 
+@pytest.mark.vivo
 def test_db_real_nao_ganha_orfao_novo():
     """O historico tem 1 orfao conhecido (2026-06-18, s085, Ictericia e Sepse
     Neonatal: 15 erros esperados, 0 registrados, 26 cards sem ancora). Se
-    aparecer um SEGUNDO, alguem voltou a substituir insert_questao por --add."""
+    aparecer um SEGUNDO, alguem voltou a substituir insert_questao por --add.
+
+    Pula com motivo sem banco (`VIVO:`), com a guarda antes de abrir conexão (part-2a):
+    sem ela, `check_erros_orfaos` devolvia None e o teste passava sem ter medido. O gêmeo
+    hermético -- o sensor acusando um bloco órfão plantado -- é
+    `test_bloco_sem_erro_registrado_e_orfao`, lá em cima."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- órfão novo do F38 no histórico real não medido")
     # 2026-09-13 (s182): FALSO POSITIVO da janela d..d+1, nao orfao -- o ENAMED foi
     # domingo 13/09 (bulk com --data 2026-09-13) e os 25 erros foram analisados e
     # persistidos na terca 15/09 (ids 1019-1043, data_registro 2026-09-15). Medido na
@@ -179,7 +192,7 @@ def test_db_real_nao_ganha_orfao_novo():
     # persistir), e os 42 erros entraram na terca 22/09 (ids 1044-1085, data_registro
     # 2026-09-22) com 52 cards ancorados. Falso positivo da janela, nao orfao.
     CONHECIDOS = {"2026-06-18", "2026-09-13", "2026-09-20"}
-    orfaos = check_erros_orfaos() or []
+    orfaos = check_erros_orfaos(str(REAL_DB)) or []
     novos = [o for o in orfaos if o[0] not in CONHECIDOS]
     assert not novos, f"orfao novo detectado: {novos}"
 

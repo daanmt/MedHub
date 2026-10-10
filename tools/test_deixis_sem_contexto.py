@@ -18,6 +18,9 @@ Populacao medida com o predicado real, 1419 cards ativos: **passivo 0, falso-pos
 import os
 import sqlite3
 import sys
+from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -30,6 +33,9 @@ from app.utils import card_checks as cc                    # noqa: E402
 import card_self_sufficiency as css         # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# O banco que o teste VIVO mede (part-2a). Constante de módulo para o harness poder apontá-la
+# para um arquivo inexistente e provar que, sem banco, o teste pula com motivo.
+REAL_DB = Path(ROOT) / "ipub.db"
 
 
 def _card(pergunta, contexto="", resposta="Resposta qualquer que serve."):
@@ -122,13 +128,10 @@ def test_corte_e_parametrizado_com_proveniencia():
 
 # --- populacao: a varredura que autoriza o BLOCK ------------------------------------
 
-def test_passivo_no_banco_real_continua_zero():
-    """Se esta cair, ou o predicado ficou largo ou entrou card defeituoso -- as duas
-    leituras exigem acao, e nenhuma delas e 'afrouxar o corte'. Pula sem banco."""
-    dbp = os.path.join(ROOT, "ipub.db")
-    if not os.path.exists(dbp):
-        return
-    con = sqlite3.connect(f"file:{dbp}?mode=ro", uri=True)
+def _passivo(db_path):
+    """Ids dos cards ativos com deixis sobre contexto vazio, lidos de `db_path` em modo ro.
+    O vivo e o gêmeo hermético passam por aqui -- a mesma query, o mesmo predicado."""
+    con = sqlite3.connect(f"file:{Path(db_path).as_posix()}?mode=ro", uri=True)
     con.row_factory = sqlite3.Row
     try:
         cards = [dict(r) for r in con.execute(
@@ -136,8 +139,38 @@ def test_passivo_no_banco_real_continua_zero():
             "WHERE COALESCE(needs_qualitative,0) < 2")]
     finally:
         con.close()
-    achados = [c["id"] for c in cards if cc.checar_deixis_sem_contexto(c)]
+    return [c["id"] for c in cards if cc.checar_deixis_sem_contexto(c)]
+
+
+@pytest.mark.vivo
+def test_passivo_no_banco_real_continua_zero():
+    """Se esta cair, ou o predicado ficou largo ou entrou card defeituoso -- as duas
+    leituras exigem acao, e nenhuma delas e 'afrouxar o corte'. Pula com motivo sem banco
+    (`VIVO:`), com a guarda antes de abrir conexão (part-2a)."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- passivo de deixis sem contexto no baralho real "
+                    "não medido")
+    achados = _passivo(REAL_DB)
     assert achados == [], f"passivo deixou de ser zero: {achados}"
+
+
+def test_gemeo_hermetico_do_passivo_acusa_o_card_plantado(db_sintetico):
+    """Gêmeo hermético do vivo acima (part-2a): a mesma varredura sobre banco sintético com
+    o defeito plantado. #1 = o texto do achado da s169 com contexto vazio (acusado); #2 = a
+    mesma deixis COM vinheta (fora); #3 = sem vinheta mas aposentado (fora da varredura)."""
+    pergunta = ("Que elementos do caso (historico do paciente e circunstancia do achado) "
+                "classificam essa morte como suspeita?")
+    vinheta = "Homem de 60 anos encontrado morto em casa, sem acompanhamento médico prévio."
+    con = sqlite3.connect(db_sintetico)
+    try:
+        for cid, contexto, nq in ((1, "", 0), (2, vinheta, 0), (3, "", 2)):
+            con.execute("INSERT INTO flashcards (id, tema_id, frente_contexto, frente_pergunta, "
+                        "verso_resposta, needs_qualitative) VALUES (?, 1, ?, ?, ?, ?)",
+                        (cid, contexto, pergunta, "Resposta qualquer que serve.", nq))
+        con.commit()
+    finally:
+        con.close()
+    assert _passivo(db_sintetico) == [1], "a varredura tem de acusar só o card sem vinheta ativo"
 
 
 def test_a_varredura_do_corpus_enxerga_o_predicado():
@@ -155,14 +188,6 @@ def test_a_varredura_do_corpus_enxerga_o_predicado():
 
 
 if __name__ == "__main__":
-    falhas = 0
-    for nome, fn in sorted(list(globals().items())):
-        if nome.startswith("test_") and callable(fn):
-            try:
-                fn()
-                print(f"  OK   {nome}")
-            except AssertionError as e:
-                falhas += 1
-                print(f"  FALHA {nome}: {e}")
-    print(f"\n{'FALHOU' if falhas else 'PASSOU'} -- {falhas} falha(s)")
-    sys.exit(1 if falhas else 0)
+    # Standalone via pytest (part-2a): o gêmeo pede o fixture `db_sintetico` do conftest e o
+    # vivo pula com `pytest.skip`, que o laço caseiro anterior não sabia tratar.
+    raise SystemExit(pytest.main([__file__, "-q"]))

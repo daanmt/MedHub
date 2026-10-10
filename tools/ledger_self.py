@@ -4,9 +4,13 @@ Os checks do auto_check ja DETECTAM inconsistencias; este modulo faz os achados
 sobreviverem ao stdout: cada um vira evento com fingerprint, recorrencia e ciclo
 de vida (opened -> resolved -> reopened). Dois artefatos, contratos distintos:
 
-  history/ledger_self.jsonl        -- eventos de TRANSICAO, append-only, versionado
+  history/ledger_self.jsonl        -- eventos de TRANSICAO, append-only, LOCAL
   history/ledger_self_state.json   -- estado corrente DERIVADO (occurrences,
-                                      last_seen), reescrito a cada run; nao versionado
+                                      last_seen), reescrito a cada run; LOCAL
+
+Os dois sao runtime do harness, fora do git (.gitignore; Fase 0 Lote 0 part-1, 10/10/2026):
+o pre-commit os grava DEPOIS do stage, entao versionados eles sujavam a arvore a cada commit.
+O historico ate essa data ficou no git; a copia fora da maquina e o Lote 4.
 
 Fronteira clinica: so achados de execucao/estado do sistema (drift, paridade,
 cobertura estrutural). Payloads carregam valores divergentes/paths/labels --

@@ -15,7 +15,7 @@ ROOT_DIR = Path(__file__).parent.parent.resolve()
 
 # Utilitários extraídos para coesão (Graphify Missão 3)
 sys.path.insert(0, str(ROOT_DIR))
-from tools.utils.git_utils import get_changed_files, get_staged_files
+from tools.utils.git_utils import _git_files, get_changed_files, get_staged_files
 from tools.utils.state_utils import (
     _ledger_record,
     _warn_total,
@@ -383,6 +383,37 @@ def dispara_suite_por_selo(arquivos):
     return any(f.replace("\\", "/") == "HANDOFF.md" for f in arquivos)
 
 
+# Fase 0 Lote 0 part-1 (/ai-eng, 10/10/2026): gatilho da suite por PREFIXO, qualquer extensao.
+# O gatilho antigo era por extensao (.py em tools/core) e deixava passar codigo, dado versionado
+# e norma: na s216 um commit so de `core/hub_quadro.json` + `artifacts/aula-*.html` saiu
+# "Aprovado!" sem `test_hub_quadro`, e as 2 falhas apareceram no commit seguinte.
+_PREFIXOS_SUITE = ("tools/", "app/", "core/", "artifacts/", ".claude/", ".agents/")
+_ARQUIVOS_SUITE = ("pytest.ini", "conftest.py", "requirements.txt")
+
+
+def dispara_suite_por_caminho(arquivos):
+    """Codigo, dado versionado ou norma no recorte -> suite completa. PURA.
+
+    Dispara: prefixo em `_PREFIXOS_SUITE` (qualquer extensao) ou arquivo de config em
+    `_ARQUIVOS_SUITE`. O chamador inclui as DELECOES staged (o ACMR do pre-commit nao as ve).
+    Limite declarado: commit so de `resumos/`, `docs/`, `.vibeflow/`, `history/` ou doc de raiz
+    nao roda a suite, embora `test_consistencia_registros` leia `.vibeflow/`/`docs/` e
+    `test_audit_resumos`/`test_autonomia_hooks` leiam resumos reais -- esses mordem no proximo
+    commit que dispare a suite. HANDOFF.md tem gatilho proprio (`dispara_suite_por_selo`).
+    Fecha na Fase 1 (CI)."""
+    for f in arquivos:
+        fp = f.replace("\\", "/")
+        if fp.startswith(_PREFIXOS_SUITE) or fp in _ARQUIVOS_SUITE:
+            return True
+    return False
+
+
+def _staged_deletados():
+    """Deletados staged (`--diff-filter=D`), que o `get_staged_files` (ACMR) exclui de proposito
+    para nao auditar arquivo removido. Alimentam SO o gatilho da suite. None = git indisponivel."""
+    return _git_files(["diff", "--cached", "--name-only", "-z", "--diff-filter=D"])
+
+
 def contagem_pytest(saida):
     """`(passed, falhas)` da linha-resumo do pytest (falhas = failed + errors), ou None. PURA.
     Ignora "N subtests passed": so conta o numero que abre a linha."""
@@ -500,6 +531,7 @@ def main():
     fsrs_relevant = (mode == "--all")
     substrato_relevant = (mode == "--all")
     selo_relevant = False   # F136: HANDOFF staged -> suite completa + numero conferido
+    suite_por_caminho = False   # Lote 0 part-1: codigo/dado versionado/norma (inclui delecao)
     # F58: session logs tocados no run corrente entram no recorte de "novo"
     # do check de integridade de history/ (proxy de "mtime > ultimo run").
     hist_extras = set()
@@ -519,6 +551,17 @@ def main():
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
             selo_relevant = dispara_suite_por_selo(changed_files)
+            # Lote 0 part-1: delecao staged conta para o gatilho da suite (o ACMR nao a ve;
+            # no --changed o `git diff HEAD` ja inclui delecoes). So o gatilho -- a auditoria
+            # de arquivos abaixo segue sobre o ACMR.
+            deletados = _staged_deletados() if mode == "--staged" else []
+            if deletados is None:
+                print("   ↳ [WARN] Deleções staged ilegíveis (git) -> suíte completa por precaução.")
+                suite_por_caminho = True
+            else:
+                if deletados:
+                    print(f"   ↳ Deleções staged: {len(deletados)} (contam só para o gatilho da suíte).")
+                suite_por_caminho = dispara_suite_por_caminho(list(changed_files) + deletados)
             for f in changed_files:
                 fp = f.replace("\\", "/")
                 if fp.startswith("history/session_") and fp.endswith(".md"):
@@ -579,14 +622,15 @@ def main():
                     card_relevant = True
                     print("   ↳ Watermark de dado: ipub.db mudou desde o último check de card — checks de card ligados.")
 
-            if (not resumos_to_check and not tools_to_check and not parity_relevant
-                    and not pointer_relevant and not doc_drift_relevant
-                    and not card_relevant and not fsrs_relevant
-                    and not substrato_relevant):
-                print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
-                print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
-                print("=" * 60)
-                return 0
+            # Lote 0 part-1: sem early-return. O antigo `return 0` ("Nenhum arquivo crítico...
+            # Aprovado!") saía ANTES dos checks "sempre" (CLI_ASSINATURA e cláusulas são BLOCK)
+            # e mentia sobre o que não tinha rodado. Agora a linha diz a verdade e o fluxo segue.
+            # Custo medido dos "sempre" (10/10/2026): ~18 s, quase todo do consistencia_check
+            # (roda `reachability_check --tabela` em subprocess); os demais somam ~1 s.
+            if not (tools_to_check or substrato_relevant or fsrs_relevant or selo_relevant
+                    or suite_por_caminho):
+                print("   ↳ Suíte não exigida para este recorte (sem código, dado versionado "
+                      "ou norma); checks \"sempre\" seguem.")
 
             print(f"   ↳ Resumos para auditar: {len(resumos_to_check)}")
             print(f"   ↳ Scripts estruturais para testar: {len(tools_to_check)}")
@@ -636,12 +680,17 @@ def main():
     #     o hook de pre-commit deixava passar commit com suite vermelha, e foi
     #     exatamente assim que a quebra de coleta da s156 sobreviveu 3 sessoes
     #     com o relatorio dizendo "Todos os checks passaram".
-    #     Gatilho: --all, qualquer .py de tools/core tocado, substrato
-    #     compartilhado (tools/utils/, core/contracts/, pytest.ini, conftest.py)
-    #     ou fsrs_relevant (F61: cobre a revisao-calibrada via bridge e a
-    #     autonomia via coleta nativa — as execuções diretas morreram).
-    #     Custo medido: ~17s. Barato demais para continuar sendo opcional.
-    if mode == "--all" or tools_to_check or substrato_relevant or fsrs_relevant or selo_relevant:
+    #     Gatilho (Lote 0 part-1, 10/10/2026): --all, HANDOFF no recorte (selo, F136) ou
+    #     `dispara_suite_por_caminho` -- PREFIXO tools/ app/ core/ artifacts/ .claude/
+    #     .agents/ + pytest.ini/conftest.py/requirements.txt, QUALQUER extensao, DELECAO
+    #     staged incluida. Antes era por extensao (.py de tools/core): commit so de
+    #     core/*.json + artifacts/*.html saia sem suite (s216). As flags antigas (.py de
+    #     tools/core, substrato F44, fsrs_relevant F61) seguem na condicao -- o prefixo as
+    #     cobre, elas ficam pelas mensagens de motivo. Limite declarado: resumos/, docs/,
+    #     .vibeflow/, history/ e doc de raiz (fora HANDOFF) nao disparam; fecha na Fase 1 (CI).
+    #     Custo medido em 10/10/2026: ~170 s, 1513 testes (era ~17 s na s159).
+    if (mode == "--all" or tools_to_check or substrato_relevant or fsrs_relevant or selo_relevant
+            or suite_por_caminho):
         desc_pytest = "Suíte completa (pytest — inclui revisão-calibrada via bridge e autonomia)"
         motivo = "substrato compartilhado" if substrato_relevant and mode != "--all" else None
         if motivo:

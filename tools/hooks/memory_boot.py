@@ -31,6 +31,7 @@ _DAY_PLAN_MAX_LINES = 40     # s190: era 8 -- as métricas do panorama moram dep
 _PANORAMA_MAX_LINES = 30
 _CMD_DAY_PLAN = "python tools/day_plan.py --no-persist"
 _CMD_PANORAMA = "python tools/plano.py --panorama"
+_IPUB_DB = PROJECT_ROOT / "ipub.db"
 
 
 def _memory_context() -> str:
@@ -66,11 +67,50 @@ def _resumir_plano(texto: str, cap: int, completo: str = _CMD_DAY_PLAN) -> str:
     return "\n".join(saida)
 
 
+def _plano_de_hoje_existe(db_path=None) -> bool:
+    """True se `plano_dia` já tem linha de hoje -- ou se não dá para saber.
+
+    Fase 0 Lote 0 part-1 (/ai-eng, 10/10/2026): o boot rodava o day_plan sem `--no-persist` a
+    cada abertura (/clear, sessão do tique), e o `persistir_plano` regravava o plano do dia com
+    os defaults -- apagando a intenção declarada de manhã (`--tempo/--energia`). Mas o boot é o
+    único writer automático do PLANEJADO (telemetria-estudo-part-1: aderência planejado x real),
+    então `--no-persist` sempre mataria a série. Regra: grava só a 1ª abertura do dia.
+    Dúvida = não gravar: banco ausente, tabela ausente ou erro na consulta contam como "existe".
+
+    "Hoje" = o mesmo `date.today()` de `day_plan.build()` (day_plan.py:892, `hoje = date.today()`).
+    Se o build migrar para o dia lógico (app/utils/relogio.py), acompanhar aqui.
+    Leitura `mode=ro` por URI (padrão de `state_utils.card_watermark_atual`): não cria o banco.
+    """
+    import sqlite3
+    from datetime import date
+    dbp = Path(db_path) if db_path else _IPUB_DB
+    try:
+        con = sqlite3.connect(f"file:{dbp.as_posix()}?mode=ro", uri=True)
+        try:
+            row = con.execute("SELECT 1 FROM plano_dia WHERE data = ? LIMIT 1",
+                              (date.today().isoformat(),)).fetchone()
+        finally:
+            con.close()
+        return row is not None
+    except Exception:
+        return True
+
+
+def _argv_day_plan(db_path=None) -> list:
+    """argv do day_plan no boot: `--no-persist` quando o dia já tem plano (ou na dúvida)."""
+    argv = [sys.executable, "tools/day_plan.py"]
+    if _plano_de_hoje_existe(db_path):
+        argv.append("--no-persist")
+    return argv
+
+
 def _day_plan_summary() -> str:
-    """Resumo do Plano do Dia por subprocess isolado; fallback silencioso."""
+    """Resumo do Plano do Dia por subprocess isolado; fallback silencioso.
+
+    Grava o planejado só na 1ª abertura do dia (`_argv_day_plan`); as seguintes simulam."""
     try:
         r = subprocess.run(
-            [sys.executable, "tools/day_plan.py"],
+            _argv_day_plan(),
             capture_output=True, text=True, encoding="utf-8", errors="replace",
             timeout=_DAY_PLAN_TIMEOUT, cwd=str(PROJECT_ROOT),
         )

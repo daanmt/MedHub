@@ -60,8 +60,14 @@ artifacts/audits/
 # /graphify output — regeneravel a partir do source (tools/, resumos/, etc.)
 graphify-out/
 
-# ledger-of-self: estado DERIVADO (reconstruivel); o .jsonl de eventos e versionado
+# Runtime do harness: local, fora do git (Fase 0 Lote 0 part-1, 10/10/2026). O pre-commit grava
+# estes arquivos DEPOIS do stage, entao versionados eles sujavam a arvore a cada commit. Ninguem
+# os le pelo git: o painel de DIVIDA le o estado no disco. O historico passado fica no git.
+#   ledger-of-self: eventos de transicao (.jsonl, append-only) + estado DERIVADO (reconstruivel)
+history/ledger_self.jsonl
 history/ledger_self_state.json
+#   watermark de dado dos cards (marco do ultimo check de card do auto_check)
+history/card_watermark.json
 # sink de falha da consolidacao de memoria (AGENTE.md §8): log de RUNTIME, nao artefato.
 # O painel de DIVIDA le o arquivo no disco -- versionar so propagaria ruido de maquina.
 history/memory_errors.log

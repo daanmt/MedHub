@@ -12,7 +12,7 @@ Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.3 (a lançar) · clea
 | 0.2a | `…-part-2a.md` | PASS | 74eed0e | 1518/0/174 | §7.4 regenerada (GO ai-eng: parte do commit) |
 | 0.2b | `…-part-2b.md` | PASS | 5887631 | 1535/0/158 | audit tirou a regra "toda aula liga a tarefa" (aula sem tarefa = "Outras aulas", estado previsto) |
 | 0.2c | `…-part-2c.md` | PASS | e294651 | 1536/0/178 | §7.4 regenerada; sentinela em `sqlite3.connect` no script (achou `DB_PATH` próprio em `review_radar` e `variancia`); M-120 -> Lote 3 |
-| 0.3 | `…-part-3.md` | pendente | | | |
+| 0.3 | `…-part-3.md` | pendente -- lançar COMO ESTÁ + restrição do ai-eng: a catraca BLOCK entra no conjunto "sempre" da part-1 (sem early-return, sem gatilho por extensão); o DoD "órfã nova = BLOCK" se prova no fluxo real (commit de teste com cláusula órfã sintética, revertido) | | | |
 | 0.4a | `…-part-4a.md` | pendente | | | |
 | 0.4b dry-run | `…-part-4b.md` | pendente | | | |
 | 0.4b apply | `…-part-4b.md` | pendente (G-op dado, condicionado à 1.4) | | | |
@@ -32,5 +32,6 @@ medhub lê SÓ a spec `…-part-3.md` e lança 1 subagente -> audit do DoD -> co
 10/10 (no chat do medhub): tique a 50 min só enquanto ele estuda; > 60 min com sessão ociosa sai mais caro (medição em `tmp/aieng/custo-tique-2026-10-10.md`).
 
 ## Regras de retomada
+🔴 **Depois de /clear, PRIMEIRO ato:** o /clear renomeia a sessão -- mandar 1 mensagem de presença ao `ai-eng-51` (SendMessage; achar o nome por `ListAgents`) citando este checkpoint e o último commit; ele passa a responder ao nome novo. Registrar `in`/`out` no exchange-log.
 boot = este arquivo + `HANDOFF.md` 8 linhas -> abrir SÓ a spec da part em curso -> 1 subagente implementa (teste antes, vermelho visto; sem índice nem commit) -> audit do DoD pelo medhub -> regenerar §7.4 (`python -X utf8 tools/reachability_check.py --tabela`) se o teste de consistência acusar -> commit + push -> linha aqui -> msg ao ai-eng (`uds` do ai-eng-51; registrar `in`/`out` no `history/exchange-log.jsonl`) -> G-part (pode /clear).
 `/clear` só em G-part. Tique: religar a 50 min só em dia de estudo (memória `feedback_tique_registra_e_analisa`).

@@ -155,6 +155,7 @@ Comando: `python -I conta_backlog.py artifacts/backlog-unico-medhub-2026-10-10.m
 | M-118 | App web mobile-first substitui o hub por string (`hub.py` 2.228 + `hub.html` 2.503 + `player.html` 1.055; 417 testes de hub/UI = 28%) | [A] §Núcleo; [E] reaproveitável; [C] responsabilidades 11-14 | arquitetura | medhub | pós-01/11 | F1 | L | não |
 | M-119 | Stack da Fase 1: ADR-plataforma 2026-10-10 recomenda Supabase/Postgres + serviço Python fino sobre `db.py` + React mobile-first; o operador decide entre isso e MongoDB | ordem do operador (10/10); ADR-plataforma 2026-10-10 | operador-decisão | operador | gate (pergunta iv) | pergunta | S | sim |
 | M-120 | Teste `vivo` lê o `ipub.db` real por `db.get_connection()`, que abre em escrita e roda `CREATE VIEW IF NOT EXISTS` (inócuo hoje): leitor em `mode=ro` para os testes `vivo` | medhub, audit da part-2a (10/10); GO do ai-eng em 10/10 | engenharia | medhub | aberto | 3 (não coube no budget da 2c) | S | não |
+| M-121 | Inventário dos módulos com `DB_PATH` próprio (fixam o caminho do banco fora de `db.DB_PATH`): `review_radar`, `variancia` e os que o sentinela da 2c achar -- mesma classe da 2b | medhub, audit da part-2c (10/10); confirmado pelo ai-eng em 10/10 | engenharia | medhub | aberto | 3 | S | não |
 
 ## Regras de vida do backlog
 

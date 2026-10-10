@@ -1,6 +1,6 @@
 # Sessão 222 -- 09-10/10/2026 (sexta, tarde -> sábado, manhã)
 
-**Executor:** Claude Code / Opus 5.5 + subagentes (5 Opus de cadeia v3, 2 Opus de análise t40/t100, 1 Sonnet de reforja, 1 Sonnet evidence-researcher). Custo pelo `usage` do harness: cadeias 106-133 mil tokens cada; análise t40 202+209 mil; t100 192+200 mil; reforja 95 mil; pesquisa 34 mil.
+**Ferramenta:** Claude Code / Opus 5.5 + subagentes (5 Opus de cadeia v3, 2 Opus de análise t40/t100, 1 Sonnet de reforja, 1 Sonnet evidence-researcher). Custo pelo `usage` do harness: cadeias 106-133 mil tokens cada; análise t40 202+209 mil; t100 192+200 mil; reforja 95 mil; pesquisa 34 mil.
 **Suíte:** 1509 passando (`python -m pytest tools/ -q`, medida no pre-commit de 10/10).
 
 ## O que ele pediu

@@ -1345,3 +1345,45 @@
 {"ts": "2026-10-08T00:27:44+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "0dfa96697396", "alvo": "session_220.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...')"}}
 {"ts": "2026-10-08T14:56:49+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "af82cabfe0a0", "alvo": "session_221.md", "payload": {"detalhe": "campo `Ferramenta:` ausente (o swap test depende dele)"}}
 {"ts": "2026-10-08T14:56:49+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "0dfa96697396", "alvo": "session_220.md"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ba6dd0eba3b5", "alvo": "card#214"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5ff9da40b2fc", "alvo": "card#522"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4a9a013ca6ec", "alvo": "card#573"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "cb75c2b78277", "alvo": "card#595"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "31de4920b812", "alvo": "card#614"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "24a34fe5bd15", "alvo": "card#623"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "0f9e824628d8", "alvo": "card#640"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "fbfcd708f584", "alvo": "card#643"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2181b6f53800", "alvo": "card#644"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "6f58b486d177", "alvo": "card#646"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "b654d6c33a26", "alvo": "card#647"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ba7166953bdd", "alvo": "card#648"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "d9016673de3a", "alvo": "card#662"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "b3a5bf3714b0", "alvo": "card#774"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "a88b340c4499", "alvo": "card#791"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e53bd027b349", "alvo": "card#794"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c45fa495bcdd", "alvo": "card#808"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c441ca0cb25b", "alvo": "card#810"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "8fb34c0d2ab2", "alvo": "card#852"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "6de1fd1114ef", "alvo": "card#873"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "103f55a83e02", "alvo": "card#877"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e66c679bc715", "alvo": "card#884"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3800d4db7b4a", "alvo": "card#893"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "a940389bf29c", "alvo": "card#1404"}
+{"ts": "2026-10-08T15:33:37+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9141fb001b89", "alvo": "card#1727"}
+{"ts": "2026-10-08T15:36:59+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "af82cabfe0a0", "alvo": "session_221.md"}
+{"ts": "2026-10-09T20:10:11+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "8cac9ffb50e0", "alvo": "2026-10-08", "payload": {"erros_esperados": 9}}
+{"ts": "2026-10-09T21:57:45+00:00", "event": "resolved", "check": "erros_orfaos", "fingerprint": "8cac9ffb50e0", "alvo": "2026-10-08"}
+{"ts": "2026-10-10T13:34:10+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "2c472b59a8ec", "alvo": "2026-10-10", "payload": {"erros_esperados": 5}}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "42278fc9da62", "alvo": "card#33"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "bc16215ccdd7", "alvo": "card#977"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "bc84f8ef5972", "alvo": "card#1278"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "9c39dcbd3588", "alvo": "card#1298"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "9a33b0cf0ebe", "alvo": "card#1369"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "333984466397", "alvo": "card#1371"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "374a5af3182e", "alvo": "card#1506"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "ea53dcf01d83", "alvo": "card#1565"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1cf9430be6df", "alvo": "card#1098"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e01d702f185d", "alvo": "card#1513"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3e301a5a22a2", "alvo": "card#1721"}
+{"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "erros_orfaos", "fingerprint": "2c472b59a8ec", "alvo": "2026-10-10"}
+{"ts": "2026-10-10T14:21:25+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "c65dfd9ce04c", "alvo": "session_222.md", "payload": {"detalhe": "campo `Ferramenta:` ausente (o swap test depende dele)"}}

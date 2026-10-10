@@ -4013,3 +4013,28 @@
 {"ts": "2026-10-07T21:15:22", "tipo": "generation", "questao_id": 1135, "n_cards": 1, "avisos": 0}
 {"ts": "2026-10-07T21:15:22", "tipo": "generation", "questao_id": 1136, "n_cards": 1, "avisos": 0}
 {"ts": "2026-10-07T21:15:22", "tipo": "generation", "questao_id": 1137, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-09T17:18:36", "tipo": "generation", "questao_id": 1139, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-09T17:18:36", "tipo": "generation", "questao_id": 1140, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-09T17:18:36", "tipo": "generation", "questao_id": 1141, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-09T17:18:36", "tipo": "generation", "questao_id": 1142, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-09T17:18:36", "tipo": "reincidencia", "questao_id": 1142, "hits": 1}
+{"ts": "2026-10-09T18:56:31", "tipo": "generation", "questao_id": 1143, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-09T18:56:31", "tipo": "generation", "questao_id": 1144, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-09T18:56:31", "tipo": "generation", "questao_id": 1145, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-09T18:56:31", "tipo": "reincidencia", "questao_id": 1145, "hits": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 370, "writer": "recurate_cards", "version_antes": 6, "version_depois": 7, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta"], "n_campos": 2, "len_verso_antes": 21, "len_verso_depois": 21, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 33, "writer": "recurate_cards", "version_antes": 7, "version_depois": 8, "reason": "reforja", "campos": ["frente_pergunta"], "n_campos": 1, "len_verso_antes": 88, "len_verso_depois": 88, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1369, "writer": "recurate_cards", "version_antes": 5, "version_depois": 6, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta"], "n_campos": 2, "len_verso_antes": 60, "len_verso_depois": 60, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1371, "writer": "recurate_cards", "version_antes": 5, "version_depois": 6, "reason": "reforja", "campos": ["frente_pergunta"], "n_campos": 1, "len_verso_antes": 89, "len_verso_depois": 89, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1565, "writer": "recurate_cards", "version_antes": 5, "version_depois": 6, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta"], "n_campos": 2, "len_verso_antes": 86, "len_verso_depois": 86, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 977, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_pergunta"], "n_campos": 1, "len_verso_antes": 98, "len_verso_depois": 98, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1278, "writer": "recurate_cards", "version_antes": 3, "version_depois": 4, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta"], "n_campos": 2, "len_verso_antes": 87, "len_verso_depois": 87, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1298, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_pergunta"], "n_campos": 1, "len_verso_antes": 31, "len_verso_depois": 31, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1506, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_pergunta"], "n_campos": 1, "len_verso_antes": 147, "len_verso_depois": 147, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1098, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 4, "len_verso_antes": 64, "len_verso_depois": 24, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1721, "writer": "recurate_cards", "version_antes": 3, "version_depois": 4, "reason": "reforja", "campos": ["frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 4, "len_verso_antes": 86, "len_verso_depois": 75, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-10T10:32:27", "tipo": "reforja", "card_id": 1513, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 4, "len_verso_antes": 83, "len_verso_depois": 67, "n_frases_antes": 5, "n_frases_depois": 2}
+{"ts": "2026-10-10T10:34:55", "tipo": "generation", "questao_id": 1147, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-10T10:34:55", "tipo": "generation", "questao_id": 1148, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-10T10:34:55", "tipo": "generation", "questao_id": 1149, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-10T10:34:55", "tipo": "generation", "questao_id": 1150, "n_cards": 1, "avisos": 0}

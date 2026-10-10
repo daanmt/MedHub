@@ -256,7 +256,8 @@ def test_semana_4_do_plano_real_diz_a_soma_das_pendentes():
     esperado = sum(hub._q_de(l) for l in linhas if l.get("status") == "pendente" and l.get("semana_plano") == 4)
     sem4 = re.search(r'<section class="qd-sem" data-secao="4".*?</section>', pagina, re.S).group(0)
     assert "<p class=\"qd-qsem\">Questões da semana: <b>%d</b>" % esperado in sem4
-    assert re.search(r'<span data-nrot>tarefas?</span> · 31 resumos</span></h3>', sem4), "o lote 1 e a S4"
+    # s222: o numero de resumos acompanha o plano real (31 -> 30 ao concluir a t40); mede a forma, nao a contagem
+    assert re.search(r'<span data-nrot>tarefas?</span> · \d+ resumos?</span></h3>', sem4), "o lote 1 e a S4"
     assert not re.search(r"\d+ questões</span></h3>", pagina), "nenhum cabecalho soma questoes"
 
 

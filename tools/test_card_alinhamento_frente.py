@@ -23,6 +23,10 @@ e os melhores negativos aqui sao os que um regex ingenuo pegaria:
 
 Textos dos fixtures sao VERBATIM do `ipub.db` (minimizados apenas por corte de espaco em branco),
 para o oraculo nao depender do banco local. O teste de POPULACAO le o banco e faz skip se ausente.
+
+Fase 0 Lote 0 part-2b (10/10/2026): o teste de população é `vivo` (pula com motivo `VIVO:` sem o
+banco) e mede a FORMA -- cada predicado dentro de uma banda declarada do baralho --, não a contagem
+12 / 4 / 1; o gêmeo hermético sobre o `db_sintetico` planta um positivo de cada e exige a acusação.
 """
 import sqlite3
 import sys
@@ -36,7 +40,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from app.utils import card_checks as cc  # noqa: E402
 
-DB = ROOT / "ipub.db"
+#: O banco que o vivo mede (part-2b; era `DB`). Constante de módulo para o teste de skip apontá-la
+#: para um arquivo inexistente.
+REAL_DB = ROOT / "ipub.db"
 
 
 def _c(ctx, perg):
@@ -219,36 +225,94 @@ def test_os_tres_sao_aviso_e_nunca_erro():
 # ---------------------------------------------------------------------------
 # Populacao -- re-medida contra o banco, com o comando na propria assercao
 # ---------------------------------------------------------------------------
-@pytest.mark.skipif(not DB.exists(), reason="ipub.db e local-only (nao versionado)")
-def test_populacao_medida_e_a_que_a_spec_declara():
-    """A spec declara 12 / 4 / 1. Numero em spec envelhece: este teste re-mede.
+#: Banda declarada (part-2b, decisão técnica 2; o mesmo modelo do `test_comprimento_total`): cada
+#: predicado acusa no máximo esta fração dos cards com contexto e pergunta. Medido em 10/10/2026:
+#: P1 1,1% · P2 0,4% · P3 0,1% de 984. Acima dela, o predicado deixou de discriminar.
+BANDA_ALINHAMENTO = 0.05
 
-    Falhar aqui NAO e bug do predicado -- e o baralho tendo mudado. A acao certa e atualizar a
-    spec com a nova medicao (e, se o passivo do P1 zerou, apertar o corte), nunca afrouxar o
-    predicado para o numero voltar.
-    """
-    con = sqlite3.connect(str(DB))
+_PREDICADOS = {"P1": cc.checar_contexto_redundante,
+               "P2": cc.checar_pergunta_generica_com_contexto,
+               "P3": cc.checar_contrafactual_mal_formado}
+
+
+def _populacao(db_path):
+    """({id: card}, {"P1"|"P2"|"P3": [ids acusados]}) dos cards ativos com contexto e pergunta de
+    `db_path`, lidos em read-only (`mode=ro`: nunca cria nem grava o banco). O vivo e o gêmeo
+    hermético passam por aqui -- um caminho só."""
+    con = sqlite3.connect(f"file:{Path(db_path).as_posix()}?mode=ro", uri=True)
     try:
         rows = con.execute(
-            "SELECT frente_contexto, frente_pergunta FROM flashcards "
+            "SELECT id, frente_contexto, frente_pergunta FROM flashcards "
             "WHERE COALESCE(frente_contexto,'') <> '' AND COALESCE(frente_pergunta,'') <> '' "
-            "  AND COALESCE(needs_qualitative,0) < 2").fetchall()
+            "  AND COALESCE(needs_qualitative,0) < 2 ORDER BY id").fetchall()
     finally:
         con.close()
-    cards = [_c(x, p) for x, p in rows]
-    medido = {
-        "P1": sum(1 for k in cards if cc.checar_contexto_redundante(k)),
-        "P2": sum(1 for k in cards if cc.checar_pergunta_generica_com_contexto(k)),
-        "P3": sum(1 for k in cards if cc.checar_contrafactual_mal_formado(k)),
-    }
-    # P1 12 -> 13 em 17/09/2026 (s185): a restauracao de acentuacao do F113 fez
-    # `frente_contexto` e `frente_pergunta` grafarem as mesmas palavras, e a
-    # sobreposicao que o predicado mede cruzou o corte 0.8 num card que ja era
-    # redundante -- a divergencia de acentuacao entre os campos e que escondia
-    # dele. Medicao mais verdadeira, nao regressao; o predicado nao foi tocado.
-    # P1 13 -> 11 em 29/09/2026 (s206): a varredura do banco apagou vinhetas redundantes na
-    # reforja pela regua de comprimento -- 2 cards sairam do passivo. Passivo que caiu por
-    # reforja; o predicado nao foi tocado.
-    assert medido == {"P1": 11, "P2": 4, "P3": 1}, (
-        "populacao divergiu da spec (.vibeflow/specs/alinhamento-frente-do-card.md): "
-        f"{medido}. Re-medir e ATUALIZAR a spec -- nunca afrouxar o predicado.")
+    cards = {cid: _c(x, p) for cid, x, p in rows}
+    return cards, {nome: [cid for cid, k in cards.items() if pred(k)]
+                   for nome, pred in _PREDICADOS.items()}
+
+
+def _fora_da_banda(cards, acusados, banda=BANDA_ALINHAMENTO):
+    """{predicado: "n/total"} dos que acusam mais que `banda` do baralho medido ({} = forma ok)."""
+    return {nome: f"{len(ids)}/{len(cards)}" for nome, ids in acusados.items()
+            if cards and len(ids) / len(cards) > banda}
+
+
+@pytest.mark.vivo
+def test_populacao_medida_e_a_que_a_spec_declara():
+    """Re-mede P1/P2/P3 sobre o ipub.db real e asserta a FORMA (part-2b): nenhum predicado acusa mais
+    que `BANDA_ALINHAMENTO` dos cards com contexto e pergunta. A contagem sai no print -- é relatório,
+    não regressão: o baralho muda quando o operador reforja ou cria card. O passivo pode zerar; que
+    cada predicado MORDE é o gêmeo hermético logo abaixo que prova, em qualquer checkout.
+
+    Pula com motivo sem banco (`VIVO:`), com a guarda antes de qualquer conexão (part-2a)."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- fração do baralho real acusada por P1/P2/P3 não medida")
+    cards, acusados = _populacao(REAL_DB)
+    if not cards:
+        pytest.skip("VIVO: ipub.db sem card ativo com contexto e pergunta -- P1/P2/P3 não medidos")
+    medido = {nome: len(ids) for nome, ids in acusados.items()}
+    print(f"  populacao: {medido} em {len(cards)} cards com contexto e pergunta")
+    # ⚰️ 10/10/2026 (part-2b): `medido == {"P1": 11, "P2": 4, "P3": 1}`, re-escrito à mão a cada mudança
+    # legítima do baralho com o predicado intocado -- P1 12 -> 13 em 17/09 (s185: a acentuação do F113
+    # fez os dois campos grafarem as mesmas palavras) e 13 -> 11 em 29/09 (s206: a reforja apagou
+    # vinhetas redundantes). Contagem é relatório; o teste mede a banda.
+    fora = _fora_da_banda(cards, acusados)
+    assert not fora, (
+        f"predicado acima da banda de {BANDA_ALINHAMENTO:.0%} do baralho: {fora}. Ou ele perdeu a "
+        "discriminação, ou o baralho mudou de forma -- re-medir e declarar, nunca afrouxar o predicado.")
+
+
+def test_gemeo_hermetico_da_populacao_acusa_cada_predicado_plantado(db_sintetico):
+    """Gêmeo hermético do vivo acima (part-2b): mesmo leitor (`_populacao`), mesmos predicados, banco
+    sintético com um positivo de cada (#673 P1, #1574 P2, #1568 P3), os negativos que um regex ingênuo
+    pegaria (#284 tem o shape `A x B`; #792 o desenho contrafactual), um card sem contexto (fora da
+    query) e um positivo aposentado (`needs_qualitative = 2`, fora). Num baralho de 5, cada acusado
+    vale 20%: a banda também acusa."""
+    from app.utils import db
+    plantados = {673: (C673, 0), 1574: (C1574, 0), 1568: (C1568, 0), 284: (C284, 0), 792: (C792, 0),
+                 10: (_c("", "Qual a conduta na apendicite aguda?"), 0), 525: (C525, 2)}
+    conn = db.get_connection()
+    try:
+        for cid, (card, nq) in plantados.items():
+            conn.execute("INSERT INTO flashcards (id, tema_id, frente_contexto, frente_pergunta, "
+                         "verso_resposta, needs_qualitative) VALUES (?, 1, ?, ?, ?, ?)",
+                         (cid, card["frente_contexto"], card["frente_pergunta"], "Resposta.", nq))
+        conn.commit()
+    finally:
+        conn.close()
+    cards, acusados = _populacao(db_sintetico)
+    assert sorted(cards) == [284, 673, 792, 1568, 1574], "sem contexto e aposentado ficam fora da query"
+    assert acusados == {"P1": [673], "P2": [1574], "P3": [1568]}, acusados
+    assert set(_fora_da_banda(cards, acusados)) == {"P1", "P2", "P3"}, "1 em 5 = 20% > a banda"
+    assert _fora_da_banda(cards, acusados, banda=0.25) == {}
+
+
+def test_vivo_pula_com_motivo_sem_banco(tmp_path, monkeypatch):
+    """DoD 1 da part-2b: sem o banco, o vivo PULA com motivo `VIVO:` (não volta verde nem vermelho)
+    e não cria o arquivo -- a guarda vem antes de qualquer conexão."""
+    ausente = tmp_path / "ipub.db"
+    monkeypatch.setitem(globals(), "REAL_DB", ausente)
+    with pytest.raises(pytest.skip.Exception, match=r"VIVO:"):
+        test_populacao_medida_e_a_que_a_spec_declara()
+    assert not ausente.exists(), "a guarda tem de vir antes do connect"

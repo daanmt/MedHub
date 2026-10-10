@@ -10,7 +10,8 @@ trava:
    wikilink publicado vira link do leitor e o nao publicado vira texto, tabela pipe, bloco cercado em
    `<pre>` com a arvore intacta, emoji intacto no titulo e na citacao.
 2. **Registro `core/hub_resumos.json`**: schema falha ALTO (GO sem disciplina, tarefa nao inteira); o
-   arquivo que nao existe e AVISO e sai do lote; o registro real (lote 1 = 31) existe inteiro no disco.
+   arquivo que nao existe e AVISO e sai do lote; o registro real existe inteiro no disco (⚰️ 10/10/2026,
+   part-2b: "lote 1 = 31" -- a contagem saiu, fica a forma; os testes do dado real são `vivo`).
 3. **Biblioteca**: area -> disciplina; a RD de varias disciplinas aparece em CADA uma e conta 1; a RD
    nova no topo; o resumo mostra quem o cita e a RD mostra de onde saiu.
 4. **Semana**: o cabecalho conta tarefas e resumos; dentro, o total REAL de questoes pendentes da semana
@@ -157,15 +158,69 @@ def test_resumo_inexistente_e_aviso_nomeado_e_sai_do_lote(tmp_path):
         hub.coletar_resumos(tmp_path, reg, aulas=[hub.Aula("resumo-hernias", "x", "2026-10-01", "a")])
 
 
+#: O banco que os vivos do plano medem (part-2b). Constante de módulo para o teste de skip apontá-la
+#: para um arquivo inexistente.
+REAL_DB = ROOT / "ipub.db"
+
+
+def _defeitos_do_lote(raiz):
+    """(registro, resumos, defeitos) do `core/hub_resumos.json` de `raiz` -- a FORMA (part-2b), sem a
+    contagem do lote: registro e disco concordam (nenhum aviso de resumo inexistente e
+    `len(resumos) == len(reg)`), slug único e dentro do `pendIdValido` (até 120 com o `doc_`), área e
+    disciplina do vocabulário. Lido por `hub.ler_resumos`/`hub.coletar_resumos` (o schema já falha ALTO
+    lá). [] = ok. O vivo e o gêmeo passam por aqui."""
+    raiz = Path(raiz)
+    reg = hub.ler_resumos(raiz / hub.RESUMOS_REG)
+    resumos, avisos = hub.coletar_resumos(raiz, reg)
+    defeitos = list(avisos)
+    if len(resumos) != len(reg):
+        defeitos.append("registro com %d resumos, disco com %d" % (len(reg), len(resumos)))
+    if len({r.slug for r in resumos}) != len(resumos):
+        defeitos.append("slug de resumo repetido no lote")
+    defeitos += ["slug longo demais para o pendIdValido: %s" % r.slug for r in resumos
+                 if len("doc_" + r.slug) > 120]
+    areas = set(hub.AREA_DA_PASTA.values())
+    defeitos += ["resumo fora das áreas %s: %s (%s)" % (sorted(areas), r.caminho, r.area)
+                 for r in resumos if r.area not in areas]
+    defeitos += ["resumo com disciplina fora do vocabulário: %s (%s)" % (r.caminho, r.disciplina)
+                 for r in resumos if r.disciplina not in hub.DISCIPLINAS]
+    return reg, resumos, defeitos
+
+
+@pytest.mark.vivo
 def test_registro_real_do_lote_existe_inteiro_e_sem_slug_repetido():
-    reg = hub.ler_resumos(ROOT / hub.RESUMOS_REG)
-    resumos, avisos = hub.coletar_resumos(ROOT, reg)
-    assert avisos == [] and len(resumos) == len(reg) == 31
-    assert len({r.slug for r in resumos}) == 31
-    assert all(len("doc_" + r.slug) <= 120 for r in resumos), "pendIdValido aceita ate 120"
-    assert {r.area for r in resumos} == {"CM", "CIR", "MFC", "PED", "GO"}
-    tb = next(r for r in resumos if r.slug == "resumo-tuberculose")
-    assert (tb.area, tb.disciplina, tb.tarefas) == ("CM", "Infectologia", (1797, 380))
+    """O registro REAL tem a forma de `_defeitos_do_lote`: registro e disco concordam, slug único e
+    dentro do pendIdValido, área e disciplina do vocabulário. Pula com motivo (`VIVO:`) sem o registro,
+    sem `resumos/` ou com o registro vazio."""
+    if not (ROOT / hub.RESUMOS_REG).is_file():
+        pytest.skip("VIVO: %s ausente -- lote de resumos real não medido" % hub.RESUMOS_REG)
+    if not (ROOT / hub.DIR_RESUMOS).is_dir():
+        pytest.skip("VIVO: %s/ ausente -- registro x disco não medido" % hub.DIR_RESUMOS)
+    reg, resumos, defeitos = _defeitos_do_lote(ROOT)
+    if not reg:
+        pytest.skip("VIVO: %s sem item -- lote de resumos real não medido" % hub.RESUMOS_REG)
+    print(f"  lote: {len(resumos)} resumos de {len(reg)} no registro, áreas {sorted({r.area for r in resumos})}")
+    # ⚰️ 10/10/2026 (part-2b): `len(resumos) == len(reg) == 31`, `len(slugs) == 31`, as áreas
+    # == {CM, CIR, MFC, PED, GO} e a (área, disciplina, tarefas) da Tuberculose -- o lote 1 da s218
+    # contado à mão; resumo novo no registro derrubava a suíte. Contagem é relatório (o print).
+    assert defeitos == [], defeitos
+
+
+def test_gemeo_hermetico_do_lote_acusa_registro_sem_arquivo(tmp_path):
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_defeitos_do_lote` sobre um repo sintético.
+    Registro e disco concordando, nada a acusar; o resumo registrado que não existe no disco é acusado
+    pelo caminho e pela discordância registro x disco. O schema torto (falha ALTO) tem gêmeo próprio,
+    `test_registro_de_resumos_com_schema_errado_falha_alto`; o slug repetido,
+    `test_resumo_inexistente_e_aviso_nomeado_e_sai_do_lote`."""
+    raiz = _repo(tmp_path)
+    _reg, resumos, defeitos = _defeitos_do_lote(raiz)
+    assert [r.slug for r in resumos] == ["resumo-tuberculose"] and defeitos == [], defeitos
+    reg = json.loads((raiz / hub.RESUMOS_REG).read_text(encoding="utf-8"))
+    reg["itens"]["Cirurgia/Sumiu.md"] = {"tarefas": [50]}
+    (raiz / hub.RESUMOS_REG).write_text(json.dumps(reg, ensure_ascii=False), encoding="utf-8")
+    _reg, _r, defeitos = _defeitos_do_lote(raiz)
+    assert len(defeitos) == 2, defeitos
+    assert "resumos/Cirurgia/Sumiu.md" in defeitos[0] and "registro com 2 resumos, disco com 1" in defeitos[1]
 
 
 # ======================================================================== 3. Biblioteca area -> disciplina
@@ -244,21 +299,78 @@ def test_semana_conta_tarefas_e_resumos_e_diz_o_total_real_do_plano():
     assert "questões</span>" not in sem4, "a soma parcial saiu do cabecalho"
 
 
-def test_semana_4_do_plano_real_diz_a_soma_das_pendentes():
+#: O cabeçalho de uma seção de SEMANA da Teoria: "<N> tarefa(s)" e, quando há, " · <N> resumo(s)".
+_RE_CABECALHO_SEM = re.compile(r'<section class="qd-sem" data-secao="(\d+)"[^>]*><h3 class="qd-titulo">[^<]*'
+                               r'<span class="qd-n"><span data-n>\d+</span> <span data-nrot>tarefas?</span>'
+                               r'(?: · (\d+) resumos?)?</span></h3>')
+
+
+def _semanas_divergentes(pagina, linhas, resumos):
+    """[(semana, campo, na página, esperado)] das seções de SEMANA da Teoria -- a forma do s218 em TODA
+    semana que a página mostra (part-2b; antes, só a S4): a linha "Questões da semana" = a soma de `_q_de`
+    das pendentes da semana no plano (0 = linha ausente) e o "N resumos" do cabeçalho = os resumos cujas
+    tarefas estão pendentes nela. Cabeçalho fora da forma também é acusado. [] = ok."""
+    q_pagina = _q_teoria(pagina)
+    cabecalhos = {m.group(1): int(m.group(2) or 0) for m in _RE_CABECALHO_SEM.finditer(pagina)}
+    saida = []
+    for semana in sorted((k for k in q_pagina if k.isdigit()), key=int):
+        da_semana = [l for l in linhas if l.get("status") == "pendente"
+                     and l.get("semana_plano") is not None and int(l["semana_plano"]) == int(semana)]
+        esperado = int(sum(hub._q_de(l) for l in da_semana))
+        if q_pagina[semana][0] != esperado:
+            saida.append((semana, "questões", q_pagina[semana][0], esperado))
+        n_resumos = len(hub._resumos_de(resumos, da_semana))
+        if semana not in cabecalhos:
+            saida.append((semana, "cabeçalho", None, n_resumos))
+        elif cabecalhos[semana] != n_resumos:
+            saida.append((semana, "resumos", cabecalhos[semana], n_resumos))
+    return saida
+
+
+@pytest.mark.vivo
+def test_semana_4_do_plano_real_diz_a_soma_das_pendentes(monkeypatch):
+    """O plano REAL: toda semana que a Teoria mostra diz o total REAL de questões pendentes dela e conta
+    os seus resumos (`_semanas_divergentes`). Nasceu na S4 (s218: "69 questões" nas semanas 4 a 7, que
+    tinham 2.750 pendentes); a part-2b mede TODAS as semanas da página -- a S4 sem pendentes, ou fora
+    da página, não derruba mais a suíte.
+
+    Pula com motivo (`VIVO:`) sem banco, sem plano ou sem semana no quadro; a guarda vem antes de
+    qualquer conexão e o `db.DB_PATH` aponta para o banco que ela conferiu."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- total por semana da Teoria no plano real não medido")
+    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
     linhas, aviso = hub._ler_plano()
     if aviso or not linhas:
-        pytest.skip("plano real indisponivel: total da S4 nao conferido (skip declarado)")
+        pytest.skip("VIVO: plano real indisponível (%s) -- total por semana não medido" % (aviso or "vazio"))
     cal = hub.calendario_trilha()
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     resumos, _ = hub.coletar_resumos(ROOT)
     aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
     pagina, _ = hub.html_quadro_de(aulas, reg, {}, linhas, cal, date(2026, 10, 7), resumos)
-    esperado = sum(hub._q_de(l) for l in linhas if l.get("status") == "pendente" and l.get("semana_plano") == 4)
-    sem4 = re.search(r'<section class="qd-sem" data-secao="4".*?</section>', pagina, re.S).group(0)
-    assert "<p class=\"qd-qsem\">Questões da semana: <b>%d</b>" % esperado in sem4
-    # s222: o numero de resumos acompanha o plano real (31 -> 30 ao concluir a t40); mede a forma, nao a contagem
-    assert re.search(r'<span data-nrot>tarefas?</span> · \d+ resumos?</span></h3>', sem4), "o lote 1 e a S4"
+    semanas = [k for k in _q_teoria(pagina) if k.isdigit()]
+    if not semanas:
+        pytest.skip("VIVO: plano real sem semana na Teoria de 07/10 -- total por semana não medido")
+    print(f"  semanas na Teoria: {semanas}")
+    # ⚰️ 10/10/2026 (part-2b): `re.search(... data-secao="4" ...).group(0)` -- só a S4, que levantava
+    # quando ela saía da página -- e o cabeçalho da S4 obrigado a ter resumo (s222: "31 -> 30 ao concluir
+    # a t40"). A forma vale agora para toda semana, com ou sem resumo.
+    assert _semanas_divergentes(pagina, linhas, resumos) == []
     assert not re.search(r"\d+ questões</span></h3>", pagina), "nenhum cabecalho soma questoes"
+
+
+def test_gemeo_semana_com_total_ou_resumos_errados_e_acusada():
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_semanas_divergentes` sobre o quadro sintético
+    (`test_semana_conta_tarefas_e_resumos_e_diz_o_total_real_do_plano` é o golden dele). Correto, nada a
+    acusar; a soma PARCIAL do s218 plantada na S4 e a contagem de resumos errada são acusadas."""
+    pagina, _ = _quadro()
+    resumos = [R_TB, R_HAS, R_PN]
+    assert _semanas_divergentes(pagina, PLANO, resumos) == []
+    parcial = pagina.replace("Questões da semana: <b>178</b>", "Questões da semana: <b>69</b>")
+    assert parcial != pagina
+    assert _semanas_divergentes(parcial, PLANO, resumos) == [("4", "questões", 69, 178)]
+    um = pagina.replace("tarefas</span> · 2 resumos</span>", "tarefas</span> · 1 resumo</span>")
+    assert um != pagina
+    assert _semanas_divergentes(um, PLANO, resumos) == [("4", "resumos", 1, 2)]
 
 
 # ======================================================================== 5. manifesto e build
@@ -343,16 +455,35 @@ def _q_teoria(pagina):
     return saida
 
 
-def _confere_com_o_painel(linhas, cal, hoje, pagina):
+def _divergencias_painel(linhas, cal, hoje, pagina):
+    """(panorama | None, q da Teoria, [(semana, campo, na Teoria, no Painel)]): a semana corrente do Painel
+    (`q_abertas`, que SOMA as atrasadas) e cada semana da rota contra a linha "Questões" da Teoria. A
+    corrente do Painel sem seção na Teoria também diverge (part-2b: antes, `KeyError`). [] = as duas
+    telas dizem o mesmo. O vivo e o gêmeo passam por aqui."""
     from tools import plano
     pan = plano.panorama(linhas, cal, hoje)
     q = _q_teoria(pagina)
+    if pan is None:
+        return None, q, []
+    divergencias = []
     atual = str(pan["semana"])
-    corrente = q[atual][1] if q[atual][1] is not None else q[atual][0]
-    assert corrente == pan["q_abertas"], "a semana corrente: o Painel soma as atrasadas"
+    if atual not in q:
+        divergencias.append((atual, "seção", None, pan["q_abertas"]))
+    else:
+        corrente = q[atual][1] if q[atual][1] is not None else q[atual][0]
+        if corrente != pan["q_abertas"]:
+            divergencias.append((atual, "corrente", corrente, pan["q_abertas"]))
     for r in pan["rota"]:
-        if str(r["semana"]) in q:
-            assert q[str(r["semana"])][0] == r["q"], r["semana"]
+        semana = str(r["semana"])
+        if semana in q and q[semana][0] != r["q"]:
+            divergencias.append((semana, "rota", q[semana][0], r["q"]))
+    return pan, q, divergencias
+
+
+def _confere_com_o_painel(linhas, cal, hoje, pagina):
+    pan, q, divergencias = _divergencias_painel(linhas, cal, hoje, pagina)
+    assert pan is not None, "o plano sintético tem semana corrente"
+    assert divergencias == [], "a semana corrente: o Painel soma as atrasadas -- %s" % divergencias
     return pan, q
 
 
@@ -371,14 +502,59 @@ def test_total_da_semana_na_teoria_e_o_do_painel_com_e_sem_atrasadas():
     assert _q_teoria(pagina)["4"] == (78, None), "sem atrasada, um numero so"
 
 
-def test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana():
+@pytest.mark.vivo
+def test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana(monkeypatch):
+    """O plano REAL: a Teoria e o Painel dizem o mesmo total por semana (`_divergencias_painel`) -- a
+    corrente com as atrasadas, as da rota sem elas. Part-2b: a corrente do Painel sem seção na Teoria
+    vira divergência nomeada (antes, `KeyError`), e o plano sem semana corrente pula.
+
+    Pula com motivo (`VIVO:`) sem banco, sem plano ou sem semana corrente; a guarda vem antes de
+    qualquer conexão e o `db.DB_PATH` aponta para o banco que ela conferiu."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- Teoria x Painel no plano real não medido")
+    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
     linhas, aviso = hub._ler_plano()
     if aviso or not linhas:
-        pytest.skip("plano real indisponivel: Teoria x Painel nao conferido (skip declarado)")
+        pytest.skip("VIVO: plano real indisponível (%s) -- Teoria x Painel não medido" % (aviso or "vazio"))
     cal = hub.calendario_trilha()
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     resumos, _ = hub.coletar_resumos(ROOT)
     aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
     hoje = date(2026, 10, 7)
     pagina, _ = hub.html_quadro_de(aulas, reg, {}, linhas, cal, hoje, resumos)
-    _confere_com_o_painel(linhas, cal, hoje, pagina)
+    pan, _q, divergencias = _divergencias_painel(linhas, cal, hoje, pagina)
+    if pan is None:
+        pytest.skip("VIVO: plano real sem semana corrente em 07/10 -- Teoria x Painel não medido")
+    assert divergencias == [], "Teoria x Painel: %s" % divergencias
+
+
+def test_gemeo_teoria_que_diverge_do_painel_e_acusada():
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_divergencias_painel` sobre o quadro sintético
+    (`test_total_da_semana_na_teoria_e_o_do_painel_com_e_sem_atrasadas` cobre as atrasadas). As duas
+    telas batendo, nada a acusar; a Teoria com outro número na semana corrente, ou sem a seção dela,
+    é acusada."""
+    hoje = date(2026, 10, 7)
+    pagina, _ = _quadro()
+    pan, _q, div = _divergencias_painel(PLANO, CAL, hoje, pagina)
+    assert pan["semana"] == 4 and div == [], div
+    torta = pagina.replace("Questões da semana: <b>178</b>", "Questões da semana: <b>69</b>")
+    assert _divergencias_painel(PLANO, CAL, hoje, torta)[2] == [("4", "corrente", 69, 178)]
+    sem_s4 = re.sub(r'<section class="qd-sem" data-secao="4".*?</section>', "", pagina, flags=re.S)
+    assert _divergencias_painel(PLANO, CAL, hoje, sem_s4)[2] == [("4", "seção", None, 178)]
+
+
+@pytest.mark.parametrize("vivo", ["test_registro_real_do_lote_existe_inteiro_e_sem_slug_repetido",
+                                  "test_semana_4_do_plano_real_diz_a_soma_das_pendentes",
+                                  "test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana"])
+def test_vivos_pulam_com_motivo_sem_o_dado(tmp_path, monkeypatch, vivo):
+    """DoD 1 da part-2b: sem o registro de resumos e sem o banco do plano, cada vivo PULA com motivo
+    `VIVO:` -- não volta verde nem cai em asserção sobre dado vazio -- e não cria o banco."""
+    import inspect
+    monkeypatch.setattr(hub, "RESUMOS_REG", "core/nao-existe-hub-resumos.json")
+    ausente = tmp_path / "sem-banco" / "ipub.db"
+    monkeypatch.setitem(globals(), "REAL_DB", ausente)
+    fn = globals()[vivo]
+    kwargs = {"monkeypatch": monkeypatch} if "monkeypatch" in inspect.signature(fn).parameters else {}
+    with pytest.raises(pytest.skip.Exception, match=r"VIVO:"):
+        fn(**kwargs)
+    assert not ausente.exists() and not ausente.parent.exists(), "a guarda tem de vir antes do connect"

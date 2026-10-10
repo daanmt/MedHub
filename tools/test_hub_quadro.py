@@ -147,45 +147,81 @@ def _item(pagina, seletor):
 # 1. Registro versionado
 # --------------------------------------------------------------------------
 
+#: O banco que o vivo das RDs mede para o plano (part-2b). Constante de módulo para o teste de skip
+#: apontá-la para um arquivo inexistente.
+REAL_DB = ROOT / "ipub.db"
+
+
+def _defeitos_do_registro(raiz):
+    """(registro, defeitos) do `core/hub_quadro.json` de `raiz` contra as aulas de `raiz/artifacts/` --
+    a FORMA (part-2b), nunca o conjunto de slugs. Lido por `hub.ler_quadro`, que já falha ALTO em tipo,
+    `tarefas`, `bloco`, `disciplinas` e `resumos` malformados. [] = ok. O vivo e o gêmeo passam por aqui."""
+    raiz = Path(raiz)
+    reg = hub.ler_quadro(raiz / hub.QUADRO_REG)
+    reais = {hub.slug_de(p.name) for p in (raiz / "artifacts").glob(hub.PADRAO_AULAS)}
+    defeitos = []
+    # Aula SEM tarefa nao e defeito: e estado previsto pelo hub ("Outras aulas", docstring do topo).
+    # O audit da part-2b (10/10/2026) tirou a regra "toda aula liga a tarefa", que poria a suite
+    # vermelha num registro legitimo -- a classe que esta part remove.
+    for slug, v in sorted(reg.items()):
+        tid = v.get("tarefa_id")
+        if tid is not None and (isinstance(tid, bool) or not isinstance(tid, int)):
+            defeitos.append("`tarefa_id` não inteiro em %s: %r" % (slug, tid))
+        if v["tipo"] == "revisao" and not slug.startswith("rd-"):
+            defeitos.append("revisão fora do padrão rd-*: %s" % slug)              # s210
+    defeitos += ["aula real sem tipo no registro: %s" % s for s in sorted(reais - set(reg))]
+    defeitos += ["registro de aula sem arquivo em artifacts/: %s" % s for s in sorted(set(reg) - reais)]
+    return reg, defeitos
+
+
+@pytest.mark.vivo
 def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
-    """s195: s17, cancer-de-mama, hernias e autopsia foram para artifacts/arquivo/ e sairam do
-    registro; s204: raciocinio-diagnostico (tarefa #877 concluida por leitura) tambem. Restam
-    dmg e topicos-pediatria em aberto, ligadas as tarefas do plano; s206: entra
-    prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id); s212: entra dossie-uerj
-    (tipo analise), o documento do bloco Documentacao do painel; s213: entram autopsia-uerj-2021
-    (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530; s214: entram
-    as aulas-base da S4 que CUMPREM as tarefas sem lista #768, #367 e #590 (como a REMIT) e a RD
-    rd-ventilacao-degrau-0, prometida ao operador na assinatura da rd-intensiva-sepse; s217: entra
-    tb-360, que CUMPRE a tarefa custom #1797 (Tuberculose 360); s219: entram as 10 aulas das tarefas
-    sem aula da S4/S5 (#881 #878 #1796 #811 x2 #310 #777 #5425 #5424 e #876+#879)."""
-    reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
-    docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
-    assert docs == {"dossie-uerj", "autopsia-uerj-2021"}
-    assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria",
-                                     "remit-cicatrizacao", "aorta-cardiomiopatias-pericardio",
-                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia", "tb-360",
-                                     "rastreamento-programas-br", "mccp-decisao-compartilhada",
-                                     "cronicas-aps-metas", "anemias-macrociticas", "oncohemato-cronicas",
-                                     "insuficiencia-adrenal", "iamcsst", "idoso-amg-polifarmacia",
-                                     "rodapes-retorno-alto", "imagem-obstetrica"}
-    assert reg["idoso-amg-polifarmacia"]["tarefas"] == [876, 879]
-    assert [reg[s]["tarefa_id"] for s in ("rastreamento-programas-br", "mccp-decisao-compartilhada",
-                                          "cronicas-aps-metas", "anemias-macrociticas",
-                                          "oncohemato-cronicas", "insuficiencia-adrenal", "iamcsst",
-                                          "rodapes-retorno-alto", "imagem-obstetrica")] == \
-        [881, 878, 1796, 811, 811, 310, 777, 5425, 5424]
-    assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
-    assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
-    assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
-    assert reg["remit-cicatrizacao"]["tarefa_id"] == 530
-    assert reg["tb-360"]["tarefa_id"] == 1797
-    assert [reg[s]["tarefa_id"] for s in ("aorta-cardiomiopatias-pericardio",
-                                          "tireoide-nodulo-cancer", "vulva-vagina-anatomia")] == [768, 367, 590]
-    reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
-    assert reais == set(reg), "aula real sem tipo no registro (ou registro de aula arquivada)"
+    """O registro REAL tem a forma de `_defeitos_do_registro`: `tarefa_id` (a tarefa que a aula CUMPRE),
+    quando existe, é inteiro; revisão = slug rd-* (s210); registro
+    e disco concordam (toda aula de `artifacts/` tem tipo; nenhum registro de aula que saiu). Sem o
+    conjunto de slugs (part-2b): registrar RD ou aula nova não derruba a suíte.
+
+    ⚰️ 10/10/2026 (part-2b): o conjunto exato de slugs por tipo e os `tarefa_id`/`tarefas` de 15 aulas,
+    re-escritos a cada sessão que registrava ou arquivava aula (s195, s204, s206, s212, s213, s214,
+    s217, s219) -- era o conjunto do dado real, não forma. Contagem é relatório (o print).
+
+    Pula com motivo (`VIVO:`) sem o registro ou sem aula em `artifacts/`."""
+    if not (ROOT / hub.QUADRO_REG).is_file():
+        pytest.skip("VIVO: %s ausente -- forma do registro real não medida" % hub.QUADRO_REG)
+    if not list((ROOT / "artifacts").glob(hub.PADRAO_AULAS)):
+        pytest.skip("VIVO: artifacts/aula-*.html ausentes -- registro x disco não medido")
+    reg, defeitos = _defeitos_do_registro(ROOT)
+    por_tipo = {t: sum(v["tipo"] == t for v in reg.values()) for t, _r in hub.TIPOS_QUADRO}
+    print(f"  registro: {len(reg)} itens {por_tipo}")
+    assert defeitos == [], defeitos
     # s216 (part-3, decisao do operador em 05/10): daqui em diante nada vai para artifacts/arquivo/ -- a
     # aula concluida fica na Biblioteca da Teoria; as 5 ja arquivadas voltam sob pedido, uma a uma
+
+
+def test_gemeo_hermetico_do_registro_acusa_cada_forma_plantada(tmp_path):
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_defeitos_do_registro` sobre um repo sintético
+    com um defeito plantado de cada -- `tarefa_id` em texto, revisão fora de `rd-*`, aula do disco sem
+    registro e registro sem arquivo. Os bem-formados (RD, aula que cumpre, aula que prepara, aula SEM
+    tarefa -- "Outras aulas" --, análise) não são acusados. Tipo inválido e `tarefas` malformada falham ALTO já na leitura:
+    `test_tipo_invalido_ou_tarefas_malformadas_falham_alto`; a aula nova no build:
+    `test_slug_desconhecido_entra_como_aula_e_avisa`."""
+    itens = {"rd-ok": {"tipo": "revisao", "disciplinas": ["Cirurgia"]},
+             "revisao-solta": {"tipo": "revisao", "disciplinas": ["Cirurgia"]},
+             "aula-cumpre": {"tipo": "aula", "tarefa_id": 26},
+             "aula-prepara": {"tipo": "aula", "tarefas": [49]},
+             "aula-solta": {"tipo": "aula"},
+             "aula-texto": {"tipo": "aula", "tarefa_id": "26"},
+             "doc": {"tipo": "analise"},
+             "arquivada": {"tipo": "aula", "tarefa_id": 40}}
+    (tmp_path / "core").mkdir()
+    (tmp_path / hub.QUADRO_REG).write_text(json.dumps({"itens": itens}), encoding="utf-8")
+    _repo(tmp_path, slugs=[s for s in itens if s != "arquivada"] + ["nova"])
+    _reg, defeitos = _defeitos_do_registro(tmp_path)
+    assert defeitos == [
+        "`tarefa_id` não inteiro em aula-texto: '26'",
+        "revisão fora do padrão rd-*: revisao-solta",
+        "aula real sem tipo no registro: nova",
+        "registro de aula sem arquivo em artifacts/: arquivada"], defeitos
 
 
 def test_slug_desconhecido_entra_como_aula_e_avisa(tmp_path):
@@ -1282,34 +1318,128 @@ def test_bloco_fora_do_vocabulario_falha_alto(tmp_path):
             hub.ler_quadro(arq)
 
 
-def test_registro_real_rds_com_disciplinas_e_fontes_no_disco():
+def _defeitos_das_rds(reg, raiz):
+    """[defeitos] das RDs (`tipo: revisao`) e das rotas da Teoria no registro `reg`, contra os resumos de
+    `raiz/resumos/` -- a FORMA da tabela do brief da s218 (part-2b), sem contagem: toda RD declara
+    `disciplinas` (>= 1, sem repetir) e `resumos` (>= 1, todos no disco), não usa mais `bloco` nem cai em
+    "Várias áreas"; todo item da Teoria tem rota (tarefa, `disciplinas` ou `bloco`). [] = ok."""
+    defeitos = []
+    for slug, v in sorted(reg.items()):
+        if v["tipo"] != "revisao":
+            continue
+        discs = v.get("disciplinas") or []
+        if not discs or len(set(discs)) != len(discs):
+            defeitos.append("RD sem `disciplinas` (ou com disciplina repetida): %s" % slug)
+        if not v.get("resumos"):
+            defeitos.append("RD sem `resumos` de origem: %s" % slug)
+        if "bloco" in v:
+            defeitos.append("RD com `bloco` (leitura antiga, ⚰️ s218): %s" % slug)
+        if any(area == "VARIAS" for area, _d in hub.lugares_do_registro(v, {})):
+            defeitos.append("RD em 'Várias áreas': %s" % slug)
+    defeitos += hub.avisos_fontes_rd(reg, raiz)
+    defeitos += ["item da Teoria sem tarefa e sem `disciplinas`: %s" % s for s, v in sorted(reg.items())
+                 if v["tipo"] != "analise" and v.get("tarefa_id") is None and not v.get("tarefas")
+                 and not v.get("disciplinas") and not v.get("bloco")]
+    return defeitos
+
+
+@pytest.mark.vivo
+def test_registro_real_rds_com_disciplinas_e_fontes_no_disco(monkeypatch):
     """s218 (a tabela do brief, conferida no <title>/h1 e no "Fonte:" de cada artifacts/aula-rd-*.html): toda
     RD declara `disciplinas` (>= 1, do vocabulario) e `resumos` (de onde saiu), e todo resumo-fonte existe no
     disco. A guarda que alcanca a PROXIMA RD: item da Teoria sem tarefa e sem `disciplinas` -- a suite do
-    commit acusa antes do hub; nenhuma RD cai mais em "Varias areas" (⚰️ s218)."""
+    commit acusa antes do hub; nenhuma RD cai mais em "Varias areas" (⚰️ s218).
+
+    Part-2b (10/10/2026): a forma da tabela é a regra de `_defeitos_das_rds`, medida em TODA RD, sem
+    contagem; com o plano real, nenhum item do registro cai em "Sem área". Pula com motivo (`VIVO:`) sem
+    o registro ou sem `resumos/`; sem o banco, mede o registro e pula antes do plano -- a guarda vem antes
+    de qualquer conexão e o `db.DB_PATH` aponta para o banco que ela conferiu."""
+    if not (ROOT / hub.QUADRO_REG).is_file():
+        pytest.skip("VIVO: %s ausente -- RDs do registro real não medidas" % hub.QUADRO_REG)
+    if not (ROOT / hub.DIR_RESUMOS).is_dir():
+        pytest.skip("VIVO: %s/ ausente -- resumos-fonte das RDs não medidos" % hub.DIR_RESUMOS)
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    rds = {s: v for s, v in reg.items() if v["tipo"] == "revisao"}
-    assert len(rds) == 20
-    assert {s: v["disciplinas"] for s, v in rds.items() if s in ("rd-intensiva-sepse", "rd-neoplasias-tgi",
-                                                                  "rd-go-0610", "rd-ortopedia-cirurgia")} == {
-        "rd-intensiva-sepse": ["Pneumologia", "Infectologia"], "rd-neoplasias-tgi": ["Gastroenterologia", "Cirurgia"],
-        "rd-go-0610": ["Obstetrícia"], "rd-ortopedia-cirurgia": ["Cirurgia"]}
-    assert len(rds["rd-pilulas"]["disciplinas"]) == 7 and len(rds["rd-pilulas-0510"]["resumos"]) == 8
-    assert all(v.get("disciplinas") and v.get("resumos") and "bloco" not in v for v in rds.values())
-    assert hub.avisos_fontes_rd(reg, ROOT) == [], "resumo-fonte de RD que nao existe no disco"
-    sem_rota = [s for s, v in reg.items() if v["tipo"] != "analise" and v.get("tarefa_id") is None
-                and not v.get("tarefas") and not v.get("disciplinas") and not v.get("bloco")]
-    assert sem_rota == [], "item da Teoria sem tarefa e sem `disciplinas`: %s" % sem_rota
-    assert all(a != "VARIAS" for v in rds.values() for a, _d in hub.lugares_do_registro(v, {}))
+    # ⚰️ 10/10/2026 (part-2b): `len(rds) == 20`, as `disciplinas` de 4 RDs nomeadas e os tamanhos 7 e 8 da
+    # rd-pilulas e da rd-pilulas-0510 -- a tabela do brief da s218 re-contada a cada RD registrada (o caso
+    # s216: 2 FAILED). Contagem é relatório (o print); a forma é `_defeitos_das_rds`.
+    print("  registro: %d RDs" % sum(v["tipo"] == "revisao" for v in reg.values()))
+    defeitos = _defeitos_das_rds(reg, ROOT)
+    assert defeitos == [], defeitos
     doc = json.loads((ROOT / hub.QUADRO_REG).read_text(encoding="utf-8"))["_doc"]
     assert "s218" in doc and "disciplinas" in doc and "⚰️" in doc
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- área das aulas com tarefa no plano real não medida "
+                    "(o registro foi medido)")
+    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
     linhas, aviso = hub._ler_plano()
     if aviso or not linhas:
-        pytest.skip("plano real indisponivel: area das aulas com tarefa nao conferida (skip declarado)")
+        pytest.skip("VIVO: plano real indisponível (%s) -- área das aulas com tarefa não medida"
+                    % (aviso or "vazio"))
     aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
     pagina, avisos = hub.html_quadro_de(aulas, reg, {}, linhas, {}, date(2026, 10, 6))
     assert not [a for a in avisos if "grande area" in a], avisos
     assert 'data-area="SEM"' not in pagina and 'data-area="VARIAS"' not in pagina
+
+
+def test_gemeo_hermetico_das_rds_acusa_cada_forma_plantada(tmp_path):
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_defeitos_das_rds` sobre um registro sintético e
+    uma pasta `resumos/` com um arquivo só. A RD bem-formada e a análise passam; cada defeito plantado é
+    acusado pelo slug. A parte do plano (item sem grande área no quadro) tem gêmeo próprio:
+    `test_item_sem_area_cai_em_sem_area_e_o_build_e_o_check_acusam_o_slug`."""
+    (tmp_path / "resumos" / "Cirurgia").mkdir(parents=True)
+    (tmp_path / "resumos" / "Cirurgia" / "Hérnias.md").write_text("# Hérnias\n", encoding="utf-8")
+    ok = {"tipo": "revisao", "disciplinas": ["Cirurgia"], "resumos": ["Cirurgia/Hérnias.md"]}
+    reg = {"rd-ok": ok,
+           "rd-repetida": dict(ok, disciplinas=["Cirurgia", "Cirurgia"]),
+           "rd-sem-fonte": {"tipo": "revisao", "disciplinas": ["Cirurgia"]},
+           "rd-fonte-sumida": dict(ok, resumos=["Cirurgia/Sumiu.md"]),
+           "rd-com-bloco": dict(ok, bloco="CIR"),
+           "rd-varias": {"tipo": "revisao", "bloco": "VARIAS", "resumos": ["Cirurgia/Hérnias.md"]},
+           "aula-solta": {"tipo": "aula"},
+           "doc": {"tipo": "analise"}}
+    assert _defeitos_das_rds(reg, tmp_path) == [
+        "RD com `bloco` (leitura antiga, ⚰️ s218): rd-com-bloco",
+        "RD sem `disciplinas` (ou com disciplina repetida): rd-repetida",
+        "RD sem `resumos` de origem: rd-sem-fonte",
+        "RD sem `disciplinas` (ou com disciplina repetida): rd-varias",
+        "RD com `bloco` (leitura antiga, ⚰️ s218): rd-varias",
+        "RD em 'Várias áreas': rd-varias",
+        "resumo-fonte inexistente na RD rd-fonte-sumida: resumos/Cirurgia/Sumiu.md -- corrija `resumos` em "
+        "core/hub_quadro.json",
+        "item da Teoria sem tarefa e sem `disciplinas`: aula-solta"]
+
+
+def _sem_dado(tmp_path, monkeypatch, quadro):
+    """Aponta o banco do vivo para um arquivo inexistente e, com `quadro=True`, o registro do quadro
+    também (part-2b). `quadro=False` deixa um registro SINTÉTICO mínimo (sem RD) em tmp_path, para o
+    vivo chegar até o plano sem depender do registro real. Devolve o caminho do banco ausente."""
+    if quadro:
+        monkeypatch.setattr(hub, "QUADRO_REG", "core/nao-existe-hub-quadro.json")
+    else:
+        sintetico = tmp_path / "hub_quadro.json"
+        sintetico.write_text(json.dumps({"_doc": "s218: `disciplinas` por RD; ⚰️ `bloco`", "itens": {}}),
+                             encoding="utf-8")
+        monkeypatch.setattr(hub, "QUADRO_REG", str(sintetico))   # absoluto: ROOT / absoluto = absoluto
+    ausente = tmp_path / "sem-banco" / "ipub.db"
+    monkeypatch.setitem(globals(), "REAL_DB", ausente)
+    return ausente
+
+
+@pytest.mark.parametrize("vivo,quadro", [
+    ("test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano", True),
+    ("test_registro_real_rds_com_disciplinas_e_fontes_no_disco", True),
+    ("test_registro_real_rds_com_disciplinas_e_fontes_no_disco", False),
+], ids=["registro-sem-registro", "rds-sem-registro", "rds-sem-banco"])
+def test_vivos_pulam_com_motivo_sem_o_dado(tmp_path, monkeypatch, vivo, quadro):
+    """DoD 1 da part-2b: sem o registro (ou, com ele, sem o banco do plano), cada vivo PULA com motivo
+    `VIVO:` -- não volta verde nem cai em asserção sobre registro vazio -- e não cria o banco."""
+    import inspect
+    ausente = _sem_dado(tmp_path, monkeypatch, quadro)
+    fn = globals()[vivo]
+    kwargs = {"monkeypatch": monkeypatch} if "monkeypatch" in inspect.signature(fn).parameters else {}
+    with pytest.raises(pytest.skip.Exception, match=r"VIVO:"):
+        fn(**kwargs)
+    assert not ausente.exists() and not ausente.parent.exists(), "a guarda tem de vir antes do connect"
 
 
 def test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa():

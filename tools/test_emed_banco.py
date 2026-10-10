@@ -656,24 +656,80 @@ def test_brief_le_o_catalogo_e_nao_carrega_copia():
         assert sum(o in brief for o in t["objetivos"]) <= 1, t["tema"]
 
 
-def test_objetivos_gravados_no_banco_real_cabem_no_catalogo():
-    """Leitura read-only do `ipub.db` real: todo objetivo gravado está na lista do tema da sua
-    lista ou é 'outro: ...'. Sem banco (CI), pula."""
-    import pytest
-    real = ROOT / "ipub.db"
-    if not real.is_file():
-        pytest.skip("sem ipub.db")
-    con = sqlite3.connect(f"file:{real}?mode=ro", uri=True)
+#: O banco que o vivo mede (part-2b). Constante de módulo para o teste de skip apontá-la para um
+#: arquivo inexistente.
+REAL_DB = ROOT / "ipub.db"
+
+
+def _objetivos_fora_do_catalogo(db_path, catalogo=None):
+    """(linhas com objetivo, [(lista, num, objetivo, problema)]) de `emed_solucoes` em `db_path`, lidas
+    em read-only e julgadas pela MESMA regra do writer (`db.problema_de_objetivo`); sem `catalogo`, o
+    `core/objetivos.json`. O vivo e o gêmeo hermético passam por aqui."""
+    con = sqlite3.connect(f"file:{Path(db_path).as_posix()}?mode=ro", uri=True)
     try:
         linhas = con.execute("SELECT lista, num, objetivo FROM emed_solucoes "
-                             "WHERE COALESCE(objetivo, '') <> ''").fetchall()
-    except sqlite3.OperationalError:
-        pytest.skip("banco sem emed_solucoes.objetivo")
+                             "WHERE COALESCE(objetivo, '') <> '' ORDER BY lista, num").fetchall()
     finally:
         con.close()
-    ruins = [(l, n, o) for l, n, o in linhas
-             if db.solucao_v2_problemas(_v2(n, lista=l, objetivo=o))]
-    assert ruins == []
+    cat = db.carregar_objetivos() if catalogo is None else catalogo
+    ruins = []
+    for lista, num, objetivo in linhas:
+        problema = db.problema_de_objetivo(lista, objetivo, cat)
+        if problema:
+            ruins.append((lista, num, objetivo, problema))
+    return linhas, ruins
+
+
+@pytest.mark.vivo
+def test_objetivos_gravados_no_banco_real_cabem_no_catalogo():
+    """Leitura read-only do `ipub.db` real: todo objetivo gravado está na lista fechada do tema da sua
+    lista ou é 'outro: <rótulo>'. FORMA, não conjunto (part-2b): pertencer ao catálogo versionado, que é
+    o conjunto PERMITIDO -- nunca bater com uma lista de objetivos tirada do banco. O gêmeo hermético
+    (`test_gemeo_objetivo_gravado_fora_do_catalogo_e_acusado`) planta o caso e exige a acusação.
+
+    Pula com motivo (`VIVO:`) sem o banco, sem a coluna ou sem objetivo gravado; a guarda vem antes de
+    qualquer conexão."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- objetivos gravados x core/objetivos.json não medidos")
+    try:
+        linhas, ruins = _objetivos_fora_do_catalogo(REAL_DB)
+    except sqlite3.OperationalError as e:
+        pytest.skip(f"VIVO: ipub.db sem emed_solucoes.objetivo ({e}) -- objetivos não medidos")
+    if not linhas:
+        pytest.skip("VIVO: ipub.db sem objetivo gravado em emed_solucoes -- catálogo não medido")
+    print(f"  objetivos: {len(linhas)} gravados, {len(ruins)} fora do catálogo")
+    assert ruins == [], f"objetivo gravado fora da lista fechada do tema: {ruins}"
+
+
+def test_gemeo_objetivo_gravado_fora_do_catalogo_e_acusado(db_sintetico, tmp_path, capsys):
+    """Gêmeo hermético do vivo acima (part-2b): o writer real grava 3 soluções com objetivo válido
+    HOJE (2 do catálogo, 1 'outro: <rótulo>'); depois o catálogo muda -- o caso que o gate do writer
+    não pega. Mesmo leitor, mesma regra: o objetivo que saiu da lista do tema e a lista que saiu do
+    catálogo são acusados; o 'outro: <rótulo>' nunca."""
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _v2(1))
+    _escrever(base, "solucoes", "t26_2", _v2(2, objetivo="DM prévio x DMG"))
+    _escrever(base, "solucoes", "t26_3", _v2(3, objetivo="outro: Prevenção de acidentes"))
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["novas"] == 3
+    linhas, ruins = _objetivos_fora_do_catalogo(db_sintetico)
+    assert len(linhas) == 3 and ruins == [], "com o catálogo real, nada a acusar"
+    encolhido = {"temas": [{"tema": "DMG", "listas": ["t26"], "objetivos": ["Indicação de insulina"]}]}
+    _l, ruins = _objetivos_fora_do_catalogo(db_sintetico, encolhido)
+    assert [(lista, num) for lista, num, _o, _p in ruins] == [("t26", 2)], ruins
+    assert "fora da lista fechada" in ruins[0][3]
+    _l, ruins = _objetivos_fora_do_catalogo(db_sintetico, {"temas": []})
+    assert [(lista, num) for lista, num, _o, _p in ruins] == [("t26", 1), ("t26", 2)], ruins
+    assert all("core/objetivos.json" in p for _l, _n, _o, p in ruins)
+
+
+def test_vivo_pula_com_motivo_sem_banco(tmp_path, monkeypatch):
+    """DoD 1 da part-2b: sem o banco, o vivo PULA com motivo `VIVO:` e não cria o arquivo."""
+    ausente = tmp_path / "ipub.db"
+    monkeypatch.setitem(globals(), "REAL_DB", ausente)
+    with pytest.raises(pytest.skip.Exception, match=r"VIVO:"):
+        test_objetivos_gravados_no_banco_real_cabem_no_catalogo()
+    assert not ausente.exists(), "a guarda tem de vir antes do connect"
 
 
 def test_writer_valida_objetivo_tambem_na_v1(tmp_path, monkeypatch, capsys):

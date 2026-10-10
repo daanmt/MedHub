@@ -22,7 +22,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import pytest
@@ -520,26 +520,135 @@ def test_extrair_lote_pela_cli(tmp_path):
     assert json.loads(destino.read_text(encoding="utf-8")) == lote
 
 
-def test_repo_real_monta_sem_problema(tmp_path):
-    """Regressao viva, read-only: as aulas e o painel REAIS de `artifacts/` e o plano REAL do
-    `ipub.db` montam sem link morto (a prova em PDF e caminho local: texto, nunca link).
-    Escreve so em tmp_path."""
+#: O banco que o vivo mede (part-2b). Constante de módulo para o teste de skip apontá-la para um
+#: arquivo inexistente.
+REAL_DB = ROOT / "ipub.db"
+_RE_SEM_TIPO = re.compile(r"aula '([^']+)' sem tipo")
+
+
+def _defeitos_do_hub(raiz, manifesto, problemas, avisos, pagina, quadro, atual):
+    """A FORMA do hub montado (part-2b), sem contagem do dado real; [] = ok. O vivo e o gêmeo passam
+    por aqui.
+
+    1. nenhum problema do `--check` (link morto, fonte inexistente, teto de entradas);
+    2. manifesto e disco concordam: as aulas publicadas existem em `artifacts/` e são min(disco, cap);
+    3. o aviso "sem tipo" diz a verdade: nomeia exatamente as aulas publicadas fora do registro (a aula
+       nova ainda sem registro é estado de passagem -- o build avisa por desenho; a concordância
+       registro x disco é do `test_hub_quadro`);
+    4. nenhum item REGISTRADO cai no grupo "Sem área" (s217, P17);
+    5. a semana corrente do quadro (`atual`, None = sem semana) tem seção na página."""
+    defeitos = list(problemas)
+    no_disco = {hub.slug_de(p.name) for p in (Path(raiz) / "artifacts").glob(hub.PADRAO_AULAS)}
+    publicadas = {p[len(hub.PREFIXO_AULA):-len(".html")] for p, fonte in manifesto["files"].items()
+                  if p.startswith(hub.PREFIXO_AULA) and fonte is not None}
+    if manifesto["aulas"] != min(len(no_disco), hub.CAP_AULAS) or len(publicadas) != manifesto["aulas"]:
+        defeitos.append("manifesto com %d aulas (%d em files), disco com %d (cap %d)"
+                        % (manifesto["aulas"], len(publicadas), len(no_disco), hub.CAP_AULAS))
+    if publicadas - no_disco:
+        defeitos.append("aula publicada sem arquivo em artifacts/: %s" % sorted(publicadas - no_disco))
+    sem_tipo = {m.group(1) for m in map(_RE_SEM_TIPO.search, avisos) if m}
+    if sem_tipo != publicadas - set(quadro):
+        defeitos.append("aviso 'sem tipo' %s != aulas publicadas fora do registro %s"
+                        % (sorted(sem_tipo), sorted(publicadas - set(quadro))))
+    sem_area = [s for s in hub.sem_area_na_pagina(pagina) if s not in sem_tipo]
+    if sem_area:
+        defeitos.append("item registrado no grupo 'Sem área': %s" % sem_area)
+    if atual is not None and not re.search(r'<section class="qd-sem" data-secao="%d"' % atual, pagina):
+        defeitos.append("semana corrente %d sem seção no quadro" % atual)
+    return defeitos
+
+
+@pytest.mark.vivo
+def test_repo_real_monta_sem_problema(tmp_path, monkeypatch):
+    """Regressão viva, read-only: as aulas, o painel, os registros e o plano REAIS montam o hub com a
+    FORMA de `_defeitos_do_hub` -- sem link morto (a prova em PDF é caminho local: texto, nunca link),
+    manifesto e disco concordando, avisos que dizem a verdade, nenhum item registrado sem área e a
+    semana corrente com seção. Sem contagem do dado real (part-2b): o operador concluir tarefa ou criar
+    aula não derruba a suíte. Escreve só em tmp_path.
+
+    Pula com motivo (`VIVO:`) sem banco, sem plano, sem registro ou sem aula; a guarda vem antes de
+    qualquer conexão (sem ela o plano degradava para [] e o teste caía no `re.search` da semana) e o
+    `db.DB_PATH` aponta para o banco que ela conferiu (há suítes que o atribuem à mão)."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- o hub real com o plano real não foi montado")
+    if not (ROOT / hub.QUADRO_REG).is_file():
+        pytest.skip("VIVO: %s ausente -- o hub real não foi montado" % hub.QUADRO_REG)
+    if not list((ROOT / "artifacts").glob(hub.PADRAO_AULAS)):
+        pytest.skip("VIVO: artifacts/aula-*.html ausentes -- o hub real não foi montado")
+    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
+    linhas, aviso = hub._ler_plano()
+    if aviso or not linhas:
+        pytest.skip("VIVO: plano real indisponível (%s) -- o hub real não foi montado" % (aviso or "vazio"))
+    calendario, _aviso = hub._ler_calendario()
+    quadro = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     manifesto, problemas, avisos = hub.construir(_lote(), raiz=ROOT, out=tmp_path / "hub",
                                                  agora=AGORA,
-                                                 data_fn=lambda p, r: ("2026-09-22", None))
-    assert problemas == []
-    assert not [a for a in avisos if "sem tipo" in a or "candidata a arquivo" in a], avisos
-    # s217 (P17): com o plano real, nenhum item da Teoria cai no grupo "Sem area" da Biblioteca
-    assert not [a for a in avisos if "grande area" in a], avisos
+                                                 data_fn=lambda p, r: ("2026-09-22", None),
+                                                 quadro=quadro, plano_linhas=linhas,
+                                                 calendario=calendario)
     pagina = (tmp_path / "hub" / "index.html").read_text(encoding="utf-8")
-    assert hub.sem_area_na_pagina(pagina) == []
-    assert re.search(r'<section class="qd-sem" data-secao="\d+"', pagina), "semanas do plano real"
+    pendentes = [l for l in linhas if l.get("status") == "pendente" and l.get("semana_plano") is not None
+                 and int(l["semana_plano"]) <= hub.SEMANA_FINAL_QUADRO]
+    atual = hub.semana_atual(calendario, AGORA.date(), pendentes)
+    # ⚰️ 10/10/2026 (part-2b): `not avisos "sem tipo"`, `not avisos "grande area"` e
+    # `sem_area_na_pagina(pagina) == []` -- a aula nova ainda sem registro derrubava a suíte (o build a
+    # avisa por desenho; a concordância registro x disco é do test_hub_quadro). "candidata a arquivo"
+    # não existe desde a s216 (part-3). E `re.search(data-secao="\d+")` virou a semana CORRENTE com seção.
+    assert _defeitos_do_hub(ROOT, manifesto, problemas, avisos, pagina, quadro, atual) == []
     assert "questões" in pagina
-    reais = sorted(p.name for p in (ROOT / "artifacts").glob("aula-*.html"))
-    esperado = min(len(reais), hub.CAP_AULAS)
-    assert manifesto["aulas"] == esperado
-    for nome in reais[:esperado]:
-        assert "aulas/%s.html" % hub.slug_de(nome) in manifesto["files"]
+
+
+def test_gemeo_hermetico_do_repo_real_acusa_cada_forma_plantada(tmp_path):
+    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_defeitos_do_hub` sobre um repo sintético.
+    Montado limpo, a aula nova ainda sem registro só AVISA (estado de passagem, não defeito). Cada caso
+    plantado é acusado: item registrado sem área, aviso 'sem tipo' que mente, a seção da semana
+    corrente sumida da página e aula no disco fora do manifesto. O link morto e a fonte inexistente
+    têm gêmeos próprios: `test_check_acusa_fonte_inexistente` e `test_check_acusa_href_fora_do_manifesto`."""
+    raiz, data_fn = _repo(tmp_path, [("dmg", "DMG", "2026-09-20"), ("orfa", "Órfã", "2026-09-21"),
+                                     ("nova", "Nova", "2026-09-22")])
+    plano = [{"id": 26, "semana_plano": 1, "tema": "DMG", "q_previstas": 19.0, "url_lista": None,
+              "fonte": "rf", "status": "pendente", "bloco": "GO", "ordem": 26, "area": None}]
+    cal = {1: (date(2026, 9, 21), date(2026, 9, 27))}
+
+    def montar(quadro):
+        manifesto, problemas, avisos = hub.construir(
+            _lote(), raiz=raiz, out=raiz / "tmp" / "hub", agora=AGORA, data_fn=data_fn,
+            template_hub=TEMPLATE_HUB_REAL, template_player=TEMPLATE_PLAYER_REAL, quadro=quadro,
+            plano_linhas=plano, calendario=cal)
+        pagina = (raiz / "tmp" / "hub" / "index.html").read_text(encoding="utf-8")
+        return manifesto, problemas, avisos, pagina
+
+    so_dmg = {"dmg": {"tipo": "aula", "titulo": "DMG", "tarefas": [26]}}
+    m, p, a, pagina = montar(so_dmg)
+    assert _defeitos_do_hub(raiz, m, p, a, pagina, so_dmg, 1) == [], "aula sem registro só avisa"
+    # 1. item REGISTRADO sem tarefa, sem `disciplinas` e sem `bloco` cai em "Sem área"
+    com_orfa = dict(so_dmg, orfa={"tipo": "aula", "titulo": "Órfã"})
+    m2, p2, a2, pagina2 = montar(com_orfa)
+    d = _defeitos_do_hub(raiz, m2, p2, a2, pagina2, com_orfa, 1)
+    assert len(d) == 1 and "Sem área" in d[0] and "orfa" in d[0], d
+    # 2. o aviso "sem tipo" que cala uma aula fora do registro
+    calado = [x for x in a if "sem tipo" not in x]
+    d = _defeitos_do_hub(raiz, m, p, calado, pagina, so_dmg, 1)
+    assert len(d) == 2 and "sem tipo" in d[0] and "Sem área" in d[1], d
+    # 3. a semana corrente sem seção na página
+    sem_semana = pagina.replace('<section class="qd-sem" data-secao="1"', '<section class="qd-sem" data-secao="x"')
+    assert sem_semana != pagina
+    d = _defeitos_do_hub(raiz, m, p, a, sem_semana, so_dmg, 1)
+    assert d == ["semana corrente 1 sem seção no quadro"], d
+    # 4. aula nova no disco depois do build: manifesto e disco discordam
+    (raiz / "artifacts" / "aula-depois.html").write_text("<title>Depois</title>", encoding="utf-8")
+    d = _defeitos_do_hub(raiz, m, p, a, pagina, so_dmg, 1)
+    assert len(d) == 1 and "manifesto com 3 aulas" in d[0] and "disco com 4" in d[0], d
+
+
+def test_vivo_pula_com_motivo_sem_banco(tmp_path, monkeypatch):
+    """DoD 1 da part-2b: sem o banco, o vivo PULA com motivo `VIVO:` -- antes da part-2b, sem ele, o
+    plano degradava para [] e o teste caía no `re.search` da semana -- e não cria o arquivo."""
+    ausente = tmp_path / "sem-banco" / "ipub.db"
+    monkeypatch.setitem(globals(), "REAL_DB", ausente)
+    with pytest.raises(pytest.skip.Exception, match=r"VIVO:"):
+        test_repo_real_monta_sem_problema(tmp_path, monkeypatch)
+    assert not ausente.exists() and not ausente.parent.exists(), "a guarda tem de vir antes do connect"
 
 
 if __name__ == "__main__":

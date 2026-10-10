@@ -1387,3 +1387,4 @@
 {"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3e301a5a22a2", "alvo": "card#1721"}
 {"ts": "2026-10-10T13:37:14+00:00", "event": "resolved", "check": "erros_orfaos", "fingerprint": "2c472b59a8ec", "alvo": "2026-10-10"}
 {"ts": "2026-10-10T14:21:25+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "c65dfd9ce04c", "alvo": "session_222.md", "payload": {"detalhe": "campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-10-10T14:48:10+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "c65dfd9ce04c", "alvo": "session_222.md"}

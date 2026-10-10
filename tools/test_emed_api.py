@@ -11,6 +11,14 @@ A rede nunca e tocada: `_get_json` e trocado por paginas sinteticas no formato d
 MEDIDO na 1a corrida real (27/09/2026; era o do cic-0003 da s198, que pedia `exams[].institution`
 e recusou a t3 inteira). O GOLDEN (a lista real Saude do Idoso, t3) le a saida local gitignored e PULA
 sem ela -- nenhum texto EMED no git.
+
+HERMETICO x VIVO (Fase 0 Lote 0 part-2c, 10/10/2026):
+  - Hermetico: todos os testes menos um. Os que tocam banco usam o fixture `ambiente`
+    (`db.DB_PATH` num `vazio.db` em tmp_path); a lente 1 do golden (`test_golden_t3_saude_do_idoso`)
+    le so a captura local gitignored e pula sem ela -- nao abre banco.
+  - Vivo: `test_golden_t3_lente_banco` (`@pytest.mark.vivo`), a lente 2 do golden: captura x t3
+    no ipub.db real. Sem banco ou sem a t3 nele, `pytest.skip("VIVO: ...")`. Lane hermetica:
+    `python -m pytest tools/test_emed_api.py -m "not vivo"`.
 """
 import json
 import os
@@ -444,22 +452,43 @@ def test_docs_passam_pelo_ingerir(ambiente, monkeypatch, capsys):
 # ---------------------------------------------------------------- GOLDEN: a lista real (t3, Saude do Idoso)
 
 GOLDEN_T3 = ROOT / "tmp" / "emed_api" / "t3" / "questoes"
+# O banco que a lente 2 VIVA mede (Lote 0 part-2c). Constante de modulo para o harness poder
+# aponta-la para um arquivo inexistente e provar que, sem banco, a lente pula com motivo.
+REAL_DB = ROOT / "ipub.db"
+
+
+def _docs_golden_t3(prefixo=""):
+    """Os docs da captura local t3 (gitignored); sem ela, PULA -- as duas lentes dependem dela."""
+    if not GOLDEN_T3.is_dir():
+        pytest.skip(f"{prefixo}saida local da t3 ausente (gitignored): golden nao verificado")
+    return [json.loads(p.read_text(encoding="utf-8")) for p in GOLDEN_T3.glob("t3_*.json")]
 
 
 def test_golden_t3_saude_do_idoso():
-    """31 achadas = 30 gravadas + Q24 discursiva declarada (contagem confirmada pelo operador em
-    26/09); lente 2 = emed_id e gabarito de cada numero iguais aos da captura t3 da s199 no ipub.db."""
-    if not GOLDEN_T3.is_dir():
-        pytest.skip("saida local da t3 ausente (gitignored): golden nao verificado")
-    docs = [json.loads(p.read_text(encoding="utf-8")) for p in GOLDEN_T3.glob("t3_*.json")]
+    """Lente 1 (captura): 31 achadas = 30 gravadas + Q24 discursiva declarada (contagem confirmada
+    pelo operador em 26/09). Le SO a captura local gitignored -- nao toca banco nenhum; a lente 2
+    (banco) e a funcao `vivo` logo abaixo, para edicao de questao no banco nao derrubar esta."""
+    docs = _docs_golden_t3()
     assert sorted(d["num"] for d in docs) == [n for n in range(1, 32) if n != 24]
     for d in docs:
         assert set(d) <= set(emed_api.CHAVES_PUBLICAS) | set(emed_api.CHAVES_META)
         letras = [linha.split(")")[0] for linha in d["alternativas"].splitlines()]
         assert 4 <= len(letras) <= 5 and d["gabarito"] in letras
+
+
+@pytest.mark.vivo
+def test_golden_t3_lente_banco(monkeypatch):
+    """Lente 2 (banco, VIVA): emed_id e gabarito de cada numero da captura t3 iguais aos da t3 da
+    s199 no ipub.db real. A guarda vem ANTES de qualquer conexao (o `sqlite3.connect` do leitor
+    criaria um ipub.db vazio na raiz), e `db.DB_PATH` aponta para o banco que a guarda conferiu,
+    nao para o que um teste anterior tenha deixado. Sem banco ou sem a t3 nele: `VIVO:` skip."""
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- lente 2 do golden t3 (captura x banco) nao verificada")
+    docs = _docs_golden_t3("VIVO: ")
+    monkeypatch.setattr(db, "DB_PATH", str(REAL_DB))
     banco = db.emed_listar_questoes("t3")
     if not banco:
-        pytest.skip("t3 ausente do ipub.db: lente 2 nao verificada")
+        pytest.skip("VIVO: t3 ausente do ipub.db -- lente 2 do golden t3 nao verificada")
     c = emed_api.conferir(docs, banco)
     assert (len(c["iguais"]), c["divergentes"], c["so_no_banco"], c["so_na_api"]) == (30, {}, [], [])
 

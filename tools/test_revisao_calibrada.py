@@ -1,8 +1,19 @@
 """test_revisao_calibrada.py — testes da feature Revisão Calibrada.
 
 Parte 1 (fundação de dados): schema, helpers roundtrip, seed, _find_resumo,
-craftsmanship. Read-only-safe: o roundtrip restaura o valor original; nenhum
-teste corrompe estado persistente. Partes 2/3 estendem este arquivo.
+craftsmanship. Partes 2/3 estendem este arquivo.
+
+HERMÉTICO x VIVO (Fase 0 Lote 0 part-2c, 10/10/2026):
+  - Hermético: TODAS as funções que tocam banco leem o banco sintético que
+    `_banco_sintetico()` cria antes da 1ª chamada (schema do `init_db` em diretório
+    temporário + o SEED + 1 card revisado). `db.DB_PATH`, o `DB_PATH` deste script e o
+    `review_radar.DB_PATH` apontam para ele, e `test_banco_sintetico` confere isso.
+  - Vivo: NENHUMA função. Um sentinela em `sqlite3.connect` recusa e registra toda
+    conexão ao ipub.db real; `test_nenhuma_conexao_no_real` exige 0 no fim.
+  - Fora do banco, a suíte lê arquivos VERSIONADOS do repo (resumos/, contrato,
+    .claude/commands/, AGENTE.md, app/**/*.py) -- documental, não dado do operador.
+Script-style (fora do `python_files`): roda só pelo `test_pytest_bridge.py`, por exit
+code; marcador de pytest não vale aqui, por isso o banco é próprio e não `-m vivo`.
 
 Uso: python tools/test_revisao_calibrada.py
 """
@@ -16,6 +27,36 @@ try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
     pass
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# O banco do operador. Esta suíte NÃO o lê (Lote 0 part-2c): só existe aqui para o
+# sentinela abaixo reconhecê-lo e recusar a conexão.
+REAL_DB = os.path.join(ROOT, "ipub.db")
+
+
+def _mesmo_arquivo(a, b):
+    return os.path.normcase(os.path.abspath(os.fspath(a))) == os.path.normcase(os.path.abspath(os.fspath(b)))
+
+
+# Sentinela (Lote 0 part-2c): toda conexão SQLite do processo passa por aqui. Conexão ao
+# ipub.db real é registrada e RECUSADA -- nada lê nem grava o banco do operador, nem um
+# módulo com `DB_PATH` próprio que tenha escapado do redirecionamento. Instalado ANTES de
+# importar app.utils.db/day_plan, para valer também para o que rodar na importação.
+_conexoes_no_real = []
+_connect_original = sqlite3.connect
+
+
+def _connect_vigiado(database, *args, **kwargs):
+    alvo = database
+    if isinstance(alvo, str) and alvo.startswith("file:"):
+        alvo = alvo[len("file:"):].split("?", 1)[0]
+    if isinstance(alvo, (str, os.PathLike)) and _mesmo_arquivo(alvo, REAL_DB):
+        _conexoes_no_real.append(os.fspath(database))
+        raise RuntimeError(f"VIVO proibido nesta suíte: conexão ao ipub.db real ({database})")
+    return _connect_original(database, *args, **kwargs)
+
+
+sqlite3.connect = _connect_vigiado
 
 import importlib  # noqa: E402
 
@@ -34,8 +75,9 @@ except ModuleNotFoundError as e:
 gtc = importlib.import_module("app.engine.get_topic_context")  # noqa: E402
 import day_plan as dp  # noqa: E402  (tools/ está no sys.path quando rodado como script)
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(ROOT, "ipub.db")
+# O banco que TODAS as funções desta suíte leem: o sintético de `_banco_sintetico()`,
+# apontado antes da 1ª chamada (o `__main__` o cria primeiro). Nunca o ipub.db real.
+DB_PATH = None
 
 SEED = [
     ("Hepato", "Hepatites Virais", 8),
@@ -51,8 +93,12 @@ SEED = [
 # (Clausula 2 do contrato -- input explicito e soberano e pode recalibrar a qualquer momento).
 # Imunizacoes saiu do SEED na mesma sessao: 9/usuario -> 7/agente_inferida
 # (2 rounds de questoes analisados, ~83% estavel, gaps estreitos e remediados).
-# O SEED verifica a semente ORIGINAL intacta -- nao faz sentido travar um
-# tema que ja evoluiu pelo fluxo real de uso.
+# Lote 0 part-2c (10/10/2026): o encolhimento acabou. O SEED (valores intactos) agora é
+# GRAVADO no banco sintético por `_banco_sintetico()` em SQL cru, e o `test_seed` lê de
+# volta com `db.get_dificuldade` -- prova a regra de leitura (nota e fonte gravadas voltam
+# iguais), não o estado do operador, que evolui pelo fluxo real de uso e não é invariante
+# de código.
+SEED_AT = "2026-01-01 00:00:00"   # carimbo fixo do seed sintético; nenhum check o lê
 # subconjunto do seed que possui resumo .md homônimo (stem == tema)
 COM_RESUMO = ["Hepatites Virais", "Doenças Exantemáticas", "Cirurgia Infantil",
               "Síndromes Hipertensivas da Gestação"]
@@ -66,6 +112,76 @@ def check(cond, msg):
         falhas.append(msg)
 
 
+DB_SINTETICO = None
+
+
+def _banco_sintetico():
+    """Cria o banco da suíte (Lote 0 part-2c) e aponta para ele tudo o que a suíte lê.
+
+    Schema CANÔNICO do `tools/init_db.py` num diretório temporário (não copia DDL: acompanha
+    o schema quando ele muda; padrão de `tools/test_fuso_unico_leitores.py::banco`) + o SEED
+    inserido em SQL cru. Repontados: `db.DB_PATH`, o `DB_PATH` deste script (lido por
+    test_schema/test_readonly_inferencia e pelas cópias de roundtrip/barreiras/aula) e o
+    `review_radar.DB_PATH` (módulo com caminho próprio, alcançado por
+    `day_plan.montar_sinais`). O diretório é apagado na saída do processo."""
+    global DB_PATH, DB_SINTETICO
+    import atexit
+    import contextlib
+    import io
+    import shutil
+    import tempfile
+
+    import init_db
+    import review_radar
+
+    pasta = tempfile.mkdtemp(prefix="revcal_")
+    atexit.register(shutil.rmtree, pasta, ignore_errors=True)
+    caminho = os.path.join(pasta, "ipub.db")
+    init_db.DB_PATH = caminho
+    with contextlib.redirect_stdout(io.StringIO()):
+        init_db.init_db()
+    con = sqlite3.connect(caminho)
+    try:
+        con.executemany(
+            "INSERT INTO taxonomia_cronograma (area, tema, dificuldade, dificuldade_fonte, "
+            "dificuldade_at) VALUES (?, ?, ?, 'usuario', ?)",
+            [(area, tema, nota, SEED_AT) for area, tema, nota in SEED])
+        # 1 card revisado em Hepatites Virais (+ a revisão no revlog): sem ele as barreiras A
+        # do test_barreiras_preparar contariam 0 -> 0 e não morderiam um UPDATE em fsrs_cards.
+        con.execute(
+            "INSERT INTO flashcards (id, tema_id, tipo, frente_pergunta, verso_resposta, "
+            "quality_source) SELECT 1, id, 'conteudo', 'P?', 'R.', 'qualitative' "
+            "FROM taxonomia_cronograma WHERE area = 'Hepato' AND tema = 'Hepatites Virais'")
+        con.execute("INSERT INTO fsrs_cards (card_id, state, due, stability, reps, last_review) "
+                    "VALUES (1, 2, '2026-01-10 00:00:00', 5.0, 1, '2026-01-05 00:00:00')")
+        con.execute("INSERT INTO fsrs_revlog (card_id, rating, state, due, review_time) "
+                    "VALUES (1, 3, 2, '2026-01-10 00:00:00', '2026-01-05 00:00:00')")
+        con.commit()
+    finally:
+        con.close()
+    DB_SINTETICO = DB_PATH = caminho
+    db.DB_PATH = caminho
+    review_radar.DB_PATH = caminho
+    return caminho
+
+
+def test_banco_sintetico():
+    print("[Lote0-2c] banco sintético: nenhuma função lê o ipub.db real")
+    check(DB_SINTETICO is not None and db.DB_PATH == DB_SINTETICO,
+          f"db.DB_PATH aponta para o banco sintético (got {db.DB_PATH})")
+    check(not _mesmo_arquivo(db.DB_PATH, REAL_DB), "db.DB_PATH não é o ipub.db real")
+    check(DB_SINTETICO is not None and DB_PATH == DB_SINTETICO,
+          f"DB_PATH do script = sintético (got {DB_PATH})")
+    import review_radar
+    check(DB_SINTETICO is not None and review_radar.DB_PATH == DB_SINTETICO,
+          f"review_radar.DB_PATH (lido por montar_sinais) = sintético (got {review_radar.DB_PATH})")
+
+
+def test_nenhuma_conexao_no_real():
+    print("[Lote0-2c] sentinela: nenhuma conexão ao ipub.db real durante a suíte")
+    check(not _conexoes_no_real, f"0 conexões ao ipub.db real (got {len(_conexoes_no_real)})")
+
+
 def test_schema():
     print("[DoD-1a] schema")
     con = sqlite3.connect(DB_PATH)
@@ -76,7 +192,7 @@ def test_schema():
 
 
 def test_seed():
-    print("[DoD-2] seed (6 notas, fonte=usuario)")
+    print("[DoD-2] seed (notas do SEED, fonte=usuario, lidas do banco sintético)")
     for area, tema, nota in SEED:
         d = db.get_dificuldade(area, tema)
         check(d is not None and d["nota"] == nota and d["fonte"] == "usuario",
@@ -85,8 +201,8 @@ def test_seed():
 
 def test_roundtrip():
     print("[DoD-1b] helpers roundtrip")
-    # Isolado numa cópia temp do ipub.db (padrão de test_barreiras_preparar):
-    # os writes de teste NUNCA tocam o db real, mesmo se um crash cair no meio.
+    # Isolado numa cópia temp do banco sintético (padrão de test_barreiras_preparar):
+    # os writes de teste não sujam o banco da suíte, mesmo se um crash cair no meio.
     import shutil
     import tempfile
 
@@ -99,7 +215,7 @@ def test_roundtrip():
               "set tema inexistente -> False")
         check(db.get_dificuldade("XAREA", "XTEMA inexistente") is None,
               "get tema inexistente -> None")
-        # clamp + restauração (na cópia temp; o db real permanece byte-idêntico)
+        # clamp + restauração (na cópia temp; o banco da suíte permanece byte-idêntico)
         orig = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
         db.set_dificuldade("Hepato", "Hepatites Virais", 99, "usuario")
         got = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
@@ -213,7 +329,7 @@ def test_barreiras_preparar():
     import dormant_refresh as drf
 
     tmp = os.path.join(tempfile.gettempdir(), "ipub_test_barreiras.db")
-    shutil.copy(DB_PATH, tmp)                 # db isolado: NÃO suja o ipub.db real
+    shutil.copy(DB_PATH, tmp)                 # cópia do banco sintético: o da suíte fica limpo
     orig_path = db.DB_PATH
     db.DB_PATH = tmp
     try:
@@ -343,6 +459,8 @@ def test_f18c_registro_aula():
 
 
 if __name__ == "__main__":
+    _banco_sintetico()          # antes da 1ª chamada: tudo abaixo lê o banco sintético
+    test_banco_sintetico()
     # Parte 1
     test_schema()
     test_seed()
@@ -365,6 +483,7 @@ if __name__ == "__main__":
     # Parte 3 (sinal da aula: F18c + F21)
     test_f21_f18c_contrato()
     test_f18c_registro_aula()
+    test_nenhuma_conexao_no_real()
     print()
     if falhas:
         print(f"FALHOU: {len(falhas)} check(s)")

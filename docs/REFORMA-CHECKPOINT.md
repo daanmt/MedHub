@@ -1,9 +1,9 @@
-# REFORMA-CHECKPOINT — 10/10/2026 14:35 · sessão s223 · mantido pelo medhub, conferido pelo ai-eng a cada relatório
+# REFORMA-CHECKPOINT — 10/10/2026 15:25 · sessão s223 · mantido pelo medhub, conferido pelo ai-eng a cada relatório
 
 > Protocolo: `C:/Users/daanm/ai-eng/artifacts/protocolo-retomada-reforma-medhub-2026-10-10.md`. O chat não é estado: retomar por este arquivo.
 
 ## Estado
-Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.2c (a lançar) · clear-safe: **sim** (G-part 0.2b fechado)
+Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.3 (a lançar) · clear-safe: **sim** (G-part 0.2c fechado). O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
 
 ## Parts (Lote 0 → 5)
 | id | spec (path no repo) | status | commit | suíte (n/falhas/s) | desvio declarado |
@@ -11,7 +11,7 @@ Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.2c (a lançar) · cle
 | 0.1 | `.vibeflow/specs/medhub-fase0-lote0-harness-hermetico-part-1.md` | PASS | 7d5948a | 1513/0/169 | §7.4 regenerada (classe -> Lote 3) |
 | 0.2a | `…-part-2a.md` | PASS | 74eed0e | 1518/0/174 | §7.4 regenerada (GO ai-eng: parte do commit) |
 | 0.2b | `…-part-2b.md` | PASS | 5887631 | 1535/0/158 | audit tirou a regra "toda aula liga a tarefa" (aula sem tarefa = "Outras aulas", estado previsto) |
-| 0.2c | `…-part-2c.md` | pendente | | | M-120 não cabe (4º arquivo) -> Lote 3 |
+| 0.2c | `…-part-2c.md` | PASS | e294651 | 1536/0/178 | §7.4 regenerada; sentinela em `sqlite3.connect` no script (achou `DB_PATH` próprio em `review_radar` e `variancia`); M-120 -> Lote 3 |
 | 0.3 | `…-part-3.md` | pendente | | | |
 | 0.4a | `…-part-4a.md` | pendente | | | |
 | 0.4b dry-run | `…-part-4b.md` | pendente | | | |
@@ -20,10 +20,10 @@ Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.2c (a lançar) · cle
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
 
 ## Próximo ato (1 linha)
-medhub lança a 0.2c (1 subagente) -> audit do DoD -> commit + push -> linha aqui -> msg ao ai-eng (G-part 0.2c); depois 0.3.
+medhub lê SÓ a spec `…-part-3.md` e lança 1 subagente -> audit do DoD -> commit + push -> linha aqui -> msg ao ai-eng (G-part 0.3); depois 0.4a e 0.4b dry-run -> G-lote 0.
 
 ## Gates abertos
-- G-part 0.2c (medhub).
+- G-part 0.3 (medhub).
 - G-op: apply da 0.4b só depois da 1.4 (cópia off-machine).
 - (fechado 10/10 ~13:55) i e ii confirmadas por ele no chat do medhub: *"já foi respondido no ai-eng. se alinhem."* -- decisão dada no canal do ai-eng com verbatim vale; não re-perguntar.
 

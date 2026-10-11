@@ -2,11 +2,20 @@
 """
 SessionStart hook v2: injeta o boot compacto no início da sessão.
 
-Bloco injetado: fraquezas top-N (memória longa) + Plano do Dia (day_plan.py via
-subprocess, timeout 8s, fallback silencioso) + Panorama do plano (plano.py
---panorama, idem) + flag de drift HANDOFF↔history + "Próximo passo imediato" do
-HANDOFF + texto-contrato Presença->Expansão (o boot ABRE com o panorama para o
-operador e OFERECE o próximo ato; não executa a sessão).
+Bloco injetado: Plano do Dia (day_plan.py via subprocess, timeout 8s, fallback
+silencioso) + Panorama do plano (plano.py --panorama, idem) + flag de drift
+HANDOFF↔history + "Próximo passo imediato" do HANDOFF + texto-contrato
+Presença->Expansão (o boot ABRE com o panorama para o operador e OFERECE o próximo
+ato; não executa a sessão).
+
+⚰️ 11/10/2026 (part 1.0, Fase 0 Lote 1): o bloco "Áreas de fraqueza persistentes
+(top 8)" da memória longa saiu do boot. Ele importava `app.memory.inspect` ->
+`app.memory.store` -> `langgraph.store.base` em toda abertura (medido: ~0,55 s dos
+~0,64 s de import do processo) para injetar uma cópia probabilística do sinal que o
+`ipub.db` já dá (`db.get_erros_por_tema`), alimentada por uma consolidação sem escrita
+desde o fechamento da s220 (07/10). Decisão do operador (10/10, canal do ai-eng): RAG/LangMem
+fora do caminho crítico. O bloco segue sob demanda: `python -m app.memory.inspect --context`.
+Teste: `test_boot_verdadeiro.py::test_boot_nao_carrega_memoria_longa_nem_rag`.
 
 s190 (pedido do operador, 20/09/2026): o boot entrega o PANORAMA -- o que está em
 aberto e o que fazer em cada tarefa, a meta, os passos e as métricas. Por isso o
@@ -32,23 +41,6 @@ _PANORAMA_MAX_LINES = 30
 _CMD_DAY_PLAN = "python tools/day_plan.py --no-persist"
 _CMD_PANORAMA = "python tools/plano.py --panorama"
 _IPUB_DB = PROJECT_ROOT / "ipub.db"
-
-
-def _memory_context() -> str:
-    """Fraquezas top-N + perfil, via inspect.load_context (stdout capturado)."""
-    try:
-        import io
-        import contextlib
-        from app.memory.inspect import load_context
-
-        buf = io.StringIO()
-        with contextlib.redirect_stdout(buf):
-            load_context()
-        return buf.getvalue().strip()
-    except FileNotFoundError:
-        return "[Memory v1] medhub_memory.db ainda não existe — primeira sessão."
-    except Exception as e:
-        return f"[Memory v1] Aviso: {e}"
 
 
 def _resumir_plano(texto: str, cap: int, completo: str = _CMD_DAY_PLAN) -> str:
@@ -208,7 +200,7 @@ _CONTRATO = (
 
 def build_context() -> str:
     handoff = _read_handoff()
-    sections = [_memory_context()]
+    sections = []
 
     day_plan = _day_plan_summary()
     if day_plan:

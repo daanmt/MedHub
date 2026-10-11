@@ -4,7 +4,14 @@ Asserts nativos, fixtures sinteticas (tmp_path; monkeypatch de db.get_dificuldad
 real em db temporario). Cobre: precedencia de fonte na calibragem (usuario > persistida
 fresca > inferencia; frescor 7d), reconciliacao de vocabulario + upsert por par das
 WeakAreas, e paths por __file__ (fim do banco-fantasma).
+
+Fase 0 Lote 1 part 1.0 (11/10/2026): o caminho do boot não carrega memória longa nem RAG
+(LangGraph, LangMem, Chroma), e nenhum hook do `.claude/settings.json` dispara a consolidação.
+Os testes do MÓDULO `app.memory` (acima) ficam: o módulo segue no disco, sob demanda.
 """
+import json
+import os
+import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -166,6 +173,121 @@ def test_leitor_ro_nao_cria_banco_fantasma(tmp_path):
     except Exception:
         pass  # falhar alto é aceitável; criar o arquivo não é
     assert not fantasma.exists()
+
+
+# ---- Fase 0 Lote 1 part 1.0: memória longa e RAG fora do caminho crítico ----------------
+
+_RAIZ = Path(__file__).resolve().parent.parent
+
+#: O que nenhum processo do caminho do boot carrega desde a part 1.0.
+_FORA_DO_BOOT = ("langgraph", "langmem", "chromadb", "app.memory", "app.engine.rag")
+
+#: Sonda instalada como `sitecustomize` (via PYTHONPATH), herdada pelos filhos do boot.
+#: (1) Repõe o `ipub.db` e o `medhub_memory.db` reais pelas cópias de BOOT_TESTE_MAPA em todo
+#: `sqlite3.connect` (caminho cru, Path ou URI `file:`): o boot grava o planejado na 1ª
+#: abertura do dia (part-1), então rodá-lo contra o banco real mudaria o estado do operador.
+#: (2) Na saída de cada processo, grava `sorted(sys.modules)` em BOOT_TESTE_MODS.
+_SONDA = '''
+import atexit, json, os, sqlite3, sqlite3.dbapi2, sys
+
+_MAPA = {os.path.normcase(os.path.abspath(k)): v
+         for k, v in json.loads(os.environ["BOOT_TESTE_MAPA"]).items()}
+_ORIGINAL = sqlite3.connect
+
+
+def _copia(caminho):
+    while caminho.startswith("/") and caminho[2:3] == ":":
+        caminho = caminho[1:]
+    return _MAPA.get(os.path.normcase(os.path.abspath(caminho))) if caminho else None
+
+
+def connect(database, *a, **k):
+    s = database.decode() if isinstance(database, bytes) else os.fspath(database)
+    if s.startswith("file:"):
+        caminho, sep, consulta = s[5:].partition("?")
+        if _copia(caminho):
+            s = "file:" + _copia(caminho).replace(os.sep, "/") + sep + consulta
+    elif s not in ("", ":memory:") and _copia(s):
+        s = _copia(s)
+    return _ORIGINAL(s, *a, **k)
+
+
+sqlite3.connect = sqlite3.dbapi2.connect = connect
+
+
+def _inventario():
+    nome = os.path.basename(sys.argv[0]) if sys.argv and sys.argv[0] else "c"
+    alvo = os.path.join(os.environ["BOOT_TESTE_MODS"], "%d_%s.txt" % (os.getpid(), nome))
+    with open(alvo, "w", encoding="utf-8") as fh:
+        fh.write("\\n".join(sorted(sys.modules)))
+
+
+atexit.register(_inventario)
+'''
+
+
+def test_boot_nao_carrega_memoria_longa_nem_rag(db_sintetico, tmp_path):
+    """part 1.0 (DoD 2 e 3; decisão do operador em 10/10/2026: "RAG/LangMem fora do caminho
+    crítico SIM"). Roda o hook DE VERDADE -- `python tools/hooks/memory_boot.py`, o comando do
+    `SessionStart` -- em subprocesso, sobre o banco sintético, com a `_SONDA` herdada pelos
+    filhos. Nenhum processo do caminho (o hook e os dois filhos que ele roda) carrega LangGraph,
+    LangMem, Chroma, `app.memory` ou `app.engine.rag`, e o bloco de Áreas de fraqueza não volta
+    ao contexto injetado. O bloco segue sob demanda: `python -m app.memory.inspect --context`.
+
+    Antes da part 1.0 o `_memory_context()` importava `app.memory.inspect` -> `app.memory.store`
+    -> `langgraph.store.base` em todo boot (medido: ~0,55 s dos ~0,64 s de import do processo).
+    """
+    sonda = tmp_path / "sonda"
+    sonda.mkdir()
+    (sonda / "sitecustomize.py").write_text(_SONDA, encoding="utf-8")
+    inventarios_dir = tmp_path / "mods"
+    inventarios_dir.mkdir()
+    env = dict(os.environ)
+    env["PYTHONPATH"] = os.pathsep.join(p for p in (str(sonda), env.get("PYTHONPATH")) if p)
+    env["BOOT_TESTE_MAPA"] = json.dumps({
+        str(_RAIZ / "ipub.db"): db_sintetico,
+        str(_RAIZ / "medhub_memory.db"): str(tmp_path / "memoria_sintetica.db"),
+    })
+    env["BOOT_TESTE_MODS"] = str(inventarios_dir)
+
+    r = subprocess.run([sys.executable, str(_RAIZ / "tools" / "hooks" / "memory_boot.py")],
+                       cwd=str(_RAIZ), env=env, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=120)
+    assert r.returncode == 0, r.stderr[-2000:]
+    ctx = json.loads(r.stdout)["hookSpecificOutput"]["additionalContext"]
+
+    inventarios = {f.stem.split("_", 1)[1]: f.read_text(encoding="utf-8").splitlines()
+                   for f in inventarios_dir.glob("*.txt")}
+    assert "memory_boot.py" in inventarios and len(inventarios) >= 3, \
+        f"o hook e os 2 filhos deixam inventário: {sorted(inventarios)}"
+    carregados = {proc: sorted({alvo for alvo in _FORA_DO_BOOT for m in mods
+                                if m == alvo or m.startswith(alvo + ".")})
+                  for proc, mods in inventarios.items()}
+    assert not any(carregados.values()), f"o caminho do boot carregou: {carregados}"
+
+    assert "MedHub Memory Context" not in ctx and "Áreas de fraqueza" not in ctx, \
+        "o bloco de Áreas de fraqueza saiu do boot (part 1.0, opção a)"
+    assert "[Boot v2" in ctx, "o texto-contrato do boot continua no fim"
+
+
+def test_nenhum_hook_dispara_a_consolidacao():
+    """part 1.0 (DoD 4): sai do `.claude/settings.json` só a entrada `PostToolUse` matcher
+    `Write` -> `memory_session_log.py`. O `SessionStart` (memory_boot) e o `PostToolUse` matcher
+    `SendMessage` (exchange_log) ficam. O script e o `app/memory/` ficam no disco: a
+    consolidação segue chamável à mão (`python -m app.memory.manager NNN`)."""
+    hooks = json.loads((_RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8"))["hooks"]
+    comandos = {}
+    for evento, entradas in hooks.items():
+        for entrada in entradas:
+            comandos.setdefault((evento, entrada.get("matcher")), []).extend(
+                h.get("command", "") for h in entrada.get("hooks", []))
+    todos = [c for lista in comandos.values() for c in lista]
+    assert not any("memory_session_log" in c for c in todos), comandos
+    assert any("memory_boot.py" in c for c in comandos.get(("SessionStart", None), [])), comandos
+    assert any("exchange_log.py" in c
+               for c in comandos.get(("PostToolUse", "SendMessage"), [])), comandos
+    assert (_RAIZ / "tools" / "hooks" / "memory_session_log.py").is_file()
+    assert (_RAIZ / "app" / "memory" / "manager.py").is_file()
 
 
 if __name__ == "__main__":

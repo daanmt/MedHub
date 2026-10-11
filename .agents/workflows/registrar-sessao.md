@@ -52,16 +52,16 @@ Criar `history/session_NNN.md` com o seguinte formato:
 ### 3. Atualizar ESTADO.md (só se o macro mudou)
 O `ESTADO.md` **não** tem seção de sessões (proibido por `core/contracts/estado-contract.md`: narrativa de sessão vai em `history/`). Atualizar o ESTADO apenas se um indicador cruzou marco, uma frente abriu/fechou ou um contrato/skill foi versionado. O registro da sessão vai em `history/session_NNN.md` + uma linha em `history/INDEX.md`.
 
-### 4. Sincronização Autônoma do RAG (Automático)
-Disparado automaticamente pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.
-Fallback manual (se o hook falhar): `python tools/index_resumos.py` (motor único `app/engine/rag.py`; o índice cobre `resumos/`, gold-only).
+### 4. Sincronização do RAG (manual, só se um resumo mudou)
+`python tools/index_resumos.py` (motor único `app/engine/rag.py`; o índice cobre `resumos/`, gold-only). Fora do caminho crítico: a sessão fecha sem ele.
+⚰️ 11/10/2026 (part 1.0, Fase 0 Lote 1): esta seção dizia que o hook `PostToolUse(Write)` reindexava o RAG sozinho. O hook saiu do `.claude/settings.json` nesta part, e o script dele (`tools/hooks/memory_session_log.py`) só disparava a consolidação, nunca a indexação. Decisão do operador (10/10): RAG/LangMem fora do caminho crítico.
 
-### 5. Consolidação de Memória Longa (Automático — Memory v1)
-Disparado automaticamente em background pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.
-Fallback manual (se o hook falhar):
+### 5. Consolidação de Memória Longa (manual, Memory v1)
+Opcional, fora do caminho crítico:
 ```powershell
 python -m app.memory.manager <NNN>
 ```
+⚰️ 11/10/2026 (part 1.0): esta seção dizia que a consolidação era disparada em background pelo hook `PostToolUse(Write)` ao criar `history/session_NNN.md`. O hook saiu do `.claude/settings.json`, e o boot não injeta mais o bloco de fraquezas. Fraqueza é sinal determinístico do `ipub.db` (`db.get_erros_por_tema`). A última consolidação gravada foi a do selo da s220 (07/10).
 Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
 
 ### 5b. Rotacionar o ledger (s204)

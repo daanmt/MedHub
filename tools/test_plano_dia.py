@@ -373,7 +373,6 @@ def test_boot_entrega_o_panorama(monkeypatch):
     texto-contrato manda o agente ENTREGAR o panorama, e continua mandando oferecer o
     proximo ato sem executar a sessao. Falha do panorama -> secao ausente, boot de pe."""
     mb = _hook_de_boot()
-    monkeypatch.setattr(mb, "_memory_context", lambda: "")
     monkeypatch.setattr(mb, "_day_plan_summary", lambda: "- plano")
     monkeypatch.setattr(mb, "_drift_flag", lambda *_a, **_k: "")
     monkeypatch.setattr(mb, "_panorama_summary", lambda: "## 🧭 Panorama do plano -- semana 2")

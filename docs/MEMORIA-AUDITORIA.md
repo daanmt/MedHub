@@ -105,7 +105,7 @@
 | eventos append-only (`generation` · `reincidencia` · **`reforja`** com version antes/depois) | `tools/event_log.py` → `history/generation_log.jsonl` | flush pós-commit; nunca texto clínico | P3 · 09-08 |
 | alcançabilidade (só `tools/*.py` + `app/**/*.py`) | `reachability_check.py` (289 ln) | WARN, só `--all` | N=71 (categoria declarativa fora: §5) |
 | contratos (9 em `core/contracts/`) | reconcile-contract v1.2 (B2 BLOCK), fsrs v1.1, revisao-calibrada **v1.3** | frontmatter ≠ corpo em 2 (evidence-governance, revisao-calibrada) + 1 sem campo | s160 anexo |
-| hooks do harness | `SessionStart` memory_boot · `PostToolUse` memory_session_log | — | `.claude/settings.json` |
+| hooks do harness | `SessionStart` memory_boot · `PostToolUse` memory_session_log (⚰️ 11/10/2026, part 1.0: saiu do settings; o boot não carrega mais a memória longa) | — | `.claude/settings.json` |
 | fila de reforja | `tools/cards_regen_queue.py` filtra `quality_source='heuristic'` (população aposentada na s075) | **cega ao passivo real**; passivo em prosa (12/13/15/38 conflitantes) | 1/3 de 09-08 |
 
 ## 5. Lições transferíveis (série gate-miss + Reachability-Debt)
@@ -308,6 +308,8 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: chips da aba Resolver | banco-emed.md 'Elo declarado pelo operador' (s211, part-2) -- os 8 chips de causa sairam da pagina; o declarado e o estado de cada elo (`elos`) -->
 <!-- TERMO-REVOGADO: cuja falha leva a ela | docs/SOLUCAO-MEDHUB-BRIEF.md v3 + banco-emed.md secao Solucao MedHub (s211, feedback-cadeia-declarada part-1) -- a alternativa errada deixou de apontar o elo: a pagina adivinhava a quebra pela letra e errou em 5 das 7 analises; quem declara o elo e o aluno -->
 <!-- TERMO-REVOGADO: --delete-pdfs | M-134 (11/10/2026): o passo 8 do workflow criar-resumo e o fluxo da skill extrair-pdf mandavam apagar o PDF-fonte, contra a retencao da s086 (AGENTE.md secao 6) -- acao irreversivel sobre material do operador; vale o default nao destrutivo, delecao so por pedido explicito dele -->
+<!-- TERMO-REVOGADO: carregada via hook `SessionStart` | AGENTE.md secao 2 passo 7 (11/10/2026, Fase 0 Lote 1 part 1.0) -- o bloco de Áreas de fraqueza da memória longa saiu do boot: importava LangGraph em toda abertura para repetir o sinal do ipub.db; segue sob demanda (python -m app.memory.inspect --context) -->
+<!-- TERMO-REVOGADO: chamada pelo hook `PostToolUse(Write)` | AGENTE.md secao 8 (11/10/2026, Fase 0 Lote 1 part 1.0) -- a entrada PostToolUse(Write) do .claude/settings.json, que rodava tools/hooks/memory_session_log.py, saiu: nenhum hook dispara a consolidação; ela segue à mão (python -m app.memory.manager NNN) -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

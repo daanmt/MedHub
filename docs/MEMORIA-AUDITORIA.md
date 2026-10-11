@@ -307,6 +307,7 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: leitura provisória pelas letras | docs/SOLUCAO-MEDHUB-BRIEF.md secao Estado por elo + banco-emed.md 'Na pagina' (s211, part-2) -- a leitura PROVISORIA (riscada = elo ok, marcada = provavel quebra) errou em 5 das 7 analises -->
 <!-- TERMO-REVOGADO: chips da aba Resolver | banco-emed.md 'Elo declarado pelo operador' (s211, part-2) -- os 8 chips de causa sairam da pagina; o declarado e o estado de cada elo (`elos`) -->
 <!-- TERMO-REVOGADO: cuja falha leva a ela | docs/SOLUCAO-MEDHUB-BRIEF.md v3 + banco-emed.md secao Solucao MedHub (s211, feedback-cadeia-declarada part-1) -- a alternativa errada deixou de apontar o elo: a pagina adivinhava a quebra pela letra e errou em 5 das 7 analises; quem declara o elo e o aluno -->
+<!-- TERMO-REVOGADO: --delete-pdfs | M-134 (11/10/2026): o passo 8 do workflow criar-resumo e o fluxo da skill extrair-pdf mandavam apagar o PDF-fonte, contra a retencao da s086 (AGENTE.md secao 6) -- acao irreversivel sobre material do operador; vale o default nao destrutivo, delecao so por pedido explicito dele -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

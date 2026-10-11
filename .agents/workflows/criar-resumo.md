@@ -70,13 +70,14 @@ Percorrer o rascunho e verificar ausência de cada um dos seguintes:
 ### 7. Salvar
 Salvar em `resumos/{Área}/{Subespecialidade}/{Nome do Tema}.md`
 
-### 8. Limpeza automática (pós-resumo)
+### 8. Limpeza automática (pós-resumo): só os `.txt` temporários
 ```
-# Deletar PDFs da pasta do tema e os arquivos temporários:
-python tools/extract_pdfs.py --delete-pdfs "pasta/do/tema/" --delete-temps "path/tmp1.txt" "path/tmp2.txt"
+# Apagar SÓ os arquivos temporários do passo 1 (o PDF-fonte fica no lugar):
+python tools/extract_pdfs.py --delete-temps "path/tmp1.txt" "path/tmp2.txt"
 ```
-- `--delete-pdfs <pasta>`: remove todos os `.pdf`/`.PDF` da pasta indicada
 - `--delete-temps <paths...>`: remove os arquivos `.txt` temporários gerados no passo 1
+- 🔴 O PDF-fonte do EMED é **retido** (`AGENTE.md §6`, retenção da s086): nunca apagar ao fechar o resumo.
+- ⚰️ 11/10/2026 (M-134, revogação pelo §10.10): este passo mandava apagar os PDFs da pasta do tema com a flag de deleção de PDF do `extract_pdfs.py`, contra a retenção da s086, numa ação irreversível sobre material do operador. Sem resposta dele à pergunta do ai-eng, vale o default não destrutivo (retenção). Deleção de PDF só por pedido explícito do operador, nunca como passo do workflow.
 
 ### 9. Fechamento (Obrigatório)
 Seguir o **Protocolo de Fechamento** em `AGENTE.md` e executar o workflow `registrar-sessao.md`.

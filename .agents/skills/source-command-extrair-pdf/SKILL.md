@@ -30,8 +30,8 @@ python tools/extract_pdfs.py "Tema/Asma.pdf" "Tema/Asma_Complementar.pdf"
 
 # 3. Redigir — escrever o resumo .md baseado no conteúdo extraído
 
-# 4. Limpar — apagar PDFs originais e arquivos temporários
-python tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C:/Temp/ipub_Asma_abc.txt" "C:/Temp/ipub_Asma_Complementar_xyz.txt"
+# 4. Limpar — apagar SÓ os .txt temporários (o PDF-fonte fica: retenção da s086)
+python tools/extract_pdfs.py --delete-temps "C:/Temp/ipub_Asma_abc.txt" "C:/Temp/ipub_Asma_Complementar_xyz.txt"
 ```
 
 ---
@@ -41,7 +41,7 @@ python tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C
 | Argumento | Uso | Exemplo |
 |---|---|---|
 | `"arquivo.pdf"` | Extrair um ou mais PDFs | `"Fichas/Cirurgia.pdf"` |
-| `--delete-pdfs <pasta>` | Apagar todos os .pdf/.PDF de uma pasta | `--delete-pdfs "resumos/GO/"` |
+| `--delete-pdfs <pasta>` | ⚰️ revogada como passo do agente em 11/10/2026 (M-134): apaga todos os .pdf/.PDF de uma pasta, e o PDF-fonte do EMED é retido (s086). Só por pedido explícito do operador, nunca no fluxo | — |
 | `--delete-temps <paths...>` | Apagar arquivos .txt temporários específicos | `--delete-temps "C:/Temp/ipub_x.txt"` |
 | `--dry-run` | Simular deleções sem executar | Para verificar antes de deletar |
 | `--out <path>` | Salvar extração em path específico (apenas 1 PDF) | `--out "saida.txt"` |
@@ -66,13 +66,13 @@ python tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C
 python tools/extract_pdfs.py "Memorex/Memorex_Cirurgia/Trauma.pdf"
 # → imprime: C:/Users/.../AppData/Local/Temp/ipub_Trauma_a1b2c3.txt
 
-# Passo 4: após escrever o resumo, limpar
-python tools/extract_pdfs.py --delete-pdfs "Memorex/Memorex_Cirurgia/" --delete-temps "C:/Users/.../ipub_Trauma_a1b2c3.txt"
+# Passo 4: após escrever o resumo, limpar só o temporário (o PDF fica)
+python tools/extract_pdfs.py --delete-temps "C:/Users/.../ipub_Trauma_a1b2c3.txt"
 ```
 
-### Verificar antes de deletar
+### Verificar antes de apagar os temporários
 ```bash
-python tools/extract_pdfs.py --dry-run --delete-pdfs "resumos/Pediatria/"
+python tools/extract_pdfs.py --dry-run --delete-temps "C:/Users/.../ipub_Trauma_a1b2c3.txt"
 ```
 
 ### Múltiplos PDFs de uma vez
@@ -85,7 +85,7 @@ python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 
 ## Política de retenção de PDFs (s086 — substitui a antiga "Zero PDF")
 
-🔴 **NÃO deletar os PDFs do EMED.** A política "Zero PDF" foi **revertida na s086**:
+🔴 **NÃO deletar os PDFs do EMED.** A política antiga ("Zero PDF") foi **revogada na s086**:
 os PDFs-fonte são **retidos** (gitignored, fora do versionamento) porque alimentam
 `tools/cobertura_conhecimento.py` (F16a — assinatura canônica: **`--dir DIR`**, raiz dos
 resumos a varrer, default `resumos`; read-only, reporta tema com PDF e sem `.md`) e o gate

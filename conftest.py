@@ -19,6 +19,10 @@ A Fase 0 Lote 0 part-2a (10/10/2026) acrescentou também:
     `db.DB_PATH` e `init_db.DB_PATH` apontados para ele);
   - o marcador `vivo` (teste que lê o ipub.db real; sem o banco, pula com motivo `VIVO:`).
     A lane hermética é `python -m pytest tools/ -q -m "not vivo"`.
+
+A part-3h (M-123, 10/10/2026) acrescentou o autouse de SESSÃO `_git_hermetico`: tira do
+`os.environ` o ambiente git que o hook herda do commit em curso (`GIT_AMBIENTE_DO_HOOK`) e o
+devolve no teardown.
 """
 import contextlib
 import importlib
@@ -40,6 +44,42 @@ def pytest_configure(config):
         "markers",
         "vivo: lê o ipub.db real da máquina do operador; sem o banco pula com motivo "
         "'VIVO: ...' (lane hermética: -m \"not vivo\")")
+
+
+# Fase 0 Lote 0 part-3h (M-123): a suíte roda DENTRO do pre-commit (check 2d), e o git exporta
+# para o hook o ambiente do commit em curso. Em `git commit -a` ou `git commit <caminhos>`, o
+# `GIT_INDEX_FILE` é absoluto e aponta para o índice temporário do repo REAL; herdado, um
+# `git -C <repo sintético> add` escreve nele (reproduzido no DoD 4(i) da part-3h: o `add` vai
+# para o índice apontado, e o do repo sintético nem nasce). Fora do hook a suíte não tem
+# nenhuma destas chaves, então tirá-las deixa a suíte no hook igual à suíte avulsa.
+# `monkeypatch` é de função e não serve para o escopo de sessão: a limpeza é feita à mão, e
+# o teardown restaura.
+# Limite: código de teste que rode git na COLETA (nível de módulo) roda antes de qualquer
+# fixture; hoje não há nenhum.
+GIT_AMBIENTE_DO_HOOK = ("GIT_INDEX_FILE", "GIT_DIR", "GIT_WORK_TREE", "GIT_PREFIX",
+                        "GIT_OBJECT_DIRECTORY")
+
+
+def limpar_git_env(environ=None):
+    """Tira de `environ` (padrão: `os.environ`) as chaves de `GIT_AMBIENTE_DO_HOOK` e devolve
+    `{chave: valor}` do que tirou, para `restaurar_git_env`."""
+    environ = os.environ if environ is None else environ
+    return {k: environ.pop(k) for k in GIT_AMBIENTE_DO_HOOK if k in environ}
+
+
+def restaurar_git_env(removidas, environ=None):
+    """Devolve a `environ` (padrão: `os.environ`) o que `limpar_git_env` tirou."""
+    environ = os.environ if environ is None else environ
+    environ.update(removidas)
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _git_hermetico():
+    removidas = limpar_git_env()
+    try:
+        yield removidas
+    finally:
+        restaurar_git_env(removidas)
 
 
 @pytest.fixture(autouse=True)

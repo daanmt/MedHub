@@ -19,7 +19,9 @@ com a leitura humana. O detector tambem e lexical (~86% de precisao amostrada): 
 escrita sem marcador deontico e invisivel para o inventario inteiro.
 """
 import datetime as dt
+import hashlib
 import os
+import shutil
 import subprocess
 import sys
 
@@ -300,3 +302,138 @@ def test_catraca_com_git_ilegivel_avisa_e_nao_derruba(tmp_path, git_isolado):
     """Falha do git (aqui: raiz inexistente) = aviso explicito e sem BLOCK, nunca excecao."""
     res = cn.catraca_contra_head("--staged", root=str(tmp_path / "nao-existe"), gates=set())
     assert res["mensagem"] is None and res["aviso"] and "git" in res["aviso"]
+
+
+# --- o BLOCK do check 29 barra o commit (Fase 0 Lote 0 part-3h, M-122) ----------------
+# Desde 9ea675a (s187) o ramo `if graves_clau:` imprimia [BLOCK] e FAILED, mas nao zerava
+# `all_passed`: o `main()` saia 0 e o commit passava com "Todos os checks passaram!". O teste
+# roda o `main()` real IN-PROCESS (nada de commit em subprocesso: o hook roda a suite, que
+# rodaria o hook -- licao da part-1). Tudo que nao e o check 29 fica neutro, para que o exit
+# code dependa so dele: sem arquivo staged, a suite nao roda; os sensores caros ou que leem o
+# banco (consistencia, D5, F38, F89) devolvem vazio; a catraca devolve "sem delta".
+
+def _achado(tipo, severidade):
+    return {"tipo": tipo, "severidade": severidade, "portador": "AGENTE.md", "linha": 1,
+            "texto": "- O agente **nunca** pula o passo sintetico."}
+
+
+def _main_do_check29(monkeypatch, capsys, achados):
+    import auto_check
+    import cli_signature_check
+    import consistencia_check
+    resumo = {"orfas": 1, "normativas": 1, "cobertura_pct": 0.0, "nao_normativas": 0}
+    monkeypatch.setattr(cn, "registro_de_gates", lambda: set())
+    monkeypatch.setattr(cn, "run_checks", lambda hoje=None, gates=None: (list(achados), resumo))
+    monkeypatch.setattr(cn, "catraca_contra_head", lambda modo, root=None, gates=None: {
+        "severidade": "BLOCK", "mensagem": None, "aviso": None, "head": 1, "atual": 1,
+        "recorte": "indice"})
+    monkeypatch.setattr(consistencia_check, "run_checks", lambda *a, **k: [])
+    monkeypatch.setattr(cli_signature_check, "run_checks", lambda *a, **k: [])
+    monkeypatch.setattr(sys, "argv", ["auto_check.py", "--staged"])
+    monkeypatch.setattr(auto_check, "get_staged_files", lambda: [])
+    monkeypatch.setattr(auto_check, "_staged_deletados", lambda: [])
+    monkeypatch.setattr(auto_check, "run_command", lambda *a, **k: (True, ""))
+    monkeypatch.setattr(auto_check, "_ledger_record", lambda *a, **k: None)
+    monkeypatch.setattr(auto_check, "card_watermark_mudou", lambda *a, **k: (False, None))
+    monkeypatch.setattr(auto_check, "card_watermark_selar", lambda *a, **k: None)
+    monkeypatch.setattr(auto_check, "check_erros_orfaos", lambda *a, **k: [])
+    monkeypatch.setattr(auto_check, "check_areas_fora_vocabulario", lambda *a, **k: [])
+    capsys.readouterr()
+    codigo = auto_check.main()
+    return codigo, capsys.readouterr().out
+
+
+@pytest.mark.parametrize("tipo", ["gate_inexistente", "nv_sem_data"])
+def test_block_do_check29_barra_o_commit(monkeypatch, capsys, tipo):
+    """DoD 2 da part-3h: anotacao com gate inexistente (ou marca sem data) e BLOCK desde o
+    nascimento -- e BLOCK que nao muda o exit code e so um aviso com outro nome."""
+    codigo, out = _main_do_check29(monkeypatch, capsys, [_achado(tipo, "BLOCK")])
+    assert f"[BLOCK] CLAUSULA_{tipo.upper()}" in out
+    assert codigo == 1, f"[BLOCK] {tipo} impresso e exit {codigo}: o commit passaria"
+    assert "Todos os checks passaram" not in out
+
+
+def test_check29_sem_achado_grave_sai_0(monkeypatch, capsys):
+    """O outro lado do DoD 2: orfa e WARN (o passivo nasce em 271) e nao barra o commit."""
+    for achados in ([], [_achado("orfa", "WARN")]):
+        codigo, out = _main_do_check29(monkeypatch, capsys, achados)
+        assert codigo == 0, out[-600:]
+        assert "[BLOCK]" not in out
+
+
+# --- git hermetico na suite (Fase 0 Lote 0 part-3h, M-123) -----------------------------
+# A suite roda dentro do pre-commit, e o git exporta para o hook o `GIT_INDEX_FILE` do commit
+# em curso (absoluto em `commit -a`/`commit <caminhos>`). Sem hook aqui (recursao, e o
+# classificador negou a sonda na part-3): o ambiente do "pai" vai EXPLICITO no subprocesso.
+
+_GIT_DO_HOOK = ("GIT_INDEX_FILE", "GIT_DIR", "GIT_WORK_TREE", "GIT_PREFIX",
+                "GIT_OBJECT_DIRECTORY")
+
+
+def _md5(caminho):
+    with open(caminho, "rb") as fh:
+        return hashlib.md5(fh.read()).hexdigest()
+
+
+def _env_sem_git():
+    return {k: v for k, v in os.environ.items() if not k.upper().startswith("GIT_")}
+
+
+def _sentinela_e_repo_a(tmp_path):
+    """Indice VALIDO como sentinela -- o `.git/index` de um 2o repo sintetico depois de um
+    `add`, copiado para fora dele (um arquivo qualquer daria "index corrupt" e um falso "nao
+    reproduz") -- e o repo A, com o arquivo `x` ainda por adicionar."""
+    env = _env_sem_git()
+    a, b = tmp_path / "repo_a", tmp_path / "repo_b"
+    for repo in (a, b):
+        subprocess.run(["git", "init", "-q", str(repo)], check=True, env=env)
+    (b / "b.txt").write_text("b\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(b), "add", "b.txt"], check=True, env=env)
+    sentinela = tmp_path / "sentinela.index"
+    shutil.copyfile(b / ".git" / "index", sentinela)
+    (a / "x").write_text("x\n", encoding="utf-8")
+    return a, sentinela
+
+
+def test_git_index_file_herdado_desvia_o_add_para_o_indice_alheio(tmp_path):
+    """DoD 4(i), a REPRODUCAO, que e tambem o controle positivo do (ii): sem ela, um
+    sentinela que nada muda daria um (ii) verde por vacuidade. `git -C A add x` com
+    `GIT_INDEX_FILE` herdado escreve no indice apontado, e o de A nem nasce."""
+    a, sentinela = _sentinela_e_repo_a(tmp_path)
+    antes = _md5(sentinela)
+    pai = {**_env_sem_git(), "GIT_INDEX_FILE": str(sentinela)}
+    subprocess.run(["git", "-C", str(a), "add", "x"], check=True, env=pai, capture_output=True)
+    assert _md5(sentinela) != antes, "o add herdado nao tocou o sentinela: nao reproduz"
+    listado = subprocess.run(["git", "-C", str(a), "ls-files"], check=True, env=pai,
+                             capture_output=True, text=True).stdout.split()
+    assert sorted(listado) == ["b.txt", "x"], "o add de A foi parar no indice de B"
+    assert not (a / ".git" / "index").exists()
+
+
+def test_fixture_de_sessao_tira_o_git_do_pai(tmp_path, monkeypatch, request):
+    """DoD 4(ii): a fixture `autouse` de sessao do conftest raiz limpa o ambiente `GIT_*` do
+    hook, e o `git -C A add x` fica no indice de A, sem tocar o sentinela. O "pai" e simulado
+    pondo a variavel no `os.environ` e chamando a MESMA funcao de limpeza que a fixture chama;
+    no teardown, a restauracao devolve o que tirou."""
+    import conftest
+    assert "_git_hermetico" in request.fixturenames, "a fixture de sessao tem de ser autouse"
+    assert not [k for k in _GIT_DO_HOOK if k in os.environ], "fixture ativa: nada do hook aqui"
+
+    a, sentinela = _sentinela_e_repo_a(tmp_path)
+    antes = _md5(sentinela)
+    monkeypatch.setenv("GIT_INDEX_FILE", str(sentinela))        # o pai: o commit em curso
+    removidas = conftest.limpar_git_env()
+    assert removidas == {"GIT_INDEX_FILE": str(sentinela)} and "GIT_INDEX_FILE" not in os.environ
+    subprocess.run(["git", "-C", str(a), "add", "x"], check=True, capture_output=True)
+    assert _md5(sentinela) == antes, "o sentinela mudou: o add herdou o indice do pai"
+    assert (a / ".git" / "index").exists(), "o add tem de cair no indice do proprio repo A"
+    conftest.restaurar_git_env(removidas)
+    assert os.environ["GIT_INDEX_FILE"] == str(sentinela)
+
+    # as 5 chaves, num ambiente que nao e o do processo
+    env = {**_env_sem_git(), **{k: str(tmp_path / k) for k in _GIT_DO_HOOK}, "PATH_X": "fica"}
+    removidas = conftest.limpar_git_env(env)
+    assert sorted(removidas) == sorted(_GIT_DO_HOOK) and not set(_GIT_DO_HOOK) & set(env)
+    assert env["PATH_X"] == "fica", "so as chaves do hook saem"
+    conftest.restaurar_git_env(removidas, env)
+    assert all(env[k] == str(tmp_path / k) for k in _GIT_DO_HOOK)

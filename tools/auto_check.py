@@ -1302,6 +1302,8 @@ def main():
         clau_warns = sum(1 for a in achados_clau if a["severidade"] == "WARN")
         if graves_clau:
             clau_ok = False
+            # M-122 (part-3h): desde 9ea675a o BLOCK so imprimia FAILED e saia 0.
+            all_passed = False
             print()
             for a in graves_clau[:10]:
                 print(f"[BLOCK] CLAUSULA_{a['tipo'].upper()}: {a['portador']}:{a['linha']} "

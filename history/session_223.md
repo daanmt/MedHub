@@ -1,4 +1,4 @@
-# Sessão 223 -- 10/10/2026 (sábado) -- EM ABERTO
+# Sessão 223 -- 10-11/10/2026 (sábado e domingo) -- ENCERRADA 11/10 16:20
 
 **Ferramenta:** Claude Code / Opus 5.5 (sessão `medhub-92`, aberta após /clear). Orquestração: `/ai-eng` (`ai-eng-51`).
 **Suíte:** 1509 passando, 0 falhas, 210,6 s (`python -m pytest tools/ -q`, medida às 11:45 de 10/10).
@@ -63,3 +63,20 @@
 - 11/10 15:20 aulas-base glomerulopatias/kawasaki/neuromusculares no hub (V93, quadro: tarefas 68+115, 651+754, 141) · 0.4b aplicada (54 desfixados, 55 purgados, 501->110 MB) · M-140 feito (local)
 - 11/10 15:58 3.0 a2: dados de memoria apagados (copia memoria_20261011 conferida), 3 pacotes desinstalados (langgraph mantido), suite 1629/0 · M-147 copia do dia 20261011_154910 conferida
 - 11/10 16:10 hub-backend: republicado com o mesmo lote (painel; V94) · limite conhecido langgraph
+
+## Fechamento (11/10/2026 16:20, pedido do operador: "pode encerrar formalmente")
+
+**Reforma (Fase 0):** Lote 1 inteiro PASS e G-lote 1 ACEITO -- 1.1a `164cd7a`, 1.1b `ebc13c2`+`d3f0f3e` (77 listas recapturadas, hotfix de precisão do `CITA_FIGURA` 0/20 -> 34 marcas retiradas), 1.2 `38cc92f` (gate de cadeia no `--exportar`), 1.3 `a955b25` (`emed_card_ancora`; re-ancoragem real 6 cards / 8 âncoras). Lote 3.0: a1 `3e072dc`, a2 `10bc75c` + `439f92c` (LangMem removido; dados copiados e apagados; 3 pacotes desinstalados, `langgraph` mantido = limite conhecido). G-op 1.4 fechado (repo privado `daanmt/backup-medhub`, 49/49) + cópia do dia (M-147, `20261011_154910`). 0.4b aplicada (54 desfixados, 391 MB liberados). M-140 feito (local). Specs passaram ao ai-eng a partir da 1.2 (ordem do operador).
+**Estudo:** t3 Saúde do Idoso registrada (29q, 69%; 7 erros, 14 cards; 3 pendências) e t61 Hérnias (15q, 60%; 5 erros, 12 cards; 2 pendências). Soluções v3 cunhadas para t61/t65. 3 aulas-base no hub (Glomerulares, Kawasaki, Neuromusculares). Hub V94; lote de cards `2026-10-10a` segue em 1/100.
+**Suíte:** 1629 passed, 0 failed (pós-a2, 258 s).
+
+### Abertos para o operador (perguntas fechadas feitas no chat)
+- t3 Q2, Q16, Q18 (elo declarado x marcação) e a fonte da Q9 (GerontoNet x Hanlon).
+- t61 Q5, Q6.
+- Conferir na literatura as divergências PDF x diretriz das aulas (KDIGO: lúpus, IgA, Goodpasture; AHA: AAS 80-100, "PCR e/ou VHS", vacinas de vírus vivo).
+- M-143: t40 Q6/Q18/Q21/Q22 erradas sem figura -> refazer quando estudar a t40; 17 Soluções a regenerar com a figura.
+
+### Próximo (engenharia, retomar pelo `docs/REFORMA-CHECKPOINT.md`)
+- 3.0 b1 -> b2 -> b3 -> b4 -> c1 -> c2 (b1/b2 só entre atos de estudo), depois Lote 2. Specs do ai-eng.
+- O tique 50 min passa a rodar numa sessão própria (decisão do operador, 11/10).
+

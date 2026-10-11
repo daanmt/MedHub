@@ -1,9 +1,9 @@
-# REFORMA-CHECKPOINT — 11/10/2026 00:45 · sessão s223 · mantido pelo medhub, conferido pelo ai-eng a cada relatório
+# REFORMA-CHECKPOINT — 11/10/2026 16:20 · sessão s223 ENCERRADA · mantido pelo medhub, conferido pelo ai-eng a cada relatório
 
 > Protocolo: `C:/Users/daanm/ai-eng/artifacts/protocolo-retomada-reforma-medhub-2026-10-10.md`. O chat não é estado: retomar por este arquivo.
 
 ## Estado
-Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10/10 23:32; detalhe por part no `history/session_223.md`). Lote 1: 1.pre PASS (`4300bed`), **1.4 PASS (`3f53136`)**, M-134 fechado (`55d1144`), **1.0 PASS (`bcb02bf`)**; agora espera o **G-op do operador** (repo git privado -> apply -> push -> clone fresco + `--conferir` -> Drive + md5), e em paralelo seguem as specs 1.1 -> 1.2 -> 1.3. clear-safe: **sim** depois do push deste commit. O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
+Fase 0 (preparar o ambiente) · **Lote 0 e Lote 1 completos, G-lote 0 e G-lote 1 ACEITOS** (ai-eng). Lote 3.0 (remoção): a1 PASS (`3e072dc`), a2 PASS (`10bc75c`, `439f92c`); próximo b1. s223 ENCERRADA em 11/10 16:20 (log selado em `history/session_223.md`). clear-safe: **sim**.
 
 ## Parts (Lote 0 → 5)
 | id | spec (path no repo) | status | commit | suíte (n/falhas/s) | desvio declarado |
@@ -21,7 +21,7 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 | 2.1-2.3 P1 fontes estruturadas (schema `referencia`, evidence-governance v1.2, amostra 62) · 3.x hub+contratos · 4.x dados · 5.x medições | 2.x: `C:/Users/daanm/ai-eng/.vibeflow/specs/medhub-fase0-lote2-fontes-part-{1,2,3}.md` (só depois do G-lote 1; reler o disco; apply do migrador = G-op; triagem dos 62 = ai-eng) | pendente | | | |
 
 ## Próximo ato (1 linha)
-G-LOTE 1 ACEITO (ai-eng, 11/10) -> 3.0 a1..c2 em série -> Lote 2. 🔴 Regras: enquanto um filho edita `db.py`, nenhum CLI de escrita no banco real; b1/b2 (engine/skills usados no estudo) só entre atos de estudo, a1/a2 a qualquer hora.
+3.0 b1 (spec do ai-eng) -> b2 -> b3 -> b4 -> c1 -> c2 -> Lote 2. Na abertura: presença ao ai-eng-51 + releitura deste arquivo. 🔴 Regras: enquanto um filho edita `db.py`, nenhum CLI de escrita no banco real; b1/b2 (engine/skills usados no estudo) só entre atos de estudo, a1/a2 a qualquer hora.
 
 ## Dívida nascida no Lote 0 (dono medhub, -> Lote 3; linhas em `docs/BACKLOG-UNICO-MEDHUB.md`)
 - **M-120** leitor do `ipub.db` real em `mode=ro` para os testes `vivo` (audit da 2a). · **M-128** `get_caderno_erros`, a 11ª função morta do `db.py`, fora da lista da 0.4a (fecho).

@@ -30,7 +30,7 @@ Reduzir a uma proposição testável: *"metformina é contraindicada com TFG < 3
 - **Tier 1 — sociedade BR / MS:** `WebSearch` "Diretriz [SBD/SBC/SBP/FEBRASGO…] [tema] [ano]" → `WebFetch` no PDF/página oficial. (Substrato `fallback` — PDFs de sociedade não estão no PubMed.)
 - **Tier 2 — RCT/meta + guideline INT:** PubMed MCP do plugin `pubmed@life-sciences`, com **query precisa** (contrato §5): PMID conhecido -> `mcp__plugin_pubmed_PubMed__get_article_metadata`; trial nomeado -> `mcp__plugin_pubmed_PubMed__search_articles` com frase exata do título ou tag de campo. Ler o **contexto** do número no abstract; se não bastar e houver PMCID, `mcp__plugin_pubmed_PubMed__get_full_text_article`. (Substrato `canonico`.) 🔴 Uso obriga atribuição ao PubMed + **DOI como link**. Guidelines INT (ADA/AHA/IDSA/GINA…) por `WebSearch`.
 - **Tier 3 — consenso/texto:** só se Tiers 1–2 não resolverem.
-- **Consistência interna:** RAG local `app.engine.rag.search` para ver o que os `resumos/` já afirmam (substrato `local`) — `python -c "from app.engine.rag import search; [print(r) for r in search('<query>', n_results=3)]"`.
+- **Consistência interna:** ver o que os `resumos/` já afirmam (substrato `local`, contrato §3) por busca determinística: arquivo do tema por nome (`get_topic_context(tema)["resumo_path"]`, lido com `Read`) + `Grep` do termo no conteúdo de `resumos/**/*.md`. "Não há" só depois das duas buscas (contrato §7).
 
 > Pesquisa pesada (várias fontes em paralelo) → delegar ao subagente **`evidence-researcher`** (`Agent` com `subagent_type: "evidence-researcher"`), que faz o fan-out e devolve o veredito estruturado — preserva o contexto principal. Budget: 6–10 macro-queries, cap 2 tentativas/afirmação (contrato §9).
 

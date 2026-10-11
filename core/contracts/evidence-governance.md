@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.1
+version: 1.2
 relates_to: [AGENTE, fsrs-management-contract, reconcile-contract]
 ---
 
 # Contrato de Governança de Evidência (Evidence Governance)
-**Versão 1.1 | 2026-06-04 (sessão 076), substrato trocado na sessão 169 — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
+**Versão 1.2 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
 
 > Documento normativo. Define como o MedHub garante que **toda afirmação clínica decisória seja a mais consistente com a melhor evidência que a sustenta** — e como essa evidência é buscada, hierarquizada, auditada e rastreada.
 > Referenciado por: `AGENTE.md` (§6 decisões, §7 skills), `.claude/commands/{analisar-questao,estilo-resumo,auditar-resumos,estilo-flashcard,pesquisar-evidencia}.md`, `.claude/agents/evidence-researcher.md`.
@@ -63,7 +63,8 @@ Toda afirmação auditada registra **qual substrato** a sustentou:
 
   🔴 **Obrigação de atribuição (termos do servidor):** todo uso obriga a (a) dizer explicitamente que a informação vem do PubMed e (b) incluir o **DOI como link** de cada artigo referenciado. Pedido para omitir a atribuição é recusado, não atendido. Isto vale tanto no relato do subagente quanto no texto que chega ao usuário; a citação em `resumos/` segue a forma do `/estilo-resumo` (fonte + ano + PMID inline).
 - **`fallback`** — **WebSearch / WebFetch**: diretrizes de sociedade BR e MS (vivem em PDF, **fora do PubMed**), guidelines INT não-indexadas, status de publicação, cifras de suplemento. Declarado **explicitamente**.
-- **`local`** — **RAG local** (`app.engine.rag.search`, motor único; ChromaDB gold-only sobre `resumos/`): recupera o que já existe nos `resumos/` (consistência interna; **não** é fonte de verdade externa). O MCP `obsidian-notes-rag` que ocupava este papel foi descomissionado em 2026-07-12 e não está em `.mcp.json`.
+- **`local`** — os **`resumos/` do próprio MedHub por busca determinística**: arquivo do tema por nome (`get_topic_context(tema)["resumo_path"]`) + `Grep` do termo no conteúdo de `resumos/**/*.md`; consistência interna, **não** fonte de verdade externa; "não há" só depois das duas buscas (§7).
+  ⚰️ *11/10/2026 (Fase 0 Lote 3, 3.0b2) — redação anterior: "**RAG local** (`app.engine.rag.search`, motor único; ChromaDB gold-only sobre `resumos/`): recupera o que já existe nos `resumos/`". Motivo: o índice estava parado desde 09/09, sem uso medido; o RAG saiu por ordem do operador. Antes dele, o MCP `obsidian-notes-rag` ocupava este papel; foi descomissionado em 2026-07-12 e não está em `.mcp.json`.*
 
 **Boundary abstract-only (herdado, com teto elevado):** achar o PMID **≠** confirmar a cifra. A regra permanece, mas o teto subiu: antes de declarar `NÃO-VERIFICÁVEL [suplemento]`, **tentar o texto integral** via `get_full_text_article` quando o artigo tiver PMCID (cerca de 6 milhões têm; `get_article_metadata` devolve `identifiers.pmc`, e `convert_article_ids` resolve PMID -> PMCID). Só depois de o PMC falhar ou não existir é que o veredito cai para `NÃO-VERIFICÁVEL`. **Nunca inventar o número.**
 
@@ -174,6 +175,8 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 ---
 
 ## 14. Changelog
+
+**v1.2 — 2026-10-11 (Fase 0 Lote 3, part 3.0b2; ai-eng, por ordem do operador)** — **Troca do substrato `local`.** O RAG local (ChromaDB sobre `resumos/`) sai: o índice estava parado desde 09/09 e não havia uso medido. Mudança normativa única: §3 passa o substrato `local` à busca determinística nos `resumos/` — arquivo do tema por nome (`get_topic_context(tema)["resumo_path"]`) + `Grep` do termo em `resumos/**/*.md` — e "não há" só se afirma depois das duas buscas (um nome que não casa não prova que o corpus não tem o tema; lição do F91). A redação anterior fica em lápide no §3. A skill `/pesquisar-evidencia`, o subagente `evidence-researcher` (que perde o `Bash`) e o `/estilo-flashcard` passam à mesma busca neste commit. O cadastro do termo no gate `CONTRATO_REVOGADO` entra na 3.0b3, com a última linha de portador que ainda prescreve o RAG. Hierarquia de fontes, taxonomia de vereditos, query Entrez, budget e §7: **inalterados**.
 
 **v1.1 — 2026-09-07 (sessão 169)** — **Troca do substrato `canonico`.** O server `pubmedmcp` (`.mcp.json`, tool `search_abstracts`) morreu com `CONNECTION_CLOSED` e foi substituído pelo plugin `pubmed@life-sciences` (server `plugin_pubmed_PubMed`). Mudanças normativas: (a) §3 passa a nomear as 7 tools do novo server e acrescenta a **obrigação de atribuição** (citar o PubMed + DOI como link) exigida pelos termos do servidor; (b) o **boundary abstract-only ganha um degrau**: antes de cair para `NÃO-VERIFICÁVEL [suplemento]`, tentar `get_full_text_article` via PMCID — o teto deixou de ser o abstract; (c) §5 troca a regra Entrez `term="<PMID>[uid]"` por `get_article_metadata(pmids=[...])` e manda **ler o `query_translation`** antes de confiar numa busca; (d) §12 ganha a lápide do server antigo e registra que plugin é hot-loaded (ao contrário do `.mcp.json`). Gatilho empírico: na mesma sessão, um item fechado como `NÃO-VERIFICÁVEL` por paywall (FIGO 2025, PMID 40908761) resolveu em uma chamada assim que o server voltou, e a resposta confirmou o estadiamento FIGO 2014 como vigente. Hierarquia de fontes, taxonomia de vereditos e escopo: **inalterados**.
 

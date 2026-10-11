@@ -15,7 +15,7 @@ status: canonical
 
 ## Princípio central
 
-O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **reforça o conteúdo exato onde o raciocínio rompeu** quando o usuário errou a questão. O substrato vem de `questoes_erros` (`tipo_erro`, `o_que_faltou`, `habilidades_sequenciais`, `alternativa_marcada` vs `alternativa_correta`, `armadilha_prova`) cruzado com o resumo correspondente (via RAG local). O card é a costura entre o ponto de ruptura e a rede de conhecimento.
+O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **reforça o conteúdo exato onde o raciocínio rompeu** quando o usuário errou a questão. O substrato vem de `questoes_erros` (`tipo_erro`, `o_que_faltou`, `habilidades_sequenciais`, `alternativa_marcada` vs `alternativa_correta`, `armadilha_prova`) cruzado com o resumo correspondente. O card é a costura entre o ponto de ruptura e a rede de conhecimento.
 
 ---
 
@@ -336,7 +336,7 @@ positivo". O que mudou foi a **porta de entrada**; a porta de **saída** continu
 Os cards cunhados pela heurística antiga devem ser refeitos pelo agente, um erro por vez:
 
 1. **Puxar a fila:** `python tools/cards_regen_queue.py [--area X] [--limit N] [--questao-id ID]` — emite, em JSON, cada erro com seu substrato metacognitivo (`tipo_erro`, `habilidades_sequenciais`, `o_que_faltou`, `alternativa_correta`/`marcada`, `armadilha_prova`) + os `cards_atuais` (com `card_id`). Critério atual: `quality_source = 'heuristic'` e `needs_qualitative != 2`.
-2. **Ancorar no resumo:** buscar o resumo correspondente via RAG local (`app.engine.rag.search`) para os critérios/alertas de incidência.
+2. **Ancorar no resumo:** `get_topic_context(tema)["resumo_path"]` e, dentro dele, `Grep` do critério ou alerta. Se o nome não casar, `Grep` em `resumos/**/*.md`.
 3. **Cunhar** 1-3 cards atômicos pelos 5 princípios acima.
 4. **Persistir, preservando o FSRS:**
    - Reescrever um card existente (mantém `card_id` → estado FSRS):

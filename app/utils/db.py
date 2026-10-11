@@ -2407,6 +2407,22 @@ def _ensure_emed_tables(conn):
     for coluna in _CAMPOS_DECLARADOS:
         if coluna not in existentes:
             conn.execute(f"ALTER TABLE emed_respostas ADD COLUMN {coluna} TEXT")
+    # Fase 0 Lote 1 part-3 (P6): ancora de CONSOLIDACAO do card na resposta EMED que o gerou
+    # (questao certa, elo `incerteza`), N:M -- um card serve a 2 questoes, uma questao gera 2
+    # cards. `flashcards.questao_id` segue sendo a ORIGEM (o erro de onde o card nasceu, 0..1).
+    # A FK composta usa o `UNIQUE (lista, num)` de `emed_respostas`. Writer unico:
+    # `emed_ancorar_card`. Ressalva (M-098): o `cards_prune` roda com FK desligada, entao o
+    # CASCADE nao dispara la -- os leitores fazem JOIN com `flashcards`.
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS emed_card_ancora (
+            card_id   INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE,
+            lista     TEXT NOT NULL,
+            num       INTEGER NOT NULL,
+            criado_em TEXT,
+            PRIMARY KEY (card_id, lista, num),
+            FOREIGN KEY (lista, num) REFERENCES emed_respostas(lista, num)
+        )
+    ''')
 
 
 def _txt(valor):
@@ -2873,6 +2889,50 @@ def emed_ligar_erro(conn, lista, num, questao_id):
                          f"nao e erro")
     conn.execute("UPDATE emed_respostas SET questao_erro_id = ? WHERE lista = ? AND num = ?",
                  (int(questao_id), lista, int(num)))
+
+
+def emed_validar_ancora(conn, lista, num):
+    """Le, sem gravar, se a resposta `(lista, num)` pode ancorar um card de consolidacao (P6).
+
+    Complemento do `emed_ligar_erro`: erro ganha `questao_id`; resposta CERTA sem erro ganha a
+    ancora. `ValueError` quando: a resposta nao existe (ou o banco nao tem `emed_respostas`);
+    ja tem erro ligado (o card ancora no erro); nao esta certa (o erro vem antes).
+    """
+    try:
+        row = conn.execute(
+            "SELECT correta, questao_erro_id FROM emed_respostas WHERE lista = ? AND num = ?",
+            (lista, int(num))).fetchone()
+    except sqlite3.OperationalError:
+        row = None
+    if row is None:
+        raise ValueError(f"resposta EMED {lista}_{num} nao existe em emed_respostas "
+                         f"(rodar emed_banco.py --registrar antes)")
+    correta, erro = row
+    if erro is not None:
+        raise ValueError(f"resposta EMED {lista}_{num} tem erro registrado: ancore no erro #{erro} "
+                         f"(questao_id), nao na resposta")
+    if correta != 1:
+        raise ValueError(f"resposta EMED {lista}_{num} nao esta certa: registre o erro antes: "
+                         f"`insert_questao --emed {lista}_{num}`")
+
+
+def emed_ancorar_card(conn, lista, num, card_id):
+    """Grava a ancora `card -> resposta EMED` em `emed_card_ancora` (P6). Writer UNICO da tabela.
+
+    Roda na conexao do CHAMADOR (a transacao do `insert_card_extra`), sem DDL: quem chama roda
+    `_ensure_emed_tables` antes. Recusa fail-loud, sem gravar nada, pelas regras de
+    `emed_validar_ancora` e quando o card nao existe. O mesmo par de novo e no-op: devolve
+    `False`; ancora nova devolve `True`.
+    """
+    emed_validar_ancora(conn, lista, num)
+    if conn.execute("SELECT 1 FROM flashcards WHERE id = ?", (int(card_id),)).fetchone() is None:
+        raise ValueError(f"card {card_id} nao existe em flashcards")
+    if conn.execute("SELECT 1 FROM emed_card_ancora WHERE card_id = ? AND lista = ? AND num = ?",
+                    (int(card_id), lista, int(num))).fetchone():
+        return False
+    conn.execute("INSERT INTO emed_card_ancora (card_id, lista, num, criado_em) VALUES (?, ?, ?, ?)",
+                 (int(card_id), lista, int(num), carimbo()))
+    return True
 
 
 def _bool01(valor):

@@ -57,3 +57,5 @@
 - Fecho desta rodada num G-part: a 1.1 (P5 figuras: API do EMED + dados do hub) fica para contexto limpo depois do `/clear`; o próximo ato está escrito no checkpoint.
 - 11/10 11:40 hub-backend: republicado com o mesmo lote 2026-10-10a (painel mudou; Version 90)
 - 11/10 14:05 part 1.1b: 77 listas recapturadas; banco 52 mescladas + 34 sem_figura retirados (hotfix de precisao 0/20); hub 52 updates + 34 deletes, V91 com o aviso; t40 Q5/6/18/21/22 com figura
+- 11/10 15:05 banco-emed: t3 registrada 29 (69%, sessoes_bulk 140, tarefa #3 concluida; analise dos 9 erros em subagente) · Solucoes v3 cunhadas e no hub: t61 15/15 (0 divergentes; lidas Q5,Q8,Q11), t65 37/37 (divergente Q18 HerniaSurge x banca; lidas Q18,Q23,Q36) -- 2 fixados
+- 11/10 15:06 part 1.3 PASS: emed_card_ancora; reancoragem real 6 cards / 8 ancoras (fixado 150506)

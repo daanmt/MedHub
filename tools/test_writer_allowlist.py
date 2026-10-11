@@ -38,7 +38,10 @@ ALLOWLIST = {
     # emed_solucoes (s199): a solucao PROPRIA do hub; `emed_upsert_solucoes` e o writer unico.
     # M-126 (fecho do Lote 0, 10/10/2026): `cronograma_progresso` saiu das duas entradas -- a
     # tabela nunca existiu no schema e os dois writers foram removidos na part-4a (a240f94).
-    "app/utils/db.py": {"emed_questoes", "emed_respostas",
+    # emed_card_ancora (Fase 0 Lote 1 part-3, P6): a ancora do card de consolidacao na resposta
+    # EMED; `emed_ancorar_card` e o writer UNICO -- o `insert_card_extra.py` o chama com a
+    # conexao dele e NAO ganha a tabela (o conjunto dele segue {flashcards, fsrs_cards}).
+    "app/utils/db.py": {"emed_card_ancora", "emed_questoes", "emed_respostas",
                         "emed_solucoes",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",

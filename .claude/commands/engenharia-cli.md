@@ -324,16 +324,30 @@ Preserva `card_id` e portanto o estado FSRS (`fsrs_cards`/`fsrs_revlog` intactos
 schema · encoding (§4.5) · formulação · **atomicidade sobre o conteúdo PROPOSTO** (o remédio é
 auditado pelo mesmo critério que diagnosticou a doença).
 
-### `tools/insert_card_extra.py` — card adicional sobre um `questao_id` EXISTENTE
+### `tools/insert_card_extra.py` — card adicional ancorado no erro de ORIGEM e/ou na resposta EMED
 
 | Flag | Função |
 |---|---|
-| `--from SRC` | **Obrigatório.** JSON: `[{questao_id, tema_id, tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?, origem_card?}]`. |
+| `--from SRC` | JSON: `[{tema_id, questao_id?, emed?, tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?, origem_card?}]`; `emed` = `"t40_5"` ou `["t40_5", "t40_17"]`. Exclusivo com `--reancorar`. |
+| `--reancorar FILE` | Re-ancora card ancorado errado. JSON: `[{card_id, tema_id, emed: [...], questao_id? (default null)}]`. Dry-run imprime, por card, `questao_id <velho> -> <novo>`, `tema_id <velho> -> <novo>` e as âncoras a criar. |
 | `--apply` | Grava (default: dry-run). |
+| `--expect N` | Com `--reancorar --apply`: COUNT-ASSERT, N = cards que mudam. Ausente ou divergente = exit 2, nada gravado. |
 
-Difere de `insert_questao.py`: **não** cria questão nova — herda `questao_id`/`tema_id` do
-original. Idempotente por `(questao_id, frente_pergunta)`. É o CLI da **atomização**: quando
-reforjar um card gera um 2º conceito do mesmo erro.
+**Card de questão certa ancora na resposta (`emed`), nunca em erro vizinho** (P6, Fase 0 Lote 1 part-3).  <!-- CHECK: test_extra_emed_resposta_com_erro_recusada -->
+`questao_id` = a ORIGEM do card (o erro de onde nasceu, 0..1; o card de **atomização**
+herda o do original); `emed` = as âncoras de consolidação (0..n, N:M) em
+`emed_card_ancora`, gravadas pelo writer único `db.emed_ancorar_card`. Todo card traz **ao menos
+uma** âncora (`questao_id`, `emed` ou as duas) e `tema_id`; card sem âncora não é mais `[SKIP]`
+calado: é exit 1.  <!-- CHECK: test_extra_sem_ancora_recusado -->
+A âncora `emed` só vale em resposta **certa e sem erro ligado** (resposta errada: registre o erro
+antes com `insert_questao --emed`; resposta com erro: ancore no erro). Todas as âncoras do lote
+são validadas, só em leitura, **antes** de qualquer escrita, também no dry-run: uma inválida =
+exit 1 e NADA gravado. O apply grava card + `fsrs_cards` + âncoras numa transação; o DDL só roda
+sob `--apply`. Idempotente: mesma `frente_pergunta` no mesmo `questao_id` ou já ancorada no mesmo
+`(lista, num)` vira `[SKIP]`.  <!-- CHECK: test_extra_emed_valido_duas_ancoras -->
+`--reancorar --apply` exige `--expect N` e o backup FIXADO do início do ato
+(`backup_db.fixar_antes_do_ato`; sem ele, recusa); tudo numa transação. Card já no estado pedido
+conta como `iguais`: re-executar dá 0 mudanças. Card inexistente ou âncora inválida = recusa.  <!-- CHECK: test_reancorar_apply_chega_ao_estado_e_reexecucao_da_zero -->
 
 ### `tools/detect_clones.py` — near-duplicates por TEMA (read-only)
 

@@ -16,6 +16,9 @@ Uso:
     python tools/emed_banco.py --registrar tmp/bancada --apply
     python tools/emed_banco.py --podar tmp/bancada --colecao respostas
     python tools/emed_banco.py --exportar t26 --out tmp/emed_export
+    python tools/emed_banco.py --exportar t40 --so-figuras --out tmp/emed_export
+    python tools/emed_banco.py --figuras tmp/emed_api/t40
+    python tools/emed_banco.py --figuras tmp/emed_api/t40 --apply --expect 5
     python tools/emed_banco.py --erros t26
     python tools/emed_banco.py --elos t26 --json
     python tools/emed_banco.py --defeitos
@@ -224,6 +227,43 @@ def cmd_ingerir(args):
         if cont.get("erro"):
             print(cont["erro"])
         print(_linha_contagem(cont, args.apply and code == 0))
+    return code
+
+
+def mapa_figuras(docs):
+    """`{emed_id: {chaves de figura}}` dos docs da recaptura (`emed_api --apply`), so dos que trazem
+    ALGUMA chave de figura: doc sem nenhuma nao apaga a marca que o banco ja tem (1.1a). PURA."""
+    mapa = {}
+    for d in docs:
+        emed_id = str(d.get("emed_id") or "").strip()
+        figs = {k: d[k] for k in db.CHAVES_FIGURA_EMED if d.get(k) not in (None, "", False, [], {})}
+        if emed_id and figs:
+            mapa[emed_id] = figs
+    return mapa
+
+
+def mesclar_figuras(mapa, aplicar=True):
+    """`db.emed_mesclar_figuras` na forma que o `_upsert_com_rito` le (`novas` 0: a mescla nunca cria)."""
+    cont = db.emed_mesclar_figuras(mapa, aplicar=aplicar)
+    return dict(cont, novas=0, invalidas=cont.get("invalidas", []))
+
+
+def cmd_figuras(args):
+    """`--figuras DIR`: mescla ESTREITA das chaves de figura da recaptura (DIR/questoes/*.json do
+    `emed_api --apply`) nas linhas que ja existem, por `emed_id` (1.1a). Dry-run por padrao; `--apply`
+    exige `--expect N` (o `atualizadas` do dry-run) e fixa o backup quando ha `atualizadas`."""
+    if args.apply and args.expect is None:
+        print("RECUSA: --figuras --apply exige --expect N (o `atualizadas` medido no dry-run). Nada gravado.")
+        return 1
+    mapa = mapa_figuras(ler_docs(args.figuras, "questoes"))
+    cont, code = _upsert_com_rito(mesclar_figuras, mapa, args)
+    if args.json:
+        _emitir(dict(cont, aplicado=bool(args.apply and code == 0)), True)
+        return code
+    if cont.get("erro"):
+        print(cont["erro"])
+    print(_linha_contagem(cont, args.apply and code == 0))
+    print(f"  ausentes (emed_id sem linha no banco; nada criado): {cont['ausentes'] or '-'}")
     return code
 
 
@@ -438,13 +478,50 @@ def figura_data_uri(url, cache=PASTA_FIGURAS, baixar=_baixar):
     return f"data:{tipo};base64," + base64.b64encode(dados).decode("ascii")
 
 
+#: 1.1a: o que o `--exportar --so-figuras` leva ao `batch update` do doc do hub -- as chaves de figura,
+#: a imagem embutida e o `emed_id` (o join da 1.1b). Nunca enunciado, alternativas ou solucao.
+CHAVES_SO_FIGURAS = ("emed_id",) + tuple(db.CHAVES_FIGURA_EMED) + ("figuras_img",)
+
+
+def exportar_so_figuras(args, linhas):
+    """`--exportar LISTA --so-figuras`: `OUT/upd/<lista>_<num>.json` so com `CHAVES_SO_FIGURAS`, e so
+    dos docs com alguma chave de figura. Falha de download: o item e listado, sem `figuras_img` parcial."""
+    pasta = os.path.join(args.out, "upd")
+    os.makedirs(pasta, exist_ok=True)
+    escritos, falhas = [], []
+    for q in linhas:
+        try:
+            extras = json.loads(q.get("extras") or "{}")
+        except ValueError:
+            extras = {}
+        doc = {k: extras[k] for k in db.CHAVES_FIGURA_EMED if k in extras}
+        if not doc:
+            continue
+        if doc.get("figuras") and not getattr(args, "sem_figuras", False):
+            imgs = [figura_data_uri(u) for u in doc["figuras"]]
+            if all(imgs):
+                doc["figuras_img"] = imgs
+            else:
+                falhas.append(f"{q['lista']}_{q['num']}")
+        doc = dict({"emed_id": q.get("emed_id")}, **doc)
+        with open(os.path.join(pasta, f"{q['lista']}_{q['num']}.json"), "w", encoding="utf-8") as fh:
+            json.dump({k: doc[k] for k in CHAVES_SO_FIGURAS if k in doc}, fh, ensure_ascii=False, indent=2)
+        escritos.append(q["num"])
+    print(f"{len(escritos)} arquivos so de figura em {pasta}"
+          + (f"; FIGURA NAO BAIXADA (o hub mostra o aviso): {falhas}" if falhas else ""))
+    return 0
+
+
 def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
-    `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
+    `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData.
+    Com `--so-figuras` (1.1a), so `OUT/upd/` com as chaves de figura (`exportar_so_figuras`)."""
     todas = db.emed_listar_questoes(args.exportar)
     # s219: o spoiler UERJ de lista do EMED nao volta ao hub (`fora_do_hub`)
     spoiler = [q["num"] for q in todas if fora_do_hub(q)]
     linhas = [q for q in todas if q["num"] not in spoiler]
+    if getattr(args, "so_figuras", False):
+        return exportar_so_figuras(args, linhas)
     solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
     falhas = []
     pasta = os.path.join(args.out, "questoes")
@@ -838,6 +915,10 @@ def main(argv=None):
                     help="pasta de saida do --exportar (default tmp/emed_export)")
     ap.add_argument("--sem-figuras", action="store_true",
                     help="--exportar sem baixar/embutir a imagem do enunciado (s221, P22)")
+    ap.add_argument("--so-figuras", dest="so_figuras", action="store_true",
+                    help="--exportar so OUT/upd/<lista>_<num>.json com as chaves de figura + emed_id (1.1a)")
+    ap.add_argument("--figuras", metavar="DIR",
+                    help="mescla so as chaves de figura de DIR/questoes/*.json (recaptura) por emed_id (1.1a)")
     ap.add_argument("--erros", metavar="LISTA",
                     help="erradas e nao-solidas da lista em integra, com a declaracao por elo "
                          "(insumo do /analisar-questao)")
@@ -856,7 +937,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     modos = {"--ingerir": args.ingerir, "--registrar": args.registrar,
-             "--solucoes": args.solucoes,
+             "--solucoes": args.solucoes, "--figuras": args.figuras,
              "--podar": args.podar, "--exportar": args.exportar,
              "--erros": args.erros, "--elos": args.elos, "--defeitos": args.defeitos,
              "--status": args.status}
@@ -866,7 +947,7 @@ def main(argv=None):
               file=sys.stderr)
         return 1
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
-            "--solucoes": cmd_solucoes,
+            "--solucoes": cmd_solucoes, "--figuras": cmd_figuras,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
             "--erros": cmd_erros, "--elos": cmd_elos, "--defeitos": cmd_defeitos,
             "--status": cmd_status}[ligados[0]]

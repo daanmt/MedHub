@@ -1094,3 +1094,149 @@ def test_defeitos_lista_cadeias_sinalizadas(tmp_path, monkeypatch, capsys):
     assert _json_saida(capsys) == [{"lista": "t26", "num": 1, "motivo": "o elo 1 não decide nada"}]
     assert emed_banco.main(["--defeitos", "--lista", "t40"]) == 0
     assert "nenhuma cadeia sinalizada" in capsys.readouterr().out
+
+
+# ------------------------------------------------------------------- Fase 0 Lote 1 part-1.1a: mescla de figura
+
+URL_F = "https://estrategia-prod-questoes.s3.amazonaws.com/images/X/X-400.png"
+
+
+def _linha_q(caminho, num, lista="t26"):
+    """A linha de `emed_questoes` como dict (leitura direta do banco SINTETICO)."""
+    con = sqlite3.connect(caminho)
+    con.row_factory = sqlite3.Row
+    try:
+        r = con.execute("SELECT * FROM emed_questoes WHERE lista = ? AND num = ?", (lista, num)).fetchone()
+        return dict(r) if r else None
+    finally:
+        con.close()
+
+
+def _contar_q(caminho):
+    con = sqlite3.connect(caminho)
+    try:
+        return con.execute("SELECT COUNT(*) FROM emed_questoes").fetchone()[0]
+    finally:
+        con.close()
+
+
+def _chrome(db_sintetico, *nums, **extra):
+    """Linhas do Chrome (sem figura) gravadas pelo writer real no banco sintetico do Lote 0."""
+    assert db.DB_PATH == db_sintetico and Path(db_sintetico).name == "ipub.db"
+    assert Path(db_sintetico).resolve() != (ROOT / "ipub.db").resolve()     # sentinela: nunca o real
+    cont = db.emed_upsert_questoes([_questao(n, **extra) for n in nums])
+    assert cont["novas"] == len(nums)
+
+
+def test_mescla_da_figura_a_linha_do_chrome_sem_tocar_o_texto(db_sintetico):
+    """DoD 3 (a) (1.1a): a linha do Chrome ganha `figuras`/`figuras_alt`; enunciado, alternativas,
+    gabarito e solucao ficam byte a byte; o `hash` acompanha o `extras` novo."""
+    _chrome(db_sintetico, 1, 2)
+    antes = _linha_q(db_sintetico, 1)
+    r = db.emed_mesclar_figuras({"e1": {"figura": True, "figuras": [URL_F], "figuras_alt": {"B": [URL_F]}}})
+    assert r == {"atualizadas": 1, "iguais": 0, "ausentes": []}
+    depois = _linha_q(db_sintetico, 1)
+    for c in ("enunciado", "alternativas", "gabarito", "solucao", "emed_id", "banca", "tags",
+              "forum", "estatistica", "executor", "capturado_em", "lista", "num"):
+        assert depois[c] == antes[c], c
+    assert json.loads(depois["extras"]) == {"figura": True, "figuras": [URL_F], "figuras_alt": {"B": [URL_F]}}
+    assert depois["hash"] == db.emed_hash_questao(depois) != antes["hash"]
+    assert _linha_q(db_sintetico, 2)["extras"] == ""                      # a outra linha nao muda
+
+
+def test_mescla_de_emed_id_desconhecido_vai_para_ausentes_sem_insert(db_sintetico):
+    """DoD 3 (b) (1.1a): a mescla nunca cria linha."""
+    _chrome(db_sintetico, 1)
+    r = db.emed_mesclar_figuras({"nao-existe": {"figuras": [URL_F]}})
+    assert r == {"atualizadas": 0, "iguais": 0, "ausentes": ["nao-existe"]}
+    assert _contar_q(db_sintetico) == 1
+
+
+def test_mescla_e_idempotente(db_sintetico):
+    """DoD 3 (c) (1.1a): a 2a rodada com o mesmo mapa da `atualizadas` 0."""
+    _chrome(db_sintetico, 1)
+    mapa = {"e1": {"figura": True, "figuras": [URL_F]}}
+    assert db.emed_mesclar_figuras(mapa)["atualizadas"] == 1
+    h = _linha_q(db_sintetico, 1)["hash"]
+    assert db.emed_mesclar_figuras(mapa) == {"atualizadas": 0, "iguais": 1, "ausentes": []}
+    assert _linha_q(db_sintetico, 1)["hash"] == h
+
+
+def test_mescla_com_figuras_derruba_o_sem_figura(db_sintetico):
+    """DoD 3 (d) (1.1a): a figura chegou, a declaracao cai; as chaves que nao sao de figura ficam."""
+    _chrome(db_sintetico, 1, sem_figura=True, acerto_pct=40)
+    assert json.loads(_linha_q(db_sintetico, 1)["extras"]) == {"acerto_pct": 40, "sem_figura": True}
+    r = db.emed_mesclar_figuras({"e1": {"figura": True, "figuras": [URL_F], "sem_figura": True}})
+    assert r["atualizadas"] == 1
+    assert json.loads(_linha_q(db_sintetico, 1)["extras"]) == {"acerto_pct": 40, "figura": True,
+                                                              "figuras": [URL_F]}
+
+
+def _recaptura(tmp_path):
+    """A pasta do `emed_api --apply` da recaptura: 1 com figura, 1 sem chave de figura, 1 ausente."""
+    base = tmp_path / "recaptura"
+    _escrever(base, "questoes", "t26_1", {"lista": "t26", "num": 1, "emed_id": "e1", "figura": True,
+                                          "figuras": [URL_F], "enunciado": "TEXTO NOVO DA API"})
+    _escrever(base, "questoes", "t26_2", {"lista": "t26", "num": 2, "emed_id": "e2", "enunciado": "x"})
+    _escrever(base, "questoes", "t26_9", {"lista": "t26", "num": 9, "emed_id": "e9", "sem_figura": True})
+    return base
+
+
+def test_cli_figuras_dry_run_nao_escreve(db_sintetico, tmp_path, capsys):
+    """DoD 4 (1.1a): sem `--apply` e dry-run com a contagem -- nada gravado."""
+    _chrome(db_sintetico, 1, 2)
+    antes = _linha_q(db_sintetico, 1)
+    assert emed_banco.main(["--figuras", str(_recaptura(tmp_path)), "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["atualizadas"], r["ausentes"], r["aplicado"]) == (1, ["e9"], False)
+    assert _linha_q(db_sintetico, 1) == antes
+
+
+def test_cli_figuras_apply_sem_expect_recusa(db_sintetico, tmp_path, capsys):
+    """DoD 4 (1.1a): `--apply` exige `--expect N` -- recusa, nada gravado."""
+    _chrome(db_sintetico, 1)
+    antes = _linha_q(db_sintetico, 1)
+    assert emed_banco.main(["--figuras", str(_recaptura(tmp_path)), "--apply"]) == 1
+    assert "--expect" in capsys.readouterr().out
+    assert _linha_q(db_sintetico, 1) == antes
+
+
+def test_cli_figuras_apply_fixa_antes_e_mescla_so_a_figura(db_sintetico, tmp_path, capsys, monkeypatch):
+    """DoD 4 (1.1a): `--apply --expect N` segue o rito (COUNT-ASSERT + backup fixado quando ha
+    `atualizadas`), imprime `ausentes` e nao troca o enunciado pelo da recaptura."""
+    _chrome(db_sintetico, 1, 2)
+    atos = []
+    monkeypatch.setattr(emed_banco, "_fixar_antes",
+                        lambda ato: atos.append(ato) or {"arquivo": "f.db", "sha256": "abc"})
+    base = _recaptura(tmp_path)
+    assert emed_banco.main(["--figuras", str(base), "--apply", "--expect", "2"]) == 2   # COUNT-ASSERT
+    assert atos == [] and "figuras" not in (_linha_q(db_sintetico, 1)["extras"] or "")
+    capsys.readouterr()
+    assert emed_banco.main(["--figuras", str(base), "--apply", "--expect", "1"]) == 0
+    out = capsys.readouterr().out
+    assert len(atos) == 1 and "e9" in out and "FIXADO" in out
+    linha = _linha_q(db_sintetico, 1)
+    assert json.loads(linha["extras"])["figuras"] == [URL_F]
+    assert linha["enunciado"] == _questao(1)["enunciado"]
+
+
+def test_exportar_so_figuras_leva_so_as_chaves_de_figura(db_sintetico, tmp_path, capsys, monkeypatch):
+    """DoD 4 (1.1a): `--exportar --so-figuras` escreve `OUT/upd/<lista>_<num>.json` so com as chaves de
+    figura + `emed_id`, e so dos docs que tem alguma -- nunca `solucao_medhub`, `enunciado`, `alternativas`."""
+    _chrome(db_sintetico, 1, 2, 3)
+    db.emed_mesclar_figuras({"e1": {"figura": True, "figuras": [URL_F], "figuras_alt": {"A": [URL_F]}},
+                             "e3": {"sem_figura": True}})
+    assert db.emed_upsert_solucoes([_solucao(1)])["novas"] == 1
+    monkeypatch.setattr(emed_banco, "figura_data_uri", lambda u: "data:image/webp;base64,AAAA")
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out), "--so-figuras"]) == 0
+    arquivos = sorted(p.name for p in (out / "upd").glob("*.json"))
+    assert arquivos == ["t26_1.json", "t26_3.json"]
+    d1 = json.loads((out / "upd" / "t26_1.json").read_text(encoding="utf-8"))
+    assert d1 == {"emed_id": "e1", "figura": True, "figuras": [URL_F], "figuras_alt": {"A": [URL_F]},
+                  "figuras_img": ["data:image/webp;base64,AAAA"]}
+    d3 = json.loads((out / "upd" / "t26_3.json").read_text(encoding="utf-8"))
+    assert d3 == {"emed_id": "e3", "sem_figura": True}
+    for d in (d1, d3):
+        assert not {"solucao_medhub", "enunciado", "alternativas"} & set(d)
+    assert not (out / "questoes").exists()

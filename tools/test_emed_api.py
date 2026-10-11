@@ -550,3 +550,109 @@ def test_comprimir_figura_vira_webp_ate_900px_com_fundo_branco():
     assert tipo == "image/webp" and out.size == (900, 300)
     assert out.convert("RGB").getpixel((10, 10)) == (255, 255, 255)
     assert emed_banco.comprimir_figura(b"nao e imagem") is None
+
+
+# ---------------------------------------------------------------- Fase 0 Lote 1 part-1.1a: figura declarada
+
+#: t40 Q6 (texto real, s222): o enunciado cita a tabela e a captura do Chrome a perdeu calada.
+T40_Q6 = ("A análise do perfil glicêmico da última semana está demonstrada na tabela a seguir: "
+          "Qual a conduta mais adequada para este caso clínico?")
+URL_FIG = "https://estrategia-prod-questoes.s3.amazonaws.com/images/X/X-400.png"
+
+
+def test_enunciado_que_cita_tabela_sem_figuras_sai_declarado_sem_figura():
+    """DoD 1 (1.1a): enunciado que cita objeto visual e questao sem `figuras` = `sem_figura` DECLARADO,
+    em vez da tabela sumir calada (t40 Q6). O doc leva a chave e segue dentro da whitelist."""
+    item = _item("e6")
+    item["statement_text"] = f"<p>{T40_Q6}</p>"
+    q = emed_api.extrair(item)
+    assert q["sem_figura"] is True and q["figuras"] == []
+    assert set(q) <= set(emed_api.CHAVES_EXTRAIDAS)
+    doc = emed_api.montar_docs([q], "t40", 40)[0]
+    assert doc["sem_figura"] is True
+    assert set(doc) <= set(emed_api.CHAVES_PUBLICAS) | set(emed_api.CHAVES_META)
+
+
+def test_enunciado_com_img_no_statement_nao_e_sem_figura():
+    """DoD 1 (1.1a): a mesma citacao, com a `<img>` no `statement`: a figura viajou, nada a declarar."""
+    item = _item("e7")
+    item["statement_text"] = f"<p>{T40_Q6}</p>"
+    item["statement"] = f'<p>{T40_Q6}</p><img src="{URL_FIG}">'
+    q = emed_api.extrair(item)
+    assert q["sem_figura"] is False and q["figuras"] == [URL_FIG]
+    assert "sem_figura" not in emed_api.montar_docs([q], "t40", 40)[0]
+
+
+@pytest.mark.parametrize("texto", [
+    "O elemento ocupa a 3a coluna da tabela periódica. Qual a conduta?",
+    "Quadro clínico de dor abdominal ha 2 dias; o exame de imagem foi normal. Qual a conduta?",
+])
+def test_termo_do_padrao_sem_objeto_visual_nao_marca(texto):
+    """DoD 1 (1.1a), o negativo explicito: termo do padrao citado SEM objeto visual na tela."""
+    assert not emed_api.CITA_FIGURA.search(texto)
+    item = _item("e8")
+    item["statement_text"] = f"<p>{texto}</p>"
+    q = emed_api.extrair(item)
+    assert q["sem_figura"] is False
+    assert "sem_figura" not in emed_api.montar_docs([q], "t9", 9)[0]
+
+
+def test_resumo_da_captura_lista_os_sem_figura(ambiente, monkeypatch, capsys):
+    """DoD 1 (1.1a): o resumo da captura lista `sem_figura: [nums]` (a numeracao da lista)."""
+    cita = _item("4000000002")
+    cita["statement_text"] = f"<p>{T40_Q6}</p>"
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), cita]))
+    assert _cli(ambiente, "--apply", "--expect", "2", "--json") == 0
+    r = json.loads(capsys.readouterr().out)
+    assert r["sem_figura"] == [2]
+    doc = json.loads((ambiente / "out" / "questoes" / "t9_2.json").read_text(encoding="utf-8"))
+    assert doc["sem_figura"] is True
+
+
+@pytest.mark.vivo
+def test_vivo_recall_cita_figura_no_conjunto_conhecido_t40():
+    """DoD 1 (1.1a), RECALL: o `CITA_FIGURA` acha as 5 questoes da t40 que perderam a figura
+    (Q5/6/18/21/22, s222), lidas do ipub.db real em `mode=ro`. Sem banco ou sem a t40, VIVO: skip."""
+    import sqlite3
+    if not REAL_DB.is_file():
+        pytest.skip("VIVO: ipub.db ausente -- recall do CITA_FIGURA na t40 nao verificado")
+    con = sqlite3.connect(f"file:{REAL_DB.as_posix()}?mode=ro", uri=True)
+    try:
+        linhas = dict(con.execute("SELECT num, enunciado FROM emed_questoes WHERE lista = 't40' "
+                                  "AND num IN (5, 6, 18, 21, 22)").fetchall())
+    except sqlite3.OperationalError:
+        linhas = {}
+    finally:
+        con.close()
+    if len(linhas) != 5:
+        pytest.skip("VIVO: t40 Q5/6/18/21/22 ausentes do ipub.db -- recall nao verificado")
+    perdidas = sorted(n for n, e in linhas.items() if not emed_api.CITA_FIGURA.search(e or ""))
+    assert perdidas == [], f"CITA_FIGURA nao acha t40 Q{perdidas}"
+
+
+def test_url_da_alternativa_imagem_viaja_em_figuras_alt():
+    """DoD 2 (1.1a): a forma REAL da t833 Q34 -- `sanitized_body` VAZIO e a `<img>` so no `body` --
+    leva a URL https por letra em `figuras_alt` (sem repetir; src relativo nao viaja)."""
+    item = _item("e34")
+    for i, alt in enumerate(item["alternatives"]):
+        url = f"https://d3typq4v571ghb.cloudfront.net/image-file/{i}.png"
+        alt["sanitized_body"] = ""
+        alt["body"] = f'<p style="x"><img src="{url}" alt="{PROF}"><img src="{url}"><img src="r.png"></p>'
+    q = emed_api.extrair(item)
+    assert q["figuras_alt"] == {L: [f"https://d3typq4v571ghb.cloudfront.net/image-file/{i}.png"]
+                                for i, L in enumerate("ABCD")}
+    assert PROF not in json.dumps(q, ensure_ascii=False)
+    assert "figuras_alt" in emed_api.CHAVES_EXTRAIDAS and "figuras_alt" in emed_api.CHAVES_META
+
+
+def test_figuras_alt_vai_ao_doc_quando_a_alternativa_tem_texto_e_imagem():
+    """DoD 2 (1.1a): alternativa com texto E imagem nao e `alt_so_figura`: vira doc, com `figuras_alt`."""
+    item = _item("e35")
+    item["alternatives"][1]["sanitized_body"] = f'<p>opção 1 <img src="{URL_FIG}"></p>'
+    q = emed_api.extrair(item)
+    assert q["figuras_alt"] == {"B": [URL_FIG]} and emed_api.fora_do_formato(q) is None
+    doc = emed_api.montar_docs([q], "t9", 9)[0]
+    assert doc["figuras_alt"] == {"B": [URL_FIG]}
+    assert set(doc) <= set(emed_api.CHAVES_PUBLICAS) | set(emed_api.CHAVES_META)
+    sem = emed_api.montar_docs([emed_api.extrair(_item("e36"))], "t9", 9)[0]
+    assert "figuras_alt" not in sem

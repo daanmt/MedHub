@@ -2578,6 +2578,76 @@ def emed_upsert_questoes(rows, aplicar=True):
         conn.close()
 
 
+#: Fase 0 Lote 1 part-1.1a (11/10/2026, M-042): as chaves de FIGURA dentro de `extras` -- as unicas que
+#: `emed_mesclar_figuras` toca. `sem_figura` = o enunciado cita imagem que nao veio (declarado).
+CHAVES_FIGURA_EMED = ("figura", "figuras", "figuras_alt", "sem_figura")
+
+
+def emed_mesclar_figuras(mapa, conn=None, aplicar=True):
+    """Mescla ESTREITA da figura recapturada nas linhas de `emed_questoes` por `emed_id` (1.1a).
+
+    `mapa = {emed_id: {figura?, figuras?, figuras_alt?, sem_figura?}}`. Em cada linha cujo `emed_id`
+    ja existe (todas, se a questao esta em mais de uma lista), as `CHAVES_FIGURA_EMED` de `extras`
+    passam a ser as do mapa (valor vazio/False = chave fora) e o `hash` e re-derivado; com `figuras`,
+    `sem_figura` cai (a figura chegou). Nada mais muda: nem enunciado, alternativas, gabarito, solucao,
+    nem `emed_solucoes`/`emed_respostas`. Nunca cria linha. Reingerir a captura da API sobre uma linha
+    do Chrome trocaria o texto de lista ja resolvida (decisao 3 da spec) -- por isso esta funcao.
+
+    Devolve `{atualizadas, iguais, ausentes: [emed_id]}`; com `extras` ilegivel a linha nao e tocada e
+    o `emed_id` vai para `invalidas`. `aplicar=False` mede pelo mesmo caminho. Com `conn` dado, quem
+    chama faz o commit e fecha."""
+    import json as _json
+    propria = conn is None
+    conn = get_connection() if propria else conn
+    cont = {"atualizadas": 0, "iguais": 0, "ausentes": []}
+    invalidas = []
+    try:
+        ts = carimbo()
+        for emed_id in sorted(mapa, key=str):
+            entrada = mapa[emed_id] or {}
+            try:
+                linhas = conn.execute(
+                    "SELECT id, " + ", ".join(CAMPOS_HASH_EMED) + " FROM emed_questoes WHERE emed_id = ?",
+                    (str(emed_id),)).fetchall()
+            except sqlite3.OperationalError:
+                linhas = []          # tabela ausente: nada a mesclar, e a leitura nao a cria
+            if not linhas:
+                cont["ausentes"].append(str(emed_id))
+                continue
+            for r in linhas:
+                linha = dict(zip(("id",) + CAMPOS_HASH_EMED, r))
+                try:
+                    extras = _json.loads(linha["extras"]) if linha["extras"] else {}
+                except ValueError:
+                    extras = None
+                if not isinstance(extras, dict):
+                    invalidas.append(str(emed_id))
+                    continue
+                novo = {k: v for k, v in extras.items() if k not in CHAVES_FIGURA_EMED}
+                novo.update({k: entrada[k] for k in CHAVES_FIGURA_EMED
+                             if entrada.get(k) not in (None, "", False, [], {})})
+                if novo.get("figuras"):
+                    novo.pop("sem_figura", None)
+                texto = _json.dumps(novo, sort_keys=True, ensure_ascii=False) if novo else ""
+                atual = _json.dumps(extras, sort_keys=True, ensure_ascii=False) if extras else ""
+                if texto == atual:
+                    cont["iguais"] += 1
+                    continue
+                cont["atualizadas"] += 1
+                if aplicar:
+                    linha["extras"] = texto
+                    conn.execute("UPDATE emed_questoes SET extras = ?, hash = ?, atualizado_em = ? "
+                                 "WHERE id = ?", (texto, emed_hash_questao(linha), ts, linha["id"]))
+        if aplicar and propria:
+            conn.commit()
+    finally:
+        if propria:
+            conn.close()
+    if invalidas:
+        cont["invalidas"] = invalidas
+    return cont
+
+
 def riscadas_norm(valor):
     """Riscadas da página (lista de letras) -> texto canônico "A,C" (ordenado, sem repetição,
     maiúsculas); vazio/ausente -> "". Aceita também o texto já canônico. PURA."""

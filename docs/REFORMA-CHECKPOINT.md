@@ -27,8 +27,7 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 - **M-131** `tmp/` SOLTO (17.189 arquivos, 40,2 MB): inventário + regra de vida do `tmp/`.
 - **M-132** Pattern Registry do `.vibeflow/index.md` x frontmatter de 5 patterns: o registry vira DERIVADO do frontmatter por ferramenta, com sensor (achado do 1.pre).
 - **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127.
-- **M-137** `.agents/workflows/` fora dos portadores que o `CONTRATO_REVOGADO` vigia (classe do M-122: o sensor existe, o caminho não chega).
-- **M-138** flag `--delete-pdfs` viva no `extract_pdfs.py`: remédio preferido = recusar salvo `--confirmo-apagar` explícito (não remover).
+- **M-137** `.agents/workflows/` fora dos portadores que o `CONTRATO_REVOGADO` vigia (classe do M-122: o sensor existe, o caminho não chega). · **M-138** flag `--delete-pdfs` viva no `extract_pdfs.py`: remédio preferido = recusar salvo `--confirmo-apagar` explícito (não remover).
 - **M-139** resíduos descritivos da era "LangMem no boot" (`README.md:169`, `ROADMAP.md:83`, `.vibeflow/patterns/agent-workflow-protocol.md:36`, comentário falso em `app/engine/get_topic_context.py:153`), classe do M-127/M-133, por lista.
 - (ambiente local, sem commit) **M-140** `.codex/hooks.json` (gitignored) ainda dispara a consolidação se o Codex rodar: 1 linha no arquivo local. 🔴 Pendente de confirmação do OPERADOR, porque é configuração de harness e o pedido veio do ai-eng; o medhub não edita config a pedido de par.
 - **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).

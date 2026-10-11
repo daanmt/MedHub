@@ -281,7 +281,8 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/trilha.py` | o GERADOR da trilha da Fase 1 (`core/cronograma/plano_trilha.json`), no repo | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+13) |
 | `tools/variancia.py` | — | `.agents/skills/source-command-performance/SKILL.md`, `.claude/commands/performance.md` (+7) |
 
-Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não re-rodar.
+Migração one-shot aplicada é apagada no commit seguinte ao apply; o git guarda o script. Vale o §3 item 4: sem `archive/`.
+⚰️ *11/10/2026 (Fase 0 Lote 3, part 3.0c1): REVOGADO o arquivo de migrações, que contradizia o §3 item 4 ("sem `archive/`"). Redação anterior: "Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não re-rodar." O diretório foi removido nesta part (13 scripts + README); restaurar um script com `git show 4493f51:tools/_archive/migrations/<arquivo>`. O termo é vigiado pelo gate `CONTRATO_REVOGADO`.*
 
 ---
 

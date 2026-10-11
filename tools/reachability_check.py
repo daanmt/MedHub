@@ -74,8 +74,6 @@ ISENTOS = {
     # Audit da consolidacao part-6 (ai-eng): sob demanda POR NORMA, nao orfaos.
     "calibrate_card_checks.py": "calibrador dos limiares de card_checks — norma: limiar "
                                 "so muda re-rodando a calibracao (decisions.md 2026-08-14)",
-    "audit_fsrs.py": "inspetor manual read-only do motor FSRS — ferramenta de mao "
-                     "declarada na tabela do AGENTE.md §7.4",
 }
 
 # Diretorio cujos .py sao alcancados por declaracao em settings.json (hooks) --

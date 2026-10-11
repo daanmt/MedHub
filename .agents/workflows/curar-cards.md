@@ -59,5 +59,6 @@ Exportar o substrato e fanout por tema:
 - **Reforjar > aposentar.** Card com `erro_origem` rico mas mal-cunhado é reforjável — re-cunhar ancorando no elo. Aposentar só duplicata, erro pontual de leitura sem conteúdo, ou redundância total.
 - **O erro define o card.** Nunca re-cunhar como "pergunta de fato sobre o tema" — ancorar na distinção que quebrou (`tipo_erro` + `o_que_faltou`).
 - **Andaimes (`tipo` base/mecanismo/nuance) são órfãos legítimos** (`questao_id` NULL): não tratar como sem-ancoragem.
-- **Backup + dry-run antes de toda escrita** no `ipub.db`. Migrações one-shot de taxonomia movem para `tools/_archive/migrations/` após aplicadas.
+- **Backup + dry-run antes de toda escrita** no `ipub.db`. Migração one-shot aplicada é apagada no commit seguinte ao apply; o git guarda o script.
+  ⚰️ *11/10/2026 (Fase 0 Lote 3, part 3.0c1): REVOGADO o arquivamento de migração, que contradizia o `AGENTE.md` §3 item 4 ("sem `archive/`"). Redação anterior: "Migrações one-shot de taxonomia movem para `tools/_archive/migrations/` após aplicadas." O diretório foi removido; restaurar um script com `git show 4493f51:tools/_archive/migrations/<arquivo>`.*
 - O linter **complementa** o olho humano/agente; nunca o substitui.

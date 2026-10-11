@@ -58,9 +58,10 @@ o relógio único. A regra vale para **writers E leitores**: `SELECT ... datetim
 a janela de "erro fresco" de 48h operava como **45h**, e a janela de volume deslizava um dia inteiro
 entre 21h e a meia-noite. `db.agora()` é monkeypatchável nos testes, e por isso os chamadores a
 invocam **pelo atributo do módulo** (`db.agora()`), nunca por `from db import agora`.
-🔴 **Escopo DECLARADO:** a varredura estrutural que impõe isto cobre `app/`; os sítios gêmeos em
-`tools/` (`audit_fsrs.py`, `variancia.py`) seguem **deferidos, não esquecidos** -- e o histórico
+🔴 **Escopo DECLARADO:** a varredura estrutural que impõe isto cobre `app/`; o sítio gêmeo em
+`tools/` (`variancia.py`) segue **deferido, não esquecido** -- e o histórico
 anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, Tier 2.3).
+⚰️ *11/10/2026 (Fase 0 Lote 3, part 3.0c1): o outro sítio gêmeo, `tools/audit_fsrs.py` (inspetor de mão sem consumidor, que lia o dia pelo relógio UTC do SQLite), foi removido; restaurar com `git show 4493f51:tools/audit_fsrs.py`.*
 
 ---
 

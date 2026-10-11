@@ -225,28 +225,29 @@ def _derivar_registro():
 _TERMOS_REVOGADOS, _PORTADORES_NORMA = _derivar_registro()
 
 _RE_HEADING = re.compile(r"^(#{1,6})\s")
-# Marcador de SECAO de lapide. Deliberadamente MAIS LARGO que o `RE_LAPIDE` do
-# doc_drift, que responde outra pergunta ("esta linha afirma que algo sumiu?").
-# Aqui a pergunta e "este bloco NARRA uma revogacao?" -- narrar a morte de uma
-# clausula e o registro correto, nao a violacao. As duas reguas convivem porque
-# medem eixos distintos; a do doc_drift e importada, nao copiada.
+# Marcador de lapide (linha ou SECAO). A pergunta aqui e "esta linha/bloco NARRA
+# uma revogacao?" -- narrar a morte de uma clausula e o registro correto, nao a
+# violacao. O `RE_LAPIDE` do doc_drift responde outra ("esta linha afirma que
+# ALGO sumiu?") e fica la, para o modo refs e para os ponteiros de memoria.
 _RE_SECAO_REVOGACAO = re.compile(
     r"revogad|morte d[aoe]|morreu|morta|morto|l[aá]pide|antig[oa]|⚰", re.I)
 _RE_VERSAO_CORPO = re.compile(r"\*\*Vers[aã]o\s+(\d+\.\d+)")
 _RE_VERSAO_FM = re.compile(r"^version:\s*(\d+\.\d+)\s*$", re.M)
 
 
-try:  # regua irma do doc_drift: importada uma vez, nunca copiada
-    from tools.doc_drift import RE_LAPIDE as _RE_LAPIDE_IRMA
-except Exception:  # noqa: BLE001 -- sem ela, so o criterio local
-    _RE_LAPIDE_IRMA = None
-
-
 def _linha_e_lapide(linha):
-    """A propria linha se declara lapide (marcador ou vocabulario)."""
-    if _RE_SECAO_REVOGACAO.search(linha):
-        return True
-    return bool(_RE_LAPIDE_IRMA and _RE_LAPIDE_IRMA.search(linha))
+    """A propria linha se declara lapide -- pelo marcador acima, e so por ele.
+
+    M-151 (11/10/2026, Lote 3 part 3.0b3): ate aqui a regua irma do doc_drift
+    (`RE_LAPIDE`: "removid", "descomissionad", "nao existe"...) tambem isentava.
+    Uma linha ATIVA que cita OUTRA coisa que sumiu responde sim a pergunta dela e
+    saia do gate: `revisao-calibrada:73` prescrevia o termo revogado
+    `justificativa de 1 linha` e escapava por dizer "Nao existe amend"; o
+    `evidence-governance:66` (b2) escapava por "descomissionado". Isentar so pelo
+    marcador fecha o furo; a lapide mora em linha propria (⚰️), nunca colada na
+    linha que ainda prescreve.
+    """
+    return bool(_RE_SECAO_REVOGACAO.search(linha))
 
 
 def check_contrato_revogado(root=None, portadores=None, termos=None):

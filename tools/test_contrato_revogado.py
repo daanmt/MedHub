@@ -40,6 +40,13 @@ def _doc(tmp_path, nome, texto):
 def test_linha_ativa_com_termo_revogado_e_achado(tmp_path):
     a = _doc(tmp_path, "c.md", "# C\n\n## Clausula 2\n\nO agente oferece o PREPARAR.\n")
     assert [(x[1], x[2]) for x in a] == [(5, "prescricao")]
+    # M-151 (3.0b3): citar OUTRA coisa que sumiu nao faz da linha uma lapide.
+    # `revisao-calibrada:73` escapava por "Nao existe amend"; o
+    # `evidence-governance:66` da b2, por "descomissionado".
+    b = _doc(tmp_path, "d.md",
+             "# D\n\nO MCP X foi descomissionado; o agente oferece o PREPARAR.\n"
+             "Nao existe amend: o agente oferece o PREPARAR.\n")
+    assert [(x[1], x[2]) for x in b] == [(3, "prescricao"), (4, "prescricao")]
 
 
 def test_secao_de_lapide_isenta_o_bloco_inteiro(tmp_path):

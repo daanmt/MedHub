@@ -232,7 +232,7 @@ Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento
 Ao fechar a sessão, **antes** de encerrar:
 
 1. **Clusterizar os gaps por TEMA/conceito, não por card.** Agrupar todo card avaliado **1 ou 2** e todo erro repetido pelo **elo metacognitivo / tema de origem** (ver [[feedback-flashcard-metacognitivo]]). Ex.: "Febre Amarela — números (incubação 3-6 x viremia <7)"; "PTI — gatilho de tratamento (púrpura úmida x valor de plaqueta)". Somar aqui os clusters que abriram a sessão com sinal **frio** (F5) e o tema **dormente** do dia, se houver — é o slot que o `/refrescar` ocupava.
-2. **Para cada gap-tema, voltar ao resumo de origem** em `resumos/` — localizar via RAG local `app.engine.rag.search` (não ler arquivo inteiro à toa). Diagnosticar o resumo **contra o gap**:
+2. **Para cada gap-tema, voltar ao resumo de origem** em `resumos/` — localizar por busca determinística: `get_topic_context(tema)["resumo_path"]` e, dentro dele, `Grep` da seção do gap; se o nome não casar, `Grep` em `resumos/**/*.md` (não ler arquivo inteiro à toa). Diagnosticar o resumo **contra o gap**:
    - **Resumo cobre o ponto com clareza** -> gap é puro recall/decoreba -> entregar **re-ensino direcionado condensado**: denso, ancorado no resumo, focado na **discriminação exata** que falhou. Sem editar o resumo.
    - **Resumo é raso/omisso no ponto** -> a **matéria é deficiente** -> **expandir o resumo**: adicionar a discriminação/armadilha que faltou, seguindo `/estilo-resumo` + **Regra de Acúmulo** (armadilhas cumulativas, nunca sobrescrever) + Siamese Twins (`AGENTE.md §6`). É o passo que faz o card **parar de ser leech**.  <!-- NAO-VERIFICAVEL: decidir que o resumo esta raso e semantico; conduta do agente na sessao, sem artefato que a registre (revisar: 2027-03-31) -->
    - **Resumo está inchado em torno do ponto** -> **comprimir**: tighten o sinal para o ponto ficar localizável. Nunca deletar armadilhas — comprimir é reorganizar, não apagar conteúdo de prova.  <!-- NAO-VERIFICAVEL: `audit_resumos` nao compara versoes, entao 'nunca deletar armadilha' nao tem sensor; candidato a ratchet de contagem por arquivo (revisar: 2026-12-31) -->
@@ -258,7 +258,7 @@ Ao fechar a sessão, **antes** de encerrar:
 | Flag | Função |
 |---|---|
 | `--pick` | Escolhe o tema dormente do dia (JSON). Ordem: tema com cards ativos, não-`[bulk]`/`Geral`, não reabordado na janela, maior score de dormência. |
-| `--context` | Substrato narrativo do tema (JSON) — resumo + erros + cards + chunks do RAG. Exige `--tema`. |
+| `--context` | Substrato narrativo do tema (JSON) — resumo + erros + cards. Exige `--tema`. |
 | `--stamp` | Carimba em `review_log` (**Invariante B**). Exige `--tema-id`. |
 | `--area AREA` | Filtro de área (match exato), com `--pick`/`--context`. |
 | `--tema TEMA` | Tema a contextualizar (com `--context`). |

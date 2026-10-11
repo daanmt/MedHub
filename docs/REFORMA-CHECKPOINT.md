@@ -3,7 +3,7 @@
 > Protocolo: `C:/Users/daanm/ai-eng/artifacts/protocolo-retomada-reforma-medhub-2026-10-10.md`. O chat não é estado: retomar por este arquivo.
 
 ## Estado
-Fase 0 (preparar o ambiente) · Lote 0 · 0.3 (`bb6ebd3`) e hotfix 0.3h (`beebc04`) PASS. O push foi liberado pelo operador às ~21:50 (*"pode commitar e pushar"*), depois que o classificador do auto mode tinha negado o 1º às 21:10. Próxima part: 0.4a. clear-safe: **sim** quando o push deste commit confirmar (G-part 0.3h). O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
+Fase 0 (preparar o ambiente) · Lote 0 · 0.3 (`bb6ebd3`) e hotfix 0.3h (`beebc04`) PASS. O push foi liberado pelo operador às ~21:50 (*"pode commitar e pushar"*), depois que o classificador do auto mode tinha negado o 1º às 21:10. 0.4a PASS (`a240f94`). Próxima part: 0.4b dry-run. clear-safe: **sim** quando o push deste commit confirmar (G-part 0.4a). O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
 
 ## Parts (Lote 0 → 5)
 | id | spec (path no repo) | status | commit | suíte (n/falhas/s) | desvio declarado |
@@ -14,14 +14,14 @@ Fase 0 (preparar o ambiente) · Lote 0 · 0.3 (`bb6ebd3`) e hotfix 0.3h (`beebc0
 | 0.2c | `…-part-2c.md` | PASS | e294651 | 1536/0/178 | §7.4 regenerada; sentinela em `sqlite3.connect` no script (achou `DB_PATH` próprio em `review_radar` e `variancia`); M-120 -> Lote 3 |
 | 0.3 | `…-part-3.md` | PASS (push pendente) | bb6ebd3 | 1539/0/162 | DoD 4 = `NAO-VERIFICAVEL` (o teste da figura prova só a URL em `figuras`; revisar 2026-12-31); API no módulo maior que os 2 nomes da spec; restrição do ai-eng cumprida (catraca fora do `else` e do `except`); prova no fluxo real: commit com órfã sintética BLOQUEADO (`128 > 127 no HEAD`, `engenharia-cli.md:732`), revertido; §7.4 não acusou |
 | 0.3h | `…-part-3h.md` (spec do medhub, DoD ditado pelo ai-eng 10/10 21:17) | PASS | beebc04 | 1544/0/165 | M-122 + M-123 fecham neste commit; DoD 1: 0 e 0 no HEAD; 4(i) REPRODUZ (o `add` vai para o índice apontado); fluxo real: commit com CHECK inexistente numa órfã existente BLOQUEADO (`CLAUSULA_GATE_INEXISTENTE`, catraca calada), revertido; também falhou o backstop `test_repo_real_sem_anotacao_mentirosa`, que roda com a suíte. A isolação da linha nova é a regressão in-process; inventário: 6 `[BLOCK]`, só o M-122 não zerava, M-125 vazio; §7.4 regenerada (2 linhas) |
-| 0.4a | `…-part-4a.md` | pendente | | | |
+| 0.4a | `…-part-4a.md` | PASS | a240f94 | 1547/0/171 (re-rodada sobre a árvore do commit; o pre-commit passou) | saem 10 funções do `db.py` (só remoções, -203), 3 arquivos sem referência e o `try/except: pass` do `cronograma_progresso`; `test_schema_escrita` sem exceções (vermelho visto); reachability 0 órfãos antes e depois; §7.4 regenerada (4 contadores); 2 candidatos ao ai-eng: allowlist com `cronograma_progresso` e patterns do vibeflow com exemplo morto |
 | 0.4b dry-run | `…-part-4b.md` | pendente | | | |
 | 0.4b apply | `…-part-4b.md` | pendente (G-op dado, condicionado à 1.4) | | | |
 | 1.0 RAG/LangMem fora do caminho crítico · 1.1 P5 · 1.2 P2 · 1.3 P6 · 1.4 cópia off-machine (Drive + git privado) | gen-spec do medhub após G-lote 0 | pendente | | | |
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
 
 ## Próximo ato (1 linha)
-medhub lê SÓ a spec `…-part-4a.md` e lança 1 subagente -> audit do DoD -> commit + push -> linha aqui -> msg ao ai-eng (G-part 0.4a); depois 0.4b dry-run -> G-lote 0.
+medhub lê SÓ a spec `…-part-4b.md` e roda o **dry-run** (o apply é G-op, depois da 1.4) -> audit -> commit + push -> linha aqui -> relatório do G-lote 0 ao ai-eng (todas as parts PASS + suíte + selo + ≤15 linhas).
 
 ## Dívida nascida no Lote 0 (dono medhub, -> Lote 3; linhas em `docs/BACKLOG-UNICO-MEDHUB.md`)
 - **M-120** leitor do `ipub.db` real em `mode=ro` para os testes `vivo` (audit da 2a).

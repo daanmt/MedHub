@@ -3,7 +3,7 @@
 > Protocolo: `C:/Users/daanm/ai-eng/artifacts/protocolo-retomada-reforma-medhub-2026-10-10.md`. O chat não é estado: retomar por este arquivo.
 
 ## Estado
-Fase 0 (preparar o ambiente) · **Lote 0 e Lote 1 completos, G-lote 0 e G-lote 1 ACEITOS** (ai-eng). Lote 3.0 (remoção): a1 PASS (`3e072dc`), a2 PASS (`10bc75c`, `439f92c`); **b1 PASS (`825902b`, executada pelo ai-eng por ordem do operador 11/10 16:15, com a s223 encerrada)**; próximo b2 (idem, ai-eng). s223 ENCERRADA em 11/10 16:20 (log selado em `history/session_223.md`). clear-safe: **sim**.
+Fase 0 (preparar o ambiente) · **Lote 0 e Lote 1 completos, G-lote 0 e G-lote 1 ACEITOS** (ai-eng). Lote 3.0 (remoção): a1 PASS (`3e072dc`), a2 PASS (`10bc75c`, `439f92c`); **b1 PASS (`825902b`) e b2 PASS (`d00d334`), executadas pelo ai-eng por ordem do operador 11/10 16:15, com a s223 encerrada**; próximo b3 (quem executa: decisão do operador — medhub na próxima sessão ou ai-eng). s223 ENCERRADA em 11/10 16:20 (log selado em `history/session_223.md`). clear-safe: **sim**.
 
 ## Parts (Lote 0 → 5)
 | id | spec (path no repo) | status | commit | suíte (n/falhas/s) | desvio declarado |
@@ -21,12 +21,12 @@ Fase 0 (preparar o ambiente) · **Lote 0 e Lote 1 completos, G-lote 0 e G-lote 1
 | 2.1-2.3 P1 fontes estruturadas (schema `referencia`, evidence-governance v1.2, amostra 62) · 3.x hub+contratos · 4.x dados · 5.x medições | 2.x: `C:/Users/daanm/ai-eng/.vibeflow/specs/medhub-fase0-lote2-fontes-part-{1,2,3}.md` (só depois do G-lote 1; reler o disco; apply do migrador = G-op; triagem dos 62 = ai-eng) | pendente | | | |
 
 ## Próximo ato (1 linha)
-3.0 b2 (ai-eng executa, por ordem do operador) -> b3 -> b4 -> c1 -> c2 -> Lote 2. Na abertura: presença ao ai-eng-51 + releitura deste arquivo. 🔴 Regras: enquanto um filho edita `db.py`, nenhum CLI de escrita no banco real; b1/b2 (engine/skills usados no estudo) só entre atos de estudo, a1/a2 a qualquer hora.
+3.0 b3 -> b4 -> c1 -> c2 -> Lote 2 (specs do ai-eng; b1/b2 já feitas pelo ai-eng). Na abertura: presença ao ai-eng-51 + releitura deste arquivo. 🔴 Regras: enquanto um filho edita `db.py`, nenhum CLI de escrita no banco real; b1/b2 (engine/skills usados no estudo) só entre atos de estudo, a1/a2 a qualquer hora.
 
 ## Dívida nascida no Lote 0 (dono medhub, -> Lote 3; linhas em `docs/BACKLOG-UNICO-MEDHUB.md`)
 - **M-120** leitor do `ipub.db` real em `mode=ro` para os testes `vivo` (audit da 2a). · **M-128** `get_caderno_erros`, a 11ª função morta do `db.py`, fora da lista da 0.4a (fecho).
 - **M-131** `tmp/` SOLTO (17.189 arquivos, 40,2 MB): inventário + regra de vida do `tmp/`.
-- **M-149** (b1, 11/10) `ledger_self_state.json` reiniciado ~05/10 diverge do `.jsonl`: 6 `opened` sem par possível (entre eles `rag_stale` fp `cd2667ee26cc`, aceito sem par ao remover o RAG_STALE); o estado deve derivar do jsonl, não viver à parte. · **M-150** (b1) `test_cli_importavel.py` importa `calibrate_card_checks.py:98-106`, que chama `record` sem `root` e grava no ledger REAL a cada suíte (occurrences 161 -> 163 em 2 rodadas): vazamento do harness, classe do M-123.
+- **M-149** (b1, 11/10) `ledger_self_state.json` reiniciado ~05/10 diverge do `.jsonl`: 6 `opened` sem par possível (entre eles `rag_stale` fp `cd2667ee26cc`, aceito sem par ao remover o RAG_STALE); o estado deve derivar do jsonl, não viver à parte. · **M-150** (b1) `test_cli_importavel.py` importa `calibrate_card_checks.py:98-106`, que chama `record` sem `root` e grava no ledger REAL a cada suíte (occurrences 161 -> 163 em 2 rodadas): vazamento do harness, classe do M-123. · **M-151** (b2) `RE_LAPIDE` do gate casa "descomissionad" também em LINHA ATIVA, isentando-a por engano (a linha 66 antiga do evidence-governance estava cega); prévia só-leitura acha 1 linha restante: `revisar.md:227` → tratar na b3 (regex só em linha com ⚰️). · evidence-governance ficou em **v1.2** na b2: a spec 2.2 do Lote 2 passa a v1.3 (ai-eng ajusta).
 - **M-132** Pattern Registry do `.vibeflow/index.md` x frontmatter de 5 patterns: o registry vira DERIVADO do frontmatter por ferramenta, com sensor (achado do 1.pre).
 - **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127. · **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
 - **M-137** `.agents/workflows/` fora dos portadores que o `CONTRATO_REVOGADO` vigia (classe do M-122: o sensor existe, o caminho não chega). · **M-138** flag `--delete-pdfs` viva no `extract_pdfs.py`: remédio preferido = recusar salvo `--confirmo-apagar` explícito (não remover).

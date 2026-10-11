@@ -8,8 +8,6 @@ nao os altera.
 Globais isolados em tmp_path, em TODO teste, pelo autouse `_event_log_isolado`
 (escrita nova em caminho global entra aqui, com o incidente que a motivou):
   - `event_log.LOG_PATH`                      -> history/generation_log.jsonl
-  - `app.memory.manager._HISTORY_DIR`         -> sink de dívida de vocabulário (F66)
-  - `app.memory.manager._ERROR_LOG`           -> history/memory_errors.log (F96)
   - `ledger_self.ROOT_DIR` e `tools.ledger_self.ROOT_DIR`
                                               -> history/ledger_self{.jsonl,_state.json}
   - `tools.utils.state_utils.WATERMARK_PATH`  -> history/card_watermark.json
@@ -97,24 +95,8 @@ def _event_log_isolado(tmp_path, monkeypatch):
                             str(tmp_path / "generation_log.jsonl"))
     except Exception:
         pass  # sem event_log (arvore parcial) -> nada a isolar
-    # F66 (s176): MESMA classe, writer novo. `reconciliar_weak_areas` grava o sink de
-    # divida de vocabulario; `test_boot_verdadeiro` a chama com store SINTETICO e, sem
-    # este isolamento, o sink de PRODUCAO era sobrescrito por dado de fixture (medido:
-    # 100 itens reais viraram 1 `wa_dummy`). Isolamos `_HISTORY_DIR` -- a costura que o
-    # proprio modulo ja expoe e que `tools/test_memory.py` (script-style, fora do pytest)
-    # ja patchava: um seam so, valido nos DOIS harnesses. Escrita nova em caminho global entra aqui.
-    try:
-        import app.memory.manager as _mgr
-        monkeypatch.setattr(_mgr, "_HISTORY_DIR", tmp_path)
-        # F96 (s177): `_ERROR_LOG` e um SEGUNDO global derivado de `_ROOT`, fora da
-        # costura acima. O caminho de SUCESSO do sink ficou isolado no 1.3 e o de FALHA
-        # nao: `log_error` seguia escrevendo no `history/memory_errors.log` real, e o
-        # teste que forca a falha de proposito somava 1 linha por rodada (14 medidas
-        # entre 10 e 11/09/2026). O painel do `ledger_self` conta as linhas desse
-        # arquivo -- a suite inflava o numero que o operador le.
-        monkeypatch.setattr(_mgr, "_ERROR_LOG", tmp_path / "memory_errors.log")
-    except Exception:
-        pass
+    # ⚰️ 11/10/2026 (part 3.0a2): o isolamento de `app.memory.manager` (`_HISTORY_DIR`, F66;
+    # `_ERROR_LOG`, F96) saiu com o módulo -- ninguém mais escreve nesses sinks.
     # Fase 0 Lote 0 part-2a (10/10/2026): o runtime do HARNESS. Teste que exercita
     # `auto_check`/`ledger_self.record` sem `root=` gravava no history/ledger_self.jsonl e no
     # history/card_watermark.json reais (fora do git desde a part-1, mas ainda o runtime do

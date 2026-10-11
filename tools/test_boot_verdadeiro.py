@@ -7,10 +7,13 @@ WeakAreas, e paths por __file__ (fim do banco-fantasma).
 
 Fase 0 Lote 1 part 1.0 (11/10/2026): o caminho do boot não carrega memória longa nem RAG
 (LangGraph, LangMem, Chroma), e nenhum hook do `.claude/settings.json` dispara a consolidação.
-Os testes do MÓDULO `app.memory` (acima) ficam: o módulo segue no disco, sob demanda.
+⚰️ Part 3.0a2 (11/10/2026): o MÓDULO `app.memory` saiu do repo, e com ele os 5 testes de
+reconciliação/paths (F45/F46); a lápide `test_memoria_longa_removida` impede a volta.
 """
+import ast
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timedelta
@@ -19,8 +22,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from app.memory import manager as mgr  # noqa: E402
-from app.memory.store import SQLiteMemoryStore  # noqa: E402
 import day_plan as dp  # noqa: E402
 
 
@@ -87,92 +88,10 @@ def test_precedencia_no_fluxo(monkeypatch):
         assert (efetiva, f_ef) == (esp_nota, esp_fonte), (nota, fonte, at)
 
 
-# ---- F45: reconciliação de vocabulário + upsert por par --------------------------------
-
-
-def _store_com(tmp_path, entradas):
-    store = SQLiteMemoryStore(str(tmp_path / "mem.db"))
-    for key, content in entradas.items():
-        store.put(("medhub", "weak_areas"), key,
-                  {"kind": "WeakArea", "content": content})
-    return store
-
-
-def test_reconcilia_normaliza_e_colapsa(tmp_path, monkeypatch):
-    monkeypatch.setattr(mgr, "_vocabulario_taxonomia",
-                        lambda p: {"cirurgia": "Cirurgia", "pediatria": "Pediatria"})
-    store = _store_com(tmp_path, {
-        "k1": {"area": "CIRURGIA", "especialidade": "Trauma", "pattern": "p1",
-               "error_count": 0, "last_updated": "2026-08-01"},
-        "k2": {"area": "Cirurgia", "especialidade": "trauma", "pattern": "p2",
-               "error_count": 5, "last_updated": "2026-08-20"},   # melhor: sobrevive
-        "k3": {"area": "Pediatria", "especialidade": "Bronquiolite", "pattern": "p3",
-               "error_count": 1},
-    })
-    stats = mgr.reconciliar_weak_areas(store, tmp_path / "ipub_fake.db")
-    assert stats["normalizadas"] >= 1          # CIRURGIA -> Cirurgia
-    assert stats["colapsadas"] == 1            # k1 morre, k2 (count 5) sobrevive
-    vivos = store.search(("medhub", "weak_areas"), limit=10)
-    pares = sorted((i.value["content"]["area"], i.value["content"]["especialidade"].lower())
-                   for i in vivos)
-    assert pares == [("Cirurgia", "trauma"), ("Pediatria", "bronquiolite")]
-
-
-def test_reconcilia_detecta_par_invertido(tmp_path, monkeypatch):
-    monkeypatch.setattr(mgr, "_vocabulario_taxonomia", lambda p: {"cirurgia": "Cirurgia"})
-    store = _store_com(tmp_path, {
-        "k1": {"area": "Trauma", "especialidade": "Cirurgia", "pattern": "x"},
-    })
-    mgr.reconciliar_weak_areas(store, tmp_path / "ipub_fake.db")
-    v = store.search(("medhub", "weak_areas"), limit=10)[0].value["content"]
-    assert v["area"] == "Cirurgia" and v["especialidade"] == "Trauma"
-
-
-def test_fora_do_vocabulario_nao_dropa(tmp_path, monkeypatch):
-    monkeypatch.setattr(mgr, "_vocabulario_taxonomia", lambda p: {"cirurgia": "Cirurgia"})
-    monkeypatch.setattr(mgr, "log_error", lambda *a, **k: None)
-    store = _store_com(tmp_path, {
-        "k1": {"area": "Astrologia Medica", "especialidade": "X", "pattern": "?"},
-    })
-    stats = mgr.reconciliar_weak_areas(store, tmp_path / "ipub_fake.db")
-    assert stats["fora_vocab"] == 1
-    assert len(store.search(("medhub", "weak_areas"), limit=10)) == 1   # recall-safe
-
-
-# ---- F46: paths por __file__ -----------------------------------------------------------
-
-#: Valor de `mgr._ERROR_LOG` no ATO DO IMPORT -- antes de a fixture autouse do conftest
-#: (isolamento F96) redirecionar o global para tmp_path. E este valor que o invariante
-#: F46 mede: o path foi calculado a partir de `__file__` do modulo, nao do cwd.
-_ERROR_LOG_NO_IMPORT = mgr._ERROR_LOG
-
-
-def test_paths_ancorados_no_repo():
-    """F46: o path nasce de `__file__`, nunca do cwd.
-
-    🔴 O oraculo le `_ERROR_LOG_NO_IMPORT`, capturado no topo deste modulo (importacao,
-    antes de qualquer fixture), e nao `mgr._ERROR_LOG` ao vivo: desde o F96 (s177) a
-    fixture autouse do `conftest.py` isola esse global em `tmp_path` durante a suite --
-    caso contrario o teste que forca a falha do sink escrevia no
-    `history/memory_errors.log` de PRODUCAO a cada rodada. O invariante continua sendo
-    o mesmo (path ancorado no repo no ato do import); muda so de onde se le o valor.
-    """
-    root = Path(__file__).resolve().parent.parent
-    assert mgr._IPUB_PATH == root / "ipub.db"
-    assert _ERROR_LOG_NO_IMPORT == root / "history" / "memory_errors.log"
-    import inspect as py_inspect
-    from app.memory import inspect as mem_inspect
-    assert Path(mem_inspect._DEFAULT_DB).is_absolute()
-    assert Path(mem_inspect._DEFAULT_DB).parent == root
-
-
-def test_leitor_ro_nao_cria_banco_fantasma(tmp_path):
-    fantasma = tmp_path / "nao_existe.db"
-    try:
-        mgr._load_ipub_error_counts(fantasma)
-    except Exception:
-        pass  # falhar alto é aceitável; criar o arquivo não é
-    assert not fantasma.exists()
+# ---- F45/F46: ⚰️ 11/10/2026 (part 3.0a2) ---------------------------------------------------
+# Os 5 testes do MÓDULO `app.memory` (reconciliação de vocabulário x2, fora do vocabulário,
+# paths ancorados, leitor RO) saíram com o módulo: a memória longa foi removida do repo.
+# A garantia que fica é a lápide `test_memoria_longa_removida` (fim deste arquivo).
 
 
 # ---- Fase 0 Lote 1 part 1.0: memória longa e RAG fora do caminho crítico ----------------
@@ -232,7 +151,7 @@ def test_boot_nao_carrega_memoria_longa_nem_rag(db_sintetico, tmp_path):
     `SessionStart` -- em subprocesso, sobre o banco sintético, com a `_SONDA` herdada pelos
     filhos. Nenhum processo do caminho (o hook e os dois filhos que ele roda) carrega LangGraph,
     LangMem, Chroma, `app.memory` ou `app.engine.rag`, e o bloco de Áreas de fraqueza não volta
-    ao contexto injetado. O bloco segue sob demanda: `python -m app.memory.inspect --context`.
+    ao contexto injetado. (⚰️ 3.0a2: o `app.memory.inspect --context` sob demanda saiu com o módulo.)
 
     Antes da part 1.0 o `_memory_context()` importava `app.memory.inspect` -> `app.memory.store`
     -> `langgraph.store.base` em todo boot (medido: ~0,55 s dos ~0,64 s de import do processo).
@@ -273,8 +192,8 @@ def test_boot_nao_carrega_memoria_longa_nem_rag(db_sintetico, tmp_path):
 def test_nenhum_hook_dispara_a_consolidacao():
     """part 1.0 (DoD 4): sai do `.claude/settings.json` só a entrada `PostToolUse` matcher
     `Write` -> `memory_session_log.py`. O `SessionStart` (memory_boot) e o `PostToolUse` matcher
-    `SendMessage` (exchange_log) ficam. O script e o `app/memory/` ficam no disco: a
-    consolidação segue chamável à mão (`python -m app.memory.manager NNN`)."""
+    `SendMessage` (exchange_log) ficam. ⚰️ Part 3.0a2 (11/10/2026): invertido -- o script e o
+    `app/memory/manager.py` não existem mais (a consolidação à mão morreu com o módulo)."""
     hooks = json.loads((_RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8"))["hooks"]
     comandos = {}
     for evento, entradas in hooks.items():
@@ -286,8 +205,8 @@ def test_nenhum_hook_dispara_a_consolidacao():
     assert any("memory_boot.py" in c for c in comandos.get(("SessionStart", None), [])), comandos
     assert any("exchange_log.py" in c
                for c in comandos.get(("PostToolUse", "SendMessage"), [])), comandos
-    assert (_RAIZ / "tools" / "hooks" / "memory_session_log.py").is_file()
-    assert (_RAIZ / "app" / "memory" / "manager.py").is_file()
+    assert not (_RAIZ / "tools" / "hooks" / "memory_session_log.py").exists()
+    assert not (_RAIZ / "app" / "memory" / "manager.py").exists()
 
 
 if __name__ == "__main__":
@@ -340,3 +259,59 @@ def test_engine_sem_memoria_longa(db_sintetico, tmp_path):
     assert not carregados, f"o engine carregou a memória longa: {carregados}"
     assert "weak_areas" not in chaves, f"o retorno ainda tem weak_areas: {chaves}"
     assert "erros_recentes" in chaves, chaves
+
+
+# ---- Fase 0 Lote 3 part 3.0a2: a memória longa sai do repo (lápide) ----------------------
+
+#: Os 9 arquivos que a part 3.0a2 apagou (git os guarda; ⚰️ 11/10/2026).
+_MEMORIA_LONGA_APAGADA = (
+    "app/memory/__init__.py", "app/memory/inspect.py", "app/memory/manager.py",
+    "app/memory/schemas.py", "app/memory/store.py", "tools/hooks/memory_session_log.py",
+    "tools/test_memory.py", "tools/test_memory_counter.py", "tools/test_vocab_memoria.py",
+)
+#: Prefixos de import proibidos em `tools/` (sem `_archive`), `app/` e `conftest.py`.
+_IMPORT_PROIBIDO = ("app.memory", "langgraph", "langmem", "langchain")
+#: Os 5 pacotes que só a memória longa usava (o `pip uninstall` é G-op; pydantic só na b4).
+_PACOTES_MORTOS = ("langgraph", "langgraph-checkpoint-sqlite", "langmem",
+                   "langchain-anthropic", "pydantic")
+
+
+def _modulos_importados(arvore):
+    for no in ast.walk(arvore):
+        if isinstance(no, ast.Import):
+            for a in no.names:
+                yield a.name
+        elif isinstance(no, ast.ImportFrom) and not no.level and no.module:
+            yield no.module
+            for a in no.names:              # `from app import memory`
+                yield f"{no.module}.{a.name}"
+
+
+def test_memoria_longa_removida():
+    """part 3.0a2 (ordem do operador de 11/10/2026: LangMem e afins saem). (i) os 9 arquivos
+    não existem; (ii) nenhum `.py` de `tools/` (sem `_archive`), de `app/` nem o `conftest.py`
+    IMPORTA `app.memory`, `langgraph`, `langmem` ou `langchain*` -- o oráculo é o import por
+    `ast`, não a menção: narrar a remoção em comentário/docstring é o registro correto (mesma
+    isenção do gate CONTRATO_REVOGADO); (iii) nenhum dos 5 pacotes está no `requirements.txt`."""
+    vivos = [p for p in _MEMORIA_LONGA_APAGADA if (_RAIZ / p).exists()]
+    assert not vivos, f"a memória longa voltou ao disco: {vivos}"
+
+    fontes = [_RAIZ / "conftest.py", *sorted((_RAIZ / "app").rglob("*.py")),
+              *(p for p in sorted((_RAIZ / "tools").rglob("*.py"))
+                if "_archive" not in p.relative_to(_RAIZ / "tools").parts)]
+    culpados = []
+    for fonte in fontes:
+        arvore = ast.parse(fonte.read_text(encoding="utf-8-sig"), filename=str(fonte))
+        for mod in _modulos_importados(arvore):
+            if any(mod == p or mod.startswith(p + ".") or (p == "langchain" and
+                   mod.startswith("langchain")) for p in _IMPORT_PROIBIDO):
+                culpados.append(f"{fonte.relative_to(_RAIZ).as_posix()}: {mod}")
+    assert not culpados, f"import da memória longa voltou: {culpados}"
+
+    nomes = set()
+    for linha in (_RAIZ / "requirements.txt").read_text(encoding="utf-8").splitlines():
+        linha = linha.split("#", 1)[0].strip()
+        if linha:
+            nomes.add(re.split(r"[<>=!~\[;\s]", linha, 1)[0].strip().lower().replace("_", "-"))
+    assert not nomes & set(_PACOTES_MORTOS), \
+        f"dependência da memória longa no requirements: {sorted(nomes & set(_PACOTES_MORTOS))}"

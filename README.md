@@ -17,7 +17,7 @@ The code owns only what has to be deterministic:
 - **Retrieval** -- `app/engine/rag.py`: a ChromaDB collection (`resumos`) over `resumos/**/*.md` chunked by H2/H3 headers, embedded with `nomic-embed-text` through a local Ollama, queried multi-query (raw plus an optional HyDE document) and filtered by a hard cosine-distance ceiling (`max_distance = 0.35`). When ChromaDB or Ollama are unavailable, `search()` degrades to a lexical fallback tagged `source = fallback_textual`.
 - **Harness** -- `tools/auto_check.py`, a warning-first linter and test runner wired into a git pre-commit hook, plus a pytest suite (365 tests collected).
 
-The Anthropic API is optional and used in exactly two places: HyDE query expansion in `app/engine/rag.py` and long-term memory consolidation in `app/memory/manager.py`, both `claude-haiku-4-5-20251001`. Without `ANTHROPIC_API_KEY`, HyDE falls back to the raw query and memory consolidation runs only the error-count sync.
+The Anthropic API is optional and used only for HyDE query expansion in `app/engine/rag.py` (`claude-haiku-4-5-20251001`); without `ANTHROPIC_API_KEY`, HyDE falls back to the raw query. The long-term memory layer (LangMem) was removed on 11/10/2026 (Fase 0, Lote 3.0 a2).
 
 ---
 
@@ -166,7 +166,7 @@ python -X utf8 tools/setup_hooks.py
 
 On Windows, prefix Python invocations with `-X utf8`; the repo assumes UTF-8 output.
 
-**Starting a session:** open the repo in Claude Code. The `SessionStart` hook in `.claude/settings.json` runs `tools/hooks/memory_boot.py`, which injects the top weaknesses from long-term memory, a summary of `tools/day_plan.py`, a HANDOFF-vs-history drift flag and the "next immediate step" from `HANDOFF.md` before the first turn. The agent then follows the boot sequence in `AGENTE.md` section 2. A `PostToolUse(Write)` hook fires `tools/hooks/memory_session_log.py` when a new `history/session_NNN.md` is written, which consolidates the session into long-term memory in a detached process.
+**Starting a session:** open the repo in Claude Code. The `SessionStart` hook in `.claude/settings.json` runs `tools/hooks/memory_boot.py`, which injects a summary of `tools/day_plan.py`, a HANDOFF-vs-history drift flag and the "next immediate step" from `HANDOFF.md` before the first turn. The agent then follows the boot sequence in `AGENTE.md` section 2.
 
 Main CLIs (canonical signatures live in the matching skill under `.claude/commands/`):
 

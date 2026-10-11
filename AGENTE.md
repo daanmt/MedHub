@@ -263,18 +263,18 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/insert_card_extra.py` | insere card adicional ancorado no erro de ORIGEM e/ou na resposta EMED | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+9) |
 | `tools/insert_questao.py` | CLI canônica para registrar um erro de questão no `ipub.db` atomicamente | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+40) |
 | `tools/learning_efficacy.py` | eficácia de aprendizado por dimensão (P3 part-4) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+1) |
-| `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+13) |
+| `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+12) |
 | `tools/listas.py` | ledger de LISTAS de exercicios: quais listas do plano ja foram feitas, | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+27) |
 | `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+6) |
-| `tools/painel.py` | Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186; refeito na s194) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-hub-backend/SKILL.md` (+39) |
-| `tools/performance.py` | performance.py | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+19) |
-| `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-cronograma/SKILL.md` (+70) |
+| `tools/painel.py` | Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186; refeito na s194) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-hub-backend/SKILL.md` (+37) |
+| `tools/performance.py` | performance.py | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+18) |
+| `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-cronograma/SKILL.md` (+67) |
 | `tools/preparacao.py` | posicao SSOT da preparacao no cronograma (PRD orquestracao, part-1) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+12) |
 | `tools/prova_pdf.py` | caderno de prova em PDF -> docs `questoes/*` do hub (caminho PDF, s201) | `.agents/skills/source-command-banco-emed/SKILL.md`, `.claude/commands/banco-emed.md` (+5) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |
 | `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+13) |
 | `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+43) |
-| `tools/registrar_sessao_bulk.py` | registrar_sessao_bulk.py | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+34) |
+| `tools/registrar_sessao_bulk.py` | registrar_sessao_bulk.py | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+32) |
 | `tools/review_radar.py` | Radar de dormência por TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+6) |
 | `tools/selo.py` | a tabela item -> terminal da reforma de engenharia, DERIVADA (s187), | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/registrar-sessao.md` (+10) |
 | `tools/setup_hooks.py` | — | `tools/cli_signature_check.py`, `tools/test_autonomia_hooks.py` |

@@ -18,10 +18,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 # Par (arquivo -> tabelas em que ELE escreve), estado real medido em 2026-09-01.
-# app/memory/store.py escreve em medhub_memory.db (backend separado, AGENTE §8) — está aqui
-# porque o scanner vê SQL de escrita, não qual arquivo .db a conexão abre.
+# ⚰️ 11/10/2026 (part 3.0a2): a entrada `app/memory/store.py` -> memory_store saiu com o módulo.
 ALLOWLIST = {
-    "app/memory/store.py": {"memory_store"},
     # reforja_marks (B2, s176): append-only, e `app/utils/db.py` e o UNICO writer --
     # o CLI `tools/reforja.py` e camada fina e nao abre sqlite3 proprio.
     # plano_tarefas (PRD plano-ssot-e-cards-v2 P1, s183): o plano de estudo como DADO.

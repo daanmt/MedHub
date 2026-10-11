@@ -47,7 +47,7 @@ Operado por `.claude/commands/refrescar.md` + `tools/dormant_refresh.py` (`--pic
 
 - **SSOT** = tabela `review_log` (em `ipub.db`, local-only): `tema_id, resumo_path, kind, source, note, reviewed_at`. `kind ∈ {dormant_refresh, directed_review, resumo_read, backfill}`. Escrita única via `db.log_review`.
 - **Leitura unificada:** `db.get_theme_last_review` une `review_log` + `fsrs_cards.last_review` + `taxonomia.ultima_revisao` (a mais recente vence).
-- **Backfill (`tools/backfill_review_log.py`):** semeia 1 linha por tema a partir do **sinal real mais forte** (fsrs → taxonomia). **Nunca `CURRENT_TIMESTAMP`** — não falsifica a curva. Idempotente.
+- ⚰️ *11/10/2026 (Fase 0 Lote 3, 3.0c2) -- **Backfill REVOGADO**; o script `tools/backfill_review_log.py` foi removido nesta part (restaurar: `git show f4b8308:tools/backfill_review_log.py`). Era one-shot e já foi aplicado: as 47 linhas `kind=backfill` do `review_log` (de 2026-04-16 a 2026-06-15) ficam como histórico, e por isso o `kind` `backfill` segue no vocabulário do SSOT, acima. A semeadura é redundante com a leitura unificada (linha acima), que lê as mesmas duas fontes. Redação anterior: "semeia 1 linha por tema a partir do **sinal real mais forte** (fsrs → taxonomia). **Nunca `CURRENT_TIMESTAMP`** — não falsifica a curva. Idempotente."*
 - **Espelho no frontmatter (`ultima_revisao`):** opcional, derivado do SSOT, escrito **organicamente** quando o agente toca o resumo. Sem migração em massa.
 
 ---

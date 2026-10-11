@@ -8,7 +8,8 @@ WeakAreas, e paths por __file__ (fim do banco-fantasma).
 Fase 0 Lote 1 part 1.0 (11/10/2026): o caminho do boot não carrega memória longa nem RAG
 (LangGraph, LangMem, Chroma), e nenhum hook do `.claude/settings.json` dispara a consolidação.
 ⚰️ Part 3.0a2 (11/10/2026): o MÓDULO `app.memory` saiu do repo, e com ele os 5 testes de
-reconciliação/paths (F45/F46); a lápide `test_memoria_longa_removida` impede a volta.
+reconciliação/paths (F45/F46); a lápide `test_removidos_do_lote3` (estendida na 3.0c2 a tudo
+que o Lote 3.0 removeu) impede a volta.
 """
 import ast
 import json
@@ -91,7 +92,7 @@ def test_precedencia_no_fluxo(monkeypatch):
 # ---- F45/F46: ⚰️ 11/10/2026 (part 3.0a2) ---------------------------------------------------
 # Os 5 testes do MÓDULO `app.memory` (reconciliação de vocabulário x2, fora do vocabulário,
 # paths ancorados, leitor RO) saíram com o módulo: a memória longa foi removida do repo.
-# A garantia que fica é a lápide `test_memoria_longa_removida` (fim deste arquivo).
+# A garantia que fica é a lápide `test_removidos_do_lote3` (fim deste arquivo).
 
 
 # ---- Fase 0 Lote 1 part 1.0: memória longa e RAG fora do caminho crítico ----------------
@@ -268,19 +269,46 @@ def test_engine_sem_memoria_longa(db_sintetico, tmp_path):
     assert "erros_recentes" in chaves, chaves
 
 
-# ---- Fase 0 Lote 3 part 3.0a2: a memória longa sai do repo (lápide) ----------------------
+# ---- Fase 0 Lote 3 (3.0a2 -> 3.0c2): o que o lote removeu não volta (lápide única) --------
 
-#: Os 9 arquivos que a part 3.0a2 apagou (git os guarda; ⚰️ 11/10/2026).
-_MEMORIA_LONGA_APAGADA = (
+#: Os 33 caminhos que o Lote 3.0 apagou (git os guarda; ⚰️ 11/10/2026). Uma lista, um lugar:
+#: a próxima remoção estende esta tupla em vez de criar outra lápide.
+_REMOVIDOS_DO_LOTE3 = (
+    # A (3.0a2): a memória longa LangMem -- 9
     "app/memory/__init__.py", "app/memory/inspect.py", "app/memory/manager.py",
     "app/memory/schemas.py", "app/memory/store.py", "tools/hooks/memory_session_log.py",
     "tools/test_memory.py", "tools/test_memory_counter.py", "tools/test_vocab_memoria.py",
+    # B (3.0b1, 3.0b4): o RAG -- 8
+    "tools/test_rag_sensores.py",
+    "app/engine/rag.py", "tools/index_resumos.py", "tools/test_rag_fail_loud.py",
+    "tools/eval/README.md", "tools/eval/REPORT.md", "tools/eval/queries.json",
+    "tools/eval/run_eval.py",
+    # C (3.0c1, 3.0c2): ferramenta de mão e one-shots já aplicados -- 16
+    "tools/audit_fsrs.py",
+    "tools/_archive/migrations/README.md",
+    "tools/_archive/migrations/autopsia_uerj2023_fechar_elos_s191.py",
+    "tools/_archive/migrations/cleanup_db.py",
+    "tools/_archive/migrations/fix_data_delta_075.py",
+    "tools/_archive/migrations/fix_data_delta_110.py",
+    "tools/_archive/migrations/fix_taxonomy_bridge.py",
+    "tools/_archive/migrations/lote_uerj2023_build_s191.py",
+    "tools/_archive/migrations/migrar_sessoes_bulk.py",
+    "tools/_archive/migrations/migrate_flashcards.py",
+    "tools/_archive/migrations/migrate_memory.py",
+    "tools/_archive/migrations/normalize_areas_bulk.py",
+    "tools/_archive/migrations/popular_subtemas.py",
+    "tools/_archive/migrations/retire_heuristic_cards.py",
+    "tools/_archive/migrations/rotacao_ledger_s204.py",
+    "tools/backfill_review_log.py",
 )
-#: Prefixos de import proibidos em `tools/` (sem `_archive`), `app/` e `conftest.py`.
-_IMPORT_PROIBIDO = ("app.memory", "langgraph", "langmem", "langchain")
-#: Os 5 pacotes que só a memória longa usava (o `pip uninstall` é G-op; pydantic só na b4).
+#: Prefixos de import proibidos em `tools/`, `app/` e `conftest.py` (`langchain` vale como
+#: prefixo de nome: pega `langchain_anthropic`, `langchain_core`...).
+_IMPORT_PROIBIDO = ("app.memory", "app.engine.rag", "langgraph", "langmem", "langchain",
+                    "chromadb", "anthropic", "dotenv", "openpyxl")
+#: Os 9 pacotes que o lote tirou do `requirements.txt` (o `pip uninstall` é G-op do operador).
 _PACOTES_MORTOS = ("langgraph", "langgraph-checkpoint-sqlite", "langmem",
-                   "langchain-anthropic", "pydantic")
+                   "langchain-anthropic", "pydantic", "python-dotenv", "anthropic",
+                   "chromadb", "openpyxl")
 
 
 def _modulos_importados(arvore):
@@ -294,18 +322,20 @@ def _modulos_importados(arvore):
                 yield f"{no.module}.{a.name}"
 
 
-def test_memoria_longa_removida():
-    """part 3.0a2 (ordem do operador de 11/10/2026: LangMem e afins saem). (i) os 9 arquivos
-    não existem; (ii) nenhum `.py` de `tools/` (sem `_archive`), de `app/` nem o `conftest.py`
-    IMPORTA `app.memory`, `langgraph`, `langmem` ou `langchain*` -- o oráculo é o import por
-    `ast`, não a menção: narrar a remoção em comentário/docstring é o registro correto (mesma
-    isenção do gate CONTRATO_REVOGADO); (iii) nenhum dos 5 pacotes está no `requirements.txt`."""
-    vivos = [p for p in _MEMORIA_LONGA_APAGADA if (_RAIZ / p).exists()]
-    assert not vivos, f"a memória longa voltou ao disco: {vivos}"
+def test_removidos_do_lote3():
+    """Lápide do Lote 3.0 (ordem do operador de 11/10/2026: LangMem, RAG e afins saem). Nasceu
+    na 3.0a2 como `test_memoria_longa_removida` (só a memória longa) e cobre o lote inteiro
+    desde a 3.0c2. (i) os 33 caminhos removidos (A, B e C) não existem; (ii) nenhum `.py` de
+    `tools/`, de `app/` nem o `conftest.py` IMPORTA `app.memory`, `app.engine.rag`, `langgraph`,
+    `langmem`, `langchain*`, `chromadb`, `anthropic`, `dotenv` ou `openpyxl` -- o oráculo é o
+    import por `ast`, não a menção: narrar a remoção em comentário/docstring é o registro
+    correto (mesma isenção do gate CONTRATO_REVOGADO); (iii) nenhum dos 9 pacotes está no
+    `requirements.txt`."""
+    vivos = [p for p in _REMOVIDOS_DO_LOTE3 if (_RAIZ / p).exists()]
+    assert not vivos, f"voltou ao disco o que o Lote 3.0 removeu: {vivos}"
 
     fontes = [_RAIZ / "conftest.py", *sorted((_RAIZ / "app").rglob("*.py")),
-              *(p for p in sorted((_RAIZ / "tools").rglob("*.py"))
-                if "_archive" not in p.relative_to(_RAIZ / "tools").parts)]
+              *sorted((_RAIZ / "tools").rglob("*.py"))]
     culpados = []
     for fonte in fontes:
         arvore = ast.parse(fonte.read_text(encoding="utf-8-sig"), filename=str(fonte))
@@ -313,12 +343,12 @@ def test_memoria_longa_removida():
             if any(mod == p or mod.startswith(p + ".") or (p == "langchain" and
                    mod.startswith("langchain")) for p in _IMPORT_PROIBIDO):
                 culpados.append(f"{fonte.relative_to(_RAIZ).as_posix()}: {mod}")
-    assert not culpados, f"import da memória longa voltou: {culpados}"
+    assert not culpados, f"voltou o import de algo que o Lote 3.0 removeu: {culpados}"
 
     nomes = set()
     for linha in (_RAIZ / "requirements.txt").read_text(encoding="utf-8").splitlines():
         linha = linha.split("#", 1)[0].strip()
         if linha:
             nomes.add(re.split(r"[<>=!~\[;\s]", linha, 1)[0].strip().lower().replace("_", "-"))
-    assert not nomes & set(_PACOTES_MORTOS), \
-        f"dependência da memória longa no requirements: {sorted(nomes & set(_PACOTES_MORTOS))}"
+    mortos = sorted(nomes & set(_PACOTES_MORTOS))
+    assert not mortos, f"voltou ao requirements um pacote que o Lote 3.0 removeu: {mortos}"

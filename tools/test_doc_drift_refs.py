@@ -128,10 +128,17 @@ def test_mcp_json_ausente_nao_quebra(tmp_path):
 
 def test_lapide_nao_e_mentira(tmp_path):
     # A norma AFIRMA a ausencia; doc e realidade concordam -> nao ha drift.
+    # O marcador de lapide do repo vale sozinho, com e sem o seletor de variante (3.0c2).
     _mk_repo(tmp_path)
     _mk_norma(tmp_path, ".claude/commands",
-              ["O player `app/pages/2_estudo.py` foi removido (codigo morto)."])
+              ["O player `app/pages/2_estudo.py` foi removido (codigo morto).",
+               "\u26b0\ufe0f 11/10/2026: o hook `tools/hooks/x.py` saiu desta secao.",
+               "\u26b0 o script `tools/y.py` saiu junto."])
     assert scan_refs(tmp_path) == []
+    # controle: a mesma citacao sem o marcador e ref morta
+    _mk_norma(tmp_path, ".claude/commands",
+              ["O hook `tools/hooks/x.py` saiu desta secao."], nome="viva.md")
+    assert [a["regra"] for a in scan_refs(tmp_path)] == ["tools/hooks/x.py"]
 
 
 def test_ref_a_outro_repo_nao_e_julgada(tmp_path):

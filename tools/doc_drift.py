@@ -82,9 +82,12 @@ RE_COMANDO = re.compile(
 # Linha que AFIRMA a ausencia nao esta mentindo ao citar o morto -- e lapide.
 # Mesma semantica da especie `path <x> absent` do modo anotacao: drift e
 # realidade != doc, e aqui doc e realidade concordam.
+# O marcador de lapide do repo (AGENTE.md 10.2) tambem vale sozinho: `\u26b0` casa o
+# caixao com e sem o seletor de variante U+FE0F. Sem ele, lapide escrita so com o
+# marcador virava DOC_REF falso (`registrar-sessao.md:57`, Fase 0 Lote 3 part 3.0c2).
 RE_LAPIDE = re.compile(
     r"removid|deletad|descontinuad|aposentad|descomissionad|expurgad"
-    r"|c[oó]digo morto|n[ãa]o existe|deixou de existir", re.I)
+    r"|c[oó]digo morto|n[ãa]o existe|deixou de existir|\u26b0", re.I)
 RE_MCP_TOOL = re.compile(r"mcp__([A-Za-z0-9_.-]+?)__[A-Za-z0-9]")
 RE_LINHA_SUFIXO = re.compile(r":\d+(?:-\d+)?$")
 RE_PLACEHOLDER = re.compile(r"NNN|XXX|nnn|\.\.\.")

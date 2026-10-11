@@ -283,16 +283,6 @@ sem histórico; os 67 com histórico ficam até triagem. Spec `.vibeflow/specs/p
 `MAX` é o default porque `taxonomia.questoes_realizadas` **não é o SSOT de volume** (esse é
 `sessoes_bulk`) — somar inflaria um número que ninguém deveria ler como verdade.
 
-### `tools/backfill_review_log.py` — semeia `review_log` com a última revisão REAL
-
-| Flag | Função |
-|---|---|
-| `--apply` | Grava (default: dry-run). |
-
-**Nunca usa a data de hoje** (falsificaria a curva): deriva de `MAX(fsrs_cards.last_review)` ou
-de `taxonomia.ultima_revisao`. Tema sem sinal real é **pulado**. Idempotente. Rodar **depois** da
-dedup, para não semear ids que seriam mesclados.
-
 ---
 
 ## Curadoria em lote de flashcards

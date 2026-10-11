@@ -168,6 +168,8 @@ Comando: `python -I conta_backlog.py artifacts/backlog-unico-medhub-2026-10-10.m
 | M-133 | Anti-patterns manuais velhos em `domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137` (conhecimento que contradiz o código, classe do M-127) | medhub, 1.pre (10/10); id do ai-eng 10/10 | engenharia | medhub | aberto | 3 | S | não |
 | M-134 | `criar-resumo` passo 8 (`--delete-pdfs`) + `AGENTE.md:208` ("Zero PDF") contradiziam a retenção da s086 (ação irreversível) | medhub, 1.pre (10/10); id e triagem do ai-eng 10/10 | operador-decisão | medhub | fechado (`55d1144`, §10.10 em 3 passos; default não destrutivo) | 1 | S | sim |
 | M-135 | Frontmatter legado em `resumos/GO/Assistência ao Parto.md` (a referência de obstetrícia do `estilo-resumo`) | medhub, 1.pre (10/10); id do ai-eng 10/10 | conteúdo | medhub | aberto | 3 | S | não |
+| M-137 | `.agents/workflows/` não está entre os portadores que o gate `CONTRATO_REVOGADO` vigia: prescrição revogada reintroduzida num workflow passa (classe do M-122) | medhub, M-134 (11/10); id do ai-eng 11/10 | engenharia | medhub | aberto | 3 | S | não |
+| M-138 | A flag `--delete-pdfs` segue viva no `extract_pdfs.py` (ação irreversível sobre o PDF-fonte) -> recusar salvo `--confirmo-apagar` explícito | medhub, M-134 (11/10); id do ai-eng 11/10 | engenharia | medhub | aberto | 3 | S | não |
 | M-136 | Retenção do repo privado de backup: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 | ai-eng, spec da 1.4 (11/10) | arquitetura | medhub | aberto | 4 / Fase 1 | S | não |
 
 ## Regras de vida do backlog

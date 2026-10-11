@@ -147,3 +147,11 @@ def _invert_elo_to_question(elo: str, tema: str) -> str:
 - Passing `--frente_pergunta` without `--verso_resposta` (or vice versa) — only one won't trigger qualitative path
 - Updating `taxonomia_cronograma.questoes_acertadas` manually — this is managed by the ETL import script, not by error insertion
 
+
+## Manual Corrections
+
+**2026-10-10 (M-127, fecho do Lote 0 da Fase 0):** a linha "`cronograma_progresso` status set to
+'Concluído' via fuzzy LIKE match on tema name" da região gerada acima está **morta**. A tabela
+nunca existiu no schema, e o bloco `try/except: pass` que a escrevia saiu do `insert_questao.py`
+na part-4a (`a240f94`). O `insert_questao` não marca conclusão de cronograma: a conclusão de
+tarefa é coluna de `plano_tarefas`, escrita por `tools/plano.py`. Trava: `tools/test_schema_escrita.py`.

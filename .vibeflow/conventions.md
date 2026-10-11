@@ -167,3 +167,10 @@ honesta, relearning até o critério, racional declarado, triagem humana de card
 Norma: `core/contracts/revisao-calibrada-contract.md` Cláusula 13. Ledger das fricções:
 `docs/FUNDAMENTOS-APRENDIZAGEM.md`. Spec que remove fricção virtuosa é regressão pedagógica com
 cara de melhoria de produto -- e nenhum gate pega, porque o código fica mais limpo.
+
+## Manual Corrections
+
+**2026-10-10 (M-127, fecho do Lote 0 da Fase 0):** o write-gate de card mora em
+`app/utils/card_checks.py::validar_card()`. Ele saiu de `tools/` em `98148fa` (s186, 1.9a: `app/`
+para de alcançar `tools/`). A linha da região gerada acima que ainda põe o módulo em `tools/` está
+desatualizada; o próximo `analyze` deve absorver esta correção.

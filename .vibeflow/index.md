@@ -31,7 +31,7 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
 | Memory | `app/memory/` | 2-layer cross-session memory (`store.py`, `manager.py`, `inspect.py`, `schemas.py`) |
 | DB access | `app/utils/db.py` | ALL database access — the only file allowed `import sqlite3` |
 | FSRS | `app/utils/fsrs.py` + `fsrs_balance.py` | Thin adapter over the `py-fsrs` reference lib + load balancing |
-| Card quality | `tools/card_checks.py` | Pure predicates; write-gate for every card writer |
+| Card quality | `app/utils/card_checks.py` | Pure predicates; write-gate for every card writer |
 | tools/CLI | `tools/` | insert_questao, fsrs_queue, index_resumos, day_plan, sensors, audits |
 | Skills | `.claude/commands/` | Canonical agent skills — **source of truth** for the mirrors |
 | Subagents | `.claude/agents/` | `evidence-researcher` (evidence audit, read-only) |
@@ -43,7 +43,7 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
 ## Flashcards (post-reform — parts 1-6 + P3)
 
 - **Write-gate:** every writer (`insert_card_base`, `insert_card_extra`, `recurate_cards`,
-  `insert_questao`) passes through `tools/card_checks.py::validar_card()` → `{erros, avisos}`.
+  `insert_questao`) passes through `app/utils/card_checks.py::validar_card()` → `{erros, avisos}`.
   `erros` block the write (empty required field, forbidden encoding, question template,
   answer leaked into the front); `avisos` warn (multi-part, orphan negative, artifact
   context, lost distractor). Covered by `tools/test_writer_gates.py` + `test_card_checks.py`.
@@ -142,7 +142,7 @@ deletion; this line stays as the record.
 | `app/utils/fsrs.py` | Adapter over the `py-fsrs` reference scheduler |
 | `app/engine/rag.py` | Semantic search over `resumos/` via ChromaDB + `nomic-embed-text` |
 | `app/memory/inspect.py` | `load_context()` — the single read path into long-term memory |
-| `tools/card_checks.py` | Pure card-quality predicates behind every write-gate |
+| `app/utils/card_checks.py` | Pure card-quality predicates behind every write-gate |
 | `tools/fsrs_queue.py` | Priority-band review queue CLI (the `/revisar` backend) |
 | `tools/insert_questao.py` | CLI: inserts error + generates flashcards → `ipub.db` |
 | `tools/index_resumos.py` | CLI: (re)indexes `resumos/` into ChromaDB |

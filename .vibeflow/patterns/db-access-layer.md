@@ -104,3 +104,43 @@ at the top of `app/utils/db.py` for the current contract.
 - String interpolation in SQL: `f"SELECT * WHERE id = {user_id}"` — SQL injection risk
 - Forgetting `conn.close()` — SQLite WAL mode won't release the file lock
 - Returning raw cursor rows from db.py functions — callers would depend on positional column order
+
+## Manual Corrections
+
+**2026-10-10 (M-127, fecho do Lote 0 da Fase 0) -- os dois exemplos canônicos da região gerada acima estão MORTOS.**
+`get_db_metrics()` e `update_cronograma_status()` saíram do `app/utils/db.py` na part-4a (`a240f94`),
+junto com outras 8 funções sem chamador. E `cronograma_progresso` nunca existiu no schema: o
+`UPDATE` do exemplo de escrita falhava calado. Não copie esses dois blocos. Os exemplos vivos de
+hoje, copiados do `db.py`:
+
+**Read function (returns DataFrame)** -- `ativos()`, o helper canônico de cards ativos que as
+skills citam:
+```python
+def ativos():
+    conn = get_connection()
+    try:
+        return pd.read_sql("SELECT * FROM flashcards_ativos", conn)
+    finally:
+        conn.close()
+```
+
+**Write function (cursor + commit)** -- `log_review()`, chamado por `tools/dormant_refresh.py`:
+```python
+def log_review(tema_id=None, resumo_path=None, kind='dormant_refresh',
+               source='agent', note=None) -> int:
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO review_log (tema_id, resumo_path, kind, source, note, reviewed_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (tema_id, resumo_path, kind, source, note, carimbo()))   # F80: relogio unico
+    conn.commit()
+    rid = cursor.lastrowid
+    conn.close()
+    return rid
+```
+
+Na lista "Examples from this codebase", troque `get_db_metrics()` e `update_cronograma_status()`
+por `ativos()` e `log_review()`. Trava contra a volta da classe: `tools/test_schema_escrita.py`
+(toda tabela escrita existe no schema do `init_db` ou tem DDL lazy). O próximo `analyze` deve
+regenerar a região gerada a partir do código e absorver esta correção.

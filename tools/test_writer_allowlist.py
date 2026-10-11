@@ -36,7 +36,9 @@ ALLOWLIST = {
     # `emed_respostas.questao_erro_id` (s199) tem writer proprio, `emed_ligar_erro`, tambem aqui:
     # o `insert_questao.py` o chama com a conexao dele e NAO ganha a tabela na allowlist.
     # emed_solucoes (s199): a solucao PROPRIA do hub; `emed_upsert_solucoes` e o writer unico.
-    "app/utils/db.py": {"cronograma_progresso", "emed_questoes", "emed_respostas",
+    # M-126 (fecho do Lote 0, 10/10/2026): `cronograma_progresso` saiu das duas entradas -- a
+    # tabela nunca existiu no schema e os dois writers foram removidos na part-4a (a240f94).
+    "app/utils/db.py": {"emed_questoes", "emed_respostas",
                         "emed_solucoes",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",
@@ -51,7 +53,7 @@ ALLOWLIST = {
     "tools/habilidades.py": {"habilidades", "questao_habilidades"},
     "tools/insert_card_base.py": {"flashcards", "fsrs_cards", "taxonomia_cronograma"},
     "tools/insert_card_extra.py": {"flashcards", "fsrs_cards"},
-    "tools/insert_questao.py": {"cronograma_progresso", "flashcards", "fsrs_cards",
+    "tools/insert_questao.py": {"flashcards", "fsrs_cards",
                                 "questoes_erros", "taxonomia_cronograma"},
     # s207: a fusao re-aponta TODA FK do tema (review_log e questao_habilidades ficavam orfas).
     "tools/normalize_taxonomia.py": {"flashcards", "questao_habilidades", "questoes_erros",

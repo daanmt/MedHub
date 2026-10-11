@@ -38,7 +38,7 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
-- **Retrieval baseline reproducible:** `tools/eval/REPORT.md` (R@5=0.889 / MRR@10=0.685 com HyDE, linha `hyde=on` da tabela Summary; 18 queries; rodar via `python tools/eval/run_eval.py`)
+- ⚰️ 11/10/2026 (Fase 0, Lote 3.0 b4) **Retrieval baseline reproducible:** `tools/eval/REPORT.md` e `tools/eval/run_eval.py` saíram com o RAG; os números de 14/08 (R@5=0.889 / MRR@10=0.685 com HyDE, 18 queries) ficam no histórico: `git show 568f605:tools/eval/REPORT.md`.
 - `/discover` (tech debt): Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF), normalização de score → meta R@5 ≥ 0.95
 - Busca semântica via `sqlite-vec` como alternativa à busca literal (a implementar)
 

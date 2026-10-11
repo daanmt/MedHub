@@ -14,10 +14,10 @@ The code owns only what has to be deterministic:
 
 - **State** -- a local SQLite database, `ipub.db`, holding the curriculum taxonomy, structured errors, flashcards, FSRS card state and revlog, bulk session volume, theme-level review timestamps, the day plan, and the skills tables (schema in `tools/init_db.py`).
 - **Scheduling** -- `app/utils/fsrs.py` is a thin adapter over `py-fsrs` (`fsrs>=6.3.1`), the reference FSRS implementation, at `REQUEST_RETENTION = 0.9`. `app/utils/fsrs_balance.py` is a pure module that flattens calendar load inside the free slack around an interval (+/-5%, floor 1 day, cap 10, review cards with interval >= 4 days only) without ever touching `stability` or `difficulty`.
-- **Retrieval** -- `app/engine/rag.py`: a ChromaDB collection (`resumos`) over `resumos/**/*.md` chunked by H2/H3 headers, embedded with `nomic-embed-text` through a local Ollama, queried multi-query (raw plus an optional HyDE document) and filtered by a hard cosine-distance ceiling (`max_distance = 0.35`). When ChromaDB or Ollama are unavailable, `search()` degrades to a lexical fallback tagged `source = fallback_textual`.
+- **Retrieval** -- ⚰️ 11/10/2026 (Fase 0, Lote 3.0 b4): the ChromaDB/Ollama RAG (`app/engine/rag.py`, HyDE, `nomic-embed-text`) was removed. Topic context now comes from `get_topic_context()` (summary file resolved by name/frontmatter + errors + cards) and deterministic `Grep` over `resumos/**/*.md`.
 - **Harness** -- `tools/auto_check.py`, a warning-first linter and test runner wired into a git pre-commit hook, plus a pytest suite (365 tests collected).
 
-The Anthropic API is optional and used only for HyDE query expansion in `app/engine/rag.py` (`claude-haiku-4-5-20251001`); without `ANTHROPIC_API_KEY`, HyDE falls back to the raw query. The long-term memory layer (LangMem) was removed on 11/10/2026 (Fase 0, Lote 3.0 a2).
+⚰️ 11/10/2026 (Fase 0, Lote 3.0 b4): the optional Anthropic API call (HyDE query expansion in `app/engine/rag.py`) left with the RAG; `ANTHROPIC_API_KEY` is no longer read by the codebase. The long-term memory layer (LangMem) was removed on 11/10/2026 (Fase 0, Lote 3.0 a2).
 
 ---
 
@@ -153,9 +153,7 @@ pip install -r requirements.txt
 # 3. Create the SQLite schema (idempotent; path resolved from __file__)
 python -X utf8 tools/init_db.py
 
-# 4. (Optional) Index the knowledge base for semantic retrieval
-ollama pull nomic-embed-text
-python -X utf8 tools/index_resumos.py        # run from the repo root
+# 4. ⚰️ 11/10/2026 (Fase 0, Lote 3.0 b4): the optional semantic index step (ollama pull + tools/index_resumos.py) was removed with the RAG
 
 # 5. Install the git pre-commit harness hook
 python -X utf8 tools/setup_hooks.py

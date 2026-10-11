@@ -48,7 +48,7 @@ Exportar o substrato e fanout por tema:
 - **4 gates** sobre o conteúdo proposto: schema · encoding (§4.5) · formulação (template/resposta-embutida) · **atomicidade** (o mesmo detector que diagnosticou o defeito audita o remédio). Card discriminador legítimo (1 critério de acerto) passa com `--permitir-atomicidade`, conferido a olho.
 
 - **Aposentar/fundir:** `recurate_cards.py --from <json> --apply` com `{card_id, aposentar:true}` para os perdedores (o sobrevivente absorve).
-- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + RAG do resumo (`app.engine.rag.search`), seguindo os 5 princípios. Aplicar via `recurate_cards.py --apply` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}` — os nomes de coluna v5 também são aceitos) — preserva `card_id` e estado FSRS, incrementa `card_version`.
+- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + o resumo do tema (`get_topic_context(tema)["resumo_path"]` + `Grep`), seguindo os 5 princípios. Aplicar via `recurate_cards.py --apply` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}` — os nomes de coluna v5 também são aceitos) — preserva `card_id` e estado FSRS, incrementa `card_version`.
 - **Atomização:** quando um reforjar gera um 2º conceito do mesmo erro, `insert_card_extra.py --from <json> --apply` cria o card herdando o `questao_id`/`tema_id` de origem.
 
 ### 5. Validar e fechar

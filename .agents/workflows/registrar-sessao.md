@@ -52,8 +52,8 @@ Criar `history/session_NNN.md` com o seguinte formato:
 ### 3. Atualizar ESTADO.md (só se o macro mudou)
 O `ESTADO.md` **não** tem seção de sessões (proibido por `core/contracts/estado-contract.md`: narrativa de sessão vai em `history/`). Atualizar o ESTADO apenas se um indicador cruzou marco, uma frente abriu/fechou ou um contrato/skill foi versionado. O registro da sessão vai em `history/session_NNN.md` + uma linha em `history/INDEX.md`.
 
-### 4. Sincronização do RAG (manual, só se um resumo mudou)
-`python tools/index_resumos.py` (motor único `app/engine/rag.py`; o índice cobre `resumos/`, gold-only). Fora do caminho crítico: a sessão fecha sem ele.
+### 4. ⚰️ Sincronização do RAG
+⚰️ 11/10/2026 (Fase 0 Lote 3, part 3.0b4): o RAG saiu; resumo editado não pede reindexação. Redação anterior: rodar `python tools/index_resumos.py` (motor `app/engine/rag.py`) quando um resumo mudasse; os dois foram removidos nesta part.
 ⚰️ 11/10/2026 (part 1.0, Fase 0 Lote 1): esta seção dizia que o hook `PostToolUse(Write)` reindexava o RAG sozinho. O hook saiu do `.claude/settings.json` nesta part, e o script dele (`tools/hooks/memory_session_log.py`) só disparava a consolidação, nunca a indexação. Decisão do operador (10/10): RAG/LangMem fora do caminho crítico.
 
 ### 5. ⚰️ Consolidação de Memória Longa (Memory v1)

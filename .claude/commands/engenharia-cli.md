@@ -293,15 +293,6 @@ sem histórico; os 67 com histórico ficam até triagem. Spec `.vibeflow/specs/p
 de `taxonomia.ultima_revisao`. Tema sem sinal real é **pulado**. Idempotente. Rodar **depois** da
 dedup, para não semear ids que seriam mesclados.
 
-### `tools/index_resumos.py` — (re)indexa `resumos/` no ChromaDB
-
-| Flag | Função |
-|---|---|
-| `--dir DIR` | Raiz dos resumos (default `resumos`). |
-| `--clear` | Deleta a indexação antiga e recria do zero. |
-
-Motor único de RAG = `app/engine/rag.py`, **gold-only** (indexa `.md`, não PDF).
-
 ---
 
 ## Curadoria em lote de flashcards

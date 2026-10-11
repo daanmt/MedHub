@@ -302,6 +302,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-fig img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;cursor:zoom-in}
 .qz-fig.zoom img{max-width:none;width:200%;cursor:zoom-out}
 .qz-fig figcaption{font-size:.74em;color:var(--tinta3);padding:4px 8px}
+.qz-alt .qz-fig{grid-column:1 / -1;margin:0 12px 10px 56px}
 .qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:44px}
 .qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
 .qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
@@ -2082,10 +2083,22 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       return '<div class="' + cls + '" data-l="' + l + '"><div class="qz-alt-btn" ' + (revelada ? (pq ? 'role="button" tabindex="0" aria-expanded="' + aberta + '"' : 'aria-disabled="true"') : 'role="radio" tabindex="0" aria-checked="false"') +
         '><b>' + l + '</b><span class="qz-alt-txt">' + qzGrifoHtml(t, g && g[l]) + '</span></div>' +
         '<button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar"' + (revelada ? ' disabled' : '') + '>&#x2715;</button>' +
-        (pq ? '<p class="qz-porque"' + (aberta ? '' : ' hidden') + '>' + qzEsc(pq) + '</p>' : '') + '</div>'; }
+        qzFigsAlt(l) + (pq ? '<p class="qz-porque"' + (aberta ? '' : ' hidden') + '>' + qzEsc(pq) + '</p>' : '') + '</div>'; }
+    // part 1.1b: figura da alternativa so com data URI (`figuras_img_alt`); a URL de `figuras_alt` nunca vai ao src
+    var fa = (q.figuras_img_alt && typeof q.figuras_img_alt === "object") ? q.figuras_img_alt : {};
+    function qzFigsAlt(l){ return (Array.isArray(fa[l]) ? fa[l] : []).filter(function(u){ return typeof u === "string" && u.indexOf("data:image/") === 0; })
+      .map(function(u){ return '<figure class="qz-fig"><img alt="Figura da alternativa ' + l + '" src="' + u + '"></figure>'; }).join(""); }
     var alts = qzAlts(q.alternativas);
     if(alts.length >= 2){ return alts.map(function(a){ return um(a.l, a.t); }).join(""); }
     return '<p class="qz-enun">' + qzEsc(q.alternativas || "") + '</p>' + ["A","B","C","D","E"].map(function(l){ return um(l, ""); }).join("");
+  }
+  // part 1.1b: `sem_figura` = a captura declarou a perda; vence o aviso do caderno em PDF. Figura embutida = sem aviso.
+  function qzFiguraAviso(q, nImgs){
+    if(nImgs){ return ""; }
+    if(q.sem_figura === true){ return "A figura desta questão não veio na captura."; }
+    if(!q.figura){ return ""; }
+    return q.pagina ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + q.pagina + "."
+      : "Esta questão tem uma figura que não chegou ao hub: veja no EMED.";
   }
   function qzMostrar(i){
     QZ.pos = i; QZ.letra = null; QZ.conf = null; var q = QZ.qs[i];
@@ -2103,10 +2116,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         + '<figcaption>Figura ' + (k + 1) + ' · toque para ampliar</figcaption></figure>';
     }).join("");
     $("qz-figs").hidden = !qzImgs.length;
-    var qzSemImg = q.figura && !qzImgs.length;
-    $("qz-figura").hidden = !qzSemImg;
-    $("qz-figura").textContent = !qzSemImg ? "" : (q.pagina ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + q.pagina + "."
-      : "Esta questão tem uma figura que não chegou ao hub: veja no EMED.");
+    $("qz-figura").textContent = qzFiguraAviso(q, qzImgs.length);
+    $("qz-figura").hidden = !$("qz-figura").textContent;
     $("qz-alts").innerHTML = qzAltsHtml(q, null, false, qzGrifosDe(q));
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
     $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";

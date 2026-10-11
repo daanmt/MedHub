@@ -1686,3 +1686,57 @@ def test_ao_vivo_so_soma_e_nunca_altera_o_publicado():
     assert "painelVivo(doc, db)" in _funcs("function painelListas(doc, quadro){")
     estilo = re.search(r'"\.vivo\{([^}]*)\}', _funcs("function painelListas(doc, quadro){")).group(1)
     assert "white-space:pre" in estilo, "o +K nao quebra a linha do numero (span curto)"
+
+
+# ---------------------------------------------------------------------------------------------------
+# Fase 0 · lote 1 · part 1.1b (DoD 1, 11/10/2026): o AVISO de figura perdida e a figura NA ALTERNATIVA.
+# `sem_figura: true` (a captura declarou a perda) mostra 1 linha discreta acima das alternativas, no
+# `#qz-figura` que ja existe. `figuras_alt` ({letra: [urls]}) so vira imagem quando `figuras_img_alt`
+# traz o data URI da mesma letra -- URL externa nunca e carregada (CSP do artifact / offline).
+# ---------------------------------------------------------------------------------------------------
+
+AVISO_SEM_FIGURA = "A figura desta questão não veio na captura."
+PNG = "data:image/png;base64,iVBORw0KGgo="
+
+
+def _com_aviso(acao):
+    return extrair_funcao(TEMPLATE, "function qzFiguraAviso(q, nImgs){") + "\n" + acao
+
+
+def test_sem_figura_mostra_a_linha_do_aviso():
+    acao = _com_aviso("""SAIDA = {sem: qzFiguraAviso({sem_figura: true}, 0), sem_com_img: qzFiguraAviso({sem_figura: true}, 1),
+      nada: qzFiguraAviso({}, 0), pdf: qzFiguraAviso({figura: true, pagina: 7}, 0),
+      sem_e_pdf: qzFiguraAviso({sem_figura: true, figura: true, pagina: 7}, 0)};""")
+    out = _rodar(_q(), None, None, acao)
+    assert out["sem"] == AVISO_SEM_FIGURA
+    assert out["sem_com_img"] == "", "a figura embutida chegou: sem aviso"
+    assert out["nada"] == ""
+    assert out["pdf"] == "Esta questão tem uma figura que o texto não traz: caderno da prova, página 7."
+    assert out["sem_e_pdf"] == AVISO_SEM_FIGURA, "a perda declarada pela captura vence"
+    corpo = extrair_funcao(TEMPLATE, "function qzMostrar(i){")
+    assert '$("qz-figura").textContent = qzFiguraAviso(q, qzImgs.length)' in corpo
+    i_aviso, i_alts = TEMPLATE.index('id="qz-figura"'), TEMPLATE.index('id="qz-alts"')
+    assert i_aviso < i_alts, "o aviso mora acima das alternativas"
+    assert re.search(r'<p class="qd-aviso qz-figura" id="qz-figura" hidden></p>', TEMPLATE), "sem layout novo"
+
+
+def test_figura_da_alternativa_so_com_data_uri():
+    q = _q(figuras_alt={"B": ["https://emed.example/b.png"], "C": ["https://emed.example/c.png"]},
+           figuras_img_alt={"B": [PNG, "https://emed.example/x.png"]})
+    out = _rodar(q, None, None, 'SAIDA = {h: qzAltsHtml(q, null, false, {})};')
+    h = out["h"]
+    blocos = dict(re.findall(r'<div class="qz-alt[^"]*" data-l="([A-E])">(.*?)(?=<div class="qz-alt[ "]|$)', h, re.S))
+    assert blocos["B"].count("<img") == 1 and f'src="{PNG}"' in blocos["B"]
+    assert 'alt="Figura da alternativa B"' in blocos["B"]
+    assert "<img" not in blocos["A"] and "<img" not in blocos["C"], "URL sem data URI: nada extra"
+    assert "https://" not in h, "URL externa nunca vai ao src (CSP / offline)"
+    i_txt = blocos["B"].index('class="qz-alt-txt"')
+    assert blocos["B"].index("<img") > blocos["B"].index("</span>", i_txt), "fora do texto: grifo nao desloca"
+    assert ".qz-alt .qz-fig{" in TEMPLATE
+
+
+def test_alternativa_sem_figura_nao_muda_o_render():
+    base = _rodar(_q(), None, None, 'SAIDA = {h: qzAltsHtml(q, null, false, {})};')["h"]
+    so_url = _rodar(_q(figuras_alt={"B": ["https://emed.example/b.png"]}), None, None,
+                    'SAIDA = {h: qzAltsHtml(q, null, false, {})};')["h"]
+    assert so_url == base

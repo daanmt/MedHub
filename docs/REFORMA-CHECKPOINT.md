@@ -27,11 +27,10 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 - **M-128** `get_caderno_erros`, a 11ª função morta do `db.py`, fora da lista da 0.4a (fecho).
 - **M-131** `tmp/` SOLTO (17.189 arquivos, 40,2 MB): inventário + regra de vida do `tmp/`.
 - **M-132** Pattern Registry do `.vibeflow/index.md` x frontmatter de 5 patterns: o registry vira DERIVADO do frontmatter por ferramenta, com sensor (achado do 1.pre).
-- **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127.
+- **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127. · **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
 - **M-137** `.agents/workflows/` fora dos portadores que o `CONTRATO_REVOGADO` vigia (classe do M-122: o sensor existe, o caminho não chega). · **M-138** flag `--delete-pdfs` viva no `extract_pdfs.py`: remédio preferido = recusar salvo `--confirmo-apagar` explícito (não remover).
 - **M-139** resíduos descritivos da era "LangMem no boot" (`README.md:169`, `ROADMAP.md:83`, `.vibeflow/patterns/agent-workflow-protocol.md:36`, comentário falso em `app/engine/get_topic_context.py:153`), classe do M-127/M-133, por lista.
 - (ambiente local, sem commit) **M-140** `.codex/hooks.json` (gitignored) ainda dispara a consolidação se o Codex rodar: 1 linha no arquivo local. 🔴 Pendente de confirmação do OPERADOR, porque é configuração de harness e o pedido veio do ai-eng; o medhub não edita config a pedido de par.
-- **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
 - (1.4b, data do operador) **M-141** PDFs (491, 6,2 GB) + `decks/cards.json` (379 MB) fora de qualquer cópia -> cópia direta ao Drive, fora do git.
 - (Lote 4 / Fase 1) **M-136** retenção do repo privado: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 (ex.: 1 cópia por semana depois de 30 dias).
 - **M-134** FECHADO em `55d1144` (11/10): a deleção do PDF-fonte saiu do fluxo (`criar-resumo` passo 8, skill `/extrair-pdf`, `AGENTE.md` §6 e §7.3) pelo §10.10 em 3 passos; termo `--delete-pdfs` vigiado pelo `CONTRATO_REVOGADO`. Default não destrutivo do operador (retenção da s086). Achado: o `.agents/workflows/` não está entre os 31 portadores que o gate vigia.
@@ -48,7 +47,7 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 - Fecho do Lote 0: `conventions.md:54` (dentro de `auto`) saiu no 1.pre (`4300bed`); `.vibeflow/index.md:177` (era a 169) é registro riscado de achado resolvido e fica: é o único resto do doc_drift em `.vibeflow/`.
 
 ## Notas de design para a Fase 1 (sem agir agora)
-- (ai-eng, 11/10 00:45) O panorama do boot NÃO carrega erros por tema do banco. Na plataforma-alvo, fraqueza = query sobre o Postgres (sinal determinístico, como o `db.get_erros_por_tema`), nunca memória de LLM.
+- (ai-eng, 11/10 00:45) O panorama do boot NÃO carrega erros por tema do banco. Na plataforma-alvo, fraqueza = query sobre o Postgres (sinal determinístico, como o `db.get_erros_por_tema`), nunca memória de LLM. · (ai-eng, 11/10 ~13h) PRD da Fase 1 pronto em `C:/Users/daanm/ai-eng/.vibeflow/prds/medhub-fase1-ambiente-proprio-product-ready.md` (F1.0-F1.5); vira gen-spec meu só depois do G-fase. Consome da Fase 0: 1.4 (backup), Lote 2 (fontes estruturadas), Lote 4 (fuso, ids congelados, `cards_prune` sem DELETE), Lote 5 (custo por unidade).
 
 ## Decisões do operador (data · verbatim curto)
 10/10 (no canal do ai-eng): i RAG/LangMem fora do caminho crítico SIM · ii purga/poda/gc SIM (após cópia off-machine) · iii cópia `ipub.db` = Drive + git privado ("drive e git") · iv ADR-006 ACEITO, opção A · v DISC §7: (1) produto, validado com ele primeiro -> infra product-ready, schema multi-tenant no Lote 4 · (2) terceiros "irrelevante": produto = provas públicas + cunhagem própria; cards = erros dos usuários; M-002 fecha como uso pessoal · (3) repo público por ora (conta Daktus), privado depois · (4) agente hospedado por ele, aditável; sem Managed Agents · (5) "não irei estudar hoje mais, portanto pode tocar nessa" -> tique desligado hoje, engenharia contínua.

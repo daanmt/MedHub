@@ -1,9 +1,9 @@
-# REFORMA-CHECKPOINT — 10/10/2026 15:25 · sessão s223 · mantido pelo medhub, conferido pelo ai-eng a cada relatório
+# REFORMA-CHECKPOINT — 10/10/2026 21:15 · sessão s223 · mantido pelo medhub, conferido pelo ai-eng a cada relatório
 
 > Protocolo: `C:/Users/daanm/ai-eng/artifacts/protocolo-retomada-reforma-medhub-2026-10-10.md`. O chat não é estado: retomar por este arquivo.
 
 ## Estado
-Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.3 (a lançar) · clear-safe: **sim** (G-part 0.2c fechado). O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
+Fase 0 (preparar o ambiente) · Lote 0 · 0.3 PASS e commitada (`bb6ebd3`), **push pendente**: o classificador do auto mode negou o `git push` ("Out-of-Place Publication"); não contornar, o operador decide. Próxima part: 0.4a. clear-safe: **não** até o push (G-part 0.3 aberto; o estado está todo neste arquivo e no git local). O log `history/session_223.md` segue EM ABERTO: depois de /clear, continuar nele.
 
 ## Parts (Lote 0 → 5)
 | id | spec (path no repo) | status | commit | suíte (n/falhas/s) | desvio declarado |
@@ -12,7 +12,7 @@ Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.3 (a lançar) · clea
 | 0.2a | `…-part-2a.md` | PASS | 74eed0e | 1518/0/174 | §7.4 regenerada (GO ai-eng: parte do commit) |
 | 0.2b | `…-part-2b.md` | PASS | 5887631 | 1535/0/158 | audit tirou a regra "toda aula liga a tarefa" (aula sem tarefa = "Outras aulas", estado previsto) |
 | 0.2c | `…-part-2c.md` | PASS | e294651 | 1536/0/178 | §7.4 regenerada; sentinela em `sqlite3.connect` no script (achou `DB_PATH` próprio em `review_radar` e `variancia`); M-120 -> Lote 3 |
-| 0.3 | `…-part-3.md` | pendente -- lançar COMO ESTÁ + restrição do ai-eng: a catraca BLOCK entra no conjunto "sempre" da part-1 (sem early-return, sem gatilho por extensão); o DoD "órfã nova = BLOCK" se prova no fluxo real (commit de teste com cláusula órfã sintética, revertido) | | | |
+| 0.3 | `…-part-3.md` | PASS (push pendente) | bb6ebd3 | 1539/0/162 | DoD 4 = `NAO-VERIFICAVEL` (o teste da figura prova só a URL em `figuras`; revisar 2026-12-31); API no módulo maior que os 2 nomes da spec; restrição do ai-eng cumprida (catraca fora do `else` e do `except`); prova no fluxo real: commit com órfã sintética BLOQUEADO (`128 > 127 no HEAD`, `engenharia-cli.md:732`), revertido; §7.4 não acusou |
 | 0.4a | `…-part-4a.md` | pendente | | | |
 | 0.4b dry-run | `…-part-4b.md` | pendente | | | |
 | 0.4b apply | `…-part-4b.md` | pendente (G-op dado, condicionado à 1.4) | | | |
@@ -20,10 +20,15 @@ Fase 0 (preparar o ambiente) · Lote 0 · part em curso: 0.3 (a lançar) · clea
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
 
 ## Próximo ato (1 linha)
-medhub lê SÓ a spec `…-part-3.md` e lança 1 subagente -> audit do DoD -> commit + push -> linha aqui -> msg ao ai-eng (G-part 0.3); depois 0.4a e 0.4b dry-run -> G-lote 0.
+operador faz o push de `bb6ebd3` + o commit deste checkpoint (ou libera o push) -> G-part 0.3 -> medhub lê SÓ a spec `…-part-4a.md` e lança 1 subagente; depois 0.4b dry-run -> G-lote 0.
+
+## Dívida nascida no Lote 0 (dono medhub, -> Lote 3; linhas em `docs/BACKLOG-UNICO-MEDHUB.md`)
+- **M-120** leitor do `ipub.db` real em `mode=ro` para os testes `vivo` (audit da 2a).
+- **M-121** inventário dos módulos com `DB_PATH` próprio: `review_radar`, `variancia` e os que o sentinela achar (audit da 2c; confirmado pelo ai-eng 10/10).
 
 ## Gates abertos
-- G-part 0.3 (medhub).
+- G-part 0.3: falta só o push (operador).
+- Achados do audit da 0.3, levados ao ai-eng (remédio proposto, aguardando GO/ALTERA): (a) `gate_inexistente`/`nv_sem_data` imprimem `[BLOCK]` e fazem `clau_ok=False`, mas nunca `all_passed=False`: não bloqueiam o commit desde `9ea675a` (s187) -> `hotfix` de 1 linha + regressão; (b) `GIT_INDEX_FILE` herdado no pre-commit pode desviar `git -C <repo sintético> add` (exposto: `tools/test_emed_api.py:383`); é inferência, a sonda foi negada pelo classificador -> candidato a `spec`.
 - G-op: apply da 0.4b só depois da 1.4 (cópia off-machine).
 - (fechado 10/10 ~13:55) i e ii confirmadas por ele no chat do medhub: *"já foi respondido no ai-eng. se alinhem."* -- decisão dada no canal do ai-eng com verbatim vale; não re-perguntar.
 

@@ -1,6 +1,6 @@
 # Spec: medhub Fase 0 · Lote 1 — Part 1.4: cópia off-machine do `ipub.db` e dos 48 fixados
 
-> Gerada: 2026-10-11 00:05 (medhub, s223, `/vibeflow:gen-spec`) | Origem: GO do Lote 1 do ai-eng (10/10 23:32), que pôs a 1.4 **primeiro** no lote por causa do M-129; os 5 pontos de conferência dele (10/10 23:55). PRD: `.vibeflow/prds/medhub-fase0-preparar-ambiente.md` (linha 4 da tabela de lotes: "backup off-machine").
+> Gerada: 2026-10-10 ~23:58 (medhub, s223, `/vibeflow:gen-spec`; commit `260cdfb`) | Origem: GO do Lote 1 do ai-eng (10/10 23:32), que pôs a 1.4 **primeiro** no lote por causa do M-129; os 5 pontos de conferência dele (10/10 23:55). Revisada em 11/10 00:01 com as adições (A) e (B) do ai-eng, no GO da spec. PRD: `.vibeflow/prds/medhub-fase0-preparar-ambiente.md` (linha 4 da tabela de lotes: "backup off-machine").
 > Repo-alvo: medhub. HEAD de partida: `bdae7bc`. Ids: fecha a condição do **M-129** (o G-op da 0.4b só depois desta part, com md5 dos 48 conferido).
 
 ## Objective
@@ -23,7 +23,7 @@ O `ipub.db` atual e os 48 backups fixados que a 0.4b vai devolver à rotação g
 ## Definition of Done
 
 1. [ ] **Dry-run por padrão, sem escrita.** `python tools/backup_offmachine.py --dest DIR` lista os N = 1 + 48 arquivos (o snapshot do banco + os de `plano_desfixar_lote(5)["sair"]`), com MB, e o carimbo da pasta que seria criada. Não cria `DIR`, não escreve nada e não toca `artifacts/backups/`. Teste em `tools/test_fixado_ato.py`, sobre diretório sintético (8 fixados + manifesto + banco sintético): a impressão digital da origem (sha256 de cada arquivo + do manifesto) fica igual e `DIR` não existe depois. Vermelho visto antes do código.
-2. [ ] **Apply com COUNT-ASSERT e md5 de volta.** `--apply` exige `--expect N`; N diferente recusa e nada muda. Com o N certo, a cópia vai para `DIR/<carimbo>/`:
+2. [ ] **Apply com COUNT-ASSERT e md5 de volta.** `--apply` exige `--expect N`; N diferente recusa e nada muda. **Precondição (A, ai-eng):** o banco está em `journal_mode=delete` (lido em `mode=ro` em 10/10). ANTES de copiar, o apply recusa se existir `ipub.db-journal` ao lado do banco (hot journal = transação em curso ou queda) ou `ipub.db-wal`/`-shm` com bytes, com a mensagem "banco em uso: pare o tique e feche conexões" e nada escrito. Teste: um `-journal` sintético ao lado do banco sintético -> recusa, `DIR` não existe. Com o N certo e o banco quieto, a cópia vai para `DIR/<carimbo>/`:
    - o snapshot `ipub_<carimbo>.db`, feito como no `_fixar` (sha256 da cópia == do banco, `integrity_check` ok; senão recusa e não deixa cópia meia-feita);
    - cada fixado com o sha256 conferido contra `FIXADOS.json` ANTES de copiar (um divergente ou sumido recusa o lote inteiro);
    - `MD5SUMS` (formato `md5sum`: `<md5>  <caminho relativo>`) e `manifest.json` (origem, bytes, sha256 do manifesto, motivo do fixado).
@@ -34,8 +34,8 @@ O `ipub.db` atual e os 48 backups fixados que a 0.4b vai devolver à rotação g
    O script só roda git de leitura (`rev-parse`, `remote -v`): nunca `init`, `add`, `commit` nem `push`. Teste: um `subprocess.run` gravador registra os subcomandos git chamados no apply sintético, e só os de leitura aparecem.
 4. [ ] **Conferência de volta reutilizável.** `python tools/backup_offmachine.py --conferir DIR/<carimbo>` relê os arquivos contra o `MD5SUMS` da própria pasta: tudo bate = exit 0; arquivo adulterado ou ausente = exit 1 com o nome. É o comando que o orquestrador roda depois do clone fresco do repo privado (G-op). Teste com um byte alterado.
 5. [ ] **Nada de banco no repo público (gitignore + gate).**
-   - O `.gitignore` ganha `*.db`, `*.db-wal`, `*.db-shm` e `*.db-journal`.
-   - O `auto_check` ganha, no conjunto "sempre" da part-1 (sem early-return, sem gatilho por extensão), o check `[BLOCK] BANCO_NO_RECORTE`: todo arquivo staged (ACMR) cujo nome casa `\.db(-wal|-shm|-journal)?$` bloqueia o commit, mesmo com `git add -f`. Nasce BLOCK porque a base é zero por construção (0 `.db` rastreados, medido): é a mesma razão do `gate_inexistente`.
+   - O `.gitignore` ganha `*.db`, `*.sqlite` e `*.sqlite3`, cada um também com `-wal`, `-shm` e `-journal`. Adição (B) do ai-eng: o Chroma usa `chroma.sqlite3`, o mesmo tipo de arquivo e o mesmo risco.
+   - O `auto_check` ganha, no conjunto "sempre" da part-1 (sem early-return, sem gatilho por extensão), o check `[BLOCK] BANCO_NO_RECORTE`: todo arquivo staged (ACMR) cujo nome casa `\.(db|sqlite3?)(-wal|-shm|-journal)?$` bloqueia o commit, mesmo com `git add -f`. Nasce BLOCK porque a base é zero por construção: 0 arquivos `.db|.sqlite|.sqlite3` rastreados (`git ls-files`, medido em 11/10), a mesma razão do `gate_inexistente`.
    - A regra é uma função PURA em `backup_offmachine.py` (`bancos_no_recorte(caminhos)`), e o `auto_check` só orquestra. Regressão in-process em `tools/test_fixado_ato.py`.
    - Prova no fluxo real, feita pelo orquestrador: `git add -f` de um `.db` sintético -> commit BLOQUEADO, HEAD intacto, revertido.
 6. [ ] **Dry-run real (orquestrador).** Sobre `artifacts/backups/` real, com `--dest` numa pasta do scratch fora do repo, o dry-run imprime N = 49 e o total em MB (esperado ~352 MB = 341,7 + o banco). A impressão digital da pasta de backups (sha256 do manifesto + nome/tamanho/mtime de cada entrada) fica idêntica antes e depois, e `--dest` não é criado. O md5 do `ipub.db` também fica igual.
@@ -49,7 +49,7 @@ O `ipub.db` atual e os 48 backups fixados que a 0.4b vai devolver à rotação g
 
 - **O script não cria repo, não autentica, não faz `git add`/`commit`/`push`, não fala com o Drive e não apaga nada**, nem na origem nem no destino. Upload e push são G-op do operador (ou ato do orquestrador com autorização dele, fora do script).
 - **Não roda o apply da 0.4b** nem chama `desfixar`/`purge`/`backup()`. A F137 não muda.
-- Nada de agendamento ou recorrência (cópia periódica = Lote 4 / Fase 1). Esta part é a cópia única que destrava o M-129.
+- Nada de agendamento ou recorrência (cópia periódica = Lote 4 / Fase 1). Esta part é a cópia única que destrava o M-129. Limite conhecido **M-136**: cada cópia pesa ~352 MB no repo privado, e a política de retenção dele (ex.: 1 cópia por semana depois de 30 dias) vai para o Lote 4 / Fase 1.
 - Nada de Git LFS, criptografia ou compressão (decisão do operador sobre o destino privado; fica para a Fase 1 se pesar).
 - Nenhuma escrita no `ipub.db`, em `FIXADOS.json` ou em `artifacts/backups/`.
 - Não mexer em `tmp/` (M-130/M-131) nem em `medhub_memory.db`.
@@ -73,7 +73,7 @@ O `ipub.db` atual e os 48 backups fixados que a 0.4b vai devolver à rotação g
 ## Risks
 
 - **"A cópia mora no mesmo disco."** -> Sim: até o push/upload ela é staging local. A condição do M-129 é o md5 conferido **depois** do clone fresco do repo privado (G-op), não o apply desta part.
-- **"O banco muda durante a cópia."** -> O sha256 da cópia diverge do banco, e o script recusa sem deixar cópia, como o `_fixar`. Repetir com o tique parado.
+- **"O banco muda durante a cópia."** -> Duas travas. Antes de copiar, a precondição (A) recusa com journal, WAL ou SHM presentes. Depois, o sha256 da cópia diverge do banco e o script recusa sem deixar cópia, como o `_fixar`. Nos dois casos, repetir com o tique parado.
 - **"O push para o repo privado é negado pelo classificador."** -> O push é do operador (`! git -C <dir> push`); o script não depende dele.
 - **"O gate novo bloqueia um `.db` legítimo de teste."** -> Nenhum `.db` é rastreado hoje. Fixture de banco sintético nasce em `tmp_path`, fora do índice.
 - **"O destino herda credencial ou remote errado."** -> A recusa por remote igual ao público roda antes de qualquer escrita; criar o remote privado é ato do operador.
@@ -82,7 +82,7 @@ O `ipub.db` atual e os 48 backups fixados que a 0.4b vai devolver à rotação g
 
 1. O operador cria o repo git PRIVADO (conta e credencial dele) e o clone local fora de `C:/Users/daanm/medhub`.
 2. O orquestrador roda o apply real com `--dest <clone>`, e o operador faz commit + push no repo privado.
-3. O orquestrador faz clone fresco do privado em scratch e roda `--conferir`: exit 0 = md5 dos 49 conferido.
+3. O orquestrador faz clone fresco do privado em scratch e roda `--conferir`: exit 0 = md5 dos 49 conferido. Se o classificador negar o clone na sessão do orquestrador, quem roda `! git clone` é o operador, nunca outro agente.
 4. Drive: o operador sobe a pasta `<carimbo>/`. O orquestrador confere o `md5Checksum` de cada arquivo pela metadata do Drive (conector, só leitura) contra o `MD5SUMS`, ou o operador roda `md5sum -c` numa cópia baixada.
 5. Com 3 e 4 conferidos, o apply da 0.4b (M-129) fica liberado para o operador.
 

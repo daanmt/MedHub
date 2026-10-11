@@ -228,7 +228,9 @@ def test_engine_sem_memoria_longa(db_sintetico, tmp_path):
     `get_topic_context` DE VERDADE em subprocesso, sobre o banco sintético, com a `_SONDA`:
     o engine não importa `app.memory` nem `langgraph`, e o retorno não tem mais `weak_areas`
     -- o sinal de fraqueza por tema é o `erros_recentes` (`db.get_erros_por_tema`, bloco 2).
-    O bloco 5 (RAG) ainda vive até a b1: o chromadb pode carregar, e este teste não olha ele.
+    Part 3.0b1 (11/10/2026): o bloco 5 (RAG) saiu. O engine também não carrega
+    `app.engine.rag`, `chromadb` nem `anthropic` (o HyDE chamava o Haiku pela API), e o
+    retorno não tem mais `relevant_chunks` nem `rag_degradado`.
     """
     sonda = tmp_path / "sonda"
     sonda.mkdir()
@@ -257,7 +259,12 @@ def test_engine_sem_memoria_longa(db_sintetico, tmp_path):
     carregados = sorted({alvo for alvo in ("app.memory", "langgraph") for m in mods
                          if m == alvo or m.startswith(alvo + ".")})
     assert not carregados, f"o engine carregou a memória longa: {carregados}"
+    rag_carregado = sorted({alvo for alvo in ("app.engine.rag", "chromadb", "anthropic")
+                            for m in mods if m == alvo or m.startswith(alvo + ".")})
+    assert not rag_carregado, f"o engine carregou o RAG: {rag_carregado}"
     assert "weak_areas" not in chaves, f"o retorno ainda tem weak_areas: {chaves}"
+    sobras = sorted({"relevant_chunks", "rag_degradado"} & set(chaves))
+    assert not sobras, f"o retorno ainda tem chaves do RAG: {sobras}"
     assert "erros_recentes" in chaves, chaves
 
 

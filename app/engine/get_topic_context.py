@@ -9,7 +9,6 @@ Limitações documentadas:
 from __future__ import annotations
 
 import difflib
-import sys
 from pathlib import Path
 
 import app.utils.db as db
@@ -102,6 +101,10 @@ def get_topic_context(tema: str) -> dict:
     Returns:
         dict com chaves:
             resumo_path (str | None): caminho relativo ao arquivo .md do resumo.
+                `None` significa só que nenhum ARQUIVO casou o nome (`_find_resumo`: nome do
+                arquivo e frontmatter), NÃO que o corpus não tem o tema (F91: HPB/LUTS estava
+                em `Urologia.md`). Antes de afirmar ausência, buscar o termo no CONTEÚDO de
+                `resumos/**/*.md`.
             resumo_content (str | None): conteúdo completo do arquivo .md.
             erros_recentes (list[dict]): últimos 20 erros de questoes_erros filtrados
                 pelo tema. Cada item: id, titulo, tipo_erro, habilidades_sequenciais,
@@ -113,7 +116,6 @@ def get_topic_context(tema: str) -> dict:
         "resumo_content": None,
         "erros_recentes": [],
         "cards_ativos": 0,
-        "relevant_chunks": [],
     }
 
     # 1. Resumo
@@ -142,30 +144,5 @@ def get_topic_context(tema: str) -> dict:
         )
     except Exception:
         pass
-
-    # 5. RAG chunks — busca semântica sobre resumos indexados
-    # 🔴 F91: este bloco era `except Exception: pass` — o SEGUNDO silenciador em série.
-    # Mesmo uma exceção honesta vinda do RAG virava `relevant_chunks: []`, e o consumidor
-    # (um agente que escreve conclusão) lia isso como "o corpus não tem o tema". Foi assim
-    # que um subagente afirmou que "não há resumo indexado sobre HPB/LUTS" — havia 39 chunks.
-    # A degradação agora é DECLARADA no próprio payload.
-    try:
-        from app.engine.rag import search as rag_search, RagIndisponivel
-    except Exception as e:  # o módulo do RAG nem carregou
-        result["relevant_chunks"] = []
-        result["rag_degradado"] = f"motor de RAG indisponivel no import: {type(e).__name__}: {e}"
-        print(f"[WARN] get_topic_context: {result['rag_degradado']}", file=sys.stderr)
-        return result
-
-    try:
-        result["relevant_chunks"] = rag_search(tema, n_results=3)
-    except RagIndisponivel as e:
-        result["relevant_chunks"] = []
-        result["rag_degradado"] = str(e)
-        print(f"[WARN] get_topic_context: {e}", file=sys.stderr)
-    except Exception as e:
-        result["relevant_chunks"] = []
-        result["rag_degradado"] = f"falha inesperada na busca: {type(e).__name__}: {e}"
-        print(f"[WARN] get_topic_context: {result['rag_degradado']}", file=sys.stderr)
 
     return result

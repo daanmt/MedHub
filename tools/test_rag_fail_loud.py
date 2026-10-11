@@ -154,15 +154,6 @@ def test_motor_vivo_com_hits_e_caminho_inalterado(monkeypatch):
 
 
 # --------------------------------------------------------------------------
-# 4. O consumidor para de mascarar (2o silenciador, em serie)
+# 4. ⚰️ 11/10/2026, 3.0b1: o teste do consumidor (`get_topic_context` declarava `rag_degradado`)
+#    saiu com o bloco 5 do engine; a garantia que fica é `test_engine_sem_memoria_longa`.
 # --------------------------------------------------------------------------
-def test_get_topic_context_declara_a_degradacao_em_vez_de_engoli_la(motor_caido, monkeypatch):
-    monkeypatch.setattr(gtc, "_find_resumo", lambda q: None)
-
-    ctx = gtc.get_topic_context("Urologia")
-
-    assert ctx.get("rag_degradado"), (
-        "get_topic_context:175-179 tinha `except Exception: pass` -- mesmo uma excecao do RAG "
-        "virava `relevant_chunks: []`, como se o corpus estivesse vazio")
-    assert not ctx.get("relevant_chunks"), \
-        "nao pode entregar chunks E declarar degradacao total"

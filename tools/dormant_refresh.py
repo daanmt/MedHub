@@ -105,7 +105,7 @@ def _find_resumo_by_filename(tema):
 
 
 def context(tema, area=None):
-    """Substrato narrativo do tema (resumo + erros + cards + RAG) p/ o agente narrar.
+    """Substrato narrativo do tema (resumo + erros + cards) p/ o agente narrar.
 
     Resumo: tenta o engine (índice por especialidade/área/alias); se não achar,
     cai para match por nome de arquivo (temas granulares costumam = nome do .md).
@@ -124,7 +124,6 @@ def context(tema, area=None):
         "resumo_content": resumo_content,                # completo — o agente narra a partir daqui
         "erros_recentes": (ctx.get("erros_recentes") or [])[:10],
         "cards_ativos": ctx.get("cards_ativos", 0),
-        "relevant_chunks": ctx.get("relevant_chunks") or [],
     }
 
 

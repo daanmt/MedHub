@@ -20,7 +20,10 @@ escrita sem marcador deontico e invisivel para o inventario inteiro.
 """
 import datetime as dt
 import os
+import subprocess
 import sys
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -165,11 +168,135 @@ def test_inventario_do_repo_tem_a_forma_esperada():
     assert resumo["gates_conhecidos"] > 300, resumo
 
 
-def test_catraca_de_orfas_so_avisa_quando_a_contagem_sobe():
-    """s189 (pedido do /ai-eng): a contagem de orfas do 1.10 nao sobe sem DECLARACAO. Subir
-    exige editar `BASE_ORFAS` no mesmo commit (o diff e a declaracao); descer e livre. WARN,
-    nunca BLOCK -- por isso nenhuma assercao sobre o repo real aqui."""
-    from clausulas_check import BASE_ORFAS, catraca
-    assert catraca(BASE_ORFAS) is None and catraca(BASE_ORFAS - 3) is None
-    msg = catraca(BASE_ORFAS + 2)
-    assert msg and "2 clausula(s) nova(s)" in msg and "BASE_ORFAS" in msg
+def test_catraca_pura_compara_com_a_base_dada():
+    """s189 (pedido do /ai-eng): a contagem de orfas do 1.10 nao sobe sem DECLARACAO. Fase 0
+    Lote 0 part-3: a base deixou de ser digitada (`BASE_ORFAS`, fixa em 127, tinha folga -- a
+    contagem caiu a 126, a base nao desceu, e a 127a e a 128a entraram escondidas). A base agora
+    e a contagem do HEAD, calculada; `catraca` so compara. Descer segue livre."""
+    assert not hasattr(cn, "BASE_ORFAS"), "a base digitada morreu: quem da a base e o HEAD"
+    assert cn.catraca(127, 127) is None and cn.catraca(124, 127) is None
+    msg = cn.catraca(129, 127)
+    assert msg and "2 clausula(s) nova(s)" in msg and "HEAD" in msg and "BASE_ORFAS" not in msg
+    assert cn.catraca(5, None) is None, "sem base (repo sem HEAD) nao ha o que comparar"
+
+
+# --- catraca derivada do HEAD (Fase 0 Lote 0 part-3) ----------------------------------
+# Repos git SINTETICOS em tmp_path (padrao `test_emed_api._repo`): nada aqui le ou escreve o
+# indice do repo real.
+
+@pytest.fixture
+def git_isolado(monkeypatch):
+    """Esta suite roda DENTRO do pre-commit (check 2d), e o git exporta `GIT_INDEX_FILE` para o
+    hook -- em `git commit -a` ou `git commit <caminhos>` o caminho e ABSOLUTO e aponta o indice
+    do commit em curso do repo REAL. Herdado, `git -C <repo sintetico> add` escreveria nele.
+    Limpar o ambiente `GIT_*` mantem o repo sintetico sintetico."""
+    for chave in [k for k in os.environ if k.upper().startswith("GIT_")]:
+        monkeypatch.delenv(chave, raising=False)
+
+
+def _git(repo, *args):
+    return subprocess.run(["git", "-C", str(repo), "-c", "user.name=sintetico",
+                           "-c", "user.email=sintetico@exemplo.invalid",
+                           "-c", "commit.gpgsign=false", *args],
+                          check=True, capture_output=True)
+
+
+def _repo_git(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    (repo / ".claude" / "commands").mkdir(parents=True)
+    (repo / "core" / "contracts").mkdir(parents=True)
+    return repo
+
+
+def _orfas(n, tag="x"):
+    """n clausulas deonticas sem terminal, cada uma com texto proprio."""
+    return "".join(f"- O agente **nunca** pula o passo {tag}{i}.\n" for i in range(n))
+
+
+def test_catraca_derivada_do_head(tmp_path, git_isolado):
+    """DoD 1 da part-3: orfas(indice) contra orfas(HEAD), lidas do git -- sem numero digitado."""
+    repo = _repo_git(tmp_path)
+    r = str(repo)
+    skill = repo / ".claude" / "commands" / "sintetico.md"
+
+    # repo vazio (sem HEAD, o 1o commit): None com aviso -- nunca excecao, nunca BLOCK
+    skill.write_text(_orfas(5), encoding="utf-8")
+    _git(repo, "add", "-A")
+    assert cn.orfas_na_revisao("HEAD", root=r, gates=set()) is None
+    sem_head = cn.catraca_contra_head("--staged", root=r, gates=set())
+    assert sem_head["mensagem"] is None and "HEAD" in (sem_head["aviso"] or "")
+
+    # HEAD com N = 3: 2 na skill + 1 no AGENTE.md. NAO contam: a anotada (tem terminal), o
+    # README (nao e portador) e a subpasta (o glob dos portadores nao e recursivo).
+    skill.write_text(_orfas(2) + "- O agente **nunca** narra. <!-- NAO-NORMATIVA: narrativa -->\n",
+                     encoding="utf-8")
+    (repo / "AGENTE.md").write_text(_orfas(1, "ag"), encoding="utf-8")
+    (repo / "README.md").write_text(_orfas(7, "rd"), encoding="utf-8")
+    sub = repo / ".claude" / "commands" / "sub"
+    sub.mkdir()
+    (sub / "fundo.md").write_text(_orfas(4, "sb"), encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "base")
+    assert cn.orfas_na_revisao("HEAD", root=r, gates=set()) == 3
+
+    def staged():
+        _git(repo, "add", "-A")
+        return cn.catraca_contra_head("--staged", root=r, gates=set())
+
+    # N+1 no indice -> mensagem de BLOCK, que aponta a clausula nova
+    skill.write_text(_orfas(3), encoding="utf-8")
+    res = staged()
+    assert (res["head"], res["atual"], res["severidade"]) == (3, 4, "BLOCK")
+    assert res["mensagem"] and "1 clausula(s) nova(s)" in res["mensagem"]
+    assert ".claude/commands/sintetico.md:3" in res["mensagem"]
+    assert cn.orfas_na_revisao(":", root=r, gates=set()) == 4
+
+    # N e N-1 -> None (descer e livre; o proximo HEAD ja e a base menor)
+    skill.write_text(_orfas(2), encoding="utf-8")
+    assert staged()["mensagem"] is None
+    skill.write_text(_orfas(1), encoding="utf-8")
+    assert staged()["mensagem"] is None
+
+    # o INDICE manda, nao a arvore: orfa nao-staged (de outro agente) nao bloqueia commit alheio
+    skill.write_text(_orfas(9), encoding="utf-8")
+    assert cn.catraca_contra_head("--staged", root=r, gates=set())["mensagem"] is None
+
+    # contagem TOTAL, nao por arquivo: portador renomeado com as mesmas orfas nao cria orfa nova
+    skill.write_text(_orfas(2), encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "mv", ".claude/commands/sintetico.md", "core/contracts/sintetico-contract.md")
+    res = cn.catraca_contra_head("--staged", root=r, gates=set())
+    assert (res["head"], res["atual"], res["mensagem"]) == (3, 3, None)
+
+
+def test_severidade_catraca_por_modo(tmp_path, git_isolado):
+    """DoD 3 da part-3: o delta nasce BLOCK no --staged (pre-commit) e segue WARN no
+    --changed/--all. Base zero por construcao -- toda orfa a mais que o HEAD e nova --, a mesma
+    razao que faz `gate_inexistente` nascer BLOCK (AGENTE.md secao 6: vira BLOCK quando a base
+    zera)."""
+    assert cn.severidade_catraca("--staged") == "BLOCK"
+    assert cn.severidade_catraca("--changed") == "WARN"
+    assert cn.severidade_catraca("--all") == "WARN"
+
+    # --changed/--all comparam a ARVORE com o HEAD e so avisam
+    repo = _repo_git(tmp_path)
+    r = str(repo)
+    skill = repo / ".claude" / "commands" / "sintetico.md"
+    skill.write_text(_orfas(2), encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "base")
+    skill.write_text(_orfas(3), encoding="utf-8")                 # so na arvore, nada staged
+    for modo in ("--changed", "--all"):
+        res = cn.catraca_contra_head(modo, root=r, gates=set())
+        assert (res["head"], res["atual"]) == (2, 3)
+        assert (res["severidade"], res["recorte"]) == ("WARN", "arvore")
+        assert res["mensagem"] and "1 clausula(s) nova(s)" in res["mensagem"]
+    assert cn.catraca_contra_head("--staged", root=r, gates=set())["mensagem"] is None
+
+
+def test_catraca_com_git_ilegivel_avisa_e_nao_derruba(tmp_path, git_isolado):
+    """Falha do git (aqui: raiz inexistente) = aviso explicito e sem BLOCK, nunca excecao."""
+    res = cn.catraca_contra_head("--staged", root=str(tmp_path / "nao-existe"), gates=set())
+    assert res["mensagem"] is None and res["aviso"] and "git" in res["aviso"]

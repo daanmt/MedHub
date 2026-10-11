@@ -18,10 +18,13 @@ O que o check mede, exatamente:
     flag `--x` de `tools/y.py` e ORFA quando NENHUMA skill que cita `y.py`
     contem a string `--x`.
 
-WARN-first (politica secao 6, s106/107): nasce WARN, vira BLOCK quando a base
-zerar -- foi assim que o F79b virou BLOCK na s176, por medicao e nao por
-vontade. Enquanto houver orfa, bloquear so pararia o commit de quem nao criou o
-passivo.
+SEVERIDADE: BLOCK no commit, informe no CLI avulso. Nasceu sob a politica
+WARN-first (secao 6, s106/107: regra nova nasce WARN e vira BLOCK quando a base
+zerar) e foi promovida na s177, quando a base zerou -- o mesmo caminho do F79b
+na s176, por medicao e nao por vontade. Quem bloqueia e o check 26 do
+`auto_check` (`[BLOCK] CLI_ASSINATURA (D5)`, `all_passed = False`, logo o
+pre-commit). Este script avulso sai 0 sempre que roda: ele lista a worklist,
+nao decide o commit.
 
 🔴 LIMITES DECLARADOS (verification-stack, AGENTE.md 10.8) -- este sensor
 SUBESTIMA de proposito, e o vies e para o lado seguro (nunca acusa quem
@@ -147,7 +150,8 @@ def run_checks(root=None):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Assinatura canonica de CLI x skill (D5; WARN-first, exit 0 sempre).")
+        description="Assinatura canonica de CLI x skill (D5). Avulso: informa e sai 0; "
+                    "quem bloqueia o commit e o check 26 do auto_check (BLOCK).")
     ap.add_argument("--json", action="store_true", help="saida JSON (worklist)")
     ap.add_argument("--limit", type=int, default=25,
                     help="quantos CLIs listar no modo texto (default 25)")
@@ -162,7 +166,7 @@ def main():
     sem_dono = [a for a in achados if not a["payload"]["donos"]]
     print()
     print("=" * 70)
-    print("  Assinatura canonica de CLI (AGENTE.md 7.2) -- WARN, nao bloqueia")
+    print("  Assinatura canonica de CLI (AGENTE.md 7.2) -- informe; o commit e BLOCK (check 26)")
     print("=" * 70)
     print(f"  CLIs com flag orfa : {len(achados)}")
     print(f"  flags orfas        : {total_orfas}")

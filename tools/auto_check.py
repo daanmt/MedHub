@@ -1281,11 +1281,23 @@ def main():
     #      que nomeia gate INEXISTENTE, ou marca sem data, e BLOCK desde o nascimento,
     #      porque essa base e ZERO por construcao: e o F90 um nivel acima (cobertura
     #      aparente e pior que cobertura ausente).
+    #      CATRACA (Fase 0 Lote 0 part-3): a base deixou de ser digitada (a constante
+    #      `BASE_ORFAS`, fixa em 127, teve folga e escondeu a 127a e a 128a) e passou a ser a
+    #      contagem do HEAD, lida pelo git. No --staged (pre-commit) o DELTA indice x HEAD e
+    #      BLOCK pela MESMA razao do `gate_inexistente`: base zero por construcao -- toda orfa
+    #      a mais que o HEAD nasceu neste commit (AGENTE.md secao 6: "vira BLOCK quando a base
+    #      zerar"). O passivo segue WARN. No --changed/--all (arvore x HEAD) o delta segue WARN.
+    #      A regra mora em `clausulas_check.catraca_contra_head`/`severidade_catraca`; aqui so
+    #      se orquestra.
+    #      A catraca roda em TODO commit ("sempre", Lote 0 part-1): fora do `else` dos BLOCKs
+    #      acima e fora do `except` do sensor -- um BLOCK dela nunca vira "sensor indisponivel".
     desc_clau = "Clausula normativa com terminal (1.10)"
     clau_ok, clau_warns = True, 0
+    gates_clau = None
     try:
-        from clausulas_check import run_checks as clau_run
-        achados_clau, resumo_clau = clau_run()
+        from clausulas_check import registro_de_gates, run_checks as clau_run
+        gates_clau = registro_de_gates()
+        achados_clau, resumo_clau = clau_run(gates=gates_clau)
         graves_clau = [a for a in achados_clau if a["severidade"] == "BLOCK"]
         clau_warns = sum(1 for a in achados_clau if a["severidade"] == "WARN")
         if graves_clau:
@@ -1306,14 +1318,30 @@ def main():
                   f"Terminal = `<!-- CHECK: nome -->` ou "
                   f"`<!-- NAO-VERIFICAVEL: motivo (revisar: AAAA-MM-DD) -->`. "
                   f"Detalhe: `python tools/clausulas_check.py --por-portador`.")
-            # s189: a CATRACA -- o passivo pode ficar, mas nao cresce em silencio.
-            from clausulas_check import catraca
-            subiu = catraca(resumo_clau["orfas"])
-            if subiu:
-                clau_warns += 1
-                print(f"[WARN] CLAUSULA_ORFA_SUBIU (catraca 1.10): {subiu}")
     except Exception as e:  # noqa: BLE001
         print(f"\n[WARN] CLAUSULA_CHECK: sensor indisponivel ({e}).")
+    # s189 + part-3: a CATRACA -- o passivo pode ficar, mas nao cresce em silencio.
+    catraca_clau = None
+    try:
+        from clausulas_check import catraca_contra_head
+        catraca_clau = catraca_contra_head(mode, gates=gates_clau)
+    except Exception as e:  # noqa: BLE001 -- a funcao nao levanta por git; isto e defeito dela
+        clau_warns += 1
+        print(f"[WARN] CLAUSULA_ORFA_CATRACA: catraca indisponivel ({e}) -- orfas x HEAD "
+              f"nao medidas neste run.")
+    if catraca_clau:
+        if catraca_clau["aviso"]:
+            clau_warns += 1
+            print(f"[WARN] CLAUSULA_ORFA_CATRACA: {catraca_clau['aviso']}")
+        if catraca_clau["mensagem"] and catraca_clau["severidade"] == "BLOCK":
+            clau_ok = False
+            all_passed = False
+            print(f"[BLOCK] CLAUSULA_ORFA_SUBIU (catraca 1.10, indice x HEAD): "
+                  f"{catraca_clau['mensagem']}")
+        elif catraca_clau["mensagem"]:
+            clau_warns += 1
+            print(f"[WARN] CLAUSULA_ORFA_SUBIU (catraca 1.10, arvore x HEAD): "
+                  f"{catraca_clau['mensagem']}")
     results_summary.append((desc_clau, clau_ok, clau_warns))
 
     # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE

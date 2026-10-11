@@ -151,7 +151,7 @@ risco da conta declarado e assumido; o que mudou: o agente não lê o token do n
 | `--apply` | Grava os docs em `--out`. Sem ele: dry-run (busca, valida, resume; nada gravado). |
 | `--out DIR` | Pasta de saída (default `tmp/emed_api/<lista>`; recebe `questoes/`). |
 
-> **Figura (s221, P22):** a URL da `<img>` do enunciado sai em `figuras` (lida do `statement`, o HTML -- o `statement_text` é texto puro e nunca trouxe imagem; até a s220 a marca `figura` saía em 0 de 2.322 docs). Quem baixa e embute é o `emed_banco.py --exportar`, nunca este script. Alternativa feita só de imagem segue declarada (`alt_so_figura`).
+> **Figura (s221, P22):** a URL da `<img>` do enunciado sai em `figuras` (lida do `statement`, o HTML -- o `statement_text` é texto puro e nunca trouxe imagem; até a s220 a marca `figura` saía em 0 de 2.322 docs). Quem baixa e embute é o `emed_banco.py --exportar`, nunca este script. Alternativa feita só de imagem segue declarada (`alt_so_figura`). <!-- NAO-VERIFICAVEL: prova parcial; test_figura_do_enunciado_vem_do_statement_html_e_viaja_como_url cobre a URL em figuras lida do statement, mas "nunca este script baixa" não tem sensor e o alt_so_figura é de outro teste; reavaliar no P5 do Lote 1 (revisar: 2026-12-31) -->
 | `--token-arquivo F` | Arquivo gitignored com a sessão (default `.emed_token`). |
 | `--pausa S` | Segundos entre páginas (default 2; `per_page` 20, o máximo da UI). |
 | `--esquema` | Imprime só a árvore de chaves e tipos da 1ª página (nenhum valor) e sai -- para manter o mapa de campos. |

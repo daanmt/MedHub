@@ -20,7 +20,7 @@ Fase 0 (preparar o ambiente) · Lote 0 · 0.3 (`bb6ebd3`) e hotfix 0.3h (`beebc0
 | 0.4b apply | `…-part-4b.md` | pendente (G-op do operador, só depois da 1.4 com md5 dos 48 conferido: M-129) | | | |
 | **G-lote 0** | — | ACEITO pelo ai-eng (10/10 23:32) | 8479d7e | 1554/0/178 | — |
 | 1.pre `/vibeflow:analyze` (resto do M-127) | — | PASS | 4300bed | 1554/0/177 (do filho, `python -m pytest tools/ -q`; commit de `.vibeflow/` não dispara a suíte) | 7 docs; fora dos marcadores idêntico ao HEAD (script); doc_drift 2 -> 1 (`index.md:177`, o histórico); fatos novos conferidos no código (`questoes_realizadas` intocado, fallback heurístico removido, `fsrs>=6.3.2`, módulos e funções citados existem). Achados não corrigidos ao ai-eng: registry x frontmatter em 5 patterns; Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`); `criar-resumo.md` passo 8 (`--delete-pdfs`) e `AGENTE.md:208` ("Zero PDF") x retenção s086; frontmatter legado de `Assistência ao Parto.md` |
-| 1.4 cópia off-machine (PRIMEIRO no Lote 1) | gen-spec do medhub | pendente | | | `ipub.db` atual + os 48 fixados; git PRIVADO separado (repo e credencial = G-op do operador) + Drive; `backup_offmachine.py` |
+| 1.4 cópia off-machine (PRIMEIRO no Lote 1) | `.vibeflow/specs/medhub-fase0-lote1-part-4.md` | spec escrita, enviada ao ai-eng (silêncio = GO) | | | `ipub.db` atual + os 48 fixados; git PRIVADO separado (repo e credencial = G-op do operador) + Drive; `backup_offmachine.py` |
 | 1.0 RAG/LangMem fora do caminho crítico | gen-spec do medhub | pendente | | | 1º DoD = MEDIR boot e injeção dos hooks, com e sem (baseline do Lote 5) |
 | 1.1 P5 figuras · 1.2 P2 `versao` + gate · 1.3 P6 âncora | gen-spec do medhub | pendente | | | |
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
@@ -33,6 +33,10 @@ Fase 0 (preparar o ambiente) · Lote 0 · 0.3 (`bb6ebd3`) e hotfix 0.3h (`beebc0
 - **M-121** inventário dos módulos com `DB_PATH` próprio: `review_radar`, `variancia` e os que o sentinela achar (audit da 2c; confirmado pelo ai-eng 10/10).
 - **M-128** `get_caderno_erros`, a 11ª função morta do `db.py`, fora da lista da 0.4a (fecho).
 - **M-131** `tmp/` SOLTO (17.189 arquivos, 40,2 MB): inventário + regra de vida do `tmp/`.
+- **M-132** Pattern Registry do `.vibeflow/index.md` x frontmatter de 5 patterns: o registry vira DERIVADO do frontmatter por ferramenta, com sensor (achado do 1.pre).
+- **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127.
+- **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
+- (fora do Lote 3) **M-134** `criar-resumo.md` passo 8 (`--delete-pdfs`) + `AGENTE.md:208` ("Zero PDF") x retenção da s086: norma de ato IRREVERSÍVEL. Quem pergunta ao operador é o ai-eng. Default sem resposta: retenção vence, e o passo 8 + a linha 208 são revogados pelo §10.10 (3 passos) num commit próprio entre a 1.4 e a 1.0. 🔴 Até lá, `criar-resumo` não roda.
 - (fora do Lote 3) **M-129** = condição do G-op da 0.4b (a rotação pós-apply apaga 49 de uma vez); **M-130** `tmp/alca_s213` (268,8 MB, CITADO só por 1 audit) = decisão do OPERADOR, quem pergunta é o ai-eng; não tocar.
 
 ## Gates abertos

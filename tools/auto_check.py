@@ -1346,6 +1346,44 @@ def main():
                   f"{catraca_clau['mensagem']}")
     results_summary.append((desc_clau, clau_ok, clau_warns))
 
+    # 16d. Arquivo de banco no commit (Fase 0 Lote 1 part 1.4). O ipub.db tem conteudo do EMED
+    #      (IP de terceiro) e nenhum banco vai para o repo publico. O `.gitignore` cobre `*.db`,
+    #      `*.sqlite`, `*.sqlite3` e os -wal/-shm/-journal, mas nao segura `git add -f` nem um
+    #      nome novo: este gate segura os dois. 🔴 NASCE BLOCK porque a base e ZERO por
+    #      construcao (0 arquivos de banco rastreados, `git ls-files` medido em 11/10/2026), a
+    #      mesma razao do `gate_inexistente` (AGENTE.md secao 6: vira BLOCK quando a base zera).
+    #      Recorte: o staged ACMR no --staged (o indice, que e o que o commit sela), a arvore x
+    #      HEAD + untracked no --changed e os rastreados no --all. Roda em TODO modo ("sempre",
+    #      Lote 0 part-1): sem gatilho por extensao e sem early-return; o BLOCK fica fora de
+    #      `else` e de `except` (so o import da regra mora no `except`, e vira WARN visivel).
+    #      A regra pura e `backup_offmachine.bancos_no_recorte`; aqui so se orquestra.
+    desc_banco = "Arquivo de banco fora do commit (BANCO_NO_RECORTE)"
+    banco_warns = 0
+    regra_banco = None
+    try:
+        from backup_offmachine import bancos_no_recorte as regra_banco
+    except Exception as e:  # noqa: BLE001 -- regra fora do ar vira WARN visivel, nunca silencio
+        banco_warns += 1
+        print(f"\n[WARN] BANCO_NO_RECORTE_SENSOR: regra indisponível ({e}); arquivos de banco "
+              f"não medidos neste run.")
+    recorte_banco = changed_files if changed_files is not None else _git_files(["ls-files", "-z"])
+    if recorte_banco is None:
+        banco_warns += 1
+        print("[WARN] BANCO_NO_RECORTE_SENSOR: recorte ilegível (git); arquivos de banco não "
+              "medidos neste run.")
+    bancos_no_commit = (regra_banco(recorte_banco)
+                        if regra_banco is not None and recorte_banco is not None else [])
+    if bancos_no_commit:
+        all_passed = False
+        print()
+        print(f"[BLOCK] BANCO_NO_RECORTE: {len(bancos_no_commit)} arquivo(s) de banco no recorte "
+              f"({'; '.join(bancos_no_commit[:5])}{'; ...' if len(bancos_no_commit) > 5 else ''}). "
+              f"Banco (.db/.sqlite/.sqlite3 e -wal/-shm/-journal) não vai para o repo público, "
+              f"nem com `git add -f`: o ipub.db tem conteúdo do EMED. Tirar do índice "
+              f"(`git restore --staged <arquivo>`, ou `git rm --cached <arquivo>` se já rastreado). "
+              f"Cópia fora da máquina: `python tools/backup_offmachine.py --dest <pasta fora do repo>`.")
+    results_summary.append((desc_banco, not bancos_no_commit, banco_warns))
+
     # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE
     # (dívida invisível em run verde é exatamente o modo de falha F54). Sensor: detecta
     # e reporta; a drenagem e a promoção WARN->BLOCK seguem a política s106/107 (base zera).

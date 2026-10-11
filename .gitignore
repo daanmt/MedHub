@@ -17,6 +17,22 @@ ipub.db-journal
 medhub_memory.db
 medhub_memory.db-journal
 ipub_backup_*.db
+# Fase 0 Lote 1 part 1.4: QUALQUER arquivo de banco, com os satélites do SQLite. Um
+# ipub_fixado_*.db copiado para fora de artifacts/backups/ entrava; o Chroma usa chroma.sqlite3
+# (adição B do ai-eng). O gitignore não segura `git add -f`: quem segura é o
+# `[BLOCK] BANCO_NO_RECORTE` do auto_check (regra em tools/backup_offmachine.py).
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite3-journal
 
 # Python
 .env

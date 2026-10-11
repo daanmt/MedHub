@@ -226,18 +226,19 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/audit_card_atomicity.py` | Check de ATOMICIDADE de flashcard (spec: estilo-flashcard.md §Formato atomico) | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+8) |
 | `tools/audit_flashcard_quality.py` | Auditoria Permanente de Qualidade de Flashcards | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+6) |
 | `tools/audit_resumos.py` | — | `.agents/skills/source-command-auditar-resumos/SKILL.md`, `.claude/commands/auditar-resumos.md` (+9) |
-| `tools/auto_check.py` | — | `.agents/skills/source-command-estilo-resumo/SKILL.md`, `.claude/commands/estilo-resumo.md` (+35) |
+| `tools/auto_check.py` | — | `.agents/skills/source-command-estilo-resumo/SKILL.md`, `.claude/commands/estilo-resumo.md` (+37) |
 | `tools/backfill_review_log.py` | semeia review_log com a ÚLTIMA REVISÃO REAL por tema | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+2) |
-| `tools/backup_db.py` | Backup do ipub.db com integrity_check + rotacao keep-5 EMBUTIDA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+10) |
+| `tools/backup_db.py` | Backup do ipub.db com integrity_check + rotacao keep-5 EMBUTIDA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+11) |
+| `tools/backup_offmachine.py` | Cópia OFF-MACHINE do ipub.db e dos fixados que a 0.4b devolve à rotação (Fase 0, Lote 1, | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+2) |
 | `tools/card_self_sufficiency.py` | Check de auto-suficiencia de flashcard (check 8 do auto_check -- spec | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/cards_prune.py` | poda de flashcards APOSENTADOS do ipub.db [DESTRUTIVO], dry-run por default | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+10) |
 | `tools/cards_regen_queue.py` | fila de regeneração de flashcards em JSON | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+2) |
 | `tools/cards_rendimento.py` | o card que CONSOME revisao e nao retem (s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+3) |
 | `tools/check_fk_orphans.py` | varredura read-only de integridade do ipub.db | `.claude/settings.local.json` (+3) |
-| `tools/clausulas_check.py` | Inventario de CLAUSULAS NORMATIVAS e sua cobertura por gate (item 1.10, s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
-| `tools/cli_signature_check.py` | Check de ASSINATURA CANONICA de CLI (D5, s177 -- AGENTE.md secao 7.2) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+9) |
+| `tools/clausulas_check.py` | Inventario de CLAUSULAS NORMATIVAS e sua cobertura por gate (item 1.10, s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |
+| `tools/cli_signature_check.py` | Check de ASSINATURA CANONICA de CLI (D5, s177 -- AGENTE.md secao 7.2) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+10) |
 | `tools/cobertura_conhecimento.py` | cobertura_conhecimento -- relatorio read-only de cobertura de SSOT clinico (F16a) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+10) |
-| `tools/consistencia_check.py` | Varredura unica de CONSISTENCIA entre registros (item 1.8, s177) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+9) |
+| `tools/consistencia_check.py` | Varredura unica de CONSISTENCIA entre registros (item 1.8, s177) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+10) |
 | `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+29) |
 | `tools/day_plan.py` | Plano do Dia para o boot proativo | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+45) |
 | `tools/dedup_taxonomia.py` | colapsa linhas duplicadas (area,tema) em taxonomia_cronograma | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+6) |
@@ -267,7 +268,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+6) |
 | `tools/painel.py` | Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186; refeito na s194) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-hub-backend/SKILL.md` (+39) |
 | `tools/performance.py` | performance.py | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+19) |
-| `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-cronograma/SKILL.md` (+66) |
+| `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-cronograma/SKILL.md` (+67) |
 | `tools/preparacao.py` | posicao SSOT da preparacao no cronograma (PRD orquestracao, part-1) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+12) |
 | `tools/prova_pdf.py` | caderno de prova em PDF -> docs `questoes/*` do hub (caminho PDF, s201) | `.agents/skills/source-command-banco-emed/SKILL.md`, `.claude/commands/banco-emed.md` (+5) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |

@@ -33,6 +33,26 @@ expulsou os pontos de retorno do dia (F137, s201).*
 **`--desfixar-lote --manter N --motivo TEXTO`** (Fase 0, part-4b): **dry-run por padrão** -- lista os fixados ativos do manifesto que sairiam (todos menos os `N` mais recentes pelo **carimbo do nome**, a ordem da rotação; nunca o mtime), com `K=` e MB, e não altera nada. **`--apply --expect K`** aplica: sem `--expect`, com `K` diferente do medido, alvo sumido ou sha256 divergente = recusa do lote inteiro, nada mexido; com o `K` certo, cada um passa pelo mesmo `--desfixar` (volta à rotação, `desfixado_em` + motivo no manifesto). Não apaga nem chama a rotação: os arquivos saem no próximo backup. Fixado ativo sem carimbo legível = recusa (a ordem não é inventada). `--manter` ≥ 1.  <!-- CHECK: test_desfixar_lote_com_k_certo_desfixa_so_os_mais_antigos_pelo_carimbo -->
 Fixar o `ipub.db` REAL de dentro do pytest é recusa (`SemPontoDeRetorno`): banco temporário de teste fixa em `<pasta do banco>/backups`.  <!-- CHECK: test_fixar_o_banco_real_dentro_do_pytest_e_recusa -->
 
+### `tools/backup_offmachine.py` — cópia off-machine do `ipub.db` e dos fixados (Fase 0, Lote 1, part 1.4)
+
+A cópia carimbada que destrava o apply da 0.4b (M-129): o banco e os fixados que o `--desfixar-lote --manter 5` soltaria vão para uma pasta FORA do repo público, com md5 conferido de volta no destino. Dali, o operador sobe a pasta para o git privado e para o Drive.
+
+| Flag | Função |
+|---|---|
+| `--dest DIR` | Pasta de destino, fora do repo público (ex.: o clone do repo PRIVADO). Sozinha = **dry-run**: lista os N arquivos (o snapshot `ipub_<carimbo>.db` + os K de `backup_db.plano_desfixar_lote(5)["sair"]`), com MB e a pasta `DIR/<carimbo>/` que seria criada. Não cria `DIR` e não escreve nada. |
+| `--apply` | Copia para `DIR/<carimbo>/` (default: dry-run). Exige `--expect N`. |
+| `--expect N` | Com `--apply`: COUNT-ASSERT, o N (1 snapshot + K fixados) que o dry-run mediu. N diferente = recusa, nada escrito. |
+| `--conferir PASTA` | Relê `DIR/<carimbo>` contra o `MD5SUMS` da própria pasta (e o `MD5SUMS` contra o `manifest.json`): tudo bate = exit 0; arquivo adulterado ou ausente = exit 1 com o nome. É o comando do G-op depois do clone fresco do repo privado. |
+
+O apply grava em `DIR/<carimbo>/` o snapshot (receita do `_fixar`: sha256 da cópia == do banco e `integrity_check` ok, senão recusa sem deixar cópia), os K fixados (sha256 da cópia == `FIXADOS.json`), o `MD5SUMS` (formato do `md5sum`, md5 lido da ORIGEM) e o `manifest.json` (origem, bytes, sha256, md5, motivo do fixado e o sha256 do `FIXADOS.json`). Depois relê cada arquivo pelo mesmo `--conferir`: divergência = exit 1 com o nome.  <!-- CHECK: test_offmachine_apply_copia_confere_md5_e_nada_sai_da_origem -->
+Recusa antes de escrever, com "banco em uso: pare o tique e feche conexões", se houver `ipub.db-journal` ao lado do banco ou `-wal`/`-shm` com bytes (o banco está em `journal_mode=delete`).  <!-- CHECK: test_offmachine_banco_em_uso_recusa_antes_de_copiar -->
+Fixado sumido ou com sha256 divergente do `FIXADOS.json` recusa o lote inteiro, e `DIR/<carimbo>/` já existente é recusa: o script **nunca** sobrescreve.  <!-- CHECK: test_offmachine_pasta_do_carimbo_existente_recusa_sem_sobrescrever -->
+O destino **nunca** é o repo público: `--dest` dentro de `C:/Users/daanm/medhub` (subpasta e caixa incluídas) é recusa, nada escrito.  <!-- CHECK: test_offmachine_destino_dentro_do_repo_publico_recusa -->
+Também é recusa o `--dest` numa árvore git com QUALQUER remote igual ao público (`.git` final, barra final, caixa, usuário e forma ssh normalizados) ou apontando para a pasta dele.  <!-- CHECK: test_offmachine_arvore_git_com_remote_publico_recusa -->
+O script **nunca** roda git de escrita: só `rev-parse` e `remote -v`. Não cria repo, não autentica, não faz `add`/`commit`/`push`, não fala com o Drive e não apaga nada (a única remoção é a do snapshot que acabou de reprovar). Push e upload são G-op do operador.  <!-- CHECK: test_offmachine_apply_so_roda_git_de_leitura -->
+Dentro do pytest, apontar para o `ipub.db` ou o `artifacts/backups` REAIS é recusa (a suíte usa diretório sintético).  <!-- CHECK: test_offmachine_banco_real_dentro_do_pytest_e_recusa -->
+`bancos_no_recorte(caminhos)` é a regra pura do `[BLOCK] BANCO_NO_RECORTE` do `auto_check` (conjunto "sempre"): arquivo de banco staged (`\.(db|sqlite3?)(-wal|-shm|-journal)?$`, sem distinguir caixa) barra o commit, mesmo com `git add -f`. O `.gitignore` cobre `*.db`, `*.sqlite` e `*.sqlite3`, cada um com `-wal`, `-shm` e `-journal`.  <!-- CHECK: test_auto_check_banco_no_recorte_barra_o_commit_e_passa_sem_banco -->
+
 ---
 
 ## Sensores do harness (read-only, WARN-first)

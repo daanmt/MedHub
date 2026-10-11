@@ -8,17 +8,27 @@
 (2b) Desfixar em LOTE (part-4b): `--desfixar-lote --manter N --motivo` e dry-run por padrao; o
     `--apply` exige `--expect K` e passa cada item pelo mesmo `desfixar()`. Diretorio sintetico.
 (3) Propriedade: rotacao com 20 backups falsos nunca remove fixado (e a purga recusa o prefixo).
+(4) Copia OFF-MACHINE (Fase 0, Lote 1, part 1.4): `tools/backup_offmachine.py` copia o banco e os
+    fixados que o desfixar-lote soltaria para uma pasta FORA do repo publico, com md5 relido no
+    destino; e o gate `BANCO_NO_RECORTE` barra arquivo de banco no commit. Diretorio sintetico
+    (a fixture `lote` + banco sintetico) e repos git sinteticos com o ambiente `GIT_*` limpo.
 
 Nada aqui toca o `ipub.db` nem o `artifacts/backups/` reais: todo banco e temporario, o fixado de
 um banco temporario mora em `<pasta do banco>/backups`, e fixar o banco REAL dentro do pytest e
 recusa (a suite nunca mais faz backup real -- a causa do F137).
 """
+import ast
 import hashlib
 import json
 import os
+import re
+import shutil
 import sqlite3
+import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -433,3 +443,526 @@ def test_normalize_taxonomia_chama_o_fixado_antes_da_transacao():
     corpo = src[src.index("def main("):]
     assert "backup_db.fixar_antes_do_ato" in src
     assert "_fixar_antes(" in corpo and corpo.index("_fixar_antes(") < corpo.index("with con:")
+
+
+# ---------------------------------------------------------------- (4) cópia off-machine (Lote 1, part 1.4)
+# O `lote` tem 8 fixados ativos: `plano_desfixar_lote(5)` solta os 3 mais antigos, e a cópia leva
+# esses 3 + o snapshot do banco (N = 4). O banco sintético entra no lugar do ipub.db (`backup_db.DB`).
+_N_SINTETICO = 1 + len(_TRES_MAIS_ANTIGOS)
+_REMOTE_PRIVADO = "https://github.com/daanmt/medhub-backup-privado.git"
+_PADROES_BANCO = [f"*.{ext}{suf}" for ext in ("db", "sqlite", "sqlite3")
+                  for suf in ("", "-wal", "-shm", "-journal")]
+
+
+def _bom():
+    """Import tardio: com o módulo ainda inexistente, só os testes desta seção ficam vermelhos."""
+    import backup_offmachine
+    return backup_offmachine
+
+
+def _md5(p):
+    return hashlib.md5(Path(p).read_bytes()).hexdigest()
+
+
+@pytest.fixture
+def git_isolado(monkeypatch):
+    """O mesmo da `test_clausulas_check.py`: a suíte roda dentro do pre-commit e herdaria o
+    `GIT_INDEX_FILE` do commit em curso; com o ambiente `GIT_*` limpo, o repo sintético fica
+    sintético."""
+    for chave in [k for k in os.environ if k.upper().startswith("GIT_")]:
+        monkeypatch.delenv(chave, raising=False)
+
+
+def _repo_git(pasta, *remotes):
+    pasta.mkdir(parents=True)
+    subprocess.run(["git", "init", "-q", str(pasta)], check=True, capture_output=True)
+    for nome, url in remotes:
+        subprocess.run(["git", "-C", str(pasta), "remote", "add", nome, url],
+                       check=True, capture_output=True)
+    return pasta
+
+
+def _subcomando_git(cmd):
+    """O subcomando de `git [-C dir] [-c k=v] <sub> ...`; chamada que não é git volta inteira."""
+    if isinstance(cmd, (str, bytes)) or Path(str(cmd[0])).stem.lower() != "git":
+        return f"<nao-git: {cmd}>"
+    resto = [str(c) for c in cmd[1:]]
+    while resto and resto[0].startswith("-"):
+        resto = resto[2:] if resto[0] in ("-C", "-c") else resto[1:]
+    return resto[0] if resto else "<vazio>"
+
+
+@pytest.fixture
+def offm(lote, tmp_path, monkeypatch):
+    """O `lote` (8 fixados + manifesto + 1 da rotação) + um banco sintético no lugar do ipub.db;
+    o destino fica em `tmp_path`, fora do repo."""
+    banco = _banco(tmp_path / "ipub.db")
+    monkeypatch.setattr(backup_db, "DB", banco)
+    return SimpleNamespace(backups=lote, banco=banco, raiz=tmp_path, dest=tmp_path / "destino")
+
+
+def _foto_origem(o):
+    """sha256 de cada arquivo da pasta de backups (fixados, rotação, FIXADOS.json) e do banco, mais
+    o que mora ao lado do banco (um -journal deixado para trás apareceria aqui)."""
+    return {**_foto_pasta(o.backups), "<banco>": _sha(o.banco),
+            "<ao lado>": sorted(p.name for p in o.raiz.iterdir() if p.name != o.dest.name)}
+
+
+def _apply(bom, o, expect=_N_SINTETICO):
+    return bom.main(["--dest", str(o.dest), "--apply", "--expect", str(expect)])
+
+
+def test_offmachine_dry_run_lista_n_mb_e_carimbo_sem_escrever(offm, capsys):
+    """DoD 1: o dry-run é o default. Lista o snapshot + os K de `plano_desfixar_lote(5)["sair"]`,
+    com MB e o carimbo da pasta que seria criada; não cria `--dest` e não toca a origem."""
+    bom = _bom()
+    antes = _foto_origem(offm)
+    assert bom.main(["--dest", str(offm.dest)]) == 0
+    saida = capsys.readouterr().out
+    carimbo = re.search(r"ipub_(\d{8}_\d{6})\.db", saida).group(1)
+    assert str(offm.dest / carimbo) in saida
+    assert f"N={_N_SINTETICO}" in saida and "K=3" in saida and "MB" in saida
+    assert all(c in saida for c in _TRES_MAIS_ANTIGOS)
+    assert [c for c in _OITO if c not in _TRES_MAIS_ANTIGOS and c in saida] == []   # os 5 que ficam
+    assert f"{backup_db.PREFIX}20260910_120000" not in saida                         # a rotação não entra
+    assert f"--apply --expect {_N_SINTETICO}" in saida
+    plano = bom.plano(offm.dest)
+    sair = backup_db.plano_desfixar_lote(5, backup_dir=offm.backups)["sair"]
+    assert plano["n"] == _N_SINTETICO == 1 + len(sair)
+    assert [i["arquivo"] for i in plano["itens"][1:]] == [a["arquivo"] for a in sair]   # reuso, não recálculo
+    assert plano["itens"][0]["arquivo"] == f"ipub_{plano['carimbo']}.db"
+    assert plano["bytes"] == offm.banco.stat().st_size + sum(a["bytes"] for a in sair)
+    assert not offm.dest.exists() and _foto_origem(offm) == antes
+
+
+def test_offmachine_apply_sem_expect_ou_com_n_errado_recusa(offm, capsys):
+    """DoD 2: `--apply` exige `--expect N`; N diferente do medido = recusa, nada escrito."""
+    bom = _bom()
+    antes = _foto_origem(offm)
+    casos = [(["--dest", str(offm.dest), "--apply"], "--expect"),
+             (["--dest", str(offm.dest), "--expect", "4"], "--apply"),
+             (["--apply", "--expect", "4"], "--dest"),
+             (["--conferir", str(offm.dest), "--dest", str(offm.dest)], "--conferir")]
+    for argv, exigido in casos:                   # a recusa nomeia o que falta
+        with pytest.raises(SystemExit):
+            bom.main(argv)
+        assert exigido in capsys.readouterr().err.split("error:")[-1], argv
+    for n in ("3", "5", "0", "49"):
+        assert _apply(bom, offm, n) == 1
+        assert "RECUSA" in capsys.readouterr().out
+    assert not offm.dest.exists() and _foto_origem(offm) == antes
+
+
+@pytest.mark.parametrize("sufixo, conteudo", [("-journal", b""), ("-journal", b"j" * 512),
+                                              ("-wal", b"w" * 64), ("-shm", b"s" * 64)],
+                         ids=["journal-vazio", "journal-com-bytes", "wal-com-bytes", "shm-com-bytes"])
+def test_offmachine_banco_em_uso_recusa_antes_de_copiar(offm, capsys, sufixo, conteudo):
+    """DoD 2, adição (A) do ai-eng: o banco está em `journal_mode=delete`. Um `-journal` ao lado
+    (hot journal: transação em curso ou queda) ou `-wal`/`-shm` com bytes = recusa ANTES de copiar,
+    e `--dest` nem é criado."""
+    bom = _bom()
+    Path(f"{offm.banco}{sufixo}").write_bytes(conteudo)
+    antes = _foto_origem(offm)
+    assert _apply(bom, offm) == 1
+    saida = capsys.readouterr().out
+    assert "banco em uso: pare o tique e feche conexões" in saida and f"ipub.db{sufixo}" in saida
+    assert not offm.dest.exists() and _foto_origem(offm) == antes
+
+
+def test_offmachine_wal_e_shm_vazios_nao_contam_como_uso(offm):
+    bom = _bom()
+    for suf in ("-wal", "-shm"):
+        Path(f"{offm.banco}{suf}").write_bytes(b"")
+    assert bom.banco_em_uso(offm.banco) == []
+    Path(f"{offm.banco}-journal").write_bytes(b"")
+    assert [p for p in bom.banco_em_uso(offm.banco) if "-journal" in p]
+
+
+def test_offmachine_apply_copia_confere_md5_e_nada_sai_da_origem(offm, capsys):
+    """DoD 2: com o N certo e o banco quieto, `DIR/<carimbo>/` recebe o snapshot (sha256 == banco,
+    integrity_check ok), os K fixados (sha256 == FIXADOS.json), o `MD5SUMS` no formato do `md5sum`
+    com o md5 da ORIGEM e o `manifest.json`. Nada é apagado nem mexido na origem."""
+    bom = _bom()
+    antes = _foto_origem(offm)
+    alvos = [a["arquivo"] for a in backup_db.plano_desfixar_lote(5, backup_dir=offm.backups)["sair"]]
+    assert _apply(bom, offm) == 0
+    saida = capsys.readouterr().out
+    (pasta,) = list(offm.dest.iterdir())                       # só a pasta do carimbo
+    assert re.fullmatch(r"\d{8}_\d{6}", pasta.name)
+    snap = f"ipub_{pasta.name}.db"
+    assert sorted(p.name for p in pasta.iterdir()) == sorted([snap, *alvos, "MD5SUMS", "manifest.json"])
+    bruto = (pasta / "MD5SUMS").read_bytes()
+    assert b"\r" not in bruto                                  # LF, como o md5sum escreve
+    md5s = {}
+    for linha in bruto.decode("utf-8").splitlines():
+        m = re.fullmatch(r"([0-9a-f]{32})  (\S+)", linha)
+        assert m, linha
+        md5s[m.group(2)] = m.group(1)
+    assert md5s == {snap: _md5(offm.banco), **{a: _md5(offm.backups / a) for a in alvos}}
+    reg = {r["arquivo"]: r for r in _manifesto(offm.backups)}
+    assert _sha(pasta / snap) == _sha(offm.banco)
+    assert all(_sha(pasta / a) == reg[a]["sha256"] for a in alvos)
+    con = sqlite3.connect(f"file:{(pasta / snap).as_posix()}?mode=ro", uri=True)
+    try:
+        assert con.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+    finally:
+        con.close()
+    man = json.loads((pasta / "manifest.json").read_text(encoding="utf-8"))
+    assert man["fixados_json"]["sha256"] == _sha(offm.backups / backup_db.MANIFESTO_FIXADOS)
+    assert man["n"] == _N_SINTETICO and man["bytes"] == sum((pasta / n).stat().st_size for n in md5s)
+    itens = {i["arquivo"]: i for i in man["arquivos"]}
+    assert set(itens) == set(md5s)
+    assert (itens[snap]["tipo"], itens[snap]["origem"]) == ("banco", str(offm.banco))
+    for a in alvos:
+        assert (itens[a]["tipo"], itens[a]["origem"]) == ("fixado", str(offm.backups / a))
+        assert (itens[a]["sha256"], itens[a]["motivo"]) == (reg[a]["sha256"], reg[a]["motivo"])
+    assert all(itens[n]["md5"] == md5s[n] and itens[n]["bytes"] == (pasta / n).stat().st_size
+               for n in md5s)
+    assert f"N={_N_SINTETICO}" in saida and "--conferir" in saida
+    assert _foto_origem(offm) == antes          # os 8 fixados, a rotação, o FIXADOS.json e o banco
+    assert bom.main(["--conferir", str(pasta)]) == 0     # a conferência de volta (o comando do G-op)
+
+
+def test_offmachine_pasta_do_carimbo_existente_recusa_sem_sobrescrever(offm, monkeypatch, capsys):
+    """DoD 2: `DIR/<carimbo>/` já existente = recusa; nunca sobrescreve."""
+    bom = _bom()
+    monkeypatch.setattr(bom, "_agora", lambda: datetime(2026, 10, 11, 0, 15, 0))
+    ja = offm.dest / "20261011_001500"
+    ja.mkdir(parents=True)
+    (ja / "MD5SUMS").write_bytes(b"de outra copia\n")
+    antes = {**_foto_origem(offm), "<ja>": _foto_pasta(ja)}
+    assert bom.main(["--dest", str(offm.dest)]) == 1            # o dry-run já avisa
+    assert _apply(bom, offm) == 1
+    assert "já existe" in capsys.readouterr().out
+    assert {**_foto_origem(offm), "<ja>": _foto_pasta(ja)} == antes
+    assert [p.name for p in offm.dest.iterdir()] == [ja.name]
+
+
+@pytest.mark.parametrize("estrago", ["adulterado", "sumido"])
+def test_offmachine_fixado_divergente_ou_sumido_recusa_o_lote_inteiro(offm, capsys, estrago):
+    """DoD 2: o sha256 de cada fixado é conferido contra o FIXADOS.json ANTES de copiar; um
+    divergente ou sumido recusa o lote inteiro (nada copiado, `--dest` nem nasce)."""
+    bom = _bom()
+    (alvo,) = [r for r in _manifesto(offm.backups) if "20260902_000001" in r["arquivo"]]
+    arq = offm.backups / alvo["arquivo"]
+    if estrago == "adulterado":
+        arq.write_bytes(b"adulterado")
+    else:
+        arq.unlink()
+    antes = _foto_origem(offm)
+    assert bom.main(["--dest", str(offm.dest)]) == 1            # o dry-run já denuncia
+    assert _apply(bom, offm) == 1
+    saida = capsys.readouterr().out
+    assert "RECUSA" in saida and alvo["arquivo"] in saida
+    assert not offm.dest.exists() and _foto_origem(offm) == antes
+
+
+def test_offmachine_snapshot_que_nao_confere_nao_deixa_copia(offm, monkeypatch, capsys):
+    """DoD 2: o snapshot segue a receita do `_fixar` (sha256 da cópia == do banco). Aqui o banco
+    "muda durante a cópia": recusa, e nenhuma cópia meia-feita fica no destino."""
+    bom = _bom()
+    real = shutil.copy2
+
+    def copia_que_diverge(src, dst, *a, **k):
+        feito = real(src, dst, *a, **k)
+        if Path(src) == offm.banco:
+            with open(dst, "ab") as fh:
+                fh.write(b"\0")
+        return feito
+
+    monkeypatch.setattr(bom.shutil, "copy2", copia_que_diverge)
+    antes = _foto_origem(offm)
+    assert _apply(bom, offm) == 1
+    assert "sha256" in capsys.readouterr().out
+    assert not offm.dest.exists() or list(offm.dest.iterdir()) == []
+    assert _foto_origem(offm) == antes
+
+
+def test_offmachine_snapshot_corrompido_reprova_no_integrity_check(offm, capsys):
+    bom = _bom()
+    offm.banco.write_bytes(b"isto nao e sqlite" * 200)
+    antes = _foto_origem(offm)
+    assert _apply(bom, offm) == 1
+    assert "integrity_check" in capsys.readouterr().out
+    assert not offm.dest.exists() or list(offm.dest.iterdir()) == []
+    assert _foto_origem(offm) == antes
+
+
+def test_offmachine_copia_de_fixado_que_nao_confere_para_e_diz_qual(offm, monkeypatch, capsys):
+    """A cópia de cada fixado tem o sha256 do FIXADOS.json; se não tiver, para, diz qual e não
+    grava o MD5SUMS (a pasta não passa no `--conferir`, então não sobe)."""
+    bom = _bom()
+    real = shutil.copy2
+    estragar = f"{backup_db.PREFIX_FIXADO}20260903_235959"
+
+    def copia_que_estraga(src, dst, *a, **k):
+        feito = real(src, dst, *a, **k)
+        if Path(src).name.startswith(estragar):
+            with open(dst, "ab") as fh:
+                fh.write(b"x")
+        return feito
+
+    monkeypatch.setattr(bom.shutil, "copy2", copia_que_estraga)
+    antes = _foto_origem(offm)
+    assert _apply(bom, offm) == 1
+    assert estragar in capsys.readouterr().out
+    (pasta,) = list(offm.dest.iterdir())
+    assert not (pasta / "MD5SUMS").exists()
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    assert _foto_origem(offm) == antes
+
+
+def test_offmachine_md5_relido_que_diverge_sai_1_e_diz_qual(offm, monkeypatch, capsys):
+    """DoD 2: depois de copiar, o script RELÊ cada arquivo no destino contra o md5 da ORIGEM. Aqui
+    o banco "muda" entre o snapshot e o md5 da origem: sai 1 e nomeia o arquivo; nada é apagado,
+    e a pasta não passa no `--conferir`."""
+    bom = _bom()
+    real = bom._md5
+    monkeypatch.setattr(bom, "_md5", lambda p: "0" * 32 if Path(p) == offm.banco else real(p))
+    antes = _foto_origem(offm)
+    assert _apply(bom, offm) == 1
+    saida = capsys.readouterr().out
+    assert re.search(r"ipub_\d{8}_\d{6}\.db", saida) and "diverge" in saida
+    (pasta,) = list(offm.dest.iterdir())
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    assert _foto_origem(offm) == antes
+
+
+def test_offmachine_banco_real_dentro_do_pytest_e_recusa(lote, tmp_path):
+    """Como o `fixar_antes_do_ato`: copiar o ipub.db ou ler o artifacts/backups REAIS de dentro do
+    pytest é recusa, antes de qualquer leitura (a suíte nunca roda a cópia real)."""
+    bom = _bom()
+    dest = tmp_path / "destino"
+    for kw in ({"db": backup_db._DB_REAL, "backup_dir": lote},
+               {"db": _banco(tmp_path / "x.db"), "backup_dir": backup_db.ROOT / "artifacts" / "backups"}):
+        with pytest.raises(backup_db.Recusa) as e:
+            bom.plano(dest, **kw)
+        assert "REAL" in str(e.value)
+    assert not dest.exists()
+
+
+def test_offmachine_destino_dentro_do_repo_publico_recusa(offm, monkeypatch, capsys):
+    """DoD 3: `--dest` dentro do repo público (a raiz, subpasta, variação de caixa) = recusa antes
+    de qualquer escrita. (a) a regra sobre a raiz REAL: só caminho, nenhuma escrita; (b) o CLI com
+    um "repo público" sintético: dry-run e apply recusam."""
+    bom = _bom()
+    for dest in (ROOT, ROOT / "tmp" / "copia", ROOT / "artifacts" / "backups" / "fora"):
+        with pytest.raises(backup_db.Recusa) as e:
+            bom.conferir_destino(dest)
+        assert "repo público" in str(e.value)
+    if os.name == "nt":                                          # NTFS não distingue caixa
+        with pytest.raises(backup_db.Recusa):
+            bom.conferir_destino(Path(str(ROOT).upper()) / "Tmp" / "Copia")
+    pub = offm.raiz / "RepoPublico"
+    pub.mkdir()
+    monkeypatch.setattr(bom, "REPO_PUBLICO", pub)
+    antes = _foto_origem(offm)
+    alvo = (Path(str(pub).swapcase()) if os.name == "nt" else pub) / "sub" / "copia"
+    for argv in (["--dest", str(alvo)], ["--dest", str(alvo), "--apply", "--expect", str(_N_SINTETICO)]):
+        assert bom.main(argv) == 1
+        assert "repo público" in capsys.readouterr().out
+    assert list(pub.iterdir()) == [] and _foto_origem(offm) == antes
+
+
+@pytest.mark.parametrize("url", [
+    "https://github.com/daanmt/MedHub.git", "https://github.com/DAANMT/medhub/",
+    "https://github.com/daanmt/MedHub", "git@github.com:daanmt/MedHub.git",
+    "ssh://git@github.com/daanmt/medhub.git/", "https://usuario@github.com/daanmt/MedHub.git"])
+def test_offmachine_arvore_git_com_remote_publico_recusa(offm, git_isolado, capsys, url):
+    """DoD 3: `--dest` numa árvore git com QUALQUER remote igual ao público (normalizados `.git`
+    final, barra final e caixa; ssh e usuário na URL também) = recusa, sem escrever no clone."""
+    bom = _bom()
+    clone = _repo_git(offm.raiz / "clone", ("origin", _REMOTE_PRIVADO), ("espelho", url))
+    antes = _foto_origem(offm)
+    dest = clone / "backups"
+    for argv in (["--dest", str(dest)], ["--dest", str(dest), "--apply", "--expect", str(_N_SINTETICO)]):
+        assert bom.main(argv) == 1
+        assert "remote" in capsys.readouterr().out
+    assert sorted(p.name for p in clone.iterdir()) == [".git"] and _foto_origem(offm) == antes
+
+
+def test_offmachine_remote_que_aponta_para_a_pasta_do_repo_publico_recusa(offm, git_isolado,
+                                                                         monkeypatch, capsys):
+    """Um clone LOCAL do repo público (remote = a pasta dele) empurraria para lá: recusa."""
+    bom = _bom()
+    pub = offm.raiz / "RepoPublico"
+    pub.mkdir()
+    monkeypatch.setattr(bom, "REPO_PUBLICO", pub)
+    clone = _repo_git(offm.raiz / "clone", ("origin", str(pub)))
+    assert bom.main(["--dest", str(clone / "x")]) == 1
+    assert "remote" in capsys.readouterr().out
+    assert sorted(p.name for p in clone.iterdir()) == [".git"]
+
+
+def test_normalizar_remote_iguala_as_grafias_e_separa_os_outros():
+    bom = _bom()
+    pub = bom.normalizar_remote(bom.REMOTE_PUBLICO)
+    assert pub == bom.normalizar_remote("HTTPS://GitHub.com/daanmt/medhub.GIT/")
+    for outro in (_REMOTE_PRIVADO, "https://github.com/outro/MedHub.git",
+                  "https://gitlab.com/daanmt/MedHub.git", "https://github.com/daanmt/MedHub2.git"):
+        assert bom.normalizar_remote(outro) != pub, outro
+
+
+def test_offmachine_apply_so_roda_git_de_leitura(offm, git_isolado, monkeypatch, capsys):
+    """DoD 3: o apply num clone de repo privado só roda git de LEITURA. Um `subprocess.run`
+    gravador registra cada chamada: só `rev-parse` e `remote` aparecem (nenhum init/add/commit/
+    push, nenhum processo que não seja git), e o clone segue sem nada no índice nem no HEAD."""
+    bom = _bom()
+    clone = _repo_git(offm.raiz / "privado", ("origin", _REMOTE_PRIVADO))
+    real = subprocess.run
+    chamadas = []
+
+    def gravador(cmd, *a, **k):
+        chamadas.append(cmd)
+        return real(cmd, *a, **k)
+
+    monkeypatch.setattr(bom.subprocess, "run", gravador)
+    assert bom.main(["--dest", str(clone), "--apply", "--expect", str(_N_SINTETICO)]) == 0
+    monkeypatch.setattr(bom.subprocess, "run", real)
+    subs = [_subcomando_git(c) for c in chamadas]
+    assert {"rev-parse", "remote"} <= set(subs) and set(subs) <= {"rev-parse", "remote"}, subs
+    assert real(["git", "-C", str(clone), "ls-files"], capture_output=True, text=True,
+                check=True).stdout == ""
+    assert real(["git", "-C", str(clone), "rev-parse", "--verify", "-q", "HEAD"],
+                capture_output=True).returncode != 0
+    (pasta,) = [p for p in clone.iterdir() if p.name != ".git"]
+    assert bom.main(["--conferir", str(pasta)]) == 0
+
+
+def test_offmachine_conferir_acusa_byte_alterado_ausente_e_md5sums_mexido(offm, capsys):
+    """DoD 4: `--conferir DIR/<carimbo>` relê contra o MD5SUMS da própria pasta: tudo bate = 0; um
+    byte alterado ou um arquivo ausente = 1 com o nome. O MD5SUMS sem uma linha também é acusado
+    (o manifest.json lista o que devia estar lá), e o CRLF de um checkout com `core.autocrlf` não
+    quebra a conferência."""
+    bom = _bom()
+    assert _apply(bom, offm) == 0
+    (pasta,) = list(offm.dest.iterdir())
+    capsys.readouterr()
+    assert bom.main(["--conferir", str(pasta)]) == 0
+    assert f"{_N_SINTETICO} de {_N_SINTETICO}" in capsys.readouterr().out
+    alvo = sorted(pasta.glob(f"{backup_db.PREFIX_FIXADO}*.db"))[0]
+    original = alvo.read_bytes()
+    alvo.write_bytes(original[:100] + bytes([original[100] ^ 1]) + original[101:])   # um byte
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    saida = capsys.readouterr().out
+    assert alvo.name in saida and "diverge" in saida
+    alvo.unlink()
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    saida = capsys.readouterr().out
+    assert alvo.name in saida and "ausente" in saida
+    alvo.write_bytes(original)
+    md5sums = pasta / "MD5SUMS"
+    bruto = md5sums.read_bytes()
+    for arq in (md5sums, pasta / "manifest.json"):                  # checkout com core.autocrlf=true
+        arq.write_bytes(arq.read_bytes().replace(b"\n", b"\r\n"))
+    assert bom.main(["--conferir", str(pasta)]) == 0
+    capsys.readouterr()
+    md5sums.write_bytes(b"".join(l for l in bruto.splitlines(keepends=True)
+                                 if alvo.name.encode() not in l))
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    assert alvo.name in capsys.readouterr().out
+    md5sums.unlink()
+    assert bom.main(["--conferir", str(pasta)]) == 1
+    assert "MD5SUMS" in capsys.readouterr().out
+
+
+def test_bancos_no_recorte_regra_pura():
+    """DoD 5: a regra do gate é PURA e mora no módulo; o `auto_check` só orquestra."""
+    bom = _bom()
+    assert bom.RE_BANCO.pattern == r"\.(db|sqlite3?)(-wal|-shm|-journal)?$"
+    sim = ["ipub.db", "artifacts/backups/ipub_fixado_20261010_120000_x.db", "outra/ipub_fixado_y.db",
+           "data/chroma/chroma.sqlite3", "a.sqlite", "x.db-wal", "x.db-shm", "x.db-journal",
+           "c.sqlite3-wal", "c.sqlite-journal", "artifacts\\backups\\b.db", "MAIUSCULO.DB"]
+    nao = ["tools/db.py", "app/utils/db.py", "x.dbx", "x.db.bak", "notas.md", "x.sqlite4",
+           "x.db-walx", "db", "sqlite3", "x.db/leia.md"]
+    assert bom.bancos_no_recorte(nao + sim) == sorted(sim)
+    assert bom.bancos_no_recorte([]) == [] and bom.bancos_no_recorte(None) == []
+
+
+def test_gitignore_cobre_todo_arquivo_de_banco(tmp_path, git_isolado):
+    """DoD 5 + adição (B) do ai-eng: `*.db`, `*.sqlite` e `*.sqlite3`, cada um com `-wal`, `-shm` e
+    `-journal`. Prova dupla: as 12 linhas estão no `.gitignore` e o git as aplica (repo sintético
+    com o mesmo `.gitignore`, config global vazia)."""
+    texto = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    linhas = {linha.strip() for linha in texto.splitlines()}
+    assert [p for p in _PADROES_BANCO if p not in linhas] == []
+    repo = _repo_git(tmp_path / "repo")
+    (repo / ".gitignore").write_text(texto, encoding="utf-8")
+    vazio = tmp_path / "gitconfig_vazio"
+    vazio.write_text("", encoding="utf-8")
+    env = {**os.environ, "GIT_CONFIG_GLOBAL": str(vazio), "GIT_CONFIG_NOSYSTEM": "1"}
+    sim = ["fora/ipub_fixado_20261010_120000_x.db", "data/chroma/chroma.sqlite3", "a.sqlite",
+           *[f"b.{ext}{suf}" for ext in ("db", "sqlite", "sqlite3") for suf in ("-wal", "-shm", "-journal")]]
+    nao = ["tools/db.py", "docs/notas.md"]
+    r = subprocess.run(["git", "-C", str(repo), "check-ignore", *sim, *nao],
+                       capture_output=True, text=True, env=env)
+    assert sorted(r.stdout.split()) == sorted(sim), r.stderr
+
+
+def _main_auto_check(monkeypatch, capsys, modo, recorte):
+    """`auto_check.main()` in-process com tudo que não é o gate neutralizado (o molde é o
+    `_main_do_check29` da test_clausulas_check): o exit code depende só do BANCO_NO_RECORTE."""
+    import auto_check
+    import clausulas_check
+    import cli_signature_check
+    import consistencia_check
+    resumo = {"orfas": 0, "normativas": 0, "cobertura_pct": 100.0, "nao_normativas": 0}
+    monkeypatch.setattr(clausulas_check, "registro_de_gates", lambda: set())
+    monkeypatch.setattr(clausulas_check, "run_checks", lambda hoje=None, gates=None: ([], resumo))
+    monkeypatch.setattr(clausulas_check, "catraca_contra_head", lambda modo, root=None, gates=None: {
+        "severidade": "WARN", "mensagem": None, "aviso": None, "head": 0, "atual": 0,
+        "recorte": "indice"})
+    monkeypatch.setattr(consistencia_check, "run_checks", lambda *a, **k: [])
+    monkeypatch.setattr(cli_signature_check, "run_checks", lambda *a, **k: [])
+    monkeypatch.setattr(sys, "argv", ["auto_check.py", modo])
+    monkeypatch.setattr(auto_check, "get_staged_files", lambda: list(recorte))
+    monkeypatch.setattr(auto_check, "get_changed_files", lambda: list(recorte))
+    monkeypatch.setattr(auto_check, "_staged_deletados", lambda: [])
+    monkeypatch.setattr(auto_check, "run_command", lambda *a, **k: (True, ""))
+    monkeypatch.setattr(auto_check, "_ledger_record", lambda *a, **k: None)
+    monkeypatch.setattr(auto_check, "card_watermark_mudou", lambda *a, **k: (False, None))
+    monkeypatch.setattr(auto_check, "card_watermark_selar", lambda *a, **k: None)
+    monkeypatch.setattr(auto_check, "check_erros_orfaos", lambda *a, **k: [])
+    monkeypatch.setattr(auto_check, "check_areas_fora_vocabulario", lambda *a, **k: [])
+    capsys.readouterr()
+    codigo = auto_check.main()
+    return codigo, capsys.readouterr().out
+
+
+def test_auto_check_banco_no_recorte_barra_o_commit_e_passa_sem_banco(monkeypatch, capsys):
+    """DoD 5: o gate roda no conjunto "sempre" (o recorte não tem código, a suíte nem é exigida) e
+    o BLOCK muda o exit code, inclusive para o `.db` que só entrou por `git add -f` (o pre-commit
+    vê o índice, não o .gitignore). Sem banco no recorte, passa e aparece no relatório."""
+    staged = ["docs/nota.md", "fora/ipub_fixado_20261010_120000_x.db", "data/chroma/chroma.sqlite3-wal"]
+    codigo, out = _main_auto_check(monkeypatch, capsys, "--staged", staged)
+    assert codigo == 1 and "[BLOCK] BANCO_NO_RECORTE" in out, out[-1500:]
+    assert "fora/ipub_fixado_20261010_120000_x.db" in out and "chroma.sqlite3-wal" in out
+    assert "Suíte não exigida para este recorte" in out
+    for modo in ("--staged", "--changed"):
+        codigo, out = _main_auto_check(monkeypatch, capsys, modo, ["docs/nota.md", "notas/db.md"])
+        assert codigo == 0, out[-1500:]
+        assert "[BLOCK]" not in out
+        assert "BANCO_NO_RECORTE" in out.split("RELATÓRIO FINAL", 1)[1]
+
+
+def test_auto_check_banco_no_recorte_mora_no_conjunto_sempre():
+    """DoD 5, lente estática declarada: o BLOCK mora num `if` direto no corpo do `main()` (fora de
+    `else`, `except` ou `try` que o engulam, e sem gatilho por modo ou extensão), zera o
+    `all_passed`, e a regra vem do módulo (`from backup_offmachine import bancos_no_recorte`)."""
+    arvore = ast.parse((ROOT / "tools" / "auto_check.py").read_text(encoding="utf-8"))
+    main = next(n for n in arvore.body if isinstance(n, ast.FunctionDef) and n.name == "main")
+    assert [n for n in ast.walk(main) if isinstance(n, ast.ImportFrom) and n.module == "backup_offmachine"
+            and any(a.name == "bancos_no_recorte" for a in n.names)], "a regra não vem do módulo"
+
+    def tem_block(no):
+        return any(isinstance(c, ast.Constant) and isinstance(c.value, str)
+                   and "[BLOCK] BANCO_NO_RECORTE" in c.value for c in ast.walk(no))
+
+    gates = [s for s in main.body if isinstance(s, ast.If) and tem_block(s)]
+    assert len(gates) == 1, "o BLOCK tem de ser um `if` direto no corpo do main"
+    assert sum(tem_block(s) for s in main.body) == 1
+    (gate,) = gates
+    assert not gate.orelse
+    assert "mode" not in {n.id for n in ast.walk(gate.test) if isinstance(n, ast.Name)}
+    assert any(isinstance(s, ast.Assign) and any(getattr(t, "id", None) == "all_passed" for t in s.targets)
+               and isinstance(s.value, ast.Constant) and s.value.value is False for s in gate.body)

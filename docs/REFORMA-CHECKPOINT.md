@@ -18,7 +18,7 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
 
 ## Próximo ato (1 linha)
-operador: criar o repo git PRIVADO e o clone local fora de `C:/Users/daanm/medhub` (G-op 1.4) -> medhub roda `python tools/backup_offmachine.py --dest <clone> --apply --expect 49`; em paralelo, medhub gera a spec da 1.1 (P5 figuras) e manda ao ai-eng.
+(1) operador: criar o repo git PRIVADO e o clone local fora de `C:/Users/daanm/medhub` (G-op 1.4) -> medhub roda `python tools/backup_offmachine.py --dest <clone> --apply --expect 49`. (2) medhub, em contexto limpo: gen-spec da **1.1** (P5 = M-042: recapturar as figuras da t40 Q5/6/18/21/22, declarar `sem_figura` sem `figura` na captura, varrer S4-S7; fontes: `history/session_222.md:40`, `session_220.md:33`, captura de figura da s221 em `tools/emed_api.py`) -> spec ao ai-eng antes do filho.
 
 ## Dívida nascida no Lote 0 (dono medhub, -> Lote 3; linhas em `docs/BACKLOG-UNICO-MEDHUB.md`)
 - **M-120** leitor do `ipub.db` real em `mode=ro` para os testes `vivo` (audit da 2a).
@@ -29,6 +29,8 @@ operador: criar o repo git PRIVADO e o clone local fora de `C:/Users/daanm/medhu
 - **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127.
 - **M-137** `.agents/workflows/` fora dos portadores que o `CONTRATO_REVOGADO` vigia (classe do M-122: o sensor existe, o caminho não chega).
 - **M-138** flag `--delete-pdfs` viva no `extract_pdfs.py`: remédio preferido = recusar salvo `--confirmo-apagar` explícito (não remover).
+- **M-139** resíduos descritivos da era "LangMem no boot" (`README.md:169`, `ROADMAP.md:83`, `.vibeflow/patterns/agent-workflow-protocol.md:36`, comentário falso em `app/engine/get_topic_context.py:153`), classe do M-127/M-133, por lista.
+- (ambiente local, sem commit) **M-140** `.codex/hooks.json` (gitignored) ainda dispara a consolidação se o Codex rodar: 1 linha no arquivo local. 🔴 Pendente de confirmação do OPERADOR, porque é configuração de harness e o pedido veio do ai-eng; o medhub não edita config a pedido de par.
 - **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
 - (Lote 4 / Fase 1) **M-136** retenção do repo privado: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 (ex.: 1 cópia por semana depois de 30 dias).
 - **M-134** FECHADO em `55d1144` (11/10): a deleção do PDF-fonte saiu do fluxo (`criar-resumo` passo 8, skill `/extrair-pdf`, `AGENTE.md` §6 e §7.3) pelo §10.10 em 3 passos; termo `--delete-pdfs` vigiado pelo `CONTRATO_REVOGADO`. Default não destrutivo do operador (retenção da s086). Achado: o `.agents/workflows/` não está entre os 31 portadores que o gate vigia.

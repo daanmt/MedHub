@@ -32,6 +32,7 @@ import sqlite3
 import sys
 import pandas as pd
 import os
+import re
 from datetime import datetime
 from app.utils.fsrs import FSRS
 from app.utils.regua import REGUA_ATUAL
@@ -2425,6 +2426,46 @@ def _ensure_emed_tables(conn):
     ''')
 
 
+def _ensure_referencia_tables(conn):
+    """DDL idempotente de `referencia` e `solucao_referencia` (Fase 0 Lote 2 part 2.1, M-031; só sob
+    `aplicar`). Writer único das duas: `referencias_sincronizar`.
+
+    `chave` única (R9) no lugar de `UNIQUE (sigla, ano, documento)`: ~70% dos rótulos não têm ano, e
+    no SQLite NULL é distinto em `UNIQUE`. O vínculo N:M usa a FK composta `(lista, num)` ->
+    `emed_solucoes` (precedente: `emed_card_ancora`, part 1.3): é a chave natural que sobrevive na F1,
+    o `id` AUTOINCREMENT não. `verificada_em` nulo = não verificada (estado explícito); `substrato` é a
+    lente do `evidence-governance.md` §3 (o nome evita a "lente da banca" do §2)."""
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS referencia (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            chave     TEXT NOT NULL UNIQUE,
+            sigla     TEXT NOT NULL,
+            ano       INTEGER,
+            documento TEXT NOT NULL,
+            tipo      TEXT NOT NULL CHECK (tipo IN ('publica','terceiro','propria')),
+            url       TEXT,
+            doi       TEXT,
+            pmid      TEXT,
+            criado_em TEXT
+        )
+    ''')
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS solucao_referencia (
+            lista         TEXT NOT NULL,
+            num           INTEGER NOT NULL,
+            ordem         INTEGER NOT NULL,
+            referencia_id INTEGER NOT NULL REFERENCES referencia(id),
+            rotulo        TEXT NOT NULL,
+            detalhe       TEXT,
+            verificada_em TEXT,
+            substrato     TEXT CHECK (substrato IN ('canonico','fallback','local')),
+            criado_em     TEXT,
+            PRIMARY KEY (lista, num, ordem),
+            FOREIGN KEY (lista, num) REFERENCES emed_solucoes(lista, num) ON DELETE CASCADE
+        )
+    ''')
+
+
 def _txt(valor):
     """Texto normalizado: ausente/None vira "" (nunca erro), resto vira `str`."""
     return "" if valor is None else str(valor)
@@ -3111,6 +3152,214 @@ def versao_solucao(texto):
     return int(d["versao"]) if d else 1
 
 
+# Fase 0 Lote 2 part 2.1 (M-031): o `fontes` da Solução -> rótulos -> referência estruturada. A regra
+# é DECLARADA (spec 2.1, TD 1-2: R0-R9) e a 2.3 a mede numa amostra; mudar uma regra depois do
+# sorteio é ALTERA do orquestrador e queima a amostra. O `fontes` original fica intacto.
+RE_FONTE_URL = re.compile(r"https?://\S+")
+RE_FONTE_PMID_URL = re.compile(r"(?:pubmed\.ncbi\.nlm\.nih\.gov/|ncbi\.nlm\.nih\.gov/pubmed/)(\d+)", re.I)
+RE_FONTE_DOI = re.compile(r"10\.\d{4,9}/\S+")
+#: R6: data numérica (dd/mm/aaaa, aaaa-mm-dd, mm/aaaa) -- o ano dentro dela não conta
+RE_FONTE_DATA = re.compile(r"(?<!\d)(?:\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|\d{4}[/.-]\d{1,2}[/.-]\d{1,2}"
+                           r"|\d{1,2}/\d{4})(?!\d)")
+#: R6: 19xx/20xx fora de número (dígito, ou dígito + `.`/`,`, colado de um dos lados)
+RE_FONTE_ANO = re.compile(r"(?<!\d)(?<!\d[.,])(?:19|20)\d{2}(?!\d)(?![.,]\d)")
+RE_FONTE_NOTA = re.compile(r"não veio|não capturad|ausente na captura|sem figura", re.I)     # R3
+RE_FONTE_ROMANO = re.compile(r"M{0,4}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
+#: classe (ALTERA 11/10): a remissão a aula/figura é nota, não citação
+RE_FONTE_REMISSAO = re.compile(r"(?:aula|figura)s?\b", re.I)
+_PONTA_TOKEN = ".,;:!?\"'“”‘’[]{}"
+_PONTA_DOCUMENTO = " \t,.;:|/–—-"
+
+
+def fonte_rotulos(texto):
+    """Corte R0 do `fontes` em rótulos (part 2.1, TD 1). PURA.
+
+    Corta em `;` só com profundidade 0 de parênteses e quando o caractere seguinte não é dígito;
+    apara e descarta os vazios (`""`/None -> `[]`). Respeita a citação de periódico com `;` dentro de
+    parênteses (F2) e o `AAAA;vol:pág` (F3); não corta em `,`, ` e ` nem ` / ` (o erro disso é medido
+    na 2.3)."""
+    t = "" if texto is None else str(texto)
+    pedacos, atual, nivel = [], [], 0
+    for i, ch in enumerate(t):
+        if ch == "(":
+            nivel += 1
+        elif ch == ")":
+            nivel = max(0, nivel - 1)
+        elif ch == ";" and nivel == 0 and not t[i + 1:i + 2].isdecimal():
+            pedacos.append("".join(atual))
+            atual = []
+            continue
+        atual.append(ch)
+    pedacos.append("".join(atual))
+    return [p.strip() for p in pedacos if p.strip()]
+
+
+def _colapsar(texto):
+    """Espaços colapsados e aparados (None -> "")."""
+    return " ".join(("" if texto is None else str(texto)).split())
+
+
+def _fonte_tokens(texto):
+    """As palavras do texto, com a pontuação das pontas aparada (vazias fora)."""
+    return [tok for tok in (w.strip(_PONTA_TOKEN) for w in _colapsar(texto).split()) if tok]
+
+
+def _eh_sigla(tok):
+    """R7 (b): token-sigla = >= 2 maiúsculas, só letras e `/&-`, nunca numeral romano."""
+    return (sum(1 for ch in tok if ch.isupper()) >= 2
+            and all(ch.isalpha() or ch in "/&-" for ch in tok)
+            and not RE_FONTE_ROMANO.fullmatch(tok))
+
+
+def _anos_fonte(texto):
+    """R6: os anos do texto fora de data e de número, como `[(início, fim, ano)]`."""
+    datas = [m.span() for m in RE_FONTE_DATA.finditer(texto)]
+    return [(m.start(), m.end(), int(m.group(0))) for m in RE_FONTE_ANO.finditer(texto)
+            if not any(a <= m.start() < b for a, b in datas)]
+
+
+def _sem_token(texto, tok):
+    """`texto` sem a 1ª ocorrência de `tok` como palavra inteira."""
+    if not tok:
+        return texto
+    return re.sub(r"(?<![\w/&-])" + re.escape(tok) + r"(?![\w/&-])", " ", texto, count=1)
+
+
+def _grupos_parenteses(texto):
+    """R2: (o texto fora dos parênteses de 1º nível, [o conteúdo de cada grupo]). Grupo sem fecho vai
+    até o fim; `)` sem abertura fica no texto."""
+    fora, grupos, atual, nivel = [], [], [], 0
+    for ch in texto:
+        if ch == "(":
+            nivel += 1
+            if nivel == 1:
+                atual = []
+                continue
+        elif ch == ")" and nivel:
+            nivel -= 1
+            if not nivel:
+                grupos.append("".join(atual))
+                continue
+        (atual if nivel else fora).append(ch)
+    if nivel:
+        grupos.append("".join(atual))
+    return "".join(fora), grupos
+
+
+def chave_referencia(sigla, ano, documento):
+    """R9: a chave da referência = `SIGLA|ano-ou-vazio|documento`, em casefold e com espaços
+    colapsados. PURA. É o UNIQUE de `referencia` (TD 4)."""
+    return "|".join(_colapsar(p) for p in (sigla, ano, documento)).casefold()
+
+
+def fonte_estruturada(rotulo):
+    """Um rótulo de fonte (saída do `fonte_rotulos`) estruturado pela regra declarada R1-R8 (part 2.1,
+    TD 2). PURA: a mesma entrada dá a mesma saída.
+
+    Devolve `{status, motivo, classe, tipo, sigla, ano, documento, detalhe, url, doi, pmid}`. `status`:
+    `ok`; `nao_referencia` (motivo `nota` = R3, `prosa` = R5); `sem_parse` (motivo `multi_fonte` = R6,
+    `sem_emissor` = R7e, `sem_documento` = R8). `tipo`: `propria` (sigla MEDHUB), `terceiro` (sigla
+    EMED) ou `publica`. `classe` (ALTERA 11/10): `nota` = `nao_referencia` ou remissão a aula/figura;
+    o resto é `citacao`, e só ela entra na régua da 2.3. A chave sai por `chave_referencia`."""
+    r = dict.fromkeys(("status", "motivo", "classe", "tipo", "sigla", "ano", "documento", "detalhe",
+                       "url", "doi", "pmid"))
+    t = _colapsar(rotulo)
+    # R1: url, pmid (de URL do PubMed) e doi saem do texto com o ` -- ` que os precede
+    m = RE_FONTE_URL.search(t)
+    if m:
+        r["url"] = m.group(0)
+        p = RE_FONTE_PMID_URL.search(r["url"])
+        r["pmid"] = p.group(1) if p else None
+    m = RE_FONTE_DOI.search(t)
+    if m:
+        r["doi"] = m.group(0)
+    for rx in (RE_FONTE_URL, RE_FONTE_DOI):
+        t = re.sub(r"(?:\s+--\s+)?" + rx.pattern, " ", t)
+    # R2: os parênteses de 1º nível e o trecho a partir do 1º `§` (fora de parênteses) -> detalhe
+    nivel, corte = 0, len(t)
+    for i, ch in enumerate(t):
+        if ch == "(":
+            nivel += 1
+        elif ch == ")":
+            nivel = max(0, nivel - 1)
+        elif ch == "§" and not nivel:
+            corte = i
+            break
+    fora, grupos = _grupos_parenteses(t[:corte])
+    detalhes = [_colapsar(g) for g in grupos if g.strip()]
+    if t[corte:].strip():
+        detalhes.append(_colapsar(t[corte:]))
+    cabeca = _colapsar(fora)
+    remissao = bool(RE_FONTE_REMISSAO.match(cabeca))
+
+    def fim(status, motivo=None):
+        r.update(status=status, motivo=motivo, detalhe=" | ".join(detalhes) or None,
+                 classe="nota" if status == "nao_referencia" or remissao else "citacao")
+        return r
+
+    if RE_FONTE_NOTA.search(cabeca):                                   # R3: nota de captura
+        return fim("nao_referencia", "nota")
+    prefixo = re.match(r"resumo\b", cabeca, re.I)                       # R4: o tipo
+    if prefixo:
+        r.update(tipo="propria", sigla="MEDHUB")
+    elif re.search(r"\bEMED\b", cabeca) or re.search(r"apostila", cabeca, re.I):
+        r.update(tipo="terceiro", sigla="EMED")
+        prefixo = re.match(r"apostila\b", cabeca, re.I)
+    else:
+        r["tipo"] = "publica"
+    if r["tipo"] == "publica":                                         # R5: prosa
+        letra = next((ch for ch in cabeca if ch.isalpha()), "")
+        antes = cabeca.split(": ", 1)[0] if ": " in cabeca else None
+        if letra.islower() or (antes is not None and not any(map(_eh_sigla, _fonte_tokens(antes)))):
+            return fim("nao_referencia", "prosa")
+    anos = _anos_fonte(cabeca)                                          # R6: o ano
+    if len({a for _, _, a in anos}) >= 2 or " + " in cabeca:
+        return fim("sem_parse", "multi_fonte")
+    if anos:
+        r["ano"] = anos[0][2]
+    else:
+        no_detalhe = {a for d in detalhes for _, _, a in _anos_fonte(d)}
+        r["ano"] = no_detalhe.pop() if len(no_detalhe) == 1 else None
+    base = cabeca[prefixo.end():] if prefixo else cabeca
+    if r["tipo"] == "terceiro":
+        base = _sem_token(base, "EMED")
+    elif r["tipo"] == "publica":                                       # R7: o emissor
+        sigla, tirar = None, None
+        if " -- " in cabeca:
+            x, y = (p.strip() for p in cabeca.split(" -- ", 1))
+            tx = _fonte_tokens(x)
+            if tx and (all(map(_eh_sigla, tx))
+                       or (not _anos_fonte(x) and not any(map(_eh_sigla, tx)))):
+                sigla, base = x, y                                      # (a) autor ou siglas
+            else:
+                if y:
+                    detalhes.append(y)
+                base = x
+        if sigla is None:
+            toks = _fonte_tokens(base)
+            sigla = tirar = next((k for k in toks if _eh_sigla(k)), None)           # (b)
+            if sigla is None:
+                sigla = next((k for d in detalhes for k in _fonte_tokens(d) if _eh_sigla(k)), None)  # (c)
+            if sigla is None and r["ano"] is not None:
+                sigla = tirar = next((k for k in toks if k[:1].isupper()), None)    # (d)
+            if sigla is None:
+                return fim("sem_parse", "sem_emissor")                              # (e)
+            base = _sem_token(base, tirar)
+        r["sigla"] = sigla
+    documento = _colapsar(_sem_trechos(base, _anos_fonte(base))).strip(_PONTA_DOCUMENTO)   # R8
+    if not documento and r["ano"] is None:
+        return fim("sem_parse", "sem_documento")
+    r["documento"] = documento
+    return fim("ok")
+
+
+def _sem_trechos(texto, trechos):
+    """`texto` sem os trechos `(início, fim, ...)` (cada um vira um espaço)."""
+    for a, b, *_ in sorted(trechos, reverse=True):
+        texto = texto[:a] + " " + texto[b:]
+    return texto
+
+
 def emed_upsert_solucoes(rows, aplicar=True):
     """Upsert de `emed_solucoes` por `(lista, num)` (s199). Writer único da tabela.
 
@@ -3195,6 +3444,155 @@ def emed_upsert_solucoes(rows, aplicar=True):
         return cont
     finally:
         conn.close()
+
+
+#: Os vínculos da part 2.1 com a referência de cada um (o JOIN dá a `chave`), na ordem do `fontes`.
+_SQL_VINCULOS = ("SELECT v.lista, v.num, v.ordem, v.rotulo, v.detalhe, v.verificada_em, v.substrato, "
+                 "v.criado_em, r.chave, r.sigla, r.ano, r.documento, r.tipo, r.url, r.doi, r.pmid "
+                 "FROM solucao_referencia v JOIN referencia r ON r.id = v.referencia_id "
+                 "ORDER BY v.lista, v.num, v.ordem")
+_COLUNAS_VINCULO = ("lista", "num", "ordem", "rotulo", "detalhe", "verificada_em", "substrato",
+                    "criado_em", "chave", "sigla", "ano", "documento", "tipo", "url", "doi", "pmid")
+
+
+def _vinculos_ler(conn):
+    """`{(lista, num): {ordem: vínculo}}` das tabelas da part 2.1; ausentes = `{}`, sem DDL."""
+    if not (_tem_tabela(conn, "referencia") and _tem_tabela(conn, "solucao_referencia")):
+        return {}
+    por = {}
+    for row in conn.execute(_SQL_VINCULOS):
+        v = dict(zip(_COLUNAS_VINCULO, row))
+        por.setdefault((v["lista"], v["num"]), {})[v["ordem"]] = v
+    return por
+
+
+def _vinculos_gravar(conn, lista, num, alvo, atual, ids, ts):
+    """Troca os vínculos da Solução `(lista, num)` pelos de `alvo`, na conexão (e na transação) do
+    `referencias_sincronizar`. O vínculo de mesma `(ordem, chave)` preserva `verificada_em`,
+    `substrato` e `criado_em`; o novo nasce não verificado (nulo)."""
+    conn.execute("DELETE FROM solucao_referencia WHERE lista = ? AND num = ?", (lista, num))
+    for v in alvo:
+        velho = atual.get(v["ordem"])
+        mesmo = velho is not None and velho["chave"] == v["chave"]
+        conn.execute(
+            "INSERT INTO solucao_referencia (lista, num, ordem, referencia_id, rotulo, detalhe, "
+            "verificada_em, substrato, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (lista, num, v["ordem"], ids[v["chave"]], v["rotulo"], v["detalhe"],
+             velho["verificada_em"] if mesmo else None, velho["substrato"] if mesmo else None,
+             velho["criado_em"] if mesmo else ts))
+
+
+def referencias_sincronizar(aplicar=True):
+    """Writer ÚNICO de `referencia` e `solucao_referencia` (Fase 0 Lote 2 part 2.1, M-031).
+
+    Lê `emed_solucoes.fontes` (nunca escreve nela: o texto fica intacto, como proveniência), corta
+    em rótulos (`fonte_rotulos`) e estrutura cada um (`fonte_estruturada`). A referência nova (pela
+    `chave_referencia`) entra; nenhuma é apagada, e a que fica sem vínculo é contada. Os vínculos de
+    uma Solução são os rótulos `ok`, com a `ordem` do rótulo no `fontes` e o rótulo literal. Cada
+    Solução cai em uma classe: `novas` (não tinha vínculo), `atualizadas` (os vínculos mudaram),
+    `iguais` ou `sem_vinculo` (nenhum rótulo `ok`, antes e agora).
+
+    Devolve `{solucoes, com_fontes, rotulos, ok, nao_referencia, sem_parse, n_nota, motivos,
+    referencias_novas, referencias_sem_vinculo, novas, atualizadas, iguais, sem_vinculo}`.
+    Invariantes, conferidas antes do commit (falhou = rollback + `ValueError`): as 4 classes somam o
+    `COUNT(*)` de `emed_solucoes`; `ok + nao_referencia + sem_parse = rotulos`; e, no 1º apply
+    (`referencia` vazia ou ausente), nenhuma referência fica sem vínculo. Com `aplicar`, a DDL e a
+    escrita vão numa transação só; `aplicar=False` mede pelo mesmo caminho, sem DDL (tabela ausente
+    conta como vazia).
+    """
+    from collections import Counter
+    conn = get_connection()
+    try:
+        if aplicar:
+            conn.execute("BEGIN")
+            _ensure_referencia_tables(conn)
+        solucoes = _emed_ler(conn, "emed_solucoes", ("lista", "num", "fontes"))
+        atuais = _vinculos_ler(conn)
+        ids = ({chave: i for i, chave in conn.execute("SELECT id, chave FROM referencia")}
+               if _tem_tabela(conn, "referencia") else {})
+        primeiro = not ids
+        status, motivos = Counter(), Counter()
+        cont = {"solucoes": len(solucoes), "com_fontes": 0, "rotulos": 0, "n_nota": 0}
+        novas_refs, alvos = {}, {}
+        for s in solucoes:
+            rotulos = fonte_rotulos(s["fontes"])
+            cont["com_fontes"] += 1 if rotulos else 0
+            alvo = []
+            for ordem, rotulo in enumerate(rotulos, 1):
+                e = fonte_estruturada(rotulo)
+                cont["rotulos"] += 1
+                cont["n_nota"] += 1 if e["classe"] == "nota" else 0
+                status[e["status"]] += 1
+                if e["status"] != "ok":
+                    motivos[e["motivo"]] += 1
+                    continue
+                chave = chave_referencia(e["sigla"], e["ano"], e["documento"])
+                if chave not in ids and chave not in novas_refs:
+                    novas_refs[chave] = e
+                alvo.append({"ordem": ordem, "chave": chave, "rotulo": rotulo, "detalhe": e["detalhe"]})
+            alvos[(s["lista"], s["num"])] = alvo
+        cont.update({k: status[k] for k in ("ok", "nao_referencia", "sem_parse")})
+        cont["motivos"] = dict(sorted(motivos.items(), key=lambda kv: str(kv[0])))
+        cont["referencias_novas"] = len(novas_refs)
+        cont.update(novas=0, atualizadas=0, iguais=0, sem_vinculo=0)
+        ts = carimbo()
+        if aplicar:
+            for chave, e in novas_refs.items():
+                cur = conn.execute(
+                    "INSERT INTO referencia (chave, sigla, ano, documento, tipo, url, doi, pmid, "
+                    "criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (chave, e["sigla"], e["ano"], e["documento"], e["tipo"], e["url"], e["doi"],
+                     e["pmid"], ts))
+                ids[chave] = cur.lastrowid
+        for (lista, num), alvo in alvos.items():
+            atual = atuais.get((lista, num), {})
+            if ({(v["ordem"], v["chave"], v["rotulo"], v["detalhe"]) for v in alvo}
+                    == {(o, v["chave"], v["rotulo"], v["detalhe"]) for o, v in atual.items()}):
+                cont["iguais" if alvo else "sem_vinculo"] += 1
+                continue
+            cont["atualizadas" if atual else "novas"] += 1
+            if aplicar:
+                _vinculos_gravar(conn, lista, num, alvo, atual, ids, ts)
+        if aplicar:
+            cont["referencias_sem_vinculo"] = conn.execute(
+                "SELECT COUNT(*) FROM referencia WHERE id NOT IN "
+                "(SELECT referencia_id FROM solucao_referencia)").fetchone()[0]
+        else:
+            usadas = {v["chave"] for alvo in alvos.values() for v in alvo}
+            cont["referencias_sem_vinculo"] = len(set(ids) - usadas)
+        total = (conn.execute("SELECT COUNT(*) FROM emed_solucoes").fetchone()[0]
+                 if _tem_tabela(conn, "emed_solucoes") else 0)
+        classes = cont["novas"] + cont["atualizadas"] + cont["iguais"] + cont["sem_vinculo"]
+        if classes != total:
+            raise ValueError(f"invariante: novas+atualizadas+iguais+sem_vinculo={classes} != "
+                             f"COUNT(*) de emed_solucoes={total}. Nada gravado.")
+        if cont["ok"] + cont["nao_referencia"] + cont["sem_parse"] != cont["rotulos"]:
+            raise ValueError(f"invariante: ok+nao_referencia+sem_parse != rotulos={cont['rotulos']} "
+                             f"({dict(status)}). Nada gravado.")
+        if aplicar and primeiro and cont["referencias_sem_vinculo"]:
+            raise ValueError(f"invariante: {cont['referencias_sem_vinculo']} referencia(s) sem vinculo "
+                             f"no 1o apply. Nada gravado.")
+        if aplicar:
+            conn.commit()
+        return cont
+    except BaseException:
+        if aplicar and conn.in_transaction:
+            conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def referencias_por_solucao():
+    """`{(lista, num): [vínculo, ...]}` na `ordem` do `fontes` (part 2.1). Cada vínculo traz `ordem`,
+    o `rotulo` literal, `detalhe`, `verificada_em`, `substrato`, `criado_em` e a referência (`chave`,
+    `sigla`, `ano`, `documento`, `tipo`, `url`, `doi`, `pmid`). Read-only; sem as tabelas, `{}`."""
+    conn = get_connection()
+    try:
+        por = _vinculos_ler(conn)
+    finally:
+        conn.close()
+    return {k: [v[o] for o in sorted(v)] for k, v in por.items()}
 
 
 def emed_listar_solucoes(lista=None):

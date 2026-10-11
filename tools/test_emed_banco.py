@@ -1477,3 +1477,360 @@ def test_status_sensor_de_cadeia_por_lista(db_sintetico, capsys):
     saida = capsys.readouterr().out
     assert "v3 | v2 | v1 | sem | sem_obj" in saida
     assert [ln for ln in saida.splitlines() if ln.startswith("[WARN]")] == ["[WARN] SEM_CADEIA: t61 (2/2)"]
+
+
+# ------------------- Lote 2 part 2.1 (M-031): fontes -> rotulo -> referencia (rotulos SINTETICOS)
+# O repo e publico por ora (REFORMA-CHECKPOINT.md:53): nenhum rotulo daqui vem do banco real.
+
+def test_fonte_rotulos_corte_r0_formatos_f1_f2_f3_e_vazios():
+    """DoD 2 (2.1), R0: corta em `;` so com profundidade 0 de parenteses e sem digito logo depois;
+    apara e descarta os vazios. F1 (rotulo unico), F2 (`;` dentro de parenteses), F3 (`AAAA;vol:pag`)."""
+    assert db.fonte_rotulos("SBX Consenso Ficticio 2020") == ["SBX Consenso Ficticio 2020"]          # F1
+    f2 = "Autor A, Autor B. Titulo ficticio. Rev Fict (2019; 12: 34-40); SBX Consenso 2021"
+    assert db.fonte_rotulos(f2) == ["Autor A, Autor B. Titulo ficticio. Rev Fict (2019; 12: 34-40)",
+                                    "SBX Consenso 2021"]                                            # F2
+    f3 = "Autor C. Titulo ficticio. Rev Fict 2019;240:578; ZZA Manual 2018"
+    assert db.fonte_rotulos(f3) == ["Autor C. Titulo ficticio. Rev Fict 2019;240:578", "ZZA Manual 2018"]
+    assert db.fonte_rotulos("SBX 2020;  ; ZZA Manual ;") == ["SBX 2020", "ZZA Manual"]
+    assert db.fonte_rotulos("") == [] and db.fonte_rotulos(None) == [] and db.fonte_rotulos(" ; ") == []
+
+
+_CASOS_FONTE = [
+    # (rotulo sintetico, subconjunto esperado da saida)
+    ("Resumo Tireoide Ficticia §2.3",                                                         # R4 propria
+     dict(status="ok", motivo=None, classe="citacao", tipo="propria", sigla="MEDHUB", ano=None,
+          documento="Tireoide Ficticia", detalhe="§2.3")),
+    ("resumo tireoide ficticia",
+     dict(status="ok", tipo="propria", sigla="MEDHUB", documento="tireoide ficticia", detalhe=None)),
+    ("Apostila EMED Endocrinologia Ficticia (vol. 2)",                                        # R4 terceiro
+     dict(status="ok", classe="citacao", tipo="terceiro", sigla="EMED", ano=None,
+          documento="Endocrinologia Ficticia", detalhe="vol. 2")),
+    ("SBX Diretriz Ficticia de Exemplo 2021 (cap. 3)",                                        # R4 publica, R7b
+     dict(status="ok", classe="citacao", tipo="publica", sigla="SBX", ano=2021,
+          documento="Diretriz Ficticia de Exemplo", detalhe="cap. 3")),
+    ("Fulano Beltrano -- Tratado Ficticio de Clinica",                                        # R7a autor
+     dict(status="ok", tipo="publica", sigla="Fulano Beltrano", ano=None,
+          documento="Tratado Ficticio de Clinica", detalhe=None)),
+    ("SBX/ZZA -- Consenso Ficticio",                                                          # R7a so siglas
+     dict(status="ok", sigla="SBX/ZZA", documento="Consenso Ficticio")),
+    ("SBX Consenso 2019 -- Capitulo Ficticio",                                                # R7a: Y ao detalhe
+     dict(status="ok", sigla="SBX", ano=2019, documento="Consenso", detalhe="Capitulo Ficticio")),
+    ("Consenso ficticio de exemplo (ZZA)",                                                    # R7c
+     dict(status="ok", sigla="ZZA", ano=None, documento="Consenso ficticio de exemplo", detalhe="ZZA")),
+    ("Fulano II Revisao 2019",                                                                # R7d; romano
+     dict(status="ok", sigla="Fulano", ano=2019, documento="II Revisao")),
+    ("SBX: Diretriz Ficticia 2020",                                                           # `: ` com sigla
+     dict(status="ok", sigla="SBX", ano=2020, documento="Diretriz Ficticia")),
+    ("ZZA 2020",                                                                              # R8: vazio com ano
+     dict(status="ok", sigla="ZZA", ano=2020, documento="")),
+    ("Figura do enunciado não capturada",                                                     # R3
+     dict(status="nao_referencia", motivo="nota", classe="nota", tipo=None, sigla=None)),
+    ("Tabela ausente na captura",
+     dict(status="nao_referencia", motivo="nota", classe="nota")),
+    ("ver a discussão do fórum da questão",                                                   # R5 minuscula
+     dict(status="nao_referencia", motivo="prosa", classe="nota", tipo="publica")),
+    ("Observação: tema recorrente em prova",                                                  # R5 `: ` sem sigla
+     dict(status="nao_referencia", motivo="prosa", classe="nota", tipo="publica")),
+    ("Aula 3 do modulo ficticio",                                                             # remissao a aula
+     dict(status="sem_parse", motivo="sem_emissor", classe="nota", tipo="publica")),
+    ("SBX Consenso 2019 e Atualizacao 2021",                                                  # R6 dois anos
+     dict(status="sem_parse", motivo="multi_fonte", classe="citacao", tipo="publica")),
+    ("SBX Consenso + ZZA Manual",                                                             # R6 ` + `
+     dict(status="sem_parse", motivo="multi_fonte", classe="citacao")),
+    ("Manual Ficticio de Condutas",                                                           # R7e
+     dict(status="sem_parse", motivo="sem_emissor", classe="citacao", tipo="publica")),
+    ("ZZA",                                                                                   # R8
+     dict(status="sem_parse", motivo="sem_documento", classe="citacao", sigla="ZZA")),
+]
+
+
+@pytest.mark.parametrize("rotulo, esperado", _CASOS_FONTE, ids=[c[0][:28] for c in _CASOS_FONTE])
+def test_fonte_estruturada_regras_r1_r8_e_classe(rotulo, esperado):
+    """DoD 2 (2.1) + ALTERA (classe): um caso de cada `tipo`, `Autor -- Titulo`, nota e prosa,
+    `multi_fonte`, `sem_emissor`, `sem_documento`; `classe` = citacao | nota por ocorrencia."""
+    saida = db.fonte_estruturada(rotulo)
+    assert {k: saida[k] for k in esperado} == esperado
+
+
+def test_fonte_estruturada_url_pmid_doi_saem_com_o_traco():
+    """DoD 2 (2.1), R1: URL, PMID tirado de URL do PubMed e DOI saem do texto com o ` -- ` que os precede."""
+    r = db.fonte_estruturada("ZZA Consenso Ficticio -- https://pubmed.ncbi.nlm.nih.gov/12345678/")
+    assert (r["status"], r["url"], r["pmid"], r["doi"]) == (
+        "ok", "https://pubmed.ncbi.nlm.nih.gov/12345678/", "12345678", None)
+    assert (r["sigla"], r["documento"], r["detalhe"]) == ("ZZA", "Consenso Ficticio", None)
+    r = db.fonte_estruturada("QWE Guideline Ficticio 2022 -- 10.1234/fict.2022.001")
+    assert (r["doi"], r["url"], r["ano"], r["documento"]) == ("10.1234/fict.2022.001", None, 2022,
+                                                            "Guideline Ficticio")
+    r = db.fonte_estruturada("SBX Portal Ficticio https://exemplo.invalid/pagina")
+    assert (r["url"], r["pmid"], r["documento"]) == ("https://exemplo.invalid/pagina", None, "Portal Ficticio")
+
+
+def test_fonte_estruturada_ano_detalhe_e_data():
+    """DoD 2 (2.1), R2 + R6: ano dentro de data ou de numero nao conta; sem ano na cabeca, vale o
+    UNICO ano do detalhe; o detalhe junta os parenteses de 1o nivel e o trecho a partir do 1o `§`."""
+    for rotulo in ("ZZA Nota Tecnica Ficticia de 12/03/2019", "ZZA Manual Ficticio 2019-05-01",
+                   "ZZA Boletim Ficticio 120190"):
+        r = db.fonte_estruturada(rotulo)
+        assert (r["status"], r["ano"]) == ("ok", None), rotulo
+    r = db.fonte_estruturada("ZZA Consenso Ficticio (atualizado em 2018)")
+    assert (r["ano"], r["detalhe"], r["documento"]) == (2018, "atualizado em 2018", "Consenso Ficticio")
+    r = db.fonte_estruturada("ZZA Consenso Ficticio (2018; revisao 2020)")
+    assert (r["status"], r["ano"]) == ("ok", None)          # dois anos no detalhe: nenhum vale
+    assert db.fonte_estruturada("Resumo Tema Ficticio (tabela 2) §3")["detalhe"] == "tabela 2 | §3"
+    assert db.fonte_estruturada("Resumo Tema Ficticio §3 (tabela 2)")["detalhe"] == "§3 (tabela 2)"
+
+
+def test_chave_referencia_normalizada_e_saida_deterministica():
+    """DoD 2 (2.1), R9: chave = SIGLA|ano-ou-vazio|documento, casefold e espacos colapsados; a mesma
+    entrada da a mesma saida (corte e parser puros)."""
+    assert db.chave_referencia("ZZA", 2020, "  Consenso   Ficticio ") == "zza|2020|consenso ficticio"
+    assert db.chave_referencia("zza", None, "CONSENSO ficticio") == "zza||consenso ficticio"
+    chaves = {"status", "motivo", "classe", "tipo", "sigla", "ano", "documento", "detalhe",
+              "url", "doi", "pmid"}
+    for rotulo, _ in _CASOS_FONTE:
+        a, b = db.fonte_estruturada(rotulo), db.fonte_estruturada(rotulo)
+        assert a == b and set(a) == chaves
+    texto = "; ".join(r for r, _ in _CASOS_FONTE)
+    assert db.fonte_rotulos(texto) == db.fonte_rotulos(texto)
+
+
+# --- writer de sincronizacao (DoD 3), CLI (DoD 4) e sensor (DoD 5), no banco sintetico do Lote 0
+
+_FONTES_SINT = {("t26", 1): "Resumo Tireoide Ficticia §2; Figura do enunciado não capturada",
+                ("t26", 2): "Resumo Tireoide Ficticia §4",
+                ("t40", 1): "Apostila EMED Endocrinologia Ficticia (vol. 2)",
+                ("t40", 2): "",
+                ("t61", 1): "SBX Diretriz Ficticia 2021; Manual Ficticio de Condutas"}
+
+
+def _semear_fontes(db_sintetico, questoes=False):
+    """5 Solucoes v1 com `fontes` sinteticas (uma lista de cada `tipo`) pelo writer real; com
+    `questoes`, tambem as questoes (o `--status` simples so lista quem tem questao)."""
+    assert Path(db_sintetico).resolve() != (ROOT / "ipub.db").resolve()     # sentinela: nunca o real
+    if questoes:
+        assert db.emed_upsert_questoes([_questao(n, lista=l, tarefa=int(l[1:]))
+                                        for (l, n) in _FONTES_SINT])["novas"] == 5
+    c = db.emed_upsert_solucoes([_solucao(n, lista=l, fontes=f) for (l, n), f in _FONTES_SINT.items()])
+    assert c["novas"] == 5 and c["invalidas"] == []
+
+
+def _tabelas_ref(caminho):
+    con = sqlite3.connect(caminho)
+    try:
+        return {r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table' "
+                                          "AND name IN ('referencia', 'solucao_referencia')")}
+    finally:
+        con.close()
+
+
+def _sha(caminho):
+    import hashlib
+    return hashlib.sha256(Path(caminho).read_bytes()).hexdigest()
+
+
+def _contagem(r):
+    return {k: r[k] for k in ("solucoes", "com_fontes", "rotulos", "ok", "nao_referencia", "sem_parse",
+                              "n_nota", "referencias_novas", "novas", "atualizadas", "iguais",
+                              "sem_vinculo")}
+
+
+_ESPERADO_1o = dict(solucoes=5, com_fontes=4, rotulos=6, ok=4, nao_referencia=1, sem_parse=1, n_nota=1,
+                    referencias_novas=3, novas=4, atualizadas=0, iguais=0, sem_vinculo=1)
+
+
+def test_referencia_ddl_idempotente_duas_fks_e_check(db_sintetico):
+    """DoD 3 (2.1): `_ensure_referencia_tables` 2x; as 2 FKs de `solucao_referencia` (referencia e a
+    composta `(lista, num)` -> `emed_solucoes`, CASCADE); `tipo` fora do CHECK e recusado."""
+    conn = db.get_connection()
+    try:
+        db._ensure_emed_tables(conn)
+        db._ensure_referencia_tables(conn)
+        db._ensure_referencia_tables(conn)
+        fks = conn.execute("PRAGMA foreign_key_list(solucao_referencia)").fetchall()
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute("INSERT INTO referencia (chave, sigla, documento, tipo) VALUES ('x', 'X', 'd', 'outro')")
+    finally:
+        conn.close()
+    por_fk = {}
+    for _id, _seq, tabela, de, para, _upd, on_delete, _m in fks:
+        por_fk.setdefault((tabela, on_delete), set()).add((de, para))
+    assert por_fk == {("referencia", "NO ACTION"): {("referencia_id", "id")},
+                      ("emed_solucoes", "CASCADE"): {("lista", "lista"), ("num", "num")}}
+    assert _tabelas_ref(db_sintetico) == {"referencia", "solucao_referencia"}
+
+
+def test_referencias_sincronizar_dry_run_apply_e_reexecucao(db_sintetico):
+    """DoD 3 (2.1): `aplicar=False` nao roda DDL e mede; o apply grava as mesmas contagens com as
+    invariantes; o leitor devolve os vinculos na ordem; rodar de novo da 0 mudancas; `fontes` intacto."""
+    _semear_fontes(db_sintetico)
+    hashes = {(s["lista"], s["num"]): (s["fontes"], s["hash"]) for s in db.emed_listar_solucoes()}
+    seco = db.referencias_sincronizar(aplicar=False)
+    assert _contagem(seco) == _ESPERADO_1o and seco["motivos"] == {"nota": 1, "sem_emissor": 1}
+    assert _tabelas_ref(db_sintetico) == set() and db.referencias_por_solucao() == {}
+    feito = db.referencias_sincronizar()
+    assert _contagem(feito) == _ESPERADO_1o and feito["referencias_sem_vinculo"] == 0
+    assert feito["novas"] + feito["atualizadas"] + feito["iguais"] + feito["sem_vinculo"] == 5
+    assert feito["ok"] + feito["nao_referencia"] + feito["sem_parse"] == feito["rotulos"]
+    vinc = db.referencias_por_solucao()
+    assert sorted(vinc) == [("t26", 1), ("t26", 2), ("t40", 1), ("t61", 1)]
+    assert [(v["ordem"], v["chave"], v["detalhe"]) for v in vinc[("t26", 1)]] == [
+        (1, "medhub||tireoide ficticia", "§2")]
+    assert vinc[("t26", 2)][0]["chave"] == vinc[("t26", 1)][0]["chave"]          # uma referencia, 2 vinculos
+    assert [(v["ordem"], v["tipo"], v["ano"]) for v in vinc[("t61", 1)]] == [(1, "publica", 2021)]
+    de_novo = db.referencias_sincronizar()
+    assert (de_novo["novas"], de_novo["atualizadas"], de_novo["referencias_novas"],
+            de_novo["iguais"], de_novo["sem_vinculo"]) == (0, 0, 0, 4, 1)
+    assert {(s["lista"], s["num"]): (s["fontes"], s["hash"]) for s in db.emed_listar_solucoes()} == hashes
+
+
+def test_referencias_atualizada_preserva_verificacao_da_mesma_ordem_e_chave(db_sintetico):
+    """DoD 3 (2.1): Solucao atualizada (fontes mudou) preserva `verificada_em` e `substrato` do vinculo
+    de mesma `(ordem, chave)`; o vinculo novo nasce nao verificado (nulo); nenhuma referencia e apagada."""
+    _semear_fontes(db_sintetico)
+    db.referencias_sincronizar()
+    con = sqlite3.connect(db_sintetico)
+    con.execute("UPDATE solucao_referencia SET verificada_em = '2026-10-11', substrato = 'canonico' "
+                "WHERE lista = 't61' AND num = 1 AND ordem = 1")
+    con.commit()
+    con.close()
+    novo = "SBX Diretriz Ficticia 2021; Manual Ficticio de Condutas; ZZA Manual Ficticio 2020"
+    assert db.emed_upsert_solucoes([_solucao(1, lista="t61", fontes=novo)])["atualizadas"] == 1
+    r = db.referencias_sincronizar()
+    assert (r["novas"], r["atualizadas"], r["iguais"], r["referencias_novas"]) == (0, 1, 3, 1)
+    v = db.referencias_por_solucao()[("t61", 1)]
+    assert [(x["ordem"], x["verificada_em"], x["substrato"]) for x in v] == [
+        (1, "2026-10-11", "canonico"), (3, None, None)]
+    db.emed_upsert_solucoes([_solucao(1, lista="t61", fontes="Manual Ficticio de Condutas")])
+    r = db.referencias_sincronizar()
+    assert (r["atualizadas"], r["sem_vinculo"], r["referencias_sem_vinculo"]) == (1, 1, 2)
+    con = sqlite3.connect(db_sintetico)
+    try:
+        assert con.execute("SELECT COUNT(*) FROM referencia").fetchone()[0] == 4
+    finally:
+        con.close()
+
+
+def _status_estranho(original):
+    def falso(rotulo):
+        r = original(rotulo)
+        return dict(r, status="outro") if r["tipo"] == "terceiro" else r
+    return falso
+
+
+@pytest.mark.parametrize("quebra", ["rotulos", "solucoes", "orfa"])
+def test_referencias_invariante_quebrada_e_rollback_sem_gravar(db_sintetico, monkeypatch, quebra):
+    """DoD 3 (2.1): cada invariante e conferida dentro da transacao -- `ok + nao_referencia +
+    sem_parse = rotulos`, `novas + atualizadas + iguais + sem_vinculo = COUNT(*)` e, no 1o apply,
+    nenhuma referencia sem vinculo. Quebrada = `ValueError` e rollback (nem as tabelas ficam)."""
+    _semear_fontes(db_sintetico)
+    if quebra == "rotulos":
+        monkeypatch.setattr(db, "fonte_estruturada", _status_estranho(db.fonte_estruturada))
+    elif quebra == "solucoes":
+        ler = db._emed_ler
+        monkeypatch.setattr(db, "_emed_ler", lambda conn, tabela, colunas, lista=None:
+                            ler(conn, tabela, colunas, lista)[1:])
+    else:
+        monkeypatch.setattr(db, "_vinculos_gravar", lambda *a, **k: None)
+    with pytest.raises(ValueError):
+        db.referencias_sincronizar()
+    assert _tabelas_ref(db_sintetico) == set()
+
+
+def test_referencias_falha_no_meio_nao_deixa_nada_gravado(db_sintetico, monkeypatch):
+    """DoD 3 (2.1): uma falha no meio da escrita (2a Solucao) desfaz tudo, DDL inclusive."""
+    _semear_fontes(db_sintetico)
+    antes = _sha(db_sintetico)
+    gravar, chamadas = db._vinculos_gravar, []
+
+    def quebra_na_segunda(*a, **k):
+        chamadas.append(1)
+        if len(chamadas) == 2:
+            raise RuntimeError("falha sintetica no meio")
+        return gravar(*a, **k)
+
+    monkeypatch.setattr(db, "_vinculos_gravar", quebra_na_segunda)
+    with pytest.raises(RuntimeError):
+        db.referencias_sincronizar()
+    assert _tabelas_ref(db_sintetico) == set() and _sha(db_sintetico) == antes
+
+
+def test_cli_referencias_dry_run_nao_muda_o_banco(db_sintetico, capsys):
+    """DoD 4 (2.1): `--referencias` sem `--apply` imprime as contagens, `nao_ok: X/Y (Z%)` e o
+    histograma de `motivo`; o sha256 do banco sintetico fica igual."""
+    _semear_fontes(db_sintetico)
+    antes = _sha(db_sintetico)
+    assert emed_banco.main(["--referencias"]) == 0
+    out = capsys.readouterr().out
+    assert "solucoes=5" in out and "rotulos=6" in out and "referencias_novas=3" in out
+    assert "nao_ok: 2/6 (33.3%)" in out and "n_nota=1" in out
+    assert "motivo nota: 1" in out and "motivo sem_emissor: 1" in out
+    assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_cli_referencias_rito_expect_apply_e_reexecucao(db_sintetico, capsys, monkeypatch):
+    """DoD 4 (2.1): `--apply` sem `--expect` = exit 1; `--expect` divergente = exit 2 (N = novas +
+    atualizadas, em Solucoes); o apply FIXA sempre antes da 1a escrita e grava; de novo = 0 mudancas."""
+    _semear_fontes(db_sintetico)
+    antes = _sha(db_sintetico)
+    atos = []
+    monkeypatch.setattr(emed_banco, "_fixar_antes",
+                        lambda ato: atos.append(ato) or {"arquivo": "f.db", "sha256": "abc"})
+    assert emed_banco.main(["--referencias", "--apply"]) == 1
+    assert "--expect" in capsys.readouterr().out
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "3"]) == 2
+    assert "COUNT-ASSERT" in capsys.readouterr().out
+    assert _sha(db_sintetico) == antes and atos == []
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--json"]) == 0
+    r = _json_saida(capsys)
+    assert r["aplicado"] is True and _contagem(r) == _ESPERADO_1o and len(atos) == 1
+    assert r["fixado"] == {"arquivo": "f.db", "sha256": "abc"}
+    assert _tabelas_ref(db_sintetico) == {"referencia", "solucao_referencia"}
+    assert emed_banco.main(["--referencias", "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["novas"], r["atualizadas"], r["referencias_novas"], r["aplicado"]) == (0, 0, 0, False)
+
+
+def test_cli_referencias_sem_fixado_recusa_sem_gravar(db_sintetico, capsys, monkeypatch):
+    """DoD 4 (2.1): o fixado que levanta = exit 1 e nada gravado (nem DDL)."""
+    _semear_fontes(db_sintetico)
+    antes = _sha(db_sintetico)
+
+    def sem_ponto(ato):
+        raise RuntimeError("sem ponto de retorno sintetico")
+
+    monkeypatch.setattr(emed_banco, "_fixar_antes", sem_ponto)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4"]) == 1
+    assert "FIXADO" in capsys.readouterr().out
+    assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_status_fontes_sensor_por_lista_e_warn(db_sintetico, capsys, monkeypatch):
+    """DoD 5 (2.1): `cobertura_fontes` (PURA) por lista -- rot/ok/nref/sem/terc/vinc + n_nota/pct_nota;
+    sem as tabelas `vinc` = 0; `--status` simples fecha com `[WARN] FONTES_SEM_ESTRUTURA`; exit 0 e
+    nada escrito. Uma lista de cada tipo: t26 propria (+ nota), t40 terceiro, t61 publica (+ sem_emissor)."""
+    _semear_fontes(db_sintetico, questoes=True)
+    antes = _sha(db_sintetico)
+    assert emed_banco.main(["--status", "--fontes", "--json"]) == 0
+    por = {d["lista"]: d for d in _json_saida(capsys)}
+    chaves = ("rot", "ok", "nref", "sem", "terc", "vinc", "n_nota", "pct_nota")
+    assert {k: tuple(d[k] for k in chaves) for k, d in por.items()} == {
+        "t26": (3, 2, 1, 0, 0, 0, 1, 33.3), "t40": (1, 1, 0, 0, 1, 0, 0, 0.0),
+        "t61": (2, 1, 0, 1, 0, 0, 0, 0.0)}
+    assert emed_banco.main(["--status", "--fontes", "--lista", "t40"]) == 0
+    out = capsys.readouterr().out
+    assert "lista | rot | ok | nref | sem | terc | vinc | n_nota | pct_nota" in out
+    assert "t40 | 1 | 1 | 0 | 0 | 1 | 0 | 0 | 0.0" in out and "t26 |" not in out
+    assert emed_banco.main(["--status"]) == 0
+    warns = [ln for ln in capsys.readouterr().out.splitlines() if ln.startswith("[WARN]")]
+    assert warns[-1] == "[WARN] FONTES_SEM_ESTRUTURA: 2 rótulos em 2 listas (ver --status --fontes)"
+    assert all(w.startswith("[WARN] SEM_CADEIA") for w in warns[:-1])
+    assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+    monkeypatch.setattr(emed_banco, "_fixar_antes", lambda ato: {"arquivo": "f.db", "sha256": "abc"})
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4"]) == 0
+    capsys.readouterr()
+    assert emed_banco.main(["--status", "--fontes", "--json"]) == 0
+    assert {d["lista"]: d["vinc"] for d in _json_saida(capsys)} == {"t26": 2, "t40": 1, "t61": 1}
+    sols = [{"lista": "t9", "num": 1, "fontes": "SBX Diretriz 2020; ver nota"}]
+    assert emed_banco.cobertura_fontes(sols, {("t9", 1): [{}]}) == [
+        {"lista": "t9", "rot": 2, "ok": 1, "nref": 1, "sem": 0, "terc": 0, "vinc": 1, "n_nota": 1,
+         "pct_nota": 50.0}]

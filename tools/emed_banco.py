@@ -26,6 +26,9 @@ Uso:
     python tools/emed_banco.py --elos t26 --json
     python tools/emed_banco.py --defeitos
     python tools/emed_banco.py --status --lista t26 --json
+    python tools/emed_banco.py --referencias
+    python tools/emed_banco.py --referencias --apply --expect 12
+    python tools/emed_banco.py --status --fontes --lista t26
 
 Camada fina sobre `app.utils.db` -- não abre `sqlite3` próprio; toda escrita passa por
 `emed_upsert_questoes` / `emed_upsert_respostas`.
@@ -355,6 +358,66 @@ def cmd_solucoes(args):
     return code
 
 
+def _linha_referencias(c, aplicado):
+    """As contagens do `--referencias` (part 2.1): a linha de rótulos, a de Soluções, o `nao_ok` e o
+    histograma de `motivo`."""
+    modo = "APLICADO" if aplicado else "dry-run (nada gravado; use --apply --expect N)"
+    nao_ok = c["nao_referencia"] + c["sem_parse"]
+    pct = round(100 * nao_ok / c["rotulos"], 1) if c["rotulos"] else 0.0
+    linhas = [f"{modo}: solucoes={c['solucoes']} com_fontes={c['com_fontes']} rotulos={c['rotulos']} "
+              f"ok={c['ok']} nao_referencia={c['nao_referencia']} sem_parse={c['sem_parse']} "
+              f"n_nota={c['n_nota']}",
+              f"  referencias_novas={c['referencias_novas']} "
+              f"referencias_sem_vinculo={c['referencias_sem_vinculo']} | Solucoes: novas={c['novas']} "
+              f"atualizadas={c['atualizadas']} iguais={c['iguais']} sem_vinculo={c['sem_vinculo']}",
+              f"  nao_ok: {nao_ok}/{c['rotulos']} ({pct}%)"]
+    linhas += [f"  motivo {m}: {n}" for m, n in c["motivos"].items()]
+    if c.get("fixado"):
+        linhas.append(f"  FIXADO antes do ato (ponto de retorno; arquivo + sha256 vao para o ledger): "
+                      f"{c['fixado']['arquivo']} sha256 {c['fixado']['sha256']}")
+    return "\n".join(linhas)
+
+
+def cmd_referencias(args):
+    """`--referencias` (Fase 0 Lote 2 part 2.1, M-031): sincroniza `referencia` e `solucao_referencia`
+    a partir de `emed_solucoes.fontes` (`db.referencias_sincronizar`; o `fontes` fica intacto).
+    Dry-run por padrao; `--apply` exige `--expect N` (N = `novas + atualizadas`, em Solucoes) e FIXA o
+    backup SEMPRE antes da 1a escrita (DDL + a 1a escrita em massa; sem fixado, exit 1)."""
+    if args.apply and args.expect is None:
+        print("RECUSA: --referencias --apply exige --expect N (o `novas + atualizadas` do dry-run, em "
+              "Solucoes). Nada gravado.")
+        return 1
+    code = 0
+    try:
+        cont = db.referencias_sincronizar(aplicar=False)
+        mudam = cont["novas"] + cont["atualizadas"]
+        if args.expect is not None and mudam != args.expect:
+            cont["erro"] = (f"COUNT-ASSERT falhou: novas+atualizadas={mudam}, --expect {args.expect}. "
+                            f"Nada gravado.")
+            code = 2
+        elif args.apply:
+            try:
+                fixado = _fixar_antes(f"emed_banco --referencias: {mudam} Solucao(oes), "
+                                      f"{cont['referencias_novas']} referencia(s) nova(s)")
+            except Exception as e:  # noqa: BLE001 -- qualquer falha do ponto de retorno = recusa
+                cont["erro"] = f"sem ponto de retorno FIXADO (F137): {e}. Nada gravado."
+                code = 1
+            else:
+                cont = db.referencias_sincronizar(aplicar=True)
+                cont["fixado"] = {"arquivo": fixado["arquivo"], "sha256": fixado["sha256"]}
+    except ValueError as e:     # invariante quebrada: o writer ja voltou atras
+        print(f"erro: {e}", file=sys.stderr)
+        return 1
+    aplicado = bool(args.apply and code == 0)
+    if args.json:
+        _emitir(dict(cont, aplicado=aplicado), True)
+        return code
+    if cont.get("erro"):
+        print(cont["erro"])
+    print(_linha_referencias(cont, aplicado))
+    return code
+
+
 def cmd_registrar(args):
     """`--registrar DIR`: upsert das respostas + resumo por lista + comando sugerido."""
     docs = ler_docs(args.registrar, "respostas")
@@ -450,6 +513,31 @@ def cobertura_cadeia(questoes, solucoes):
 def _numeros_cadeia(c):
     """`v3 a | v2 b | v1 c | sem d | sem_obj e` -- os números da cobertura numa linha."""
     return " | ".join(f"{k} {c[k]}" for k in ("v3", "v2", "v1", "sem", "sem_obj"))
+
+
+def cobertura_fontes(solucoes, vinculos):
+    """Cobertura das fontes estruturadas por lista, PURA (part 2.1, sensor; molde do `fora_do_hub`).
+
+    `solucoes` = linhas de `emed_solucoes` (`lista`, `num`, `fontes`); `vinculos` = o
+    `db.referencias_por_solucao()` (`{}` sem as tabelas). Por lista: `rot` (rotulos do corte R0), `ok`,
+    `nref` (nao_referencia), `sem` (sem_parse), `terc` (rotulos de `tipo` terceiro, qualquer status),
+    `vinc` (vinculos gravados), `n_nota` e `pct_nota` (classe nota sobre `rot`, em %). Uma regra so:
+    o `--status --fontes` e o WARN do `--status` chamam esta funcao."""
+    por = {}
+    for s in solucoes:
+        d = por.setdefault(s["lista"], {"lista": s["lista"], "rot": 0, "ok": 0, "nref": 0, "sem": 0,
+                                        "terc": 0, "vinc": 0, "n_nota": 0})
+        for rotulo in db.fonte_rotulos(s.get("fontes")):
+            e = db.fonte_estruturada(rotulo)
+            d["rot"] += 1
+            d[{"ok": "ok", "nao_referencia": "nref"}.get(e["status"], "sem")] += 1
+            d["terc"] += 1 if e["tipo"] == "terceiro" else 0
+            d["n_nota"] += 1 if e["classe"] == "nota" else 0
+        d["vinc"] += len(vinculos.get((s["lista"], s["num"])) or [])
+    saida = [por[k] for k in sorted(por)]
+    for d in saida:
+        d["pct_nota"] = round(100 * d["n_nota"] / d["rot"], 1) if d["rot"] else 0.0
+    return saida
 
 
 def questoes_no_hub_por_tarefa(questoes=None):
@@ -975,6 +1063,21 @@ def cmd_status(args):
             print(f"{g['tema']} | {g['objetivo']} | {g['firmes']}/{g['feitas']} | "
                   f"{g['chutes_certos']} | {', '.join(g['erradas']) or '-'}")
         return 0
+    if args.fontes:     # part 2.1: o sensor das fontes estruturadas, por lista (so le)
+        linhas = cobertura_fontes([s for s in db.emed_listar_solucoes()
+                                   if not args.lista or s["lista"] == args.lista],
+                                  db.referencias_por_solucao())
+        if args.json:
+            _emitir(linhas, True)
+            return 0
+        cols = ("rot", "ok", "nref", "sem", "terc", "vinc", "n_nota")
+        print("lista | " + " | ".join(cols) + " | pct_nota")
+        for d in linhas:
+            print(f"{d['lista']} | " + " | ".join(str(d[k]) for k in cols) + f" | {d['pct_nota']}")
+        tot = {k: sum(d[k] for d in linhas) for k in cols}
+        pct = round(100 * tot["n_nota"] / tot["rot"], 1) if tot["rot"] else 0.0
+        print("total | " + " | ".join(str(tot[k]) for k in cols) + f" | {pct}")
+        return 0
     linhas = [s for s in db.emed_status() if not args.lista or s["lista"] == args.lista]
     if linhas:      # part 1.2: o sensor de cadeia, sobre todas as questoes da lista (como `capturadas`)
         questoes, solucoes = db.emed_listar_questoes(), db.emed_listar_solucoes()
@@ -1000,6 +1103,12 @@ def cmd_status(args):
     for s in linhas:    # sensor, nao gate (warn-first): o estoque que ja esta no hub
         if s["area"] != "Simulado" and s["v1"] + s["sem"] > 0:
             print(f"[WARN] SEM_CADEIA: {s['lista']} ({s['v1'] + s['sem']}/{s['capturadas']})")
+    fontes = cobertura_fontes([s for s in db.emed_listar_solucoes()
+                               if not args.lista or s["lista"] == args.lista], {})
+    fora = [d["nref"] + d["sem"] for d in fontes if d["nref"] + d["sem"]]
+    if fora:            # part 2.1: sensor, nao gate -- fecha depois do WARN da 1.2
+        print(f"[WARN] FONTES_SEM_ESTRUTURA: {sum(fora)} rótulos em {len(fora)} listas "
+              f"(ver --status --fontes)")
     return 0
 
 
@@ -1007,7 +1116,8 @@ def main(argv=None):
     """Ponto de entrada: exatamente UM modo por chamada."""
     ap = argparse.ArgumentParser(
         description="Banco de questoes EMED no ipub.db (Bancada EMED): ingerir, "
-                    "registrar, solucoes, podar, exportar, erros, elos, defeitos, status.")
+                    "registrar, solucoes, podar, exportar, erros, elos, defeitos, status, "
+                    "referencias.")
     ap.add_argument("--ingerir", metavar="DIR", help="upsert de DIR/questoes/*.json")
     ap.add_argument("--registrar", metavar="DIR", help="upsert de DIR/respostas/*.json")
     ap.add_argument("--solucoes", metavar="DIR",
@@ -1038,10 +1148,15 @@ def main(argv=None):
                     help="elos declarados Nao/Incerteza/Desatencao (sem LISTA: todas) (s211)")
     ap.add_argument("--defeitos", action="store_true",
                     help="questoes com cadeia_defeito: a fila de correcao de cadeia (s211)")
+    ap.add_argument("--referencias", action="store_true",
+                    help="sincroniza referencia/solucao_referencia a partir de emed_solucoes.fontes "
+                         "(part 2.1; dry-run; --apply exige --expect N e fixa o backup)")
     ap.add_argument("--status", action="store_true", help="resumo por lista")
     ap.add_argument("--lista", metavar="LISTA", help="filtro do --status e do --defeitos")
     ap.add_argument("--por-objetivo", dest="por_objetivo", action="store_true",
                     help="com --status: acerto por tema e objetivo da questao (s200)")
+    ap.add_argument("--fontes", action="store_true",
+                    help="com --status: cobertura das fontes estruturadas por lista (part 2.1)")
     ap.add_argument("--apply", action="store_true", help="grava (default = dry-run)")
     ap.add_argument("--expect", type=int, metavar="N",
                     help="COUNT-ASSERT: novas+atualizadas deve ser N, senao exit 2")
@@ -1053,7 +1168,7 @@ def main(argv=None):
              "--reavaliar-sem-figura": args.reavaliar_sem_figura,
              "--podar": args.podar, "--exportar": args.exportar,
              "--erros": args.erros, "--elos": args.elos, "--defeitos": args.defeitos,
-             "--status": args.status}
+             "--status": args.status, "--referencias": args.referencias}
     ligados = [m for m, v in modos.items() if v]
     if len(ligados) != 1:
         print("erro: informe exatamente UM modo (" + " | ".join(modos) + ")",
@@ -1067,7 +1182,7 @@ def main(argv=None):
             "--reavaliar-sem-figura": cmd_reavaliar_sem_figura,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
             "--erros": cmd_erros, "--elos": cmd_elos, "--defeitos": cmd_defeitos,
-            "--status": cmd_status}[ligados[0]]
+            "--status": cmd_status, "--referencias": cmd_referencias}[ligados[0]]
     try:
         return acao(args)
     except ErroLeitura as e:

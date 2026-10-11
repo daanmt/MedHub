@@ -39,8 +39,11 @@ ALLOWLIST = {
     # emed_card_ancora (Fase 0 Lote 1 part-3, P6): a ancora do card de consolidacao na resposta
     # EMED; `emed_ancorar_card` e o writer UNICO -- o `insert_card_extra.py` o chama com a
     # conexao dele e NAO ganha a tabela (o conjunto dele segue {flashcards, fsrs_cards}).
+    # referencia/solucao_referencia (Fase 0 Lote 2 part 2.1, M-031): o `fontes` da Solucao
+    # estruturado em referencia + vinculo N:M; `referencias_sincronizar` e o writer UNICO das duas
+    # -- o `tools/emed_banco.py --referencias` e camada fina e NAO aparece aqui.
     "app/utils/db.py": {"emed_card_ancora", "emed_questoes", "emed_respostas",
-                        "emed_solucoes",
+                        "emed_solucoes", "referencia", "solucao_referencia",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",
                         "questao_habilidades", "review_log", "reforja_marks",

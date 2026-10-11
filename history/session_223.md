@@ -59,3 +59,5 @@
 - 11/10 14:05 part 1.1b: 77 listas recapturadas; banco 52 mescladas + 34 sem_figura retirados (hotfix de precisao 0/20); hub 52 updates + 34 deletes, V91 com o aviso; t40 Q5/6/18/21/22 com figura
 - 11/10 15:05 banco-emed: t3 registrada 29 (69%, sessoes_bulk 140, tarefa #3 concluida; analise dos 9 erros em subagente) · Solucoes v3 cunhadas e no hub: t61 15/15 (0 divergentes; lidas Q5,Q8,Q11), t65 37/37 (divergente Q18 HerniaSurge x banca; lidas Q18,Q23,Q36) -- 2 fixados
 - 11/10 15:06 part 1.3 PASS: emed_card_ancora; reancoragem real 6 cards / 8 ancoras (fixado 150506)
+- 11/10 15:13 hub-backend: t61 registrada 15 (60%, sb 141, tarefa #61 concluida; analise dos 6 erros em subagente); republicado com o mesmo lote 2026-10-10a (painel; V92)
+- 11/10 15:20 aulas-base glomerulopatias/kawasaki/neuromusculares no hub (V93, quadro: tarefas 68+115, 651+754, 141) · 0.4b aplicada (54 desfixados, 55 purgados, 501->110 MB) · M-140 feito (local)

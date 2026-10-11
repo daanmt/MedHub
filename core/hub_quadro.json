@@ -357,6 +357,29 @@
       "tipo": "aula",
       "titulo": "Imagem obstétrica",
       "tarefa_id": 5424
+    },
+    "glomerulopatias": {
+      "tipo": "aula",
+      "titulo": "Doenças Glomerulares",
+      "tarefas": [
+        68,
+        115
+      ]
+    },
+    "kawasaki": {
+      "tipo": "aula",
+      "titulo": "Doença de Kawasaki",
+      "tarefas": [
+        651,
+        754
+      ]
+    },
+    "neuromusculares": {
+      "tipo": "aula",
+      "titulo": "Doenças Neuromusculares",
+      "tarefas": [
+        141
+      ]
     }
   }
 }

@@ -1,0 +1,558 @@
+<title>Doenças Neuromusculares</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1F4; --card:#FAFBFC; --sunk:#E1E6EC;
+  --ink:#161B24; --ink2:#4A5363; --ink3:#737D8E;
+  --line:rgba(22,27,36,.12); --line2:rgba(22,27,36,.25);
+  --acc:#3B4F9A; --acc-ink:#2A3A78; --acc-wash:#E0E5F4;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#12151C; --card:#1A1F29; --sunk:#242A36;
+  --ink:#E7EAF0; --ink2:#AEB5C3; --ink3:#828A9A;
+  --line:rgba(231,234,240,.13); --line2:rgba(231,234,240,.27);
+  --acc:#9DB0F0; --acc-ink:#BCC9F6; --acc-wash:#232B45;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#12151C;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#12151C; --card:#1A1F29; --sunk:#242A36;
+  --ink:#E7EAF0; --ink2:#AEB5C3; --ink3:#828A9A;
+  --line:rgba(231,234,240,.13); --line2:rgba(231,234,240,.27);
+  --acc:#9DB0F0; --acc-ink:#BCC9F6; --acc-wash:#232B45;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#12151C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+a{color:var(--acc-ink)}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:48px 0 28px;border-bottom:1px solid var(--line2)}
+.eye{font:600 13px/1.3 "Source Sans 3";color:var(--acc-ink);margin:0 0 14px}
+.top h1{font-size:clamp(30px,5vw,48px);font-weight:680;max-width:20ch;margin-bottom:14px}
+.top .sub{font-size:17.5px;line-height:1.6;color:var(--ink2);max-width:64ch;margin:0}
+
+/* o eixo: hero */
+.axis{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;border:1px solid var(--line2);background:var(--card)}
+.axis li{min-width:0;padding:14px 12px 13px;position:relative;border-left:1px solid var(--line)}
+.axis li:first-child{border-left:0}
+.axis li::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--acc);opacity:calc(.25 + var(--i)*.13)}
+.axis .ak{font:600 11.5px "IBM Plex Mono";color:var(--acc-ink);display:block;margin-bottom:5px;font-variant-numeric:tabular-nums}
+.axis .an{font:600 15px/1.25 Fraunces,Georgia,serif;color:var(--ink);display:block;margin-bottom:5px}
+.axis .av{font-size:13px;line-height:1.42;color:var(--ink2);display:block}
+@media(max-width:860px){.axis{grid-template-columns:repeat(3,minmax(0,1fr))}.axis li:nth-child(4){border-left:0}.axis li:nth-child(n+4){border-top:1px solid var(--line)}}
+@media(max-width:480px){.axis{grid-template-columns:repeat(2,minmax(0,1fr))}.axis li:nth-child(4){border-left:1px solid var(--line)}.axis li:nth-child(odd){border-left:0}.axis li:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* layout */
+.body{display:grid;grid-template-columns:210px minmax(0,1fr);gap:52px;padding-top:36px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:minmax(0,1fr);gap:28px}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.rail .rlab{font:600 12.5px/1 "Source Sans 3";color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;align-items:baseline;padding:6px 0 6px 10px;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--acc-ink);border-left-color:var(--acc);font-weight:600}
+.rail a.on .rn{color:var(--acc-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 5px}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border:1px solid var(--line2);border-radius:3px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--acc-wash);border-color:var(--acc)}
+}
+main{min-width:0;max-width:720px}
+
+/* degrau */
+.degrau{padding:42px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.dhead{display:flex;gap:15px;align-items:flex-start;margin-bottom:14px}
+.dnum{flex-shrink:0;width:42px;height:42px;border:1.5px solid var(--acc);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 16px "IBM Plex Mono";color:var(--acc-ink)}
+.dtitle{padding-top:2px;min-width:0}
+.dtitle .dstage{font:600 12.5px "Source Sans 3";color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.src{font-size:12.8px;line-height:1.45;color:var(--ink3);margin:0 0 14px;padding-left:57px}
+.src.out{color:var(--amber-ink)}
+@media(max-width:640px){.src{padding-left:0}}
+.fx{display:inline-block;font:600 11px/1.3 "Source Sans 3";color:var(--amber-ink);border:1px dashed var(--amber);border-radius:3px;padding:0 5px;margin-left:4px;vertical-align:1px}
+.lede{font-size:16.5px;line-height:1.58;color:var(--ink2);margin:0 0 16px;font-style:italic}
+.prose ul{margin:0 0 14px;padding-left:20px}
+.prose li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+.prose li:last-child{margin-bottom:0}
+h3.sub{font:600 15px/1.3 "Source Sans 3";color:var(--ink);margin:24px 0 9px}
+
+/* callouts */
+.trap,.banca,.aside{margin:18px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.aside{border-left:3px solid var(--acc);background:var(--acc-wash)}
+.albl{font:700 13px "Source Sans 3";margin-bottom:4px}
+.trap .albl{color:var(--carmine-ink)} .banca .albl{color:var(--amber-ink)} .aside .albl{color:var(--acc-ink)}
+.trap p,.banca p,.aside p{font-size:15.2px;line-height:1.56;color:var(--ink);margin:0}
+.trap p+p,.banca p+p,.aside p+p{margin-top:7px}
+
+/* tabelas com rolagem propria */
+.tw{margin:18px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line2);background:var(--card)}
+.tw table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.8px;line-height:1.42}
+.tw.w8 table{min-width:780px}
+.tw th,.tw td{padding:9px 11px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+.tw thead th{background:var(--sunk);font-weight:600;color:var(--ink);border-top:0;font-size:13px}
+.tw tbody th{font-weight:600;color:var(--acc-ink);width:118px}
+.tw td{color:var(--ink2)}
+.tw td strong{color:var(--ink)}
+.tw .hi{background:var(--acc-wash)}
+.hint{font-size:12.3px;color:var(--ink3);margin:-10px 0 18px}
+@media(min-width:760px){.hint{display:none}}
+
+/* grade de criterios (2 col) */
+.crit{border:1px solid var(--line2);margin:18px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--acc-ink);min-width:0}
+.crit .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:560px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* referencia densa */
+details.ref{margin:18px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 15px;font:600 14px "Source Sans 3";color:var(--acc-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px}
+details.ref[open]>summary::before{content:"−"}
+details.ref .refbody{padding:0 15px 14px}
+details.ref .row{display:grid;grid-template-columns:140px minmax(0,1fr);gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .k{font-weight:600;color:var(--ink);min-width:0}
+details.ref .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:560px){details.ref .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:28px 26px;margin-top:34px}
+@media(max-width:640px){.synth{padding:20px 16px}}
+.synth h2{font-size:23px;margin-bottom:8px}
+.trig{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:12px 14px;min-width:0}
+.trig .tk{font:600 13.5px/1.35 "Source Sans 3";color:var(--acc-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:16px}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:11px}
+.arm .dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:var(--carmine);margin-top:8px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0;min-width:0}
+
+footer{margin-top:54px;padding-top:20px;border-top:1px solid var(--line2)}
+footer p{font-size:12.6px;color:var(--ink3);max-width:80ch;margin:0 0 8px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px;word-break:break-word}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Aula-base · Neurologia · antes da lista #141 (24 questões)</p>
+  <h1>Doenças neuromusculares: onde está a lesão</h1>
+  <p class="sub">Toda questão do tema é a mesma pergunta disfarçada: em que andar do eixo motor o problema mora. Reflexo, sensibilidade, fasciculação, creatinoquinase e eletroneuromiografia respondem; o nome da doença vem depois.</p>
+  <ol class="axis" aria-label="O eixo motor, do córtex ao músculo">
+    <li style="--i:0"><span class="ak">1</span><span class="an">Neurônio motor superior</span><span class="av">reflexo vivo, Babinski, espasticidade</span></li>
+    <li style="--i:1"><span class="ak">2</span><span class="an">Corno anterior</span><span class="av">fasciculação, atrofia, sensibilidade intacta</span></li>
+    <li style="--i:2"><span class="ak">3</span><span class="an">Raiz</span><span class="av">dor que irradia num dermátomo, 1 reflexo cai</span></li>
+    <li style="--i:3"><span class="ak">4</span><span class="an">Nervo</span><span class="av">fraqueza + sensibilidade no território do nervo</span></li>
+    <li style="--i:4"><span class="ak">5</span><span class="an">Junção</span><span class="av">fraqueza que flutua, nada sensitivo, reflexo normal</span></li>
+    <li style="--i:5"><span class="ak">6</span><span class="an">Músculo</span><span class="av">fraqueza proximal, creatinoquinase alta</span></li>
+  </ol>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>Localização</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Raiz e nível</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Mononeuropatias</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Polineuropatias</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Guillain-Barré</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>PDIC</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Miastenia</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Lambert-Eaton</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Miopatias</span></a>
+  <a href="#d9" data-r="d9"><span class="rn">9</span><span>ELA</span></a>
+  <a href="#d10" data-r="d10"><span class="rn">10</span><span>Exames</span></a>
+  <a href="#d11" data-r="d11"><span class="rn">11</span><span>As cinco que a banca mistura</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">✓</span><span>Gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">!</span><span>Armadilhas</span></a>
+</nav>
+
+<main>
+
+<!-- 0 -->
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Base · localização</span><h2>A grade que localiza a lesão</h2></div></div>
+  <p class="src">EMED: neurônio motor superior x inferior (deck Semiologia, p. 22) e corno anterior (p. 10). Colunas raiz a músculo, fasciculação, creatinoquinase (CK) e eletroneuromiografia (ENMG) <span class="fx">fora do EMED</span></p>
+  <p class="lede">Seis andares, seis assinaturas; a fraqueza sozinha não localiza nada, o que localiza é o que vem junto.</p>
+  <div class="prose"><ul>
+    <li><strong>Neurônio motor superior (NMS)</strong> = córtex até o trato corticoespinhal; <strong>neurônio motor inferior (NMI)</strong> começa no corno anterior da medula e termina na placa motora.</li>
+    <li>O NMS freia o arco reflexo: lesado, o reflexo sobra (hiper-reflexia, clônus, Babinski, espasticidade em canivete). Lesão do NMI corta o próprio arco: reflexo some, tônus cai, atrofia chega cedo.</li>
+    <li>A partir da raiz, a <strong>sensibilidade</strong> separa: raiz e nervo carregam fibras sensitivas; corno anterior, junção e músculo não.</li>
+  </ul></div>
+  <div class="tw w8" role="region" aria-label="Grade de localização" tabindex="0">
+    <table>
+      <thead><tr><th>Andar</th><th>Força</th><th>Reflexos</th><th>Sensibilidade</th><th>Fasciculação / atrofia</th><th>CK</th><th>ENMG</th></tr></thead>
+      <tbody>
+        <tr><th>NMS</th><td>Padrão piramidal (extensores do braço, flexores da perna)</td><td><strong>Exaltados</strong>, Babinski, clônus</td><td>Depende do nível (medula, cérebro)</td><td>Sem fasciculação; atrofia tardia, por desuso</td><td>Normal</td><td>Normal (lesão central)</td></tr>
+        <tr><th>Corno anterior</th><td>Assimétrica, distal no início</td><td>Diminuídos</td><td><strong>Normal</strong></td><td><strong>Fasciculação</strong>, atrofia precoce</td><td>Normal ou pouco ↑</td><td>Desnervação, condução sensitiva normal</td></tr>
+        <tr><th>Raiz</th><td>No miótomo</td><td>Cai o reflexo daquela raiz</td><td>Dor irradiada no dermátomo</td><td>Atrofia se crônica</td><td>Normal</td><td>Desnervação paraespinhal; sensitivo normal (lesão proximal ao gânglio)</td></tr>
+        <tr><th>Nervo (poli)</th><td>Distal, simétrica</td><td>Diminuídos, primeiro o aquileu</td><td>Bota e luva</td><td>Atrofia distal</td><td>Normal</td><td>Axonal (amplitude ↓) ou desmielinizante (velocidade ↓)</td></tr>
+        <tr><th>Junção</th><td><strong>Flutua</strong>, piora com o uso; ocular e bulbar</td><td>Normais (Lambert-Eaton: ↓)</td><td>Normal</td><td>Sem</td><td>Normal</td><td>Estimulação repetitiva: decremento ou incremento</td></tr>
+        <tr><th>Músculo</th><td><strong>Proximal</strong>, simétrica</td><td>Normais até fraqueza grave</td><td>Normal</td><td>Sem fasciculação</td><td><strong>Alta</strong> (exceções no degrau 8)</td><td>Padrão miopático</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">Arraste a tabela para o lado.</p>
+  <div class="aside">
+    <div class="albl">A pergunta de ouro</div>
+    <p>Tem sensibilidade alterada? Sim = raiz, nervo ou NMS com lesão central. Não = corno anterior, junção ou músculo. Depois: reflexo vivo junto com fasciculação no mesmo membro só existe numa doença, a ELA.</p>
+  </div>
+</section>
+
+<!-- 1 -->
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Base · raiz</span><h2>Raiz, dermátomo e nível</h2></div></div>
+  <p class="src">EMED: cards 1-5 (p. 2-10).</p>
+  <p class="lede">Raiz lesada fala por três sinais ao mesmo tempo: onde dói, o que enfraquece e qual reflexo some.</p>
+  <div class="prose"><ul>
+    <li><strong>Miótomo</strong> = músculos de uma raiz; <strong>dermátomo</strong> = pele de uma raiz.</li>
+    <li>Entre C1 e C7 o nervo espinhal sai <strong>acima</strong> da vértebra homônima; de C8 a L5, <strong>abaixo</strong>. Por isso existe raiz C8 sem vértebra C8.</li>
+    <li>Marcos sensitivos: <strong>T4</strong> linha intermamilar, <strong>T10</strong> umbigo, <strong>T12</strong> ligamento inguinal.</li>
+  </ul></div>
+  <div class="tw" role="region" aria-label="Raízes" tabindex="0">
+    <table>
+      <thead><tr><th>Raiz</th><th>Dor irradia para</th><th>Fraqueza</th><th>Reflexo</th></tr></thead>
+      <tbody>
+        <tr><th>C5</th><td>Face anterior do braço e antebraço</td><td>Flexão do cotovelo</td><td>Bicipital</td></tr>
+        <tr><th>C6</th><td>Face lateral do braço, antebraço e polegar</td><td>Extensão do punho</td><td>Bicipital</td></tr>
+        <tr><th>C7</th><td>Indicador, médio, lado lateral do anular</td><td>Extensão do cotovelo</td><td>Tricipital (invertido)</td></tr>
+        <tr><th>C8</th><td>Face medial do braço, anular, mínimo</td><td>Flexão dos dedos</td><td>Nenhum</td></tr>
+        <tr><th>L4</th><td>Face medial do pé, maléolo medial</td><td>Dorsiflexão do pé</td><td>Patelar</td></tr>
+        <tr><th>L5</th><td>Face anterior da perna, dorso do pé</td><td>Extensão do hálux</td><td>Nenhum</td></tr>
+        <tr><th>S1</th><td>Face lateral do pé, maléolo lateral</td><td>Flexão plantar</td><td>Aquileu</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Tricipital invertido:</strong> o tricipital usa C6-C8. Sem C7, a percussão do tríceps recruta C6, que flete o cotovelo; sai flexão em vez de extensão.</li>
+  </ul></div>
+  <details class="ref">
+    <summary>Nível medular x vértebra (e uma divergência)</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Por que muda</span><span class="v">A medula é mais curta que o canal ósseo; o segmento medular fica acima da vértebra de mesmo número.</span></div>
+      <div class="row"><span class="k">Regra do EMED</span><span class="v">C2 a T10: some 2 (fratura de C4 lesa a medula C6). T11-T12 abrigam os segmentos lombares; L1, os sacrais e coccígeos.</span></div>
+      <div class="row"><span class="k">Regra clássica <span class="fx">fora do EMED</span></span><span class="v">Cervical +1, T1-T6 +2, T7-T9 +3. Se a questão der a conta, siga a conta dela.</span></div>
+    </div>
+  </details>
+</section>
+
+<!-- 2 -->
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Mecanismo · nervo</span><h2>Os três padrões de neuropatia e as mononeuropatias</h2></div></div>
+  <p class="src">EMED: padrões (p. 12), Bell (p. 14-16), fibular (p. 18), hanseníase (p. 20); facial central x periférica (deck Semiologia, p. 46). Túnel do carpo, ulnar, radial, vasculite e conduta na Bell <span class="fx">fora do EMED</span></p>
+  <p class="lede">O desenho da área afetada já é o diagnóstico topográfico: um nervo, vários nervos soltos, ou todos os nervos longos ao mesmo tempo.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Mononeuropatia</span><span class="v">Um nervo. Pense em compressão ou trauma.</span></div>
+    <div class="row"><span class="k">Mononeuropatia múltipla</span><span class="v">Vários nervos isolados, assimétricos, em tempos diferentes. No Brasil, a sensitiva é <strong>hanseníase</strong> até prova em contrário; fora dela, vasculite (poliarterite nodosa, vasculite associada a anticorpo anticitoplasma de neutrófilo, crioglobulinemia) e diabetes <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">Polineuropatia</span><span class="v">Simétrica, distal, comprimento-dependente (degrau 3).</span></div>
+  </div>
+  <h3 class="sub">Mononeuropatias que caem</h3>
+  <div class="prose"><ul>
+    <li><strong>Facial periférica (Bell):</strong> fraqueza da hemiface inteira, <strong>testa incluída</strong>; rima desvia para o lado são; paladar dos 2/3 anteriores da língua cai; hiperacusia (estapédio). Fatores de risco: gravidez e herpesvírus.</li>
+    <li>Facial <strong>central</strong> poupa a testa, porque o andar superior da face recebe córtex dos dois lados.</li>
+    <li>Bell: prednisona nas primeiras 72 h; antiviral só associado, em quadro grave; proteção ocular sempre <span class="fx">fora do EMED</span></li>
+    <li><strong>Fibular comum</strong> (cabeça da fíbula: cruzar pernas, emagrecimento, gesso): pé caído, <strong>marcha escarvante</strong>, eversão fraca, dorso do pé dormente.</li>
+    <li><strong>Mediano no túnel do carpo:</strong> parestesia noturna do 1º ao 3º dedo, Tinel e Phalen, atrofia tenar tardia; associa-se a gravidez, hipotireoidismo, diabetes, artrite reumatoide, acromegalia <span class="fx">fora do EMED</span></li>
+    <li><strong>Ulnar</strong> (cotovelo): 4º-5º dedos, mão em garra, interósseos fracos. <strong>Radial</strong> (úmero, "paralisia do sábado à noite"): punho caído <span class="fx">fora do EMED</span></li>
+  </ul></div>
+  <div class="trap">
+    <div class="albl">Pé caído: fibular ou L5?</div>
+    <p>A inversão do pé (tibial posterior) é L5, mas não fibular. Inversão fraca + dor lombar irradiada = raiz L5; inversão preservada = nervo fibular. <span class="fx">fora do EMED</span></p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Mecanismo · nervo</span><h2>Polineuropatias: o nervo mais longo adoece primeiro</h2></div></div>
+  <p class="src">EMED: cards 11-17, 29-30 (p. 22-34, 58-60). B12, álcool, fármacos, ganglionopatia e rastreio da American Diabetes Association <span class="fx">fora do EMED</span></p>
+  <p class="lede">Agressão metabólica ou tóxica difusa vence primeiro o axônio que tem mais caminho a manter: o do pé.</p>
+  <div class="prose"><ul>
+    <li><strong>Comprimento-dependente:</strong> começa nos pés, sobe até o joelho e só então aparece nas mãos; daí a "bota e luva" e o aquileu como 1º reflexo a sumir.</li>
+    <li><strong>Diabetes</strong> é a causa mais comum. Raciocínio em três camadas: sindrômico (fraqueza e hipoestesia), topográfico (polineuropatia), etiológico (diabetes).</li>
+    <li>Rastreio ambulatorial: exame de sensibilidade, idealmente com <strong>monofilamento de Semmes-Weinstein</strong>. A American Diabetes Association (ADA) pede monofilamento de 10 g + mais um teste (vibração 128 Hz, dor, temperatura), anual, desde o diagnóstico no tipo 2 e após 5 anos no tipo 1 <span class="fx">fora do EMED</span></li>
+  </ul></div>
+  <h3 class="sub">Carências e tóxicos</h3>
+  <div class="crit">
+    <div class="row"><span class="k">B1 (tiamina)</span><span class="v">Beribéri: polineuropatia sensitivo-motora, dolorosa, distal. Com insuficiência cardíaca = beribéri <strong>molhado</strong>.</span></div>
+    <div class="row"><span class="k">B6 em excesso</span><span class="v"><strong>Neuronopatia sensitiva</strong>: lesa o gânglio da raiz dorsal, então não é comprimento-dependente; ataxia sensitiva e arreflexia global. Sjögren, cisplatina e anti-Hu fazem o mesmo <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">B6 em falta</span><span class="v">Isoniazida: polineuropatia; prevenir com piridoxina <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">Zinco em excesso</span><span class="v">Depleta <strong>cobre</strong>: mielopatia com ataxia sensitiva + NMS, idêntica à degeneração combinada subaguda.</span></div>
+    <div class="row"><span class="k">B12</span><span class="v">Degeneração combinada subaguda (cordão posterior + piramidal) ± neuropatia; metformina, inibidor de bomba, gastrectomia, vegano <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">Outras</span><span class="v">Álcool, hipotireoidismo, uremia, HIV, quimioterápicos (platina, taxanos, vincristina), paraproteína <span class="fx">fora do EMED</span></span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Porfiria intermitente aguda</strong> imita Guillain-Barré: tetraparesia flácida + confusão, dor abdominal, crise epiléptica, hiponatremia, urina que avermelha ao sol.</li>
+  </ul></div>
+  <h3 class="sub">Dor neuropática</h3>
+  <div class="prose"><ul>
+    <li>Nasce de lesão do próprio sistema nervoso: espontânea, em queimação ou pontada, com hiperalgesia ou alodínia.</li>
+    <li>Opções: duais (venlafaxina, duloxetina), tricíclicos (amitriptilina, nortriptilina), alfa-2-delta (gabapentina, pregabalina), bloqueadores de sódio (carbamazepina, oxcarbazepina), opioides atípicos (tramadol, metadona).</li>
+  </ul></div>
+  <div class="banca">
+    <div class="albl">Fonte x diretriz</div>
+    <p>O EMED lista as cinco classes lado a lado. Pelo grupo de dor neuropática da IASP (NeuPSIG), 1ª linha = dual, tricíclico ou alfa-2-delta; tramadol é 2ª linha, opioide forte 3ª; carbamazepina é 1ª linha só na neuralgia do trigêmeo.</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Discriminador · raiz + nervo agudo</span><h2>Síndrome de Guillain-Barré (SGB)</h2></div></div>
+  <p class="src">EMED: cards 18-28 (p. 36-56). Subtipos axonal x desmielinizante, regra 20/30/40, janela do tratamento <span class="fx">fora do EMED</span></p>
+  <p class="lede">Uma infecção ensina o sistema imune a atacar um antígeno que a mielina ou o axônio também carregam (mimetismo molecular); daí a fraqueza que sobe em dias.</p>
+  <div class="prose"><ul>
+    <li>Também chamada <strong>polirradiculoneuropatia aguda</strong>: pega raiz e nervo, por isso o liquor muda.</li>
+    <li><strong>Gatilhos:</strong> <em>Campylobacter jejuni</em> (o de <strong>pior prognóstico</strong>), vírus Epstein-Barr, citomegalovírus, zika, dengue, chikungunya; vacina de influenza.</li>
+    <li><strong>Quadro:</strong> fraqueza ascendente e simétrica, hipo ou arreflexia, disautonomia; o pior momento chega em <strong>até 4 semanas</strong>. Parestesia e dor lombar são comuns, mas a fraqueza domina.</li>
+    <li>A disautonomia (arritmia, pressão lábil) e o diafragma são o que matam <span class="fx">fora do EMED</span></li>
+    <li><strong>Miller Fisher:</strong> oftalmoplegia + ataxia + arreflexia, <strong>anti-GQ1b</strong>. <strong>Bickerstaff:</strong> mesmo espectro com encefalopatia (sistema nervoso central).</li>
+    <li>Subtipos <span class="fx">fora do EMED</span>: desmielinizante (clássico do Ocidente) e axonal motor (pós-<em>Campylobacter</em>, anti-GM1, mais comum na América Latina e Ásia, recupera pior).</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Liquor</span><span class="v"><strong>Dissociação albuminocitológica</strong>: proteína alta, células normais. Na 1ª semana pode vir normal; células acima de 50/mm³ apontam HIV, linfoma, Lyme <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">ENMG</span><span class="v">Confirma e classifica (degrau 10).</span></div>
+    <div class="row"><span class="k">Tratamento</span><span class="v"><strong>Imunoglobulina intravenosa (IgIV) ou plasmaférese.</strong> Corticoide <strong>não</strong>. Indicação: não anda 10 m sem apoio; IgIV até 2 semanas, plasmaférese até 4; não somar as duas <span class="fx">fora do EMED</span></span></div>
+    <div class="row"><span class="k">Vigiar <span class="fx">fora do EMED</span></span><span class="v">Capacidade vital forçada (CVF) seriada. Intubar perto de <strong>20/30/40</strong>: CVF &lt; 20 mL/kg, pressão inspiratória máxima pior que −30, expiratória &lt; 40 cmH₂O. Profilaxia de trombose.</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Sinais que tiram da SGB</div>
+    <p>Motor puro, sem dor: síndrome pólio-like. Motor puro, doloroso, com CK alta: miosite. Nível sensitivo + esfíncter + NMS: mielite.</p>
+  </div>
+  <div class="banca">
+    <div class="albl">Fonte x diretriz</div>
+    <p>O EMED (p. 38) cita "1ª dose da vacina de SARS-CoV-2" como gatilho. O sinal ficou restrito às vacinas de vetor adenoviral (AstraZeneca, Janssen); com as de RNA mensageiro não se confirmou.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Discriminador · raiz + nervo crônico</span><h2>Polirradiculoneuropatia desmielinizante inflamatória crônica (PDIC)</h2></div></div>
+  <p class="src out">Ausente da fonte do EMED. Bloco inteiro <span class="fx">fora do EMED</span></p>
+  <p class="lede">A prima crônica da SGB: o mesmo ataque à mielina, mas que não para em 4 semanas.</p>
+  <div class="prose"><ul>
+    <li>Progressão por <strong>mais de 8 semanas</strong>, contínua ou em surtos.</li>
+    <li>Fraqueza <strong>proximal e distal</strong> simétrica + arreflexia + sensitivo. A fraqueza proximal a separa da polineuropatia comprimento-dependente.</li>
+    <li>Liquor com proteína alta; ENMG desmielinizante com bloqueio de condução.</li>
+    <li>Responde a <strong>corticoide</strong>, IgIV ou plasmaférese: o oposto da SGB no ponto do corticoide.</li>
+    <li>"SGB" que piora de novo após 8 semanas ou flutua 3 vezes ou mais = PDIC de início agudo.</li>
+  </ul></div>
+</section>
+
+<!-- 6 -->
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Discriminador · junção pós-sináptica</span><h2>Miastenia gravis e crise miastênica</h2></div></div>
+  <p class="src out">Ausente da fonte do EMED (só o timoma, no deck de Cirurgia Torácica). Bloco <span class="fx">fora do EMED</span></p>
+  <p class="lede">Anticorpos destroem os receptores de acetilcolina da placa; cada contração repetida libera menos transmissor e sobra menos receptor, então a força some com o uso.</p>
+  <div class="prose"><ul>
+    <li><strong>Fatigabilidade:</strong> pior no fim do dia e após esforço. Ptose e diplopia flutuantes abrem metade dos casos; a maioria generaliza em até 2 anos.</li>
+    <li>Depois: bulbar (disfagia, voz anasalada, mastigação que cansa), proximal, cervical. Reflexos, sensibilidade e <strong>pupila normais</strong>.</li>
+    <li><strong>Anticorpos:</strong> antirreceptor de acetilcolina (anti-AChR) em ~85% da forma generalizada (menos na ocular); anti-MuSK em parte dos soronegativos (mulher, bulbar, responde mal à piridostigmina, sem timoma).</li>
+    <li><strong>Timo:</strong> hiperplasia na maioria; timoma em ~10-15%. Tomografia de tórax em todo diagnóstico.</li>
+    <li><strong>Diagnóstico à beira do leito:</strong> teste do gelo na ptose. ENMG: decremento na estimulação repetitiva lenta; fibra única (jitter) é o mais sensível.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Sintomático</span><span class="v">Piridostigmina (anticolinesterásico).</span></div>
+    <div class="row"><span class="k">Imunológico</span><span class="v">Prednisona + poupador (azatioprina, micofenolato). Corticoide em dose alta pode piorar nos primeiros dias: iniciar baixo ou internado.</span></div>
+    <div class="row"><span class="k">Timectomia</span><span class="v">Timoma: sempre. Sem timoma: anti-AChR generalizada no adulto jovem (consenso internacional: 18-50 anos).</span></div>
+    <div class="row"><span class="k">Crise miastênica</span><span class="v">Fraqueza respiratória ou bulbar que exige suporte. <strong>IgIV ou plasmaférese</strong>, CVF seriada, ventilação; suspender piridostigmina se intubado (secreção). Gatilhos: infecção, cirurgia, fármaco, gestação.</span></div>
+  </div>
+  <details class="ref">
+    <summary>Fármacos que pioram a miastenia</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Antibióticos</span><span class="v">Aminoglicosídeos, fluoroquinolonas, macrolídeos (telitromicina contraindicada).</span></div>
+      <div class="row"><span class="k">Outros</span><span class="v">Magnésio intravenoso, betabloqueador, bloqueador neuromuscular, cloroquina e hidroxicloroquina.</span></div>
+      <div class="row"><span class="k">Induzem MG</span><span class="v">D-penicilamina, inibidores de checkpoint imunológico.</span></div>
+      <div class="row"><span class="k">Crise colinérgica</span><span class="v">Excesso de anticolinesterásico: fraqueza + miose, sialorreia, bradicardia, diarreia, fasciculações. Rara; a crise miastênica é muito mais comum.</span></div>
+    </div>
+  </details>
+</section>
+
+<!-- 7 -->
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Discriminador · junção pré-sináptica</span><h2>Síndrome de Lambert-Eaton (SLE)</h2></div></div>
+  <p class="src out">Ausente da fonte do EMED. Bloco <span class="fx">fora do EMED</span></p>
+  <p class="lede">O anticorpo bloqueia o canal de cálcio voltagem-dependente do terminal pré-sináptico; o esforço repetido acumula cálcio e devolve a liberação, então a força <strong>melhora</strong> com o uso.</p>
+  <div class="prose"><ul>
+    <li>Cerca de metade é <strong>paraneoplásica</strong>, quase sempre carcinoma pulmonar de pequenas células; fumante com fraqueza proximal de pernas = procurar o tumor (e repetir a busca por 2 anos).</li>
+    <li>Tríade: fraqueza proximal de membros inferiores, <strong>reflexos diminuídos</strong> que reaparecem após 10 s de contração (facilitação), disautonomia (boca seca, impotência, constipação).</li>
+    <li>Ocular e bulbar leves ou ausentes: o inverso da miastenia.</li>
+    <li>ENMG: potencial motor baixo em repouso que <strong>aumenta</strong> após exercício ou estímulo de alta frequência (incremento clássico &gt; 100%).</li>
+    <li>Tratamento: tratar o tumor; amifampridina (3,4-diaminopiridina); IgIV.</li>
+  </ul></div>
+  <details class="ref">
+    <summary>Botulismo, o terceiro da junção</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Mecanismo</span><span class="v">Toxina pré-sináptica impede a liberação de acetilcolina.</span></div>
+      <div class="row"><span class="k">Quadro</span><span class="v">Paralisia <strong>descendente</strong> (pares cranianos primeiro), pupila midriática, boca seca, sem febre, consciência preservada; conserva caseira.</span></div>
+      <div class="row"><span class="k">Conduta</span><span class="v">Antitoxina precoce e suporte ventilatório.</span></div>
+    </div>
+  </details>
+</section>
+
+<!-- 8 -->
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Discriminador · músculo</span><h2>Miopatias inflamatórias e outras</h2></div></div>
+  <p class="src">EMED: só o alerta "motor isolado, doloroso, CK alta = miosite" (p. 56). Restante <span class="fx">fora do EMED</span></p>
+  <p class="lede">Doença do músculo poupa nervo e sensibilidade: sobra fraqueza proximal e simétrica, com a CK denunciando a fibra que se rompe.</p>
+  <div class="prose"><ul>
+    <li>Queixa típica: subir escada, levantar da cadeira, pentear o cabelo. Reflexos ficam até a fraqueza ser grave.</li>
+    <li>Investigação: CK (e aldolase), ENMG miopática, ressonância (edema guia a biópsia), autoanticorpos, <strong>biópsia</strong>.</li>
+    <li>Tratamento das inflamatórias: corticoide + poupador (metotrexato, azatioprina); IgIV na dermatomiosite refratária.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Dermatomiosite</span><span class="v">Heliótropo, pápulas de Gottron, sinal do V e do xale. <strong>Rastrear neoplasia</strong> (anti-TIF1γ eleva o risco). Anti-MDA5: pouca fraqueza, pneumopatia que progride rápido. Biópsia: atrofia perifascicular.</span></div>
+    <div class="row"><span class="k">Antissintetase</span><span class="v">Anti-Jo-1: miosite + doença pulmonar intersticial + artrite + mãos de mecânico + Raynaud.</span></div>
+    <div class="row"><span class="k">Necrosante imunomediada</span><span class="v">CK muito alta, necrose com pouca inflamação. Anti-HMGCR (estatina; não melhora ao suspender) ou anti-SRP.</span></div>
+    <div class="row"><span class="k">Por corpúsculos de inclusão</span><span class="v">Homem acima de 50 anos, <strong>assimétrica</strong>, quadríceps e flexores dos dedos, disfagia; CK pouco alta; resistente a imunossupressão.</span></div>
+    <div class="row"><span class="k">Polimiosite</span><span class="v">Diagnóstico de exclusão, hoje raro.</span></div>
+  </div>
+  <h3 class="sub">Não inflamatórias que a banca usa</h3>
+  <div class="prose"><ul>
+    <li><strong>Estatina:</strong> mialgia com CK normal, miosite, até rabdomiólise; risco sobe com genfibrozila e macrolídeo.</li>
+    <li><strong>Corticoide:</strong> fraqueza proximal de pernas com <strong>CK normal</strong>; afasta miosite em atividade.</li>
+    <li><strong>Hipotireoidismo:</strong> CK alta, reflexo com relaxamento lento.</li>
+  </ul></div>
+</section>
+
+<!-- 9 -->
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Discriminador · NMS + NMI</span><h2>Esclerose lateral amiotrófica (ELA)</h2></div></div>
+  <p class="src out">Ausente da fonte do EMED. Bloco <span class="fx">fora do EMED</span></p>
+  <p class="lede">Os dois neurônios motores morrem juntos; nenhuma outra doença põe atrofia com fasciculação e reflexo vivo no mesmo membro.</p>
+  <div class="prose"><ul>
+    <li>Começa nos membros (assimétrica, mão que atrofia) ou bulbar (disartria, disfagia, língua com fasciculação). Progride sem remissão.</li>
+    <li><strong>Poupa:</strong> sensibilidade, musculatura ocular extrínseca, esfíncteres. Demência frontotemporal acompanha uma minoria.</li>
+    <li>Diagnóstico clínico + ENMG: desnervação aguda e crônica em várias regiões (bulbar, cervical, torácica, lombossacra), condução sensitiva normal. Critério de Gold Coast: NMS + NMI em 1 região, ou NMI em 2. Imagem para excluir imitadores.</li>
+    <li>CK normal ou pouco alta; 5-10% familiar (SOD1, C9orf72).</li>
+    <li><strong>Tratamento:</strong> riluzol (ganho modesto de sobrevida); ventilação não invasiva (o que mais prolonga a vida); gastrostomia antes de a CVF cair muito. Sobrevida média de 3 a 5 anos, morte por falência respiratória.</li>
+  </ul></div>
+  <div class="trap">
+    <div class="albl">Os imitadores tratáveis</div>
+    <p>Mielopatia cervical espondilótica: NMS nas pernas + NMI nos braços, mas com sensitivo, esfíncter e sem bulbar. Neuropatia motora multifocal: NMI puro, assimétrico, com bloqueio de condução; responde a IgIV.</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><span class="dstage">Banca · exames</span><h2>ENMG, liquor e CK</h2></div></div>
+  <p class="src">EMED: ENMG e liquor na SGB (p. 50-52). Padrões eletrofisiológicos <span class="fx">fora do EMED</span></p>
+  <p class="lede">A ENMG é o exame que estende a grade do degrau 0: confirma o andar e diz se a lesão é da mielina ou do axônio.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Desmielinizante</span><span class="v">Velocidade de condução ↓, latência ↑, bloqueio de condução, dispersão temporal. SGB clássica, PDIC.</span></div>
+    <div class="row"><span class="k">Axonal</span><span class="v">Amplitude ↓, velocidade quase normal. Diabetes, álcool, SGB axonal.</span></div>
+    <div class="row"><span class="k">Corno anterior</span><span class="v">Fibrilação, ondas positivas, fasciculação; unidades motoras grandes; sensitivo normal.</span></div>
+    <div class="row"><span class="k">Junção</span><span class="v">Estimulação repetitiva: decremento (miastenia) ou incremento após exercício (Lambert-Eaton).</span></div>
+    <div class="row"><span class="k">Músculo</span><span class="v">Unidades motoras pequenas, curtas, polifásicas, recrutamento precoce; fibrilação se inflamatória.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Liquor:</strong> serve às doenças com raiz (SGB, PDIC: proteína alta). Junção e músculo têm liquor normal.</li>
+    <li><strong>CK:</strong> alta é assinatura de músculo; normal na junção e na neuropatia; normal ou discreta no corno anterior.</li>
+  </ul></div>
+</section>
+
+<!-- 11 -->
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><span class="dstage">Banca · diferencial</span><h2>As cinco que a banca mistura</h2></div></div>
+  <p class="src">Linha SGB do EMED; demais colunas <span class="fx">fora do EMED</span></p>
+  <p class="lede">Fraqueza aguda ou subaguda sem alteração cognitiva: cinco candidatas, separadas por tempo, reflexo, sensibilidade e o que acontece com o esforço.</p>
+  <div class="tw w8" role="region" aria-label="SGB x PDIC x miastenia x Lambert-Eaton x miopatia inflamatória" tabindex="0">
+    <table>
+      <thead><tr><th></th><th>SGB</th><th>PDIC</th><th>Miastenia</th><th>Lambert-Eaton</th><th>Miopatia inflamatória</th></tr></thead>
+      <tbody>
+        <tr><th>Tempo</th><td>Nadir ≤ 4 semanas</td><td>&gt; 8 semanas</td><td>Flutua; crises</td><td>Subagudo</td><td>Semanas a meses</td></tr>
+        <tr><th>Distribuição</th><td>Ascendente, simétrica</td><td>Proximal + distal</td><td>Ocular, bulbar, proximal</td><td>Proximal de pernas</td><td>Proximal simétrica</td></tr>
+        <tr><th>Esforço</th><td>Indiferente</td><td>Indiferente</td><td class="hi"><strong>Piora</strong></td><td class="hi"><strong>Melhora</strong></td><td>Indiferente</td></tr>
+        <tr><th>Reflexos</th><td>Abolidos</td><td>Abolidos</td><td>Normais</td><td>↓, voltam após esforço</td><td>Normais</td></tr>
+        <tr><th>Sensitivo</th><td>Leve</td><td>Presente</td><td>Normal</td><td>Normal (autonômico sim)</td><td>Normal</td></tr>
+        <tr><th>Exame-chave</th><td>Liquor: dissociação</td><td>ENMG desmielinizante</td><td>Anti-AChR, decremento</td><td>Anti-canal de cálcio, incremento</td><td>CK alta, biópsia</td></tr>
+        <tr><th>Associação</th><td><em>Campylobacter</em>, vírus</td><td>Paraproteína, diabetes</td><td>Timoma</td><td>Pequenas células</td><td>Neoplasia (dermatomiosite)</td></tr>
+        <tr><th>Corticoide</th><td class="hi"><strong>Não</strong></td><td class="hi"><strong>Sim</strong></td><td>Sim (+ timectomia)</td><td>Tratar o tumor</td><td>Sim</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">Arraste a tabela para o lado.</p>
+</section>
+
+<section class="synth" id="synth">
+  <h2>Grade de gatilhos</h2>
+  <div class="trig">
+    <div><span class="tk">Fraqueza sem sensitivo</span><span class="tv">Corno anterior, junção ou músculo; nunca nervo.</span></div>
+    <div><span class="tk">Fasciculação + reflexo vivo</span><span class="tv">ELA.</span></div>
+    <div><span class="tk">Dor irradiada + 1 reflexo</span><span class="tv">Raiz; leia a tabela C5-S1.</span></div>
+    <div><span class="tk">Bota e luva</span><span class="tv">Polineuropatia; diabetes primeiro.</span></div>
+    <div><span class="tk">Nervos soltos, sensitivo, Brasil</span><span class="tv">Hanseníase.</span></div>
+    <div><span class="tk">Ascendente, arreflexo, ≤ 4 semanas</span><span class="tv">SGB: IgIV ou plasmaférese, nunca corticoide; CVF seriada.</span></div>
+    <div><span class="tk">Oftalmoplegia + ataxia + arreflexia</span><span class="tv">Miller Fisher, anti-GQ1b.</span></div>
+    <div><span class="tk">Mesmo quadro &gt; 8 semanas</span><span class="tv">PDIC; corticoide funciona.</span></div>
+    <div><span class="tk">Ptose e diplopia no fim do dia</span><span class="tv">Miastenia; tomografia de tórax.</span></div>
+    <div><span class="tk">Fumante, pernas fracas, boca seca</span><span class="tv">Lambert-Eaton; procurar pequenas células.</span></div>
+    <div><span class="tk">Proximal + CK alta + pele</span><span class="tv">Dermatomiosite; rastrear neoplasia.</span></div>
+    <div><span class="tk">Proximal + CK normal + corticoide</span><span class="tv">Miopatia por corticoide.</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Banca</span><h2>Armadilhas de prova</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Corticoide na SGB está errado; na PDIC está certo.</strong> A banca troca as duas na mesma alternativa.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Liquor normal na 1ª semana não afasta SGB.</strong> A dissociação aparece depois; repita ou siga a clínica.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Pupila alterada não é miastenia.</strong> Ptose com midríase aponta III nervo compressivo ou botulismo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Na crise miastênica não se espera a gasometria.</strong> A hipercapnia é tardia; quem indica a via aérea é a CVF e a força bulbar.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Aminoglicosídeo, quinolona ou magnésio num miastênico</strong> é o gatilho escondido no enunciado da crise.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>CK normal não afasta miopatia.</strong> Corticoide e corpúsculos de inclusão vêm com CK normal ou quase.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>ELA não mexe nos olhos, na sensibilidade nem no esfíncter.</strong> Qualquer um desses no caso = outro diagnóstico.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Excesso de B6 não dá bota e luva:</strong> dá ataxia sensitiva global, porque lesa o gânglio, não o axônio longo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Bell com testa poupada não é Bell.</strong> Paralisia facial que poupa a testa é central: pense em AVC.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Tetraparesia flácida + dor abdominal + hiponatremia</strong> é porfiria, não SGB.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Clínica Médica/Neurologia/Flashcards - Doenças Neuromusculares (...).pdf</code> e <code>.cards.json</code> (EMED, bloco "Neuromuscular 1", 30 cards, 60 páginas); NMS x NMI do deck de Anatomia, Fisiologia e Semiologia Neurológica; timoma do deck de Cirurgia Torácica.</p>
+  <p>Tudo marcado <span class="fx">fora do EMED</span> veio de diretriz e literatura de referência, não do PDF: conferir antes de virar card ou resumo. A fonte não cobre PDIC, miastenia, Lambert-Eaton, miopatias nem ELA.</p>
+  <p>Escopo: os 8 objetivos de "Doenças neuromusculares" em <code>core/objetivos.json</code> (lista #141).</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links=Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets=links.map(function(a){return document.getElementById(a.getAttribute('data-r'));}).filter(Boolean);
+  if(!('IntersectionObserver' in window)||!targets.length)return;
+  var byId={};links.forEach(function(a){byId[a.getAttribute('data-r')]=a;});
+  var obs=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){links.forEach(function(a){a.classList.remove('on');});var a=byId[en.target.id];if(a)a.classList.add('on');}});},{rootMargin:'-15% 0px -70% 0px',threshold:0});
+  targets.forEach(function(t){obs.observe(t);});
+})();
+</script>

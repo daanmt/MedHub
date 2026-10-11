@@ -1,0 +1,522 @@
+<title>Doenças Glomerulares</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF2F1; --card:#FAFCFB; --sunk:#E1E8E6;
+  --ink:#17201E; --ink2:#4A5855; --ink3:#788683;
+  --line:rgba(23,32,30,.13); --line2:rgba(23,32,30,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --plum:#5B3F7A; --plum-ink:#45305E; --plum-wash:#E9E2F1;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121918; --card:#1A2321; --sunk:#242F2C;
+  --ink:#E7EFEC; --ink2:#ADBAB6; --ink3:#7D8B87;
+  --line:rgba(231,239,236,.14); --line2:rgba(231,239,236,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --plum:#C2A8E0; --plum-ink:#D6C3EC; --plum-wash:#2F2540;
+  --on:#121918;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#121918; --card:#1A2321; --sunk:#242F2C;
+  --ink:#E7EFEC; --ink2:#ADBAB6; --ink3:#7D8B87;
+  --line:rgba(231,239,236,.14); --line2:rgba(231,239,236,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --plum:#C2A8E0; --plum-ink:#D6C3EC; --plum-wash:#2F2540;
+  --on:#121918;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:48px 0 28px;border-bottom:1px solid var(--line2)}
+.eye{font:600 13px/1.3 "Source Sans 3";color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:14px}
+.top .sub{font-size:17.5px;line-height:1.6;color:var(--ink2);max-width:64ch;margin:0}
+
+/* assinatura: as 5 sindromes como espectro */
+.spec{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:24px 0 0}
+.spec div{background:var(--card);padding:12px 13px;min-width:0}
+.spec .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.spec .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+.spec .s-aua{border-top:3px solid var(--ink3)}
+.spec .s-nefri{border-top:3px solid var(--carmine)}
+.spec .s-nefro{border-top:3px solid var(--teal)}
+.spec .s-gnrp{border-top:3px solid var(--plum)}
+.spec .s-cron{border-top:3px solid var(--line2)}
+@media(max-width:760px){.spec{grid-template-columns:repeat(2,minmax(0,1fr))}.spec .s-aua{grid-column:1/-1}}
+
+/* layout */
+.body{display:grid;grid-template-columns:210px minmax(0,1fr);gap:52px;padding-top:36px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:minmax(0,1fr);gap:28px}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.rail .rlab{font:600 12px/1 "Source Sans 3";color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0 7px 10px;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--teal-ink);border-left-color:var(--teal);font-weight:600}
+.rail a.on .rn{color:var(--teal-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--teal-wash);border-color:var(--teal)}
+}
+main{min-width:0;max-width:720px}
+
+/* degrau */
+.degrau{padding:42px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:2px;min-width:0}
+.dtitle .dstage{font:600 12.5px "Source Sans 3";color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 18px;font-style:italic}
+.prose ul{margin:0 0 16px;padding-left:20px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h3.sub{font-size:15px;font-weight:700;font-family:"Source Sans 3";letter-spacing:.005em;color:var(--ink);margin:28px 0 10px}
+
+/* callouts */
+.trap,.banca,.aside{margin:20px 0;padding:14px 17px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.aside{border-left:3px solid var(--teal);background:var(--teal-wash)}
+.albl{font:700 12.5px "Source Sans 3";margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)} .banca .albl{color:var(--amber-ink)} .aside .albl{color:var(--teal-ink)}
+.trap p,.banca p,.aside p{font-size:15.2px;line-height:1.58;color:var(--ink);margin:0}
+
+/* comparativo 2 colunas */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px;min-width:0}
+.vs h4{font:700 14px "Source Sans 3";margin:0 0 8px}
+.vs .a h4{color:var(--carmine-ink)} .vs .b h4{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* tabelas largas: rolagem horizontal propria */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+.tw:focus-visible{outline:2px solid var(--teal)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px;line-height:1.45}
+table.w7{min-width:700px}
+th,td{text-align:left;vertical-align:top;padding:9px 11px;border-top:1px solid var(--line)}
+thead th{background:var(--sunk);font-weight:700;color:var(--ink2);font-size:12.8px;border-top:0}
+tbody th{font-weight:700;color:var(--ink);min-width:118px}
+td{color:var(--ink2)}
+.cap{font-size:12.5px;color:var(--ink3);margin:-12px 0 20px}
+
+/* etiquetas de complemento */
+.c{display:inline-block;padding:1px 7px;border-radius:3px;font:600 12px/1.5 "IBM Plex Mono";font-variant-numeric:tabular-nums}
+.c3{background:var(--amber-wash);color:var(--amber-ink);border:1px solid var(--amber)}
+.c34{background:var(--carmine-wash);color:var(--carmine-ink);border:1px solid var(--carmine)}
+.cn{background:var(--teal-wash);color:var(--teal-ink);border:1px solid var(--teal)}
+
+/* mapa do complemento (o elemento memoravel) */
+.cmap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.cmap>div{background:var(--card);padding:14px 15px;min-width:0}
+.cmap h4{font:700 15px "Source Sans 3";margin:0 0 4px}
+.cmap .why{font-size:13px;color:var(--ink3);margin:0 0 8px;line-height:1.4}
+.cmap ul{margin:0;padding-left:17px}
+.cmap li{font-size:14.3px;color:var(--ink2);margin-bottom:3px}
+.cmap .k3{border-top:4px solid var(--amber)} .cmap .k3 h4{color:var(--amber-ink)}
+.cmap .k34{border-top:4px solid var(--carmine)} .cmap .k34 h4{color:var(--carmine-ink)}
+.cmap .kn{border-top:4px solid var(--teal)} .cmap .kn h4{color:var(--teal-ink)}
+@media(max-width:640px){.cmap{grid-template-columns:minmax(0,1fr)}}
+
+/* imunofluorescencia */
+.if3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.if3>div{background:var(--card);padding:14px 15px;min-width:0}
+.if3 svg{display:block;width:64px;height:64px;margin-bottom:8px}
+.if3 h4{font:700 15px "Source Sans 3";margin:0 0 4px;color:var(--plum-ink)}
+.if3 p{font-size:14px;color:var(--ink2);margin:0 0 6px;line-height:1.45}
+.if3 p:last-child{margin:0}
+@media(max-width:640px){.if3{grid-template-columns:minmax(0,1fr)}.if3>div{display:grid;grid-template-columns:64px minmax(0,1fr);gap:0 14px}.if3 svg{grid-row:span 3;margin:0}}
+
+/* fluxo de inducao */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 20px}
+.flow span{background:var(--card);border:1px solid var(--line2);padding:7px 11px;font-size:14px;color:var(--ink);min-width:0}
+.flow i{font-style:normal;color:var(--ink3);font:600 14px "IBM Plex Mono"}
+
+/* lista de criterios */
+.crit{border:1px solid var(--line2);margin:18px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:10px 14px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:700;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 14px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"\2212"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .tw{margin:8px 0 0}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:16px}
+.arm{background:var(--card);padding:14px 17px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.56;color:var(--ink2);margin:0}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:30px 28px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 16px}}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .lede{margin-bottom:0}
+.trig{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px;min-width:0}
+.trig .tk{font:700 12px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line2)}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+footer p{font-size:12.5px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eye">Nefrologia · Clínica Médica · prepara a lista t68</p>
+  <h1>Doenças glomerulares</h1>
+  <p class="sub">Toda glomerulopatia é um padrão. O enunciado nunca traz a biópsia de graça: ele traz idade, latência da infecção, complemento e um sinal extrarrenal. Esta aula ensina a ler esses quatro dados.</p>
+  <div class="spec" aria-label="As cinco síndromes glomerulares">
+    <div class="s-aua"><span class="tn">Alteração urinária assintomática</span><span class="tv">Hematúria e/ou proteinúria subnefrótica; sem edema, hipertensão ou perda de função.</span></div>
+    <div class="s-nefri"><span class="tn">Nefrítica</span><span class="tv">Inflamação: edema, hipertensão, hematúria.</span></div>
+    <div class="s-nefro"><span class="tn">Nefrótica</span><span class="tv">Peneira furada: proteinúria maciça, albumina baixa, edema.</span></div>
+    <div class="s-gnrp"><span class="tn">GN rapidamente progressiva</span><span class="tv">Hematúria + perda de função em dias a semanas.</span></div>
+    <div class="s-cron"><span class="tn">GN crônica</span><span class="tv">Destino comum de qualquer glomerulopatia: DRC. Fora desta aula.</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" aria-label="Degraus da aula">
+  <p class="rlab">Degraus</p>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>O que vaza</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Nefrítica x nefrótica</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Causas nefríticas</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Causas nefróticas</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>GNRP</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Armadilhas</span></a>
+  <a href="#sint" data-r="sint"><span class="rn">S</span><span>Gatilhos</span></a>
+</nav>
+
+<main>
+
+<!-- DEGRAU 1 -->
+<section class="degrau" id="d1">
+  <div class="dhead"><div class="dnum">1</div><div class="dtitle"><span class="dstage">Base</span><h2>A peneira e o que passa por ela</h2></div></div>
+  <p class="lede">Doença glomerular aparece na urina de duas formas que normalmente não existem: hemácia e proteína.</p>
+  <div class="prose"><ul>
+    <li><strong>Barreira de filtração</strong> = fenestras do endotélio + membrana basal glomerular (MBG) + pedicelos dos podócitos. Filtra por tamanho e por carga: a MBG é negativa e repele a albumina, também negativa.</li>
+    <li><strong>Hematúria</strong> = mais de 5-10 hemácias por campo. Só é glomerular se vier com <strong>dismorfismo eritrocitário</strong> ou <strong>cilindro hemático</strong>; sem isso, pode ser de qualquer ponto do trato urinário.</li>
+    <li><strong>Proteinúria</strong> = mais de 150 mg/24 h. É glomerular quando passa de 1 g com hematúria, ou quando é nefrótica: <span class="mn">&gt;3,5 g/dia</span> no adulto, <span class="mn">&gt;50 mg/kg/dia</span> na criança, ou 3+ na fita.</li>
+    <li><strong>Vocabulário da biópsia:</strong> <em>focal</em> = menos de 50% dos glomérulos; <em>difusa</em> = 50% ou mais. <em>Segmentar</em> = parte do glomérulo; <em>global</em> = ele inteiro.</li>
+  </ul></div>
+
+  <h3 class="sub">Alteração urinária assintomática: as duas hereditárias</h3>
+  <p class="lede">Criança com hematúria glomerular isolada e família com hematúria: a pergunta é se ela vai ou não perder o rim.</p>
+  <div class="tw" tabindex="0" role="region" aria-label="Membrana fina x Alport">
+  <table>
+    <thead><tr><th></th><th>Doença da membrana fina (DMF)</th><th>Síndrome de Alport</th></tr></thead>
+    <tbody>
+      <tr><th>Defeito</th><td>Afilamento difuso da MBG</td><td>Mutação no colágeno da MBG; espessamento e lamelação da lâmina densa</td></tr>
+      <tr><th>Herança</th><td>Autossômica (um alelo); principal causa hereditária de hematúria glomerular</td><td>Ligada ao X: predomina em homens</td></tr>
+      <tr><th>Família</th><td>Homens ou mulheres com hematúria</td><td>Homens com hematúria</td></tr>
+      <tr><th>Fora do rim</th><td>Nada</td><td>Surdez neurossensorial adquirida; olho: lenticone anterior, manchas (<em>flecks</em>) na retina, catarata</td></tr>
+      <tr><th>Evolução</th><td>Não evolui para DRC; excelente prognóstico</td><td>Proteinúria crescente; diálise ou transplante por volta dos 40 anos</td></tr>
+      <tr><th>Diagnóstico e conduta</th><td colspan="2">Confirmação só por microscopia eletrônica. Nenhuma das duas tem tratamento específico.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="banca"><p class="albl">Como a banca pede</p><p>Hematúria glomerular + surdez + alteração visual + homens da família afetados = Alport. Hematúria isolada sem nada fora do rim = membrana fina.</p></div>
+</section>
+
+<!-- DEGRAU 2 -->
+<section class="degrau" id="d2">
+  <div class="dhead"><div class="dnum">2</div><div class="dtitle"><span class="dstage">Mecanismo</span><h2>Nefrítica x nefrótica</h2></div></div>
+  <p class="lede">Nefrítica é glomérulo inflamado que retém sal e sangra; nefrótica é podócito lesado que deixa a proteína escapar.</p>
+  <div class="vs">
+    <div class="a"><h4>Síndrome nefrítica</h4><ul>
+      <li><strong>Define:</strong> edema + hipertensão + hematúria glomerular.</li>
+      <li>Pode ter: leucocitúria (é inflamação), proteinúria subnefrótica, creatinina subindo, oligúria.</li>
+      <li>Edema e hipertensão vêm da retenção de sódio e água: hipervolemia.</li>
+      <li>Complemento conta a etiologia (degrau 3).</li>
+    </ul></div>
+    <div class="b"><h4>Síndrome nefrótica</h4><ul>
+      <li><strong>Define:</strong> proteinúria nefrótica + hipoalbuminemia + edema.</li>
+      <li>Albumina <span class="mn">&lt;3,5 g/dL</span> no adulto; <span class="mn">&lt;3,0</span> (ou 2,5) g/dL na criança.</li>
+      <li>Fora da definição, mas frequentes: dislipidemia e lipidúria (cilindros graxos).</li>
+      <li>Sem inflamação: pouca ou nenhuma hematúria no padrão puro.</li>
+    </ul></div>
+  </div>
+
+  <h3 class="sub">O que a perda de proteína arrasta junto (morbidades da nefrótica)</h3>
+  <div class="crit">
+    <div class="row"><div class="k">Dislipidemia</div><div class="v">Padrão misto (LDL e triglicerídeos altos, HDL baixo): menos lipase lipoproteica, mais síntese hepática de lipoproteína, HDL perdido na urina. Risco cardiovascular cerca de 5 vezes maior.</div></div>
+    <div class="row"><div class="k">Infecção</div><div class="v">Perde IgG, fatores de opsonização, zinco e transferrina: risco com germes encapsulados. Na criança com ascite, a peritonite bacteriana espontânea (PBE) é por <strong>pneumococo</strong>, depois gram-negativos; trata com ceftriaxona.</div></div>
+    <div class="row"><div class="k">Trombose</div><div class="v">Fígado produz mais fibrinogênio e fator V; urina perde antitrombina III; proteínas C e S caem; plaquetas agregam mais. Quanto menor a albumina, maior o risco.</div></div>
+    <div class="row"><div class="k">Trombose de veia renal</div><div class="v">Clássica da <strong>membranosa</strong>: dor no flanco, hematúria, piora da função renal. Trata com anticoagulação.</div></div>
+    <div class="row"><div class="k">A própria proteinúria</div><div class="v">Quanto maior, pior o prognóstico. IECA ou BRA dilatam a arteríola eferente, baixam a pressão de filtração e reduzem a proteinúria: é a principal nefroproteção farmacológica.</div></div>
+  </div>
+  <div class="trap"><p class="albl">Armadilha</p><p>A PBE da criança nefrótica não é a do cirrótico: o germe principal é o pneumococo, não a <em>E. coli</em>.</p></div>
+</section>
+
+<!-- DEGRAU 3 -->
+<section class="degrau" id="d3">
+  <div class="dhead"><div class="dnum">3</div><div class="dtitle"><span class="dstage">Discriminador</span><h2>Quem causa a síndrome nefrítica</h2></div></div>
+  <p class="lede">Diante de uma nefrite, olhe primeiro o complemento: ele separa as causas em três gavetas.</p>
+
+  <div class="cmap" aria-label="Mapa do complemento nas nefrites">
+    <div class="k3"><h4>Só C3 baixo</h4><p class="why">Via alternativa (C4 normal)</p><ul><li>GN pós-estreptocócica (C3 e CH50)</li></ul></div>
+    <div class="k34"><h4>C3 e C4 baixos</h4><p class="why">Via clássica, por imunocomplexo</p><ul><li>Nefrite lúpica</li><li>GN membranoproliferativa</li><li>Crioglobulinemia</li></ul></div>
+    <div class="kn"><h4>Complemento normal</h4><p class="why">Não consome</p><ul><li>Nefropatia por IgA</li><li>Vasculites ANCA</li><li>Goodpasture (degrau 5)</li></ul></div>
+  </div>
+
+  <div class="tw" tabindex="0" role="region" aria-label="Grade de discriminação das nefrites">
+  <table class="w7">
+    <thead><tr><th>Doença</th><th>Quem / quando</th><th>Pista que fecha</th><th>Complemento</th><th>Imunofluorescência</th></tr></thead>
+    <tbody>
+      <tr><th>GN pós-estreptocócica (GNPE)</th><td>Criança; 1-3 sem após faringite, 3-6 sem após pele</td><td>Anticorpo antiestreptocócico positivo</td><td><span class="c c3">C3</span></td><td>Granular</td></tr>
+      <tr><th>Nefropatia por IgA (Berger)</th><td>Homem 10-40 anos; durante ou 2-3 dias após infecção viral ou exercício</td><td>Hematúria macroscópica recorrente ou microscópica persistente</td><td><span class="c cn">normal</span></td><td>IgA no mesângio</td></tr>
+      <tr><th>Nefrite lúpica</th><td>Mulher em idade fértil</td><td>Artralgia, rash malar, anemia hemolítica, FAN e anti-DNA</td><td><span class="c c34">C3 e C4</span></td><td>"Full house"</td></tr>
+      <tr><th>GN membranoproliferativa</th><td>Qualquer idade</td><td>Causa secundária: infecção, neoplasia sólida ou hematológica, autoimune</td><td><span class="c c34">C3 e C4</span></td><td>—</td></tr>
+      <tr><th>Vasculites ANCA</th><td>Idade mais avançada</td><td>Via aérea superior ou pulmão; ANCA positivo</td><td><span class="c cn">normal</span></td><td>Negativa (pauci-imune)</td></tr>
+      <tr><th>Crioglobulinemia</th><td>Portador de hepatite C</td><td>Púrpura palpável, artralgia, febre, perda de peso</td><td><span class="c c34">C3 e C4</span></td><td>Granular</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Role a tabela para o lado no celular.</p>
+
+  <h3 class="sub">GNPE: o diagnóstico sem biópsia</h3>
+  <div class="prose"><ul>
+    <li><strong>Mecanismo:</strong> cepa nefritogênica do estreptococo beta-hemolítico do grupo A; semanas depois, o sistema imune confunde antígeno bacteriano com glomerular e ativa a via alternativa. Causa mais comum de nefrítica na infância.</li>
+    <li><strong>Tripé:</strong> quadro compatível + latência certa + prova de contato recente. Biópsia não é necessária.</li>
+    <li><strong>Prova de contato:</strong> antiestreptolisina O (ASLO), anti-DNAse B, anti-hialuronidase. Os três sobem após faringite; <strong>após pele, o ASLO não sobe</strong> — use anti-DNAse B.</li>
+    <li><strong>C3 baixo</strong> reforça o diagnóstico e marca o prognóstico: deve normalizar em até 8 semanas.</li>
+    <li><strong>Gravidade</strong> vem da hipervolemia: edema agudo de pulmão, encefalopatia hipertensiva; raramente lesão renal com diálise.</li>
+    <li><strong>Tratamento</strong> = tirar da hipervolemia: restrição de sal e água + furosemida; anti-hipertensivo na emergência. Não há tratamento específico; prognóstico excelente.</li>
+    <li><strong>Penicilina benzatina</strong> (eritromicina no alérgico) só se houver infecção ativa, ou para cortar a circulação da cepa. Não muda o curso da nefrite.</li>
+  </ul></div>
+  <div class="aside"><p class="albl">Quando a GNPE sai do roteiro: biopsiar</p><p>Anúria ou perda grave de função nas primeiras 48-72 h · C3 baixo por mais de 8 semanas · função renal sem melhora em 2 semanas · hipertensão por mais de 2-4 semanas · sinais de doença sistêmica (lúpus, por exemplo).</p></div>
+
+  <h3 class="sub">GNPE x nefropatia por IgA</h3>
+  <p class="lede">As duas vêm depois de uma infecção; o relógio e o complemento separam.</p>
+  <div class="vs">
+    <div class="a"><h4>GNPE</h4><ul>
+      <li>Latência de semanas (2-3); infecção bacteriana.</li>
+      <li>Criança; edema + hipertensão + hematúria.</li>
+      <li>Evolução para DRC rara.</li>
+    </ul></div>
+    <div class="b"><h4>Nefropatia por IgA</h4><ul>
+      <li>Dias (2-3) ou junto da infecção; viral.</li>
+      <li>Adulto jovem; hematúria, em geral sem edema, hipertensão ou perda de função.</li>
+      <li>Até 25% evoluem para DRC.</li>
+    </ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>IgA:</strong> glomerulopatia primária mais comum do mundo. Predisposição genética + gatilho ambiental (glúten em estudo) geram IgA anômala que se deposita no mesângio.</li>
+    <li>Pode, menos vezes, vir como nefrítica, nefrótica ou GNRP. Diagnóstico definitivo só por biópsia: IgA mesangial dominante ou codominante.</li>
+    <li><strong>Tratamento:</strong> hematúria isolada = só seguimento. Hipertensão, proteinúria ou perda de função ao diagnóstico = pior prognóstico e curso de corticoide.</li>
+  </ul></div>
+
+  <h3 class="sub">Nefrite lúpica: a classe manda na síndrome</h3>
+  <p class="lede">Até 60% dos lúpicos têm acometimento renal; a classe histológica prevê como ele aparece.</p>
+  <div class="tw" tabindex="0" role="region" aria-label="Classes da nefrite lúpica">
+  <table>
+    <thead><tr><th>Classe</th><th>Histologia</th><th>Como aparece</th></tr></thead>
+    <tbody>
+      <tr><th>I mesangial mínima · II proliferativa mesangial</th><td>Glomérulo quase normal, com depósitos (II: proliferação mesangial)</td><td>Alteração urinária assintomática ou nada</td></tr>
+      <tr><th>III proliferativa focal</th><td>Proliferação endocapilar em &lt;50% dos glomérulos</td><td>Hematúria, proteinúria subnefrótica, complemento baixo, anti-DNA alto; perda de função menos comum que na IV</td></tr>
+      <tr><th>IV proliferativa difusa</th><td>Proliferação endocapilar em &gt;50%; pode ter crescentes</td><td>A <strong>mais frequente</strong>: nefrítica com disfunção renal, até GNRP</td></tr>
+      <tr><th>V membranosa</th><td>MBG espessada, depósitos subepiteliais</td><td><strong>Nefrótica pura</strong></td></tr>
+      <tr><th>VI esclerosante</th><td>Esclerose em &gt;90%</td><td>DRC terminal, sem atividade</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose"><ul>
+    <li><strong>Imunofluorescência "full house":</strong> tudo positivo — IgA, IgM, IgG, C3 e C1q.</li>
+    <li><strong>Classes III e IV:</strong> indução e manutenção. Manutenção com azatioprina ou micofenolato.</li>
+  </ul></div>
+  <div class="flow" aria-label="Indução nas classes III e IV">
+    <span>Pulso de corticoide</span><i>→</i><span>Ciclofosfamida IV <em>ou</em> micofenolato VO</span><i>+</i><span>Prednisona VO 1 mg/kg</span>
+  </div>
+
+  <h3 class="sub">Vasculites ANCA e crioglobulinemia</h3>
+  <div class="prose"><ul>
+    <li><strong>ANCA</strong> = anticorpo anticitoplasma de neutrófilo: c-ANCA mira a proteinase-3 (PR3); p-ANCA mira a mieloperoxidase (MPO). No rim, glomerulonefrite; o que separa as três é o que acontece fora do rim (tabela no degrau 5).</li>
+    <li><strong>Crioglobulinemia:</strong> imunoglobulina que precipita no frio e se deposita em pequenos vasos. Causa mais cobrada: hepatite C. Trata-se o vírus.</li>
+  </ul></div>
+</section>
+
+<!-- DEGRAU 4 -->
+<section class="degrau" id="d4">
+  <div class="dhead"><div class="dnum">4</div><div class="dtitle"><span class="dstage">Discriminador</span><h2>Quem causa a síndrome nefrótica</h2></div></div>
+  <p class="lede">Na nefrótica, idade e cor da pele escolhem a doença antes da biópsia.</p>
+
+  <div class="tw" tabindex="0" role="region" aria-label="Grade de discriminação das nefróticas">
+  <table class="w7">
+    <thead><tr><th>Doença</th><th>Paciente típico</th><th>Clínica</th><th>Biópsia</th><th>Tratamento</th></tr></thead>
+    <tbody>
+      <tr><th>Lesão mínima (DLM)</th><td>Criança de 2-3 anos (até 85% das nefróticas primárias da infância); 3ª causa no adulto</td><td>Nefrótica pura: edema insidioso, ascendente, com derrames; PA e função normais</td><td>Óptica normal; eletrônica com fusão dos pedicelos</td><td>Prednisona/prednisolona VO; resposta em até 90% das crianças e 80% dos adultos</td></tr>
+      <tr><th>GESF primária</th><td>Adulto jovem, negro</td><td>Nefrótica em semanas; hipertensão em metade; hematúria em 30-50%; pode ter perda de função</td><td>Esclerose segmentar e focal; eletrônica com fusão dos pedicelos</td><td>Prednisona; resposta pior que a DLM</td></tr>
+      <tr><th>Nefropatia do HIV</th><td>Negro, carga viral alta, CD4 baixo, sem terapia antirretroviral (TARV)</td><td>Nefrótica grave com perda de função</td><td>GESF <strong>colapsante</strong> (o subtipo de pior prognóstico)</td><td>Iniciar TARV</td></tr>
+      <tr><th>Membranosa (GM)</th><td>Caucasiano a partir dos 50 anos</td><td>Nefrótica; maior risco de trombose de veia renal</td><td>MBG espessada; primária com anti-PLA2R</td><td>Primária: imunossupressão. Secundária: tratar a causa</td></tr>
+      <tr><th>Amiloidose AL</th><td>Idoso; gamopatia monoclonal (mieloma)</td><td>Nefrótica + miocardiopatia, disautonomia, equimose periorbitária; <strong>rins aumentados</strong></td><td>Vermelho-congo com birrefringência verde-maçã</td><td>—</td></tr>
+      <tr><th>Lúpus classe V</th><td>Mulher jovem lúpica</td><td>Nefrótica pura</td><td>Membranosa</td><td>Tratar o lúpus</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Role a tabela para o lado no celular.</p>
+
+  <h3 class="sub">Lesão mínima: o mecanismo e o roteiro</h3>
+  <div class="prose"><ul>
+    <li><strong>Podocitopatia:</strong> o podócito é lesado sem mudar o glomérulo na óptica — daí o nome. DLM e GESF dividem a mesma fusão de pedicelos; muda a esclerose.</li>
+    <li><strong>Gravidade:</strong> hipotensão, edema escrotal, restrição ventilatória por ascite volumosa.</li>
+    <li><strong>Recidiva</strong> é marca da DLM: gatilhos são infecção viral de via aérea e vacinação. Trata igual ao primeiro episódio.</li>
+    <li>Criança nefrótica = DLM até prova em contrário, tratada sem biópsia. No adulto, a biópsia é a regra.</li>
+  </ul></div>
+  <div class="aside"><p class="albl">Criança nefrótica: quando biopsiar</p><p>Idade &lt;1 ano ou &gt;10 anos · hematúria macroscópica ou persistente · complemento baixo · piora importante da função · hipertensão não explicada pelo corticoide · sem resposta ao corticoide · sinais de doença sistêmica. Cada um aponta outra doença, de pior prognóstico.</p></div>
+
+  <details class="ref"><summary>Causas secundárias de GESF e de membranosa</summary><div class="refbody">
+    <div class="tw" tabindex="0" role="region" aria-label="Causas secundárias">
+    <table>
+      <thead><tr><th></th><th>GESF secundária</th><th>Membranosa secundária</th></tr></thead>
+      <tbody>
+        <tr><th>Genéticas</th><td>Nefrina, podocina, alfa-actinina-4</td><td>—</td></tr>
+        <tr><th>Infecções</th><td>HIV, parvovírus B19, citomegalovírus</td><td>Hepatite B, sífilis</td></tr>
+        <tr><th>Néfron sobrecarregado</th><td>Pouca massa renal (rim único, prematuridade, displasia, refluxo); sobrecarga (obesidade, hipertensão, diabetes, ateroembolismo, massa magra, anemia falciforme)</td><td>—</td></tr>
+        <tr><th>Drogas</th><td>Heroína, pamidronato, lítio, anabolizantes</td><td>AINE, penicilamina, sais de ouro</td></tr>
+        <tr><th>Neoplasias</th><td>—</td><td>Próstata, pulmão (broncogênico), mama, leucemia linfocítica crônica</td></tr>
+        <tr><th>Autoimune</th><td>—</td><td>Lúpus (classe V)</td></tr>
+      </tbody>
+    </table></div>
+    <p class="cap" style="margin:10px 0 0">Membranosa primária: imunossupressão com corticoide, ciclofosfamida oral, rituximabe ou inibidor de calcineurina.</p>
+  </div></details>
+  <div class="banca"><p class="albl">Como a banca pede</p><p>Membranosa em prova costuma ser secundária: idoso nefrótico, com perda de peso ou tabagismo, pede rastreio de neoplasia.</p></div>
+</section>
+
+<!-- DEGRAU 5 -->
+<section class="degrau" id="d5">
+  <div class="dhead"><div class="dnum">5</div><div class="dtitle"><span class="dstage">Discriminador</span><h2>Glomerulonefrite rapidamente progressiva</h2></div></div>
+  <p class="lede">GNRP é hematúria glomerular com função renal caindo rápido; a imunofluorescência da biópsia dá o nome da causa.</p>
+  <div class="prose"><ul>
+    <li><strong>Crescente:</strong> lesão grave rompe o capilar para dentro do espaço urinário; células chegam para tapar o buraco e se acumulam em forma de lua, comprimindo o tufo. Crescentes em &gt;50% dos glomérulos = GN crescêntica.</li>
+    <li>Diagnóstico de certeza só por biópsia; só há três padrões de imunofluorescência.</li>
+  </ul></div>
+
+  <div class="if3" aria-label="Três padrões de imunofluorescência">
+    <div>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line2)" stroke-width="2"/><path d="M14 22 Q32 6 50 22 Q60 34 48 48 Q32 60 16 48 Q4 34 14 22Z" fill="none" stroke="var(--plum)" stroke-width="3"/></svg>
+      <h4>Linear</h4><p>Anticorpo contra a própria MBG.</p><p><strong>Goodpasture</strong></p>
+    </div>
+    <div>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line2)" stroke-width="2"/><g fill="var(--plum)"><circle cx="20" cy="22" r="3"/><circle cx="34" cy="16" r="2.5"/><circle cx="46" cy="26" r="3"/><circle cx="42" cy="42" r="2.5"/><circle cx="28" cy="46" r="3"/><circle cx="17" cy="37" r="2.5"/><circle cx="32" cy="31" r="2.5"/></g></svg>
+      <h4>Granular</h4><p>Imunocomplexo em vários pontos do glomérulo.</p><p><strong>Lúpus, GN pós-infecciosas, crioglobulinemia, IgA</strong></p>
+    </div>
+    <div>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line2)" stroke-width="2" stroke-dasharray="4 4"/></svg>
+      <h4>Pauci-imune</h4><p>Sem anticorpo nem imunocomplexo depositado: necrose.</p><p><strong>Vasculites ANCA</strong></p>
+    </div>
+  </div>
+
+  <h3 class="sub">As três vasculites ANCA</h3>
+  <div class="tw" tabindex="0" role="region" aria-label="Vasculites ANCA">
+  <table>
+    <thead><tr><th></th><th>Granulomatose com poliangeíte (Wegener)</th><th>Granulomatose eosinofílica com poliangeíte (Churg-Strauss)</th><th>Poliangeíte microscópica</th></tr></thead>
+    <tbody>
+      <tr><th>ANCA / alvo</th><td>c-ANCA / PR3</td><td>p-ANCA / MPO</td><td>p-ANCA / MPO</td></tr>
+      <tr><th>Fora do rim</th><td>Sinusite destrutiva, nódulos pulmonares cavitados, síndrome pulmão-rim</td><td>Asma, infiltrado pulmonar migratório, dermatite atópica</td><td>Sintomas constitucionais, síndrome pulmão-rim</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="sub">Doença de Goodpasture (anti-MBG)</h3>
+  <div class="prose"><ul>
+    <li>Homem de 20-30 anos. Anticorpo contra o <strong>colágeno tipo IV</strong>, presente na MBG e no alvéolo: por isso pulmão e rim.</li>
+    <li>No rim, a única forma é GNRP; com hemorragia alveolar, vira síndrome pulmão-rim. Biópsia: crescêntica com IF linear.</li>
+    <li><strong>Tratamento:</strong> corticoide + ciclofosfamida; plasmaférese quando há hemorragia alveolar.</li>
+  </ul></div>
+  <div class="trap"><p class="albl">Armadilha</p><p>Síndrome pulmão-rim não é sinônimo de Goodpasture: Wegener e poliangeíte microscópica também fazem. A imunofluorescência (linear x negativa) e o ANCA desempatam.</p></div>
+</section>
+
+<!-- DEGRAU 6 -->
+<section class="degrau" id="d6">
+  <div class="dhead"><div class="dnum">6</div><div class="dtitle"><span class="dstage">Banca</span><h2>Onde o raciocínio escorrega</h2></div></div>
+  <p class="lede">Os erros desta área quase sempre são de um dado lido no contexto errado.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Hematúria sem dismorfismo ou cilindro</strong> não é glomerular até prova em contrário; procure causa urológica.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Infecção de pele + ASLO normal</strong> não afasta GNPE: o anticorpo de pele é o anti-DNAse B.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Hematúria 2 dias após IVAS</strong> é IgA, não GNPE. Latência curta e complemento normal mandam.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>C4 baixo junto com C3</strong> tira a GNPE da frente: pense em lúpus, membranoproliferativa ou crioglobulinemia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Antibiótico na faringite</strong> não previne nem atenua a GNPE; a penicilina não trata a nefrite.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Nefrótica no lúpus</strong> é classe V (membranosa); nefrítica com perda de função é classe IV.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Imunofluorescência negativa</strong> não é biópsia normal: é o padrão pauci-imune das vasculites ANCA.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Rim grande em idoso nefrótico</strong> aponta amiloidose; o rim de DRC comum é pequeno.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Membrana fina x Alport:</strong> ambas começam com hematúria isolada; a diferença está no ouvido, no olho e na evolução.</p></div>
+  </div>
+</section>
+
+<!-- SINTESE -->
+<section class="synth" id="sint">
+  <h2>Grade de gatilhos</h2>
+  <p class="lede">Uma linha por degrau, para reler antes da lista.</p>
+  <div class="trig">
+    <div><span class="tk">1 Base</span><span class="tv">Glomerular = dismorfismo/cilindro hemático ou proteinúria nefrótica. Hematúria isolada familiar: membrana fina (benigna) x Alport (ouvido, olho, DRC).</span></div>
+    <div><span class="tk">2 Mecanismo</span><span class="tv">Nefrítica = inflamação (edema, HAS, hematúria). Nefrótica = podócito (proteinúria, albumina baixa, edema) + trombose, pneumococo, lipídio.</span></div>
+    <div><span class="tk">3 Nefríticas</span><span class="tv">Só C3: GNPE. C3+C4: lúpus, membranoproliferativa, crio. Normal: IgA, ANCA. Latência de semanas x dias.</span></div>
+    <div><span class="tk">4 Nefróticas</span><span class="tv">Criança: DLM sem biópsia. Negro jovem: GESF (HIV: colapsante). Caucasiano 50+: membranosa (trombose de veia renal, neoplasia). Idoso sistêmico: amiloidose.</span></div>
+    <div><span class="tk">5 GNRP</span><span class="tv">Crescentes &gt;50%. IF linear: Goodpasture. Granular: imunocomplexo. Negativa: ANCA.</span></div>
+    <div><span class="tk">6 Banca</span><span class="tv">ASLO não sobe após pele; antibiótico não previne GNPE; lúpus nefrótico = classe V.</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>Fonte: Estratégia MED, <em>Doenças Glomerulares</em> (resumo estratégico, Prof. Ricardo Leal, 2024), com apoio do deck de flashcards do tema. Classificação lúpica citada pelo PDF: ISN/RPS 2003.</p>
+  <p>Conteúdo permanente (armadilhas, discriminações, condutas) mora em <code>resumos/</code>; esta página é a camada de leitura.</p>
+</footer>
+
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

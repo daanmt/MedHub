@@ -1,0 +1,550 @@
+<title>Doença de Kawasaki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6E7C74;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:48px 0 28px;border-bottom:1px solid var(--line2)}
+.eye{font:600 13px/1.3 "Source Sans 3";color:var(--teal-ink);margin:0 0 12px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:20ch;margin-bottom:14px}
+.top .sub{font-size:17.5px;line-height:1.6;color:var(--ink2);max-width:64ch;margin:0}
+
+/* a regua do dia de febre (elemento-assinatura) */
+.ruler{margin:26px 0 4px;border:1px solid var(--line2);background:var(--card)}
+.ruler .bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line2)}
+.ruler .bar span{padding:9px 10px;font:600 12.5px "IBM Plex Mono";color:var(--ink3);font-variant-numeric:tabular-nums;border-left:1px solid var(--line)}
+.ruler .bar span:first-child{border-left:0}
+.ruler .bar span.hot{background:var(--carmine-wash);color:var(--carmine-ink)}
+.ruler .cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.ruler .cols div{padding:11px 10px 13px;border-left:1px solid var(--line);min-width:0}
+.ruler .cols div:first-child{border-left:0}
+.ruler .cols b{display:block;font-size:14px;color:var(--ink);margin-bottom:4px}
+.ruler .cols p{margin:0;font-size:13.2px;line-height:1.45;color:var(--ink2)}
+.ruler .foot{padding:9px 12px;border-top:1px solid var(--line2);font-size:13px;color:var(--ink2);background:var(--sunk)}
+@media(max-width:640px){
+  .ruler .bar{display:none}
+  .ruler .cols{grid-template-columns:1fr}
+  .ruler .cols div{border-left:3px solid var(--teal);border-top:1px solid var(--line)}
+  .ruler .cols div:first-child{border-top:0}
+  .ruler .cols div::before{content:attr(data-d);display:block;font:600 12px "IBM Plex Mono";color:var(--teal-ink);margin-bottom:3px}
+}
+
+/* layout */
+.body{display:grid;grid-template-columns:210px minmax(0,1fr);gap:52px;padding-top:36px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:minmax(0,1fr);gap:28px}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.rail .rlab{font:600 13px/1 "Source Sans 3";color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0 7px 10px;
+  font-size:13.5px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--teal-ink);border-left-color:var(--teal);font-weight:600}
+.rail a.on .rn{color:var(--teal-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--teal-wash);border-color:var(--teal)}
+}
+main{min-width:0;max-width:700px}
+
+/* degrau */
+.degrau{padding:40px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.dnum{flex-shrink:0;width:42px;height:42px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 16px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:3px;min-width:0}
+.dtitle .dstage{font:600 13px "Source Sans 3";color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 18px;font-style:italic}
+.prose ul{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4.sub{font-size:14.5px;font-weight:600;font-family:"Source Sans 3";color:var(--ink);margin:24px 0 10px}
+
+/* callouts */
+.aside,.trap,.banca{margin:20px 0;padding:14px 17px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.trap{border-left-color:var(--carmine);background:var(--carmine-wash)}
+.banca{border-left-color:var(--amber);background:var(--amber-wash)}
+.albl{font:700 13px "Source Sans 3";margin-bottom:5px;color:var(--teal-ink)}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.aside p,.trap p,.banca p{font-size:15.2px;line-height:1.58;color:var(--ink);margin:0}
+.aside p+p,.trap p+p,.banca p+p{margin-top:7px}
+.fora{font:600 11px "IBM Plex Mono";color:var(--amber-ink);background:var(--amber-wash);padding:1px 5px;border-radius:2px;white-space:nowrap}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);margin:18px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;padding:10px 14px;font-size:14.4px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .row .v{color:var(--ink2);line-height:1.5;min-width:0}
+.crit .row.h{background:var(--sunk);font-size:13px}
+.crit .row.h .k,.crit .row.h .v{color:var(--ink3);font-weight:600}
+.crit .row.key .k{color:var(--carmine-ink)}
+.crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:minmax(0,1fr);gap:3px}}
+
+/* CREAM */
+.cream{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.cream>div{background:var(--card);padding:13px 15px;min-width:0}
+.cream .lt{font:680 26px/1 Fraunces,Georgia,serif;color:var(--teal);margin-right:8px}
+.cream h5{display:flex;align-items:baseline;margin:0 0 7px;font:600 15px "Source Sans 3";color:var(--ink)}
+.cream p{margin:0;font-size:14px;line-height:1.5;color:var(--ink2)}
+.cream .fever{background:var(--carmine-wash);grid-column:1/-1}
+.cream .fever .lt{color:var(--carmine)}
+
+/* fluxograma */
+.flow{margin:18px 0;display:flex;flex-direction:column;gap:0}
+.flow .node{border:1px solid var(--line2);background:var(--card);padding:11px 14px;font-size:14.4px;line-height:1.5;color:var(--ink2)}
+.flow .node strong{color:var(--ink)}
+.flow .node.start{background:var(--sunk);border-color:var(--teal)}
+.flow .arrow{height:18px;width:2px;background:var(--teal);margin-left:22px;position:relative}
+.flow .arrow::after{content:"";position:absolute;bottom:-1px;left:-4px;border:5px solid transparent;border-top-color:var(--teal);border-bottom:0}
+.branches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media(max-width:700px){.branches{grid-template-columns:minmax(0,1fr)}}
+.br{border:1px solid var(--line2);background:var(--card);padding:11px 13px;min-width:0}
+.br .bh{font:600 13.5px "IBM Plex Mono";color:var(--teal-ink);margin-bottom:5px;font-variant-numeric:tabular-nums}
+.br p{margin:0;font-size:14px;line-height:1.5;color:var(--ink2)}
+.br p+p{margin-top:6px}
+.br.red{border-color:var(--carmine)}
+.br.red .bh{color:var(--carmine-ink)}
+
+/* tabela de diferencial */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:18px 0;border:1px solid var(--line2);background:var(--card)}
+.tw table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+.tw th,.tw td{text-align:left;vertical-align:top;padding:9px 11px;border-top:1px solid var(--line);line-height:1.45}
+.tw thead th{background:var(--sunk);color:var(--ink3);font-weight:600;font-size:13px;border-top:0}
+.tw tbody th{color:var(--ink);font-weight:600;width:22%}
+.tw td{color:var(--ink2)}
+.tw .grp td{background:var(--teal-wash);color:var(--teal-ink);font-weight:600;font-size:13px;padding:6px 11px}
+.hint{font-size:12.5px;color:var(--ink3);margin:-10px 0 18px}
+
+/* vs */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h5{font:700 14px "Source Sans 3";margin:0 0 8px}
+.vs .a h5{color:var(--teal-ink)}
+.vs .b h5{color:var(--carmine-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.2px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* referencia densa */
+details.ref{margin:18px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 15px;font:600 14px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 15px 14px}
+details.ref .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:8px 0;font-size:14px;border-top:1px solid var(--line)}
+details.ref .k{font-weight:600;color:var(--ink);min-width:0}
+details.ref .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:640px){details.ref .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:28px 26px;margin-top:6px}
+@media(max-width:640px){.synth{padding:20px 16px}}
+.synth h2{font-size:23px;margin-bottom:8px}
+.synth .lede{margin-bottom:0}
+.trig{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:12px 14px;min-width:0}
+.trig .tk{font:600 12px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:14px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:16px}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line2)}
+footer p{font-size:12.8px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px;word-break:break-all}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Aula-base de Pediatria, antes da lista #651 (30 questões)</p>
+  <h1>Doença de Kawasaki: a corrida do décimo dia</h1>
+  <p class="sub">Uma vasculite que se diagnostica pela clínica e se trata contra o relógio: o dia 1 de febre dispara a contagem, e a imunoglobulina até o 10º dia é o que separa a criança curada da criança com aneurisma de coronária.</p>
+
+  <div class="ruler" role="group" aria-label="Linha do tempo da doença, contada em dias de febre">
+    <div class="bar" aria-hidden="true"><span>D1</span><span>D5</span><span class="hot">D10</span><span>sem 2-3 em diante</span></div>
+    <div class="cols">
+      <div data-d="D1"><b>Febre começa</b><p>Dia 1 de febre = dia 1 da doença. Exantema perineal e conjuntivite são precoces.</p></div>
+      <div data-d="D5"><b>Critério fecha</b><p>Febre ≥ 5 dias + 4 de 5 sinais = forma clássica. Tratar já.</p></div>
+      <div data-d="D10"><b>Janela da IGIV</b><p>Imunoglobulina até aqui corta o aneurisma de 20-25% para 5%.</p></div>
+      <div data-d="Semana 2-3"><b>Fase subaguda</b><p>Descamação periungueal, plaquetose e aneurismas aparecem agora.</p></div>
+    </div>
+    <div class="foot">Tudo o que vem depois nesta aula se pendura nesta régua.</div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>O que é</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Mecanismo</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Critérios clássicos</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Laboratório e eco</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Kawasaki incompleto</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Diferencial</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Tratamento</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Coronárias e seguimento</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>SIM-P / MIS-C</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">∑</span><span>Gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">!</span><span>Armadilhas</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0 · base</span><h2>Quem adoece e de quê</h2></div></div>
+  <p class="lede">A doença de Kawasaki (DK) é uma vasculite aguda e autolimitada de artérias de médio calibre, com predileção pelas coronárias.</p>
+  <div class="prose"><ul>
+    <li><strong>Segunda vasculite mais comum da infância</strong>; a primeira é a púrpura de Henoch-Schönlein (vasculite por IgA).</li>
+    <li><strong>Criança &lt; 5 anos</strong>, pico entre 9 e 12 meses, predomínio masculino; 5 a 10 vezes mais em asiáticos, mesmo morando no Ocidente.</li>
+    <li>Principal causa de <strong>cardiopatia adquirida</strong> na infância em países desenvolvidos (EUA, Japão).</li>
+    <li>Etiologia desconhecida. Modelo aceito: resposta imune a um ou mais agentes infecciosos em criança <strong>geneticamente predisposta</strong>.</li>
+    <li>Pistas da teoria infecciosa: rara antes dos 6 meses (anticorpos maternos), ondas sazonais, rara no adulto (imunidade prévia). Nenhum agente isolado até hoje.</li>
+  </ul></div>
+  <div class="banca">
+    <div class="albl">Como cai</div>
+    <p>Caso clássico pedindo o diagnóstico, depois tratamento e complicações. Critérios clínicos sozinhos respondem por 27% das questões; complicações, 15%. Quase 90% das questões vêm de bancas do Sudeste.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1 · mecanismo</span><h2>Por que a coronária dilata</h2></div></div>
+  <p class="lede">A inflamação entra fundo na parede da artéria e desmonta a estrutura que a mantinha de pé.</p>
+  <div class="prose"><ul>
+    <li>Infiltrado inflamatório profundo destrói <strong>endotélio, fibras de elastina e colágeno</strong>: a parede perde a integridade e cede em <strong>aneurisma</strong>, que pode romper ou trombosar.</li>
+    <li>Leva tempo para a parede ceder: por isso o aneurisma é complicação <strong>subaguda</strong>, depois do 10º dia, e o tratamento antes disso o previne.</li>
+    <li>Os sinais clínicos vêm da mesma vasculite generalizada e <strong>não seguem cronologia</strong>: uns somem enquanto outros surgem, e raramente estão todos presentes no mesmo exame. Daí a anamnese valer tanto quanto o exame físico.</li>
+    <li>Inflamação sistêmica explica o laboratório (provas inflamatórias altas); a fase de reparo explica a plaquetose tardia, que é o alvo do AAS em dose antiplaquetária.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2 · diagnóstico</span><h2>Critérios clássicos: febre + CREAM</h2></div></div>
+  <p class="lede">O diagnóstico é clínico: febre ≥ 5 dias sem outra explicação e 4 dos 5 sinais do mnemônico CREAM.</p>
+  <div class="cream">
+    <div class="fever"><h5><span class="lt">F</span>Febre, o critério obrigatório</h5><p>Alta (&gt; 38,5 °C), pouco responsiva a antitérmico, ≥ 5 dias sem outra causa. Sem tratamento dura 1-2 semanas.</p></div>
+    <div><h5><span class="lt">C</span>Conjuntivite</h5><p>Em 90%. <strong>Bilateral, não exsudativa</strong>, precoce; pode ter fotofobia e uveíte anterior.</p></div>
+    <div><h5><span class="lt">R</span>Rash (exantema)</h5><p><strong>Polimorfo</strong> e precoce: começa no períneo, vai a tronco e membros. Maculopapular, escarlatiniforme, urticariforme, micropustular ou psoriásico. Nunca vesicular.</p></div>
+    <div><h5><span class="lt">E</span>Extremidades</h5><p>Eritema palmoplantar e edema endurecido do dorso de mãos e pés. Na semana 2-3, descamação periungueal.</p></div>
+    <div><h5><span class="lt">A</span>Adenopatia cervical</h5><p>O sinal <strong>menos frequente</strong> (25-50%, mais raro &lt; 1 ano). Cervical, <strong>única, &gt; 1,5 cm</strong>.</p></div>
+    <div><h5><span class="lt">M</span>Mucosa oral</h5><p>Lábios vermelhos, edemaciados e rachados; língua em morango; faringe hiperemiada <strong>sem exsudato</strong>.</p></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Ecocardiograma e laboratório não são critério.</strong> Servem para afastar diferenciais e procurar a complicação.</li>
+    <li>Sinal curioso que ajuda: <strong>hiperemia ou crosta na cicatriz da BCG</strong> (vacina contra tuberculose).</li>
+    <li>Descamação perineal é da fase aguda; a da ponta dos dedos é tardia, da semana 2-3.</li>
+  </ul></div>
+  <details class="ref">
+    <summary>Outros achados que não são critério, mas aparecem em alternativa</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Coração</span><span class="v">Taquicardia, galope, derrame pericárdico, miocardite linfocítica, má perfusão periférica</span></div>
+      <div class="row"><span class="k">Abdome</span><span class="v">Diarreia, vômitos, hepatite, icterícia, <strong>hidropsia da vesícula biliar</strong></span></div>
+      <div class="row"><span class="k">Neurológico</span><span class="v">Irritabilidade, meningite asséptica, paralisia facial</span></div>
+      <div class="row"><span class="k">Outros</span><span class="v">Infiltrado peribrônquico ou intersticial; uretrite, hidrocele; artrite autolimitada de grandes articulações; linhas de Beau nas unhas (convalescença)</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3 · exames</span><h2>O laboratório da inflamação e o eco obrigatório</h2></div></div>
+  <p class="lede">O laboratório confirma que há inflamação sistêmica; o ecocardiograma procura a complicação e entra para todos.</p>
+  <div class="crit">
+    <div class="row h"><span class="k">Achado</span><span class="v">O que lembrar</span></div>
+    <div class="row"><span class="k">Provas inflamatórias</span><span class="v">VHS (velocidade de hemossedimentação) e PCR (proteína C reativa) altas; ferritina alta</span></div>
+    <div class="row"><span class="k">Leucograma</span><span class="v">Leucocitose com desvio à esquerda; <strong>linfopenia na fase aguda</strong>, linfocitose na convalescença</span></div>
+    <div class="row key"><span class="k">Plaquetas</span><span class="v"><strong>Plaquetose na 2ª semana</strong>. Plaquetopenia é rara (consumo) e é sinal de gravidade</span></div>
+    <div class="row"><span class="k">Série vermelha</span><span class="v">Anemia normocítica e normocrômica</span></div>
+    <div class="row"><span class="k">Urina e líquor</span><span class="v">Leucocitúria estéril de células não polimorfonucleares; pleocitose liquórica sem hipoglicorraquia</span></div>
+    <div class="row"><span class="k">Bioquímica</span><span class="v">Transaminases discretamente altas, triglicérides altos, <strong>hiponatremia (marca risco de aneurisma)</strong></span></div>
+    <div class="row"><span class="k">Imagem</span><span class="v"><strong>Eco e ECG (eletrocardiograma) em todas as crianças</strong>: dilatação e aneurismas de coronária</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Quando desconfiar de ativação macrofágica</div>
+    <p>Plaquetopenia + triglicérides altos + hiponatremia + função hepática alterada (ou macrófagos no líquor) sugerem síndrome de ativação macrofágica (SAM) subclínica: investigar.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4 · discriminador</span><h2>Kawasaki incompleto: o algoritmo da AHA</h2></div></div>
+  <p class="lede">Cerca de 10% não fecham os critérios; nesses, inflamação no laboratório e o eco decidem quem trata.</p>
+  <div class="prose"><ul>
+    <li>Suspeitar em dois cenários: <strong>lactente &lt; 6 meses com febre inexplicada ≥ 7 dias</strong>, mesmo sem sinal de DK; ou <strong>qualquer idade com febre ≥ 5 dias e 2-3 critérios</strong>.</li>
+    <li>O lactente pequeno é o que mais faz forma incompleta e o que mais faz aneurisma: por isso o limiar dele é a febre sozinha.</li>
+    <li>Kawasaki incompleto confirmado recebe <strong>o mesmo tratamento</strong> da forma clássica.</li>
+  </ul></div>
+
+  <div class="flow" aria-label="Fluxograma do Kawasaki incompleto, segundo a American Heart Association (AHA) no PDF">
+    <div class="node start"><strong>Febre ≥ 5 dias</strong> (ou lactente &lt; 6 m com febre ≥ 7 dias). Quantos critérios CREAM?</div>
+    <div class="arrow"></div>
+    <div class="branches">
+      <div class="br red"><div class="bh">≥ 4 critérios</div><p>DK clássica. Tratar e pedir eco.</p></div>
+      <div class="br"><div class="bh">2-3 critérios</div><p>Dosar PCR e VHS (ver abaixo).</p></div>
+      <div class="br"><div class="bh">0-1 critério</div><p>Só entra no fluxo o lactente &lt; 6 m com febre ≥ 7 dias; os demais, investigar outra causa.</p></div>
+    </div>
+    <div class="arrow"></div>
+    <div class="branches">
+      <div class="br"><div class="bh">PCR &lt; 3 mg/dL e VHS &lt; 40</div><p>DK improvável: manter acompanhamento.</p><p>Se surgir descamação periungueal: fazer eco.</p></div>
+      <div class="br red"><div class="bh">PCR ≥ 3 mg/dL e VHS ≥ 40</div><p>Contar os critérios laboratoriais suplementares e fazer eco.</p></div>
+      <div class="br red"><div class="bh">≥ 3 suplementares ou eco alterado</div><p>DK incompleta: tratar.</p><p>&lt; 3 e eco normal: continuar acompanhando e monitorando.</p></div>
+    </div>
+  </div>
+
+  <div class="crit">
+    <div class="row h"><span class="k">Critério suplementar</span><span class="v">Corte</span></div>
+    <div class="row"><span class="k">Anemia</span><span class="v">para a idade</span></div>
+    <div class="row"><span class="k">Plaquetas</span><span class="v">≥ 450.000 <strong>após o 7º dia</strong> de febre</span></div>
+    <div class="row"><span class="k">Albumina</span><span class="v">≤ 3,0 g/dL</span></div>
+    <div class="row"><span class="k">ALT</span><span class="v">elevada (alanina aminotransferase)</span></div>
+    <div class="row"><span class="k">Leucócitos</span><span class="v">≥ 15.000/mm³</span></div>
+    <div class="row"><span class="k">Urina</span><span class="v">≥ 10 leucócitos/campo</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5 · discriminador</span><h2>Diagnóstico diferencial</h2></div></div>
+  <p class="lede">Para cada imitador, procure o dado que ele tem e a DK não tem, ou o critério CREAM que falta nele.</p>
+  <div class="prose"><ul>
+    <li>Febre e exantema há <strong>menos de 5 dias</strong> raramente é DK: pense primeiro em infecção viral ou bacteriana.</li>
+    <li>Na DK, antibiótico e anti-histamínico não têm papel; falha de antibiótico em "amigdalite" que segue febril é pista clássica.</li>
+  </ul></div>
+  <div class="tw" tabindex="0" role="region" aria-label="Tabela de diagnóstico diferencial, rolável na horizontal">
+    <table>
+      <thead><tr><th>Doença</th><th>O que tem que a DK não tem</th><th>O que falta nela</th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="3">Virais</td></tr>
+        <tr><th>Sarampo</th><td>Pródromo catarral (tosse, coriza), manchas de Koplik, exantema crânio-caudal</td><td>Alteração de extremidades</td></tr>
+        <tr><th>Adenovírus, echovírus</th><td>Febre, conjuntivite e exantema também, mas viral comum</td><td>Alteração de extremidades</td></tr>
+        <tr><th>Exantema súbito (roséola)</th><td>Lactente em bom estado; exantema surge quando a febre <strong>some</strong></td><td>Febre persistente durante o exantema</td></tr>
+        <tr><th>Mão-pé-boca</th><td>Vesículas em mãos, pés e boca</td><td>Conjuntivite e exantema polimorfo</td></tr>
+        <tr><th>Mononucleose</th><td>Febre baixa, adenopatias cervicais múltiplas, exsudato na orofaringe, exantema após antibiótico</td><td>Conjuntivite</td></tr>
+        <tr class="grp"><td colspan="3">Toxinas</td></tr>
+        <tr><th>Escarlatina</th><td>Exantema áspero em lixa, sinal de Pastia (dobras), palidez perioral (Filatow); responde a antibiótico</td><td>Conjuntivite; artralgia</td></tr>
+        <tr><th>Choque tóxico</th><td>Edema generalizado, choque</td><td>Artralgia</td></tr>
+        <tr class="grp"><td colspan="3">Reações a fármacos</td></tr>
+        <tr><th>Alergia, doença do soro</th><td>Provas inflamatórias normais ou pouco altas</td><td>Mucosa e olhos só discretos</td></tr>
+        <tr><th>Stevens-Johnson (SSJ)</th><td>Exposição a fármaco; mucosite e olho intensos (a exceção do grupo)</td><td>Inflamação sistêmica do porte da DK</td></tr>
+        <tr class="grp"><td colspan="3">Reumáticas</td></tr>
+        <tr><th>Artrite idiopática juvenil (AIJ)</th><td>Linfadenopatia generalizada, pode ter esplenomegalia</td><td>Conjuntivite e alteração oral</td></tr>
+        <tr><th>Febre reumática</th><td>Artrite migratória; cardite valvar</td><td>Conjuntivite; coronária poupada</td></tr>
+        <tr class="grp"><td colspan="3">Pós-COVID</td></tr>
+        <tr><th>SIM-P / MIS-C</th><td>Criança maior, gastrointestinal e choque, disfunção miocárdica, plaquetopenia</td><td>Detalhe no degrau 8</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">Deslize a tabela para o lado no celular.</p>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6 · conduta</span><h2>Tratamento: IGIV + AAS, e quem leva corticoide</h2></div></div>
+  <p class="lede">Tratar até o 10º dia de febre reduz o risco de aneurisma em 5 vezes; o objetivo é apagar a inflamação antes que a parede ceda.</p>
+  <div class="crit">
+    <div class="row h"><span class="k">Peça</span><span class="v">Como e por quê</span></div>
+    <div class="row key"><span class="k">IGIV</span><span class="v">Imunoglobulina intravenosa <strong>2 g/kg em dose única, infusão de 8-12 h</strong>, de preferência até o 10º dia. Para todos, clássico e incompleto, com ou sem lesão cardíaca.</span></div>
+    <div class="row"><span class="k">AAS fase aguda</span><span class="v">Ácido acetilsalicílico 30-50 mg/kg/dia de 6/6 h (efeito anti-inflamatório). A SBP (Sociedade Brasileira de Pediatria) aceita 50-80 mg/kg/dia.</span></div>
+    <div class="row"><span class="k">AAS baixa dose</span><span class="v">48 h sem febre: cair para <strong>3-5 mg/kg/dia</strong> (antiplaquetário) por até 8 semanas, suspenso quando o VHS normaliza, se não houver aneurisma. Com aneurisma: mantém, e pode somar anticoagulante.</span></div>
+    <div class="row"><span class="k">Alto risco de resistência</span><span class="v">A AHA manda estimar o risco <strong>antes</strong> de tratar. Alto risco: <strong>corticoide junto já no início</strong> (prednisona ou prednisolona 2 mg/kg/dia 12/12 h por 10 dias, depois 1 mg/kg/dia por 5 dias).</span></div>
+    <div class="row key"><span class="k">Refratário</span><span class="v">85-90% respondem a IGIV + AAS. Febre e vasculite persistentes: <strong>2ª dose de IGIV</strong>. <span class="fora">AHA 2017, fora do PDF</span> refratário = febre que persiste ou volta ≥ 36 h após o fim da infusão.</span></div>
+  </div>
+  <details class="ref">
+    <summary>Escores de risco de resistência à IGIV</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Não japonesas (alto risco ≥ 3)</span><span class="v">Coronária com escore Z &gt; +2 no eco (2 pontos); idade ≤ 6 meses (1); origem asiática (1); PCR ≥ 13 mg/dL (1)</span></div>
+      <div class="row"><span class="k">Kobayashi, japonesas (alto risco ≥ 5)</span><span class="v">Sódio ≤ 133 (2); AST ≥ 100 (2); neutrófilos ≥ 80% (2); tratamento iniciado até o 4º dia (2); PCR ≥ 10 mg/dL (1); plaquetas ≤ 300.000 (1); idade ≤ 12 meses (1)</span></div>
+    </div>
+  </details>
+  <div class="aside">
+    <div class="albl">Síndrome de Reye</div>
+    <p>Encefalopatia com disfunção hepática após varicela ou influenza em quem usa AAS. Rara na DK, mas é o efeito adverso que a prova cobra.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7 · banca</span><h2>Coronárias, complicações e seguimento</h2></div></div>
+  <p class="lede">O aneurisma de coronária é a complicação mais comum e a mais grave, e é ele que define o seguimento.</p>
+  <div class="prose"><ul>
+    <li>Surge <strong>depois do 10º dia</strong>. Frequência sem tratamento: 20-25% no geral e 50% em &lt; 6 meses; com tratamento a tempo, 5%.</li>
+    <li><strong>Gigante (&gt; 8 mm)</strong> em 1%: trombose, isquemia, infarto e morte súbita. Pode haver aneurisma também em axilar, braquial e ilíaca.</li>
+    <li>Fatores de risco: tratamento após o 10º dia; idade &lt; 1 ou &gt; 9 anos; sexo masculino; refratariedade; Ht &lt; 35%, albumina baixa, Na &lt; 135, PCR e VHS altas, IL-6 e IL-8 altas.</li>
+    <li>Não cardíacas, raras: SAM (1-5%, cai na resistência à IGIV), disfunção de múltiplos órgãos, perda auditiva neurossensorial. Pericardite em &lt; 5%.</li>
+    <li>Mortalidade pós-IGIV de 0,1-0,3%; o peso a longo prazo é o infarto do aneurisma gigante.</li>
+  </ul></div>
+  <h4 class="sub">Seguimento</h4>
+  <div class="crit">
+    <div class="row"><span class="k">Diagnóstico</span><span class="v">Eco + ECG para todos</span></div>
+    <div class="row"><span class="k">2-6 semanas</span><span class="v">Repetir o eco</span></div>
+    <div class="row"><span class="k">Com aneurisma</span><span class="v">Eco seriado + cardiologista pediátrico; AAS mantido, anticoagulação conforme o tamanho</span></div>
+    <div class="row key"><span class="k">Vacinas</span><span class="v">Adiar <strong>11 meses</strong> após a IGIV: os anticorpos infundidos neutralizam o antígeno vacinal</span></div>
+  </div>
+  <h4 class="sub">Escore Z da coronária <span class="fora">AHA 2017, fora do PDF</span></h4>
+  <div class="crit c3">
+    <div class="row h"><span class="k">Escore Z</span><span class="v">Classe</span><span class="v">Implicação</span></div>
+    <div class="row"><span class="k mn">&lt; 2</span><span class="v">Sem envolvimento</span><span class="v">Sem seguimento cardiológico prolongado</span></div>
+    <div class="row"><span class="k mn">2 a &lt; 2,5</span><span class="v">Só dilatação</span><span class="v">Repetir eco; costuma regredir</span></div>
+    <div class="row"><span class="k mn">2,5 a &lt; 5</span><span class="v">Aneurisma pequeno</span><span class="v">AAS prolongado, eco seriado</span></div>
+    <div class="row"><span class="k mn">5 a &lt; 10</span><span class="v">Aneurisma médio</span><span class="v">AAS; considerar 2º antiagregante</span></div>
+    <div class="row key"><span class="k mn">≥ 10 ou ≥ 8 mm</span><span class="v">Gigante</span><span class="v">AAS + anticoagulação; seguimento por toda a vida</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8 · banca</span><h2>SIM-P / MIS-C: o primo pós-COVID</h2></div></div>
+  <p class="lede">A síndrome inflamatória multissistêmica pediátrica (SIM-P, ou MIS-C em inglês) é uma desregulação imune 2-6 semanas após a infecção pelo SARS-CoV-2.</p>
+  <div class="prose"><ul>
+    <li>Afeta &lt; 1% das crianças infectadas e parece DK incompleta ou choque tóxico.</li>
+    <li>Quadro: febre, sintomas gastrointestinais, exantema, conjuntivite, mucosite, edema de mãos e pés, adenopatia, sintomas neurológicos e respiratórios, mialgia.</li>
+    <li><strong>Coração é o centro</strong>: a disfunção miocárdica é o achado mais frequente; pode ir a choque, arritmia, aneurisma de coronária, lesão renal, serosite, hepatite e encefalopatia.</li>
+    <li>Laboratório: linfopenia, neutrofilia, anemia e <strong>plaquetopenia</strong>; PCR, VHS, D-dímero, fibrinogênio, ferritina, procalcitonina e interleucinas altos; troponina e BNP altos; hipoalbuminemia, DHL alto, coagulopatia.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Kawasaki</h5><ul>
+      <li>Lactente e pré-escolar (&lt; 5 anos)</li>
+      <li>Coração afetado pela coronária, na fase subaguda</li>
+      <li>Plaquetose na 2ª semana</li>
+      <li>Febre ≥ 5 dias para o critério</li>
+    </ul></div>
+    <div class="b"><h5>SIM-P / MIS-C</h5><ul>
+      <li>Escolar e adolescente previamente hígidos</li>
+      <li>Miocárdio e choque logo de saída</li>
+      <li>Plaquetopenia e coagulopatia</li>
+      <li>Febre ≥ 3 dias + contato ou teste para SARS-CoV-2</li>
+    </ul></div>
+  </div>
+  <div class="crit">
+    <div class="row h"><span class="k">Definição OMS</span><span class="v">Os 6 itens obrigatórios</span></div>
+    <div class="row"><span class="k">1. Idade</span><span class="v">0 a 19 anos</span></div>
+    <div class="row"><span class="k">2. Febre</span><span class="v">≥ 3 dias</span></div>
+    <div class="row"><span class="k">3. Multissistêmico</span><span class="v">≥ 2 de: pele e mucosas (exantema, conjuntivite não exsudativa, mãos e pés); hipotensão ou choque; disfunção cardíaca, pericardite, valvulite ou coronária (eco, troponina, BNP); coagulopatia (TP ou TTPA longos, D-dímero alto); gastrointestinal agudo</span></div>
+    <div class="row"><span class="k">4. Inflamação</span><span class="v">VHS, PCR ou procalcitonina altas</span></div>
+    <div class="row"><span class="k">5. Exclusão</span><span class="v">Sem outra causa microbiana óbvia (sepse, choque tóxico estrepto ou estafilocócico)</span></div>
+    <div class="row"><span class="k">6. SARS-CoV-2</span><span class="v">RT-PCR, antígeno ou sorologia positivos, ou contato com caso de COVID-19</span></div>
+  </div>
+  <h4 class="sub">Tratamento conforme a gravidade</h4>
+  <div class="prose"><ul>
+    <li><strong>Moderado a grave</strong> (vasopressor, disfunção de VE, aneurisma, troponina ou BNP altos, arritmia, UTI): <strong>IGIV + corticoide intravenoso</strong>.</li>
+    <li>Fenótipo de Kawasaki: IGIV + AAS. Choque: protocolo de choque.</li>
+    <li><strong>Antibiótico de amplo espectro</strong> enquanto não se afasta sepse; suspender com culturas negativas e melhora.</li>
+    <li>Antitrombótico se disfunção grave de VE ou aneurisma; isolamento se RT-PCR positivo. Tocilizumabe, infliximabe e antivirais: sem evidência robusta.</li>
+    <li>Caso duvidoso e sem gravidade: ambulatório com reavaliação e exames em 24-48 h.</li>
+  </ul></div>
+  <details class="ref">
+    <summary>Imagem na SIM-P</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Eco</span><span class="v">Disfunção de VE, dilatação coronária, insuficiência mitral, derrame pericárdico</span></div>
+      <div class="row"><span class="k">Tórax</span><span class="v">Radiografia com infiltrado simétrico e derrame pleural; tomografia com vidro fosco</span></div>
+      <div class="row"><span class="k">Abdome</span><span class="v">Ascite, inflamação mesentérica, ileíte, adenite</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="synth" id="synth">
+  <h2>Gatilhos, um por degrau</h2>
+  <p class="lede">Se a questão traz este dado, puxe esta resposta.</p>
+  <div class="trig">
+    <div><span class="tk">0 · base</span><span class="tv">Lactente, febre alta prolongada, menino, asiático: DK, vasculite de médio calibre.</span></div>
+    <div><span class="tk">1 · mecanismo</span><span class="tv">Parede destruída leva tempo a ceder: aneurisma depois do 10º dia.</span></div>
+    <div><span class="tk">2 · critérios</span><span class="tv">Febre ≥ 5 d + 4 de CREAM. Conjuntivite sem secreção; adenopatia única &gt; 1,5 cm.</span></div>
+    <div><span class="tk">3 · exames</span><span class="tv">Inflamação alta, plaquetose na 2ª semana; eco e ECG para todos.</span></div>
+    <div><span class="tk">4 · incompleto</span><span class="tv">2-3 critérios ou &lt; 6 m com 7 d de febre: PCR ≥ 3 / VHS ≥ 40, suplementares e eco.</span></div>
+    <div><span class="tk">5 · diferencial</span><span class="tv">Koplik, Pastia, vesículas, exsudato: não é DK. Falta extremidade ou conjuntivite.</span></div>
+    <div><span class="tk">6 · tratamento</span><span class="tv">IGIV 2 g/kg + AAS até D10; alto risco ganha corticoide; refratário, 2ª IGIV.</span></div>
+    <div><span class="tk">7 · seguimento</span><span class="tv">Eco em 2-6 sem; gigante &gt; 8 mm; vacina adiada 11 meses.</span></div>
+    <div><span class="tk">8 · SIM-P</span><span class="tv">Adolescente, abdome, choque, miocárdio, plaquetopenia, COVID recente.</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Armadilhas de prova</span><h2>Onde a alternativa engana</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Febre é o único critério obrigatório.</strong> Os outros cinco são "4 de 5"; nenhum deles é mandatório.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Coronária é complicação, não critério.</strong> Eco normal não exclui DK clássica, e eco não é necessário para fechar o diagnóstico.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Conjuntivite purulenta afasta DK.</strong> A da DK é bilateral e sem exsudato.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Exantema escarlatiniforme cabe na DK.</strong> Polimorfo inclui escarlatiniforme, e ele pode descamar.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Plaquetose é da 2ª semana.</strong> Alternativa que põe plaquetose na 1ª semana ou plaquetopenia como típica está errada.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>IGIV é para todos.</strong> Não se restringe a quem já tem lesão cardíaca, e trata também a forma incompleta.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>AAS em dose baixa só depois de 48 h sem febre.</strong> Na fase febril a dose é anti-inflamatória.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Corticoide sozinho não é o tratamento.</strong> Ele entra junto da IGIV no alto risco, ou na SIM-P grave.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Refratário pode, sim, repetir IGIV.</strong> A 2ª dose é a primeira escolha do PDF.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Sintoma gastrointestinal ou de vias aéreas não exclui DK.</strong> Diarreia, vômitos, coriza e irritabilidade são comuns.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Hidropsia de vesícula é da DK</strong>, apesar de não ser critério. Estenose mitral é da febre reumática.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>SIM-P leva antibiótico empírico</strong> até afastar sepse; DK não leva.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Pediatria/34. Doença de Kawasaki.pdf</code> (EMED, Prof. Andrea Makssoudian, Extensivo 2024), sumário inteiro; apoio em <code>Flashcards - Doença de Kawasaki.cards.json</code>. Complementos fora do PDF, marcados no texto: classes de escore Z coronariano e definição de refratário (AHA 2017).</p>
+  <p>Escopo: os 8 objetivos do catálogo do tema (lista #651). Nenhuma questão do PDF foi reproduzida.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

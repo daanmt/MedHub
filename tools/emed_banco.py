@@ -16,6 +16,7 @@ Uso:
     python tools/emed_banco.py --registrar tmp/bancada --apply
     python tools/emed_banco.py --podar tmp/bancada --colecao respostas
     python tools/emed_banco.py --exportar t26 --out tmp/emed_export
+    python tools/emed_banco.py --exportar t61 --sem-cadeia "motivo declarado"
     python tools/emed_banco.py --exportar t40 --so-figuras --out tmp/emed_export
     python tools/emed_banco.py --figuras tmp/emed_api/t40
     python tools/emed_banco.py --figuras tmp/emed_api/t40 --apply --expect 5
@@ -422,6 +423,35 @@ def fora_do_hub(q):
     return q.get("executor") != "prova_pdf" and emed_api.spoiler_uerj(q.get("banca"))
 
 
+def cobertura_cadeia(questoes, solucoes):
+    """Cobertura da Solução em cadeia sobre `questoes` (linhas do banco), PURA (part 1.2, P2).
+
+    Uma regra só para o gate do `--exportar` (que passa só as questões que vão ao hub, depois do
+    `fora_do_hub`) e para o sensor do `--status` (todas as questões da lista, como `capturadas`).
+    A versão vem de `db.versao_solucao`; `sem_obj` conta objetivo vazio OU Solução ausente.
+    Devolve `{n, v3, v2, v1, sem, sem_obj, sem_cadeia: [num], sem_objetivo: [num]}`: em `sem_cadeia`
+    cai quem tem versão < 2 (v1 ou sem Solução)."""
+    sol = {(s["lista"], s["num"]): s for s in solucoes}
+    c = {"n": 0, "v3": 0, "v2": 0, "v1": 0, "sem": 0, "sem_obj": 0,
+         "sem_cadeia": [], "sem_objetivo": []}
+    for q in questoes:
+        s = sol.get((q["lista"], q["num"]))
+        v = db.versao_solucao(s["solucao"]) if s else 0
+        c["n"] += 1
+        c[("v3" if v == 3 else "v2" if v == 2 else "v1") if s else "sem"] += 1   # linha vazia = v1
+        if v < 2:
+            c["sem_cadeia"].append(q["num"])
+        if not s or not str(s.get("objetivo") or "").strip():
+            c["sem_obj"] += 1
+            c["sem_objetivo"].append(q["num"])
+    return c
+
+
+def _numeros_cadeia(c):
+    """`v3 a | v2 b | v1 c | sem d | sem_obj e` -- os números da cobertura numa linha."""
+    return " | ".join(f"{k} {c[k]}" for k in ("v3", "v2", "v1", "sem", "sem_obj"))
+
+
 def questoes_no_hub_por_tarefa(questoes=None):
     """{tarefa_id: n} -- quantas questões de cada tarefa o `--exportar` manda ao hub (o que a aba
     Listas conta), pela MESMA regra (`fora_do_hub`). P20 (s219): a Teoria, o Painel e o boot contam
@@ -549,24 +579,52 @@ def exportar_so_figuras(args, linhas):
     return 0
 
 
+def gate_cadeia(args, cabecalho, c):
+    """Gate de cadeia do `--exportar` (part 1.2, P2): a lista só chega ao hub com cadeia (v2/v3) e
+    `objetivo` em toda questão que vai ao hub. Simulado (`area` do plano, a regra do hub) não se
+    aplica; `--sem-cadeia MOTIVO` deixa passar declarado. True = segue; False = RECUSA impressa."""
+    if cabecalho.get("area") == "Simulado":
+        print("simulado: gate de cadeia nao se aplica")
+        return True
+    if c["sem_cadeia"] or c["sem_objetivo"]:
+        motivo = getattr(args, "sem_cadeia", None)
+        if motivo:
+            print(f"SEM CADEIA declarado ({motivo}): {_numeros_cadeia(c)}")
+            return True
+        partes = [f"sem {nome} em " + ",".join(f"Q{n}" for n in sorted(nums))
+                  for nome, nums in (("cadeia", c["sem_cadeia"]), ("objetivo", c["sem_objetivo"]))
+                  if nums]
+        print(f"RECUSA: {args.exportar} " + " / ".join(partes)
+              + " -- cunhar v3 com objetivo (--solucoes --apply --expect N) ou --sem-cadeia MOTIVO")
+        return False
+    if c["v2"]:
+        print(f"legado v2: {c['v2']}")
+    return True
+
+
 def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
     `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData.
-    Com `--so-figuras` (1.1a), so `OUT/upd/` com as chaves de figura (`exportar_so_figuras`)."""
+    Com `--so-figuras` (1.1a), so `OUT/upd/` com as chaves de figura (`exportar_so_figuras`).
+    Part 1.2: antes de escrever, o gate de cadeia (`gate_cadeia`) recusa a lista sem cadeia/objetivo."""
     todas = db.emed_listar_questoes(args.exportar)
     # s219: o spoiler UERJ de lista do EMED nao volta ao hub (`fora_do_hub`)
     spoiler = [q["num"] for q in todas if fora_do_hub(q)]
     linhas = [q for q in todas if q["num"] not in spoiler]
     if getattr(args, "so_figuras", False):
         return exportar_so_figuras(args, linhas)
-    solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
+    linhas_sol = db.emed_listar_solucoes(args.exportar)
+    solucoes = {s["num"]: s for s in linhas_sol}
+    cabecalho = doc_lista(args.exportar, len(linhas))
+    if not gate_cadeia(args, cabecalho, cobertura_cadeia(linhas, linhas_sol)):
+        return 1    # part 1.2: antes do makedirs -- recusa nao cria OUT
     falhas = []
     pasta = os.path.join(args.out, "questoes")
     os.makedirs(pasta, exist_ok=True)
     pasta_l = os.path.join(args.out, "listas")
     os.makedirs(pasta_l, exist_ok=True)
     with open(os.path.join(pasta_l, f"{args.exportar}.json"), "w", encoding="utf-8") as fh:
-        json.dump(doc_lista(args.exportar, len(linhas)), fh, ensure_ascii=False, indent=2)
+        json.dump(cabecalho, fh, ensure_ascii=False, indent=2)
     for q in linhas:
         doc = {c: q.get("tarefa_id" if c == "tarefa" else c) for c in CAMPOS_DOC_QUESTAO}
         # `extras` volta a ser chaves soltas do doc (formato do artifact); o hash re-deriva igual.
@@ -918,19 +976,30 @@ def cmd_status(args):
                   f"{g['chutes_certos']} | {', '.join(g['erradas']) or '-'}")
         return 0
     linhas = [s for s in db.emed_status() if not args.lista or s["lista"] == args.lista]
+    if linhas:      # part 1.2: o sensor de cadeia, sobre todas as questoes da lista (como `capturadas`)
+        questoes, solucoes = db.emed_listar_questoes(), db.emed_listar_solucoes()
+        for s in linhas:
+            c = cobertura_cadeia([q for q in questoes if q["lista"] == s["lista"]],
+                                 [x for x in solucoes if x["lista"] == s["lista"]])
+            s.update({k: c[k] for k in ("v3", "v2", "v1", "sem", "sem_obj")})
     if args.json:
         _emitir(linhas, True)
         return 0
     if not linhas:
         print("nenhuma lista no banco EMED")
         return 0
-    print("lista | tarefa | area | tema | capt | resp | acertos | sol/duv/chu | erradas | tempo")
+    print("lista | tarefa | area | tema | capt | resp | acertos | sol/duv/chu | erradas | tempo"
+          " | v3 | v2 | v1 | sem | sem_obj")
     for s in linhas:
         print(f"{s['lista']} | {s['tarefa_id'] or '-'} | {s['area'] or '-'} | "
               f"{s['tema'] or '-'} | {s['capturadas']} | {s['respondidas']} | "
               f"{s['acertos']} | {s['solidas']}/{s['duvidas']}/{s['chutes']} | "
               f"{s['erradas']} | "
-              f"{s['tempo_medio_s'] if s['tempo_medio_s'] is not None else '-'}")
+              f"{s['tempo_medio_s'] if s['tempo_medio_s'] is not None else '-'} | "
+              f"{s['v3']} | {s['v2']} | {s['v1']} | {s['sem']} | {s['sem_obj']}")
+    for s in linhas:    # sensor, nao gate (warn-first): o estoque que ja esta no hub
+        if s["area"] != "Simulado" and s["v1"] + s["sem"] > 0:
+            print(f"[WARN] SEM_CADEIA: {s['lista']} ({s['v1'] + s['sem']}/{s['capturadas']})")
     return 0
 
 
@@ -952,6 +1021,9 @@ def main(argv=None):
                     help="pasta de saida do --exportar (default tmp/emed_export)")
     ap.add_argument("--sem-figuras", action="store_true",
                     help="--exportar sem baixar/embutir a imagem do enunciado (s221, P22)")
+    ap.add_argument("--sem-cadeia", dest="sem_cadeia", metavar="MOTIVO",
+                    help="--exportar de lista sem cadeia v2/v3 ou sem objetivo, com o motivo declarado "
+                         "(part 1.2; sem a flag, o gate recusa com exit 1)")
     ap.add_argument("--so-figuras", dest="so_figuras", action="store_true",
                     help="--exportar so OUT/upd/<lista>_<num>.json com as chaves de figura + emed_id (1.1a)")
     ap.add_argument("--figuras", metavar="DIR",
@@ -986,6 +1058,9 @@ def main(argv=None):
     if len(ligados) != 1:
         print("erro: informe exatamente UM modo (" + " | ".join(modos) + ")",
               file=sys.stderr)
+        return 1
+    if args.sem_cadeia is not None and not args.sem_cadeia.strip():
+        print("erro: --sem-cadeia exige um MOTIVO nao vazio", file=sys.stderr)
         return 1
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
             "--solucoes": cmd_solucoes, "--figuras": cmd_figuras,

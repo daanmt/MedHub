@@ -83,7 +83,8 @@ def test_extras_vao_para_coluna_e_voltam_no_export(tmp_path, monkeypatch, capsys
                                         "alternativas_pct": "A 2% B 93% C 5%"}
     assert q2["extras"] == ""
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: extras e hash, sem Solucao"]) == 0
     capsys.readouterr()
     doc1 = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
     assert doc1["acerto_pct"] == 93 and doc1["video"] is True and "extras" not in doc1
@@ -214,7 +215,8 @@ def test_exportar_round_trip(tmp_path, monkeypatch, capsys):
     _escrever(base, "questoes", "t26_3", _questao(3, tarefa=None, estatistica=None))
     assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: round trip do doc, sem Solucao"]) == 0
     arquivos = sorted(p.name for p in (out / "questoes").glob("*.json"))
     assert arquivos == ["t26_1.json", "t26_2.json", "t26_3.json"]
     doc = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
@@ -241,11 +243,13 @@ def test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed(tmp_path, monkeypatc
     assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
     capsys.readouterr()
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: regra do spoiler, sem Solucao"]) == 0
     assert "spoiler UERJ fora: [2]" in capsys.readouterr().out
     assert sorted(p.name for p in (out / "questoes").glob("t26_*.json")) == ["t26_1.json", "t26_3.json"]
     assert json.loads((out / "listas" / "t26.json").read_text(encoding="utf-8"))["q"] == 2
-    assert emed_banco.main(["--exportar", "t1794", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t1794", "--out", str(out),
+                            "--sem-cadeia", "teste: prova sem plano semeado"]) == 0
     assert (out / "questoes" / "t1794_1.json").is_file()
 
 
@@ -270,7 +274,8 @@ def test_contagem_no_hub_por_tarefa_e_a_do_exportar(tmp_path, monkeypatch, capsy
     capsys.readouterr()
     assert emed_banco.questoes_no_hub_por_tarefa() == {26: 2, 1794: 2}, "so spoiler = fora do hub"
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: contagem do hub, sem Solucao"]) == 0
     assert json.loads((out / "listas" / "t26.json").read_text(encoding="utf-8"))["q"] == 2
     assert emed_banco.fora_do_hub({"banca": f"{hupe}, 2022", "executor": "emed_api"})
     assert not emed_banco.fora_do_hub({"banca": "UERJ 2022", "executor": "prova_pdf"})
@@ -368,7 +373,8 @@ def test_exportar_leva_solucao_medhub_e_round_trip(tmp_path, monkeypatch, capsys
     assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
     assert emed_banco.main(["--solucoes", str(base), "--apply"]) == 0
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: so a Q1 tem Solucao (v1)"]) == 0
     d1 = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
     d2 = json.loads((out / "questoes" / "t26_2.json").read_text(encoding="utf-8"))
     assert d1["solucao_medhub"] == _solucao(1)["solucao"] and d1["divergente"] is True
@@ -515,7 +521,8 @@ def test_exportar_em_banco_nao_migrado_mantem_as_solucoes(tmp_path, monkeypatch,
     con.close()
 
     out = tmp_path / "exp"
-    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out),
+                            "--sem-cadeia", "teste: v2 sem a coluna objetivo"]) == 0
     docs = [json.loads((out / "questoes" / f"t26_{i}.json").read_text(encoding="utf-8"))
             for i in range(1, n + 1)]
     assert sum(1 for d in docs if d.get("solucao_medhub")) == n
@@ -1315,3 +1322,158 @@ def test_cli_reavaliar_sem_figura_dry_run_e_rito(db_sintetico, capsys, monkeypat
     out = capsys.readouterr().out
     assert len(atos) == 1 and "FIXADO" in out and "t26_1" in out
     assert "sem_figura" not in json.loads(_linha_q(db_sintetico, 1)["extras"])
+
+
+# ------------------------------------- part 1.2 (P2): versao da Solucao, gate de cadeia, sensor
+
+def test_versao_solucao_pura_seis_casos():
+    """DoD 2 (1.2): `versao_solucao` -- 3 (v3), 2 (v2), 1 (texto que nao e cadeia: prosa, JSON torto,
+    versao desconhecida) e 0 (vazio/None). A mesma funcao que o loader da Fase 1 vai usar."""
+    assert db.versao_solucao(json.dumps(_v3(1))) == 3
+    assert db.versao_solucao(json.dumps(_v2(1))) == 2
+    assert db.versao_solucao("Pede a conduta. Gabarito B.") == 1
+    assert db.versao_solucao('{"versao": 3, "cadeia": [') == 1
+    assert db.versao_solucao('{"versao": 4}') == 1
+    assert db.versao_solucao("") == 0 and db.versao_solucao("   ") == 0
+    assert db.versao_solucao(None) == 0
+
+
+def _sem_objetivo(doc):
+    """O doc da Solucao sem a chave `objetivo` (o writer aceita; o gate nao)."""
+    doc = dict(doc)
+    doc.pop("objetivo", None)
+    return doc
+
+
+def _semear_gate(db_sintetico, sols, nums=(1, 2), lista="t26", **extra_q):
+    """Questoes `nums` da `lista` + Solucoes `sols` (docs) pelos writers reais, no banco sintetico."""
+    assert Path(db_sintetico).resolve() != (ROOT / "ipub.db").resolve()     # sentinela: nunca o real
+    tarefa = int(lista.lstrip("t"))
+    assert db.emed_upsert_questoes([_questao(n, lista=lista, tarefa=tarefa, **extra_q)
+                                    for n in nums])["novas"] == len(nums)
+    if sols:
+        c = db.emed_upsert_solucoes(sols)
+        assert c["invalidas"] == [] and c["novas"] == len(sols)
+
+
+def _simulado(tarefa_id):
+    """Tarefa do plano com `area = Simulado` (a regra do hub) no banco sintetico."""
+    conn = db.get_connection()
+    try:
+        db._ensure_plano_table(conn)
+        conn.execute("INSERT INTO plano_tarefas (id, fonte, area, tema) VALUES (?, 'custom', "
+                     "'Simulado', 'Simulado UERJ')", (tarefa_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def test_gate_exportar_v3_completa_passa(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): todas com v3 e objetivo -> exit 0 e os arquivos saem."""
+    _semear_gate(db_sintetico, [_v3(1), _v3(2)])
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out), "--sem-figuras"]) == 0
+    assert "RECUSA" not in capsys.readouterr().out
+    assert sorted(p.name for p in (out / "questoes").glob("*.json")) == ["t26_1.json", "t26_2.json"]
+
+
+def test_gate_exportar_v1_recusa_sem_criar_out(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): Solucao v1 (prosa) -> RECUSA, exit 1, e `OUT` nem existe (gate antes do makedirs)."""
+    _semear_gate(db_sintetico, [_v3(1), _solucao(2, objetivo="Indicação de insulina")])
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 1
+    assert "RECUSA: t26 sem cadeia em Q2" in capsys.readouterr().out
+    assert not out.exists()
+
+
+def test_gate_exportar_sem_solucao_recusa(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): questao sem Solucao -> exit 1 (sem cadeia e sem objetivo)."""
+    _semear_gate(db_sintetico, [_v3(1)])
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 1
+    saida = capsys.readouterr().out
+    assert "sem cadeia em Q2" in saida and "sem objetivo em Q2" in saida
+    assert not out.exists()
+
+
+def test_gate_exportar_v3_sem_objetivo_recusa(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): v3 valida mas sem `objetivo` (o writer aceita) -> exit 1."""
+    _semear_gate(db_sintetico, [_v3(1), _sem_objetivo(_v3(2))])
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 1
+    saida = capsys.readouterr().out
+    assert "RECUSA: t26 sem objetivo em Q2" in saida and "sem cadeia" not in saida
+    assert not out.exists()
+
+
+def test_gate_exportar_sem_cadeia_motivo_passa_e_vazio_e_erro(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): `--sem-cadeia MOTIVO` deixa passar e imprime o motivo e os numeros;
+    `--sem-cadeia ""` e erro de uso (exit 1, nada escrito)."""
+    _semear_gate(db_sintetico, [])
+    vazio = tmp_path / "vazio"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(vazio), "--sem-cadeia", ""]) == 1
+    assert "--sem-cadeia" in capsys.readouterr().err
+    assert not vazio.exists()
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out), "--sem-cadeia", "motivo-x"]) == 0
+    saida = capsys.readouterr().out
+    assert "motivo-x" in saida and "sem 2" in saida and "RECUSA" not in saida
+    assert (out / "questoes" / "t26_1.json").is_file()
+
+
+def test_gate_exportar_v2_passa_como_legado(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): a v2 e cadeia validada -> passa com o rotulo `legado v2: N`."""
+    _semear_gate(db_sintetico, [_v3(1), _v2(2)])
+    assert emed_banco.main(["--exportar", "t26", "--out", str(tmp_path / "exp")]) == 0
+    assert "legado v2: 1" in capsys.readouterr().out
+
+
+def test_gate_exportar_simulado_nao_se_aplica(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): lista cuja tarefa e `area = Simulado` no plano passa sem Solucao nenhuma."""
+    _simulado(1794)
+    _semear_gate(db_sintetico, [], lista="t1794", banca="UERJ 2022", executor="prova_pdf")
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t1794", "--out", str(out)]) == 0
+    assert "simulado: gate de cadeia nao se aplica" in capsys.readouterr().out
+    assert (out / "questoes" / "t1794_1.json").is_file()
+
+
+def test_gate_exportar_so_figuras_nao_passa_pelo_gate(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): `--so-figuras` de lista v1 -> exit 0 (o patch de figura nao e entrada de lista)."""
+    _semear_gate(db_sintetico, [_solucao(1), _solucao(2)])
+    assert emed_banco.main(["--exportar", "t26", "--out", str(tmp_path / "exp"), "--so-figuras"]) == 0
+    assert "RECUSA" not in capsys.readouterr().out
+
+
+def test_gate_exportar_spoiler_nao_entra_na_conta(db_sintetico, tmp_path, capsys):
+    """DoD 3 (1.2): a questao spoiler (fora do hub) sem Solucao nao derruba a lista."""
+    hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+    _semear_gate(db_sintetico, [_v3(1)], nums=(1,))
+    assert db.emed_upsert_questoes([_questao(2, banca=f"{hupe}, 2022", executor="emed_api")])["novas"] == 1
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert "spoiler UERJ fora: [2]" in capsys.readouterr().out
+    c = emed_banco.cobertura_cadeia([q for q in db.emed_listar_questoes("t26")
+                                     if not emed_banco.fora_do_hub(q)], db.emed_listar_solucoes("t26"))
+    assert (c["n"], c["v3"], c["sem"], c["sem_cadeia"], c["sem_objetivo"]) == (1, 1, 0, [], [])
+
+
+def test_status_sensor_de_cadeia_por_lista(db_sintetico, capsys):
+    """DoD 4 (1.2): o `--status` ganha `v3 | v2 | v1 | sem | sem_obj` por lista (todas as questoes
+    do banco) e `[WARN] SEM_CADEIA` para lista fora de simulado com v1 + sem > 0. Exit 0 sempre."""
+    _semear_gate(db_sintetico, [_v3(1), _sem_objetivo(_v3(2))])                              # v3
+    _semear_gate(db_sintetico, [_sem_objetivo(_v2(1, lista="t40"))], nums=(1,), lista="t40")  # v2
+    _semear_gate(db_sintetico, [_solucao(1, lista="t61")], lista="t61")                       # v1 + sem
+    _simulado(1794)
+    _semear_gate(db_sintetico, [], nums=(1,), lista="t1794")                                  # simulado
+    assert emed_banco.main(["--status", "--json"]) == 0
+    por = {s["lista"]: s for s in _json_saida(capsys)}
+    chaves = ("v3", "v2", "v1", "sem", "sem_obj")
+    assert tuple(por["t26"][k] for k in chaves) == (2, 0, 0, 0, 1)
+    assert tuple(por["t40"][k] for k in chaves) == (0, 1, 0, 0, 1)
+    assert tuple(por["t61"][k] for k in chaves) == (0, 0, 1, 1, 2)
+    assert tuple(por["t1794"][k] for k in chaves) == (0, 0, 0, 1, 1)
+    assert emed_banco.main(["--status"]) == 0
+    saida = capsys.readouterr().out
+    assert "v3 | v2 | v1 | sem | sem_obj" in saida
+    assert [ln for ln in saida.splitlines() if ln.startswith("[WARN]")] == ["[WARN] SEM_CADEIA: t61 (2/2)"]

@@ -156,7 +156,8 @@ def test_docs_passam_pelo_ingerir_e_o_export_devolve_pagina_e_figura(tmp_path, m
     capsys.readouterr()
     assert emed_banco.main(["--ingerir", str(tmp_path / "out"), "--apply", "--expect", "3", "--json"]) == 0
     assert json.loads(capsys.readouterr().out)["novas"] == 3
-    assert emed_banco.main(["--exportar", "t9", "--out", str(tmp_path / "exp")]) == 0
+    assert emed_banco.main(["--exportar", "t9", "--out", str(tmp_path / "exp"),
+                            "--sem-cadeia", "teste: prova sem plano semeado nem Solucao"]) == 0
     d3 = json.loads((tmp_path / "exp" / "questoes" / "t9_3.json").read_text(encoding="utf-8"))
     assert d3["figura"] is True and d3["pagina"] == 3 and d3["tags"] == "Pediatria"
 

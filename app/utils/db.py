@@ -3040,6 +3040,17 @@ def solucao_estruturada(texto):
     return d if isinstance(d, dict) and d.get("versao") in (2, 3) else None
 
 
+def versao_solucao(texto):
+    """A `versao` da Solução como campo (Fase 0, part 1.2): 3 (v3), 2 (v2), 1 (texto não vazio que não
+    é cadeia: prosa, JSON torto, versão desconhecida) ou 0 (vazio/None). PURA. Derivada pela
+    `solucao_estruturada`, não guardada: o gate do `--exportar`, o sensor do `--status` e o loader da
+    Fase 1 (que materializa a coluna `versao`) leem por aqui."""
+    if texto is None or not str(texto).strip():
+        return 0
+    d = solucao_estruturada(texto)
+    return int(d["versao"]) if d else 1
+
+
 def emed_upsert_solucoes(rows, aplicar=True):
     """Upsert de `emed_solucoes` por `(lista, num)` (s199). Writer único da tabela.
 

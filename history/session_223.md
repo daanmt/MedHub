@@ -61,3 +61,4 @@
 - 11/10 15:06 part 1.3 PASS: emed_card_ancora; reancoragem real 6 cards / 8 ancoras (fixado 150506)
 - 11/10 15:13 hub-backend: t61 registrada 15 (60%, sb 141, tarefa #61 concluida; analise dos 6 erros em subagente); republicado com o mesmo lote 2026-10-10a (painel; V92)
 - 11/10 15:20 aulas-base glomerulopatias/kawasaki/neuromusculares no hub (V93, quadro: tarefas 68+115, 651+754, 141) · 0.4b aplicada (54 desfixados, 55 purgados, 501->110 MB) · M-140 feito (local)
+- 11/10 15:58 3.0 a2: dados de memoria apagados (copia memoria_20261011 conferida), 3 pacotes desinstalados (langgraph mantido), suite 1629/0 · M-147 copia do dia 20261011_154910 conferida

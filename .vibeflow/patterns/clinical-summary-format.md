@@ -12,116 +12,82 @@ last_verified: 2026-08-25
 
 <!-- vibeflow:auto:start -->
 ## What
-Mandatory structure and formatting rules for all clinical summaries in `resumos/`. Every file must follow the 80/20 benchmark: 80% assertiveness (condutas, scores, criteria), 20% clinical didactics. Enforced by `.claude/commands/estilo-resumo.md`.
+Estrutura e formatação obrigatórias de todo resumo clínico em `resumos/`, com o benchmark 80/20 (80% assertividade: condutas, scores, critérios; 20% didática do porquê clínico). A SSOT é `.claude/commands/estilo-resumo.md`; o linter `tools/audit_resumos.py` (rodado pelo `tools/auto_check.py`) mede a estrutura e o encoding. Este pattern é espelho: em conflito, o `estilo-resumo.md` vence.
 
 ## Where
-All `.md` files under `resumos/` — organized by specialty:
-- `resumos/Clínica Médica/<Specialty>/`
-- `resumos/Cirurgia/`
-- `resumos/GO/`
-- `resumos/Pediatria/`
-- `resumos/Preventiva/`
+Os `.md` de `resumos/` (contagem só pelo contador canônico, `python tools/cobertura_conhecimento.py`; nunca fixar número), por grande área:
+- `resumos/Clínica Médica/<Especialidade>/`
+- `resumos/Cirurgia/`, `resumos/GO/`, `resumos/Pediatria/`, `resumos/Preventiva/`, `resumos/Otorrino/`
+Os PDFs-fonte do EMED moram nas mesmas pastas (retidos, gitignored).
 
 ## The Pattern
 
-**Frontmatter (required on every file):**
+**Frontmatter (`AGENTE.md` §5.2):**
 ```yaml
 ---
 type: knowledge
 area: Clínica Médica
 especialidade: Cardiologia
 status: active
-aliases: [IC, insuficiência cardíaca]
+aliases: [IC]
 ---
 ```
 
-**Heading hierarchy:**
+**Hierarquia:** `# Nome do Tema` (H1 único, sem metadata de fonte) -> `## 1. Seção` (H2 numerado) -> `### 1.1 Subseção` (H3) -> `**Título em negrito:**` + bullets. Separador `---` entre seções principais.
+
+**Marcadores no corpo:** `⭐` (fundamental), `⚠️ Padrão de prova:` (armadilha inline), `🔴` (na seção final de armadilhas), blockquote `>` para alerta.
+
+**Seção final obrigatória e cumulativa:**
 ```markdown
-# Título do Tema (H1 — one per file, no emojis)
+## N. Armadilhas de Prova
 
-## 1. Seção Principal (H2 — numbered sections, no emojis)
-
-### 1.1 Subseção (H3 — optional, no emojis)
-```
-
-**Bullet style — assertions first:**
-```markdown
-- Critério A: valor/conduta
-  - Detalhe específico com mecanismo se relevante
-- **Conceito chave** em negrito quando fundamental
-- ⭐ Item de alta cobrança em prova
-```
-
-**Exam traps (inline, in relevant section):**
-```markdown
-- Conduta X: fazer Y
-  - ⚠️ Padrão de prova: perguntas costumam omitir o contexto Z para induzir ao erro
-```
-
-**Armadilhas section (always last, cumulative — never delete):**
-```markdown
-## N. Armadilhas e Padrões de Prova
-
-- 🔴 Descrição da armadilha mais cobrada
-- 🔴 Segunda armadilha, acumulada da sessão de análise anterior
+- 🔴 [armadilha 1]
+- 🔴 [armadilha 2]
 ```
 
 ## Rules
-- H1/H2/H3 headers: **no emojis, no backticks**
-- Bullets: `⭐` for fundamental items, `⚠️ Padrão de prova:` inline for exam traps, `🔴` only in armadilhas section
-- **No `✅`/`❌` bullets** anywhere in the file
-- **No `estilo:` field** in frontmatter
-- **No editorial footers** (e.g., "Atualizado em sessão X")
-- **No informal language** ("vamos lá", "encher balde", etc.)
-- Armadilhas section is cumulative — only add/refine, never delete old ones
-- 80/20 benchmark: most content is direct condutas and criteria; physiology only to explain "why" for high-yield items
-- Tables permitted only for comparative data (e.g., drug dosing) — not for narrative content
+- Sem tabelas, em nenhum tamanho ou formato: converter em bullets hierárquicos. O linter acusa linha `| ... | ... |`.
+- Sem fluxograma ASCII em bloco de código: condicionais em texto (`-> se X:`, `-> se não:`).
+- Sem LaTeX inline (`$...$`, `\rightarrow`) nem `→`, `—`, `–`: usar `->`, `--`, `-`, `<=`.
+- Sem emoji em H1/H2/H3; emoji só inline como marcador.
+- Sem `✅`/`❌` como bullet: `- **Conduta recomendada:**` / `- **Proscrito:**`.
+- Frontmatter só com `area`, `tema`, `type`, `especialidade`, `status`, `aliases`; sem `estilo:`. O linter cobra `type`, `area`, `especialidade`, `status` (WARN).
+- Sem rodapé editorial, sem header de metadata (fonte, autor, ano), sem linguagem informal, sem citar questão no texto ("Q1 na prova").
+- A seção "Armadilhas de Prova" (com ou sem número) é obrigatória (BLOCK no linter) e cumulativa: nunca apagar armadilha antiga.
+- Especificidade técnica: classificação oficial ou critério quantitativo em vez de descrição genérica (AAST Grau IV, não "lesão grave").
+- Conteúdo decisório segue `core/contracts/evidence-governance.md`: conflito banca x evidência vira 🔴 armadilha banca-dependente com fonte.
+- Antes de encerrar: `python -X utf8 tools/auto_check.py --changed` com exit 0.
 
 ## Examples from this codebase
 
 File: `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md`
 ```markdown
----
-type: knowledge
-area: Clínica Médica
-especialidade: Cardiologia
-status: active
-aliases: [IC, insuficiência cardíaca, heart failure]
----
-
-# Insuficiência Cardíaca
+# Insuficiência Cardíaca (IC)
 
 ## 1. Definição e Epidemiologia
-- Síndrome clínica de débito cardíaco inadequado para demandas metabólicas
-  - Causa mais comum de internação em >65 anos no Brasil
-- ⭐ Prevalência: 2-3% da população geral; 10% em >70 anos
+- **Conceito Base:** Síndrome clínica com baixo débito cardíaco (baixo fluxo) e/ou pressões de enchimento anormais (congestão).
+- **Tradição em Provas:** 1ª causa de internação no Brasil.
+- **Etiologia Nacional:** Isquêmica lidera, mas Doença de Chagas chega a 40% na Região Norte.
 
-## 2. Classificação pela FEVE
-- **ICFEr** (FEVE < 40%): sistólica — maior arsenal terapêutico com redução de mortalidade
-- **ICFEi** (FEVE 40-49%): intermediária — conduta similar à ICFEr
-- **ICFEp** (FEVE ≥ 50%): diastólica — tratamento sintomático (diurético + controle da FC)
-  - ⚠️ Padrão de prova: ICFEp não tem benefício demonstrado com IECA/BRA em mortalidade
-
-## 7. Armadilhas e Padrões de Prova
-- 🔴 Confundir edema pulmonar agudo (ortopneia + B3) com derrame pleural (macicez)
-- 🔴 Na IC descompensada, nunca iniciar betabloqueador — apenas manter se já em uso
+## 2. A Bússola: Classificação por Fração de Ejeção (FEVE)
+O Ecocardiograma (método de Simpson) divide a IC em três caminhos de tratamento absolutos.
+- **ICFEr (Reduzida) -- FEVE < 40%:**
+  - O defeito é na **contratilidade** (sístole). O músculo estirou.
 ```
 
-File: `resumos/GO/Assistência ao Parto.md` (reference for GO and procedure-heavy summaries)
+File: `resumos/GO/Assistência ao Parto.md` (referência de obstetrícia no `estilo-resumo.md`)
 ```markdown
-## 3. Manobras do Parto Normal
+### 9.2 Prolapso de Cordão
 
-### 3.1 Rotação Interna
-- Occipito-anterior: rotação espontânea de 45° no plano +2
-- ⭐ Indicação de manobra manual: falha de rotação após período expulsivo prolongado
+- **Definição:** exteriorização do cordão antes da apresentação fetal -> compressão vascular -> sofrimento fetal agudo.
+- **Conduta:** cesárea de emergência. Enquanto prepara: elevar manualmente a apresentação para aliviar compressão.
+- ⚠️ Padrão de prova: **circular de cordão ≠ prolapso**. Circular NÃO contraindica parto vaginal.
 
-### 3.2 Deflexão e Desengajamento
-- Deflexão progressiva ao nível do suboccipital
-- **Manobra de Ritgen modificada**: protege o períneo, evita lacerações de 3°/4° grau
+## 12. Armadilhas de Prova
 
-## 5. Armadilhas e Padrões de Prova
-- 🔴 Cardiotocografia com desacelerações tardias = insuficiência uteroplacentária, não compressão de cordão
+- 🔴 **Critério 1 cm/hora abandonado:** não indicar ocitocina nem cesárea apenas por não atingir 1 cm/h -- evolução do parto eutócico é heterogênea.
 ```
+Divergência na própria referência: o frontmatter de `Assistência ao Parto.md` ainda é o legado (`type: resumo`, `status: ativo`, mais `tema:`).
 <!-- vibeflow:auto:end -->
 
 ## Anti-patterns

@@ -11,133 +11,123 @@ last_verified: 2026-08-25
 
 <!-- vibeflow:auto:start -->
 ## What
-The canonical pipeline for registering a wrong answer: one CLI call to `tools/insert_questao.py` atomically creates an entry in `questoes_erros`, 1-2 flashcards in `flashcards`, initializes FSRS state in `fsrs_cards`, and updates `taxonomia_cronograma` metrics.
+O caminho canônico para registrar uma questão errada: `tools/insert_questao.py` grava, numa transação de commit único, o tema em `taxonomia_cronograma` (se novo), o erro em `questoes_erros`, os cards em `flashcards` e o estado FSRS inicial em `fsrs_cards`. Os cards são cunhados pelo agente e passam pelo gate de qualidade antes de qualquer INSERT; não existe mais geração heurística.
 
 ## Where
-- `tools/insert_questao.py` — the CLI entry point (writes to DB)
-- `app/utils/db.py` — `record_review()` for FSRS updates post-registration
-- `.agents/workflows/analisar-questoes.md` — agent workflow that invokes this pipeline
-- `.claude/commands/analisar-questao.md` — skill spec for Claude
+- `tools/insert_questao.py` — o writer (modo single, `--cards-file`, lote `--errors-file`, pré-check `--errors-file ... --dry-run`).
+- `app/utils/card_checks.py` — `validar_card()` e `checar_distrator()`, o gate de cunhagem.
+- `app/utils/areas.py` — `validar_area()`, a precondição de `--area` (vocabulário em `core/areas.json`).
+- `app/utils/db.py` — relógio único (`db.agora()`, `db.carimbo()`), `db.emed_chave()` e `db.emed_ligar_erro()` (vínculo com a aba Questões do hub).
+- `tools/utils/lastro.py` — `tem_lastro()`, por trás do aviso `[SEM-LASTRO]`.
+- `.claude/commands/analisar-questao.md` §9 — assinatura canônica (8 obrigatórios + opcionais) e mapa argumento -> coluna; `.agents/workflows/analisar-questoes.md` aponta para lá.
+- Volume de questões (feitas/acertos) NÃO passa por aqui: é `tools/registrar_sessao_bulk.py` (`sessoes_bulk`).
 
 ## The Pattern
 
-**CLI invocation (from agent workflow):**
+**Invocação single (forma de `.claude/commands/analisar-questao.md` §9):**
 ```bash
 python tools/insert_questao.py \
-  --area "Clínica Médica" \
-  --tema "Insuficiência Cardíaca" \
-  --titulo "IC Descompensada - Betabloqueador" \
-  --enunciado "Paciente com IC FEVE 30%..." \
-  --correta "Manter betabloqueador" \
-  --marcada "Suspender betabloqueador" \
-  --erro "Conceitual" \
-  --elo "Não sabia que betabloqueador deve ser mantido em descompensação" \
-  --armadilha "Confundir instabilidade hemodinâmica com descompensação leve" \
-  --habilidades "Conhecer indicações de suspensão de betabloqueador em IC" \
-  --explicacao "Betabloqueador melhora mortalidade mesmo em IC descompensada..." \
-  --frente_pergunta "Na IC descompensada sem instabilidade, betabloqueador deve ser..." \
-  --verso_resposta "Mantido — suspender apenas em choque cardiogênico ou bradicardia sintomática" \
-  --verso_regra_mestre "Betabloqueador reduz mortalidade em ICFEr; suspender APENAS se instabilidade grave" \
-  --verso_armadilha "Examinador descreve 'piora' para induzir suspensão indevida"
+  --area "<subespecialidade real, valor já existente na taxonomia>" \
+  --tema "<tema>" --titulo "<título curto>" \
+  --enunciado "<enunciado limpo>" \
+  --correta "<texto da correta>" --marcada "<texto marcado>" \
+  --erro "<tipo>" --elo "<habilidade que faltou>" --armadilha "<distrator>" \
+  --habilidades "<Hab 1 -> Hab 2>" --faltou "<conceito>" --explicacao "<regra mestre>" \
+  --frente_contexto "..." --frente_pergunta "...?" --verso_resposta "..." \
+  --verso_regra_mestre "..." --verso_armadilha "..." \
+  [--cards-file cards.json] [--status anulada|banca-divergente] [--sessao ID] [--emed LISTA_NUM]
 ```
 
-**Atomic transaction inside `insert_questao()`:**
+**Contrato de cunhagem, PURO e antes de qualquer escrita (`avaliar_cunhagem`, trecho):**
 ```python
-# 1. Upsert tema in taxonomia_cronograma
-cursor.execute("SELECT id FROM taxonomia_cronograma WHERE tema = ?", (tema,))
-row = cursor.fetchone()
-if row:
-    tema_id = row[0]
-else:
-    cursor.execute('''
-        INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, ...)
-        VALUES (?, ?, 0, 0, 0, ?)
-    ''', (area, tema, datetime.now().strftime('%Y-%m-%d')))
-    tema_id = cursor.lastrowid
-
-# 2. Insert questao_erro (always 1 per call)
-cursor.execute('''
-    INSERT INTO questoes_erros
-    (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada,
-     tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-''', (...))
-questao_id = cursor.lastrowid
-
-# 3. Generate 1-2 flashcards (elo_quebrado always, armadilha if len > 20)
-for tipo_card, frente, verso, fc_, fp_, vr_, vrm_, va_, qs_ in cards_to_insert:
-    needs_q = 0 if qs_ == 'qualitative' else 1
-    cursor.execute('INSERT INTO flashcards (...) VALUES (...)', (...))
-    card_id = cursor.lastrowid
-    # 4. Init FSRS state for each card
-    cursor.execute('INSERT INTO fsrs_cards (card_id, state, due) VALUES (?, 0, ?)',
-                   (card_id, datetime.now()))
-
-# 5. Update taxonomy metrics
-cursor.execute('''
-    UPDATE taxonomia_cronograma
-    SET questoes_realizadas = questoes_realizadas + 1, ultima_revisao = ?
-    WHERE id = ?
-''', (...))
-
-conn.commit()  # Single commit — all or nothing
+    if status in ("anulada", "banca-divergente"):
+        # F26: anulada/banca-divergente registra o ERRO mas NAO cunha card.
+        return {"cards": [], "tuplas": [], "erros": [], "avisos": [],
+                "sem_cards": False}
+    if cards is None and frente_pergunta and verso_resposta:
+        # Modo flags individuais (CLI single): converge para o caminho unico.
+        cards = [{
+            "tipo": "elo_quebrado",
+            ...
+        }]
+    if not cards:
+        return {"cards": [], "tuplas": [], "erros": [], "avisos": [],
+                "sem_cards": True}
+    ctx = {"titulo": titulo, "tema": tema, "area": area}
+    erros, avisos, tuplas = [], [], []
+    for i, c in enumerate(cards):
+        res = card_checks.validar_card(c, contexto=ctx)
+        erros += [f"card {i}: {e_}" for e_ in res["erros"]]
+        avisos += [f"card {i}: {a_}" for a_ in res["avisos"]]
 ```
+`insert_questao()` levanta `ValueError(MSG_SEM_CARDS)` sem cards e `ValueError(MSG_GATE_REPROVOU + ...)` com `erros`; `avisos` saem como `[AVISO-CARD]` e não bloqueiam.
 
-**Quality source determination:**
+**Transação (dentro de `insert_questao()`, trecho):**
 ```python
-use_qualitative = all([frente_pergunta, verso_resposta])
-qual_source_elo = 'qualitative' if use_qualitative else 'heuristic'
-needs_q = 0 if qual_source_elo == 'qualitative' else 1
+        if own_conn:
+            conn = sqlite3.connect(DB_PATH)
+            conn.execute("PRAGMA foreign_keys = ON")  # part-1: FKs do schema impostas
+        cursor = conn.cursor()
+        _ensure_status_column(cursor)
+        _ensure_sessao_column(cursor)
+        ...
+        cursor.execute("SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?", (area, tema))
+        ...
+        cursor.execute('''
+            INSERT INTO questoes_erros
+            (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada,
+             tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova, status,
+             data_registro, sessao_bulk_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (tema_id, titulo, complexidade, enunciado, correta, chamada,
+              erro, habilidades, faltou, explicacao, armadilha, status,
+              db.carimbo(),    # F80: relogio unico (LOCAL), nunca o DEFAULT UTC
+              int(sessao) if sessao is not None else None))
+        questao_id = cursor.lastrowid
+        if emed_lista is not None:
+            db.emed_ligar_erro(conn, emed_lista, emed_num, questao_id)
+        for tipo_card, fc_, fp_, vr_, vrm_, va_ in cards_to_insert:
+            cursor.execute('''
+                INSERT INTO flashcards (questao_id, tema_id, tipo,
+                                        frente_contexto, frente_pergunta, verso_resposta,
+                                        verso_regra_mestre, verso_armadilha,
+                                        quality_source, needs_qualitative)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'qualitative', 0)
+            ''', (questao_id, tema_id, tipo_card,
+                  fc_, fp_, vr_, vrm_, va_))
+            card_id = cursor.lastrowid
+            cursor.execute('''
+                INSERT INTO fsrs_cards (card_id, state, due)
+                VALUES (?, 0, ?)
+            ''', (card_id, db.agora()))
+        ...
+        if own_conn:
+            conn.commit()
+            _flush_eventos()
 ```
+
+**Lote (`insert_batch`):** valida campos obrigatórios, `status` e vínculos de todos os itens ANTES da transação; pula por dedupe de conteúdo `(area, tema, TRIM(enunciado))`; chama `insert_questao(..., conn=conn)` em cada item; qualquer exceção -> `conn.rollback()`, zero gravado.
 
 ## Rules
-- One `insert_questao.py` call per wrong question — never batch insert
-- `--frente_pergunta` + `--verso_resposta` together → `quality_source='qualitative'`, `needs_qualitative=0`
-- Without them → `quality_source='heuristic'`, `needs_qualitative=1` (pending LLM rewrite)
-- Card type 2 (armadilha) only created if `len(armadilha) > 20 and armadilha != "N/A"`
-- `questoes_realizadas` is incremented even for errors (it tracks questions attempted, not just correct)
-- `questoes_acertadas` is NOT updated by `insert_questao` — only by performance import ETL
-- `cronograma_progresso` status set to 'Concluído' via fuzzy LIKE match on tema name
-- `DB_PATH` in tools: `os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')`
+- `--area` passa por `areas.validar_area()` antes de tudo: área fora de `core/areas.json` é recusada, nunca normalizada.
+- Todo erro válido exige cards: `--cards-file` (N cards atômicos, régua em `.claude/commands/estilo-flashcard.md`) ou o par `--frente_pergunta` + `--verso_resposta`. Sem isso o insert falha. O fallback heurístico foi removido (incidente dos 68, 2026-08-13).
+- `--status anulada|banca-divergente` registra o erro SEM card (não é lacuna real) e imprime `[GATE-EVIDENCIA]`.
+- Todo card nasce `quality_source='qualitative'`, `needs_qualitative=0`, e ganha linha em `fsrs_cards` com `state=0`.
+- `taxonomia_cronograma`: cria `(area, tema)` se não existir e atualiza só `ultima_revisao`. `questoes_realizadas` e `questoes_acertadas` NÃO mudam aqui (volume = `registrar_sessao_bulk.py`).
+- `--elo` não tem coluna: alimenta só o matcher de reincidência (F25). O elo persistido é `o_que_faltou` (via `--faltou`).
+- Carimbos por `db.carimbo()` / `db.agora()` (F80), nunca pelo DEFAULT UTC do SQLite.
+- Vínculos opcionais na mesma transação: `--sessao` (id da LINHA de `sessoes_bulk`, nunca o `sessao_num`) e `--emed` (resposta da aba Questões). Vínculo recusado = nada gravado.
+- Pós-commit, só informativos (nunca mudam o resultado): `[REINCIDENCIA]` (F25) e `[SEM-LASTRO]` (F31). Eventos `generation`/`reincidencia` só vão para o `event_log` depois do commit.
+- Lote: uma transação para o arquivo inteiro, rollback total em qualquer falha; `--dry-run` só existe com `--errors-file` e não abre conexão.
+- Exit code: 0 em sucesso, 1 em falha, nos dois modos (F27).
+- `DB_PATH` do CLI: `os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')`; o perímetro de tabelas dele está em `tools/test_writer_allowlist.py`.
 
 ## Examples from this codebase
-
-File: `tools/insert_questao.py` (lines 44-159)
-```python
-def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
-                   complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A",
-                   titulo="Erro sem titulo",
-                   frente_contexto=None, frente_pergunta=None,
-                   verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None):
-    conn = None
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        # ... [full pipeline above] ...
-        conn.commit()
-        print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
-        return True
-    except Exception as e:
-        print(f"Erro ao inserir no banco: {e}")
-        return False
-    finally:
-        if conn:
-            conn.close()
-```
-
-File: `tools/insert_questao.py` — heuristic question inversion (lines 18-42)
-```python
-def _invert_elo_to_question(elo: str, tema: str) -> str:
-    """Transforma texto do elo quebrado em pergunta cirúrgica."""
-    elo_lower = elo.lower()
-    if any(x in elo_lower for x in ['limiar', 'ponto de corte', 'mg/dl', 'bpm']):
-        return f"Em {tema}: qual o valor limiar/dose correto para {_extract_key_term(elo)}?"
-    if any(x in elo_lower for x in ['antes', 'primeiro', 'prioritário', 'sequência']):
-        return f"Em {tema}: qual a sequência correta de conduta? (Dica: a ordem importa)"
-    # ... other patterns ...
-    elo_clean = elo.rstrip('.').strip()
-    return f"{elo_clean}?" if len(elo_clean) > 20 and not elo_clean.endswith('?') else f"Qual a abordagem diagnóstica/terapêutica em {tema}?"
-```
+- `tools/insert_questao.py::avaliar_cunhagem` — contrato de cunhagem puro, usado pelo writer e pelo pré-check (F107).
+- `tools/insert_questao.py::insert_questao` — a transação; com `conn=` externa não abre, não commita, não fecha e propaga a exceção.
+- `tools/insert_questao.py::insert_batch` / `checar_lote` — lote transacional e pré-check read-only.
+- `tools/insert_questao.py::checar_reincidencia` — matcher lexical F25 (`LIMIAR_OVERLAP = 0.5`).
+- Testes: `tools/test_insert_questao.py`, `tools/test_batch_insert.py`, `tools/test_insert_dry_run.py`, `tools/test_reincidencia.py`, `tools/test_insert_questao_vinculo.py`, `tools/test_writer_gates.py`.
 <!-- vibeflow:auto:end -->
 
 

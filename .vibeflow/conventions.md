@@ -12,7 +12,7 @@
 
 ## File naming
 - tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `card_checks.py`
-- Tests: `tools/test_<alvo>.py`, and the filename must be added to `python_files` in `pytest.ini` to be collected
+- Tests: `tools/test_<alvo>.py`, and the filename must be added to `python_files` in `pytest.ini` to be collected (`tools/test_suites_orfas.py` falha se uma suíte não estiver em nenhum registro de execução)
 - Resumos (clinical summaries): `Título em Sentence Case.md` under `resumos/<Especialidade>/[Subarea/]`
 - Session logs: `history/session_NNN.md` (zero-padded 3-digit number)
 - Agent skills: `.claude/commands/<slug>.md`; mirrors are `.agents/skills/source-command-<slug>/SKILL.md`
@@ -20,11 +20,17 @@
 
 ## Database access
 - **Only `app/utils/db.py` may use `import sqlite3`** — no other module in `app/`
+  - Conflito (regra x código): `app/memory/store.py` (backend do `medhub_memory.db`, não do `ipub.db`) e `app/memory/manager.py` (abre o `ipub.db` só em `mode=ro`) também importam `sqlite3`. O `store.py` já consta da allowlist de escrita como backend separado (`AGENTE.md` §8).
 - All queries go through functions in `db.py` that return `pd.DataFrame` or plain dicts
 - DB path resolved relative to repo root: `os.path.join(os.path.dirname(...), 'ipub.db')`
-- Always close connections: explicit `conn.close()` after every `pd.read_sql` or cursor block
+- Conexão por `get_connection()`: liga `PRAGMA foreign_keys = ON` (o PRAGMA é por conexão) e garante a VIEW `flashcards_ativos`. CLI com conexão própria liga o mesmo PRAGMA
+- Sempre fechar a conexão; o idioma atual é `try: ... finally: conn.close()`
 - Use `conn.commit()` before `conn.close()` on write operations
-- Exception: standalone CLIs in `tools/` open their own connection directly
+- Carimbo de tempo só por `db.agora()` / `db.carimbo()` / `db.hoje()` (hora LOCAL naive, F80), chamados pelo atributo do módulo para o teste poder congelar o relógio; nunca pelo `DEFAULT CURRENT_TIMESTAMP` (UTC). Trava: `tools/test_fuso_unico.py`
+- Toda tabela escrita existe no schema do `tools/init_db.py` ou tem DDL preguiçosa idempotente (`_ensure_<tabela>_table`, `ALTER ... ADD COLUMN` condicional). Trava: `tools/test_schema_escrita.py`
+- "Card ativo" tem definição única: `db.ATIVO_WHERE` / `db.ativo_where(alias)` / VIEW `flashcards_ativos` / `db.ativos()`
+- Exception: standalone CLIs in `tools/` open their own connection directly. O perímetro arquivo -> tabelas de cada writer está em `tools/test_writer_allowlist.py::ALLOWLIST`; writer novo = editar a allowlist de propósito. CLI novo prefere a camada fina (escrever por um writer do `db.py`, como `tools/plano.py`, `tools/reforja.py`, `tools/emed_banco.py`)
+- Testes nunca tocam o `ipub.db` real: `monkeypatch.setattr(db, "DB_PATH", <tmp_path>)`
 
 ## Agent norms (the product surface)
 - `.claude/commands/<slug>.md` is the **single source of truth** for a skill. Never hand-edit
@@ -33,7 +39,7 @@
 - Each CLI has its canonical signature in exactly ONE skill; workflows reference it, never copy it (AGENTE.md §7.2)
 - A norm must describe the system that exists. If a subsystem dies, the clause that names it
   either becomes accurate or is deleted — a stale clause burns tool calls and, at worst, destroys data
-- Never instruct a tool name (`mcp__<server>__<tool>`) whose server is absent from `.mcp.json`
+- Nunca instruir uma tool (`mcp__<server>__<tool>`) cujo server não esteja declarado. Hoje o `.mcp.json` (gitignored) está vazio e o único MCP de projeto vem de plugin habilitado em `.claude/settings.json`: `pubmed@life-sciences` (server `plugin_pubmed_PubMed`). As tools `mcp__pubmedmcp__*` morreram na s169
 - Never require binary bytes over MCP in a boot step — if a read needs bytes, it belongs to the
   user's local ritual, not the agent (`cronograma-contract.md` Cláusula 5b)
 
@@ -51,11 +57,11 @@
 - Provenance: `quality_source`, `card_version`, `needs_qualitative`, `questao_id` on `flashcards`;
   `card_version` + `selection_reason` on `fsrs_revlog`
 - Card types: `tipo` = `elo_quebrado` | `armadilha` | scaffold degrees (`base`, `mecanismo`, …)
-- **Every write passes `tools/card_checks.py::validar_card()`** — `erros` block the write, `avisos` warn
+- **Todo INSERT de card passa por `app/utils/card_checks.py::validar_card()`** (`insert_questao`, `insert_card_base`, `insert_card_extra`) — `erros` bloqueiam a escrita, `avisos` só avisam. A EDIÇÃO (`tools/recurate_cards.py`, `db.update_flashcard_fields`) roda os mesmos predicados do `card_checks` um a um, mais o ratchet de verso de `app/utils/card_atomicity.py`
 - `card_version` bumps only on a real field change; FSRS state is always preserved across recuration
 
 ## FSRS
-- The scheduler is the reference library `py-fsrs` (`fsrs>=6.3.1`) — **not** a hand-rolled v4
+- The scheduler is the reference library `py-fsrs` (`fsrs>=6.3.2`) — **not** a hand-rolled v4
 - `app/utils/fsrs.py` is a thin adapter (`Scheduler(desired_retention=0.9, learning_steps=(), relearning_steps=(), enable_fuzzing=False)`); the kwargs live in ONE place, `app.utils.fsrs.KWARGS_BASE`, and `tools/fsrs_optimize.py` builds its replay Scheduler from it
 - No rating brings a card back on the same day (F140, s204): same-day relearning belongs to the player's re-drill, which never records. `state` 3 is legacy data, not something the adapter produces
 - Never write `fsrs_revlog` twice for the same card in one session (anti-duplo-registro). In the chat `/revisar` the dedup lives in the agent; in the player/hub path it lives in the writer (s193): `fsrs_queue --record-lote` is idempotent by revlog EQUALITY (`app/utils/notas_player.situacao`: same `review_time` = already recorded; a newer review without the equal one = out of order, reported, never written)
@@ -65,11 +71,11 @@
 
 ## CLI tools (tools/)
 - All scripts are invokable as `python tools/<script>.py --arg value`
-- Use `argparse` with explicit `required=True` for mandatory args
+- Use `argparse` with explicit `required=True` for mandatory args (exceção: o `insert_questao.py` valida os obrigatórios à mão, porque `--errors-file` os dispensa no modo lote)
 - DB path: `os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')`
 - Print human-readable success/error to stdout; return bool from the main insert function
 - `finally: if conn: conn.close()` — always close on exception
-- Destructive tools need a `--dry-run` and must be idempotent
+- Ferramenta destrutiva ou de lote: dry-run POR PADRÃO, grava só com `--apply --expect N` (COUNT-ASSERT: o N medido no dry-run), e é idempotente. Ex.: `tools/plano.py --semear`, `tools/selo.py --rotacionar`, `tools/backup_db.py --desfixar-lote`
 
 ## Clinical summaries (resumos/)
 - Mandatory spec: `.claude/commands/estilo-resumo.md`
@@ -88,15 +94,15 @@
 - Deleting a PDF is an explicit user act, never an agent default
 
 ## Agent sessions
-- Boot: read `AGENTE.md` first, then `ESTADO.md`. The day-plan is injected by the `SessionStart`
-  hook — **do not re-run `tools/day_plan.py` by hand**
-- Closure: update `ESTADO.md` + create `history/session_NNN.md` + git commit
+- Boot (`AGENTE.md` §2): `AGENTE.md` antes de qualquer ação; depois `HANDOFF.md` PRIMEIRO, `ESTADO.md`, o check de reconcile e o Plano do Dia. O Plano do Dia é injetado pelo hook `SessionStart` — **do not re-run `tools/day_plan.py` by hand**
+- Fechamento (`AGENTE.md` §3): `HANDOFF.md` sempre (números por `tools/day_plan.py --handoff-block`); `ESTADO.md` só se o macro mudou; `history/session_NNN.md` + linha em `history/INDEX.md`; `tools/selo.py --rotacionar`; commit semântico + push
 - SSOT rule: the error goes to `ipub.db` (via `insert_questao.py`), the lesson goes to `resumos/`
 - `ESTADO.md` narrative fields are **1 line** by contract — accumulated prose belongs in `history/`
 
 ## Git / commits
-- Session commits: `sessao NNN: <one-line description>`
-- Tool commits: `chore: <description>`
+- Selo de sessão: `sessao NNN: <descrição>`, com tag opcional (`sessao NNN (hub-backend): ...`)
+- Engenharia: `feat|fix|docs|chore|refactor(sNNN): <descrição>` (ex.: `fix(s176): F91 -- ...`)
+- Reforma: `fase N lote N part-X: <descrição>`
 - `ipub.db`: NOT committed (local only, in .gitignore)
 - `medhub_memory.db`: NOT committed
 - Source PDFs: NOT committed (gitignored, but retained on disk)
@@ -106,7 +112,7 @@
   - Corpus: `resumos/**/*.md`, **gold-only**, single collection `resumos`, chunked by H2/H3
   - Embedding: `nomic-embed-text` via local Ollama (`http://localhost:11434`)
   - Interface: `from app.engine.rag import search, index_all`
-  - Safe fallback: if ChromaDB or Ollama is offline, `search()` degrades to a textual fallback
+  - Degradação declarada (F91): com ChromaDB/Ollama fora, `search()` cai no fallback léxico (hits com `metadata['source'] == 'fallback_textual'`) e, se nada casar, levanta `RagIndisponivel` — nunca devolve `[]` mudo
   - Reindex after adding/renaming a resumo: `python tools/index_resumos.py` (`--clear` after renames)
 - **There is no second index.** The `obsidian-notes-rag` MCP was decommissioned 2026-07-12 and
   removed from `.mcp.json`; `search_two_tier()`/`pdf_raw` were removed in consolidacao part-2
@@ -115,7 +121,7 @@
 ## Don'ts
 - Do NOT use `import sqlite3` outside `app/utils/db.py` (only exception: standalone CLIs in `tools/`)
 - Do NOT hand-edit anything under `.agents/skills/` — regenerate with `tools/sync_skills.py`
-- Do NOT reference an MCP server that is not in `.mcp.json` (today only `pubmedmcp`)
+- Do NOT referenciar MCP server não declarado: o `.mcp.json` está vazio; o PubMed vem do plugin `pubmed@life-sciences` (as tools `mcp__pubmedmcp__*` não existem mais)
 - Do NOT delete source PDFs — the "Zero PDF" policy was reverted in s086
 - Do NOT add emojis to H1/H2/H3 headers in resumo files
 - Do NOT use `✅`/`❌` as bullet markers in resumos
@@ -126,6 +132,11 @@
 - Do NOT read from `caderno_erros.md` as SSOT — it's archived; SSOT is `ipub.db`
 - Do NOT use `flashcards_cache.json` for anything — it's archived to `artifacts/legacy/`
 - Do NOT re-run `tools/day_plan.py` at boot — the hook already did it
+- Do NOT carimbar pelo `DEFAULT CURRENT_TIMESTAMP` do SQLite (UTC) — usar `db.carimbo()` / `db.agora()` (F80)
+- Do NOT escrever em tabela que não existe no schema nem tem DDL preguiçosa — dentro de `try/except` a escrita falha calada; trava `tools/test_schema_escrita.py`
+- Do NOT reimplementar o filtro de card ativo — usar `db.ATIVO_WHERE` / `db.ativos()`
+- Do NOT registrar erro sem card cunhado (exceto `--status anulada|banca-divergente`) — o fallback heurístico do `insert_questao.py` foi removido
+- Do NOT ler `[]`/`RagIndisponivel` do RAG como "o tema não existe" — honest-negative (`core/contracts/evidence-governance.md`)
 
 <!-- vibeflow:auto:end -->
 

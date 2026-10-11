@@ -1,7 +1,8 @@
 # Project: MedHub
 > Hand-reconciled: 2026-08-14 (consolidacao part-5) — supersedes the 2026-04-07 auto-analysis
-> Stack: Python 3.12, SQLite (`ipub.db`), ChromaDB + Ollama (`nomic-embed-text`), `py-fsrs`, LangGraph/LangMem, Anthropic Claude API, pdfplumber/PyPDF2/openpyxl, `pubmedmcp` (MCP)
-> Type: **Agent-first** medical residency prep platform — CLI tools + agent norms. **No UI layer.**
+> Analyzed: 2026-10-10 (incremental, HEAD `8479d7e`) — regenerou as regiões `vibeflow:auto` de `conventions.md` e de 5 patterns; neste arquivo só fatos desatualizados mudaram
+> Stack: Python 3.12, SQLite (`ipub.db`), ChromaDB + Ollama (`nomic-embed-text`), `py-fsrs`, LangGraph/LangMem, Anthropic Claude API, pdfplumber/PyPDF2/openpyxl, PubMed via plugin `pubmed@life-sciences` (MCP; o `pubmedmcp` morreu na s169)
+> Type: **Agent-first** medical residency prep platform — CLI tools + agent norms. **No in-repo app UI:** a única superfície visual é o MedHub HUB, uma página Artifact do claude.ai gerada por `tools/hub.py`.
 > Suggested budget: ≤ 6 files per task
 
 > ⚠️ **Update this file by hand.** Re-running `analyze` regenerates it from a codebase whose
@@ -33,6 +34,10 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
 | FSRS | `app/utils/fsrs.py` + `fsrs_balance.py` | Thin adapter over the `py-fsrs` reference lib + load balancing |
 | Card quality | `app/utils/card_checks.py` | Pure predicates; write-gate for every card writer |
 | tools/CLI | `tools/` | insert_questao, fsrs_queue, index_resumos, day_plan, sensors, audits |
+| Single-source helpers | `app/utils/{areas,provas,regua,relogio,notas_player,card_atomicity}.py` | Leitores/predicados únicos: vocabulário de área, `core/provas.json`, régua FSRS, dia lógico, regras do `--record-lote`, atomicidade de card |
+| Plano de estudo | `tools/plano.py` + tabela `plano_tarefas` | O plano como DADO: semeadura, listagem, concluir/cortar/mover (writers `db.plano_*`) |
+| MedHub HUB | `tools/hub.py` + `core/templates/{hub,player}.html` | Monta a página única (Painel, Teoria, Listas, Cards) e o manifesto do publish |
+| Banco EMED | `tools/emed_api.py`, `tools/emed_banco.py`, `tools/prova_pdf.py` | Questões de lista/prova para a aba Listas do hub; writers `db.emed_*` |
 | Skills | `.claude/commands/` | Canonical agent skills — **source of truth** for the mirrors |
 | Subagents | `.claude/agents/` | `evidence-researcher` (evidence audit, read-only) |
 | Workflows | `.agents/workflows/` | Portable agent protocols (analisar, criar, curar, registrar) |
@@ -42,8 +47,9 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
 
 ## Flashcards (post-reform — parts 1-6 + P3)
 
-- **Write-gate:** every writer (`insert_card_base`, `insert_card_extra`, `recurate_cards`,
-  `insert_questao`) passes through `app/utils/card_checks.py::validar_card()` → `{erros, avisos}`.
+- **Write-gate:** every insert writer (`insert_card_base`, `insert_card_extra`, `insert_questao`)
+  passes through `app/utils/card_checks.py::validar_card()` → `{erros, avisos}`; the edit writers
+  (`recurate_cards`, `db.update_flashcard_fields`) run the same `card_checks` predicates one by one.
   `erros` block the write (empty required field, forbidden encoding, question template,
   answer leaked into the front); `avisos` warn (multi-part, orphan negative, artifact
   context, lost distractor). Covered by `tools/test_writer_gates.py` + `test_card_checks.py`.
@@ -56,7 +62,7 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
   `tools/learning_efficacy.py` slices efficacy by those dimensions (pre-migration rows
   grouped as `pre-P3`). `card_version` is a monotone edit counter — `recurate_cards.py`
   bumps it only on a real field change, preserving FSRS state.
-- **FSRS is the reference implementation** (`py-fsrs>=6.3.1`), not a hand-rolled v4.
+- **FSRS is the reference implementation** (`py-fsrs>=6.3.2`), not a hand-rolled v4.
   `app/utils/fsrs.py` is an adapter (`Scheduler(desired_retention=0.9, learning_steps=(),
   relearning_steps=(), enable_fuzzing=False)` — `KWARGS_BASE`, shared with
   `tools/fsrs_optimize.py`); every rating schedules in whole days, and `state` 3 is legacy
@@ -84,9 +90,11 @@ removed in 2026-07-12 as regressive on the medical corpus.
 ## Exams (`core/provas.json`)
 
 A top-level JSON **array** of `{"nome", "data", "tipo"}` (`tipo`: `prova` | `grade`), parsed by
-`tools/day_plan.py::carregar_provas()`. Drives the countdown in the day-plan header
-("ENAMED em N dias · grade fecha em M dias"). **Display only** — the target pace is still
-computed against the *grade*, never the exam date. The parser is tolerant by contract:
+the single reader `app/utils/provas.py::carregar_provas()` (F88; `tools/day_plan.py` re-exports it).
+Drives the countdown in the day-plan header ("ENAMED em N dias · grade fecha em M dias") and the
+FSRS blackout (`db.blackout_provas`, F71: exam day + the next one get no card). It does **not** set
+the pace: since s203 the only daily pace is the goal's (10.000 questões em 01/11,
+`tools/performance.py::MARCOS` / `volume_vs_marco`). The parser is tolerant by contract:
 missing file / bad JSON / malformed entry → WARN on stderr, returns `[]`, the plan never
 breaks. Covered by `tools/test_provas.py`.
 
@@ -136,7 +144,7 @@ deletion; this line stays as the record.
 | `AGENTE.md` | Boot protocol — MUST read before any session action |
 | `ESTADO.md` | Canonical state snapshot (SSOT for docs) |
 | `ipub.db` | SQLite SSOT: errors, flashcards, FSRS state, taxonomy |
-| `.mcp.json` | The **only** MCP declaration — today: `pubmedmcp` alone |
+| `.mcp.json` | Project MCP declaration (gitignored) — today empty (`mcpServers: {}`); PubMed comes from the plugin `pubmed@life-sciences` enabled in `.claude/settings.json` |
 | `core/provas.json` | Exam/grade dates driving the day-plan countdown |
 | `app/utils/db.py` | ALL database access — the only file allowed to use `sqlite3` |
 | `app/utils/fsrs.py` | Adapter over the `py-fsrs` reference scheduler |
@@ -155,12 +163,12 @@ deletion; this line stays as the record.
 
 | Dep | Rationale |
 |-----|-----------|
-| `fsrs` (`py-fsrs>=6.3.1`) | Reference spaced-repetition scheduler |
+| `fsrs` (`py-fsrs>=6.3.2`) | Reference spaced-repetition scheduler |
 | `chromadb` | Vector store for the `resumos` collection |
 | `anthropic` | LLM for qualitative flashcard rewrite + memory consolidation |
 | `langgraph` + `langgraph-checkpoint-sqlite` + `langmem` | Cross-session memory (`medhub_memory.db`) |
 | `pdfplumber` / `PyPDF2` | PDF text extraction |
-| `openpyxl` | Local xlsx parsing for the cronograma ritual (`--sync-drive`) |
+| `openpyxl` | Sem uso em produção: o `--sync-drive` que lia o xlsx do Drive foi revogado em 17/09/2026; hoje só `tools/test_orquestrador.py` o importa |
 | `pandas` | DataFrame returns from `db.py` |
 
 ## Known Issues / Tech Debt

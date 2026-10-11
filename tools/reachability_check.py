@@ -84,7 +84,11 @@ ISENTOS = {
 ARQUIVOS_DE_HOOK = [".claude/settings.json"]
 
 # Titulo do ledger. None desliga o registro.
-LEDGER_TAG = "reachability"
+# None desde a Fase 0 Lote 0 part-4a (10/10/2026): o modo texto gravava no ledger a cada
+# rodada, e o docstring diz que este script nao escreve nada no repo. O registro da tag
+# `reachability` fica com o `auto_check --all` (`_ledger_record`), que ja o fazia por conta
+# propria. Prova: test_reachability::test_modo_texto_nao_grava_ledger.
+LEDGER_TAG = None
 
 # ===========================================================================
 # Fim da CONFIG.

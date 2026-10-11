@@ -164,6 +164,43 @@ def test_warn_first_exit_zero():
             RC.ROOT_DIR = orig
 
 
+def test_modo_texto_nao_grava_ledger():
+    """Fase 0 Lote 0 part-4a: o instrumento mede sem gravar. O modo TEXTO chamava
+    `ledger_self.record(LEDGER_TAG, achados)` a cada rodada, e o docstring dizia "nao escreve
+    nada no repo". O registro da tag `reachability` e do `auto_check --all` (`_ledger_record`).
+
+    O `record` trocado anota a chamada E levanta: o `main()` engole excecao do ledger
+    (`except Exception` -> WARN), entao so o levantar deixaria o teste verde com o bug. Quem
+    reprova e a lista de chamadas. Sem fixture do pytest: roda tambem no modo standalone."""
+    import contextlib
+    import io
+
+    import ledger_self
+
+    chamadas = []
+
+    def _record_proibido(*args, **kwargs):
+        chamadas.append(args)
+        raise AssertionError("reachability_check gravou no ledger em modo texto")
+
+    orig_root, orig_record, argv = RC.ROOT_DIR, ledger_self.record, sys.argv
+    with tempfile.TemporaryDirectory() as td:
+        RC.ROOT_DIR = Path(_repo(td))
+        ledger_self.record = _record_proibido
+        sys.argv = ["reachability_check.py"]          # modo texto: sem --json/--tabela
+        saida = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(saida):
+                rc = RC.main()
+        finally:
+            sys.argv = argv
+            ledger_self.record = orig_record
+            RC.ROOT_DIR = orig_root
+    assert "[WARN] REACHABILITY" in saida.getvalue(), "o modo texto nao rodou sobre o repo sintetico"
+    assert chamadas == [], f"o modo texto chamou ledger_self.record {len(chamadas)}x"
+    assert rc == 0
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     falhas = 0

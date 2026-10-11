@@ -410,15 +410,6 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             WHERE id = ?
         ''', (db.agora().strftime('%Y-%m-%d'), tema_id))
 
-        try:
-            cursor.execute('''
-                UPDATE cronograma_progresso
-                SET status = 'Concluído', updated_at = CURRENT_TIMESTAMP
-                WHERE tema LIKE ?
-            ''', (f"%{tema}%",))
-        except Exception:
-            pass  # tabela opcional — ignorar se não existir
-
         # P3 part-4: evento de geracao (ids/contagens — nunca texto clinico);
         # fica pendente ate o commit (lote comita em insert_batch).
         if cards_to_insert:

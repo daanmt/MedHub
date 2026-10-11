@@ -291,29 +291,6 @@ def registrar_condicao_dia(tempo_h, energia):
                      "tempo_h": tempo_h, "energia": energia}, ensure_ascii=False),
         fonte="day_plan")
 
-def get_db_metrics():
-    """Consulta métricas de desempenho por área (1 linha por área após import fixado)."""
-    conn = get_connection()
-    df = pd.read_sql('''
-        SELECT
-            area AS "Área",
-            SUM(questoes_realizadas) AS "Total",
-            SUM(questoes_acertadas)  AS "Acertos"
-        FROM taxonomia_cronograma
-        GROUP BY area
-        HAVING SUM(questoes_realizadas) > 0
-    ''', conn)
-    conn.close()
-    if df.empty:
-        return {'total_questoes': 0, 'total_acertos': 0, 'media_desempenho': 0.0, 'df_areas': df}
-    df['Desempenho'] = (df['Acertos'] / df['Total'] * 100).round(1)
-    df = df.sort_values('Desempenho', ascending=True)
-    total_questoes = int(df['Total'].sum())
-    total_acertos  = int(df['Acertos'].sum())
-    media          = total_acertos / total_questoes * 100 if total_questoes > 0 else 0.0
-    return {'total_questoes': total_questoes, 'total_acertos': total_acertos,
-            'media_desempenho': round(media, 1), 'df_areas': df}
-
 def get_taxonomia_rendimento():
     """Lista (area, tema, volume, erros) por tema da taxonomia — read-only.
 
@@ -373,30 +350,6 @@ def get_caderno_erros():
     conn.close()
     return df
 
-def get_cronograma():
-    """Retorna o DataFrame do progresso do cronograma"""
-    conn = get_connection()
-    df = pd.read_sql('SELECT id, semana as Semana, tema as Tema, status as Status FROM cronograma_progresso ORDER BY pos_semana, pos_tema', conn)
-    conn.close()
-    return df
-
-def update_cronograma_status(row_id, new_status):
-    """Atualiza o status de um tema no cronograma"""
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute('UPDATE cronograma_progresso SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_status, row_id))
-    conn.commit()
-    conn.close()
-
-def get_due_cards_count():
-    """Retorna quantos cards estão vencidos para hoje"""
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM fsrs_cards WHERE due <= ?", (datetime.now(),))
-    count = cursor.fetchone()[0]
-    conn.close()
-    return count
-
 def get_retencao_revlog(dias=7, agora_=None):
     """Retenção medida das revisões dos últimos `dias` (read-only, part-7).
 
@@ -441,32 +394,6 @@ def get_retencao_revlog(dias=7, agora_=None):
             "retencao": (round(acertos / n, 3) if n else None),
             "por_regua": {str(k): por_regua[k] for k in sorted(por_regua)}}
 
-
-def get_caderno_detalhado(area=None):
-    """Caderno de erros detalhado para a página de consulta (read-only).
-
-    Retorna colunas: id, area, tema, titulo, elo, caso, explicacao, armadilha.
-    Filtro opcional por área (match exato). Diferente de `get_caderno_erros()`
-    (que serve outra visão); ambos coexistem.
-    """
-    conn = get_connection()
-    sql = '''
-        SELECT q.id, t.area, t.tema, q.titulo,
-               q.habilidades_sequenciais AS elo,
-               q.o_que_faltou AS caso,
-               q.explicacao_correta AS explicacao,
-               q.armadilha_prova AS armadilha
-        FROM questoes_erros q
-        JOIN taxonomia_cronograma t ON q.tema_id = t.id
-    '''
-    params = ()
-    if area:
-        sql += ' WHERE t.area = ?'
-        params = (area,)
-    sql += ' ORDER BY q.id DESC'
-    df = pd.read_sql(sql, conn, params=params)
-    conn.close()
-    return df
 
 def carga_agendada(cursor, inicio, fim):
     """{date: n_cards} de cards de revisão já agendados na faixa. Read-only.
@@ -1001,24 +928,6 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
     conn.commit()
     return new_metrics
 
-def get_erros_resumidos():
-    """Traz erros agrupados por tema para o Bloco 3"""
-    conn = get_connection()
-    df = pd.read_sql('''
-        SELECT
-            t.area || ' - ' || t.tema as TemaFull,
-            q.tipo_erro,
-            q.habilidades_sequenciais as elo_quebrado,
-            q.armadilha_prova,
-            q.id
-        FROM questoes_erros q
-        JOIN taxonomia_cronograma t ON q.tema_id = t.id
-        ORDER BY t.area, t.tema
-    ''', conn)
-    conn.close()
-    return df
-
-
 def get_erros_por_tema(tema: str) -> list:
     """Retorna erros recentes filtrados por tema ou área (busca substring, case-insensitive).
 
@@ -1045,35 +954,6 @@ def get_erros_por_tema(tema: str) -> list:
     return df.to_dict('records')
 
 
-def get_bulk_totals_por_area():
-    """Totais de sessoes_bulk por área para o dashboard (read-only, F10).
-
-    Colunas: area, feitas, acertos, sessoes, ultima_sessao, pct.
-    DataFrame vazio se o banco/tabela não existir — a página degrada graciosamente.
-    """
-    if not os.path.exists(DB_PATH):
-        return pd.DataFrame()
-    conn = get_connection()
-    try:
-        df = pd.read_sql('''
-            SELECT
-                area,
-                SUM(questoes_feitas)     AS feitas,
-                SUM(questoes_acertadas)  AS acertos,
-                COUNT(DISTINCT sessao_num) AS sessoes,
-                MAX(data_sessao)           AS ultima_sessao
-            FROM sessoes_bulk
-            WHERE questoes_feitas > 0
-            GROUP BY area
-            ORDER BY feitas DESC
-        ''', conn)
-        df['pct'] = (df['acertos'] / df['feitas'] * 100).round(1)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
-
-
 def get_trend_sessoes():
     """Série (area, sessao_num, pct) de sessoes_bulk para tendência do dashboard (read-only, F10)."""
     if not os.path.exists(DB_PATH):
@@ -1090,24 +970,6 @@ def get_trend_sessoes():
             WHERE sessao_num > 0
               AND questoes_feitas > 0
             ORDER BY area, sessao_num
-        ''', conn)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
-
-
-def get_erros_por_area():
-    """Contagem de questoes_erros por área para o dashboard (read-only, F10)."""
-    if not os.path.exists(DB_PATH):
-        return pd.DataFrame()
-    conn = get_connection()
-    try:
-        df = pd.read_sql('''
-            SELECT t.area, COUNT(q.id) AS erros
-            FROM questoes_erros q
-            JOIN taxonomia_cronograma t ON t.id = q.tema_id
-            GROUP BY t.area
         ''', conn)
     except Exception:
         df = pd.DataFrame()
@@ -1785,71 +1647,6 @@ def get_habilidades_reincidentes(limit=10, min_temas=1):
         conn.close()
     if not df.empty:
         df['padrao_de_raciocinio'] = df['temas_distintos'] >= 3
-    return df
-
-
-def registrar_habilidade(texto, tema_id=None, veredito='errou', questao_id=None,
-                         origem='agente'):
-    """Registra uma ocorrência de habilidade. NÃO toca `questoes_erros`.
-
-    Existe para o caso que o pipeline de erro não cobre: aprendizado colhido de
-    questão **acertada** (ou acertada com dúvida). Por isso `questao_id` é
-    opcional e nada aqui incrementa erro nem volume.
-    """
-    if veredito not in VEREDITOS_HABILIDADE:
-        raise ValueError("veredito inválido: %r -- válidos: %s"
-                         % (veredito, ', '.join(VEREDITOS_HABILIDADE)))
-    if not texto or not str(texto).strip():
-        raise ValueError("texto da habilidade vazio")
-    import unicodedata
-    _s = unicodedata.normalize('NFKD', str(texto))
-    norm = ' '.join(''.join(c for c in _s if not unicodedata.combining(c)).lower().split())
-    agora_iso = agora().isoformat(timespec='seconds')
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        row = cur.execute('SELECT id FROM habilidades WHERE texto_norm = ?',
-                          (norm,)).fetchone()
-        if row:
-            hid = row[0]
-        else:
-            cur.execute('INSERT INTO habilidades (texto, texto_norm, precisa_curadoria, '
-                        'criado_em) VALUES (?, ?, 0, ?)', (str(texto).strip(), norm, agora_iso))
-            hid = cur.lastrowid
-        cur.execute('INSERT INTO questao_habilidades (habilidade_id, questao_id, tema_id, '
-                    'ordem, veredito, origem, criado_em) VALUES (?, ?, ?, 0, ?, ?, ?)',
-                    (hid, questao_id, tema_id, veredito, origem, agora_iso))
-        conn.commit()
-        return hid
-    finally:
-        conn.close()
-
-
-# --- Série de blocos para diagnóstico de variância (spec variancia-e-zona) ---
-
-def get_serie_blocos(piso_questoes=15, ultimos=None, incluir_simulado=False):
-    """Série de % de acerto por bloco (DataFrame, read-only).
-
-    Substrato do diagnóstico de variância: no platô dos 75-80%, a **variância**
-    entre blocos diz mais que a média — nota alta numa prova e baixa em outra
-    indica desempenho dependente do perfil da prova, não do conhecimento.
-    Blocos abaixo do piso são excluídos: 5 questões geram % com granularidade
-    de 20 pp e poluem a métrica com ruído amostral.
-    """
-    filtro = "" if incluir_simulado else "area <> 'Simulado' AND "
-    conn = get_connection()
-    try:
-        df = pd.read_sql_query(
-            "SELECT data_sessao, area, questoes_feitas, questoes_acertadas "
-            "FROM sessoes_bulk WHERE " + filtro + "questoes_feitas >= ? "
-            "ORDER BY data_sessao, id", conn, params=(int(piso_questoes),))
-    finally:
-        conn.close()
-    if df.empty:
-        return df
-    df['pct'] = (df['questoes_acertadas'] / df['questoes_feitas'] * 100).round(1)
-    if ultimos:
-        df = df.tail(int(ultimos))
     return df
 
 

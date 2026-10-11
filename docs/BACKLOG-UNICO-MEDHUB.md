@@ -172,6 +172,7 @@ Comando: `python -I conta_backlog.py artifacts/backlog-unico-medhub-2026-10-10.m
 | M-138 | A flag `--delete-pdfs` segue viva no `extract_pdfs.py` (ação irreversível sobre o PDF-fonte) -> recusar salvo `--confirmo-apagar` explícito | medhub, M-134 (11/10); id do ai-eng 11/10 | engenharia | medhub | aberto | 3 | S | não |
 | M-139 | Resíduos descritivos da era "LangMem no boot": `README.md:169`, `ROADMAP.md:83`, `.vibeflow/patterns/agent-workflow-protocol.md:36`, comentário falso em `app/engine/get_topic_context.py:153` | medhub, part 1.0 (11/10); id do ai-eng 11/10 | engenharia | medhub | aberto | 3 | S | não |
 | M-140 | `.codex/hooks.json` (gitignored, ambiente local) ainda dispara a consolidação se o Codex rodar | medhub, part 1.0 (11/10); id do ai-eng 11/10 | ambiente | operador (confirma; config de harness) | aberto | — | S | sim |
+| M-141 | PDFs-fonte (491, 6,2 GB) + `decks/cards.json` (379 MB) fora de qualquer cópia off-machine: cópia direta ao Drive, fora do git (1.4b) | ai-eng 11/10 (G-op da 1.4) | ambiente | operador (data) + medhub | aberto | 1 | S | sim |
 | M-136 | Retenção do repo privado de backup: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 | ai-eng, spec da 1.4 (11/10) | arquitetura | medhub | aberto | 4 / Fase 1 | S | não |
 
 ## Regras de vida do backlog

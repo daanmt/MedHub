@@ -19,6 +19,8 @@ Uso:
     python tools/emed_banco.py --exportar t40 --so-figuras --out tmp/emed_export
     python tools/emed_banco.py --figuras tmp/emed_api/t40
     python tools/emed_banco.py --figuras tmp/emed_api/t40 --apply --expect 5
+    python tools/emed_banco.py --reavaliar-sem-figura
+    python tools/emed_banco.py --reavaliar-sem-figura --apply --expect 20
     python tools/emed_banco.py --erros t26
     python tools/emed_banco.py --elos t26 --json
     python tools/emed_banco.py --defeitos
@@ -264,6 +266,41 @@ def cmd_figuras(args):
         print(cont["erro"])
     print(_linha_contagem(cont, args.apply and code == 0))
     print(f"  ausentes (emed_id sem linha no banco; nada criado): {cont['ausentes'] or '-'}")
+    return code
+
+
+def _cita_figura(enunciado):
+    """A regra VIGENTE de `sem_figura` (`emed_api.CITA_FIGURA`, hotfix 1.1b DoD 5) como bool."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import emed_api
+    return bool(emed_api.CITA_FIGURA.search(enunciado or ""))
+
+
+def reavaliar_sem_figura(cita, aplicar=True):
+    """`db.emed_reavaliar_sem_figura` na forma que o `_upsert_com_rito` le (`novas` 0: nunca cria)."""
+    cont = db.emed_reavaliar_sem_figura(cita, aplicar=aplicar)
+    return dict(cont, novas=0, invalidas=cont.get("invalidas", []))
+
+
+def cmd_reavaliar_sem_figura(args):
+    """`--reavaliar-sem-figura` (hotfix 1.1b DoD 5): re-roda a regra vigente sobre o enunciado das
+    linhas com `sem_figura` e sem `figuras`, e tira a marca de quem ela nao marca mais (so essa chave
+    de `extras`, e o `hash`). Dry-run por padrao; `--apply` exige `--expect N` e fixa o backup."""
+    if args.apply and args.expect is None:
+        print("RECUSA: --reavaliar-sem-figura --apply exige --expect N (o `atualizadas` do dry-run). "
+              "Nada gravado.")
+        return 1
+    cont, code = _upsert_com_rito(reavaliar_sem_figura, _cita_figura, args)
+    if args.json:
+        _emitir(dict(cont, aplicado=bool(args.apply and code == 0)), True)
+        return code
+    if cont.get("erro"):
+        print(cont["erro"])
+    print(_linha_contagem(cont, args.apply and code == 0))
+    print(f"  sem_figura retirado (lista_num): {', '.join(cont['listas']) or '-'}")
+    print(f"  ainda marcadas pela regra nova: {cont['iguais']}")
     return code
 
 
@@ -919,6 +956,9 @@ def main(argv=None):
                     help="--exportar so OUT/upd/<lista>_<num>.json com as chaves de figura + emed_id (1.1a)")
     ap.add_argument("--figuras", metavar="DIR",
                     help="mescla so as chaves de figura de DIR/questoes/*.json (recaptura) por emed_id (1.1a)")
+    ap.add_argument("--reavaliar-sem-figura", dest="reavaliar_sem_figura", action="store_true",
+                    help="re-roda a regra vigente do sem_figura e tira a marca de quem ela nao marca "
+                         "mais (hotfix 1.1b)")
     ap.add_argument("--erros", metavar="LISTA",
                     help="erradas e nao-solidas da lista em integra, com a declaracao por elo "
                          "(insumo do /analisar-questao)")
@@ -938,6 +978,7 @@ def main(argv=None):
 
     modos = {"--ingerir": args.ingerir, "--registrar": args.registrar,
              "--solucoes": args.solucoes, "--figuras": args.figuras,
+             "--reavaliar-sem-figura": args.reavaliar_sem_figura,
              "--podar": args.podar, "--exportar": args.exportar,
              "--erros": args.erros, "--elos": args.elos, "--defeitos": args.defeitos,
              "--status": args.status}
@@ -948,6 +989,7 @@ def main(argv=None):
         return 1
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
             "--solucoes": cmd_solucoes, "--figuras": cmd_figuras,
+            "--reavaliar-sem-figura": cmd_reavaliar_sem_figura,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
             "--erros": cmd_erros, "--elos": cmd_elos, "--defeitos": cmd_defeitos,
             "--status": cmd_status}[ligados[0]]

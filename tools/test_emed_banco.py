@@ -1240,3 +1240,78 @@ def test_exportar_so_figuras_leva_so_as_chaves_de_figura(db_sintetico, tmp_path,
     for d in (d1, d3):
         assert not {"solucao_medhub", "enunciado", "alternativas"} & set(d)
     assert not (out / "questoes").exists()
+
+
+# ---------------------------------------------------- hotfix 1.1b DoD 5: retratacao do sem_figura
+
+#: Falso positivo REAL da regra antiga (quadro clinico) e o positivo verdadeiro da t40 Q6.
+ENUNC_FP = "Febre e dor lombar. Diante do quadro clínico e laboratorial apresentado, a conduta é:"
+ENUNC_VP = ("A análise do perfil glicêmico da última semana está demonstrada na tabela a seguir: "
+            "Qual a conduta mais adequada para este caso clínico?")
+
+
+def _semear_sem_figura(db_sintetico):
+    """1 = falso positivo (com `figura` e `acerto_pct`, que ficam); 2 = positivo verdadeiro;
+    3 = falso positivo que JA tem `figuras` (fora do escopo); 4 = sem marca."""
+    assert db.emed_upsert_questoes([
+        _questao(1, enunciado=ENUNC_FP, sem_figura=True, figura=True, acerto_pct=40),
+        _questao(2, enunciado=ENUNC_VP, sem_figura=True),
+        _questao(3, enunciado=ENUNC_FP, sem_figura=True, figuras=[URL_F]),
+        _questao(4, enunciado=ENUNC_FP)])["novas"] == 4
+    assert Path(db_sintetico).resolve() != (ROOT / "ipub.db").resolve()     # sentinela: nunca o real
+
+
+def _cita(enunciado):
+    import emed_api
+    return bool(emed_api.CITA_FIGURA.search(enunciado))
+
+
+def test_reavaliar_sem_figura_derruba_so_o_falso_positivo(db_sintetico):
+    """Hotfix 1.1b DoD 5: so a linha com `sem_figura`, sem `figuras` e que a regra nova NAO marca perde
+    o `sem_figura` (hash re-derivado); `figura`/`figuras`/outras chaves e as outras linhas ficam."""
+    _semear_sem_figura(db_sintetico)
+    antes = {n: _linha_q(db_sintetico, n) for n in (1, 2, 3, 4)}
+    medida = db.emed_reavaliar_sem_figura(_cita, aplicar=False)
+    assert (medida["atualizadas"], medida["iguais"], medida["listas"]) == (1, 1, ["t26_1"])
+    assert {n: _linha_q(db_sintetico, n) for n in (1, 2, 3, 4)} == antes          # dry-run
+    r = db.emed_reavaliar_sem_figura(_cita)
+    assert (r["atualizadas"], r["listas"]) == (1, ["t26_1"])
+    l1 = _linha_q(db_sintetico, 1)
+    assert json.loads(l1["extras"]) == {"acerto_pct": 40, "figura": True}
+    assert l1["hash"] == db.emed_hash_questao(l1) != antes[1]["hash"]
+    for c in ("enunciado", "alternativas", "gabarito", "solucao", "emed_id"):
+        assert l1[c] == antes[1][c], c
+    for n in (2, 3, 4):
+        assert _linha_q(db_sintetico, n) == antes[n], n
+
+
+def test_reavaliar_sem_figura_e_idempotente(db_sintetico):
+    """Hotfix 1.1b DoD 5: a 2a rodada nao muda nada."""
+    _semear_sem_figura(db_sintetico)
+    assert db.emed_reavaliar_sem_figura(_cita)["atualizadas"] == 1
+    h = _linha_q(db_sintetico, 1)["hash"]
+    r = db.emed_reavaliar_sem_figura(_cita)
+    assert (r["atualizadas"], r["iguais"], r["listas"]) == (0, 1, [])
+    assert _linha_q(db_sintetico, 1)["hash"] == h
+
+
+def test_cli_reavaliar_sem_figura_dry_run_e_rito(db_sintetico, capsys, monkeypatch):
+    """Hotfix 1.1b DoD 5: `--reavaliar-sem-figura` e dry-run por padrao (imprime as `lista_num`);
+    `--apply` sem `--expect` recusa; `--expect` errado = COUNT-ASSERT; certo = backup FIXADO + grava."""
+    _semear_sem_figura(db_sintetico)
+    antes = _linha_q(db_sintetico, 1)
+    assert emed_banco.main(["--reavaliar-sem-figura", "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["atualizadas"], r["listas"], r["aplicado"]) == (1, ["t26_1"], False)
+    assert emed_banco.main(["--reavaliar-sem-figura", "--apply"]) == 1
+    assert "--expect" in capsys.readouterr().out
+    atos = []
+    monkeypatch.setattr(emed_banco, "_fixar_antes",
+                        lambda ato: atos.append(ato) or {"arquivo": "f.db", "sha256": "abc"})
+    assert emed_banco.main(["--reavaliar-sem-figura", "--apply", "--expect", "2"]) == 2
+    assert _linha_q(db_sintetico, 1) == antes and atos == []
+    capsys.readouterr()
+    assert emed_banco.main(["--reavaliar-sem-figura", "--apply", "--expect", "1"]) == 0
+    out = capsys.readouterr().out
+    assert len(atos) == 1 and "FIXADO" in out and "t26_1" in out
+    assert "sem_figura" not in json.loads(_linha_q(db_sintetico, 1)["extras"])

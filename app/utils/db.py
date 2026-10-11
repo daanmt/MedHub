@@ -2648,6 +2648,63 @@ def emed_mesclar_figuras(mapa, conn=None, aplicar=True):
     return cont
 
 
+def emed_reavaliar_sem_figura(cita, conn=None, aplicar=True):
+    """Retratacao ESTREITA do `sem_figura` (hotfix 1.1b DoD 5): a regra que o marcou apertou.
+
+    `cita(enunciado) -> bool` e a regra NOVA (`emed_api.CITA_FIGURA`; quem chama a injeta -- este modulo
+    nao importa tools/). Em cada linha de `emed_questoes` cujo `extras` tem `sem_figura` e NAO tem
+    `figuras`, se `cita(enunciado)` for falso, `sem_figura` sai de `extras` e o `hash` e re-derivado.
+    So essa chave muda: `figura`, `figuras`, `figuras_alt`, as outras chaves de `extras`, o texto e as
+    outras tabelas ficam. Nunca cria nem apaga linha; nunca ACRESCENTA `sem_figura`.
+
+    Devolve `{atualizadas, iguais, listas: ["<lista>_<num>"]}` (`iguais` = a regra nova ainda marca);
+    `extras` ilegivel vai para `invalidas`. `aplicar=False` mede pelo mesmo caminho. Com `conn` dado,
+    quem chama faz o commit e fecha."""
+    import json as _json
+    propria = conn is None
+    conn = get_connection() if propria else conn
+    cont = {"atualizadas": 0, "iguais": 0, "listas": []}
+    invalidas = []
+    try:
+        ts = carimbo()
+        try:
+            linhas = conn.execute(
+                "SELECT id, lista, num, " + ", ".join(CAMPOS_HASH_EMED) + " FROM emed_questoes "
+                "WHERE extras LIKE '%sem_figura%' ORDER BY lista, num").fetchall()
+        except sqlite3.OperationalError:
+            linhas = []              # tabela ausente: nada a reavaliar, e a leitura nao a cria
+        for r in linhas:
+            linha = dict(zip(("id", "lista", "num") + CAMPOS_HASH_EMED, r))
+            try:
+                extras = _json.loads(linha["extras"]) if linha["extras"] else {}
+            except ValueError:
+                extras = None
+            if not isinstance(extras, dict):
+                invalidas.append(f"{linha['lista']}_{linha['num']}")
+                continue
+            if not extras.get("sem_figura") or extras.get("figuras"):
+                continue
+            if cita(linha["enunciado"] or ""):
+                cont["iguais"] += 1
+                continue
+            novo = {k: v for k, v in extras.items() if k != "sem_figura"}
+            texto = _json.dumps(novo, sort_keys=True, ensure_ascii=False) if novo else ""
+            cont["atualizadas"] += 1
+            cont["listas"].append(f"{linha['lista']}_{linha['num']}")
+            if aplicar:
+                linha["extras"] = texto
+                conn.execute("UPDATE emed_questoes SET extras = ?, hash = ?, atualizado_em = ? "
+                             "WHERE id = ?", (texto, emed_hash_questao(linha), ts, linha["id"]))
+        if aplicar and propria:
+            conn.commit()
+    finally:
+        if propria:
+            conn.close()
+    if invalidas:
+        cont["invalidas"] = invalidas
+    return cont
+
+
 def riscadas_norm(valor):
     """Riscadas da página (lista de letras) -> texto canônico "A,C" (ordenado, sem repetição,
     maiúsculas); vazio/ausente -> "". Aceita também o texto já canônico. PURA."""

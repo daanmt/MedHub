@@ -103,22 +103,71 @@ RX_ANO = re.compile(r"(?<!\d)((?:19|20)\d\d)(?!\d)")
 #: TEXTO ja extraido (o HTML e do parser, F108). Falso positivo aceito (decisao 2 da spec): o custo e um
 #: aviso a mais; o do falso negativo e a tabela sumir. Termo isolado ("quadro clinico", "exame de
 #: imagem", "tabela periodica") NAO marca: o termo pede uma deixis visual (a seguir, abaixo, na ...).
-_OBJ_VISUAL = (r"figuras?|imagens?|tabelas?|quadros?|gr[aá]ficos?|radiografias?|tomografias?|"
+#: Hotfix 1.1b DoD 5 (11/10/2026): "quadro" SAIU do objeto visual com deixis -- na amostra de 20
+#: `sem_figura` ele era sempre o quadro CLINICO ("o quadro clinico apresentado", "o quadro acima").
+#: "Quadro" so marca numerado ("Quadro 1") ou no fim pedindo o que vem depois ("quadro abaixo:").
+_OBJ_VISUAL = (r"figuras?|imagens?|tabelas?|gr[aá]ficos?|radiografias?|tomografias?|"
                r"eletrocardiogramas?|ECG|resson[aâ]ncias?|ultrassonografias?|fotografias?|fotos?|"
                r"tra[cç]ados?|esquemas?|curvas?")
-CITA_FIGURA = re.compile(
+_NOME_DE_DADO = r"perfil|perfis|curvas?|valores|resultados|imagens?|tra[cç]ados?|glicemias"
+_RX_CITA_FIGURA = re.compile(
     # objeto visual + deixis ("na tabela a seguir", "figura abaixo", "radiografia apresentada")
     rf"\b(?:{_OBJ_VISUAL})\b[^.;?!\n]{{0,40}}?(?:\ba seguir\b|\babaixo\b|\bacima\b|\bao lado\b|"
     r"\bseguintes?\b|\b(?:apresentad|demonstrad|mostrad|ilustrad|exibid|anexad)[ao]s?\b)"
-    # "na/nesta/pela/conforme a tabela", "figura 1"
+    # "na/nesta/pela/conforme a tabela", "figura 1", "Quadro 2"
     r"|\b(?:na|nesta|desta|pela|conforme a|observe a|veja a)\s+(?:figura|tabela|imagem|gr[aá]fico)\b"
     r"|\b(?:figura|tabela|gr[aá]fico|quadro)\s+\d"
-    # demonstrativo + dado que nao esta no texto ("esse perfil glicemico", "os seguintes valores")
-    r"|\b(?:ess[ea]s?|est[ea]s?|[oa]s? seguintes?)\s+(?:perfil|perfis|curvas?|valores|resultados|"
-    r"imagens?|tra[cç]ados?|glicemias|medidas)\b"
-    # o enunciado termina pedindo o que vem depois ("... a seguir:")
+    # demonstrativo + dado ("esse perfil glicemico", "os seguintes valores") -- so vale com o dado
+    # AUSENTE do texto (`_dado_no_texto`)
+    rf"|(?P<dado>\b(?:ess[ea]s?|est[ea]s?)\s+(?:{_NOME_DE_DADO})\b"
+    rf"|\b[oa]s? seguintes?\s+(?:{_NOME_DE_DADO}|medidas)\b)"
+    # o enunciado termina pedindo o que vem depois ("... a seguir:", "o quadro abaixo:")
     r"|\b(?:a seguir|abaixo)\s*:?\s*$",
     re.I)
+#: Depois de uma citacao de DADO, o trecho ate o fim da frase (no maximo 120 caracteres): com um
+#: digito nele, o dado citado esta no texto ("os seguintes resultados: PCR 6 mg/dL") -- nada perdido.
+_JANELA_DADO = 120
+_RX_FIM_FRASE = re.compile(r"[?!]|\.(?=\s|$)")
+#: "... dentre as abaixo:" / "das alternativas a seguir:" -- o que vem depois sao as ALTERNATIVAS.
+_RX_PEDE_ALTERNATIVAS = re.compile(r"\b(?:alternativas?|op[cç][oõ]es|afirmativas|assertivas|itens|"
+                                   r"dentre|entre)\b[^.;?!\n]{0,20}$", re.I)
+
+
+def _dado_no_texto(texto, m):
+    """True quando a citacao `m` aponta para dado que ESTA no texto logo depois (ou, no ramo do fim,
+    para as alternativas): nao e objeto visual perdido. PURA."""
+    seguintes = m.group("dado") or re.search(r"seguint", m.group(0), re.I)
+    if seguintes:
+        janela = texto[m.end():m.end() + _JANELA_DADO]
+        fim = _RX_FIM_FRASE.search(janela)
+        return bool(re.search(r"\d", janela[:fim.start()] if fim else janela))
+    if re.match(r"(?:a seguir|abaixo)\s*:?\s*$", m.group(0), re.I):
+        return bool(_RX_PEDE_ALTERNATIVAS.search(texto[:m.start()]))
+    return False
+
+
+class _RegraCitaFigura:
+    """O enunciado cita um objeto visual que NAO esta no texto: a regex `_RX_CITA_FIGURA` + o filtro
+    `_dado_no_texto`. `search(texto)` devolve o 1o `re.Match` que vale (ou None) -- a mesma forma de
+    `re.Pattern.search`, para quem ja chamava `CITA_FIGURA.search`. PURA."""
+
+    def __init__(self, rx):
+        self.rx = rx
+
+    def search(self, texto):
+        texto = texto or ""
+        pos = 0
+        while True:
+            m = self.rx.search(texto, pos)
+            if m is None:
+                return None
+            if not _dado_no_texto(texto, m):
+                return m
+            pos = m.start() + 1
+
+
+CITA_FIGURA = _RegraCitaFigura(_RX_CITA_FIGURA)
+
 
 RX_CADERNO = re.compile(r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})", re.I)
 

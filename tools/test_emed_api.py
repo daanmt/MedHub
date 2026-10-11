@@ -597,6 +597,60 @@ def test_termo_do_padrao_sem_objeto_visual_nao_marca(texto):
     assert "sem_figura" not in emed_api.montar_docs([q], "t9", 9)[0]
 
 
+#: Hotfix 1.1b DoD 5 (11/10/2026): a amostra de 20 `sem_figura` deu precisao 0/20 -- os falsos
+#: positivos REAIS caem em duas classes. (A) "quadro" = quadro CLINICO descrito no texto; (B) o dado
+#: citado ("os seguintes resultados") ESTA no texto logo depois. Nenhum pode marcar.
+FALSOS_POSITIVOS_SEM_FIGURA = [
+    # (A) quadro clinico
+    "Paciente de 54 anos com febre e dor lombar. Diante do quadro clínico e laboratorial apresentado, "
+    "a conduta mais adequada, neste momento, é:",
+    "Criança com tosse há 3 semanas. Qual exame deve ser adotado neste momento para o quadro clínico "
+    "apresentado?",
+    "Lesão vegetante de 3 cm no colo uterino. De acordo com o quadro descrito acima, qual o provável "
+    "estadiamento clínico?",
+    "Tumor de 2 cm sem demais alterações. De acordo com o quadro acima, assinale a alternativa "
+    "correspondente ao estadiamento e à conduta mais adequada.",
+    "Lactente com diarreia há dois anos. O diagnóstico e tratamento do quadro apresentado, "
+    "respectivamente, são:",
+    "Homem com ideação suicida.\nConsiderando o quadro clínico apresentado, assinale a alternativa correta:",
+    "Gestante com cefaleia. Segundo as diretrizes da AHA e considerando o quadro clínico apresentado, "
+    "qual é a melhor conduta para essa paciente?",
+    # (B) o dado citado esta no texto, logo depois
+    "Gestante de 33 anos apresentou os seguintes resultados na investigação do metabolismo glicídico: "
+    "glicemia de jejum com 10 semanas = 89 mg/dL; TOTG com 24 semanas: 90, 180 e 150 mg/dL.",
+    "Paciente com dor articular. Os exames laboratoriais revelam os seguintes resultados: proteína "
+    "C-reativa 6 mg/dL; VHS 78 mm/h; Hb 9,5 g/dL. Qual o diagnóstico?",
+    "Criança com febre e rigidez de nuca. Uma punção lombar é realizada, com os seguintes resultados no "
+    "líquor: Leucócitos = 7.000, com 90% de neutrófilos, proteína = 150mg/dL. Qual o agente?",
+    "Traz TTOG com 75g de glicose com resultados: 90, 170 e 168 mg/dl (Jejum, 1h e 2h). Após avaliar o "
+    "quadro clínico e exames laboratoriais acima, assinale o diagnóstico correto.",
+    "Gestante realizou TOTG com 75 g de glicose na 25ª semana de gestação com os seguintes resultados: "
+    "jejum = 102mg/dL; 1 hora = 192mg/dL; 2 horas = 147mg/dL. Qual a conduta?",
+    # o fim "abaixo:" aponta para as ALTERNATIVAS (t40 Q12)
+    "Assinale a alternativa com a CONDUTA MAIS INDICADA para esta gestante, dentre as abaixo:",
+]
+
+
+@pytest.mark.parametrize("texto", FALSOS_POSITIVOS_SEM_FIGURA)
+def test_falso_positivo_real_do_sem_figura_nao_marca(texto):
+    """Hotfix 1.1b DoD 5: "quadro" clinico e dado-que-esta-no-texto NAO sao objeto visual perdido."""
+    assert not emed_api.CITA_FIGURA.search(texto)
+    item = _item("e8")
+    item["statement_text"] = f"<p>{texto}</p>"
+    assert emed_api.extrair(item)["sem_figura"] is False
+
+
+@pytest.mark.parametrize("texto", [
+    "Os achados estão resumidos no Quadro 1. Qual o diagnóstico?",
+    "Observe os dados do quadro abaixo:",
+    "Apresenta os seguintes valores de curva glicêmica domiciliar (valores em mg%):\n\nA conduta é:",
+    "Com esse perfil glicêmico, a conduta correta será a seguinte:",
+])
+def test_positivo_que_o_aperto_preserva(texto):
+    """Hotfix 1.1b DoD 5: o aperto mantem "Quadro N", "quadro abaixo:" no fim e o dado ausente."""
+    assert emed_api.CITA_FIGURA.search(texto)
+
+
 def test_resumo_da_captura_lista_os_sem_figura(ambiente, monkeypatch, capsys):
     """DoD 1 (1.1a): o resumo da captura lista `sem_figura: [nums]` (a numeracao da lista)."""
     cita = _item("4000000002")

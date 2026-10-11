@@ -245,7 +245,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/detect_clones.py` | near-duplicates de flashcards POR TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+1) |
 | `tools/doc_drift.py` | Sensor de drift doc-vs-codigo (check 7 do auto_check -- degrau 1 da auto-evolucao) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+10) |
 | `tools/dormant_refresh.py` | ritual diário de refresh de tema DORMENTE | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-refrescar/SKILL.md` (+13) |
-| `tools/emed_api.py` | lista do EMED -> docs `questoes/*` do hub pela API do EMED, SEM LLM (s202) | `.agents/skills/source-command-banco-emed/SKILL.md`, `.claude/commands/banco-emed.md` (+5) |
+| `tools/emed_api.py` | lista do EMED -> docs `questoes/*` do hub pela API do EMED, SEM LLM (s202) | `.agents/skills/source-command-banco-emed/SKILL.md`, `.claude/commands/banco-emed.md` (+6) |
 | `tools/emed_banco.py` | banco de questões EMED no ipub.db: ingere questões e respostas da Bancada EMED, poda o b | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+15) |
 | `tools/emed_flashcards.py` | Corpus de flashcards do EMED 2024 -- colheita, extracao e consulta | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-estilo-flashcard/SKILL.md` (+4) |
 | `tools/event_log.py` | eventos append-only do pipeline de flashcards (P3 part-4) | `pytest.ini` (+7) |

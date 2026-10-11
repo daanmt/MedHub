@@ -29,6 +29,7 @@ KEEP = 5
 #: a rotacao (que so enxerga PREFIX) nunca o conta nem o apaga; registro com sha256 em FIXADOS.json.
 PREFIX_FIXADO = 'ipub_fixado_'
 MANIFESTO_FIXADOS = 'FIXADOS.json'
+_CARIMBO_FIXADO = re.compile(re.escape(PREFIX_FIXADO) + r"(\d{8}_\d{6})")
 #: o banco REAL, que nenhum monkeypatch troca: fixa-lo de dentro do pytest e recusa (F137 parte 2).
 _DB_REAL = ROOT / 'ipub.db'
 
@@ -245,16 +246,122 @@ def desfixar(ident, motivo, backup_dir=None):
         raise Recusa(f"{item['arquivo']} sumiu do disco -- registrar no ledger, nada mexido")
     if _sha256(arq) != item["sha256"]:
         raise Recusa(f"{item['arquivo']}: sha256 nao confere com o manifesto -- nada mexido; investigar")
-    m = re.match(PREFIX_FIXADO + r"(\d{8}_\d{6})", item["arquivo"])
+    m = _CARIMBO_FIXADO.match(item["arquivo"])
     carimbo = m.group(1) if m else datetime.now().strftime('%Y%m%d_%H%M%S')
-    novo = backup_dir / f"{PREFIX}{carimbo}_desfixado.db"
-    if novo.exists():
-        raise Recusa(f"{novo.name} ja existe -- nada mexido")
+    # part-4b: dois fixados do mesmo carimbo (6 casos no manifesto real) colidiam no 2o desfixar;
+    # `-N` desambigua como o `_fixar` faz -- nunca sobrescreve, e a rotacao segue o carimbo.
+    novo, n = backup_dir / f"{PREFIX}{carimbo}_desfixado.db", 1
+    while novo.exists():
+        novo, n = backup_dir / f"{PREFIX}{carimbo}_desfixado-{n}.db", n + 1
     arq.rename(novo)
     item.update({"desfixado_em": datetime.now().replace(microsecond=0).isoformat(),
                  "motivo_desfixar": motivo, "arquivo_na_rotacao": novo.name})
     _gravar_manifesto(backup_dir, reg)
     return item
+
+
+def plano_desfixar_lote(manter, backup_dir=None):
+    """Dry-run do desfixar em LOTE (part-4b): quais fixados ATIVOS do manifesto sairiam se so os
+    `manter` mais recentes ficassem. NAO escreve nada (le o manifesto e o sha256 de cada alvo).
+
+    "Mais recente" = carimbo do nome, a ordem do `purge` (`_listar`), nunca o mtime. Fixado ativo
+    sem carimbo legivel no nome = `Recusa`: a ordem nao e inventada. Alvo sumido do disco ou com
+    sha256 divergente vai para `problemas` -- e o `--apply` recusa o lote inteiro (nada pela metade).
+    Devolve {ativos, manter, sair: [{arquivo, bytes}], k, bytes, problemas}, `sair` do mais antigo
+    ao mais recente."""
+    backup_dir = Path(backup_dir) if backup_dir else BACKUP_DIR
+    if manter is None or manter < 1:
+        raise Recusa(f"--manter {manter}: o lote guarda ao menos 1 fixado (o ponto de retorno mais recente)")
+    ativos = [r for r in _ler_manifesto(backup_dir) if not r.get("desfixado_em")]
+    sem_carimbo = [r["arquivo"] for r in ativos if not _CARIMBO_FIXADO.match(r["arquivo"])]
+    if sem_carimbo:
+        raise Recusa(f"{len(sem_carimbo)} fixado(s) ativo(s) sem carimbo legivel no nome "
+                     f"({PREFIX_FIXADO}AAAAMMDD_HHMMSS...) -- a ordem nao e inventada; nada mexido: "
+                     + ", ".join(sem_carimbo))
+    ordem = sorted(ativos, key=lambda r: r["arquivo"], reverse=True)    # = `_listar`: carimbo do nome
+    ficam, sair = ordem[:manter], ordem[manter:][::-1]
+    assert len(ficam) + len(sair) == len(ativos), "COUNT-ASSERT desfixar-lote: ficam + sair != ativos"
+    assert len(sair) == max(0, len(ativos) - manter), "COUNT-ASSERT desfixar-lote: K != ativos - manter"
+    alvos, problemas = [], []
+    for r in sair:
+        arq = backup_dir / r["arquivo"]
+        if not arq.is_file():
+            problemas.append(f"{r['arquivo']}: sumiu do disco")
+            alvos.append({"arquivo": r["arquivo"], "bytes": 0})
+            continue
+        if _sha256(arq) != r["sha256"]:
+            problemas.append(f"{r['arquivo']}: sha256 nao confere com o manifesto")
+        alvos.append({"arquivo": r["arquivo"], "bytes": arq.stat().st_size})
+    return {"ativos": len(ativos), "manter": [r["arquivo"] for r in ficam], "sair": alvos,
+            "k": len(alvos), "bytes": sum(a["bytes"] for a in alvos), "problemas": problemas}
+
+
+def desfixar_lote(manter, motivo, expect, backup_dir=None):
+    """Apply do desfixar em LOTE: COUNT-ASSERT antes (`expect` == K medido agora, zero problemas) e
+    cada um dos K passa pelo `desfixar()` -- motivo, sha256 conferido, devolvido a ROTACAO, linha do
+    manifesto com `desfixado_em`. Nao apaga nada e nao chama a rotacao (quem apaga e o proximo
+    `backup()`). COUNT-ASSERT depois: os ativos que sobram sao exatamente os `manter` medidos."""
+    backup_dir = Path(backup_dir) if backup_dir else BACKUP_DIR
+    if not (motivo or "").strip():
+        raise Recusa("desfixar-lote exige --motivo (decisao com rastro)")
+    if expect is None:
+        raise Recusa("--apply exige --expect K (o K que o dry-run mediu)")
+    medido = plano_desfixar_lote(manter, backup_dir)
+    if medido["problemas"]:
+        raise Recusa(f"{len(medido['problemas'])} alvo(s) com problema -- nada mexido: "
+                     + "; ".join(medido["problemas"]))
+    if expect != medido["k"]:
+        raise Recusa(f"COUNT-ASSERT: --expect {expect} != K medido {medido['k']} -- nada mexido")
+    feitos = []
+    for i, alvo in enumerate(medido["sair"]):
+        try:
+            feitos.append(desfixar(alvo["arquivo"], motivo, backup_dir=backup_dir))
+        except Recusa as e:
+            raise Recusa(f"parou no item {i + 1}/{medido['k']} ({e}); {len(feitos)} ja desfixado(s), "
+                         "cada um com rastro no manifesto -- registrar no ledger") from None
+    restantes = sorted(r["arquivo"] for r in _ler_manifesto(backup_dir) if not r.get("desfixado_em"))
+    assert len(feitos) == expect, f"COUNT-ASSERT pos desfixar-lote: {len(feitos)} != {expect}"
+    assert restantes == sorted(medido["manter"]), (
+        f"COUNT-ASSERT pos desfixar-lote: ativos {restantes} != os {manter} mantidos na medicao")
+    return feitos
+
+
+def _mb(n):
+    """MB = 2**20 bytes (a unidade do `du -m`)."""
+    return f"{n / 2**20:.1f} MB"
+
+
+def _main_lote(args):
+    """`--desfixar-lote`: dry-run por padrao; `--apply --expect K` aplica."""
+    try:
+        if args.apply:
+            feitos = desfixar_lote(args.manter, args.motivo, args.expect)
+        else:
+            medido = plano_desfixar_lote(args.manter)
+    except Recusa as e:
+        print(f"RECUSA: {e}")
+        return 1
+    if args.apply:
+        for item in feitos:
+            print(f"DESFIXADO: {item['arquivo']} (sha256 {item['sha256']}) -> rotacao como "
+                  f"{item['arquivo_na_rotacao']}")
+        print(f"DESFIXAR-LOTE: {len(feitos)} fixado(s) devolvido(s) a rotacao; motivo: {args.motivo.strip()}. "
+              f"Quem apaga e a rotacao keep-{KEEP} no proximo backup. Registrar no ledger.")
+        return 0
+    print(f"DESFIXAR-LOTE (dry-run, nada mexido) em {BACKUP_DIR}")
+    print(f"  fixados ativos: {medido['ativos']} | ficam os {args.manter} mais recentes pelo carimbo do nome "
+          f"| sairiam K={medido['k']} ({_mb(medido['bytes'])})")
+    print("  ficam: " + (", ".join(medido["manter"]) or "(nenhum)"))
+    print("  sairiam (do mais antigo ao mais recente):")
+    for a in medido["sair"]:
+        print(f"    {a['arquivo']}  {_mb(a['bytes'])}")
+    if medido["problemas"]:
+        print(f"  RECUSA no --apply: {len(medido['problemas'])} alvo(s) com problema -- "
+              + "; ".join(medido["problemas"]))
+        return 1
+    print(f"  Para aplicar (devolve a rotacao, nao apaga): python tools/backup_db.py --desfixar-lote "
+          f"--manter {args.manter} --motivo \"...\" --apply --expect {medido['k']}")
+    return 0
 
 
 def _parser():
@@ -266,6 +373,15 @@ def _parser():
     ap.add_argument("--desfixar", metavar="ID",
                     help="devolve um fixado a rotacao (nome do arquivo ou 8+ do sha256); exige --motivo")
     ap.add_argument("--motivo", help="a decisao que desfixa (fica no manifesto e vai para o ledger)")
+    ap.add_argument("--desfixar-lote", action="store_true",
+                    help="devolve a rotacao os fixados ativos menos os --manter N mais recentes (carimbo do "
+                         "nome); dry-run por padrao; exige --manter e --motivo")
+    ap.add_argument("--manter", type=int, metavar="N",
+                    help="com --desfixar-lote: quantos fixados mais recentes ficam (>= 1)")
+    ap.add_argument("--apply", action="store_true",
+                    help="com --desfixar-lote: aplica (default: dry-run); exige --expect K")
+    ap.add_argument("--expect", type=int, metavar="K",
+                    help="com --desfixar-lote --apply: COUNT-ASSERT, o K medido no dry-run")
     return ap
 
 
@@ -289,6 +405,18 @@ def main(argv=()):
     """
     ap = _parser()
     args = ap.parse_args(list(argv))
+    if not args.desfixar_lote and (args.manter is not None or args.apply or args.expect is not None):
+        ap.error("--manter/--apply/--expect exigem --desfixar-lote")
+    if args.desfixar_lote:
+        if args.desfixar or args.fixar:
+            ap.error("--desfixar-lote nao combina com --desfixar/--fixar")
+        if args.manter is None:
+            ap.error("--desfixar-lote exige --manter N")
+        if not (args.motivo or "").strip():
+            ap.error("--desfixar-lote exige --motivo")
+        if args.apply and args.expect is None:
+            ap.error("--apply exige --expect K (o K que o dry-run mediu)")
+        return _main_lote(args)
     if args.desfixar:
         if not args.motivo:
             ap.error("--desfixar exige --motivo")

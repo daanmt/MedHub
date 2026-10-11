@@ -5,6 +5,8 @@
     prova que e o estado de antes: sha256 da copia == sha256 do banco no mesmo instante.
 (2) Sair da fixacao so por decisao com rastro: `--desfixar ID --motivo`; nenhuma CLI apaga fixado --
     o desfixado volta para a ROTACAO, que e quem apaga.
+(2b) Desfixar em LOTE (part-4b): `--desfixar-lote --manter N --motivo` e dry-run por padrao; o
+    `--apply` exige `--expect K` e passa cada item pelo mesmo `desfixar()`. Diretorio sintetico.
 (3) Propriedade: rotacao com 20 backups falsos nunca remove fixado (e a purga recusa o prefixo).
 
 Nada aqui toca o `ipub.db` nem o `artifacts/backups/` reais: todo banco e temporario, o fixado de
@@ -121,6 +123,144 @@ def test_desfixar_ambiguo_inexistente_ou_adulterado_e_recusa(tmp_path):
     with pytest.raises(backup_db.Recusa) as e:
         backup_db.desfixar(a["arquivo"], "motivo", backup_dir=pasta)
     assert "sha256" in str(e.value) and (pasta / a["arquivo"]).exists()
+
+
+def test_desfixar_dois_fixados_do_mesmo_carimbo_nao_colidem_na_rotacao(tmp_path):
+    """No `FIXADOS.json` real ha 6 carimbos repetidos (ex.: 3 fixados em `20260929_184526`): o 2o
+    `desfixar` do mesmo carimbo recusava (`..._desfixado.db ja existe`) e o lote parava no meio.
+    Agora desambigua com `-N`, o mesmo padrao do `_fixar`, sem sobrescrever nada."""
+    pasta = _fixados_sinteticos(tmp_path / "backups", ["20260929_184526", "20260929_184526", "20261001_120000"])
+    a, b, _ = _manifesto(pasta)
+    ra = backup_db.desfixar(a["arquivo"], "lote de teste", backup_dir=pasta)
+    rb = backup_db.desfixar(b["arquivo"], "lote de teste", backup_dir=pasta)
+    assert ra["arquivo_na_rotacao"] != rb["arquivo_na_rotacao"]
+    for r, orig in ((ra, a), (rb, b)):
+        novo = pasta / r["arquivo_na_rotacao"]
+        assert novo.name.startswith(backup_db.PREFIX + "20260929_184526") and novo.suffix == ".db"
+        assert _sha(novo) == orig["sha256"]
+    assert len(backup_db._listar(pasta, backup_db.PREFIX)) == 2      # a rotacao enxerga os dois
+
+
+# ---------------------------------------------------------------- (2b) desfixar em lote (part-4b)
+#: carimbos fora de ordem no manifesto; o mtime sai INVERTIDO (o mais antigo no carimbo e o mais
+#: novo no disco): "mais recente" e o carimbo do nome, como no `purge` (DT2 da part-4b)
+_OITO = ["20260905_120000", "20260901_120000", "20260908_090000", "20260903_235959",
+         "20260902_000001", "20260907_120000", "20260904_120000", "20260906_120000"]
+_TRES_MAIS_ANTIGOS = ["20260901_120000", "20260902_000001", "20260903_235959"]
+
+
+def _fixados_sinteticos(pasta, carimbos):
+    pasta.mkdir(parents=True, exist_ok=True)
+    reg = []
+    for i, c in enumerate(carimbos):
+        nome = f"{backup_db.PREFIX_FIXADO}{c}_ato-{i}.db"
+        conteudo = f"fixado {i} {c}\n".encode() * 500
+        (pasta / nome).write_bytes(conteudo)
+        reg.append({"arquivo": nome, "sha256": hashlib.sha256(conteudo).hexdigest(),
+                    "motivo": f"ato {i}", "criado_em": "2026-09-01T12:00:00"})
+    for nome in sorted(r["arquivo"] for r in reg):                  # mtime invertido em relacao ao carimbo
+        t = 2_000_000_000 - int(nome[len(backup_db.PREFIX_FIXADO):][:8])
+        os.utime(pasta / nome, (t, t))
+    (pasta / backup_db.MANIFESTO_FIXADOS).write_text(json.dumps(reg, indent=1) + "\n", encoding="utf-8")
+    return pasta
+
+
+def _foto_pasta(pasta):
+    return {p.name: _sha(p) for p in sorted(Path(pasta).iterdir())}
+
+
+@pytest.fixture
+def lote(tmp_path, monkeypatch):
+    """8 fixados sinteticos + manifesto + 1 backup da rotacao; o BACKUP_DIR da CLI aponta para ca."""
+    pasta = _fixados_sinteticos(tmp_path / "backups", _OITO)
+    (pasta / f"{backup_db.PREFIX}20260910_120000.db").write_bytes(b"rotacao")
+    monkeypatch.setattr(backup_db, "BACKUP_DIR", pasta)
+    return pasta
+
+
+def _cli(*args):
+    return backup_db.main(["--desfixar-lote", "--manter", "5", "--motivo", "poda dos antigos", *args])
+
+
+def test_desfixar_lote_dry_run_lista_k_e_mb_e_nao_altera_nada(lote, capsys):
+    antes = _foto_pasta(lote)
+    assert _cli() == 0
+    saida = capsys.readouterr().out
+    assert "K=3" in saida and "MB" in saida and "--apply --expect 3" in saida
+    assert all(c in saida for c in _TRES_MAIS_ANTIGOS)
+    assert _foto_pasta(lote) == antes                                # arquivos E FIXADOS.json, mesmo sha256
+    plano = backup_db.plano_desfixar_lote(5, backup_dir=lote)
+    assert [r["arquivo"][len(backup_db.PREFIX_FIXADO):][:15] for r in plano["sair"]] == _TRES_MAIS_ANTIGOS
+    assert plano["k"] == 3 and len(plano["manter"]) == 5 and plano["problemas"] == []
+    assert _foto_pasta(lote) == antes
+
+
+def test_desfixar_lote_apply_sem_expect_recusa(lote, capsys):
+    antes = _foto_pasta(lote)
+    casos = [(["--desfixar-lote", "--manter", "5", "--motivo", "x", "--apply"], "--expect"),
+             (["--desfixar-lote", "--manter", "5"], "--motivo"),
+             (["--desfixar-lote", "--motivo", "x"], "--manter"),
+             (["--manter", "5", "--motivo", "x", "--apply", "--expect", "3"], "--desfixar-lote")]
+    for argv, exigido in casos:                   # a recusa nomeia o que falta (nao e "flag desconhecida")
+        with pytest.raises(SystemExit):
+            backup_db.main(argv)
+        err = capsys.readouterr().err
+        assert "exige" in err and exigido in err.split("error:")[-1], (argv, err)
+    assert _foto_pasta(lote) == antes
+
+
+def test_desfixar_lote_expect_errado_recusa_e_nada_muda(lote, capsys):
+    antes = _foto_pasta(lote)
+    for k in ("2", "4", "0"):
+        assert _cli("--apply", "--expect", k) == 1
+        assert "RECUSA" in capsys.readouterr().out
+    assert _foto_pasta(lote) == antes
+
+
+def test_desfixar_lote_com_k_certo_desfixa_so_os_mais_antigos_pelo_carimbo(lote, capsys):
+    antes = _foto_pasta(lote)
+    reg_antes = {r["arquivo"]: r for r in _manifesto(lote)}
+    assert _cli("--apply", "--expect", "3") == 0
+    capsys.readouterr()
+    reg = {r["arquivo"]: r for r in _manifesto(lote)}
+    assert reg.keys() == reg_antes.keys()                            # o rastro fica: nenhuma linha sai
+    sairam = sorted(n for n, r in reg.items() if r.get("desfixado_em"))
+    assert [n[len(backup_db.PREFIX_FIXADO):][:15] for n in sairam] == _TRES_MAIS_ANTIGOS
+    for n in sairam:
+        r = reg[n]
+        assert r["motivo_desfixar"] == "poda dos antigos" and r["desfixado_em"]
+        assert not (lote / n).exists()
+        assert _sha(lote / r["arquivo_na_rotacao"]) == r["sha256"]   # devolvido a rotacao, intacto
+    ficam = [n for n, r in reg.items() if not r.get("desfixado_em")]
+    assert len(ficam) == 5 and all(_sha(lote / n) == reg[n]["sha256"] for n in ficam)
+    # nenhum arquivo apagado (a flag nao apaga: quem apaga e a rotacao, que o lote nao chama)
+    assert sorted(v for k, v in _foto_pasta(lote).items() if k.endswith(".db")) == \
+        sorted(v for k, v in antes.items() if k.endswith(".db"))
+    assert (lote / f"{backup_db.PREFIX}20260910_120000.db").is_file()
+
+
+def test_desfixar_lote_sha_divergente_recusa_o_lote_inteiro(lote, capsys):
+    (alvo,) = [r for r in _manifesto(lote) if "20260902_000001" in r["arquivo"]]
+    (lote / alvo["arquivo"]).write_bytes(b"adulterado")
+    antes = _foto_pasta(lote)
+    assert _cli() == 1                                               # o dry-run ja denuncia
+    assert _cli("--apply", "--expect", "3") == 1
+    assert "sha256" in capsys.readouterr().out
+    assert _foto_pasta(lote) == antes                                # nenhum dos 3 saiu: nada pela metade
+
+
+def test_desfixar_lote_sem_carimbo_legivel_recusa_sem_inventar_ordem(lote, capsys):
+    reg = _manifesto(lote)
+    (lote / f"{backup_db.PREFIX_FIXADO}manual.db").write_bytes(b"sem carimbo")
+    reg.append({"arquivo": f"{backup_db.PREFIX_FIXADO}manual.db",
+                "sha256": _sha(lote / f"{backup_db.PREFIX_FIXADO}manual.db"), "motivo": "m", "criado_em": "x"})
+    (lote / backup_db.MANIFESTO_FIXADOS).write_text(json.dumps(reg, indent=1) + "\n", encoding="utf-8")
+    antes = _foto_pasta(lote)
+    assert _cli() == 1
+    assert _cli("--apply", "--expect", "4") == 1
+    saida = capsys.readouterr().out
+    assert "carimbo" in saida and f"{backup_db.PREFIX_FIXADO}manual.db" in saida
+    assert _foto_pasta(lote) == antes
 
 
 def test_cli_desfixar_exige_motivo_e_nao_existe_flag_de_apagar(tmp_path, capsys):

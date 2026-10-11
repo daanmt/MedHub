@@ -164,6 +164,11 @@ Comando: `python -I conta_backlog.py artifacts/backlog-unico-medhub-2026-10-10.m
 | M-129 | A rotação keep-5 depois do apply da 0.4b apaga 49 de uma vez (os 5 de rotação, de 26/09-07/10, são mais velhos que os fixados de 09/10 devolvidos): no disco ficam só pontos de 09-10/10 | medhub, dry-run da 0.4b (10/10); id do ai-eng 10/10 | operador-decisão | operador | condição do G-op 0.4b: só após a 1.4 com md5 dos 48 | 1 | S | sim |
 | M-130 | `tmp/alca_s213/` (268,8 MB, 70% do `tmp/`) é CITADO só por 1 audit | medhub, inventário da 0.4b (10/10); id do ai-eng 10/10 | operador-decisão | operador (quem pergunta é o ai-eng) | aberto: não tocar | — | S | sim |
 | M-131 | `tmp/` SOLTO = 17.189 arquivos, 40,2 MB (sem leitor no código nem citação em rastreado): inventário + regra de vida do `tmp/` | medhub, inventário da 0.4b (10/10); id do ai-eng 10/10 | engenharia | medhub | aberto | 3 | S | não |
+| M-132 | Pattern Registry do `.vibeflow/index.md` diverge do frontmatter de 5 patterns -> registry DERIVADO do frontmatter por ferramenta, com sensor | medhub, 1.pre (10/10); id do ai-eng 10/10 | engenharia | medhub | aberto | 3 | S | não |
+| M-133 | Anti-patterns manuais velhos em `domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137` (conhecimento que contradiz o código, classe do M-127) | medhub, 1.pre (10/10); id do ai-eng 10/10 | engenharia | medhub | aberto | 3 | S | não |
+| M-134 | `criar-resumo` passo 8 (`--delete-pdfs`) + `AGENTE.md:208` ("Zero PDF") contradiziam a retenção da s086 (ação irreversível) | medhub, 1.pre (10/10); id e triagem do ai-eng 10/10 | operador-decisão | medhub | fechado (`55d1144`, §10.10 em 3 passos; default não destrutivo) | 1 | S | sim |
+| M-135 | Frontmatter legado em `resumos/GO/Assistência ao Parto.md` (a referência de obstetrícia do `estilo-resumo`) | medhub, 1.pre (10/10); id do ai-eng 10/10 | conteúdo | medhub | aberto | 3 | S | não |
+| M-136 | Retenção do repo privado de backup: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 | ai-eng, spec da 1.4 (11/10) | arquitetura | medhub | aberto | 4 / Fase 1 | S | não |
 
 ## Regras de vida do backlog
 

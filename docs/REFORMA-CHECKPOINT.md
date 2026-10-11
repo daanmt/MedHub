@@ -13,7 +13,7 @@ Fase 0 (preparar o ambiente) · **Lote 0 completo, G-lote 0 ACEITO** (ai-eng, 10
 | **G-lote 0** | — | ACEITO pelo ai-eng (10/10 23:32) | 8479d7e | 1554/0/178 | — |
 | 1.pre `/vibeflow:analyze` (resto do M-127) | — | PASS | 4300bed | 1554/0/177 (do filho, `python -m pytest tools/ -q`; commit de `.vibeflow/` não dispara a suíte) | 7 docs; fora dos marcadores idêntico ao HEAD (script); doc_drift 2 -> 1 (`index.md:177`, o histórico); fatos novos conferidos no código (`questoes_realizadas` intocado, fallback heurístico removido, `fsrs>=6.3.2`, módulos e funções citados existem). Achados não corrigidos ao ai-eng: registry x frontmatter em 5 patterns; Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`); `criar-resumo.md` passo 8 (`--delete-pdfs`) e `AGENTE.md:208` ("Zero PDF") x retenção s086; frontmatter legado de `Assistência ao Parto.md` |
 | 1.4 cópia off-machine (PRIMEIRO no Lote 1) | `.vibeflow/specs/medhub-fase0-lote1-part-4.md` | PASS (código); a cópia real espera o G-op | 3f53136 | 1585/0/188 | adições (A) e (B) do ai-eng dentro; dry-run real N=49, 352,5 MB, backups + `ipub.db` idênticos, destino não criado; recusa `--dest` no repo público (até com caixa trocada); gate `BANCO_NO_RECORTE` no fluxo real: o `git add` foi recusado pelo gitignore e o commit com `-f` BLOQUEADO só por ele, HEAD intacto, revertido; §7.4 regenerada (1 linha + 6 contadores) |
-| 1.0 RAG/LangMem fora do caminho crítico | `.vibeflow/specs/medhub-fase0-lote1-part-0.md` | spec escrita, enviada ao ai-eng (default do bloco de fraquezas no boot = sair; TODO a/b) | | | 1º DoD = MEDIR boot e injeção dos hooks, com e sem (baseline do Lote 5) |
+| 1.0 RAG/LangMem fora do caminho crítico | `.vibeflow/specs/medhub-fase0-lote1-part-0.md` | em curso: GO do ai-eng (11/10 00:45) com o default (a), o bloco sai do boot; + 1 linha na baseline (última consolidação bem-sucedida x nº de sessões em `history/`); 1 filho Opus implementa | | | 1º DoD = MEDIR boot e injeção dos hooks, com e sem (baseline do Lote 5) |
 | 1.1 P5 figuras · 1.2 P2 `versao` + gate · 1.3 P6 âncora | gen-spec do medhub | pendente | | | |
 | 2.x P1 · 3.x hub+contratos · 4.x dados (multi-tenant) · 5.x medições | idem | pendente | | | |
 
@@ -29,7 +29,7 @@ operador: criar o repo git PRIVADO e o clone local fora de `C:/Users/daanm/medhu
 - **M-133** Anti-patterns manuais velhos (`domain-engine-api:106`, `agent-workflow-protocol:91-92`, `error-insertion-pipeline:137`), mesma classe do M-127.
 - **M-135** frontmatter legado de `resumos/GO/Assistência ao Parto.md` (quando a referência for tocada ou no inventário de frontmatter).
 - (Lote 4 / Fase 1) **M-136** retenção do repo privado: cada cópia off-machine pesa ~352 MB, e a recorrência ficou fora da 1.4 (ex.: 1 cópia por semana depois de 30 dias).
-- (fora do Lote 3) **M-134** `criar-resumo.md` passo 8 (`--delete-pdfs`) + `AGENTE.md:208` ("Zero PDF") x retenção da s086: norma de ato IRREVERSÍVEL. Quem pergunta ao operador é o ai-eng. Default sem resposta: retenção vence, e o passo 8 + a linha 208 são revogados pelo §10.10 (3 passos) num commit próprio entre a 1.4 e a 1.0. 🔴 Até lá, `criar-resumo` não roda.
+- **M-134** FECHADO em `55d1144` (11/10): a deleção do PDF-fonte saiu do fluxo (`criar-resumo` passo 8, skill `/extrair-pdf`, `AGENTE.md` §6 e §7.3) pelo §10.10 em 3 passos; termo `--delete-pdfs` vigiado pelo `CONTRATO_REVOGADO`. Default não destrutivo do operador (retenção da s086). Achado: o `.agents/workflows/` não está entre os 31 portadores que o gate vigia.
 - (fora do Lote 3) **M-129** = condição do G-op da 0.4b (a rotação pós-apply apaga 49 de uma vez); **M-130** `tmp/alca_s213` (268,8 MB, CITADO só por 1 audit) = decisão do OPERADOR, quem pergunta é o ai-eng; não tocar.
 
 ## Gates abertos
@@ -42,6 +42,9 @@ operador: criar o repo git PRIVADO e o clone local fora de `C:/Users/daanm/medhu
 ## Limites conhecidos (aceitos pelo ai-eng; revisar na data)
 - 0.3 DoD 4: `banco-emed.md:154` (Figura, s221) com `NAO-VERIFICAVEL`. O teste da figura prova só a URL em `figuras`; "nunca este script baixa" não tem sensor. Revisar **2026-12-31** (P5 do Lote 1). D83, 3º destino.
 - Fecho do Lote 0: `conventions.md:54` (dentro de `auto`) saiu no 1.pre (`4300bed`); `.vibeflow/index.md:177` (era a 169) é registro riscado de achado resolvido e fica: é o único resto do doc_drift em `.vibeflow/`.
+
+## Notas de design para a Fase 1 (sem agir agora)
+- (ai-eng, 11/10 00:45) O panorama do boot NÃO carrega erros por tema do banco. Na plataforma-alvo, fraqueza = query sobre o Postgres (sinal determinístico, como o `db.get_erros_por_tema`), nunca memória de LLM.
 
 ## Decisões do operador (data · verbatim curto)
 10/10 (no canal do ai-eng): i RAG/LangMem fora do caminho crítico SIM · ii purga/poda/gc SIM (após cópia off-machine) · iii cópia `ipub.db` = Drive + git privado ("drive e git") · iv ADR-006 ACEITO, opção A · v DISC §7: (1) produto, validado com ele primeiro -> infra product-ready, schema multi-tenant no Lote 4 · (2) terceiros "irrelevante": produto = provas públicas + cunhagem própria; cards = erros dos usuários; M-002 fecha como uso pessoal · (3) repo público por ora (conta Daktus), privado depois · (4) agente hospedado por ele, aditável; sem Managed Agents · (5) "não irei estudar hoje mais, portanto pode tocar nessa" -> tique desligado hoje, engenharia contínua.

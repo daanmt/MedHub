@@ -56,13 +56,8 @@ O `ESTADO.md` **não** tem seção de sessões (proibido por `core/contracts/est
 `python tools/index_resumos.py` (motor único `app/engine/rag.py`; o índice cobre `resumos/`, gold-only). Fora do caminho crítico: a sessão fecha sem ele.
 ⚰️ 11/10/2026 (part 1.0, Fase 0 Lote 1): esta seção dizia que o hook `PostToolUse(Write)` reindexava o RAG sozinho. O hook saiu do `.claude/settings.json` nesta part, e o script dele (`tools/hooks/memory_session_log.py`) só disparava a consolidação, nunca a indexação. Decisão do operador (10/10): RAG/LangMem fora do caminho crítico.
 
-### 5. Consolidação de Memória Longa (manual, Memory v1)
-Opcional, fora do caminho crítico:
-```powershell
-python -m app.memory.manager <NNN>
-```
-⚰️ 11/10/2026 (part 1.0): esta seção dizia que a consolidação era disparada em background pelo hook `PostToolUse(Write)` ao criar `history/session_NNN.md`. O hook saiu do `.claude/settings.json`, e o boot não injeta mais o bloco de fraquezas. Fraqueza é sinal determinístico do `ipub.db` (`db.get_erros_por_tema`). A última consolidação gravada foi a do selo da s220 (07/10).
-Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
+### 5. ⚰️ Consolidação de Memória Longa (Memory v1)
+⚰️ 11/10/2026 (Fase 0 Lote 3 part 3.0a1): não há mais consolidação no fechamento -- a memória longa LangMem saiu de uso por ordem do operador (`AGENTE.md` §6 "Memory v1"); fraqueza por tema é sinal determinístico do `ipub.db` (`db.get_erros_por_tema`).
 
 ### 5b. Rotacionar o ledger (s204)
 Achado resolvido na sessão **sai da frente no selo**: `python tools/selo.py --rotacionar` (dry-run) e, com o N medido, `--apply --expect N`. Assinatura em `.claude/commands/engenharia-cli.md`, seção `tools/selo.py`. Os dois arquivos do ledger entram no commit do selo.

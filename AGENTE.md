@@ -52,7 +52,7 @@ A obtenção de aprovação integral (status `✅ PASSED` com exit code `0`) é 
 4. **Plano do Dia** -- o hook `SessionStart` já rodou `tools/day_plan.py` e injetou o plano antes do 1o turno: **não re-rodar**. Liderar com ele e propor o passo imediato. **A abertura entrega o PANORAMA ao operador (s190, pedido dele em 20/09/2026)** -- meta e datas, onde estamos, tarefas em aberto com o que fazer em cada (lista / caderno a criar / aula-base / sem lista), passos de hoje com o ritmo da meta, métricas -- montado só dos blocos derivados que o hook injeta (Plano do Dia inteiro + `plano.py --panorama`); a ordem das seções mora no texto-contrato de `tools/hooks/memory_boot.py`, preso por `test_boot_entrega_o_panorama`. Sob demanda: `--difficulty`, `--tempo H --energia alta|media|baixa`. 🔴 **Uma meta, um ritmo (s203, decisão do operador em 27/09/2026):** a meta é 10.000 questões em 01/11 (`performance.MARCOS`) e o único "por dia" do boot, do painel, do HANDOFF e do recomendador é o dela (`performance.volume_vs_marco`); a Fase 1 aparece como COBERTURA da meta (onde o acumulado chega fechando o plano), nunca como 2º ritmo -- `cronograma-contract` v1.5. ⚰️ *Era "ritmo-alvo mede a grade, nunca a prova" e, no bloco do plano, a cota da semana + o ritmo da Fase 1 + o Ciclo 2026.* O bloco `🧭 Cronograma` sai de **`plano_tarefas`** (semana do plano, fase, próximas tarefas com link e nº previsto); conclusão/ordem são colunas editáveis por `tools/plano.py`, ⚰️ *não mais pela W8/`--sync-drive`, revogados em 17/09/2026*. Normas: `forgetting-curve`/`orquestracao`/`cronograma`-contract. Pausas: §1.1.  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
 5. **Workflow da tarefa** -- `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
 6. **Último log** -- `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
-7. **Memória longa** -- fora do boot, sob demanda: `python -m app.memory.inspect --context`. ⚰️ *11/10/2026 (part 1.0, Fase 0 Lote 1): era "carregada via hook `SessionStart`". O bloco de Áreas de fraqueza saiu do boot: importava LangGraph em toda abertura (~0,55 s medidos) para repetir, como cópia probabilística, o sinal que o `ipub.db` já dá (`db.get_erros_por_tema`), alimentado por uma consolidação sem escrita desde o selo da s220 (07/10). Decisão do operador em 10/10: RAG/LangMem fora do caminho crítico.*
+7. **Memória longa** -- ⚰️ *11/10/2026 (Fase 0 Lote 3 part 3.0a1): fora de uso, nem no boot nem sob demanda. Era "sob demanda: o `inspect --context` do pacote LangMem" e, antes da part 1.0, "carregada via hook `SessionStart`" (saiu do boot por importar LangGraph em toda abertura, ~0,55 s medidos). Revogada pela ordem do operador de 11/10 (`docs/REFORMA-CHECKPOINT.md:55`, "LangMem e afins" saem): era cópia probabilística do sinal que o `ipub.db` já dá (`db.get_erros_por_tema`, o `erros_recentes` do `get_topic_context`), sem escrita desde o selo da s220 (07/10). O pacote `app/memory/` e o `medhub_memory.db` saem na part 3.0a2. Declaração: §6 "Memory v1".*
 8. **RAG semântico durante a sessão** -- motor único = `app/engine/rag.py` (via `app/engine/get_topic_context.py`) para localizar conteúdo em `resumos/` sem ler arquivos inteiros. O MCP `obsidian-notes-rag` foi descontinuado (ROADMAP: indexava snapshot stale; decisão empírica) -- não usar.
 
 ---
@@ -63,7 +63,7 @@ A obtenção de aprovação integral (status `✅ PASSED` com exit code `0`) é 
 2. **Atualizar `ESTADO.md`** -- **só se o macro mudou** (indicador cruzou marco, nova frente, skill/contrato versionado). Não é diário de sessões. Regras em `core/contracts/estado-contract.md`.
 3. **Registrar sessão** -- novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md` + entry em `history/INDEX.md`. **Invariante de ponteiro (F1):** o `auto_check` verifica que o ponteiro do HANDOFF não excede `max(history/session_NNN) + 1` (WARN `SESSION_POINTER_DRIFT`) -- selar a sessão aqui é o que mantém o passo 1 legítimo.  <!-- CHECK: test_memory_boot_drift -->
 4. **Auto-higiene** -- **achado RESOLVIDO sai da frente do ledger no selo** (s204, decisão do operador em 28/09/2026: *"o que resolvermos, sai da frente"*): `python tools/selo.py --rotacionar` (dry-run) e `--apply --expect N`; o bloco vai inteiro para `history/auditoria/resolvidos.md`.  <!-- CHECK: test_repo_real_consistente --> **Arquivo absorvido/integrado em doc mais estável SAI no mesmo commit do selo**; relatório incorporado por outro mais fresco SAI. Veredito **binário** (fica ou é deletado) -- sem `archive/`, sem "deixa por enquanto": o conteúdo já vive no doc que o absorveu, e a cópia órfã só existe para envelhecer e mentir. Vale para relatórios de sessão, specs cumpridas, scratch de `tmp/` e backups fora da rotação. O que NÃO sai: SSOT (`resumos/`, `history/`, `core/`), dívida ativa declarada no HANDOFF e PDFs-fonte EMED.
-5. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre -- o hook roda no commit, nao escolhe o que foi staged (revisar: 2027-03-31) -->
+5. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` não vai pro git.  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre -- o hook roda no commit, nao escolhe o que foi staged (revisar: 2027-03-31) -->
 
 **Checklist do rito:** HANDOFF -> ESTADO (se o macro mudou) -> `session_NNN` + INDEX -> **auto-higiene (o que foi absorvido saiu?)** -> commit semântico.
 
@@ -144,7 +144,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 | Conhecimento clínico | `resumos/**/*.md` | Sim |
 | Estado do projeto | `ESTADO.md` | Sim |
 | Workflows | `.agents/workflows/` | Sim |
-| Memória longa do agente | `medhub_memory.db` | Não (local-only) |
+| ⚰️ ~~Memória longa do agente~~ (11/10/2026, part 3.0a1: fora de uso; o arquivo sai na a2) | `medhub_memory.db` | Não (local-only) |
 | Chaves de API | `.env` | Não (gitignored) |
 
 ---
@@ -153,7 +153,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 - **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, **gold-only**: a collection `pdf_raw` e o `search_two_tier()` foram removidos na consolidacao part-2). Baseline reproducible em `tools/eval/REPORT.md`. (BM25 rerank removido em 2026-07-12 -- era regressivo no corpus médico; ver `.vibeflow/audits/mecanismo-conhecimento-consolidacao-part-1-audit.md`.)
 - **Engine API** = `app/engine/` expõe **1 superficie estavel** para agentes: `get_topic_context()` (sobre `rag.py`). `summarize_performance()` foi removido junto com a UI Streamlit -- performance sai pela skill `/performance` + CLIs. Agentes **não** fazem queries SQL diretas -- vão pelo engine ou pelos CLIs em `tools/`.
-- **Memory v1** = `app/memory/` (LangMem + `SQLiteMemoryStore`). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `tools/test_memory.py`.
+- ⚰️ **Memory v1** -- REVOGADA em 11/10/2026 (Fase 0 Lote 3 part 3.0a1), por ordem do operador de 11/10 (`docs/REFORMA-CHECKPOINT.md:55`: "limpeza AUTORIZADA 'com o LangMem e afins'"). *Era: `app/memory/` (LangMem + `SQLiteMemoryStore`), backend `medhub_memory.db`, isolado do `ipub.db`, smoke tests em `tools/test_memory.py`.* Motivo: a memória longa era uma cópia probabilística (Haiku por API) do sinal que o `ipub.db` dá de forma determinística (`db.get_erros_por_tema`), sem escrita desde o selo da s220, lida pelo engine num `except: pass`. Desde a 3.0a1 nenhum código vivo a lê (`get_topic_context` e `dormant_refresh` sem `weak_areas`) e nenhuma norma manda rodá-la; o efeito das `weak_areas` (M-064/M-111) fica declarado como **não medido**. O pacote, os testes do módulo e os dados saem na part 3.0a2.
 - **Siamese Twins** -- Erro -> DB (via `tools/insert_questao.py`). Lição/Armadilha -> resumo correspondente em `resumos/`.
 - **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.  <!-- NAO-VERIFICAVEL: 🔴 RAIO ALTO, custo declarado -- o writer existe e e testado, mas 'chamar ANTES de processar erros' e ordem de atos numa conversa; o F38 pega o RESULTADO (bloco com erro e sem linha), nao a ordem (revisar: 2027-03-31) -->
 - **Resumos seguem** `.claude/commands/estilo-resumo.md`. Bullets hierárquicos, marcadores ⭐/⚠️/🔴. Sem tabelas, sem fluxogramas ASCII.
@@ -286,7 +286,7 @@ Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não
 
 ---
 
-## 8. Modelo de Memória (2 camadas)
+## 8. Modelo de Memória (1 camada)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -295,21 +295,9 @@ Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não
 │  Conteúdo clínico e estado do projeto. Fonte de verdade.     │
 └──────────────────────────────────────────────────────────────┘
         ↑ lida no boot · atualizada ao fechar sessão
-┌──────────────────────────────────────────────────────────────┐
-│ CAMADA 3 -- Long-term (LangMem + SQLiteMemoryStore)           │
-│  SQLiteMemoryStore -> medhub_memory.db::memory_store          │
-│  Namespace: weak_areas (único -- tem writer E leitor)        │
-└──────────────────────────────────────────────────────────────┘
 ```
 
-**Governança:**
-- Camada 3 captura padrões de fraqueza -- **não** replica `resumos/`, `ipub.db` ou `ESTADO.md`.
-- `consolidate_session(NNN)` roda só à mão: `python -m app.memory.manager NNN`. Usa `claude-haiku-4-5` se `ANTHROPIC_API_KEY` estiver presente; sem a chave, só o sync de `error_count` roda. ⚰️ *11/10/2026 (part 1.0, Fase 0 Lote 1): era "chamada pelo hook `PostToolUse(Write)` quando um novo `history/session_NNN.md` é escrito". A entrada saiu do `.claude/settings.json`; o script `tools/hooks/memory_session_log.py` e o `app/memory/` seguem no disco. O caminho falhava sem leitor (1460 linhas de falha em `history/memory_errors.log`, a última de 11/09), e a última escrita no `medhub_memory.db` é do selo da s220 (07/10): s221-s223 foram seladas sem deixar escrita lá. O "fica ou morre" do LangMem é do Lote 5.*
-- `error_count` vem de `ipub.db` por match **exato** do par (area, tema); par sem correspondência fica em 0 -- nunca herda o total da área.  <!-- CHECK: test_memory_counter -->
-- Falha da consolidação é registrada em `history/memory_errors.log`.
-
-**Inspeção:** `python -m app.memory.inspect --{context,namespace medhub/weak_areas,dump,stats}`.
-**Detalhes técnicos:** docstring de `app/memory/__init__.py` + `app/memory/schemas.py`.
+⚰️ *11/10/2026 (Fase 0 Lote 3 part 3.0a1): a **Camada 3 -- Long-term (LangMem + `SQLiteMemoryStore`, `medhub_memory.db::memory_store`, namespace `medhub/weak_areas`)** saiu de uso, e com ela a governança dela: a consolidação de sessão rodada à mão pelo `manager` do pacote (Haiku se houver `ANTHROPIC_API_KEY`), a inspeção pelo `inspect` do pacote, o sync de `error_count` por par (area, tema) e o log de falha em `history/memory_errors.log`. Antes, na part 1.0, já tinham saído o bloco do boot e o hook `PostToolUse(Write)` que disparava a consolidação. Motivo e ordem do operador: §6 "Memory v1". O sinal de fraqueza por tema é o `ipub.db` (`db.get_erros_por_tema`). O pacote `app/memory/`, o `tools/hooks/memory_session_log.py`, os testes do módulo e os dados saem na part 3.0a2.*
 
 ---
 

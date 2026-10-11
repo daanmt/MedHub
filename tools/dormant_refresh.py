@@ -111,7 +111,7 @@ def context(tema, area=None):
     cai para match por nome de arquivo (temas granulares costumam = nome do .md).
     """
     from app.engine import get_topic_context
-    ctx = get_topic_context(tema, area)
+    ctx = get_topic_context(tema)  # `area` só ecoa na saída: o engine não filtra por área (part 3.0a1)
     resumo_path = ctx.get("resumo_path")
     resumo_content = ctx.get("resumo_content")
     if not resumo_content:
@@ -124,7 +124,6 @@ def context(tema, area=None):
         "resumo_content": resumo_content,                # completo — o agente narra a partir daqui
         "erros_recentes": (ctx.get("erros_recentes") or [])[:10],
         "cards_ativos": ctx.get("cards_ativos", 0),
-        "weak_areas": ctx.get("weak_areas") or [],
         "relevant_chunks": ctx.get("relevant_chunks") or [],
     }
 

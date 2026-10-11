@@ -4,7 +4,6 @@ get_topic_context — consulta o estado completo de um tema clínico.
 Limitações documentadas:
 - O índice de resumos é construído no primeiro acesso e cacheado em memória do processo.
   Novos resumos adicionados durante uma sessão Python não serão indexados sem reinicializar.
-- medhub_memory.db é local-only (não commitado). Se ausente, weak_areas retorna [].
 """
 
 from __future__ import annotations
@@ -12,7 +11,6 @@ from __future__ import annotations
 import difflib
 import sys
 from pathlib import Path
-from typing import Optional
 
 import app.utils.db as db
 
@@ -95,12 +93,11 @@ def _find_resumo(tema: str) -> Path | None:
     return Path(index[matches[0]]) if matches else None
 
 
-def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
+def get_topic_context(tema: str) -> dict:
     """Retorna contexto completo de um tema para uso por agentes.
 
     Args:
         tema: Nome do tema, especialidade ou alias (ex: "Cardiologia", "IC", "Trauma").
-        area: Filtro opcional por área para refinar weak_areas (ex: "Clínica Médica").
 
     Returns:
         dict com chaves:
@@ -110,16 +107,12 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
                 pelo tema. Cada item: id, titulo, tipo_erro, habilidades_sequenciais,
                 armadilha_prova, explicacao_correta, area, tema.
             cards_ativos (int): número de flashcards com state > 0 vinculados ao tema.
-            weak_areas (list[dict]): padrões de fraqueza de medhub_memory.db filtrados
-                pelo tema/area. Cada item: area, especialidade, pattern, error_count.
-                Retorna [] se medhub_memory.db estiver ausente ou vazio.
     """
     result: dict = {
         "resumo_path": None,
         "resumo_content": None,
         "erros_recentes": [],
         "cards_ativos": 0,
-        "weak_areas": [],
         "relevant_chunks": [],
     }
 
@@ -147,29 +140,6 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
             1 for c in queue["atrasados"] + queue["hoje"]
             if termo_lower in (str(c.get("tema", "")) + " " + str(c.get("area", ""))).lower()
         )
-    except Exception:
-        pass
-
-    # 4. Weak areas da memória longa (sem LangGraph)
-    try:
-        from app.memory import get_store
-        store = get_store()
-        items = store.search(("medhub", "weak_areas"), limit=100)
-        filtro = (area or tema).lower()
-        for item in items:
-            val = item.value
-            if val.get("kind") != "WeakArea":
-                continue
-            content = val.get("content", {})
-            area_val = content.get("area", "").lower()
-            esp_val = content.get("especialidade", "").lower()
-            if filtro in area_val or filtro in esp_val or area_val in filtro or esp_val in filtro:
-                result["weak_areas"].append({
-                    "area": content.get("area", ""),
-                    "especialidade": content.get("especialidade", ""),
-                    "pattern": content.get("pattern", ""),
-                    "error_count": content.get("error_count", 0),
-                })
     except Exception:
         pass
 

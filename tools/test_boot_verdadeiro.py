@@ -293,3 +293,50 @@ def test_nenhum_hook_dispara_a_consolidacao():
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+#: Filho do teste do engine: chama a superfície estável e imprime as chaves do retorno.
+_FILHO_ENGINE = (
+    "import json, sys; sys.path.insert(0, sys.argv[1]); "
+    "from app.engine.get_topic_context import get_topic_context as g; "
+    "r = g(sys.argv[2]); "
+    "print('CHAVES=' + json.dumps(sorted(r)))"
+)
+
+
+def test_engine_sem_memoria_longa(db_sintetico, tmp_path):
+    """Fase 0 Lote 3 part 3.0a1 (11/10/2026; ordem do operador: LangMem e afins saem). Roda
+    `get_topic_context` DE VERDADE em subprocesso, sobre o banco sintético, com a `_SONDA`:
+    o engine não importa `app.memory` nem `langgraph`, e o retorno não tem mais `weak_areas`
+    -- o sinal de fraqueza por tema é o `erros_recentes` (`db.get_erros_por_tema`, bloco 2).
+    O bloco 5 (RAG) ainda vive até a b1: o chromadb pode carregar, e este teste não olha ele.
+    """
+    sonda = tmp_path / "sonda"
+    sonda.mkdir()
+    (sonda / "sitecustomize.py").write_text(_SONDA, encoding="utf-8")
+    inventarios_dir = tmp_path / "mods"
+    inventarios_dir.mkdir()
+    env = dict(os.environ)
+    env["PYTHONPATH"] = os.pathsep.join(p for p in (str(sonda), env.get("PYTHONPATH")) if p)
+    env["BOOT_TESTE_MAPA"] = json.dumps({
+        str(_RAIZ / "ipub.db"): db_sintetico,
+        str(_RAIZ / "medhub_memory.db"): str(tmp_path / "memoria_sintetica.db"),
+    })
+    env["BOOT_TESTE_MODS"] = str(inventarios_dir)
+
+    r = subprocess.run([sys.executable, "-c", _FILHO_ENGINE, str(_RAIZ), "Apendicite Aguda"],
+                       cwd=str(_RAIZ), env=env, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=120)
+    assert r.returncode == 0, r.stderr[-2000:]
+    linha = [l for l in r.stdout.splitlines() if l.startswith("CHAVES=")]
+    assert linha, f"o filho não imprimiu as chaves: {r.stdout[-1000:]}"
+    chaves = json.loads(linha[-1][len("CHAVES="):])
+
+    mods = [m for f in inventarios_dir.glob("*.txt")
+            for m in f.read_text(encoding="utf-8").splitlines()]
+    assert mods, "a sonda deixou o inventário do filho"
+    carregados = sorted({alvo for alvo in ("app.memory", "langgraph") for m in mods
+                         if m == alvo or m.startswith(alvo + ".")})
+    assert not carregados, f"o engine carregou a memória longa: {carregados}"
+    assert "weak_areas" not in chaves, f"o retorno ainda tem weak_areas: {chaves}"
+    assert "erros_recentes" in chaves, chaves

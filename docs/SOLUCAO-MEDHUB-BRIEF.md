@@ -68,16 +68,29 @@ Um arquivo por questão em `<BASE>/solucoes/<lista>_<n>.json`, UTF-8, exatamente
   assertivas (I/II/III ou V/F): o `recordar` julga a assertiva decisiva; o `descartar` aponta a letra
   que a contém.
 - **alternativas** = TODAS as letras do enunciado, cada uma com `porque` (1 frase); exatamente uma
-  com `"certa": true`. ⚰️ *02/10/2026 (s211): revogada a regra da v2 "cada errada `{elo: k}` = o elo
-  cuja falha leva a ela" -- a página adivinhava a quebra pela letra marcada e errou em 5 das 7
-  análises (t26, t96). Na v3 a alternativa só explica a si mesma; `elo` numa errada é ignorado.*
+  com `"certa": true`. Na v3 a alternativa só explica a si mesma; `elo` numa errada é ignorado.
+  ⚰️ *02/10/2026 (s211): revogada a regra da v2 "cada errada `{elo: k}` = o elo cuja falha leva a ela"
+  -- a página adivinhava a quebra pela letra marcada e errou em 5 das 7 análises (t26, t96).*
 - **Fontes, nesta ordem:** resumos (`get_topic_context`) -> apostila do EMED em PDF dentro de
   `resumos/` -> `/pesquisar-evidencia` para afirmação decisiva (dose, ponto de corte, conduta de
   diretriz). Dúvida que resumos e apostilas não fecham vira `divergente` + `conferir`.
+- **`fontes`** = só referência (`core/contracts/evidence-governance.md` §7.1): rótulos separados
+  por `;`, cada um numa destas formas (exemplos sintéticos):
+  - `EMISSOR [ANO] Documento [(detalhe)] [§x] [-- URL]` -> `SBX 2024 Diretriz de Exemplo (tabela 2)`
+  - `Resumo <tema> [§x]` -> `Resumo Tema de Exemplo §3`
+  - `Apostila EMED <capítulo> [(detalhe)]` -> `Apostila EMED Capítulo de Exemplo (vol. 1)`
+  Apostila do EMED = `terceiro`: o writer marca a fonte, nunca recusa por isso. Solução nova, ou
+  `fontes` alterado, com rótulo fora dessas formas ou vazio vai para `invalidas` (motivo no `--json`).
+  Nota de captura ("figura não veio") vai ao `conferir`, nunca a `fontes`.
+- **`troca_fonte`** = só quando uma fonte que já estava no banco (a do `v1/`) sai ou é trocada; o doc
+  traz `"troca_fonte": {"substrato": "canonico|fallback|local", "verificada_em": "AAAA-MM-DD", "motivo": "..."}`,
+  a 2ª lente que achou a certa. Não achar a fonte nunca a remove; sem isso, `troca_sem_2a_lente`.
 - **divergente** = true só quando o seu raciocínio NÃO chega ao gabarito oficial; aí `conferir`
   diz em 1 linha o ponto exato em disputa. Não force o gabarito. Se o gabarito segue diretriz
   antiga, mas continua a melhor alternativa, `divergente` = false e diga isso no `porque` da certa
-  e em `fontes`.
+  e no `conferir`; a disputa nunca vai a `fontes`.
+  ⚰️ *11/10/2026 (Fase 0 Lote 2 part 2.2): revogado "no `porque` da certa e em `fontes`" -- prosa
+  no campo de fonte nenhuma ferramenta separa; `fontes` só leva referência (evidence-governance §7.1).*
 - **objetivo** = o que a questão cobra, escolhido da LISTA FECHADA do tema: em
   `core/objetivos.json`, a entrada cujo `listas` contém esta lista (leia o arquivo; não copie a
   lista para lugar nenhum). Se nenhum servir mesmo, use "outro: <rótulo curto>". Lista sem
@@ -92,7 +105,9 @@ Confira por script: N arquivos, json.load ok, todas as letras do enunciado prese
 `alternativas`, a `certa` igual ao gabarito do `in`, e `db.solucao_problemas(doc) == []` em cada
 arquivo (`from app.utils import db`, rodando de C:/Users/daanm/medhub) -- é o MESMO validador do
 writer: sequência e tipos da cadeia, `letra` de cada `descartar`, uma certa, `porque` em toda letra
-e objetivo da lista fechada ou "outro: ...". Devolva no máximo ~1.200 caracteres:
+e objetivo da lista fechada ou "outro: ...". O `fontes` passa ainda pelo gate do writer: todo
+rótulo de `db.fonte_rotulos(doc["fontes"])` com `db.fonte_estruturada(r)["status"] == "ok"`.
+Devolva no máximo ~1.200 caracteres:
 quantos gravou, as divergentes (1 linha cada), os "outro:" usados e qualquer questão sem figura/
 tabela na captura.
 

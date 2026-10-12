@@ -2,15 +2,15 @@
 type: contract
 layer: core
 status: canonical
-version: 1.2
+version: 1.3
 relates_to: [AGENTE, fsrs-management-contract, reconcile-contract]
 ---
 
 # Contrato de Governança de Evidência (Evidence Governance)
-**Versão 1.2 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
+**Versão 1.3 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2), fonte da Solução MedHub em 2026-10-11 (Fase 0 Lote 2, 2.2) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
 
 > Documento normativo. Define como o MedHub garante que **toda afirmação clínica decisória seja a mais consistente com a melhor evidência que a sustenta** — e como essa evidência é buscada, hierarquizada, auditada e rastreada.
-> Referenciado por: `AGENTE.md` (§6 decisões, §7 skills), `.claude/commands/{analisar-questao,estilo-resumo,auditar-resumos,estilo-flashcard,pesquisar-evidencia}.md`, `.claude/agents/evidence-researcher.md`.
+> Referenciado por: `AGENTE.md` (§6 decisões, §7 skills), `.claude/commands/{analisar-questao,estilo-resumo,auditar-resumos,estilo-flashcard,pesquisar-evidencia}.md`, `.claude/agents/evidence-researcher.md`, `docs/SOLUCAO-MEDHUB-BRIEF.md` (§7.1).
 
 ---
 
@@ -32,6 +32,7 @@ Princípio-mãe (herdado do irmão, adaptado): *a afirmação clínica que entra
 | `resumos/**` (novo conteúdo / armadilha nova) | ao cunhar uma afirmação decisória nova (conduta/dose/cutoff/critério) |
 | flashcards (`verso_resposta`/`regra-mestre`) | herdam a auditoria da questão/resumo de origem — não auditar o card isolado |
 | sob demanda | `/pesquisar-evidencia "<afirmação>"` a qualquer momento |
+| Solução MedHub (`emed_solucoes`) — a FONTE, ao cunhar ou alterar `fontes` | quando o `fontes` é novo ou muda: a regra do §7.1, cumprida pelo writer `db.emed_upsert_solucoes` <!-- CHECK: test_gate_fonte_nova_com_prosa_nota_ou_vazia_vai_para_invalidas --> |
 
 **Escopo travado (v1.0):** **go-forward + skill sob demanda.** NÃO há varredura retroativa dos 45 resumos existentes nesta versão (ver §11 Fora de escopo).
 
@@ -121,6 +122,18 @@ Isto espelha o princípio do irmão *"drift clínico é falha estrutural — div
 - **Honest-negative (invariante):** se a busca precisa (cap 2 tentativas) não sustenta a afirmação → `NÃO-VERIFICÁVEL`, declarado. **Jamais fabricar** uma confirmação, um PMID ou uma cifra.
 - **Substrato declarado:** um `CONFIRMADO` via `fallback` (WebSearch) **não** tem a mesma força que via `canonico` (PubMed PMID/DOI) — a diferença fica registrada.
 
+### 7.1 Fonte da Solução MedHub (v1.3)
+
+Vale para o campo `fontes` de `emed_solucoes` quando a Solução é cunhada ou o `fontes` dela muda. Quem cumpre é o writer, `db.emed_upsert_solucoes`; a linha com `fontes` idêntico ao do banco não passa pelo gate, e o estoque fica com o sensor `emed_banco.py --status --fontes` (part 2.1).
+
+- **(a) Gramática e parser único.** Cada rótulo de `fontes` (separados por `;`) tem uma destas formas: `EMISSOR [ANO] Documento [(detalhe)] [§x] [-- URL]` (também `Autor -- Título`), `Resumo <tema> [§x]` ou `Apostila EMED <capítulo> [(detalhe)]`. O parser é um só, `db.fonte_estruturada`, o mesmo do estoque: a Solução nova, ou com `fontes` alterado, exige ≥ 1 rótulo e todos `ok`; senão vai para `invalidas`, com o motivo no `--json` (`fonte_vazia`, `rotulo_<status>:<motivo>`). <!-- CHECK: test_gate_fonte_nova_com_prosa_nota_ou_vazia_vai_para_invalidas -->
+- **(b) Só referência.** Prosa e nota de captura nunca vão no `fontes`: a disputa com o gabarito vai ao `porque` da certa e ao `conferir`; a nota de captura, ao `conferir`. <!-- CHECK: test_gate_fonte_nova_com_prosa_nota_ou_vazia_vai_para_invalidas -->
+- **(c) `tipo` derivado.** O `tipo` (`publica`, `propria`, `terceiro`) sai do parser e nunca é declarado pelo agente. `terceiro` (a apostila do EMED) marca a fonte e nunca recusa a Solução nem apaga nada (operador 10/10; M-002); o gabarito comentado usado como 2ª lente da Autópsia também é `terceiro` (M-068). <!-- CHECK: test_gate_fonte_nova_ok_grava_com_vinculos_inclusive_terceiro -->
+- **(d) Fonte só sai com 2ª lente.** Uma fonte que já se estruturava (chave `ok` do `fontes` do banco) só sai ou troca com 2ª lente declarada no doc, `troca_fonte: {substrato: canonico|fallback|local (§3), verificada_em: AAAA-MM-DD <= hoje, motivo}`, e nunca por ausência de evidência (s222: um subagente trocou uma fonte que existia porque não a achou). Sem ela, ou com ela torta, o doc vai para `invalidas` (`troca_sem_2a_lente`); com ela, o vínculo de chave nova ganha `verificada_em` e `substrato`. Rótulo `sem_parse` ou prosa que sai não pede troca. <!-- CHECK: test_gate_remocao_sem_troca_fonte_e_recusada -->
+- **(e) Nada de memória.** Rótulo de fonte é o que foi lido no ato (resumo, apostila ou `/pesquisar-evidencia`), nunca diretriz citada de memória; `verificada_em` nulo é "não verificada", estado explícito como o `NÃO-AUDITADO` do §4. <!-- NAO-VERIFICAVEL: citar de memoria e conduta do agente; o parser ve a forma do rotulo, nao a leitura (revisar: 2027-03-31) -->
+
+**Limite declarado (AGENTE.md §10.8):** o writer confere a forma da `troca_fonte`, não que a 2ª lente foi de fato consultada; e o gate pega o delta, não reescreve o estoque.
+
 ---
 
 ## 8. Audit-Before-Advance (afirmação decisória nova)
@@ -151,7 +164,7 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 - **Varredura retroativa** dos 45 resumos existentes (auditoria em ondas) — candidata a uma v1.1 se o go-forward provar valor.
 - **Capacidade B do irmão:** detecção proativa de drift guideline×literatura, scoring de robustez, cobertura automática de SR/MA recentes.
 - **Pipeline programático em batch** (fetch/dedup/scoring) — só se a Capacidade A provar valor.
-- **Persistência claim-level em DB** (o irmão tem banco de claims; o MedHub registra a citação inline no resumo/card, sem tabela própria nesta versão).
+- **Persistência claim-level em DB** (o irmão tem banco de claims; o MedHub registra a citação inline no resumo/card, sem tabela de claims). A Solução ganha `referencia` + `solucao_referencia` na v1.3 (§7.1): elas estruturam a FONTE da Solução, não o claim.
 
 ---
 
@@ -175,6 +188,9 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 ---
 
 ## 14. Changelog
+
+**v1.3 — 2026-10-11 (Fase 0 Lote 2, part 2.2; ai-eng, ordem do operador de 11/10)** — **A fonte da Solução MedHub entra no contrato.** §1 ganha a Solução (`emed_solucoes.fontes`, ao cunhar ou alterar). §7.1, nova: a gramática do `fontes` e o parser único `db.fonte_estruturada` (o da part 2.1); prosa e nota de captura fora de `fontes`; o `tipo` derivado, com `terceiro` que marca e não recusa (M-002, M-068); a fonte que sai ou troca só com 2ª lente declarada (`troca_fonte`, lição da s222); `verificada_em` nulo como estado explícito. Quem cumpre é o writer `db.emed_upsert_solucoes`: recusa o delta (Solução nova ou `fontes` alterado) com o motivo no `--json`, e o estoque fica com o sensor da part 2.1. §11: a Solução ganha `referencia`; o claim-level segue fora. O brief da Solução (`docs/SOLUCAO-MEDHUB-BRIEF.md`) passa a portador varrido pelo gate `CONTRATO_REVOGADO`. Hierarquia de fontes, taxonomia de vereditos, §3, query Entrez e budget: **inalterados**.
+⚰️ *Revogada nesta versão (AGENTE.md §10.10, 3 passos no mesmo commit): a instrução do brief de dizer a disputa "no `porque` da certa e em `fontes`" (regra do `divergente`). A disputa vai ao `porque` e ao `conferir`; `fontes` só leva referência. Lápide no brief; termo cadastrado no §12 do `docs/MEMORIA-AUDITORIA.md`.*
 
 **v1.2 — 2026-10-11 (Fase 0 Lote 3, part 3.0b2; ai-eng, por ordem do operador)** — **Troca do substrato `local`.** O RAG local (ChromaDB sobre `resumos/`) sai: o índice estava parado desde 09/09 e não havia uso medido. Mudança normativa única: §3 passa o substrato `local` à busca determinística nos `resumos/` — arquivo do tema por nome (`get_topic_context(tema)["resumo_path"]`) + `Grep` do termo em `resumos/**/*.md` — e "não há" só se afirma depois das duas buscas (um nome que não casa não prova que o corpus não tem o tema; lição do F91). A redação anterior fica em lápide no §3. A skill `/pesquisar-evidencia`, o subagente `evidence-researcher` (que perde o `Bash`) e o `/estilo-flashcard` passam à mesma busca neste commit. O cadastro do termo no gate `CONTRATO_REVOGADO` entra na 3.0b3, com a última linha de portador que ainda prescreve o RAG. Hierarquia de fontes, taxonomia de vereditos, query Entrez, budget e §7: **inalterados**.
 

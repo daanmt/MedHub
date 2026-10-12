@@ -2428,7 +2428,9 @@ def _ensure_emed_tables(conn):
 
 def _ensure_referencia_tables(conn):
     """DDL idempotente de `referencia` e `solucao_referencia` (Fase 0 Lote 2 part 2.1, M-031; só sob
-    `aplicar`). Writer único das duas: `referencias_sincronizar`.
+    `aplicar`). Writers das duas: `referencias_sincronizar` (o estoque) e, desde a part 2.2, o
+    `emed_upsert_solucoes` (os vínculos da Solução cujo `fontes` ele grava), pelo mesmo
+    `_vinculos_gravar`.
 
     `chave` única (R9) no lugar de `UNIQUE (sigla, ano, documento)`: ~70% dos rótulos não têm ano, e
     no SQLite NULL é distinto em `UNIQUE`. O vínculo N:M usa a FK composta `(lista, num)` ->
@@ -3360,20 +3362,92 @@ def _sem_trechos(texto, trechos):
     return texto
 
 
+#: Fase 0 Lote 2 part 2.2 (evidence-governance v1.3 §7.1): o vocabulário da `troca_fonte` é o do §3,
+#: o mesmo do CHECK de `solucao_referencia.substrato`.
+SUBSTRATOS_TROCA = ("canonico", "fallback", "local")
+RE_DATA_TROCA = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def _troca_fonte_problema(troca):
+    """O campo torto da `troca_fonte` de um doc (part 2.2), ou None quando a 2ª lente está bem
+    declarada: objeto com `substrato` do §3, `verificada_em` AAAA-MM-DD <= hoje (`hoje()`, o relógio
+    único) e `motivo` não vazio. O writer confere a FORMA, não que a busca aconteceu (AGENTE §10.8)."""
+    if not isinstance(troca, dict):
+        return "forma"
+    if troca.get("substrato") not in SUBSTRATOS_TROCA:
+        return "substrato"
+    data = _txt(troca.get("verificada_em")).strip()
+    try:
+        dia = datetime.strptime(data, "%Y-%m-%d").date() if RE_DATA_TROCA.fullmatch(data) else None
+    except ValueError:
+        dia = None
+    if dia is None or dia > hoje():
+        return "verificada_em"
+    if not _txt(troca.get("motivo")).strip():
+        return "motivo"
+    return None
+
+
+def _fonte_gate(fontes, antigo, troca):
+    """O gate da fonte NOVA da Solução (part 2.2; evidence-governance v1.3 §7.1). Só roda quando a
+    Solução é nova (`antigo` None) ou o `fontes` difere do banco; o estoque com `fontes` idêntico não
+    passa por aqui.
+
+    Regra, pelo parser único da 2.1 (`fonte_rotulos` + `fonte_estruturada`, sem regra nova):
+    >= 1 rótulo, todos `ok`; a `troca_fonte` presente tem de estar bem formada; e a chave `ok` do
+    `fontes` antigo que some do novo exige `troca_fonte` (fonte só sai com 2ª lente, nunca por
+    ausência -- s222). `tipo` não entra: `terceiro` marca, nunca recusa.
+
+    Devolve `(motivo, alvo, velhas)`. `motivo` None = passa: `alvo` = os vínculos na forma do
+    `referencias_sincronizar` (`ordem`, `chave`, `rotulo`, `detalhe`, + a estrutura `e`) e `velhas` =
+    as chaves `ok` do `fontes` antigo. Senão `fonte_vazia`, `rotulo_<status>:<motivo>`,
+    `troca_sem_2a_lente:<campo>` (troca torta) ou `troca_sem_2a_lente` (remoção sem troca)."""
+    rotulos = fonte_rotulos(fontes)
+    if not rotulos:
+        return "fonte_vazia", None, None
+    alvo = []
+    for ordem, rotulo in enumerate(rotulos, 1):
+        e = fonte_estruturada(rotulo)
+        if e["status"] != "ok":
+            return f"rotulo_{e['status']}:{e['motivo']}", None, None
+        alvo.append({"ordem": ordem, "chave": chave_referencia(e["sigla"], e["ano"], e["documento"]),
+                     "rotulo": rotulo, "detalhe": e["detalhe"], "e": e})
+    if troca is not None:
+        campo = _troca_fonte_problema(troca)
+        if campo:
+            return f"troca_sem_2a_lente:{campo}", None, None
+    velhas = set()
+    for rotulo in fonte_rotulos(antigo):
+        e = fonte_estruturada(rotulo)
+        if e["status"] == "ok":
+            velhas.add(chave_referencia(e["sigla"], e["ano"], e["documento"]))
+    if troca is None and velhas - {v["chave"] for v in alvo}:
+        return "troca_sem_2a_lente", None, None
+    return None, alvo, velhas
+
+
 def emed_upsert_solucoes(rows, aplicar=True):
     """Upsert de `emed_solucoes` por `(lista, num)` (s199). Writer único da tabela.
 
-    Devolve `{novas, atualizadas, iguais, invalidas}`; `hash` = texto + divergente +
+    Devolve `{novas, atualizadas, iguais, invalidas, motivos}`; `hash` = texto + divergente +
     fontes + objetivo. Obrigatórios: `lista`, `num` e a solução -- `solucao` não-vazia (v1,
     texto) ou a cadeia v2/v3 (s200/s211: `cadeia` + `alternativas` + `pede`, validadas por
     `solucao_problemas` pela `versao` e gravadas como JSON canônico em `solucao`). `objetivo` AUSENTE do
     doc preserva o do banco (re-ingerir um arquivo v1 antigo não apaga o objetivo); presente,
     tem de estar na lista fechada do tema (`core/objetivos.json`, s201) -- fora dela = `invalidas`.
+
+    Gate da fonte (Fase 0 Lote 2 part 2.2, evidence-governance v1.3 §7.1): a Solução nova, ou a
+    que muda o `fontes` (depois do `strip`), passa por `_fonte_gate`; recusada = `invalidas`, e
+    `motivos` = `{doc_id: motivo}` (só as recusas do gate). A linha com `fontes` idêntico ao do banco
+    não passa pelo gate e os vínculos dela ficam intactos. A que passa troca os vínculos pelo parse
+    novo NA MESMA TRANSAÇÃO (`_vinculos_gravar`, o helper da 2.1; DDL das tabelas só quando há
+    vínculo a gravar); com `troca_fonte`, o vínculo de chave nova ganha `verificada_em` e
+    `substrato` da declaração. O `fontes` antigo fica no fixado do `_upsert_com_rito` (F137).
     `aplicar=False` mede pelo mesmo caminho e não roda DDL.
     """
     import hashlib
     import json as _json
-    invalidas, preparadas = [], []
+    invalidas, preparadas, motivos = [], [], {}
     catalogo = carregar_objetivos()     # s201: objetivo da lista fechada, na v1 e na v2
     for doc in rows:
         num = _int_ou_none(doc.get("num"))
@@ -3401,19 +3475,31 @@ def emed_upsert_solucoes(rows, aplicar=True):
                            "divergente": _bool01(doc.get("divergente")),
                            "fontes": _txt(doc.get("fontes")).strip(),
                            "objetivo": (_txt(doc.get("objetivo")).strip()
-                                        if "objetivo" in doc else None)})
+                                        if "objetivo" in doc else None),
+                           "_doc_id": doc.get("_doc_id"), "_troca": doc.get("troca_fonte")})
 
     conn = get_connection()
     try:
         if aplicar:
+            conn.execute("BEGIN")       # part 2.2: a linha e os vínculos dela numa transação só
             _ensure_emed_tables(conn)
         banco = {(r["lista"], r["num"]): r
                  for r in _emed_ler(conn, "emed_solucoes", _COLUNAS_EMED_S)}
-        cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
+        cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas, "motivos": motivos}
         ts = carimbo()
+        ids = None                      # {chave: id} de `referencia`, lido na 1ª Solução que vincula
         for linha in preparadas:
             chave = (linha["lista"], linha["num"])
             atual = banco.get(chave)
+            alvo = velhas = None
+            if atual is None or _txt(atual.get("fontes")).strip() != linha["fontes"]:
+                motivo, alvo, velhas = _fonte_gate(linha["fontes"],
+                                                   None if atual is None else atual.get("fontes"),
+                                                   linha["_troca"])
+                if motivo:
+                    invalidas.append(linha["_doc_id"])
+                    motivos[linha["_doc_id"]] = motivo
+                    continue
             if linha["objetivo"] is None:
                 linha["objetivo"] = (atual or {}).get("objetivo") or ""
             canon = _json.dumps({k: linha[k] for k in ("solucao", "divergente", "fontes",
@@ -3439,9 +3525,36 @@ def emed_upsert_solucoes(rows, aplicar=True):
                         hash = excluded.hash, atualizado_em = excluded.atualizado_em
                 ''', (linha["lista"], linha["num"], linha["solucao"], linha["divergente"],
                       linha["fontes"], linha["objetivo"], linha["hash"], ts, ts))
+                if alvo is not None:
+                    if ids is None:
+                        _ensure_referencia_tables(conn)
+                        ids = {c: i for i, c in conn.execute("SELECT id, chave FROM referencia")}
+                    for v in alvo:
+                        if v["chave"] not in ids:
+                            e = v["e"]
+                            ids[v["chave"]] = conn.execute(
+                                "INSERT INTO referencia (chave, sigla, ano, documento, tipo, url, doi, "
+                                "pmid, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                (v["chave"], e["sigla"], e["ano"], e["documento"], e["tipo"], e["url"],
+                                 e["doi"], e["pmid"], ts)).lastrowid
+                    _vinculos_gravar(conn, linha["lista"], linha["num"], alvo,
+                                     _vinculos_ler(conn).get(chave, {}), ids, ts)
+                    troca = linha["_troca"]
+                    novas_ordens = [v["ordem"] for v in alvo if v["chave"] not in velhas]
+                    if troca is not None and novas_ordens:
+                        marcas = ",".join("?" * len(novas_ordens))
+                        conn.execute(
+                            "UPDATE solucao_referencia SET verificada_em = ?, substrato = ? "
+                            f"WHERE lista = ? AND num = ? AND ordem IN ({marcas})",
+                            (_txt(troca["verificada_em"]).strip(), troca["substrato"], linha["lista"],
+                             linha["num"], *novas_ordens))
         if aplicar:
             conn.commit()
         return cont
+    except BaseException:
+        if aplicar and conn.in_transaction:
+            conn.rollback()
+        raise
     finally:
         conn.close()
 
@@ -3468,8 +3581,9 @@ def _vinculos_ler(conn):
 
 def _vinculos_gravar(conn, lista, num, alvo, atual, ids, ts):
     """Troca os vínculos da Solução `(lista, num)` pelos de `alvo`, na conexão (e na transação) do
-    `referencias_sincronizar`. O vínculo de mesma `(ordem, chave)` preserva `verificada_em`,
-    `substrato` e `criado_em`; o novo nasce não verificado (nulo)."""
+    `referencias_sincronizar` ou do `emed_upsert_solucoes` (part 2.2). O vínculo de mesma
+    `(ordem, chave)` preserva `verificada_em`, `substrato` e `criado_em`; o novo nasce não verificado
+    (nulo)."""
     conn.execute("DELETE FROM solucao_referencia WHERE lista = ? AND num = ?", (lista, num))
     for v in alvo:
         velho = atual.get(v["ordem"])
@@ -3483,7 +3597,9 @@ def _vinculos_gravar(conn, lista, num, alvo, atual, ids, ts):
 
 
 def referencias_sincronizar(aplicar=True):
-    """Writer ÚNICO de `referencia` e `solucao_referencia` (Fase 0 Lote 2 part 2.1, M-031).
+    """Writer do ESTOQUE de `referencia` e `solucao_referencia` (Fase 0 Lote 2 part 2.1, M-031);
+    desde a part 2.2 o `emed_upsert_solucoes` também grava os vínculos da Solução cujo `fontes`
+    muda, pelo mesmo `_vinculos_gravar`.
 
     Lê `emed_solucoes.fontes` (nunca escreve nela: o texto fica intacto, como proveniência), corta
     em rótulos (`fonte_rotulos`) e estrutura cada um (`fonte_estruturada`). A referência nova (pela

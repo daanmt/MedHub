@@ -1603,15 +1603,57 @@ _FONTES_SINT = {("t26", 1): "Resumo Tireoide Ficticia §2; Figura do enunciado n
                 ("t61", 1): "SBX Diretriz Ficticia 2021; Manual Ficticio de Condutas"}
 
 
+def _hash_solucao(solucao, divergente, fontes, objetivo):
+    """A formula do `hash` de `emed_solucoes` (s199: texto + divergente + fontes + objetivo), escrita
+    de novo aqui de proposito: o teste da part 2.2 prova que o gate da fonte nao a muda."""
+    import hashlib
+    canon = json.dumps({"solucao": solucao, "divergente": divergente, "fontes": fontes,
+                        "objetivo": objetivo}, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha1(canon.encode("utf-8")).hexdigest()
+
+
+def _semear_legado(sols):
+    """Linhas de `emed_solucoes` como o ESTOQUE de antes do gate da part 2.2, por SQL direto e so em
+    banco sintetico: `fontes` com prosa, nota ou `sem_parse`, que o writer de hoje recusa no delta
+    (Solucao nova ou `fontes` alterado). O `hash` segue a formula do writer."""
+    assert Path(db.DB_PATH).resolve() != (ROOT / "ipub.db").resolve()       # sentinela: nunca o real
+    conn = db.get_connection()
+    try:
+        db._ensure_emed_tables(conn)
+        for s in sols:
+            sol, fon, obj = s["solucao"].strip(), s["fontes"].strip(), s.get("objetivo", "")
+            div = int(bool(s.get("divergente")))
+            conn.execute("INSERT INTO emed_solucoes (lista, num, solucao, divergente, fontes, objetivo, "
+                         "hash, cunhado_em, atualizado_em) VALUES (?, ?, ?, ?, ?, ?, ?, "
+                         "'2026-10-01 10:00:00', '2026-10-01 10:00:00')",
+                         (s["lista"], s["num"], sol, div, fon, obj, _hash_solucao(sol, div, fon, obj)))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _trocar_fontes_legado(lista, num, fontes):
+    """O `fontes` do estoque trocado por fora do writer (SQL direto, banco sintetico): exercita a
+    `atualizada` do `referencias_sincronizar` sem passar pelo gate da part 2.2."""
+    assert Path(db.DB_PATH).resolve() != (ROOT / "ipub.db").resolve()       # sentinela: nunca o real
+    con = sqlite3.connect(db.DB_PATH)
+    try:
+        con.execute("UPDATE emed_solucoes SET fontes = ? WHERE lista = ? AND num = ?", (fontes, lista, num))
+        con.commit()
+    finally:
+        con.close()
+
+
 def _semear_fontes(db_sintetico, questoes=False):
-    """5 Solucoes v1 com `fontes` sinteticas (uma lista de cada `tipo`) pelo writer real; com
+    """5 Solucoes v1 com `fontes` sinteticas (uma lista de cada `tipo`) como ESTOQUE (part 2.2: pelo
+    writer, o delta com prosa/nota/`sem_parse` e recusado; o estoque e anterior ao gate); com
     `questoes`, tambem as questoes (o `--status` simples so lista quem tem questao)."""
     assert Path(db_sintetico).resolve() != (ROOT / "ipub.db").resolve()     # sentinela: nunca o real
     if questoes:
         assert db.emed_upsert_questoes([_questao(n, lista=l, tarefa=int(l[1:]))
                                         for (l, n) in _FONTES_SINT])["novas"] == 5
-    c = db.emed_upsert_solucoes([_solucao(n, lista=l, fontes=f) for (l, n), f in _FONTES_SINT.items()])
-    assert c["novas"] == 5 and c["invalidas"] == []
+    _semear_legado([_solucao(n, lista=l, fontes=f) for (l, n), f in _FONTES_SINT.items()])
+    assert len(db.emed_listar_solucoes()) == 5
 
 
 def _tabelas_ref(caminho):
@@ -1694,13 +1736,13 @@ def test_referencias_atualizada_preserva_verificacao_da_mesma_ordem_e_chave(db_s
     con.commit()
     con.close()
     novo = "SBX Diretriz Ficticia 2021; Manual Ficticio de Condutas; ZZA Manual Ficticio 2020"
-    assert db.emed_upsert_solucoes([_solucao(1, lista="t61", fontes=novo)])["atualizadas"] == 1
+    _trocar_fontes_legado("t61", 1, novo)     # part 2.2: pelo writer, o `sem_parse` no delta e recusado
     r = db.referencias_sincronizar()
     assert (r["novas"], r["atualizadas"], r["iguais"], r["referencias_novas"]) == (0, 1, 3, 1)
     v = db.referencias_por_solucao()[("t61", 1)]
     assert [(x["ordem"], x["verificada_em"], x["substrato"]) for x in v] == [
         (1, "2026-10-11", "canonico"), (3, None, None)]
-    db.emed_upsert_solucoes([_solucao(1, lista="t61", fontes="Manual Ficticio de Condutas")])
+    _trocar_fontes_legado("t61", 1, "Manual Ficticio de Condutas")
     r = db.referencias_sincronizar()
     assert (r["atualizadas"], r["sem_vinculo"], r["referencias_sem_vinculo"]) == (1, 1, 2)
     con = sqlite3.connect(db_sintetico)
@@ -1834,3 +1876,242 @@ def test_status_fontes_sensor_por_lista_e_warn(db_sintetico, capsys, monkeypatch
     assert emed_banco.cobertura_fontes(sols, {("t9", 1): [{}]}) == [
         {"lista": "t9", "rot": 2, "ok": 1, "nref": 1, "sem": 0, "terc": 0, "vinc": 1, "n_nota": 1,
          "pct_nota": 50.0}]
+
+
+# --- Fase 0 Lote 2 part 2.2: o gate da fonte no writer (evidence-governance v1.3 §7.1) -------------
+# Rotulos SINTETICOS (siglas inventadas SBX/ZZA/QWE); nenhum rotulo real de Solucao.
+
+_OK_PUB = "SBX 2020 Diretriz Ficticia A"
+_OK_PUB2 = "ZZA 2021 Manual Ficticio B"
+_OK_PUB3 = "QWE 2022 Guia Ficticio C"
+_OK_PROPRIA = "Resumo Tema Ficticio §2"
+_OK_TERCEIRO = "Apostila EMED Capitulo Ficticio (vol. 1)"
+_BRIEF = ROOT / "docs" / "SOLUCAO-MEDHUB-BRIEF.md"
+
+
+def _doc22(num, fontes, lista="t26", **extra):
+    """Doc v1 da Solucao com `_doc_id` (a chave do `motivos`) e o `fontes` dado."""
+    return _solucao(num, lista=lista, fontes=fontes, _doc_id=f"{lista}_{num}", **extra)
+
+
+def _troca(**mudar):
+    """`troca_fonte` valido (substrato do §3, data <= hoje, motivo), com os campos de `mudar`."""
+    t = {"substrato": "fallback", "verificada_em": "2026-10-10", "motivo": "a 2a lente achou a certa"}
+    t.update(mudar)
+    return t
+
+
+def _relogio(monkeypatch):
+    """Relogio fixo do banco: hoje = 11/10/2026 (o `verificada_em` futuro e 12/10)."""
+    import datetime as _dt
+    monkeypatch.setattr(db, "agora", lambda: _dt.datetime(2026, 10, 11, 12, 0, 0))
+
+
+def _carimbar(lista, num, ordem, verificada_em, substrato):
+    """Verificacao posta a mao num vinculo (banco sintetico), para ver o que o writer preserva."""
+    assert Path(db.DB_PATH).resolve() != (ROOT / "ipub.db").resolve()       # sentinela: nunca o real
+    con = sqlite3.connect(db.DB_PATH)
+    try:
+        con.execute("UPDATE solucao_referencia SET verificada_em = ?, substrato = ? "
+                    "WHERE lista = ? AND num = ? AND ordem = ?", (verificada_em, substrato, lista, num, ordem))
+        con.commit()
+    finally:
+        con.close()
+
+
+def test_gate_fonte_nova_ok_grava_com_vinculos_inclusive_terceiro(tmp_path, monkeypatch):
+    """DoD 2 (2.2): Solucao nova com todos os rotulos `ok` grava, e os vinculos dela entram na mesma
+    transacao (helper da 2.1), nao verificados; `terceiro` (apostila do EMED) marca e nunca recusa. Os
+    vinculos sao os que o `referencias_sincronizar` derivaria: a sincronizacao seguinte da `iguais`."""
+    _usar_db(tmp_path, monkeypatch)
+    docs = [_doc22(1, f"{_OK_PUB}; {_OK_PROPRIA}"), _doc22(2, _OK_TERCEIRO),
+            _doc22(3, f"{_OK_PUB2} (tabela 2) §4")]
+    c = db.emed_upsert_solucoes(docs)
+    assert (c["novas"], c["invalidas"], c["motivos"]) == (3, [], {})
+    vinc = db.referencias_por_solucao()
+    assert {k: [(v["ordem"], v["tipo"], v["verificada_em"], v["substrato"]) for v in vs]
+            for k, vs in vinc.items()} == {
+        ("t26", 1): [(1, "publica", None, None), (2, "propria", None, None)],
+        ("t26", 2): [(1, "terceiro", None, None)],
+        ("t26", 3): [(1, "publica", None, None)]}
+    r = db.referencias_sincronizar(aplicar=False)
+    assert (r["novas"], r["atualizadas"], r["iguais"], r["referencias_novas"]) == (0, 0, 3, 0)
+
+
+@pytest.mark.parametrize("fontes, motivo", [
+    ("ver a discussao no porque da certa", "rotulo_nao_referencia:prosa"),
+    (f"{_OK_PUB}; Figura do enunciado não capturada", "rotulo_nao_referencia:nota"),
+    ("Manual Ficticio de Condutas", "rotulo_sem_parse:sem_emissor"),
+    ("", "fonte_vazia"),
+    ("  ;  ", "fonte_vazia"),
+])
+def test_gate_fonte_nova_com_prosa_nota_ou_vazia_vai_para_invalidas(tmp_path, monkeypatch, fontes,
+                                                                     motivo):
+    """DoD 2 (2.2): Solucao nova exige >= 1 rotulo e todos `ok` no parser unico; senao vai para
+    `invalidas` e `motivos` diz por que (`fonte_vazia` ou `rotulo_<status>:<motivo>`, sem o texto
+    do rotulo). A outra do lote grava; a recusada nao deixa linha nem vinculo."""
+    _usar_db(tmp_path, monkeypatch)
+    c = db.emed_upsert_solucoes([_doc22(1, fontes), _doc22(2, _OK_PUB)])
+    assert (c["novas"], c["invalidas"], c["motivos"]) == (1, ["t26_1"], {"t26_1": motivo})
+    assert [s["num"] for s in db.emed_listar_solucoes()] == [2]
+    assert list(db.referencias_por_solucao()) == [("t26", 2)]
+
+
+def test_gate_legada_com_fontes_identico_e_sem_parse_e_iguais(tmp_path, monkeypatch):
+    """DoD 2 (2.2): a linha do estoque com `fontes` identico ao do banco (depois do `strip`) nao passa
+    pelo gate: reingerida igual = `iguais`; com outro texto e o mesmo `fontes` = `atualizada`, e os
+    vinculos dela (com a verificacao carimbada) ficam intactos. Mudar o `fontes` sem limpar o
+    `sem_parse` e recusado."""
+    _usar_db(tmp_path, monkeypatch)
+    legado = f"{_OK_PUB}; Manual Ficticio de Condutas"
+    _semear_legado([_solucao(1, fontes=legado)])
+    db.referencias_sincronizar()
+    _carimbar("t26", 1, 1, "2026-10-01", "canonico")
+    antes = db.referencias_por_solucao()
+    c = db.emed_upsert_solucoes([_doc22(1, legado)])
+    assert (c["iguais"], c["invalidas"], c["motivos"]) == (1, [], {})
+    c = db.emed_upsert_solucoes([_doc22(1, "  " + legado + " ", solucao="Outro texto da solucao.")])
+    assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (1, [], {})
+    assert db.referencias_por_solucao() == antes
+    assert antes[("t26", 1)][0]["verificada_em"] == "2026-10-01"
+    c = db.emed_upsert_solucoes([_doc22(1, f"{legado}; {_OK_PUB2}")])
+    assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (
+        0, ["t26_1"], {"t26_1": "rotulo_sem_parse:sem_emissor"})
+    assert db.emed_listar_solucoes()[0]["fontes"] == legado
+
+
+def test_gate_remocao_sem_troca_fonte_e_recusada(tmp_path, monkeypatch):
+    """DoD 2 (2.2): fonte que ja se estruturava (chave `ok` do `fontes` do banco) so sai ou troca com
+    2a lente declarada, nunca por ausencia (s222). Sem `troca_fonte`: `invalidas`, motivo
+    `troca_sem_2a_lente`, e o banco fica byte a byte. Mudar so o detalhe nao e remocao; prosa que sai
+    nao pede troca (TD 4: a saida dela e a propria limpeza)."""
+    _usar_db(tmp_path, monkeypatch)
+    assert db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB}; {_OK_PUB2}")])["novas"] == 1
+    antes = _sha(db.DB_PATH)
+    for novo in (_OK_PUB, f"{_OK_PUB}; {_OK_PUB3}", f"{_OK_PUB3}; {_OK_PUB2}"):
+        c = db.emed_upsert_solucoes([_doc22(1, novo)])
+        assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (
+            0, ["t26_1"], {"t26_1": "troca_sem_2a_lente"}), novo
+    assert _sha(db.DB_PATH) == antes
+    c = db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB} (tabela 1); {_OK_PUB2}")])
+    assert (c["atualizadas"], c["invalidas"]) == (1, [])
+    _semear_legado([_solucao(2, fontes=f"{_OK_PUB}; ver nota da aula")])
+    c = db.emed_upsert_solucoes([_doc22(2, _OK_PUB)])
+    assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (1, [], {})
+
+
+def test_gate_remocao_com_troca_fonte_valida_grava_e_carimba(tmp_path, monkeypatch):
+    """DoD 2 (2.2): com `troca_fonte` valido (substrato do §3, `verificada_em` <= hoje, motivo) a troca
+    grava; o vinculo novo (chave fora do `fontes` antigo) ganha `verificada_em` e `substrato` da
+    declaracao, e o da mesma `(ordem, chave)` preserva o seu. O `fontes` antigo fica no fixado do
+    rito (F137), nao no banco."""
+    _usar_db(tmp_path, monkeypatch)
+    _relogio(monkeypatch)
+    assert db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB}; {_OK_PUB2}")])["novas"] == 1
+    _carimbar("t26", 1, 1, "2026-10-01", "canonico")
+    novo = f"{_OK_PUB}; {_OK_PUB3}"
+    c = db.emed_upsert_solucoes([_doc22(1, novo, troca_fonte=_troca(verificada_em="2026-10-11"))])
+    assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (1, [], {})
+    v = db.referencias_por_solucao()[("t26", 1)]
+    assert [(x["ordem"], x["chave"], x["verificada_em"], x["substrato"]) for x in v] == [
+        (1, "sbx|2020|diretriz ficticia a", "2026-10-01", "canonico"),
+        (2, "qwe|2022|guia ficticio c", "2026-10-11", "fallback")]
+    s = db.emed_listar_solucoes()[0]
+    assert s["fontes"] == novo and s["hash"] == _hash_solucao(s["solucao"], 0, novo, "")
+
+
+@pytest.mark.parametrize("troca, motivo", [
+    (_troca(substrato="memoria"), "troca_sem_2a_lente:substrato"),
+    (_troca(verificada_em="2026-10-12"), "troca_sem_2a_lente:verificada_em"),
+    (_troca(verificada_em="10/10/2026"), "troca_sem_2a_lente:verificada_em"),
+    (_troca(motivo="   "), "troca_sem_2a_lente:motivo"),
+    ("pesquisei e achei", "troca_sem_2a_lente:forma"),
+])
+def test_gate_troca_fonte_torta_e_recusada(tmp_path, monkeypatch, troca, motivo):
+    """DoD 2 (2.2): `troca_fonte` torto -- substrato fora do §3, data futura ou fora de AAAA-MM-DD,
+    motivo vazio, ou nao e objeto -- nao e 2a lente: recusado, com o campo no motivo; banco intacto."""
+    _usar_db(tmp_path, monkeypatch)
+    _relogio(monkeypatch)
+    assert db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB}; {_OK_PUB2}")])["novas"] == 1
+    antes = _sha(db.DB_PATH)
+    c = db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB}; {_OK_PUB3}", troca_fonte=troca)])
+    assert (c["atualizadas"], c["invalidas"], c["motivos"]) == (0, ["t26_1"], {"t26_1": motivo})
+    assert _sha(db.DB_PATH) == antes
+
+
+def test_gate_dry_run_sha256_igual_e_json_mostra_motivos(tmp_path, monkeypatch, capsys):
+    """DoD 2 (2.2): o dry-run mede pelo mesmo caminho (mesmos `invalidas` e `motivos` do apply) e o
+    banco fica byte a byte; o `--json` do `--solucoes` mostra `motivos`. O apply grava so a valida."""
+    _usar_db(tmp_path, monkeypatch)
+    assert db.emed_upsert_solucoes([_doc22(1, f"{_OK_PUB}; {_OK_PUB2}")])["novas"] == 1
+    base = tmp_path / "lote"
+    _escrever(base, "solucoes", "t26_1", _solucao(1, fontes=_OK_PUB))
+    _escrever(base, "solucoes", "t26_2", _solucao(2, fontes="ver o porque da certa"))
+    _escrever(base, "solucoes", "t26_3", _solucao(3, fontes=_OK_TERCEIRO))
+    esperado = {"t26_1": "troca_sem_2a_lente", "t26_2": "rotulo_nao_referencia:prosa"}
+    antes = _sha(db.DB_PATH)
+    seco = db.emed_upsert_solucoes(emed_banco.ler_docs(str(base), "solucoes"), aplicar=False)
+    assert (seco["novas"], seco["invalidas"], seco["motivos"]) == (1, ["t26_1", "t26_2"], esperado)
+    assert _sha(db.DB_PATH) == antes
+    assert emed_banco.main(["--solucoes", str(base), "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["motivos"], r["aplicado"]) == (esperado, False) and _sha(db.DB_PATH) == antes
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--expect", "1", "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["novas"], r["invalidas"], r["motivos"], r["aplicado"]) == (
+        1, ["t26_1", "t26_2"], esperado, True)
+    assert sorted(db.referencias_por_solucao()) == [("t26", 1), ("t26", 3)]
+
+
+def test_gate_falha_no_vinculo_desfaz_a_linha(tmp_path, monkeypatch):
+    """DoD 2 (2.2): a linha e os vinculos dela vao numa transacao so -- uma falha ao gravar o vinculo
+    desfaz tambem o `emed_solucoes` (e a DDL das tabelas da 2.1): banco byte a byte."""
+    _usar_db(tmp_path, monkeypatch)
+    _semear_legado([_solucao(1, fontes=_OK_PUB)])
+    antes = _sha(db.DB_PATH)
+
+    def quebra(*a, **k):
+        raise RuntimeError("falha sintetica no vinculo")
+
+    monkeypatch.setattr(db, "_vinculos_gravar", quebra)
+    with pytest.raises(RuntimeError):
+        db.emed_upsert_solucoes([_doc22(2, _OK_PUB2)])
+    assert _sha(db.DB_PATH) == antes and [s["num"] for s in db.emed_listar_solucoes()] == [1]
+    assert _tabelas_ref(db.DB_PATH) == set()
+
+def test_gate_hash_de_linha_com_fontes_inalterado_fica_igual(tmp_path, monkeypatch):
+    """DoD 2 (2.2): o gate nao entra no `hash` (s199: texto + divergente + fontes + objetivo); a linha
+    com `fontes` inalterado reingerida tem o mesmo hash, e `troca_fonte` sobrando no doc nao muda nada."""
+    _usar_db(tmp_path, monkeypatch)
+    doc = _doc22(1, _OK_PUB)
+    assert db.emed_upsert_solucoes([doc])["novas"] == 1
+    h = db.emed_listar_solucoes()[0]["hash"]
+    assert h == _hash_solucao(doc["solucao"], 0, _OK_PUB, "")
+    c = db.emed_upsert_solucoes([dict(doc, troca_fonte=_troca())])
+    assert (c["iguais"], c["invalidas"], c["motivos"]) == (1, [], {})
+    assert db.emed_listar_solucoes()[0]["hash"] == h
+
+
+def test_brief_exemplos_de_fontes_passam_no_parser():
+    """DoD 4 (2.2): o `fontes` do exemplo JSON do brief (o literal de sempre) e o exemplo sintetico de
+    cada familia da gramatica (evidence-governance §7.1) passam inteiros no parser unico, um de cada
+    `tipo`."""
+    texto = _BRIEF.read_text(encoding="utf-8")
+    do_json = re.findall(r'"fontes": "([^"]*)"', texto)
+    assert do_json == ["Consenso OPAS/MS/FEBRASGO/SBD 2017"]
+    exemplos = re.findall(r"^\s*- `[^`]+` -> `([^`]+)`\s*$", texto, re.M)
+    assert len(exemplos) == 3
+    tipos = []
+    for fontes in do_json + exemplos:
+        estruturados = [db.fonte_estruturada(r) for r in db.fonte_rotulos(fontes)]
+        assert estruturados and all(e["status"] == "ok" for e in estruturados), fontes
+        tipos.append(estruturados[0]["tipo"])
+    assert tipos[1:] == ["publica", "propria", "terceiro"]
+
+
+def test_brief_da_solucao_e_portador_do_gate_contrato_revogado():
+    """DoD 5 (2.2): o brief e o portador lido no ato pelo subagente que cunha a Solucao; fora da
+    varredura, a lapide dele seria decorativa (F95). Entra por constante explicita (TD 6)."""
+    import consistencia_check
+    assert "docs/SOLUCAO-MEDHUB-BRIEF.md" in consistencia_check.PORTADORES_DOCS
+    assert "docs/SOLUCAO-MEDHUB-BRIEF.md" in consistencia_check.portadores_derivados()

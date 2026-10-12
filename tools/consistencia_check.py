@@ -69,6 +69,12 @@ DOCS_RAIZ = ("AGENTE.md", "ESTADO.md", "HANDOFF.md", "README.md", "ROADMAP.md")
 #: turno e `dormant_refresh` expoe texto de `--help` no ato do uso (F97).
 PORTADORES_CODIGO = ("tools/day_plan.py", "tools/dormant_refresh.py")
 
+#: Portadores em `docs/` -- constante explicita, nao glob de `docs/` (Fase 0 Lote 2 part 2.2,
+#: TD 6). O brief da Solucao e lido no ato pelo subagente que a cunha; a clausula revogada
+#: (a disputa dita tambem no campo de fonte) so vivia nele, e fora da varredura a lapide
+#: seria decorativa (F95).
+PORTADORES_DOCS = ("docs/SOLUCAO-MEDHUB-BRIEF.md",)
+
 RE_PATH_PY = re.compile(r"\b((?:tools|app)/[\w./-]+\.py)\b")
 
 #: Vocabulario de AUSENCIA: a linha declara que a coisa nao existe mais. Linha
@@ -225,10 +231,11 @@ def check_status_ledger(root=None):
 def portadores_derivados(root=None):
     """Lista de portadores da norma, DERIVADA em vez de digitada (F95).
 
-    Todo contrato, toda skill canonica, os docs de raiz e os portadores de
-    codigo do F97. Enumerar a mao foi o defeito duas vezes seguidas: o F95 achou
-    o contrato FSRS fora da lista com um `PREPARAR` vivo, e a medicao que trocou
-    a lista achou outro no `README.md`.
+    Todo contrato, toda skill canonica, os docs de raiz, os portadores de
+    codigo do F97 e os de `docs/` (`PORTADORES_DOCS`, part 2.2). Enumerar a mao
+    foi o defeito duas vezes seguidas: o F95 achou o contrato FSRS fora da lista
+    com um `PREPARAR` vivo, e a medicao que trocou a lista achou outro no
+    `README.md`.
     """
     base = Path(root).resolve() if root else ROOT_DIR
     saida = []
@@ -238,6 +245,7 @@ def portadores_derivados(root=None):
             saida += [p.relative_to(base).as_posix() for p in sorted(pasta.glob(padrao))]
     saida += [d for d in DOCS_RAIZ if (base / d).is_file()]
     saida += [p for p in PORTADORES_CODIGO if (base / p).is_file()]
+    saida += [p for p in PORTADORES_DOCS if (base / p).is_file()]
     return tuple(sorted(set(saida)))
 
 

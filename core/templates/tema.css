@@ -1,4 +1,4 @@
-/* MedHub tema v2.2 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
+/* MedHub tema v2.3 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
    acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
    O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
    v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
@@ -135,3 +135,9 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
 .pausa[aria-pressed="true"]{border-color:var(--rosa);background:var(--rosa-fraco);color:var(--rosa-tinta)}
 .qz-lista li.qz-recente > button{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-fraco)}
 .hub-aba:focus-visible{outline-color:var(--rosa)}
+
+/* grifo salvo (marca-texto do leitor e das Listas): o hub le --qz-grifo; era ambar, agora rosa como a selecao */
+:root:not([data-theme="light"]),:root[data-theme="dark"]{--qz-grifo:#FF5CA8;--qz-grifo-tinta:#0B0F2B}
+:root[data-theme="light"]{--qz-grifo:#FFB3D4;--qz-grifo-tinta:#3A1238}
+/* pontos pequenos de destaque: cabecalho de tabela em rosa claro */
+thead th{color:var(--rosa-tinta)}

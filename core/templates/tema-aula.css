@@ -51,7 +51,7 @@ h3.sub{font-size:16px;font-weight:650;margin:28px 0 8px}
 .trig div{background:var(--sunk)}
 .cmap .k3,.cmap .k34,.cmap .kn{border-top-width:2px}
 table{font-size:15px}
-thead th{background:var(--sunk);color:var(--ink2);font-weight:650;font-size:13.5px}
+thead th{background:var(--sunk);color:var(--rosa-tinta);font-weight:650;font-size:13.5px}
 th,td{padding:10px 12px}
 .c{border-radius:6px}
 .flow span{border-radius:8px;border-color:var(--line);font-size:15px}
@@ -61,4 +61,10 @@ details.ref>summary{font-weight:600;color:var(--ink)}
 code{background:var(--sunk);border-radius:4px;font-size:.9em}
 footer{border-top:1px solid var(--line)}
 
-
+/* pontos pequenos de destaque (pedido dele em 12/10/2026, apontando a tabela de exemplo): o termo-chave em negrito
+   fica ciano claro (informacao), sub-titulos e a etapa do degrau em rosa claro (identidade). termo-chave */
+strong{color:var(--acento-tinta)}
+h3.sub{color:var(--rosa-tinta)}
+.dtitle .dstage{color:var(--rosa-tinta)}
+.rail .rlab{color:var(--rosa-tinta)}
+.crit.hd .row:first-child>*{color:var(--rosa-tinta)}   /* cabecalho de tabela feita com div (aulas novas) */

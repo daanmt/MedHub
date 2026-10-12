@@ -1,19 +1,22 @@
-/* MedHub tema indigo v1 -- ESCURO POR PADRÃO (decisão dele, 12/10/2026: preto + branco azulado + azuis da paleta);
-   o claro só com data-theme="light". Seletores de especificidade (0,2,0) para vencer o CSS de cada aula. */
+/* MedHub tema v2 -- VICE CITY, escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
+   acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
+   O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
+   v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
 :root{--fonte:"Atkinson Hyperlegible Next",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif}
 :root:not([data-theme="light"]),:root[data-theme="dark"]{
-  --papel:#000000; --card:#06064D; --afundado:#10106A;
-  --tinta:#EDEDFF; --tinta2:#CCCCFF; --tinta3:#9A9AE6;
-  --linha:rgba(204,204,255,.16);
-  --acento:#8484DB; --acento-fraco:#171775; --acento-tinta:#CCCCFF; --suave:#8484DB;
-  --alerta:#FF9DB3; --alerta-fraco:#3A1030;
+  /* Vice City: Ocean Night #0B0F2B, Vice Cyan #00F0FF, Sunset Pink #FF5CA8, Neon Purple #BC6CFF, Miami Peach #FFB86B */
+  --papel:#0B0F2B; --card:#131A45; --afundado:#1A2260;
+  --tinta:#F4F1FF; --tinta2:#CFC8F5; --tinta3:#8E92C9;
+  --linha:rgba(207,200,245,.16);
+  --acento:#00F0FF; --acento-fraco:#0C3347; --acento-tinta:#8CF7FF; --suave:#BC6CFF;
+  --alerta:#FF5CA8; --alerta-fraco:#3A1238;
   --paper:var(--papel); --sunk:var(--afundado); --ink:var(--tinta); --ink2:var(--tinta2); --ink3:var(--tinta3);
-  --line:var(--linha); --line2:rgba(204,204,255,.30);
-  --teal:#8484DB; --teal-ink:#CCCCFF; --teal-wash:#171775;
-  --amber:#8484DB; --amber-ink:#CCCCFF; --amber-wash:#10106A;
-  --plum:#8484DB; --plum-ink:#CCCCFF; --plum-wash:#10106A;
-  --carmine:#FF9DB3; --carmine-ink:#FFC2CF; --carmine-wash:#3A1030;
-  --on:#000000; --raio:12px; --sombra:none; color-scheme:dark;
+  --line:var(--linha); --line2:rgba(207,200,245,.30);
+  --teal:#00F0FF; --teal-ink:#8CF7FF; --teal-wash:#0C3347;
+  --amber:#FFB86B; --amber-ink:#FFD3A0; --amber-wash:#3A2A1A;
+  --plum:#BC6CFF; --plum-ink:#D9AEFF; --plum-wash:#2A1A5C;
+  --carmine:#FF5CA8; --carmine-ink:#FF9CCB; --carmine-wash:#3A1238;
+  --on:#0B0F2B; --raio:12px; --sombra:none; color-scheme:dark;
 }
 :root[data-theme="light"]{
   --papel:#F7F7FF; --card:#FFFFFF; --afundado:#ECECFB;

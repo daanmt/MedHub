@@ -27,12 +27,15 @@ Uso:
     python tools/emed_banco.py --defeitos
     python tools/emed_banco.py --status --lista t26 --json
     python tools/emed_banco.py --referencias
-    python tools/emed_banco.py --referencias --apply --expect 12
+    python tools/emed_banco.py --amostra-referencias 9a5963f
+    python tools/emed_banco.py --referencias --regua tmp/lote2/amostra-9a5963f.json
+    python tools/emed_banco.py --referencias --apply --expect 12 --regua tmp/lote2/amostra-9a5963f.json
     python tools/emed_banco.py --status --fontes --lista t26
 
 Camada fina sobre `app.utils.db` -- não abre `sqlite3` próprio; toda escrita passa por
 `emed_upsert_questoes` / `emed_upsert_respostas`.
-Exit: 0 ok; 1 erro de uso/leitura; 2 COUNT-ASSERT falhou.
+Exit: 0 ok; 1 erro de uso/leitura; 2 COUNT-ASSERT falhou; 3 PARA da regua (part 2.3:
+`--referencias --apply --regua ARQ` com veredito PARA -- nada gravado, nem o fixado).
 """
 import argparse
 import json
@@ -358,10 +361,330 @@ def cmd_solucoes(args):
     return code
 
 
+# ------------------------------------------------------------------ amostra e régua das fontes (2.3)
+
+#: Fase 0 Lote 2 part 2.3 (M-031): o arquivo da amostra fica SÓ aqui, dentro de `tmp/` (gitignored,
+#: `.gitignore:66`): o conteúdo das Soluções é IP do EMED e o repo é público (TD 6). Os testes a apontam
+#: para `tmp_path`.
+PASTA_AMOSTRA = os.path.join(ROOT, "tmp", "lote2")
+#: A régua de parada do apply do estoque: PARA quando `p` ou `a` passa ESTRITAMENTE deste limite.
+REGUA_LIMITE = 0.10
+#: Acima desta fração de `nota` (por ocorrência) sai um achado de CONTEÚDO (M-024/M-025), nunca PARA.
+NOTA_ACHADO = 0.30
+#: O vocabulário fechado da triagem: `ok` e `impreciso` não contam; `mal_atribuido:<campo>` conta.
+CAMPOS_MAL_ATRIBUIDO = ("sigla", "ano", "documento", "tipo", "nao_referencia")
+VEREDITOS = ("ok", "impreciso") + tuple(f"mal_atribuido:{c}" for c in CAMPOS_MAL_ATRIBUIDO)
+#: As siglas que o parser DERIVA (R4); a D1 não as procura no rótulo.
+SIGLAS_DERIVADAS = ("MEDHUB", "EMED")
+RE_SEMENTE = re.compile(r"[0-9a-f]{7}")
+#: O token de veredito da triagem: `lista_num#ordem=veredito[:campo]` (ex.: `t26_3#2=ok`).
+RE_TOKEN_VEREDITO = re.compile(r"(?P<lista>\S+)_(?P<num>\d+)#(?P<ordem>\d+)=(?P<veredito>\S+)")
+
+
+def _sha1_fontes(fontes):
+    """sha1 do `fontes` como está no banco (None = "")."""
+    import hashlib
+    return hashlib.sha1(("" if fontes is None else str(fontes)).encode("utf-8")).hexdigest()
+
+
+def amostra_referencias(solucoes, semente, por_lista=2):
+    """O sorteio da amostra das fontes (part 2.3, DoD 2), PURO. Por lista, entre as Soluções com `fontes`
+    não vazio (>= 1 rótulo no corte R0): `random.Random(f"{semente}:{lista}").sample(sorted(nums),
+    min(por_lista, n))`. A semente por lista isola as listas (acrescentar uma não muda as outras); sem
+    relógio nem estado global. Devolve `{listas: {lista: [num, ...]}, curtas: {lista: n}}`; em `curtas`
+    fica a lista com menos de `por_lista` Soluções com fonte (ela entra com o que tem)."""
+    import random
+    por = {}
+    for s in solucoes:
+        num = db._int_ou_none(s.get("num"))
+        lista = str(s.get("lista") or "").strip()
+        if lista and num is not None and db.fonte_rotulos(s.get("fontes")):
+            por.setdefault(lista, set()).add(num)
+    listas, curtas = {}, {}
+    for lista in sorted(por):
+        nums = sorted(por[lista])
+        listas[lista] = sorted(random.Random(f"{semente}:{lista}").sample(nums, min(por_lista, len(nums))))
+        if len(nums) < por_lista:
+            curtas[lista] = len(nums)
+    return {"listas": listas, "curtas": curtas}
+
+
+def _tokens_d1(texto):
+    """Os tokens da D1: cada sequência máxima de letras ou de dígitos, em casefold (`SBX2019` dá `sbx` e
+    `2019`; pontuação e parênteses não contam)."""
+    return re.findall(r"[^\W\d_]+|\d+", str(texto).casefold())
+
+
+def d1_ida_e_volta(rotulo, parse):
+    """D1, a ida e volta do rótulo `ok` (part 2.3, DoD 3), PURA. Os tokens de `sigla` (salvo MEDHUB e EMED,
+    que o parser deriva), de `ano` e de `documento` precisam aparecer, cada campo em ordem e em casefold,
+    entre os tokens do rótulo (subsequência). Devolve None (passa) ou o 1º campo que falha."""
+    toks = _tokens_d1(rotulo)
+    for campo in ("sigla", "ano", "documento"):
+        valor = parse.get(campo)
+        if valor is None or (campo == "sigla" and str(valor) in SIGLAS_DERIVADAS):
+            continue
+        resto = iter(toks)
+        if not all(tok in resto for tok in _tokens_d1(valor)):
+            return campo
+    return None
+
+
+def amostra_arquivo(solucoes, semente_hex, por_lista=2):
+    """O conteúdo do `amostra-<hex>.json` (part 2.3, DoD 3), PURO. Traz a semente (o hex gravado e o
+    `int(hex, 16)` que sorteia) e, por Solução sorteada, `lista`, `num`, `sha1_fontes` e os rótulos:
+    `ordem`, `rotulo`, o parse inteiro (`db.fonte_estruturada`), `d1` (`ok` / `falha:<campo>`; nulo fora
+    de `ok`), `veredito` e `origem`. A D1 que falha já dá `mal_atribuido:<campo>` com `origem: D1`; o
+    resto nasce nulo, para a triagem."""
+    semente = int(semente_hex, 16)
+    sorteio = amostra_referencias(solucoes, semente, por_lista)
+    por_chave = {(str(s.get("lista") or "").strip(), db._int_ou_none(s.get("num"))): s for s in solucoes}
+    saida = []
+    for lista, nums in sorteio["listas"].items():
+        for num in nums:
+            fontes = por_chave[(lista, num)].get("fontes")
+            rotulos = []
+            for ordem, rotulo in enumerate(db.fonte_rotulos(fontes), 1):
+                parse = db.fonte_estruturada(rotulo)
+                d1 = veredito = origem = None
+                if parse["status"] == "ok":
+                    campo = d1_ida_e_volta(rotulo, parse)
+                    d1 = f"falha:{campo}" if campo else "ok"
+                    if campo:
+                        veredito, origem = f"mal_atribuido:{campo}", "D1"
+                rotulos.append({"ordem": ordem, "rotulo": rotulo, "parse": parse, "d1": d1,
+                                "veredito": veredito, "origem": origem})
+            saida.append({"lista": lista, "num": num, "sha1_fontes": _sha1_fontes(fontes), "rotulos": rotulos})
+    return {"semente": semente_hex, "semente_int": semente, "por_lista": por_lista,
+            "curtas": sorteio["curtas"], "token": "lista_num#ordem=veredito[:campo]",
+            "vocabulario": list(VEREDITOS), "solucoes": saida}
+
+
+def aplicar_vereditos(amostra, tokens):
+    """A entrada dos vereditos da triagem no `amostra-<hex>.json` (part 2.3), PURA: devolve (uma cópia da
+    amostra com os vereditos, `{aplicados, recusados: [(token, motivo)]}`).
+
+    Token = `lista_num#ordem=veredito[:campo]` (ex.: `t26_3#2=ok`, `t26_3#1=mal_atribuido:documento`), no
+    vocabulário fechado `VEREDITOS`. O aplicado ganha `origem: triagem`. Recusas: `forma`, `vocabulario`,
+    `fora_da_amostra`, `d1_manda` (a D1 manda no veredito do campo dela), `nota_so_nao_referencia` (em
+    `nota`, só `mal_atribuido:nao_referencia` conta) e `duplicado_divergente` (o mesmo rótulo com outro
+    veredito no mesmo lote: vale o 1º)."""
+    import copy
+    nova = copy.deepcopy(amostra)
+    idx = {}
+    for s in nova.get("solucoes") or []:
+        for r in s.get("rotulos") or []:
+            idx[(str(s.get("lista")), db._int_ou_none(s.get("num")), db._int_ou_none(r.get("ordem")))] = r
+    vistos, aplicados, recusados = {}, 0, []
+    for token in tokens:
+        token = str(token).strip()
+        if not token:
+            continue
+        m = RE_TOKEN_VEREDITO.fullmatch(token)
+        if not m:
+            recusados.append((token, "forma"))
+            continue
+        v, chave = m["veredito"], (m["lista"], int(m["num"]), int(m["ordem"]))
+        r = idx.get(chave)
+        if v not in VEREDITOS:
+            motivo = "vocabulario"
+        elif r is None:
+            motivo = "fora_da_amostra"
+        elif r.get("origem") == "D1" and v != r.get("veredito"):
+            motivo = "d1_manda"
+        elif ((r.get("parse") or {}).get("classe") == "nota" and v.startswith("mal_atribuido:")
+              and v != "mal_atribuido:nao_referencia"):
+            motivo = "nota_so_nao_referencia"
+        elif vistos.get(chave, v) != v:
+            motivo = "duplicado_divergente"
+        else:
+            motivo = None
+        if motivo:
+            recusados.append((token, motivo))
+            continue
+        vistos[chave] = v
+        if r.get("origem") != "D1":
+            r["veredito"], r["origem"] = v, "triagem"
+        aplicados += 1
+    return nova, {"aplicados": aplicados, "recusados": recusados}
+
+
+def _taxa(num, den):
+    """`num/den` em %, 1 casa (0.0 sem denominador)."""
+    return round(100 * num / den, 1) if den else 0.0
+
+
+def _passa(num, den, limite):
+    """`num/den > limite`, ESTRITO e exato (sem erro de float: 1/10 não passa de 0,10)."""
+    from fractions import Fraction
+    return Fraction(num, den) > Fraction(str(limite))
+
+
+def regua_referencias(populacao, amostra):
+    """A régua de parada do apply do estoque (part 2.3, DoD 4), PURA. Mede o PARSER só sobre `classe =
+    citacao` (TD 2): a `nota` fica fora de `p` e de `a` e sai à parte (`n_nota`, `pct_nota`).
+
+    `populacao` = linhas de `emed_solucoes` (`lista`, `num`, `fontes`), lidas do banco NO ATO; `amostra` =
+    o `amostra-<hex>.json` triado. `p` = citações fora de `ok` / citações da população. `a` = (citações da
+    amostra fora de `ok` + `ok` com `mal_atribuido:*` ou com a D1 falhando + `nota` marcada
+    `mal_atribuido:nao_referencia`) / citações da amostra. Os dois saem como `(num, den)`.
+
+    PARA quando: `p` ou `a` > `REGUA_LIMITE` (estrito); a taxa não tem denominador; um rótulo `ok` da
+    amostra está sem veredito ("triagem incompleta"); há veredito fora do vocabulário; uma Solução da
+    amostra tem o `fontes` mudado ou ausente, ou o parse mudado, desde o sorteio ("amostra velha": parser
+    alterado queima a semente, TD 3). `nota` > `NOTA_ACHADO` vai para `achados` (conteúdo, M-024/M-025),
+    nunca para PARA. Devolve `{veredito, motivos, p, a, p_distinto, n_nota, pct_nota, nota_solucao,
+    rotulos, solucoes_amostra, histograma, achados, semente}`."""
+    from collections import Counter
+    pop_cit = pop_nok = pop_rot = pop_nota = sol_com = sol_nota = 0
+    distintos, atuais = {}, {}
+    for s in populacao:
+        rotulos = db.fonte_rotulos(s.get("fontes"))
+        parses = [db.fonte_estruturada(x) for x in rotulos]
+        chave = (str(s.get("lista") or "").strip(), db._int_ou_none(s.get("num")))
+        atuais[chave] = (_sha1_fontes(s.get("fontes")), list(zip(rotulos, parses)))
+        if rotulos:
+            sol_com += 1
+            sol_nota += any(e["classe"] == "nota" for e in parses)
+        for rotulo, e in zip(rotulos, parses):
+            pop_rot += 1
+            if e["classe"] == "nota":
+                pop_nota += 1
+                continue
+            pop_cit += 1
+            pop_nok += e["status"] != "ok"
+            distintos[" ".join(rotulo.split()).casefold()] = e["status"] != "ok"
+    sols = amostra.get("solucoes") if isinstance(amostra, dict) else None
+    sols = [s for s in sols if isinstance(s, dict)] if isinstance(sols, list) else []
+    hist = Counter()
+    am_cit = am_def = am_rot = am_nota = am_sol_nota = sem_veredito = fora_vocab = velhas = parse_mudou = 0
+    for s in sols:
+        rotulos = [r for r in s.get("rotulos") or [] if isinstance(r, dict)]
+        atual = atuais.get((str(s.get("lista") or "").strip(), db._int_ou_none(s.get("num"))))
+        if atual is None or atual[0] != s.get("sha1_fontes"):
+            velhas += 1
+        elif [(r.get("rotulo"), r.get("parse")) for r in rotulos] != atual[1]:
+            parse_mudou += 1
+        am_sol_nota += any((r.get("parse") or {}).get("classe") == "nota" for r in rotulos)
+        for r in rotulos:
+            e, v = r.get("parse") or {}, r.get("veredito")
+            am_rot += 1
+            valido = v is None or v in VEREDITOS
+            fora_vocab += not valido
+            if e.get("classe") == "nota":
+                am_nota += 1
+                am_def += v == "mal_atribuido:nao_referencia"
+                hist["nota" if v in (None, "ok", "impreciso") else
+                     f"nota:{v if valido else 'fora_do_vocabulario'}"] += 1
+                continue
+            am_cit += 1
+            if e.get("status") != "ok":
+                am_def += 1
+                hist[f"{e.get('status')}:{e.get('motivo')}"] += 1
+                continue
+            sem_veredito += v is None
+            mal = valido and str(v or "").startswith("mal_atribuido:")
+            d1 = d1_ida_e_volta(r.get("rotulo") or "", e)
+            am_def += mal or d1 is not None
+            if d1 is not None and not mal:
+                hist[f"mal_atribuido:{d1}"] += 1           # a D1 manda no campo dela
+            else:
+                hist[v if valido and v else ("sem_veredito" if v is None else "fora_do_vocabulario")] += 1
+    p, a = (pop_nok, pop_cit), (am_def, am_cit)
+    motivos, achados = [], []
+    for nome, (num, den), onde in (("p", p, "populacao"), ("a", a, "amostra")):
+        if not den:
+            motivos.append(f"{nome} sem citacao na {onde}: taxa indefinida")
+        elif _passa(num, den, REGUA_LIMITE):
+            motivos.append(f"{nome} {num}/{den} ({_taxa(num, den)}%) > {round(100 * REGUA_LIMITE)}%")
+    if sem_veredito:
+        motivos.append(f"triagem incompleta: {sem_veredito} rotulo(s) ok sem veredito")
+    if fora_vocab:
+        motivos.append(f"veredito fora do vocabulario: {fora_vocab}")
+    if velhas:
+        motivos.append(f"amostra velha: {velhas} Solucao(oes) com fontes mudado ou ausente desde o sorteio")
+    if parse_mudou:
+        motivos.append(f"amostra velha: o parse de {parse_mudou} Solucao(oes) mudou desde o sorteio "
+                       f"(parser alterado = semente queimada)")
+    for onde, num, den in (("populacao", pop_nota, pop_rot), ("amostra", am_nota, am_rot)):
+        if den and _passa(num, den, NOTA_ACHADO):
+            achados.append(f"nota {num}/{den} ({_taxa(num, den)}%) > {round(100 * NOTA_ACHADO)}% na {onde}: "
+                           f"achado de conteudo (M-024/M-025), nao PARA")
+    return {"veredito": "PARA" if motivos else "SEGUE", "motivos": motivos, "p": p, "a": a,
+            "p_distinto": (sum(distintos.values()), len(distintos)),
+            "n_nota": {"populacao": pop_nota, "amostra": am_nota},
+            "pct_nota": {"populacao": _taxa(pop_nota, pop_rot), "amostra": _taxa(am_nota, am_rot)},
+            "nota_solucao": {"populacao": (sol_nota, sol_com), "amostra": (am_sol_nota, len(sols))},
+            "rotulos": {"populacao": pop_rot, "amostra": am_rot}, "solucoes_amostra": len(sols),
+            "histograma": dict(sorted(hist.items())), "achados": achados,
+            "semente": amostra.get("semente") if isinstance(amostra, dict) else None}
+
+
+def _linhas_regua(r):
+    """As linhas da régua no `--referencias --regua` (part 2.3): veredito, `p` e `a` (num/den), nota à
+    parte, os motivos de PARA, os achados e o histograma da amostra. Só contagens e nomes de regra."""
+    def fr(par):
+        return f"{par[0]}/{par[1]} ({_taxa(*par)}%)"
+    pn, an = r["nota_solucao"]["populacao"], r["nota_solucao"]["amostra"]
+    linhas = [f"regua (semente {r['semente']}): {r['veredito']}",
+              f"  p (populacao, so citacao): {fr(r['p'])} | por distinto: {fr(r['p_distinto'])}",
+              f"  a (amostra, so citacao): {fr(r['a'])} | Solucoes {r['solucoes_amostra']}, "
+              f"rotulos {r['rotulos']['amostra']}",
+              f"  nota: populacao {fr((r['n_nota']['populacao'], r['rotulos']['populacao']))}, Solucoes {fr(pn)}"
+              f" | amostra {fr((r['n_nota']['amostra'], r['rotulos']['amostra']))}, Solucoes {fr(an)}"]
+    linhas += [f"  PARA: {m}" for m in r["motivos"]]
+    linhas += [f"  achado: {m}" for m in r["achados"]]
+    linhas += [f"  regua {k}: {n}" for k, n in r["histograma"].items()]
+    return "\n".join(linhas)
+
+
+def _regua_do_arquivo(caminho):
+    """A régua (`regua_referencias`) sobre o `--regua ARQ` e as Soluções lidas do banco NO ATO."""
+    try:
+        with open(caminho, encoding="utf-8") as fh:
+            amostra = json.load(fh)
+    except (OSError, ValueError) as e:
+        raise ErroLeitura(f"--regua ilegivel: {caminho} ({e.__class__.__name__})")
+    return regua_referencias(db.emed_listar_solucoes(), amostra)
+
+
+def cmd_amostra_referencias(args):
+    """`--amostra-referencias HEX` (part 2.3, DoD 3): sorteia até 2 Soluções com fonte por lista com a
+    semente `int(HEX, 16)` (HEX = o hash de 7 caracteres do commit que congelou o parser) e escreve SÓ
+    `PASTA_AMOSTRA/amostra-<hex>.json` (gitignored). Só lê o banco. Não sobrescreve uma amostra que já
+    existe: a triagem gravada nela se perderia."""
+    hexa = (args.amostra_referencias or "").strip().lower()
+    if not RE_SEMENTE.fullmatch(hexa):
+        print("erro: --amostra-referencias exige a semente = hex de 7 caracteres (git log -1 --format=%h)",
+              file=sys.stderr)
+        return 1
+    destino = os.path.join(PASTA_AMOSTRA, f"amostra-{hexa}.json")
+    if os.path.exists(destino):
+        print(f"RECUSA: {destino} ja existe (a triagem gravada nele se perderia). Nada escrito.")
+        return 1
+    am = amostra_arquivo(db.emed_listar_solucoes(), hexa)
+    os.makedirs(PASTA_AMOSTRA, exist_ok=True)
+    with open(destino, "w", encoding="utf-8") as fh:
+        json.dump(am, fh, ensure_ascii=False, indent=1)
+    rots = [r for s in am["solucoes"] for r in s["rotulos"]]
+    cont = {"arquivo": destino, "semente": hexa, "listas": len({s["lista"] for s in am["solucoes"]}),
+            "curtas": len(am["curtas"]), "solucoes": len(am["solucoes"]), "rotulos": len(rots),
+            "ok": sum(1 for r in rots if r["parse"]["status"] == "ok"),
+            "nota": sum(1 for r in rots if r["parse"]["classe"] == "nota"),
+            "d1_falhas": sum(1 for r in rots if r["origem"] == "D1")}
+    if args.json:
+        _emitir(cont, True)
+        return 0
+    print(f"amostra-referencias {hexa}: listas={cont['listas']} curtas={cont['curtas']} "
+          f"solucoes={cont['solucoes']} rotulos={cont['rotulos']} ok={cont['ok']} nota={cont['nota']} "
+          f"d1_falhas={cont['d1_falhas']}\n  -> {destino} (triagem: tokens lista_num#ordem=veredito[:campo])")
+    return 0
+
+
 def _linha_referencias(c, aplicado):
     """As contagens do `--referencias` (part 2.1): a linha de rótulos, a de Soluções, o `nao_ok` e o
     histograma de `motivo`."""
-    modo = "APLICADO" if aplicado else "dry-run (nada gravado; use --apply --expect N)"
+    modo = "APLICADO" if aplicado else "dry-run (nada gravado; use --apply --expect N --regua ARQ)"
     nao_ok = c["nao_referencia"] + c["sem_parse"]
     pct = round(100 * nao_ok / c["rotulos"], 1) if c["rotulos"] else 0.0
     linhas = [f"{modo}: solucoes={c['solucoes']} com_fontes={c['com_fontes']} rotulos={c['rotulos']} "
@@ -382,16 +705,29 @@ def cmd_referencias(args):
     """`--referencias` (Fase 0 Lote 2 part 2.1, M-031): sincroniza `referencia` e `solucao_referencia`
     a partir de `emed_solucoes.fontes` (`db.referencias_sincronizar`; o `fontes` fica intacto).
     Dry-run por padrao; `--apply` exige `--expect N` (N = `novas + atualizadas`, em Solucoes) e FIXA o
-    backup SEMPRE antes da 1a escrita (DDL + a 1a escrita em massa; sem fixado, exit 1)."""
+    backup SEMPRE antes da 1a escrita (DDL + a 1a escrita em massa; sem fixado, exit 1).
+    Part 2.3: com `--regua ARQ` imprime a regua (`regua_referencias`, sobre as Solucoes lidas no ato);
+    o `--apply` exige `--regua` (sem ela, exit 1) com veredito SEGUE (PARA = exit 3, antes do
+    COUNT-ASSERT); nos dois casos nada e gravado e o fixado nem sai."""
     if args.apply and args.expect is None:
         print("RECUSA: --referencias --apply exige --expect N (o `novas + atualizadas` do dry-run, em "
               "Solucoes). Nada gravado.")
         return 1
+    if args.apply and not args.regua:
+        print("RECUSA: --referencias --apply exige --regua ARQ (a amostra triada da part 2.3, com "
+              "veredito SEGUE). Nada gravado.")
+        return 1
+    regua = _regua_do_arquivo(args.regua) if args.regua else None
     code = 0
     try:
         cont = db.referencias_sincronizar(aplicar=False)
         mudam = cont["novas"] + cont["atualizadas"]
-        if args.expect is not None and mudam != args.expect:
+        if regua is not None:
+            cont["regua"] = regua
+        if args.apply and regua["veredito"] != "SEGUE":
+            cont["erro"] = f"PARA: {'; '.join(regua['motivos'])}. Nada gravado (nem o fixado)."
+            code = 3
+        elif args.expect is not None and mudam != args.expect:
             cont["erro"] = (f"COUNT-ASSERT falhou: novas+atualizadas={mudam}, --expect {args.expect}. "
                             f"Nada gravado.")
             code = 2
@@ -405,6 +741,7 @@ def cmd_referencias(args):
             else:
                 cont = db.referencias_sincronizar(aplicar=True)
                 cont["fixado"] = {"arquivo": fixado["arquivo"], "sha256": fixado["sha256"]}
+                cont["regua"] = regua
     except ValueError as e:     # invariante quebrada: o writer ja voltou atras
         print(f"erro: {e}", file=sys.stderr)
         return 1
@@ -415,6 +752,8 @@ def cmd_referencias(args):
     if cont.get("erro"):
         print(cont["erro"])
     print(_linha_referencias(cont, aplicado))
+    if regua is not None:
+        print(_linhas_regua(regua))
     return code
 
 
@@ -1117,7 +1456,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Banco de questoes EMED no ipub.db (Bancada EMED): ingerir, "
                     "registrar, solucoes, podar, exportar, erros, elos, defeitos, status, "
-                    "referencias.")
+                    "referencias, amostra-referencias.")
     ap.add_argument("--ingerir", metavar="DIR", help="upsert de DIR/questoes/*.json")
     ap.add_argument("--registrar", metavar="DIR", help="upsert de DIR/respostas/*.json")
     ap.add_argument("--solucoes", metavar="DIR",
@@ -1150,7 +1489,13 @@ def main(argv=None):
                     help="questoes com cadeia_defeito: a fila de correcao de cadeia (s211)")
     ap.add_argument("--referencias", action="store_true",
                     help="sincroniza referencia/solucao_referencia a partir de emed_solucoes.fontes "
-                         "(part 2.1; dry-run; --apply exige --expect N e fixa o backup)")
+                         "(part 2.1; dry-run; --apply exige --expect N e --regua ARQ, e fixa o backup)")
+    ap.add_argument("--amostra-referencias", dest="amostra_referencias", metavar="HEX",
+                    help="sorteia ate 2 Solucoes com fonte por lista (semente = o hex de 7 do commit "
+                         "que congelou o parser) em tmp/lote2/amostra-<hex>.json (part 2.3; so le o banco)")
+    ap.add_argument("--regua", metavar="ARQ",
+                    help="com --referencias: a regua de parada sobre a amostra triada (part 2.3); "
+                         "o --apply exige veredito SEGUE (PARA = exit 3)")
     ap.add_argument("--status", action="store_true", help="resumo por lista")
     ap.add_argument("--lista", metavar="LISTA", help="filtro do --status e do --defeitos")
     ap.add_argument("--por-objetivo", dest="por_objetivo", action="store_true",
@@ -1168,7 +1513,8 @@ def main(argv=None):
              "--reavaliar-sem-figura": args.reavaliar_sem_figura,
              "--podar": args.podar, "--exportar": args.exportar,
              "--erros": args.erros, "--elos": args.elos, "--defeitos": args.defeitos,
-             "--status": args.status, "--referencias": args.referencias}
+             "--status": args.status, "--referencias": args.referencias,
+             "--amostra-referencias": args.amostra_referencias}
     ligados = [m for m, v in modos.items() if v]
     if len(ligados) != 1:
         print("erro: informe exatamente UM modo (" + " | ".join(modos) + ")",
@@ -1177,12 +1523,16 @@ def main(argv=None):
     if args.sem_cadeia is not None and not args.sem_cadeia.strip():
         print("erro: --sem-cadeia exige um MOTIVO nao vazio", file=sys.stderr)
         return 1
+    if args.regua is not None and not args.referencias:
+        print("erro: --regua so vale com --referencias", file=sys.stderr)
+        return 1
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
             "--solucoes": cmd_solucoes, "--figuras": cmd_figuras,
             "--reavaliar-sem-figura": cmd_reavaliar_sem_figura,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
             "--erros": cmd_erros, "--elos": cmd_elos, "--defeitos": cmd_defeitos,
-            "--status": cmd_status, "--referencias": cmd_referencias}[ligados[0]]
+            "--status": cmd_status, "--referencias": cmd_referencias,
+            "--amostra-referencias": cmd_amostra_referencias}[ligados[0]]
     try:
         return acao(args)
     except ErroLeitura as e:

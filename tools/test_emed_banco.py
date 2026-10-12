@@ -1809,7 +1809,7 @@ def test_cli_referencias_dry_run_nao_muda_o_banco(db_sintetico, capsys):
     assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
 
 
-def test_cli_referencias_rito_expect_apply_e_reexecucao(db_sintetico, capsys, monkeypatch):
+def test_cli_referencias_rito_expect_apply_e_reexecucao(db_sintetico, tmp_path, capsys, monkeypatch):
     """DoD 4 (2.1): `--apply` sem `--expect` = exit 1; `--expect` divergente = exit 2 (N = novas +
     atualizadas, em Solucoes); o apply FIXA sempre antes da 1a escrita e grava; de novo = 0 mudancas."""
     _semear_fontes(db_sintetico)
@@ -1819,10 +1819,11 @@ def test_cli_referencias_rito_expect_apply_e_reexecucao(db_sintetico, capsys, mo
                         lambda ato: atos.append(ato) or {"arquivo": "f.db", "sha256": "abc"})
     assert emed_banco.main(["--referencias", "--apply"]) == 1
     assert "--expect" in capsys.readouterr().out
-    assert emed_banco.main(["--referencias", "--apply", "--expect", "3"]) == 2
+    regua = _regua_segue(tmp_path, monkeypatch)        # part 2.3: o apply exige --regua (SEGUE)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "3", "--regua", regua]) == 2
     assert "COUNT-ASSERT" in capsys.readouterr().out
     assert _sha(db_sintetico) == antes and atos == []
-    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--json"]) == 0
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--regua", regua, "--json"]) == 0
     r = _json_saida(capsys)
     assert r["aplicado"] is True and _contagem(r) == _ESPERADO_1o and len(atos) == 1
     assert r["fixado"] == {"arquivo": "f.db", "sha256": "abc"}
@@ -1832,7 +1833,7 @@ def test_cli_referencias_rito_expect_apply_e_reexecucao(db_sintetico, capsys, mo
     assert (r["novas"], r["atualizadas"], r["referencias_novas"], r["aplicado"]) == (0, 0, 0, False)
 
 
-def test_cli_referencias_sem_fixado_recusa_sem_gravar(db_sintetico, capsys, monkeypatch):
+def test_cli_referencias_sem_fixado_recusa_sem_gravar(db_sintetico, tmp_path, capsys, monkeypatch):
     """DoD 4 (2.1): o fixado que levanta = exit 1 e nada gravado (nem DDL)."""
     _semear_fontes(db_sintetico)
     antes = _sha(db_sintetico)
@@ -1841,12 +1842,13 @@ def test_cli_referencias_sem_fixado_recusa_sem_gravar(db_sintetico, capsys, monk
         raise RuntimeError("sem ponto de retorno sintetico")
 
     monkeypatch.setattr(emed_banco, "_fixar_antes", sem_ponto)
-    assert emed_banco.main(["--referencias", "--apply", "--expect", "4"]) == 1
+    regua = _regua_segue(tmp_path, monkeypatch)        # part 2.3: o apply exige --regua (SEGUE)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--regua", regua]) == 1
     assert "FIXADO" in capsys.readouterr().out
     assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
 
 
-def test_status_fontes_sensor_por_lista_e_warn(db_sintetico, capsys, monkeypatch):
+def test_status_fontes_sensor_por_lista_e_warn(db_sintetico, tmp_path, capsys, monkeypatch):
     """DoD 5 (2.1): `cobertura_fontes` (PURA) por lista -- rot/ok/nref/sem/terc/vinc + n_nota/pct_nota;
     sem as tabelas `vinc` = 0; `--status` simples fecha com `[WARN] FONTES_SEM_ESTRUTURA`; exit 0 e
     nada escrito. Uma lista de cada tipo: t26 propria (+ nota), t40 terceiro, t61 publica (+ sem_emissor)."""
@@ -1868,7 +1870,8 @@ def test_status_fontes_sensor_por_lista_e_warn(db_sintetico, capsys, monkeypatch
     assert all(w.startswith("[WARN] SEM_CADEIA") for w in warns[:-1])
     assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
     monkeypatch.setattr(emed_banco, "_fixar_antes", lambda ato: {"arquivo": "f.db", "sha256": "abc"})
-    assert emed_banco.main(["--referencias", "--apply", "--expect", "4"]) == 0
+    regua = _regua_segue(tmp_path, monkeypatch)        # part 2.3: o apply exige --regua (SEGUE)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--regua", regua]) == 0
     capsys.readouterr()
     assert emed_banco.main(["--status", "--fontes", "--json"]) == 0
     assert {d["lista"]: d["vinc"] for d in _json_saida(capsys)} == {"t26": 2, "t40": 1, "t61": 1}
@@ -2115,3 +2118,391 @@ def test_brief_da_solucao_e_portador_do_gate_contrato_revogado():
     import consistencia_check
     assert "docs/SOLUCAO-MEDHUB-BRIEF.md" in consistencia_check.PORTADORES_DOCS
     assert "docs/SOLUCAO-MEDHUB-BRIEF.md" in consistencia_check.portadores_derivados()
+
+
+# --- Fase 0 Lote 2 part 2.3: amostra de 62 com semente gravada + regua de parada no apply (M-031) ----
+# Rotulos SINTETICOS (siglas inventadas SBX/ZZA/QWE); nenhum rotulo real de Solucao. O arquivo da
+# amostra vai para `PASTA_AMOSTRA`, apontada para `tmp_path` em todo teste.
+
+_NOTA = "Figura do enunciado não capturada"          # nota (R3)
+_REMISSAO = "Aula 3 do modulo ficticio"              # nota por remissao, com status sem_parse
+_SEM_EMISSOR = "Manual Ficticio de Condutas"         # citacao sem_parse (R7e)
+_AMOSTRA10 = [{"lista": "t80", "num": n, "fontes": _OK_PUB2} for n in range(1, 11)]
+
+
+def _sols_amostra(listas=3, por=6, fontes=_OK_PUB):
+    """Linhas de `emed_solucoes` sinteticas (`lista`, `num`, `fontes`): `listas` x `por`, todas com fonte."""
+    return [{"lista": f"t{100 + i}", "num": n, "fontes": fontes}
+            for i in range(listas) for n in range(1, por + 1)]
+
+
+def _pop(n_ok=0, n_sem=0, n_nota=0, n_remissao=0, lista="t70"):
+    """Populacao sintetica: uma Solucao por rotulo, na ordem ok -> sem_parse -> nota -> remissao."""
+    fontes = ([_OK_PUB] * n_ok + [_SEM_EMISSOR] * n_sem + [_NOTA] * n_nota + [_REMISSAO] * n_remissao)
+    return [{"lista": lista, "num": i, "fontes": f} for i, f in enumerate(fontes, 1)]
+
+
+def _triada(sols, vereditos=None, padrao="ok"):
+    """A amostra de TODAS as `sols` (por_lista = len) com cada rotulo `ok` triado: `padrao`, salvo o que
+    `vereditos` diz por `(num, ordem)`."""
+    am = emed_banco.amostra_arquivo(sols, "abc1234", por_lista=len(sols))
+    for s in am["solucoes"]:
+        for r in s["rotulos"]:
+            if r["veredito"] is None and r["parse"]["status"] == "ok":
+                r["veredito"] = (vereditos or {}).get((s["num"], r["ordem"]), padrao)
+    return am
+
+
+def _regua_segue(tmp_path, monkeypatch):
+    """`--regua` com veredito SEGUE forcado (a regua em si tem os testes dela): o rito do apply da 2.1
+    continua testavel com o gate da 2.3 no lugar."""
+    arq = tmp_path / "amostra-segue.json"
+    arq.write_text("{}", encoding="utf-8")
+    real = emed_banco.regua_referencias
+    monkeypatch.setattr(emed_banco, "regua_referencias",
+                        lambda populacao, amostra: dict(real(populacao, amostra), veredito="SEGUE", motivos=[]))
+    return str(arq)
+
+
+def _spy_fixar(monkeypatch):
+    atos = []
+    monkeypatch.setattr(emed_banco, "_fixar_antes",
+                        lambda ato: atos.append(ato) or {"arquivo": "f.db", "sha256": "abc"})
+    return atos
+
+
+# DoD 2: o sorteio puro
+
+def test_amostra_referencias_mesma_semente_mesma_amostra_e_formula_declarada():
+    """DoD 2 (2.3): mesma semente = mesma amostra (a ordem de entrada nao importa); outra semente = outra
+    amostra; por lista vale `random.Random(f"{semente}:{lista}").sample(sorted(nums), min(2, n))`."""
+    import random
+    sols = _sols_amostra()
+    a = emed_banco.amostra_referencias(sols, 0x9a5963f)
+    assert a == emed_banco.amostra_referencias(list(reversed(sols)), 0x9a5963f)
+    assert sorted(a["listas"]) == ["t100", "t101", "t102"] and a["curtas"] == {}
+    for lista, nums in a["listas"].items():
+        assert nums == sorted(random.Random(f"{0x9a5963f}:{lista}").sample(list(range(1, 7)), 2))
+    assert emed_banco.amostra_referencias(sols, 0x1234567)["listas"] != a["listas"]
+
+
+def test_amostra_referencias_lista_nova_nao_muda_as_outras():
+    """DoD 2 (2.3): a semente por lista isola as listas -- acrescentar uma nao muda o sorteio das outras."""
+    sols = _sols_amostra()
+    antes = emed_banco.amostra_referencias(sols, 42)["listas"]
+    mais = sols + [{"lista": "t999", "num": n, "fontes": _OK_PUB2} for n in range(1, 9)]
+    depois = emed_banco.amostra_referencias(mais, 42)["listas"]
+    assert {k: v for k, v in depois.items() if k != "t999"} == antes and len(depois["t999"]) == 2
+
+
+def test_amostra_referencias_fontes_vazio_nunca_entra_e_lista_curta_e_reportada():
+    """DoD 2 (2.3): `fontes` vazio (None, "", so espacos, so `;`) nunca entra; lista com 1 Solucao com
+    fonte entra com 1 e sai em `curtas`; lista sem nenhuma nao aparece."""
+    vazias = [{"lista": "t100", "num": n, "fontes": f} for n, f in ((10, ""), (11, None), (12, " ; "), (13, "  "))]
+    sols = (_sols_amostra(listas=1, por=2) + vazias
+            + [{"lista": "t200", "num": 1, "fontes": _OK_PUB}, {"lista": "t200", "num": 2, "fontes": ""},
+               {"lista": "t300", "num": 1, "fontes": None}])
+    for semente in range(20):
+        a = emed_banco.amostra_referencias(sols, semente)
+        assert a["listas"] == {"t100": [1, 2], "t200": [1]} and a["curtas"] == {"t200": 1}
+
+
+def test_amostra_referencias_31_listas_com_2_ou_mais_dao_62():
+    """DoD 2 (2.3): 31 listas com >= 2 Solucoes com fonte cada = 2 x 31 = 62, nenhuma curta."""
+    sols = [{"lista": f"t{i}", "num": n, "fontes": _OK_PUB} for i in range(1, 32) for n in range(1, 3 + i % 5)]
+    a = emed_banco.amostra_referencias(sols, 0x9a5963f)
+    assert len(a["listas"]) == 31 and sum(len(v) for v in a["listas"].values()) == 62 and a["curtas"] == {}
+
+
+# DoD 3: D1 (ida e volta) e o `--amostra-referencias`
+
+def test_d1_ida_e_volta_passa_em_todo_ok_do_parser_e_pega_campo_montado_errado():
+    """DoD 3 (2.3): a D1 passa em todo rotulo `ok` da tabela de casos do parser (2.1) e pega o campo
+    montado errado (documento fora de ordem ou com palavra de fora, sigla e ano de outro rotulo);
+    MEDHUB/EMED nao se conferem (derivadas); letra e digito colados nao enganam o token."""
+    oks = [r for r, _ in _CASOS_FONTE if db.fonte_estruturada(r)["status"] == "ok"]
+    assert len(oks) >= 10
+    for rotulo in oks:
+        assert emed_banco.d1_ida_e_volta(rotulo, db.fonte_estruturada(rotulo)) is None, rotulo
+    rotulo = "SBX Diretriz Ficticia de Exemplo 2021 (cap. 3)"
+    certo = db.fonte_estruturada(rotulo)
+    assert emed_banco.d1_ida_e_volta(rotulo, dict(certo, documento="Ficticia Diretriz de Exemplo")) == "documento"
+    assert emed_banco.d1_ida_e_volta(rotulo, dict(certo, documento="Diretriz Ficticia Outra")) == "documento"
+    assert emed_banco.d1_ida_e_volta(rotulo, dict(certo, sigla="ZZA")) == "sigla"
+    assert emed_banco.d1_ida_e_volta(rotulo, dict(certo, ano=2012)) == "ano"
+    assert emed_banco.d1_ida_e_volta("SBX2019 Consenso Ficticio",
+                                     {"sigla": "SBX", "ano": 2019, "documento": "Consenso Ficticio"}) is None
+
+
+def test_cli_amostra_referencias_grava_so_na_pasta_amostra_com_a_forma(db_sintetico, tmp_path, monkeypatch,
+                                                                       capsys):
+    """DoD 3 (2.3): `--amostra-referencias HEX` escreve SO `PASTA_AMOSTRA/amostra-<hex>.json`: a semente
+    (hex gravado + int), por Solucao `lista`/`num`/sha1 do `fontes`, por rotulo `ordem`/`rotulo`/o parse
+    inteiro/`d1`/`veredito` null/`origem` null; imprime so contagens; o banco nao muda."""
+    import hashlib
+    _semear_fontes(db_sintetico)        # t26 (2 com fonte), t40 (1 com fonte + 1 vazia), t61 (1)
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    antes = _sha(db_sintetico)
+    assert emed_banco.main(["--amostra-referencias", "ABC1234"]) == 0
+    out = capsys.readouterr().out
+    assert [p.name for p in pasta.iterdir()] == ["amostra-abc1234.json"]
+    am = json.loads((pasta / "amostra-abc1234.json").read_text(encoding="utf-8"))
+    assert (am["semente"], am["semente_int"], am["por_lista"]) == ("abc1234", 0xabc1234, 2)
+    assert am["curtas"] == {"t40": 1, "t61": 1}
+    fontes = {(s["lista"], s["num"]): s["fontes"] for s in db.emed_listar_solucoes()}
+    assert [(s["lista"], s["num"]) for s in am["solucoes"]] == [("t26", 1), ("t26", 2), ("t40", 1), ("t61", 1)]
+    for s in am["solucoes"]:
+        f = fontes[(s["lista"], s["num"])]
+        assert s["sha1_fontes"] == hashlib.sha1(f.encode("utf-8")).hexdigest()
+        assert [(r["ordem"], r["rotulo"]) for r in s["rotulos"]] == list(enumerate(db.fonte_rotulos(f), 1))
+        for r in s["rotulos"]:
+            assert set(r) == {"ordem", "rotulo", "parse", "d1", "veredito", "origem"}
+            assert r["parse"] == db.fonte_estruturada(r["rotulo"])
+            assert (r["veredito"], r["origem"]) == (None, None)
+            assert r["d1"] == ("ok" if r["parse"]["status"] == "ok" else None)
+    assert "solucoes=4" in out and "rotulos=6" in out and "ok=4" in out and "d1_falhas=0" in out
+    assert "curtas=2" in out and "amostra-abc1234.json" in out
+    assert "Ficticia" not in out and "Tireoide" not in out          # so contagens, nenhum rotulo
+    assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_cli_amostra_referencias_d1_nasce_mal_atribuido_com_origem_d1(db_sintetico, tmp_path, monkeypatch,
+                                                                      capsys):
+    """DoD 3 (2.3): o rotulo `ok` cujo `documento` saiu montado errado nasce `mal_atribuido:documento`,
+    `origem: D1`, `d1: falha:documento`; a contagem `d1_falhas` sai no `--json`."""
+    _semear_fontes(db_sintetico)
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    original = db.fonte_estruturada
+
+    def torto(rotulo):
+        r = original(rotulo)
+        return dict(r, documento="Ficticia Diretriz") if r["sigla"] == "SBX" else r
+
+    monkeypatch.setattr(db, "fonte_estruturada", torto)
+    assert emed_banco.main(["--amostra-referencias", "abc1234", "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["solucoes"], r["rotulos"], r["ok"], r["d1_falhas"]) == (4, 6, 4, 1)
+    am = json.loads((pasta / "amostra-abc1234.json").read_text(encoding="utf-8"))
+    sbx = [x for s in am["solucoes"] for x in s["rotulos"] if x["parse"]["sigla"] == "SBX"]
+    assert [(x["d1"], x["veredito"], x["origem"]) for x in sbx] == [
+        ("falha:documento", "mal_atribuido:documento", "D1")]
+
+
+@pytest.mark.parametrize("semente", ["9a5963", "9a5963fa", "xyz1234", " "])
+def test_cli_amostra_referencias_semente_torta_recusa_sem_escrever(db_sintetico, tmp_path, monkeypatch, semente):
+    """DoD 3 (2.3): a semente e um hex de 7 caracteres; outra coisa = erro de uso (exit 1), nada escrito."""
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    assert emed_banco.main(["--amostra-referencias", semente]) == 1
+    assert not pasta.exists()
+
+
+def test_cli_amostra_referencias_nao_sobrescreve_a_triagem(db_sintetico, tmp_path, monkeypatch, capsys):
+    """DoD 3 (2.3): o arquivo da amostra ja existe (com a triagem dentro) -> recusa, exit 1, intacto."""
+    _semear_fontes(db_sintetico)
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    assert emed_banco.main(["--amostra-referencias", "abc1234"]) == 0
+    arq = pasta / "amostra-abc1234.json"
+    arq.write_text(arq.read_text(encoding="utf-8").replace('"veredito": null', '"veredito": "ok"', 1),
+                   encoding="utf-8")
+    triado = arq.read_bytes()
+    capsys.readouterr()
+    assert emed_banco.main(["--amostra-referencias", "abc1234"]) == 1
+    assert "RECUSA" in capsys.readouterr().out and arq.read_bytes() == triado
+
+
+# DoD 4: a regua pura (so `classe = citacao`; nota fora de p e de a)
+
+def test_regua_p_acima_de_10_para_e_a_igual_a_10_segue():
+    """DoD 4 (2.3): `REGUA_LIMITE = 0.10` estrito -- p = 0,11 da PARA; p = 0,10 e a = 0,10 dao SEGUE;
+    a = 0,20 da PARA. `p` e `a` saem como (num, den)."""
+    assert emed_banco.REGUA_LIMITE == 0.10
+    am = _triada(_AMOSTRA10, {(3, 1): "mal_atribuido:sigla"})
+    r = emed_banco.regua_referencias(_pop(n_ok=80, n_sem=10) + _AMOSTRA10, am)
+    assert (r["veredito"], r["p"], r["a"], r["motivos"]) == ("SEGUE", (10, 100), (1, 10), [])
+    r = emed_banco.regua_referencias(_pop(n_ok=79, n_sem=11) + _AMOSTRA10, am)
+    assert (r["veredito"], r["p"], r["motivos"]) == ("PARA", (11, 100), ["p 11/100 (11.0%) > 10%"])
+    am = _triada(_AMOSTRA10, {(3, 1): "mal_atribuido:sigla", (4, 1): "mal_atribuido:ano"})
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10, am)
+    assert (r["veredito"], r["a"], r["motivos"]) == ("PARA", (2, 10), ["a 2/10 (20.0%) > 10%"])
+
+
+def test_regua_tudo_limpo_segue_e_impreciso_nao_conta():
+    """DoD 4 (2.3): tudo triado e limpo da SEGUE; `impreciso` nao conta; o histograma so tem nomes."""
+    am = _triada(_AMOSTRA10, {(5, 1): "impreciso"})
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10, am)
+    assert (r["veredito"], r["motivos"], r["p"], r["a"]) == ("SEGUE", [], (0, 100), (0, 10))
+    assert r["histograma"] == {"impreciso": 1, "ok": 9}
+
+
+def test_regua_triagem_incompleta_para():
+    """DoD 4 (2.3): um rotulo `ok` da amostra sem veredito = PARA ("triagem incompleta")."""
+    am = _triada(_AMOSTRA10)
+    am["solucoes"][0]["rotulos"][0]["veredito"] = None
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10, am)
+    assert (r["veredito"], r["motivos"]) == ("PARA", ["triagem incompleta: 1 rotulo(s) ok sem veredito"])
+
+
+def test_regua_amostra_velha_para(monkeypatch):
+    """DoD 4 (2.3): o sha1 do `fontes` de uma Solucao da amostra mudou (ou ela sumiu) = PARA ("amostra
+    velha"); o parse mudou com o mesmo `fontes` (parser alterado depois do sorteio, TD 3) = PARA tambem."""
+    am = _triada(_AMOSTRA10)
+    trocada = [dict(s, fontes=_OK_PUB3) if s["num"] == 2 else s for s in _AMOSTRA10]
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + trocada, am)
+    assert (r["veredito"], r["motivos"]) == ("PARA", ["amostra velha: 1 Solucao(oes) com fontes mudado ou "
+                                                      "ausente desde o sorteio"])
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10[1:], am)
+    assert r["veredito"] == "PARA" and r["motivos"][0].startswith("amostra velha: 1 ")
+    original = db.fonte_estruturada
+    monkeypatch.setattr(db, "fonte_estruturada",
+                        lambda rotulo: dict(original(rotulo), detalhe="outro"))
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10, am)
+    assert (r["veredito"], r["motivos"]) == ("PARA", ["amostra velha: o parse de 10 Solucao(oes) mudou desde o "
+                                                      "sorteio (parser alterado = semente queimada)"])
+
+
+def test_regua_mede_so_citacao_nota_fica_fora_de_p_e_a():
+    """DoD 4 (2.3, TD 2): acrescentar 100 `nota` -- com status `nao_referencia` ou `sem_parse` (remissao)
+    -- nao muda `p`; `n_nota`/`pct_nota` saem a parte; nota > 30% vira achado de conteudo, nao PARA;
+    1 `nota` da amostra marcada `mal_atribuido:nao_referencia` sobe `a`."""
+    base = _pop(n_ok=85, n_sem=5) + _AMOSTRA10
+    am = _triada(_AMOSTRA10)
+    r0 = emed_banco.regua_referencias(base, am)
+    r1 = emed_banco.regua_referencias(base + _pop(n_nota=100, lista="t71"), am)
+    r2 = emed_banco.regua_referencias(base + _pop(n_remissao=100, lista="t71"), am)
+    assert r0["p"] == r1["p"] == r2["p"] == (5, 100)
+    assert [r["n_nota"]["populacao"] for r in (r0, r1, r2)] == [0, 100, 100]
+    assert (r1["pct_nota"]["populacao"], r1["veredito"]) == (50.0, "SEGUE")
+    assert r0["achados"] == [] and r1["achados"] == ["nota 100/200 (50.0%) > 30% na populacao: achado de "
+                                                     "conteudo (M-024/M-025), nao PARA"]
+    sols = _AMOSTRA10 + [{"lista": "t80", "num": 11, "fontes": _NOTA}]
+    am = _triada(sols)
+    r = emed_banco.regua_referencias(base + sols[-1:], am)
+    assert (r["a"], r["n_nota"]["amostra"], r["veredito"]) == ((0, 10), 1, "SEGUE")
+    am["solucoes"][-1]["rotulos"][0]["veredito"] = "mal_atribuido:nao_referencia"
+    r = emed_banco.regua_referencias(base + sols[-1:], am)
+    assert r["a"] == (1, 10) and r["histograma"]["nota:mal_atribuido:nao_referencia"] == 1
+
+
+def test_regua_citacao_fora_de_ok_conta_sem_triagem_e_vocabulario_fechado():
+    """DoD 4 (2.3): a citacao `sem_parse` da amostra conta em `a` sem veredito; `mal_atribuido:<campo>`
+    conta; um veredito fora do vocabulario = PARA."""
+    sols = _AMOSTRA10[:9] + [{"lista": "t80", "num": 10, "fontes": _SEM_EMISSOR}]
+    am = _triada(sols, {(1, 1): "mal_atribuido:tipo"})
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + sols, am)
+    assert (r["a"], r["veredito"]) == ((2, 10), "PARA")
+    assert r["histograma"] == {"mal_atribuido:tipo": 1, "ok": 8, "sem_parse:sem_emissor": 1}
+    am = _triada(_AMOSTRA10, {(1, 1): "errado"})
+    r = emed_banco.regua_referencias(_pop(n_ok=90) + _AMOSTRA10, am)
+    assert (r["veredito"], r["motivos"]) == ("PARA", ["veredito fora do vocabulario: 1"])
+
+
+def test_aplicar_vereditos_tokens_lista_num_ordem_puro_e_d1_manda():
+    """DoD 6 (2.3), a entrada dos vereditos: tokens `lista_num#ordem=veredito[:campo]`; PURA (a amostra de
+    entrada fica intacta); recusa forma, vocabulario, fora da amostra, o veredito da D1 (ela manda no
+    campo dela), campo != nao_referencia em nota e o duplicado divergente."""
+    sols = [{"lista": "t80", "num": 1, "fontes": f"{_OK_PUB}; {_NOTA}"}, {"lista": "t80", "num": 2, "fontes": _OK_PUB2}]
+    am = emed_banco.amostra_arquivo(sols, "abc1234")
+    am["solucoes"][1]["rotulos"][0].update(d1="falha:documento", veredito="mal_atribuido:documento", origem="D1")
+    copia = json.loads(json.dumps(am))
+    tokens = ["t80_1#1=ok", "t80_1#2=mal_atribuido:nao_referencia", "t80_2#1=ok", "t80_9#1=ok", "t80_1#1=bom",
+              "lixo", "t80_1#2=mal_atribuido:sigla", "t80_1#1=impreciso", "t80_2#1=mal_atribuido:documento"]
+    nova, rel = emed_banco.aplicar_vereditos(am, tokens)
+    assert am == copia
+    assert rel == {"aplicados": 3, "recusados": [
+        ("t80_2#1=ok", "d1_manda"), ("t80_9#1=ok", "fora_da_amostra"), ("t80_1#1=bom", "vocabulario"),
+        ("lixo", "forma"), ("t80_1#2=mal_atribuido:sigla", "nota_so_nao_referencia"),
+        ("t80_1#1=impreciso", "duplicado_divergente")]}
+    assert [(r["veredito"], r["origem"]) for s in nova["solucoes"] for r in s["rotulos"]] == [
+        ("ok", "triagem"), ("mal_atribuido:nao_referencia", "triagem"), ("mal_atribuido:documento", "D1")]
+
+
+# DoD 5: o gate no apply
+
+def test_cli_referencias_apply_sem_regua_recusa_exit_1_sem_fixar(db_sintetico, capsys, monkeypatch):
+    """DoD 5 (2.3): `--referencias --apply` sem `--regua` = exit 1; o fixado nao e chamado; nada gravado."""
+    _semear_fontes(db_sintetico)
+    antes, atos = _sha(db_sintetico), _spy_fixar(monkeypatch)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4"]) == 1
+    assert "--regua" in capsys.readouterr().out
+    assert atos == [] and _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_cli_referencias_apply_com_regua_para_exit_3_sem_fixar(db_sintetico, tmp_path, capsys, monkeypatch):
+    """DoD 5 (2.3): com veredito PARA (triagem incompleta; p 1/5) = exit 3 com `PARA: ...`, antes do
+    COUNT-ASSERT; o fixado nao e chamado; nada gravado (nem DDL). `--regua` ilegivel = exit 1."""
+    _semear_fontes(db_sintetico)
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(tmp_path / "lote2"))
+    assert emed_banco.main(["--amostra-referencias", "abc1234"]) == 0
+    arq = str(tmp_path / "lote2" / "amostra-abc1234.json")
+    capsys.readouterr()
+    antes, atos = _sha(db_sintetico), _spy_fixar(monkeypatch)
+    for expect in ("4", "99"):
+        assert emed_banco.main(["--referencias", "--apply", "--expect", expect, "--regua", arq]) == 3
+        out = capsys.readouterr().out
+        assert "PARA: " in out and "triagem incompleta: 4 rotulo(s) ok sem veredito" in out
+        assert "COUNT-ASSERT" not in out
+    assert emed_banco.main(["--referencias", "--regua", str(tmp_path / "nao_existe.json")]) == 1
+    assert atos == [] and _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_cli_referencias_regua_dry_run_imprime_veredito_p_a_e_histograma_sem_conteudo(db_sintetico, tmp_path,
+                                                                                      capsys, monkeypatch):
+    """DoD 5 (2.3): `--referencias --regua ARQ` (dry-run) imprime o veredito, `p` e `a` com numerador e
+    denominador, `n_nota` e o histograma -- so nomes de regra, nenhum rotulo; exit 0; o banco nao muda.
+    Os vereditos entram pelos tokens (`aplicar_vereditos`). `--regua` fora do `--referencias` = exit 1."""
+    _semear_fontes(db_sintetico)
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    assert emed_banco.main(["--amostra-referencias", "abc1234"]) == 0
+    arq = pasta / "amostra-abc1234.json"
+    am = json.loads(arq.read_text(encoding="utf-8"))
+    tokens = [f"{s['lista']}_{s['num']}#{r['ordem']}=ok" for s in am["solucoes"] for r in s["rotulos"]
+              if r["parse"]["status"] == "ok"]
+    am, rel = emed_banco.aplicar_vereditos(am, tokens)
+    assert rel == {"aplicados": 4, "recusados": []}
+    arq.write_text(json.dumps(am, ensure_ascii=False), encoding="utf-8")
+    capsys.readouterr()
+    antes = _sha(db_sintetico)
+    assert emed_banco.main(["--referencias", "--regua", str(arq)]) == 0
+    out = capsys.readouterr().out
+    assert "regua (semente abc1234): PARA" in out
+    assert "p (populacao, so citacao): 1/5 (20.0%)" in out and "a (amostra, so citacao): 1/5 (20.0%)" in out
+    assert "PARA: p 1/5 (20.0%) > 10%" in out and "PARA: a 1/5 (20.0%) > 10%" in out
+    assert "nota: populacao 1/6 (16.7%)" in out
+    assert "regua sem_parse:sem_emissor: 1" in out and "regua ok: 4" in out and "regua nota: 1" in out
+    assert "Ficticia" not in out and "Tireoide" not in out and "Condutas" not in out
+    assert emed_banco.main(["--referencias", "--regua", str(arq), "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["regua"]["veredito"], r["regua"]["p"], r["regua"]["a"], r["aplicado"]) == ("PARA", [1, 5], [1, 5], False)
+    assert emed_banco.main(["--status", "--regua", str(arq)]) == 1
+    assert _sha(db_sintetico) == antes and _tabelas_ref(db_sintetico) == set()
+
+
+def test_cli_referencias_apply_com_regua_segue_e_expect_certo_grava(db_sintetico, tmp_path, capsys, monkeypatch):
+    """DoD 5 (2.3): populacao so com citacao `ok` (p = 0) + amostra inteira triada `ok` = SEGUE; o
+    COUNT-ASSERT continua (exit 2); com `--expect` certo o fixado sai antes e grava; o JSON leva a regua."""
+    fontes = {("t26", 1): _OK_PUB, ("t26", 2): _OK_PUB2, ("t40", 1): _OK_PROPRIA, ("t40", 2): _OK_TERCEIRO,
+              ("t61", 1): f"{_OK_PUB3}; {_NOTA}"}
+    _semear_legado([_solucao(n, lista=l, fontes=f) for (l, n), f in fontes.items()])
+    pasta = tmp_path / "lote2"
+    monkeypatch.setattr(emed_banco, "PASTA_AMOSTRA", str(pasta))
+    assert emed_banco.main(["--amostra-referencias", "abc1234"]) == 0
+    arq = pasta / "amostra-abc1234.json"
+    am = json.loads(arq.read_text(encoding="utf-8"))
+    am, _rel = emed_banco.aplicar_vereditos(am, [f"{s['lista']}_{s['num']}#{r['ordem']}=ok"
+                                                 for s in am["solucoes"] for r in s["rotulos"]
+                                                 if r["parse"]["status"] == "ok"])
+    arq.write_text(json.dumps(am, ensure_ascii=False), encoding="utf-8")
+    capsys.readouterr()
+    antes, atos = _sha(db_sintetico), _spy_fixar(monkeypatch)
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "4", "--regua", str(arq)]) == 2
+    assert "COUNT-ASSERT" in capsys.readouterr().out and atos == [] and _sha(db_sintetico) == antes
+    assert emed_banco.main(["--referencias", "--apply", "--expect", "5", "--regua", str(arq), "--json"]) == 0
+    r = _json_saida(capsys)
+    assert (r["aplicado"], r["regua"]["veredito"], r["regua"]["p"], r["regua"]["a"]) == (True, "SEGUE", [0, 5], [0, 5])
+    assert len(atos) == 1 and _tabelas_ref(db_sintetico) == {"referencia", "solucao_referencia"}
+    assert len(db.referencias_por_solucao()) == 5

@@ -1,4 +1,4 @@
-/* MedHub tema v2.1 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
+/* MedHub tema v2.2 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
    acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
    O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
    v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
@@ -112,7 +112,6 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
 .qd-bl,.qz-chip,.reason{background:var(--rosa-fraco);color:var(--rosa-tinta)}
 .qd-alvo:hover::after{color:var(--rosa)}
 .qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--rosa-tinta)}
-.primario{background:var(--rosa);border-color:var(--rosa);color:var(--papel)}
 .fracao b{color:var(--rosa-tinta)}
 .fig.alvo{background:var(--rosa-fraco)}
 .fig.alvo .fig-n{color:var(--rosa-tinta)}
@@ -124,3 +123,15 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
 .rail a.on .rn{color:var(--rosa-tinta)}
 .top h1{text-shadow:0 0 28px rgba(255,92,168,.25)}
 .aside{background:var(--rosa-fraco)} .aside .albl{color:var(--rosa-tinta)}
+
+/* v2.2 (escolhas dele em 12/10/2026): botao principal = ciano; titulos, barras de progresso e SELECAO em rosa */
+::selection{background:var(--rosa);color:var(--papel)}
+.hub-titulo,.qd-titulo,.qd-bib-tit,.bloco h2,.dia h2{color:var(--rosa-tinta)}
+.qd-n{color:var(--tinta3)}
+.dist-barra i,.qz-trilho i.f{background:linear-gradient(90deg,var(--rosa),var(--acento))}
+.qz-trilho i.atual{outline-color:var(--rosa)}
+.qz-alt.marcada{border-color:var(--rosa);background:var(--rosa-fraco)}
+.qz-elo button.on{border-color:var(--rosa);color:var(--rosa-tinta);background:var(--rosa-fraco)}
+.pausa[aria-pressed="true"]{border-color:var(--rosa);background:var(--rosa-fraco);color:var(--rosa-tinta)}
+.qz-lista li.qz-recente > button{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-fraco)}
+.hub-aba:focus-visible{outline-color:var(--rosa)}

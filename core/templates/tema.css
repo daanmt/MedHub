@@ -1,4 +1,4 @@
-/* MedHub tema v2 -- VICE CITY, escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
+/* MedHub tema v2.1 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
    acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
    O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
    v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
@@ -104,3 +104,23 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
 /* ============================================================ CARDS (player) */
 .card{box-shadow:none}
 .reason{border-radius:6px}
+/* ======================================================== ROSA (o rosa conduz acao e identidade; o ciano fica com informacao) */
+:root:not([data-theme="light"]),:root[data-theme="dark"]{--rosa:#FF5CA8;--rosa-fraco:#3A1238;--rosa-tinta:#FF9CCB}
+:root[data-theme="light"]{--rosa:#B8286B;--rosa-fraco:#F9E3EE;--rosa-tinta:#8A1A50}
+.hub-marca span{color:var(--rosa)}
+.hub-aba[aria-selected="true"]{border-bottom-color:var(--rosa)}
+.qd-bl,.qz-chip,.reason{background:var(--rosa-fraco);color:var(--rosa-tinta)}
+.qd-alvo:hover::after{color:var(--rosa)}
+.qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--rosa-tinta)}
+.primario{background:var(--rosa);border-color:var(--rosa);color:var(--papel)}
+.fracao b{color:var(--rosa-tinta)}
+.fig.alvo{background:var(--rosa-fraco)}
+.fig.alvo .fig-n{color:var(--rosa-tinta)}
+.barra i{background:linear-gradient(90deg,var(--rosa),var(--acento))}
+.ag-barras i{border-top-color:var(--rosa);background:var(--rosa-fraco)}
+.t-rot{color:var(--rosa-tinta)}
+.dnum{color:var(--rosa)}
+.rail a.on{box-shadow:inset 2px 0 0 var(--rosa)}
+.rail a.on .rn{color:var(--rosa-tinta)}
+.top h1{text-shadow:0 0 28px rgba(255,92,168,.25)}
+.aside{background:var(--rosa-fraco)} .aside .albl{color:var(--rosa-tinta)}

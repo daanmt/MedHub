@@ -16,3 +16,4 @@
 - Conferido em navegador real (Edge, banco falso, 390 px em `<iframe>` e 1100 px): Painel, Teoria, Listas, Cards, leitor de aula e de resumo; escuro e claro. Suíte 1692 passando. Hub Version 96 no ar (`--confirmar` feito).
 - `/aula-base` ganhou §2b (aula nova usa os tokens do tema; sem paleta/fonte/caixa-alta próprias).
 - Aberto: tabelas largas a 390 px rolam na própria caixa (empilhar exige `data-label`); botão de tema claro; 1 aula usa nomes de token próprios; telas internas do player (fim de sessão) e fluxos de Listas com cenários (erro/elos) ainda sem captura própria.
+- 18:03 hub-backend: republicado com o mesmo lote 2026-10-10a (quadro mudou: aula Rastreamento assinada, sem comentário), Version 97. `plano.py --concluir 881 --leitura` RECUSADO (tarefa com 20 questões no hub: a conclusão vem pela lista) -- relatado, não forçado. pendências 0 respondidas · 0 absorvidas · 1 assinatura (sem comentário).

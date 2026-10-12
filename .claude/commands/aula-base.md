@@ -63,6 +63,20 @@ compor. O que copiar dele:
 
 ---
 
+## 2b. O tema do hub (s224, pedido dele em 12/10/2026): a aula NÃO traz paleta nem fonte
+
+Decisão dele: *"prefiro tema escuro / modo noite [...] fundo preto e letra branca, com essa paleta de azul compondo"* (`#000042 #171775 #4343A8 #8484DB #CCCCFF`). Quem aplica é o **leitor do hub**: injeta `core/templates/tema.css` + `core/templates/tema-aula.css` depois do CSS da aula (e remove o `<link>` de Google Fonts dela). Uma fonte só (Atkinson Hyperlegible Next), fundo `#000000`, superfícies em azul, texto `#EDEDFF`, um único tom de alerta (amora).
+
+Para a aula nova isso muda a régua da seção 2:
+- **Use os nomes de token do tema**, que as aulas já usam: `--paper --card --sunk --ink --ink2 --ink3 --line --line2 --teal* (acento) --amber*/--plum* (apoio) --carmine* (alerta) --on`. Os valores o tema sobrescreve; não invente cor fora dessa lista.
+- **Sem `@import`/`<link>` de fonte, sem `font-family` próprio**: o tema impõe a família única (`*{font-family:var(--fonte)!important}`).
+- **Sem caixa-alta** (`text-transform`): o tema a desliga; eyebrow é texto comum.
+- **Estrutura**: linhas com filete e blocos de realce, não cartões empilhados com borda e sombra; um raio só (12 px); o numeral do degrau grande e leve é a única decoração.
+- Dark/light continuam espelhados (`@media` **e** `[data-theme]`); o padrão agora é o **escuro**.
+- Fonte única do CSS: `core/templates/tema.css` (shell, painel, listas, cards) e `tema-aula.css` (só aulas/resumos). Mudou o visual do MedHub = edite lá, não em cada aula. Teste visual: hub montado em pasta de rascunho + banco falso + Edge headless a 390 px dentro de `<iframe width=390>` (a janela do Edge tem largura mínima ~500 px; receita na memória `project_conferir_tela_no_navegador`).
+
+---
+
 ## 3. Motor reusável: candidato, não obrigação
 
 A ambição declarada na s149 era convergir para um **motor reusável** (um template HTML puro +

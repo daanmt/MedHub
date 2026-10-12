@@ -710,6 +710,17 @@ SCRIPT_ATUALIZADO = """
 """
 
 
+#: O tema escuro unico (s224): o MESMO `core/templates/tema.css` que o hub injeta no shell e no leitor.
+_TEMA_FONTE = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
+               '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+               '<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:'
+               'wght@300;400;500;600;650;700&display=swap" rel="stylesheet">\n')
+
+
+def _tema_css():
+    return (ROOT / "core" / "templates" / "tema.css").read_text(encoding="utf-8")
+
+
 def render_html(d):
     """Pagina autocontida. UM `.wrap`, tokens em `:root` (os MESMOS do hub), dark por
     `prefers-color-scheme` GUARDADO + `[data-theme]`, `body` com background explicito, 360px sem
@@ -725,11 +736,12 @@ def render_html(d):
     ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
-            "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n"
+            "<title>%s</title>\n%s<style>%s</style>\n<style id=\"medhub-tema\">%s</style>\n"
+            "</head>\n<body>\n<div class=\"wrap\">\n"
             "<p class=\"atualizado\">%s<span data-gerado=\"%s\" data-gerado-iso=\"%s\" data-fallback=\"%s\">%s</span>%s</p>\n"
             "%s\n</div>\n%s</body>\n</html>\n"
-            % (_e(TITULO), CSS, MARCA_GERADO_ABRE, _e(gerado), _e(gerado), _e(fallback), _e(fallback),
-               MARCA_GERADO_FECHA, corpo, SCRIPT_ATUALIZADO))
+            % (_e(TITULO), _TEMA_FONTE, CSS, _tema_css(), MARCA_GERADO_ABRE, _e(gerado), _e(gerado),
+               _e(fallback), _e(fallback), MARCA_GERADO_FECHA, corpo, SCRIPT_ATUALIZADO))
 
 
 # -------------------------------------------------------------------- CLI

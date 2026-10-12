@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Painel MedHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300;400;500;600;650;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
@@ -112,10 +113,114 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
   table{font-size:.84em}
 }
 </style>
+<style id="medhub-tema">/* MedHub tema indigo v1 -- ESCURO POR PADRÃO (decisão dele, 12/10/2026: preto + branco azulado + azuis da paleta);
+   o claro só com data-theme="light". Seletores de especificidade (0,2,0) para vencer o CSS de cada aula. */
+:root{--fonte:"Atkinson Hyperlegible Next",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif}
+:root:not([data-theme="light"]),:root[data-theme="dark"]{
+  --papel:#000000; --card:#06064D; --afundado:#10106A;
+  --tinta:#EDEDFF; --tinta2:#CCCCFF; --tinta3:#9A9AE6;
+  --linha:rgba(204,204,255,.16);
+  --acento:#8484DB; --acento-fraco:#171775; --acento-tinta:#CCCCFF; --suave:#8484DB;
+  --alerta:#FF9DB3; --alerta-fraco:#3A1030;
+  --paper:var(--papel); --sunk:var(--afundado); --ink:var(--tinta); --ink2:var(--tinta2); --ink3:var(--tinta3);
+  --line:var(--linha); --line2:rgba(204,204,255,.30);
+  --teal:#8484DB; --teal-ink:#CCCCFF; --teal-wash:#171775;
+  --amber:#8484DB; --amber-ink:#CCCCFF; --amber-wash:#10106A;
+  --plum:#8484DB; --plum-ink:#CCCCFF; --plum-wash:#10106A;
+  --carmine:#FF9DB3; --carmine-ink:#FFC2CF; --carmine-wash:#3A1030;
+  --on:#000000; --raio:12px; --sombra:none; color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --papel:#F7F7FF; --card:#FFFFFF; --afundado:#ECECFB;
+  --tinta:#000042; --tinta2:#2E2E8A; --tinta3:#5959B8;
+  --linha:rgba(0,0,66,.13);
+  --acento:#4343A8; --acento-fraco:#E6E6FF; --acento-tinta:#171775; --suave:#8484DB;
+  --alerta:#9B2C4A; --alerta-fraco:#F8E5EA;
+  --paper:var(--papel); --sunk:var(--afundado); --ink:var(--tinta); --ink2:var(--tinta2); --ink3:var(--tinta3);
+  --line:var(--linha); --line2:rgba(0,0,66,.22);
+  --teal:#4343A8; --teal-ink:#171775; --teal-wash:#E6E6FF;
+  --amber:#6B6BC9; --amber-ink:#2E2E8A; --amber-wash:#EFEFFF;
+  --plum:#6B6BC9; --plum-ink:#2E2E8A; --plum-wash:#EFEFFF;
+  --carmine:#9B2C4A; --carmine-ink:#7A2039; --carmine-wash:#F8E5EA;
+  --on:#FFFFFF; color-scheme:light;
+}
+
+/* uma família só; !important porque as aulas declaram a fonte em atalhos `font:` espalhados */
+*{font-family:var(--fonte)!important;font-variant-numeric:tabular-nums}
+body{background:var(--papel);color:var(--tinta);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+strong{font-weight:650}
+
+/* ============================================================= HUB */
+.hub-marca{font-weight:700;letter-spacing:-.01em;font-size:1.1rem}
+.hub-abas{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:0;gap:0;margin-bottom:26px}
+.hub-aba{border-radius:0;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--tinta3);font-weight:600;letter-spacing:0}
+.hub-aba:hover{background:transparent;color:var(--tinta)}
+.hub-aba[aria-selected="true"]{background:transparent;box-shadow:none;color:var(--tinta);border-bottom-color:var(--acento)}
+.hub-titulo{font-weight:700;letter-spacing:-.02em}
+.hub-sub{color:var(--tinta3)}
+
+/* Teoria: de cartões para linhas */
+.qd-semanas{gap:34px}
+.qd-titulo{font-size:1.02rem;font-weight:700;color:var(--tinta);margin-bottom:2px}
+.qd-n{color:var(--tinta3);font-weight:500}
+.qd-lista{gap:0}
+.qd-bloco{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:14px 2px}
+.qd-item.qd-atrasada .qd-bloco{border-left:0}
+.qd-tema{font-weight:600;font-size:1.02em}
+.qd-meta{margin-top:5px;gap:4px 12px;align-items:center}
+.qd-bl{background:var(--acento-fraco);color:var(--acento-tinta);border-radius:6px;padding:1px 8px;font-size:.92em}
+.qd-atraso{color:var(--tinta3);font-weight:500}   /* o alerta aparece UMA vez, no titulo da secao */
+.qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--alerta)}
+.qd-alvo{padding-right:30px}
+.qd-alvo:hover{background:var(--afundado)}
+.qd-sem-aula .qd-bloco{border-style:solid}
+.qd-resumos{border:0;border-radius:0;background:transparent;margin-top:6px}
+.qd-resumos>summary{padding:8px 2px;color:var(--tinta3)}
+.qd-rlista{padding:0 2px 8px}
+.qd-rlista a,.qd-aulas a,.qd-acao a{font-weight:500;color:var(--acento-tinta)}
+.qd-bib{border-top:0;margin-top:40px}
+.qd-bib-tit{font-size:1.02rem;font-weight:700}
+details.qd-area>summary{font-weight:600;color:var(--tinta)}
+.qd-novas{border-radius:6px}
+.qd-disc-tit{font-weight:600}
+
+/* ======================================================== GLOBAL (todas as telas) */
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* sem caixa-alta: os eyebrows em maiusculas (aulas, player) viram texto comum */
+*{text-transform:none!important}
+.reason,.rot{letter-spacing:0}
+
+/* ============================================================ PAINEL (artifacts/painel.html) */
+.dia h2{font-weight:700;letter-spacing:-.02em}
+.dose{background:transparent;border:0;border-radius:0;padding:4px 0}
+.dose+.dose{border-top:1px solid var(--linha);padding-top:16px}
+.doses{gap:0 12px}
+.barra{background:var(--afundado)}
+.fig{background:transparent;border-top:1px solid var(--linha);border-radius:0;padding:10px 0}
+.fig.alvo{background:var(--acento-fraco);border-top:0;border-radius:12px;padding:10px 12px}
+.fig.abaixo .fig-n{color:var(--alerta)}
+.tarefa{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:12px 0}
+.tarefa.atrasada{border-left:0}
+.t-atraso{color:var(--tinta3)}
+.t-rot{color:var(--acento-tinta)}
+tr.sim th,tr.sim td{color:var(--tinta2)}
+
+/* ============================================================ LISTAS (aba Listas / Questoes) */
+.qz-lista{gap:0}
+.qz-lista button{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:14px 2px}
+.qz-lista button:hover{background:var(--afundado)}
+.qz-chip{background:var(--acento-fraco);color:var(--acento-tinta);border-radius:6px;font-weight:600}
+.qz-modo-lista{background:var(--afundado)}
+
+/* ============================================================ CARDS (player) */
+.card{box-shadow:none}
+.reason{border-radius:6px}
+</style>
 </head>
 <body>
 <div class="wrap">
-<p class="atualizado"><!--gerado--><span data-gerado="2026-10-12T17:04:49" data-gerado-iso="2026-10-12T17:04:49" data-fallback="atualizado em 12/10, 17:04">atualizado em 12/10, 17:04</span><!--/gerado--></p>
+<p class="atualizado"><!--gerado--><span data-gerado="2026-10-12T17:58:05" data-gerado-iso="2026-10-12T17:58:05" data-fallback="atualizado em 12/10, 17:58">atualizado em 12/10, 17:58</span><!--/gerado--></p>
 <section class="bloco dia" data-bloco="dia">
 <h2>Hoje, segunda 12/10</h2>
 <div class="doses" data-sessao-gravada="2026-10-08b">

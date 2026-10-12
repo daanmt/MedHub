@@ -99,6 +99,10 @@ from tools.plano import (  # noqa: E402
     q_da_tarefa, questoes_no_hub, tema_exibido)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
+#: O tema escuro unico (s224): fonte unica do CSS que o shell, o leitor (aulas/resumos) e o painel recebem.
+TEMA_CSS = RAIZ / "core" / "templates" / "tema.css"
+#: A camada so das AULAS e RESUMOS (leitor): .wrap/.body/h1-h4 nao podem vazar para o shell nem para o painel.
+TEMA_AULA_CSS = RAIZ / "core" / "templates" / "tema-aula.css"
 #: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?, tarefas?, bloco?}.
 QUADRO_REG = "core/hub_quadro.json"
 #: Tipos de aula do registro (validacao + etiqueta no bloco). Rotulos curtos (celular).
@@ -188,6 +192,8 @@ REGIOES_PLAYER = (
 #: Lugares do template do hub, cada um exatamente 1x.
 LUGARES_HUB = (
     ("player-css", "/* @hub:player-css */"),
+    ("tema-css", "/* @hub:tema-css */"),
+    ("tema-js", '"@hub:tema-js"'),
     ("player-corpo", "<!-- @hub:player-corpo -->"),
     ("player-js", "<!-- @hub:player-js -->"),
     ("aulas", "<!-- @hub:aulas -->"),
@@ -1087,6 +1093,16 @@ def _hoje_de(agora):
     return agora or date.today()
 
 
+def _ler_tema():
+    """O CSS do tema escuro (core/templates/tema.css), a mesma fonte do shell, do leitor e do painel."""
+    return TEMA_CSS.read_text(encoding="utf-8")
+
+
+def _ler_tema_aula():
+    """A camada de aula/resumo do tema: so o leitor a recebe (depois do `tema.css`)."""
+    return TEMA_AULA_CSS.read_text(encoding="utf-8")
+
+
 def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, quadro=None,
                  estado=None, plano_linhas=None, calendario=None, resumos=()):
     """A pagina: casca do hub + as 3 regioes do player + aulas/painel + o lote.
@@ -1100,6 +1116,8 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
         _exatamente_uma(template_hub, marca, "hub.html")
     trocas = {
         "player-css": regioes["css"],
+        "tema-css": _ler_tema(),
+        "tema-js": json.dumps(_ler_tema() + "\n" + _ler_tema_aula()),
         "player-corpo": regioes["corpo"],
         "player-js": regioes["js"],
         "aulas": html_quadro_de(aulas_sel, quadro, estado, plano_linhas, calendario,

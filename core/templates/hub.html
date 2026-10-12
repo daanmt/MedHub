@@ -1,4 +1,5 @@
 <title>MedHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300;400;500;600;650;700&display=swap" rel="stylesheet">
 <!--
   Template do MedHub HUB (v0) -- spec .vibeflow/specs/medhub-hub-v0-part-1.md.
   Montado por `python tools/hub.py --build`; publicado SEMPRE no mesmo artifact
@@ -329,6 +330,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .hub-assina-retorno{margin:0;padding:8px 12px;border-left:3px solid var(--acento);background:var(--acento-fraco);border-radius:6px;font-size:.9em;color:var(--tinta)}
 .hub-assina[data-st="erro"] .qz-status,.hub-assina[data-st="leitura"] .qz-status{color:var(--alerta);cursor:pointer}
 .hub-assina[data-st="assinado"] .qz-status,.hub-assina[data-st="absorvida"] .qz-status{color:var(--qz-ok)}
+
+/* @hub:tema-css */
 </style>
 
 <div class="wrap">
@@ -501,7 +504,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // ---------------------------------------------- quadro (aula ou painel)
   // A aula-base e publicada sem DOCTYPE (o esqueleto do Artifact embrulha); no
   // srcdoc ela ganha um esqueleto equivalente, senao cairia em quirks mode.
+  // Tema escuro unico (core/templates/tema.css, injetado por hub.py): entra DEPOIS do CSS de cada aula/resumo/
+  // painel, que trazem o proprio. As fontes antigas das aulas (3 familias) saem: o tema usa uma so.
+  var TEMA_CSS = "@hub:tema-js";
+  var TEMA_FONTE = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300;400;500;600;650;700&display=swap" rel="stylesheet">';
+  function comTema(html){
+    if(html.indexOf('id="medhub-tema"') >= 0){ return html; }
+    html = html.replace(/<link[^>]*fonts\.googleapis\.com[^>]*>/gi, "");
+    var tema = TEMA_FONTE + '<style id="medhub-tema">' + TEMA_CSS + '</style>';
+    return /<\/body>/i.test(html) ? html.replace(/<\/body>/i, function(){ return tema + "</body>"; }) : html + tema;
+  }
   function documentoCompleto(html){
+    html = comTema(html);
     if(/^\s*<!doctype/i.test(html)){ return html; }
     return "<!DOCTYPE html>\n<html lang=\"pt-BR\"><head><meta charset=\"utf-8\">" +
       "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  Harness de UI do MedHub HUB (s225). Montado por `python tools/ui_capturas.py`, que cola este
+  cabecalho + <body> + o index.html do build do hub numa pagina de teste em tmp/ (gitignorado).
+  Fica fora do publish por construcao: carrega o SEED (docs do db do hub baixados para tmp/, com
+  conteudo do EMED). Porte enxuto do kit da s213 (tmp/alca_s213/site/test.html).
+
+  1. db falso: window.claude.use("db") devolve um db EM MEMORIA semeado pelo SEED (chave = caminho
+     do doc), com o subconjunto que core/templates/hub.html e player.html usam: doc, collection,
+     where(==), orderBy/limit (sem efeito), get, onSnapshot, set, update. 1o snapshot em 40 ms;
+     escrita notifica as assinaturas e morre com a aba.
+  2. cena (?cena=NOME&lista=ID&num=N&modo=questoes|simulados): ANTES do hub rodar, prepara o
+     aparelho (localStorage da aba e do modo) e poda o db falso; depois do DOMContentLoaded toca a
+     tela como o operador tocaria (cliques), esperando cada passo. Sem ?cena= nada roda alem do db.
+  3. medida: rolagem horizontal do documento (scrollWidth > clientWidth) e de cada iframe visivel
+     (painel, leitor), os 5 elementos que passam da borda direita pela caixa ou pelo texto (fora de
+     conteiner com overflow proprio) com seletor curto, e os erros de JS da pagina. Sai em JSON no
+     <pre id="ui-resultado"> da moldura (frame.html), que o Edge devolve pelo --dump-dom.
+-->
+<script>
+(function(){
+  "use strict";
+  var P = new URLSearchParams(location.search);
+  var CENA = P.get("cena") || "", LISTA = P.get("lista") || "", NUM = P.get("num") || "", MODO = P.get("modo") || "";
+  var SEED = /*@ui:seed*/null;
+
+  var erros = [];
+  function erro(txt){ if(erros.length < 8){ erros.push(String(txt).slice(0, 300)); } }
+  window.addEventListener("error", function(e){ erro((e.message || "erro") + (e.filename ? " (" + String(e.filename).split("/").pop() + ":" + e.lineno + ")" : "")); });
+  window.addEventListener("unhandledrejection", function(e){ var r = e.reason; erro("promessa rejeitada: " + ((r && (r.message || r.code)) || r)); });
+
+  // ------------------------------------------------------------------ db falso
+  var store = JSON.parse(JSON.stringify(SEED || {}));
+  var subs = [], escritas = 0;
+  function clone(x){ return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
+  function notificar(){ subs.slice().forEach(function(s){ s(); }); }
+  function direto(col){ return function(p){ return p.indexOf(col + "/") === 0 && p.slice(col.length + 1).indexOf("/") < 0; }; }
+  function snapDoc(path){ var d = store[path];
+    return {id: path.split("/").pop(), ref: {path: path}, exists: !!d, metadata: {fromCache: false, hasPendingWrites: false},
+            data: function(){ return d ? Object.freeze(clone(d)) : undefined; }}; }
+  function assinar(entrega, fn){
+    var s = function(){ fn(entrega()); }; subs.push(s); setTimeout(s, 40);
+    return function(){ subs = subs.filter(function(x){ return x !== s; }); };
+  }
+  function docRef(path){
+    return {id: path.split("/").pop(), path: path,
+      get: function(){ return Promise.resolve(snapDoc(path)); },
+      set: function(d, o){ store[path] = (o && o.merge && store[path]) ? Object.assign(clone(store[path]), clone(d)) : clone(d);
+        escritas++; notificar(); return Promise.resolve(); },
+      update: function(d){ if(!store[path]){ return Promise.reject({code: "not_found", message: "doc inexistente (db falso)"}); }
+        store[path] = Object.assign(clone(store[path]), clone(d)); escritas++; notificar(); return Promise.resolve(); },
+      onSnapshot: function(fn){ return assinar(function(){ return snapDoc(path); }, fn); },
+      collection: function(c){ return consulta(path + "/" + c, []); }};
+  }
+  function consulta(col, filtros){
+    function rodar(){
+      var docs = Object.keys(store).filter(direto(col)).sort().map(snapDoc).filter(function(s){
+        var d = s.data(); return filtros.every(function(f){ return !!d && d[f[0]] === f[1]; }); });
+      return {docs: docs, size: docs.length, empty: !docs.length, metadata: {fromCache: false, hasPendingWrites: false},
+              docChanges: function(){ return []; }, forEach: function(fn){ docs.forEach(fn); }};
+    }
+    return {path: col,
+      where: function(campo, op, valor){ if(op !== "=="){ erro("db falso: where('" + campo + "', '" + op + "') sem suporte -- filtro ignorado"); return consulta(col, filtros); }
+        return consulta(col, filtros.concat([[campo, valor]])); },
+      orderBy: function(){ return consulta(col, filtros); }, limit: function(){ return consulta(col, filtros); },
+      get: function(){ return Promise.resolve(rodar()); },
+      onSnapshot: function(fn){ return assinar(rodar, fn); },
+      doc: function(id){ return docRef(col + "/" + id); }};
+  }
+  var db = {doc: docRef, collection: function(p){ return consulta(p, []); }};
+  window.claude = {use: function(nome){ return Promise.resolve(nome === "db" ? db : null); }};
+
+  if(!CENA){ return; }
+
+  // ------------------------------------------------- preparo (antes do hub rodar)
+  try{ localStorage.clear(); }catch(e){}
+  function lsGravar(k, texto){ try{ localStorage.setItem(k, texto); }catch(e){} }
+  function daLista(col){ return Object.keys(store).filter(direto(col)).filter(function(p){ return store[p] && store[p].lista === LISTA; }); }
+  // O aparelho onde ele respondeu ja tem o espelho local `medhub.respostas.<lista>`. Sem ele, o 1o snapshot
+  // de `questoes` chega antes do de `respostas` e o hub posiciona a lista como se nada estivesse respondido.
+  function espelharRespostas(){
+    var m = {}; daLista("respostas").forEach(function(p){ var r = store[p]; if(r.num){ m[r.num] = r; } });
+    lsGravar("medhub.respostas." + LISTA, JSON.stringify(m));
+  }
+  function prepQuestao(){
+    // a questao-alvo fica sem resposta; lista sem resposta e sem modo vira Prova (senao o hub pergunta Estudo/Prova)
+    daLista("respostas").forEach(function(p){ if(String(store[p].num) === NUM){ delete store[p]; } });
+    var l = store["listas/" + LISTA];
+    if(l && !daLista("respostas").length && l.modo !== "estudo" && l.modo !== "prova"){ l.modo = "prova"; }
+    espelharRespostas();
+  }
+  function prepRespondida(){
+    // fim e "rever" exigem a lista inteira respondida: so as questoes com resposta ficam no db falso
+    var feitas = {}; daLista("respostas").forEach(function(p){ feitas[String(store[p].num)] = 1; });
+    daLista("questoes").forEach(function(p){ if(!feitas[String(store[p].num)]){ delete store[p]; } });
+    espelharRespostas();
+  }
+  function semNotas(){ Object.keys(store).forEach(function(p){ if(p.indexOf("sessoes/") === 0){ delete store[p]; } }); }
+
+  // ------------------------------------------------------------------ roteiro
+  function $(id){ return document.getElementById(id); }
+  function visivel(el){ return !!el && el.getClientRects().length > 0 && !el.closest("[hidden]"); }
+  function pausa(ms){ return new Promise(function(ok){ setTimeout(ok, ms); }); }
+  function esperar(cond, ms, desc){
+    return new Promise(function(ok, nao){
+      var t0 = Date.now();
+      (function volta(){
+        var v = null; try{ v = cond(); }catch(e){ nao(e); return; }
+        if(v){ ok(v); return; }
+        if(Date.now() - t0 > ms){ nao(new Error(desc)); return; }
+        setTimeout(volta, 80);
+      })();
+    });
+  }
+  function cssEsc(s){ return (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/["\\]/g, "\\$&"); }
+  function esperarQuadro(id, avisoId, rot){
+    return esperar(function(){
+      if(visivel($(avisoId))){ throw new Error(rot + ": o hub mostrou o aviso de falha"); }
+      var q = $(id), d = null; if(!visivel(q)){ return false; }
+      try{ d = q.contentDocument; }catch(e){ d = null; }
+      return !!(d && d.body && d.body.childElementCount > 0 && d.readyState === "complete");
+    }, 10000, rot + " não carregou");
+  }
+  function abrirDoc(sel, rot){
+    return esperar(function(){ return document.querySelector("#aba-aulas " + sel); }, 8000, "nenhum link de " + rot + " na Teoria")
+      .then(function(a){ var href = a.getAttribute("href"); a.click();
+        return esperarQuadro("hub-leitor-quadro", "hub-leitor-aviso", rot + " " + href).then(function(){ return pausa(3500); })
+          .then(function(){ return href; }); });
+  }
+  function listasProntas(){
+    return esperar(function(){ var c = $("qz-listas"); return visivel(c) && c.textContent.indexOf("Carregando") < 0; }, 8000, "as listas não carregaram")
+      .then(function(){ return pausa(400); }).then(function(){ return "modo " + CENAS[CENA].modo; });
+  }
+  function abrirLista(){
+    return esperar(function(){ return document.querySelector('#qz-listas button[data-qzl="' + cssEsc(LISTA) + '"]'); }, 8000,
+      "o botão da lista " + LISTA + " não apareceu na aba Listas").then(function(b){ b.click(); });
+  }
+  function fimDaLista(){
+    return abrirLista().then(function(){ return esperar(function(){ return visivel($("qz-fim")); }, 8000, "a tela de fim da lista " + LISTA + " não apareceu"); });
+  }
+  function frenteDoCard(){
+    return esperar(function(){ var p = $("pergunta"); return visivel($("card")) && !!p.textContent && p.textContent.indexOf("Carregando") < 0; }, 8000, "o card não apareceu")
+      .then(function(){ return pausa(600); });
+  }
+
+  var CENAS = {
+    painel: {aba: "painel", roteiro: function(){
+      return esperarQuadro("hub-painel-quadro", "hub-painel-aviso", "o painel").then(function(){ return pausa(3500); }).then(function(){ return "painel.html"; }); }},
+    teoria: {aba: "aulas", roteiro: function(){
+      return esperar(function(){ return visivel($("hub-aulas-lista")); }, 8000, "a Teoria não apareceu").then(function(){ return pausa(1200); }).then(function(){ return "Teoria"; }); }},
+    listas: {aba: "questoes", modo: "questoes", roteiro: listasProntas},
+    simulados: {aba: "questoes", modo: "simulados", roteiro: listasProntas},
+    questao: {aba: "questoes", preparo: prepQuestao, roteiro: function(){
+      return abrirLista().then(function(){ return esperar(function(){ return visivel($("qz-questao")) && visivel($("qz-antes")) && !!$("qz-enun").textContent; }, 8000, "a questão não abriu (lista " + LISTA + ")"); })
+        .then(function(){ return pausa(400); }).then(function(){ return "lista " + LISTA + " · " + $("qz-pos").textContent; }); }},
+    revelada: {aba: "questoes", preparo: prepRespondida, roteiro: function(){
+      return fimDaLista().then(function(){
+        var alvo = Array.prototype.filter.call($("qz-revisao").querySelectorAll("button[data-rev]"), function(b){ var t = b.querySelector("b"); return !!t && t.textContent.trim() === "Q" + NUM; })[0];
+        if(!alvo){ throw new Error("a Q" + NUM + " não está no fim da lista " + LISTA); }
+        alvo.click();
+        return esperar(function(){ return visivel($("qz-depois")); }, 8000, "a Q" + NUM + " não revelou"); })
+        .then(function(){ return pausa(500); })
+        .then(function(){ return "lista " + LISTA + " · " + $("qz-pos").textContent + (visivel($("qz-medhub-box")) ? " · com cadeia" : " · sem cadeia"); }); }},
+    fim: {aba: "questoes", preparo: prepRespondida, roteiro: function(){
+      return fimDaLista().then(function(){ return pausa(500); }).then(function(){ return "lista " + LISTA; }); }},
+    cards: {aba: "cards", preparo: semNotas, roteiro: function(){
+      return frenteDoCard().then(function(){ return "frente do 1º card de " + $("total").textContent; }); }},
+    verso: {aba: "cards", preparo: semNotas, roteiro: function(){
+      return frenteDoCard().then(function(){ var b = $("btn-virar"); if(!visivel(b)){ throw new Error("sem o botão de virar (lote vazio?)"); } b.click();
+        return esperar(function(){ return visivel($("verso")); }, 4000, "o card não virou"); })
+        .then(function(){ return pausa(300); }).then(function(){ return "verso do 1º card"; }); }},
+    aula: {aba: "aulas", roteiro: function(){ return abrirDoc('a.hub-aula[href^="aulas/"]', "aula"); }},
+    resumo: {aba: "aulas", roteiro: function(){ return abrirDoc('a.hub-aula[href^="resumos/"]', "resumo"); }}
+  };
+  var C = CENAS[CENA];
+  if(C){
+    lsGravar("medhub.aba", C.aba);                                   // o hub le cru
+    if(C.modo || MODO){ lsGravar("medhub.listas.modo", JSON.stringify(C.modo || MODO)); }   // o hub le JSON
+    if(C.preparo){ C.preparo(); }
+  }
+
+  // -------------------------------------------------------------------- medida
+  function seletor(el){
+    function parte(e){
+      var s = e.tagName.toLowerCase(); if(e.id){ return s + "#" + e.id; }
+      var c = String(e.getAttribute("class") || "").trim().split(/\s+/).filter(Boolean).slice(0, 2);
+      return s + (c.length ? "." + c.join(".") : "");
+    }
+    if(el.id){ return parte(el); }
+    for(var a = el.parentElement; a && a !== el.ownerDocument.body; a = a.parentElement){ if(a.id){ return "#" + a.id + " " + parte(el); } }
+    return parte(el);
+  }
+  function recortado(el, doc, proprio){
+    // fixo, ou dentro de conteiner com overflow proprio (rolagem local, recorte): nao empurra a pagina.
+    // `proprio`: o overflow do proprio `el` conta (o texto dele e recortado por ele mesmo).
+    for(var a = el; a && a !== doc.body && a !== doc.documentElement; a = a.parentElement){
+      var cs = doc.defaultView.getComputedStyle(a);
+      if(cs.position === "fixed"){ return true; }
+      if((a !== el || proprio) && cs.overflowX !== "visible"){ return true; }
+    }
+    return false;
+  }
+  function passamDaBorda(doc){
+    // caixa que passa da borda direita + texto que passa (nowrap, palavra longa): o texto transborda a
+    // caixa do pai sem alargar caixa nenhuma, por isso o pai entra pela medida do proprio texto (Range)
+    var vw = doc.documentElement.clientWidth, sx = doc.defaultView.pageXOffset || 0, achados = new Map();
+    function anotar(el, larg, dir){ var a = achados.get(el); if(!a || dir > a.direita){ achados.set(el, {sel: seletor(el), largura: Math.round(larg), direita: Math.round(dir)}); } }
+    Array.prototype.forEach.call(doc.body.getElementsByTagName("*"), function(el){
+      var r = el.getBoundingClientRect(); if(!r.width && !r.height){ return; }
+      if(r.right + sx > vw + 1 && !recortado(el, doc, false)){ anotar(el, r.width, r.right + sx); }
+    });
+    var w = doc.createTreeWalker(doc.body, 4 /* NodeFilter.SHOW_TEXT */), rg = doc.createRange(), t, r;
+    while((t = w.nextNode())){
+      if(!t.parentElement || !/\S/.test(t.nodeValue || "")){ continue; }
+      rg.selectNodeContents(t); r = rg.getBoundingClientRect();
+      if(r.width && r.right + sx > vw + 1 && !recortado(t.parentElement, doc, true)){ anotar(t.parentElement, r.width, r.right + sx); }
+    }
+    var out = Array.from(achados.values());
+    out.sort(function(a, b){ return b.direita - a.direita || b.largura - a.largura; });
+    return out.slice(0, 5);
+  }
+  function medirDoc(doc){
+    var e = doc.documentElement, m = {sw: e.scrollWidth, cw: e.clientWidth};
+    m.rola = m.sw > m.cw; m.elementos = m.rola && doc.body ? passamDaBorda(doc) : [];
+    return m;
+  }
+  function medir(){
+    var m = medirDoc(document); m.quadros = [];
+    Array.prototype.forEach.call(document.querySelectorAll("iframe"), function(f){
+      var d = null; if(!visivel(f)){ return; }
+      try{ d = f.contentDocument; }catch(e){ d = null; }
+      if(!d || !d.documentElement || !d.body){ return; }
+      var q = medirDoc(d); q.id = f.id || "iframe"; m.quadros.push(q);
+    });
+    return m;
+  }
+  function relatar(r){
+    var res = {cena: CENA, ok: !!r.ok, info: r.info || "", erro: r.erro || ""};
+    try{ var m = medir(); Object.keys(m).forEach(function(k){ res[k] = m[k]; }); }catch(e){ res.erro_medida = String((e && e.message) || e); }
+    res.erros_js = erros.slice(); res.escritas_db = escritas;
+    // ASCII puro: o --dump-dom sai no console do Windows e o Python le sem depender de code page
+    var txt = JSON.stringify(res).replace(/[\u007f-\uffff]/g, function(c){ return "\\u" + ("000" + c.charCodeAt(0).toString(16)).slice(-4); });
+    var alvo = null;
+    try{ alvo = window.parent !== window ? window.parent.document.getElementById("ui-resultado") : null; }catch(e){ alvo = null; }
+    if(!alvo){ alvo = $("ui-resultado"); }
+    if(!alvo){ alvo = document.createElement("pre"); alvo.id = "ui-resultado"; alvo.hidden = true; document.body.appendChild(alvo); }
+    alvo.textContent = txt;
+  }
+  function rodar(){
+    if(!C){ relatar({ok: false, erro: "cena desconhecida: " + CENA}); return; }
+    pausa(300).then(C.roteiro).then(function(info){ relatar({ok: true, info: info}); },
+      function(e){ relatar({ok: false, erro: String((e && e.message) || e)}); });
+  }
+  if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", rodar); } else { rodar(); }
+})();
+</script></head>

@@ -733,6 +733,25 @@ Ler a versão viva, listar os arquivos, publicar e ler as notas do `db` são ato
 `/revisar` ("DRENAR no player") e `.agents/workflows/registrar-sessao.md §6`.
 Specs `.vibeflow/specs/medhub-hub-v0-part-1.md` e `medhub-hub-v1-manifesto-diff.md`; testes `tools/test_hub.py` e `tools/test_hub_quadro.py`.
 
+### `tools/ui_capturas.py` -- capturas da UI do hub em navegador real (**só `tmp/`: não publica, não escreve banco**)
+
+A conferência de "tela nova do hub só publica conferida em navegador real (hub em scratch + db falso + Edge a 390 px)" em 1 comando: `python tools/ui_capturas.py` (todas as cenas a 390, 768 e 1280) ou `python tools/ui_capturas.py --cenas revelada,fim --larguras 390`.
+
+| Flag | Função |
+|---|---|
+| `--hub DIR` | Build do hub com `index.html` (default `tmp/hub`; um build seu sai de `hub.py --build --out DIR`). Sem `index.html` = exit 1. |
+| `--out DIR` | Pasta da saída, dentro de `tmp/` (default `tmp/ui_capturas/AAAAMMDD-HHMM`): os PNGs `<cena>-<largura>.png`, o `resultado.json` e o `site/` servido. Fora de `tmp/` = exit 1, nada escrito. |
+| `--larguras L1,L2` | Larguras em px (default `390,768,1280`; 200 a 4000). |
+| `--cenas C1,C2` | `painel`, `teoria`, `listas` (modo Questões), `simulados`, `questao` (1ª lista com questões, uma questão sem resposta), `revelada` (respondida e revelada, com a cadeia), `fim` (tela de fim da lista), `cards` (frente do 1º card), `verso`, `aula` e `resumo` (leitor com o 1º de cada). Default: todas. |
+| `--seed DIR` | Pasta de docs JSON do db do hub (caminho relativo = id do doc), repetível, dentro de `tmp/`; a posterior vence no mesmo id. **Troca a lista padrão inteira**: `tmp/hub_db`, `tmp/bancada` e o `tmp/player_*_db` de nome maior (os que existirem). Ex.: `--seed tmp/hub_db --seed tmp/bancada --seed tmp/hub_sim_t1794_v3 --seed tmp/bancada_t1794`. |
+| `--porta N` | Porta do `http.server` em 127.0.0.1 (default 0 = livre, escolhida pelo SO). 8766/8767 são reservadas (exit 1). |
+
+O harness versionado é `core/templates/ui_harness.html`: o db falso em memória (o subconjunto de `claude.use("db")` que `hub.html` e `player.html` usam), o roteiro de cada cena (prepara o aparelho e poda o db falso ANTES do hub rodar; depois clica como o operador) e a medida. Uma corrida do Edge headless por cena x largura grava o PNG (`--screenshot`) e devolve a medida pelo `--dump-dom` de uma moldura com iframe da largura pedida (o layout do Edge headless não desce de ~500 px).  <!-- CHECK: test_toda_cena_do_tool_tem_roteiro_no_harness -->
+Saída: tabela cena x largura -> PNG e `ok` ou `ROLA +Npx: seletor largura; ...` (rolagem horizontal do documento do hub e de cada iframe visível, com os 5 elementos ou textos que passam da borda direita fora de contêiner com overflow próprio), mais os erros de JS da página. Cena que o seed não monta sai como `NAO MONTADA: motivo` e as outras seguem.  <!-- CHECK: test_roteiro_sem_dados_diz_o_motivo -->
+Exit 0 com rolagem ou cena não montada (é sensor); exit 1 só para uso ou ambiente: Edge ausente, `--hub` sem `index.html`, `--seed` ou `--out` fora de `tmp/`, porta reservada ou ocupada, nenhum PNG gravado.  <!-- CHECK: test_erro_de_uso_sai_1 -->
+🔒 O seed carrega conteúdo do EMED: o tool lê o seed só de `tmp/` e escreve só em `tmp/` (gitignorado); não publica, não fala com a API de Artifact e não toca o db do hub.  <!-- CHECK: test_out_fora_de_tmp_recusa_sem_escrever -->
+Limites declarados na docstring do módulo: a foto é a janela (1800 px a partir do topo), não a página inteira; o estado da cena sai de poda no db falso (é a tela, não o dado); Google Fonts vem da rede. Testes das partes puras em `tools/test_ui_capturas.py`.
+
 ### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
 
 | Flag | Função |

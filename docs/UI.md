@@ -156,8 +156,9 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 
 Regra da casa: tela nova do hub só publica conferida em navegador real, a 390 px. Caminho:
 1. `python tools/painel.py --html` e `python tools/hub.py --build --lote <lote vivo> --publicado <listagem> --quadro-estado tmp/hub_db`.
-2. Capturas com banco falso no Edge headless, a 390, 768 e 1280 px: `python tools/ui_capturas.py` (entra na s225;
-   assinatura em `/engenharia-cli`). O seed vem dos dumps locais do db do hub em `tmp/` (conteúdo do EMED: nunca no git).
+2. Capturas com banco falso no Edge headless, a 390, 768 e 1280 px: `python tools/ui_capturas.py` (11 cenas: painel,
+   teoria, listas, simulados, questao, revelada, fim, cards, verso, aula, resumo; mede rolagem horizontal e erro de JS;
+   assinatura e limites em `/engenharia-cli`). Saída em `tmp/ui_capturas/<data>/`. O seed vem dos dumps locais do db do hub em `tmp/` (conteúdo do EMED: nunca no git).
 3. Ler as capturas (ferramenta Read) e conferir: hierarquia, rolagem horizontal, estados e contraste.
 4. Rodar as suítes `tools/test_hub*.py tools/test_painel.py tools/test_fsrs_queue_player.py`.
 
@@ -181,12 +182,18 @@ está aqui).
 | A9 | Borda de campo e de botão a 1,6:1 (invisível) | hub, player | **resolvido**: `--linha-forte` (3,2 a 3,8:1) |
 | A10 | Brilho no título da aula e gradiente nas barras de progresso | tema, painel, player | **resolvido**: barras sólidas; sem `text-shadow` |
 | A11 | Vermelho literal `#b3261e` no erro do formulário de pergunta dentro dos documentos (ilegível no escuro) | `hub.html` (`pendEstilo`) | **resolvido**: `var(--erro, #b3261e)` |
-| A12 | O kit de conferência visual (banco falso, montagem do site, capturas) existia só em `tmp/` (gitignorado) | `tmp/design`, `tmp/alca_s213` | **em andamento** (s225): `tools/ui_capturas.py` versionado entra no commit seguinte; até lá, a receita manual da memória `project_conferir_tela_no_navegador` |
+| A12 | O kit de conferência visual (banco falso, montagem do site, capturas) existia só em `tmp/` (gitignorado) | `tmp/design`, `tmp/alca_s213` | **resolvido**: `tools/ui_capturas.py` + `core/templates/ui_harness.html` (11 cenas, rolagem horizontal medida; §8) |
 | A13 | `.qz-lista button` (0,1,1) vencia `.qz-rev` (0,1,0) e espremia a revisão em 2 colunas | `hub.html` | **resolvido**: `.qz-lista .qz-rev` |
 | A14 | Coluna de 58rem: ~110 caracteres por linha no desktop | `--wrap` | **resolvido**: 46rem |
 | A15 | O "próximo passo" não existia como elemento no Painel | painel | **resolvido**: a 1ª tarefa da Semana leva "Próxima" e a ação como botão primário |
 | A16 | Página de resumo publicada tem paleta própria (verde-água antigo) para quando abre fora do leitor | `hub.py` `CSS_RESUMO` | **pendente** (baixo impacto: no leitor o tema vem por cima; mudar republica 31 resumos) |
 | A17 | Tema claro só por `data-theme="light"`; o hub ignora `prefers-color-scheme: light` de propósito | `tema.css` | **decisão dele** (s224: escuro por padrão); o claro foi refeito na mesma semântica |
+| A18 | Aba que não carrega ("Não consegui ler as listas"): a assinatura de `listas` (e a do quadro da Teoria) é feita uma vez só e não tenta de novo depois de uma falha | `hub.html` `iniciarQuestoes` | **pendente**: PRD `.vibeflow/prds/hub-correcoes-pos-tema-v3.md` (relato dele, 13/10) |
+| A19 | Cards: o Painel conta o saldo do dia (X de 150) e a aba Cards o lote no ar (3/100), que é de 10/10 (backend manual) | `painel.py`, `player.html`, `/hub-backend` | **pendente**: mesmo PRD (decisão dele: contador do dia + fila diária) |
+| A20 | Semana do Painel: "resolver no hub"/"abrir aula" repetidos por linha, "da semana N" em cada atrasada, a Próxima com controle de outro tipo | `painel.py` | **pendente**: mesmo PRD (linha clicável, aviso uma vez) |
+| A21 | Listas: chip "pronta" repetido em toda linha (informação nula) | `hub.html` `qzItem` | **pendente**: mesmo PRD (estado só quando foge do normal) |
+| A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **pendente**: mesmo PRD |
+| A23 | Sem o espelho local `medhub.respostas.<lista>`, o 1º snapshot de `questoes` chega antes do de `respostas` e a Q1 aparece como nova mesmo respondida (lido no código pelo subagente, não medido) | `hub.html` | **pendente**: mesmo PRD (família do A18) |
 
 ## 11. Histórico de decisões
 

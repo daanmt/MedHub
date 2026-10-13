@@ -50,3 +50,14 @@
 - Suíte: **1739** (`pytest tools/ -q`, pré-commit do `ec2042b`).
 - Commits: `54cf3ad` (specs), `20d6d38` (part-3), `c2e0837` (RDs), `d7be259` (part-1), `ec2042b` (part-2) + o do selo.
 - banco-emed: t1794 registrada 59 · erros analisados 36 (20 gravados, Q60 pendente) · soluções lidas pelas análises 37/60.
+
+## Adendo -- sprint final até a UERJ (pedido dele, 13/10 tarde)
+- Bug visto por ele na Version 108: aba Listas em "Não consegui ler as listas" com as 3 tentativas esgotadas; sair do artifact e voltar resolveu -> conexão do banco velha depois da troca de versão.
+- Pedido: *"muitas rotas para o mesmo 'lugar' [...] 3 cronogramas simultâneos [...] proposta: integrar um backlog único no painel. teoria/biblioteca consultiva, com um único backlog próprio, de revisões direcionadas. listas consultiva também [...] proponho planejamento diário até a prova"*; *"use o loop do vibeflow [...] terceirizar a implementação e auditoria das partes a um subagent opus"*.
+- Discovery (AskUserQuestion, recomendações aceitas): **80 q/dia**; simulados **UERJ 2024 (sáb 17/10), 2025 (qua 21/10), 2026 (dom 25/10)**, cadernos 2017-2020 cortados; prioridade = faixa UERJ, desempate pelo acerto acumulado UERJ (CIR 45% < PED 52% < GO 61% < CM 61% < MFC 86%).
+- PRD `.vibeflow/prds/sprint-final-uerj.md` + specs part-1..5 (`89358a4`); backlog P27 (P26 feito).
+- part-1 reconexão `a223d81` (audit PARTIAL -> corrigi a Teoria gravando na conexão velha, `db71ed3`); part-2 `plano.py --sprint` `5a54f17` (audit PASS); **`--sprint --apply --expect 83` no banco real, com OK dele** (44 tarefas + 3 simulados no sprint = 1.489 q; 37 fora; 2 cortadas; 2ª corrida = 0); part-3 Painel "Plano de hoje" `4c14f21` + `d132ece` (audit PASS; adendo RD sem estado = não afirma pendente); part-4 Teoria/Listas consultivas `8b0c4d3` (audit PARTIAL: 38 x 37 = a #65 Hérnias da Fase 2 -> "Outras listas", `7f546c0`); part-5 boot + frase do Ritmo `70b1109` (audit PARTIAL: o sprint não acabava -> `019db23`, agenda None depois do último dia gravado).
+- Hub Version 109 (reconexão + Plano de hoje) e **110** (Teoria/Listas). Ritmo: cumprindo o sprint, **9.306 em 01/11 (694 abaixo da meta)**; fora do sprint 997 q em 37 tarefas.
+- Pendências baixas dos audits: `painelVivo` sem retentativa; `ui_capturas.py` sem `--leitura`; notas do lote sem aviso ao morrer; `orquestracao-contract` sem bump de versão; apply do sprint não é transação única; pendente sem dia nem marca some da agenda; teto da soma do hoje no boot.
+- Subagentes do adendo (`usage`): impl part-1 151.328/60/32,6 min · part-2 210.741/75/27,9 · part-3 170.223/46/21,7 · part-4 322.183/121/38,4 · part-5 247.815/77/31,2 · audits 112.766 + 91.274 + 102.825 + 127.919 + 120.810.
+- Suíte final: **1751** (pré-commit do `019db23`).

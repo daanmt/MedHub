@@ -184,13 +184,18 @@ def _proximo_passo(handoff: str) -> str:
     return ""
 
 
+# s226 (sprint-final-uerj part-5): o item (2) pede o HOJE DO SPRINT -- o mesmo "Plano de hoje" do
+# Painel e da aba Listas (`plano.agenda_sprint`).
+# ⚰️ *Ate 13/10/2026 pedia "ONDE ESTAMOS -- semana do plano, feitas x pendentes, atraso": o sprint
+# trocou a semana e as atrasadas por um plano por dia (a pendente de ontem rola para hoje).*
 _CONTRATO = (
     "[Boot v2 — contrato Presença->Expansão]\n"
     "Abra a sessão entregando ao usuário o PANORAMA, montado SÓ dos blocos derivados "
     "acima (Plano do Dia + Panorama do plano; número digitado de memória é proibido), "
-    "nesta ordem: (1) A META (uma so: 10.000 questoes em 01/11) e datas; (2) ONDE ESTAMOS — semana do plano, feitas x "
-    "pendentes, atraso, simulado da vez e a sequência; (3) TAREFAS EM ABERTO — cada "
-    "uma com o que fazer: lista pronta (link), caderno a criar no banco, aula-base ou "
+    "nesta ordem: (1) A META (uma so: 10.000 questoes em 01/11) e datas; (2) HOJE DO SPRINT — "
+    "as tarefas de hoje e o total de questões, o simulado do dia, a dose de cards, amanhã e "
+    "quantas ficaram fora do sprint (sem sprint no banco: a semana do plano); (3) TAREFAS DE HOJE — cada "
+    "uma com o que fazer: aba Listas do hub, lista pronta (link), caderno a criar no banco, aula-base ou "
     "sem lista; (4) PASSOS DE HOJE, em ordem, com o ritmo da meta; (5) MÉTRICAS — ritmo real x "
     "o da meta, performance/zona, cards (dívida e teto). Feche OFERECENDO o próximo "
     "ato — \"Próximo ato: X — sigo nele salvo redireção\" — e devolva o turno ao "

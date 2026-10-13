@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.5
+version: 1.6
 relates_to: [reconcile-contract, forgetting-curve-contract, estado-contract, AGENTE]
 ---
 
 # Contrato do Cronograma (Sync Cronograma ↔ Performance ↔ FSRS)
-**Versão 1.5 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.5 nas sessões seguintes (v1.5: s203, meta única).**
+**Versão 1.6 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.6 nas sessões seguintes (v1.5: s203, meta única; v1.6: s226, sprint final).**
 **Origem: Materializa o ultraplan `docs/plans/s094-ultraplan.md §c/§d`.**
 
 > Documento normativo. Governa a **camada derivada do cronograma de Reta Final** (EMED) e seu sync com os SSOTs de estado. O cronograma é um **plano**, não verdade-de-estado: divergência plano↔realidade é *informação de gestão*, nunca corrupção. Referenciado por: `AGENTE.md` (§2 passo 4, §6, §7.3/§7.4), `reconcile-contract.md` (W5-W7), `forgetting-curve-contract.md` (Boot).
@@ -90,6 +90,8 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 ## Integração
 
 - **Boot (`AGENTE §2 passo 4`) — v1.3:** `day_plan.py` deriva o bloco `🧭 Cronograma` de **`plano_tarefas`**: semana do plano corrente (menor `semana_plano` com pendência), fase (1 até 01/11 / 2 daí em diante), X/Y tarefas feitas da semana, as próximas 3-5 tarefas pendentes em ordem (`fonte`, `tema`, `tipo`, `q_previstas`, `url_lista`), a **cobertura da Fase 1** e, na linha Meta, o **único ritmo** (v1.5). 🔴 **Numerador e denominador da MESMA fase (F123, s189):** o ritmo soma só as pendentes das semanas 1-7 e divide pelos dias até `FIM_CONTEUDO_ALVO`; a Fase 2 e a reserva ficam fora da conta e declaradas (⚰️ *até 18/09/2026 somava TODAS as pendentes, Fase 2 inclusa: 273 q/dia, que também governava o recomendador*). 🔴 **UMA meta, UM ritmo (v1.5, s203 -- decisão do operador em 27/09/2026: "a única meta por hora é 01/11 e o alvo é 10k"):** o único "por dia" do boot, do painel, do HANDOFF e do recomendador é o da META (`performance.volume_vs_marco`: 10.000 questões em 01/11). A Fase 1 entra como **COBERTURA** dela -- `fechando_q` = acumulado + pendentes das semanas 1-7, com os simulados declarados em `simulados_q` --, nunca como um 2º ritmo ("o alvo anda junto com a quantidade de questões nas listas"). ⚰️ *Até 27/09/2026 o boot tinha 4 réguas para a mesma pergunta: marco de volume, ritmo da Fase 1, a cota do dia da semana de calendário (`day_plan.cota_do_dia`, F123b -- no domingo, a semana inteira num dia: "~474q/dia até 27/09") e o Ciclo 2026 (12.500 @ 31/12). As três últimas SAÍRAM; a semana de calendário segue no `plano.panorama` (quais tarefas são da semana), que nunca foi cota.* É a 4ª fonte do Plano do Dia (dormência × volume × FSRS × **plano**). ⚰️ *Era "importa `cronograma.py` e renderiza semana de conteúdo vs nominal ... próximos temas"* — o ramo calendário morreu em 17/09/2026 (Parte 4). `cronograma.py` segue sendo o derivador do PDF (Cláusula 4) e a fonte da **semeadura** do plano; deixou de ser a fonte do "o que vem agora".
+- **Boot com sprint (v1.6, s226 -- PRD `sprint-final-uerj`, part-5):** enquanto o banco tiver agenda do sprint (`plano_tarefas.dia_plano`, gravada só por `plano.py --sprint --apply`), o bloco `🧭 Cronograma` do `day_plan.py` e o `plano.py --panorama` leem o **HOJE do sprint** por `plano.resumo_sprint` sobre `plano.agenda_sprint` -- a MESMA função do "Plano de hoje" do Painel e da aba Listas (paridade presa em `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje`): "Hoje (DD/MM): N tarefas · Q questões" com cada tarefa e o que fazer (aba Listas do hub, lista, caderno, aula), "Amanhã" em 1 linha, "Fora do sprint: N" e a cobertura do SPRINT (acumulado + questões com dia até o fim do sprint = onde o acumulado fecha em 01/11 cumprindo-o; o fora do sprint declarado à parte). A tarefa de dia que passou ROLA para o hoje, sem rótulo de atraso. O recomendador segue a mesma agenda (`orquestracao-contract` §3, R3/R4 com sprint). Sem `dia_plano` no banco, o bloco da v1.3-1.5 volta sozinho.
+  ⚰️ *Suspensa enquanto houver sprint (13/10 -> 31/10/2026): a regra semanal do boot -- semana do plano corrente, X/Y tarefas feitas da semana, atrasadas de semana anterior, as próximas 3-5 pendentes e a cobertura da Fase 1 inteira. O contrato do hook de boot (`memory_boot._CONTRATO`) trocou "ONDE ESTAMOS — semana do plano" por "HOJE DO SPRINT" (termo cadastrado em `docs/MEMORIA-AUDITORIA.md §12`).*
 - **Reconcile:** condições **W5/W6/W7** (sempre WARNING, nunca BLOCKING — ver `reconcile-contract.md`). Travar boot por estar atrasado seria hostil.
 - **`/performance`, `/refrescar`, `/revisar`:** consumidores opcionais (bloco "Cronograma vs Meta"; tie-break de dormência a favor do tema da semana; filtro de cards da semana). Nenhum altera política FSRS.
 
@@ -105,6 +107,14 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 ---
 
 ## Changelog
+
+- **v1.6 (2026-10-13, s226 — PRD `sprint-final-uerj`, part-5):** **o boot fala o hoje do sprint.**
+  (a) Bloco `🧭 Cronograma` e `--panorama` por `plano.resumo_sprint`/`agenda_sprint` quando há
+  `dia_plano` (Integração, "Boot com sprint"); ⚰️ a regra semanal fica suspensa até 31/10.
+  (b) Recomendador: R3 (simulado periódico) e a capacidade por fórmula do R4 não valem com sprint
+  (`orquestracao-contract` §3). (c) A cobertura do Ritmo (boot e Painel) conta o sprint e declara o
+  fora do sprint. (d) Termo revogado cadastrado: `ONDE ESTAMOS — semana do plano`. Testes:
+  `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje`, `::test_boot_entrega_o_panorama`.
 
 - **v1.5 (2026-09-27, s203 — decisão do operador):** **uma meta, um ritmo.** A meta é
   10.000 questões em 01/11 (`performance.MARCOS`, entrada única; ⚰️ *era 10.400, mais "Ciclo 2026"*

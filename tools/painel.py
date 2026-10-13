@@ -312,6 +312,9 @@ def _bloco_ritmo(hoje):
     finally:
         con.close()
     cron = day_plan._cronograma_hoje(vm["total"], hoje) or {}
+    # s226 (sprint-final-uerj part-5): havendo sprint, a cobertura conta o SPRINT (o mesmo
+    # `plano.resumo_sprint` do boot); None = a frase da Fase 1
+    sp = cron.get("sprint")
     return {
         "real_7d": db.get_ritmo_real(7),
         "real_14d": db.get_ritmo_real(14),
@@ -324,6 +327,8 @@ def _bloco_ritmo(hoje):
         "fase1_simulados_q": cron.get("simulados_q"),
         "fechando_q": cron.get("fechando_q"),
         "fim_fase1": cron.get("fim_conteudo_alvo"),
+        "sprint": ({"q": sp["q_sprint"], "simulados_q": sp["simulados_q"], "fechando_q": sp["fechando_q"],
+                    "fim": sp["fim"], "fora": sp["fora"], "q_fora": sp["q_fora"]} if sp else None),
         "acumulado": vm["total"],
         "acerto": (round(vm["acertos"] / vm["total"] * 100, 1) if vm["total"] else None),
     }
@@ -707,6 +712,11 @@ def _html_sprint(s, cards):
     return corpo
 
 
+def _comparacao_meta(dif, quem="o plano"):
+    return ("%s acima da meta" % _n(dif) if dif > 0 else
+            "%s abaixo da meta: %s não cobre a meta" % (_n(-dif), quem) if dif < 0 else "exatamente a meta")
+
+
 def _html_ritmo(r):
     alvo = r["alvo_marco"]
     atras = alvo is not None and (r["real_7d"] or 0) < alvo
@@ -722,15 +732,23 @@ def _html_ritmo(r):
     fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
                'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
     nota = ""
-    if r["fechando_q"] is not None:
+    sp = r.get("sprint")
+    if sp:
+        # s226 (part-5): a cobertura do SPRINT -- o que tem dia ate o fim dele; o fora do sprint a parte
+        sim = sp["simulados_q"] or 0
+        partes = "%s questões nas listas" % _n(sp["q"] - sim) + (" e %s nos simulados" % _n(sim) if sim else "")
+        nota = ('<p class="nota">O sprint até %s tem %s. Cumprindo o sprint, você chega a %s em %s (%s). '
+                'Ficam fora do sprint %s em %s.</p>'
+                % (_dm(sp["fim"]), partes, _n(sp["fechando_q"]), _dm(r["fim_fase1"]),
+                   _comparacao_meta(sp["fechando_q"] - r["meta"], "o sprint"),
+                   _plural(sp["q_fora"], "questão", "questões"), _plural(sp["fora"], "tarefa", "tarefas")))
+    elif r["fechando_q"] is not None:
         sim = r["fase1_simulados_q"] or 0
         listas = (r["fase1_q"] or 0) - sim
         partes = "%s questões nas listas" % _n(listas) + (" e %s nos simulados" % _n(sim) if sim else "")
-        dif = r["fechando_q"] - r["meta"]
-        comp = ("%s acima da meta" % _n(dif) if dif > 0 else
-                "%s abaixo da meta: o plano não cobre a meta" % _n(-dif) if dif < 0 else "exatamente a meta")
         nota = ('<p class="nota">O plano da Fase 1 tem %s em aberto. Fechando tudo, você chega a %s '
-                'em %s (%s).</p>' % (partes, _n(r["fechando_q"]), _dm(r["fim_fase1"]), comp))
+                'em %s (%s).</p>' % (partes, _n(r["fechando_q"]), _dm(r["fim_fase1"]),
+                                     _comparacao_meta(r["fechando_q"] - r["meta"])))
     return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n%s' % ("".join(fig), nota)
 
 

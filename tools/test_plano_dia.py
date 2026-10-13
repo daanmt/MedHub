@@ -379,14 +379,129 @@ def test_boot_entrega_o_panorama(monkeypatch):
     ctx = mb.build_context()
     assert ctx.index("## Plano do Dia") < ctx.index("Panorama do plano -- semana 2") \
         < ctx.index("[Boot v2"), "plano, panorama e so entao o contrato"
-    for secao in ("PANORAMA", "META", "ONDE ESTAMOS", "TAREFAS EM ABERTO", "PASSOS DE HOJE",
-                  "MÉTRICAS", "Próximo ato", "NÃO execute a sessão inteira"):
+    # s226 (sprint-final-uerj part-5): o item (2) e o HOJE DO SPRINT, o mesmo do Painel e das Listas.
+    # ⚰️ *Era "ONDE ESTAMOS -- semana do plano, feitas x pendentes, atraso" e "TAREFAS EM ABERTO".*
+    for secao in ("PANORAMA", "META", "HOJE DO SPRINT", "TAREFAS DE HOJE", "PASSOS DE HOJE",
+                  "MÉTRICAS", "Próximo ato", "NÃO execute a sessão inteira",
+                  "fora do sprint", "simulado do dia", "sem sprint no banco: a semana do plano"):
         assert secao in mb._CONTRATO, f"o contrato do boot perdeu: {secao}"
+    assert "ONDE ESTAMOS" not in mb._CONTRATO, "a semana do plano saiu do item (2) do boot"
     assert mb._DAY_PLAN_MAX_LINES >= 30, \
         "ritmo real x necessario e diagnostico sao as linhas ~20-27 do Plano do Dia"
 
     monkeypatch.setattr(mb, "_panorama_summary", lambda: "")
     assert "Panorama do plano" not in mb.build_context().split("[Boot v2")[0]
+
+
+# --------------------------------------------------------------------------
+# s226 (sprint-final-uerj part-5): o boot e o recomendador falam o "hoje" do sprint -- a MESMA
+# `plano.agenda_sprint` do "Plano de hoje" do Painel (part-3) e da aba Listas (part-4).
+# --------------------------------------------------------------------------
+
+HOJE_SPRINT = date(2026, 10, 13)
+
+
+def _semear_sprint():
+    """Plano sintetico com agenda: a rolada (dia 12, pendente) entra no hoje; a feita do dia 13 nao;
+    amanha uma tarefa; um simulado em 17/10; uma fora do sprint com o motivo na nota."""
+    _semear([
+        _tarefa(1, semana_plano=3, area="Cirurgia", tema="Rolada de ontem", q_previstas=20,
+                url_lista="https://exemplo/rolada"),
+        _tarefa(2, semana_plano=4, area="Pediatria", tema="Asma | Bronquiolite", q_previstas=30),
+        _tarefa(3, semana_plano=4, area="Cirurgia", tema="Feita hoje", status="feita", q_previstas=25),
+        _tarefa(4, semana_plano=5, area="Obstetrícia", tema="Pré-Natal", q_previstas=40),
+        _tarefa(5, semana_plano=5, area="Simulado", tema="UERJ 2026 -- prova INTEIRA", q_previstas=100),
+        _tarefa(6, semana_plano=6, area="Cardiologia", tema="Fora", q_previstas=50),
+    ])
+    ids = {l["tarefa_fonte"]: int(l["id"]) for l in db.plano_listar()}
+    dias = {1: "2026-10-12", 2: "2026-10-13", 3: "2026-10-13", 4: "2026-10-14", 5: "2026-10-17"}
+    mud = [{"id": ids[n], "dia_plano": d, "nota": None} for n, d in dias.items()]
+    mud.append({"id": ids[6], "dia_plano": None, "nota": "sprint: fora (sem vaga ate 31/10)"})
+    db.plano_set_dias(mud, aplicar=True)
+    return ids
+
+
+def test_boot_painel_listas_mesmo_hoje(tmp_db, monkeypatch):
+    """DoD 3 (PRD Success Criteria 2): do MESMO banco sintetico, os ids de hoje e o total de questoes
+    sao iguais no boot (bloco Cronograma e panorama), no Painel (part-3) e nas Listas (part-4) -- e a
+    ordem tambem."""
+    import hub
+    import painel
+    import plano
+    ids = _semear_sprint()
+    monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {})
+    monkeypatch.setattr(painel, "_rd_nao_assinada", lambda: None)
+    c = day_plan._cronograma_hoje(0, HOJE_SPRINT)
+    do_boot = [t["id"] for t in c["sprint"]["hoje"]]
+    linhas = plano.linhas_com_q_hub(db.plano_listar())
+    no_painel = painel._bloco_sprint(linhas, HOJE_SPRINT)
+    nas_listas = hub.dados_sprint(linhas, HOJE_SPRINT)
+    assert do_boot == [ids[1], ids[2]], "a rolada de ontem entra no hoje; a feita nao"
+    assert do_boot == [t["id"] for t in no_painel["hoje"]] == nas_listas["hoje"]
+    assert c["sprint"]["q_hoje"] == no_painel["q_hoje"] == nas_listas["q_hoje"] == 50
+    # o TEXTO do boot e do panorama mostra as mesmas tarefas, na mesma ordem
+    render = day_plan.render(_p_render(c))
+    pos = [render.index("#%d " % i) for i in do_boot]
+    assert pos == sorted(pos) and "#%d " % ids[3] not in render
+    panorama = plano.render_panorama_sprint(plano.resumo_sprint(linhas, HOJE_SPRINT))
+    pos = [panorama.index("#%d " % i) for i in do_boot]
+    assert pos == sorted(pos) and "Hoje (13/10):** 2 tarefa(s) · 50 questoes" in panorama
+
+
+def test_bloco_cronograma_do_boot_com_sprint(tmp_db):
+    """DoD 1: com sprint, "Hoje (DD/MM): N tarefas · Q questoes" com cada tarefa e o que fazer,
+    "Amanha" em 1 linha e "Fora do sprint: N"; sem semana e sem atrasadas. A cobertura conta o
+    sprint (acumulado + q com dia) e declara o fora."""
+    ids = _semear_sprint()
+    c = day_plan._cronograma_hoje(9000, HOJE_SPRINT)
+    s = c["sprint"]
+    assert (s["q_sprint"], s["simulados_q"], s["fora"], s["q_fora"]) == (190, 100, 1, 50)
+    assert s["fechando_q"] == 9190 and s["amanha"]["data"] == "2026-10-14"
+    linhas = day_plan.render(_p_render(c)).splitlines()
+    i = next(n for n, l in enumerate(linhas) if "Cronograma" in l)
+    assert "**Hoje (13/10): 2 tarefa(s) · 50 questoes**" in linhas[i]
+    assert linhas[i + 1].strip().startswith("1. #%d" % ids[1]) and "lista: https://exemplo/rolada" in linhas[i + 1]
+    assert linhas[i + 2].strip().startswith("2. #%d" % ids[2]) and "Asma · Bronquiolite" in linhas[i + 2]
+    assert "caderno" in linhas[i + 2], "sem link e com questoes previstas: o que fazer e o caderno"
+    assert "Amanha (14/10): 1 tarefa(s) · 40q -- Pré-Natal" in linhas[i + 3]
+    assert "Fora do sprint: 1 tarefa(s) · 50q" in linhas[i + 4]
+    assert "acumulado chega a 9190 em 01/11" in linhas[i + 5] and "fora do sprint 50q" in linhas[i + 5]
+    render = "\n".join(linhas)
+    for morto in ("plano **semana", "atrasada", "Plano da Fase 1", "tarefas feitas"):
+        assert morto not in render, morto
+    assert render.count("q/dia") == 1, "o sprint nao traz um 2o ritmo"
+
+
+def test_sem_sprint_o_bloco_antigo_segue(tmp_db):
+    """Degradacao declarada: banco sem `dia_plano` -> `sprint` None e o bloco da semana."""
+    _semear([_tarefa(1, semana_plano=2, q_previstas=30)])
+    c = day_plan._cronograma_hoje(0, HOJE_SPRINT)
+    assert c["sprint"] is None
+    render = day_plan.render(_p_render(c))
+    assert "Cronograma:** plano **semana 2**" in render and "Hoje (" not in render
+
+
+def _sinais(sprint=None, semana=4):
+    return {"dias_grade": 19, "restante_grade_q": 2000, "ritmo_real": 20.0, "vencidos": 10,
+            "teto_efetivo": 100, "backlog_novos": 5, "semana_conteudo": semana,
+            "tema_alvo": "Asma", "frescos_tema_alvo": [], "sprint": sprint}
+
+
+def test_recomendador_com_sprint_le_o_dia_da_agenda():
+    """DoD 2: com sprint, nada de "simulado periodico" pela semana nem "capacidade ~Nq" por formula:
+    as questoes sao as tarefas de hoje e o simulado e o do dia na agenda; os cards seguem."""
+    hoje = [{"id": 1, "area": "Cirurgia", "tema": "Asma", "q": 20},
+            {"id": 2, "area": "Pediatria", "tema": "B", "q": 30}]
+    r = day_plan.recomendar_dia(_sinais({"hoje": hoje, "simulado_hoje": None}))
+    assert [b["tipo"] for b in r["blocos"]] == ["questoes", "fsrs"], r["blocos"]
+    assert r["blocos"][0]["qtd"] == 50 and "plano de hoje do sprint" in r["blocos"][0]["motivo"]
+    for morto in ("slot periódico", "capacidade ~", "capacidade máxima", "múltipla de"):
+        assert morto not in repr(r), morto
+    sim = {"id": 9, "area": "Simulado", "tema": "UERJ 2026", "q": 100}
+    r = day_plan.recomendar_dia(_sinais({"hoje": [sim], "simulado_hoje": sim}))
+    assert [(b["tipo"], b["alvo"]) for b in r["blocos"]] == [("simulado", "UERJ 2026"), ("fsrs", "fila do dia")]
+    sem = day_plan.recomendar_dia(_sinais(None))
+    assert "slot periódico" in repr(sem) and "capacidade ~" in repr(sem), "sem sprint, R3/R4 de antes"
 
 
 if __name__ == "__main__":

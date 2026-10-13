@@ -53,6 +53,10 @@ sustentavel -- nao maximizar volume num dia isolado.
 - **R4 questoes do dia:** qtd = min(capacidade do dia, ritmo necessario DA META arredondado
   para cima). Meta ATRASADA (folga < 0) -> capacidade maxima do dia.
   capacidade = tempo_h x `QUESTOES_POR_HORA` x fator de energia.
+- **R3/R4 com sprint (s226, `cronograma-contract` v1.6):** havendo agenda do sprint (`dia_plano` no
+  banco), o dia ja vem decidido pelo `plano.py --sprint`: o simulado e o do dia na agenda e as questoes
+  sao a soma das tarefas de hoje (`plano.resumo_sprint`). R3 pela semana e a capacidade por formula
+  do R4 ficam suspensos enquanto o banco tiver `dia_plano`; sem ele, voltam. R1, R2 e R5 seguem.
 - **R5 fsrs:** qtd = min(teto efetivo, vencidos + 15). O teto dinamico (F4) segue
   sendo o unico governador da divida -- este contrato nao o altera.
 

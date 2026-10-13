@@ -1698,7 +1698,8 @@ def _item_sprint(l):
     return {"id": l.get("id"), "semana": l.get("semana_plano"), "atrasada": False,
             "dia_plano": l.get("dia_plano"), "bloco": l.get("bloco"), "area": l.get("area"),
             "tema": l.get("tema"), "q": _q(l), "classe": classe_da_tarefa(l),
-            "url_lista": l.get("url_lista"), "nota": l.get("nota")}
+            "url_lista": l.get("url_lista"), "nota": l.get("nota"),
+            "no_hub": bool(l.get("q_hub"))}
 
 
 def agenda_sprint(linhas, hoje):
@@ -1733,6 +1734,97 @@ def agenda_sprint(linhas, hoje):
             "proximos": [{"data": d, "tarefas": ts, "q": sum(t["q"] for t in ts)}
                          for d, ts in sorted(por_dia.items())],
             "fora": fora}
+
+
+# ------------------------------------------- o "hoje" do sprint no boot (s226, part-5)
+
+def o_que_fazer(t):
+    """O que fazer com uma tarefa da agenda, em texto de boot. PURA. Questoes no banco do hub =
+    a aba Listas; senao o link da lista; senao a classe (`CLASSES_PANORAMA`, sem lista: caderno,
+    aula-base)."""
+    if t.get("no_hub"):
+        return "aba Listas do hub"
+    if t.get("url_lista"):
+        return f"lista: {t['url_lista']}"
+    return CLASSES_PANORAMA.get(t.get("classe"), t.get("classe") or "?")
+
+
+def fim_do_sprint(linhas=None):
+    """A data final do sprint (`core/sprint.json`); ilegivel = o maior `dia_plano` das linhas,
+    ou None. Nunca data inventada."""
+    try:
+        return ler_sprint()["fim"]
+    except Exception:  # noqa: BLE001 -- leitura de exibicao; cai no que o banco diz
+        dias = sorted(str(l["dia_plano"]) for l in linhas or [] if l.get("dia_plano"))
+        return dias[-1] if dias else None
+
+
+def resumo_sprint(linhas, hoje, fim=None):
+    """O sprint como o boot e o Ritmo do Painel o leem -- `agenda_sprint` (a MESMA fonte do "Plano de
+    hoje" do Painel e da aba Listas) mais as somas. PURA. None = banco sem sprint.
+
+    `hoje`/`q_hoje`: as tarefas do dia (a rolada inclusa); `simulado_hoje`: o simulado do dia ou None;
+    `amanha`: `{data, tarefas, q}` do dia seguinte (tarefas vazias = nada no plano); `q_sprint`: as
+    questoes que faltam DENTRO do sprint (hoje + proximos dias), `simulados_q` a parte delas que e
+    simulado; `fora`/`q_fora`: o que ficou fora do sprint (marca na nota)."""
+    ag = agenda_sprint(linhas, hoje)
+    if ag is None:
+        return None
+    amanha_iso = date.fromordinal(hoje.toordinal() + 1).isoformat()
+    amanha = next((p for p in ag["proximos"] if p["data"] == amanha_iso),
+                  {"data": amanha_iso, "tarefas": [], "q": 0})
+    no_sprint = ag["hoje"] + [t for p in ag["proximos"] for t in p["tarefas"]]
+    e_sim = lambda t: t.get("area") == AREA_SIMULADO
+    return {
+        "hoje_data": hoje.isoformat(), "fim": fim or fim_do_sprint(linhas),
+        "hoje": ag["hoje"], "q_hoje": ag["q_hoje"],
+        "simulado_hoje": next((t for t in ag["hoje"] if e_sim(t)), None),
+        "amanha": amanha, "proximos": ag["proximos"],
+        "q_sprint": sum(t["q"] for t in no_sprint),
+        "simulados_q": sum(t["q"] for t in no_sprint if e_sim(t)),
+        "simulados": [t for t in no_sprint if e_sim(t)],
+        "fora": len(ag["fora"]), "q_fora": sum(t["q"] for t in ag["fora"]),
+    }
+
+
+def tema_curto(tema, n=40):
+    """O 1o pedaco do `tema_exibido` (antes do " · " e do " -- "), cortado em `n` -- a linha de um dia. PURA."""
+    return tema_exibido(tema).split(" · ")[0].split(" -- ")[0][:n]
+
+
+def _linha_tarefa_sprint(i, t):
+    q = f" · {t['q']}q" if t["q"] else ""
+    sim = " **simulado do dia**" if t.get("area") == AREA_SIMULADO else ""
+    return (f"    {i}. #{t['id']}{sim} [{t.get('bloco') or '?'}] {t.get('area') or '?'} | "
+            f"{tema_exibido(t.get('tema'))[:70]}{q} · {o_que_fazer(t)}")
+
+
+def render_panorama_sprint(r):
+    """O panorama em Markdown quando ha sprint: o HOJE (cada tarefa com o que fazer), os simulados do
+    sprint com a data, os proximos dias (um por linha) e o fora do sprint -- sem semana nem atrasadas.
+    E o que o hook de boot injeta (sprint-final-uerj part-5)."""
+    hoje = r["hoje"]
+    out = [f"## 🧭 Panorama do plano -- sprint ate {_dm(r['fim'])} (hoje {_dm(r['hoje_data'])})",
+           f"- **Hoje ({_dm(r['hoje_data'])}):** {len(hoje)} tarefa(s) · {r['q_hoje']} questoes"
+           + ("" if hoje else " -- nada no plano de hoje")]
+    for i, t in enumerate(hoje[:PANORAMA_TAREFAS], 1):
+        out.append(_linha_tarefa_sprint(i, t))
+    if len(hoje) > PANORAMA_TAREFAS:
+        out.append(f"    • +{len(hoje) - PANORAMA_TAREFAS} tarefa(s) de hoje "
+                   f"(`python tools/plano.py --sprint`)")
+    if r["simulados"]:
+        out.append("- **Simulados do sprint:** " + " -> ".join(
+            f"{_dm(t['dia_plano'])} {_nome_curto(t['tema'])}" for t in r["simulados"]))
+    if r["proximos"]:
+        out.append("- **Proximos dias:**")
+        for p in r["proximos"]:
+            temas = "; ".join(tema_curto(t.get("tema")) for t in p["tarefas"][:3])
+            mais = f"; +{len(p['tarefas']) - 3}" if len(p["tarefas"]) > 3 else ""
+            out.append(f"    • {_dm(p['data'])}: {len(p['tarefas'])} tarefa(s) · {p['q']}q -- "
+                       f"{temas}{mais}")
+    out.append(f"- **Fora do sprint:** {r['fora']} tarefa(s) · {r['q_fora']}q "
+               f"(`python tools/plano.py --sprint` lista o motivo de cada uma)")
+    return "\n".join(out)
 
 
 def _fixar_antes(ato):
@@ -1949,8 +2041,15 @@ def main(argv=None):
         return 0
     if modo == "--panorama":
         # P20 (s219): as linhas com a contagem do banco do hub -- o MESMO numero do Painel e da Teoria
-        pan = panorama(linhas_com_q_hub(db.plano_listar()), calendario_trilha(), db.hoje(),
-                       prevalencia=ler_prevalencia())
+        linhas = linhas_com_q_hub(db.plano_listar())
+        # s226 (part-5): com sprint, o panorama e o HOJE do sprint (`agenda_sprint`, a fonte do Painel
+        # e da aba Listas); sem sprint, a semana do plano
+        sp = resumo_sprint(linhas, db.hoje())
+        if sp is not None:
+            print(json.dumps(sp, ensure_ascii=False, indent=1) if args.json
+                  else render_panorama_sprint(sp))
+            return 0
+        pan = panorama(linhas, calendario_trilha(), db.hoje(), prevalencia=ler_prevalencia())
         print(json.dumps(pan, ensure_ascii=False, indent=1) if args.json
               else render_panorama(pan))
         return 0

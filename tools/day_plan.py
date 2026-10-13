@@ -508,7 +508,15 @@ def _cronograma_hoje(total_q, hoje):
     simulados = sum(_q_prevista(l) for l in pendentes
                     if _fase_do_plano(l.get("semana_plano")) == 1 and l.get("area") == "Simulado")
 
+    # s226 (sprint-final-uerj part-5): havendo sprint, o "hoje" do boot e o da agenda do sprint --
+    # `plano.resumo_sprint` sobre `plano.agenda_sprint`, a MESMA fonte do Painel e da aba Listas.
+    # None = banco sem `dia_plano`: o bloco antigo (semana do plano) segue.
+    sprint = plano.resumo_sprint(linhas, hoje)
+    if sprint is not None:
+        sprint["fechando_q"] = (total_q or 0) + sprint["q_sprint"]
+
     return {
+        "sprint": sprint,
         "semana": semana,
         "fase": _fase_do_plano(semana),
         "tarefas_semana": len(vivas),
@@ -517,7 +525,9 @@ def _cronograma_hoje(total_q, hoje):
         "previstas": sum(_q_prevista(l) for l in vivas),
         "sem_semana": sum(1 for l in pendentes if l.get("semana_plano") is None),
         "proximas": proximas,
-        "temas": [t["tema"] for t in proximas if t.get("tema")][:3],
+        # o tema-alvo do recomendador: com sprint, as tarefas de HOJE (fora o simulado)
+        "temas": ([t["tema"] for t in sprint["hoje"] if t.get("tema") and t.get("area") != "Simulado"][:3]
+                  if sprint else [t["tema"] for t in proximas if t.get("tema")][:3]),
         "pendentes_total": len(pendentes),
         "dias_grade": dias_grade,
         "fim_conteudo_alvo": FIM_CONTEUDO_ALVO.isoformat(),
@@ -849,28 +859,46 @@ def recomendar_dia(sinais, tempo_h=None, energia=None):
         return {"blocos": blocos, "justificativa": just, "projecao": projecao,
                 "defaults_assumidos": defaults_assumidos, "contexto": contexto}
 
-    # R3 — simulado periódico (usa a área 'Simulado' já existente no registro)
     semana = sinais.get("semana_conteudo")
-    if semana and semana % PERIODO_SIMULADO_SEMANAS == 0:
-        blocos.append({"tipo": "simulado", "qtd": 1, "alvo": "Simulado",
-                       "motivo": "slot periódico (semana S%d, a cada %d semanas)"
-                                 % (semana, PERIODO_SIMULADO_SEMANAS)})
-        just.append("semana S%d é múltipla de %d: slot de simulado"
-                    % (semana, PERIODO_SIMULADO_SEMANAS))
+    sprint = sinais.get("sprint")
+    if sprint is not None:
+        # s226 (sprint-final-uerj part-5): com sprint, o dia JA esta decidido pelo `plano.py --sprint`
+        # (capacidade do `core/sprint.json`): o simulado do dia vem da agenda e as questoes sao as
+        # tarefas de hoje. Os cards (R5) seguem.
+        # ⚰️ *R3 (simulado periodico pela semana) e a capacidade por formula do R4 (tempo x 15 q/h x
+        # energia) nao valem enquanto houver sprint (13/10/2026); sem `dia_plano`, voltam.*
+        sim = sprint.get("simulado_hoje")
+        if sim:
+            blocos.append({"tipo": "simulado", "qtd": 1, "alvo": sim.get("tema") or "Simulado",
+                           "motivo": "simulado do sprint de hoje (%sq)" % (sim.get("q") or 0)})
+            just.append("hoje e dia de simulado no sprint")
+        listas = [t for t in sprint.get("hoje") or [] if not sim or t.get("id") != sim.get("id")]
+        if listas:
+            blocos.append({"tipo": "questoes", "qtd": sum(t.get("q") or 0 for t in listas),
+                           "alvo": tema_alvo or "tarefas de hoje",
+                           "motivo": "%d tarefa(s) do plano de hoje do sprint" % len(listas)})
+    else:
+        # R3 — simulado periódico (usa a área 'Simulado' já existente no registro)
+        if semana and semana % PERIODO_SIMULADO_SEMANAS == 0:
+            blocos.append({"tipo": "simulado", "qtd": 1, "alvo": "Simulado",
+                           "motivo": "slot periódico (semana S%d, a cada %d semanas)"
+                                     % (semana, PERIODO_SIMULADO_SEMANAS)})
+            just.append("semana S%d é múltipla de %d: slot de simulado"
+                        % (semana, PERIODO_SIMULADO_SEMANAS))
 
-    # R4 — questões da grade: alvo = min(capacidade do dia, ritmo necessário);
-    # atrasado (folga negativa) => capacidade máxima do dia
-    alvo_q = capacidade_q if ritmo_nec is None else min(capacidade_q,
-                                                        max(int(math.ceil(ritmo_nec)), 1))
-    if folga_dias is not None and folga_dias < 0:
-        alvo_q = capacidade_q
-        just.append("meta atrasada (%dd de déficit projetado): capacidade máxima em questões"
-                    % -folga_dias)
-    if alvo_q > 0 and restante > 0:
-        blocos.append({"tipo": "questoes", "qtd": alvo_q,
-                       "alvo": tema_alvo or "próximo tema da semana",
-                       "motivo": "necessário %sq/dia; capacidade ~%dq (%.1fh x %d q/h x %.2f)"
-                                 % (ritmo_nec, capacidade_q, tempo_h, QUESTOES_POR_HORA, fator)})
+        # R4 — questões da grade: alvo = min(capacidade do dia, ritmo necessário);
+        # atrasado (folga negativa) => capacidade máxima do dia
+        alvo_q = capacidade_q if ritmo_nec is None else min(capacidade_q,
+                                                            max(int(math.ceil(ritmo_nec)), 1))
+        if folga_dias is not None and folga_dias < 0:
+            alvo_q = capacidade_q
+            just.append("meta atrasada (%dd de déficit projetado): capacidade máxima em questões"
+                        % -folga_dias)
+        if alvo_q > 0 and restante > 0:
+            blocos.append({"tipo": "questoes", "qtd": alvo_q,
+                           "alvo": tema_alvo or "próximo tema da semana",
+                           "motivo": "necessário %sq/dia; capacidade ~%dq (%.1fh x %d q/h x %.2f)"
+                                     % (ritmo_nec, capacidade_q, tempo_h, QUESTOES_POR_HORA, fator)})
     just.append("ritmo real %.1fq/dia vs necessário %sq/dia (janela %dd)"
                 % (ritmo_real, ritmo_nec, JANELA_RITMO_DIAS))
 
@@ -958,6 +986,8 @@ def build(tempo_h=None, energia=None):
         # (§R3); a FONTE mudou na Parte 4 -- era a semana de calendario/
         # `preparacao_estado`, agora e a semana do PLANO (`plano_tarefas`).
         "semana_conteudo": (cron or {}).get("semana"),
+        # s226 (part-5): com sprint, R3/R4 leem o dia da agenda (`plano.resumo_sprint`); None = regra antiga
+        "sprint": (cron or {}).get("sprint"),
         "tema_alvo": tema_alvo,
         "frescos_tema_alvo": frescos,
     }
@@ -1154,6 +1184,51 @@ def _linha_cobertura(c):
             f"{sim_txt} -> fechando o plano, o acumulado chega a {fecha} em {alvo_dm}{comp}; "
             f"Fase 2 e reserva fora da conta"]
 
+
+def _comparar_com_meta(fecha, meta):
+    if fecha is None or not meta:
+        return ""
+    dif = fecha - meta
+    return (f" -- {dif} acima da meta de {meta}" if dif > 0 else
+            f" -- {-dif} ABAIXO da meta de {meta}" if dif < 0 else
+            f" -- exatamente a meta de {meta}")
+
+
+def _linhas_sprint(c):
+    """s226 (sprint-final-uerj part-5): o bloco Cronograma com sprint -- "Hoje (DD/MM): N tarefas · Q
+    questoes" com cada tarefa e o que fazer, "Amanha" em 1 linha, "Fora do sprint: N" e a cobertura
+    do sprint (onde o acumulado fecha em 01/11 cumprindo-o). Sem semana, sem atrasadas: a tarefa de
+    dia que passou ja vem no hoje (`plano.agenda_sprint`).
+    ⚰️ *Ate 13/10/2026 o bloco era a semana do plano (X/Y feitas, 5 proximas, Fase 1); volta sozinho
+    quando o banco nao tem `dia_plano` (sem sprint).*"""
+    import plano
+    s = c["sprint"]
+    hoje = s["hoje"]
+    out = [f"- 🧭 **Cronograma (sprint ate {_dm(s['fim'])}):** **Hoje ({_dm(s['hoje_data'])}): "
+           f"{len(hoje)} tarefa(s) · {s['q_hoje']} questoes**"
+           + ("" if hoje else " -- nada no plano de hoje")]
+    for i, t in enumerate(hoje, 1):
+        sim = " **simulado do dia**" if t.get("area") == "Simulado" else ""
+        q = f" · {t['q']}q" if t.get("q") else ""
+        out.append(f"    {i}. #{t['id']}{sim} [{t.get('bloco') or '?'}] "
+                   f"{plano.tema_exibido(t.get('tema'))[:80]}{q} · {plano.o_que_fazer(t)}")
+    am = s["amanha"]
+    if am["tarefas"]:
+        temas = "; ".join(plano.tema_curto(t.get("tema")) for t in am["tarefas"])
+        out.append(f"    • Amanha ({_dm(am['data'])}): {len(am['tarefas'])} tarefa(s) · "
+                   f"{am['q']}q -- {temas}")
+    else:
+        out.append(f"    • Amanha ({_dm(am['data'])}): nada no plano")
+    out.append(f"    • Fora do sprint: {s['fora']} tarefa(s) · {s['q_fora']}q "
+               f"(`python tools/plano.py --sprint`)")
+    sim = s.get("simulados_q") or 0
+    sim_txt = f" ({sim}q de simulados)" if sim else ""
+    out.append(f"    • 📦 **Sprint:** {s['q_sprint']}q ate {_dm(s['fim'])}{sim_txt} -> cumprindo o "
+               f"sprint, o acumulado chega a {s.get('fechando_q')} em "
+               f"{_dm(c.get('fim_conteudo_alvo'))}{_comparar_com_meta(s.get('fechando_q'), c.get('meta'))}; "
+               f"fora do sprint {s['q_fora']}q")
+    return out
+
 def render(p):
     d, v, f = p["dormant"], p["volume"], p["fsrs"]
     out = [f"# 🗓️ Plano do Dia — {p['data']}", ""]
@@ -1193,7 +1268,10 @@ def render(p):
                f"{regime}) · gatilho = **{dv.get('vencidos', 0)} vencidos** "
                f"(atrasados + hoje){saldo}")
     c = p.get("cronograma")
-    if c:
+    if c and c.get("sprint"):
+        # s226 (sprint-final-uerj part-5): o HOJE do sprint, o mesmo do Painel e da aba Listas
+        out.extend(_linhas_sprint(c))
+    elif c:
         # Parte 4: a fonte do "o que vem agora" é `plano_tarefas`, não o calendário
         # do PDF nem o snapshot do xlsx. Semana corrente = menor `semana_plano` com
         # pendência -- sem projeção por data (plano não é verdade-de-estado).

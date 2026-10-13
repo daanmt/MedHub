@@ -1969,6 +1969,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
             if(f !== li.hasAttribute("data-feito")){ aplicar(li, f); }
           });
         }, {nome: "quadro", db: db, aoEsperar: function(){ avisoLeitura("Carregando…"); },
+            // s226 (audit sprint part-1): o "feito" grava na conexao nova, nunca na que morreu
+            aoReconectar: function(novo){ colecao = novo.collection("quadro"); },
             // sem assinatura: vale o estado do build e o que for clicado; o botao reassina
             aoMorrer: function(){ avisoLeitura(htmlRetentar("Não consegui ler o que você já concluiu.", "quadro")); }});
       }).catch(semArmazenamento);

@@ -2073,7 +2073,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     return QZ_DIAS[new Date(+m[1], +m[2] - 1, +m[3], 12).getDay()] + " " + m[3] + "/" + m[2]; }
   // os grupos da aba Listas pelo sprint: Hoje, um por dia dos Proximos e Fora do sprint, na ordem do plano
   // (a ordem da agenda; listas da mesma tarefa pelo `seq`). Lista aberta cuja tarefa nao tem dia nem marca
-  // de fora (concluida/cortada no plano, ou sem tarefa) vai para o Fora, com o motivo "sem dia no plano". PURA.
+  // de fora (concluida/cortada no plano, Fase 2, ou sem tarefa) vai para "Outras listas" -- o Fora e SO o do
+  // Painel (`agenda_sprint().fora`), para as duas abas contarem igual (audit part-4, s226: a #65 Hernias). PURA.
   function qzGruposSprint(sp, ls){
     var lugar = {}, pos = 0, grupos = [];
     function grupo(chave, titulo, tarefas, aberto){
@@ -2085,11 +2086,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var hoje = grupo("hoje", "Hoje", sp.hoje, true);
     var proximos = (sp.proximos || []).map(function(p){ return grupo("d" + p.data, qzDia(p.data), p.tarefas, false); });
     var fora = grupo("fora", "Fora do sprint", sp.fora, false);
-    ls.map(function(l){ return {l: l, x: lugar[String(l.tarefa)] || {g: fora, pos: Infinity, motivo: "sem dia no plano"}}; })
+    var outras = {chave: "outras", titulo: "Outras listas", itens: [], q: 0, aberto: false, motivos: {}};
+    ls.map(function(l){ return {l: l, x: lugar[String(l.tarefa)] || {g: outras, pos: Infinity, motivo: "fora do plano até 01/11"}}; })
       .sort(function(a, b){ return (a.x.pos === b.x.pos ? 0 : (a.x.pos < b.x.pos ? -1 : 1)) || ((a.l.seq || 0) - (b.l.seq || 0)) || String(a.l._id).localeCompare(String(b.l._id)); })
       .forEach(function(o){ o.x.g.itens.push(o.l); o.x.g.q += Math.round(o.l.q || o.l.q_previstas || 0);
-        if(o.x.g === fora){ fora.motivos[o.l._id] = o.x.motivo || "fora do sprint"; } });
-    return {hoje: hoje, proximos: proximos.filter(function(g){ return g.itens.length; }), fora: fora};
+        if(o.x.g === fora || o.x.g === outras){ o.x.g.motivos[o.l._id] = o.x.motivo || "fora do sprint"; } });
+    return {hoje: hoje, proximos: proximos.filter(function(g){ return g.itens.length; }), fora: fora, outras: outras};
   }
   // P20 (s219): o titulo herdado do EMED ('Endócrino- | Metabólica ... | Cicatrização') como a Teoria e o
   // Painel o mostram -- hifen colado antes do ' | ' junta; os demais ' | ' viram ' · '. Paridade com
@@ -2120,7 +2122,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
   // s211 (part-3): cada lista escolhe Estudo (gabarito e cadeia depois de cada questao) ou Prova (tudo
   // no fim); simulado e sempre Prova. Textos de no maximo 2 frases.
-  var QZ_SUB = {questoes: "As listas da semana: em Estudo o gabarito e a cadeia aparecem depois de cada questão, em Prova só no fim. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
+  var QZ_SUB = {questoes: "As listas na ordem do plano de hoje, do Painel: em Estudo o gabarito e a cadeia aparecem depois de cada questão, em Prova só no fim. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
                 simulados: "As provas da UERJ inteiras, na ordem do plano e como no dia: gabarito só no fim, cerca de 3 minutos por questão. No fim, o resultado por bloco; cada resposta grava na hora."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
   // atalho "resolver no hub" do Painel (s201; P21: a Teoria nao o tem mais) e o "aba Listas" da linha
@@ -2193,6 +2195,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var html = secao(gs.hoje, "Hoje" + conta(gs.hoje), "Nenhuma lista do plano para hoje.");
     if(gs.proximos.length){ html += '<h3 class="qz-grupo">Próximos dias</h3>' + gs.proximos.map(function(g){ return secao(g, qzEsc(g.titulo) + conta(g), ""); }).join(""); }
     if(gs.fora.itens.length){ html += secao(gs.fora, "Fora do sprint · " + gs.fora.itens.length, ""); }
+    if(gs.outras.itens.length){ html += secao(gs.outras, "Outras listas · " + gs.outras.itens.length, ""); }
     html += feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "";
     $("qz-listas").innerHTML = html;
     if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];

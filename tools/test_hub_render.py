@@ -606,7 +606,7 @@ def test_modo_questoes_mostra_so_as_listas_e_conta_as_abertas():
     assert "Diabetes na Gestação" in out["html"]                          # resolvida, recolhida no fim
     assert out["botoes"] == [["questoes", True, "Questões<small>1</small>"],
                              ["simulados", False, "Simulados<small>2</small>"]]
-    assert out["sub"].startswith("As listas da semana")
+    assert out["sub"].startswith("As listas na ordem do plano de hoje")
 
 
 def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
@@ -685,8 +685,10 @@ def test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint():
     assert "Hoje <span class=\"qd-n\">3 listas · 40 questões</span>" in html
     assert "qua 14/10 <span class=\"qd-n\">1 lista · 30 questões</span>" in html
     assert _ids_do_grupo(html, "d2026-10-14") == ["t30"]
-    assert _ids_do_grupo(html, "fora") == ["t77", "t12"], "a de tarefa sem dia (feita no plano) cai no fora"
-    assert "sem vaga até 31/10" in html and "sem dia no plano" in html
+    # s226 (audit part-4): o Fora e SO o do Painel; lista sem dia nem marca vai para "Outras listas"
+    assert _ids_do_grupo(html, "fora") == ["t77"]
+    assert _ids_do_grupo(html, "outras") == ["t12"], "a de tarefa sem dia (feita no plano) cai em Outras listas"
+    assert "sem vaga até 31/10" in html and "fora do plano até 01/11" in html and "Outras listas · 1" in html
     assert re.search(r'<section data-grupo="hoje">', html) and re.search(r'<section data-recolhida data-grupo="fora">', html)
     assert "UERJ" not in html, "o simulado segue na sua sub-aba"
 

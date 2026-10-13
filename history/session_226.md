@@ -61,3 +61,15 @@
 - Pendências baixas dos audits: `painelVivo` sem retentativa; `ui_capturas.py` sem `--leitura`; notas do lote sem aviso ao morrer; `orquestracao-contract` sem bump de versão; apply do sprint não é transação única; pendente sem dia nem marca some da agenda; teto da soma do hoje no boot.
 - Subagentes do adendo (`usage`): impl part-1 151.328/60/32,6 min · part-2 210.741/75/27,9 · part-3 170.223/46/21,7 · part-4 322.183/121/38,4 · part-5 247.815/77/31,2 · audits 112.766 + 91.274 + 102.825 + 127.919 + 120.810.
 - Suíte final: **1751** (pré-commit do `019db23`).
+
+## Adendo 2 -- dashboard do Painel, cores, legendas, skill anima (13/10, tarde)
+- Pedido dele com prints: integrar Hoje + Ritmo + Por bloco num dashboard no topo do Painel (sem artifact novo), resolver as metas divergentes (~115 x 76; 114,9 x 80), tags do Painel na cor das de Teoria (Próxima em azul), "Hub" no azul, barra da aba ativa no degradê, apagar legendas; skill de imagem `Garinmckayl/anima` -- *"vamos apenas fazer com as cinco revisões direcionadas da uerj, para testar"*; aulas/resumos com figura = próximas sessões.
+- Rápido, por mim: `9289737` ("Hub" ciano, barra = trecho do horizonte por `nth-child`, `.t-rot` em rosa-fraco, fora a frase do Ritmo, o "Fora da tabela" e a legenda da Teoria) -> hub **v111**. Tropeço: heredoc do Bash comeu `
+` num literal Python (memória `feedback_heredoc_barra_invertida`); refeito por Edit.
+- PRD `.vibeflow/prds/painel-dashboard-sprint.md` + specs part-1/2 (`501fb16`), backlog P28.
+- Skill anima: autorização dele (*"pode instalar a skill no medhub"*) -> `npx skills add Garinmckayl/anima -a claude-code -y` no PROJETO; scanner Gen Safe / Socket 1 alerta / Snyk Low; varredura minha: kit JS puro gerando SVG, só os scripts de captura abrem Chrome headless em 127.0.0.1; pasta no `.gitignore` (13 MB), `skills-lock.json` versionado (`dcb7da7`).
+- UM subagente Opus (implement + audit): part-1 `aca66f6` (dashboard: Questões 0 de 76, Ritmo x 80/dia, barra 7.817 -> 9.306 -> 10.000, Por bloco em barras, contrato v1.7: a tela usa o por-dia do sprint) e part-2 `1ad34e6` (1 figura SVG inline por RD, estática, só tokens, texto conferido contra a seção); audits PASS. Eu li os textos das 5 figuras e a captura a 768 antes do publish.
+- Hub **v112** (dashboard + figuras). Suíte **1755**.
+- Pendências: `performance.md:31` e `ESTADO.md:26` ainda dizem que o por-dia do painel é o da meta; CIR/GO/MFC: a figura repete a tabela (decisão dele); "mais fraco" no Por bloco é pelo acerto das LISTAS (CM), o desempate do sprint usa o acerto UERJ (CIR) -- explicar ou alinhar; figuras estáticas (o kit isométrico da anima não foi usado).
+- Subagente (`usage`): 360.409 tokens, 143 chamadas, 51,9 min.
+

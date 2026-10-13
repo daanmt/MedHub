@@ -1677,6 +1677,64 @@ def mudancas_do_sprint(linhas, plano_dia):
     return saida
 
 
+def motivo_fora_do_sprint(nota):
+    """O motivo gravado na marca `sprint: fora (<motivo>)` da `nota`; sem a marca = None. PURA."""
+    for p in str(nota or "").split(";"):
+        p = p.strip()
+        if not p.casefold().startswith(MARCA_SPRINT):
+            continue
+        resto = p[len(MARCA_SPRINT):].strip()
+        if resto.casefold().startswith("fora"):
+            resto = resto[4:].strip()
+            if resto.startswith("(") and resto.endswith(")"):
+                resto = resto[1:-1].strip()
+            return resto or "fora do sprint"
+    return None
+
+
+def _item_sprint(l):
+    """Uma tarefa da agenda do sprint: os campos do item do panorama + `dia_plano`. Sem atraso: a
+    pendente de dia que passou entra no `hoje` como as outras (rolou, sem rotulo). PURA."""
+    return {"id": l.get("id"), "semana": l.get("semana_plano"), "atrasada": False,
+            "dia_plano": l.get("dia_plano"), "bloco": l.get("bloco"), "area": l.get("area"),
+            "tema": l.get("tema"), "q": _q(l), "classe": classe_da_tarefa(l),
+            "url_lista": l.get("url_lista"), "nota": l.get("nota")}
+
+
+def agenda_sprint(linhas, hoje):
+    """A agenda do sprint como as telas a leem -- a fonte UNICA do "hoje" do Painel, da aba Listas
+    e do boot (sprint-final-uerj parts 3-5). PURA; le so `dia_plano` (quem decide o dia e o
+    `--sprint`, nunca a tela). Devolve `{hoje: [tarefas], proximos: [{data, tarefas, q}],
+    fora: [tarefas + motivo], q_hoje}`, ou None quando nenhuma linha tem `dia_plano` (banco sem
+    sprint: a tela mostra o bloco antigo -- degradacao declarada).
+
+    - `hoje`: pendentes com `dia_plano` <= hoje -- a de dia que passou ROLA para hoje, sem rotulo
+      de atraso, ate o proximo `--sprint` recalcular; ordem = (dia, ordem de `linhas`);
+    - `proximos`: um item por dia > hoje com pendente, em ordem de data;
+    - `fora`: pendentes sem `dia_plano` com a marca `sprint: fora (<motivo>)` na nota;
+    - feita e cortada nao entram (a agenda e do que falta)."""
+    if not any(l.get("dia_plano") for l in linhas or []):
+        return None
+    hoje_iso = hoje.isoformat()
+    pend = [(i, l) for i, l in enumerate(linhas) if l.get("status") == "pendente"]
+    com_dia = sorted(((str(l["dia_plano"]), i, l) for i, l in pend if l.get("dia_plano")),
+                     key=lambda x: (x[0], x[1]))
+    de_hoje = [_item_sprint(l) for d, _i, l in com_dia if d <= hoje_iso]
+    por_dia = {}
+    for d, _i, l in com_dia:
+        if d > hoje_iso:
+            por_dia.setdefault(d, []).append(_item_sprint(l))
+    fora = []
+    for _i, l in pend:
+        motivo = None if l.get("dia_plano") else motivo_fora_do_sprint(l.get("nota"))
+        if motivo:
+            fora.append(dict(_item_sprint(l), motivo=motivo))
+    return {"hoje": de_hoje, "q_hoje": sum(t["q"] for t in de_hoje),
+            "proximos": [{"data": d, "tarefas": ts, "q": sum(t["q"] for t in ts)}
+                         for d, ts in sorted(por_dia.items())],
+            "fora": fora}
+
+
 def _fixar_antes(ato):
     """F137 parte 2: o ponto de retorno FIXADO do inicio do ato (`backup_db`), como os outros
     writers em lote. Levanta `SemPontoDeRetorno` -- quem chama RECUSA e nada e gravado."""

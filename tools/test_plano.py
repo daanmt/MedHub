@@ -1626,3 +1626,41 @@ def test_cli_sprint_apply_sem_expect_e_erro(tmp_path, monkeypatch):
     with pytest.raises(SystemExit) as e:
         plano.main(["--sprint", "--apply"])
     assert e.value.code == 2
+
+
+# ------------------------------------- agenda do sprint (s226, sprint-final-uerj part-3)
+
+def _ag(tid, dia, status="pendente", q=20, nota=None, area="Cirurgia"):
+    return dict(_t(tid, q, area=area, status=status, nota=nota), dia_plano=dia)
+
+
+def test_agenda_sprint_hoje_rola_proximos_e_fora():
+    """`agenda_sprint` le SO `dia_plano`: a pendente de dia que passou entra no hoje (sem atraso);
+    os dias seguintes um por linha, em ordem; fora = sem dia com a marca do sprint; feita e
+    cortada nao entram. Fonte unica das parts 3-5."""
+    linhas = [_ag(1, "2026-10-14", q=30), _ag(2, "2026-10-12", q=25), _ag(3, "2026-10-13", q=40),
+              _ag(4, "2026-10-13", status="feita"), _ag(5, "2026-10-16", q=10),
+              _ag(6, "2026-10-14", q=12),
+              _ag(7, None, nota="trilha x; sprint: fora (sem vaga ate 31/10 (80 q/dia))"),
+              _ag(8, None, nota="sem marca"), _ag(9, None, status="cortada",
+                                                  nota="sprint: fora (qualquer)")]
+    ag = plano.agenda_sprint(linhas, _HOJE)
+    assert [t["id"] for t in ag["hoje"]] == [2, 3], "rolou (12/10) antes da de hoje; feita fora"
+    assert all(t["atrasada"] is False for t in ag["hoje"])
+    assert ag["q_hoje"] == 65
+    assert [(p["data"], [t["id"] for t in p["tarefas"]], p["q"]) for p in ag["proximos"]] == [
+        ("2026-10-14", [1, 6], 42), ("2026-10-16", [5], 10)]
+    assert [(t["id"], t["motivo"]) for t in ag["fora"]] == [(7, "sem vaga ate 31/10 (80 q/dia)")]
+
+
+def test_agenda_sprint_sem_dia_plano_e_none():
+    """Banco sem sprint (`dia_plano` todo NULL): None -- a tela cai no bloco antigo."""
+    assert plano.agenda_sprint([_ag(1, None), _ag(2, None, nota="x")], _HOJE) is None
+    assert plano.agenda_sprint([], _HOJE) is None
+
+
+def test_motivo_fora_do_sprint_le_a_marca_do_compor():
+    nota = plano.compor_nota_sprint("a; b", "sem vaga ate 31/10 (80 q/dia)")
+    assert plano.motivo_fora_do_sprint(nota) == "sem vaga ate 31/10 (80 q/dia)"
+    assert plano.motivo_fora_do_sprint("a; b") is None
+    assert plano.motivo_fora_do_sprint(None) is None

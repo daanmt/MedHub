@@ -124,9 +124,14 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 
 ## 6. Telas: o que cada uma prioriza
 
-- **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos), o que está atrasado
-  (Semana: o subtítulo "Atrasadas · N" em âmbar, uma vez, nunca por linha) e o próximo passo (a 1ª tarefa da Semana
-  leva só o rótulo "Próxima", `li.tarefa.proxima`, o mesmo controle das outras). Na Semana, a tarefa com questões no
+- **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos) e o que vem depois.
+  Com o sprint gravado (s226, `plano.agenda_sprint`, a fonte única do "hoje" do Painel, da aba Listas e do boot), o
+  bloco das tarefas é **Hoje** (as tarefas do dia, a que rolou de um dia passado sem rótulo de atraso, o total de
+  questões, "+ N cards" que faltam da dose do dia e a RD não assinada mais antiga, a linha inteira abrindo o leitor)
+  + **Próximos dias** (um dia por linha, "qua 14/10 · 2 listas · 72 q", recolhido) + **Fora do sprint · N**
+  (recolhido, agrupado pelo motivo). Sem "Semana", "Atrasadas", "Desta semana" nem "Até a prova". Sem sprint
+  (`dia_plano` todo NULL), a semana antiga: o subtítulo "Atrasadas · N" em âmbar, uma vez, nunca por linha. Nos
+  dois, a 1ª tarefa leva só o rótulo "Próxima", `li.tarefa.proxima`, o mesmo controle das outras. Na Semana, a tarefa com questões no
   hub é UM alvo (`a.t-alvo` com `data-hub-aba`: a linha inteira abre a lista); a aula ligada fica fora dele, pequena
   ("aula"). Fora do hub (lista externa, PDF), a coluna de ação de antes. O Ritmo fica logo abaixo de Hoje (pedido
   dele, s221).
@@ -152,6 +157,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
+| Painel com sprint: Hoje / Próximos dias / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`, que viaja embutido) | `test_painel.py::test_html_sem_jargao` |
 | leituras das abas pela assinatura resiliente (retentativa, botão, 1 ouvinte); chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | a retentativa pede conexão nova ao banco (e o `QZ.db` passa a ser ela) | `test_hub_render.py::test_retentativa_pede_conexao_nova` |

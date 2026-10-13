@@ -53,6 +53,10 @@ ARTIFATOS = ROOT / "artifacts"
 #: s216 (hub-integracao part-6): o marcador do `--record-lote` -- QUAL lote ja esta no numero publicado
 #: (o "Hoje ao vivo" da pagina so soma as notas de lote que ainda nao foi gravado). Ausente = "".
 MARCADOR_GRAVACAO = ROOT / "tmp" / "hub" / "ultima_gravacao_hub.json"
+#: s226 (sprint-final-uerj part-3): o estado `quadro/<slug>` que o tique baixa do db do hub (o mesmo
+#: `--quadro-estado tmp/hub_db` do `hub.py`) -- a RD sem assinatura entra no "Hoje". Ausente = nenhuma
+#: assinada (toda RD com arquivo conta como nao assinada).
+QUADRO_ESTADO = ROOT / "tmp" / "hub_db" / "quadro"
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
 #: pagina SEMPRE desenha.
@@ -162,6 +166,53 @@ def _bloco_semana(linhas, hoje):
         "q": pan["q_abertas"], "atrasadas": pan["atrasadas"],
         "feitas_semana": pan["feitas_semana"], "tarefas_semana": pan["tarefas_semana"],
         "proxima": pan["proxima"], "rota": rota,
+    }
+
+
+def _data_da_aula(caminho):
+    """A data de criacao da aula pela regra do hub (`hub.data_de_criacao`: 1o commit; sem git, o
+    arquivo). Injetavel nos testes."""
+    import hub
+    return hub.data_de_criacao(caminho, ROOT)[0]
+
+
+def _rd_nao_assinada():
+    """A Revisao Direcionada NAO assinada mais antiga: item `revisao` do quadro (`core/hub_quadro.json`)
+    com arquivo em `artifacts/` e sem `feito` no estado do quadro (`QUADRO_ESTADO`, lido por
+    `hub.ler_estado_quadro`). None = nenhuma. Registro ilegivel = None (o Hoje so perde a linha da RD)."""
+    import hub
+    try:
+        reg = json.loads(QUADRO.read_text(encoding="utf-8")).get("itens") or {}
+        estado = hub.ler_estado_quadro(QUADRO_ESTADO if Path(QUADRO_ESTADO).exists() else None)
+    except (OSError, ValueError):
+        return None
+    candidatas = []
+    for slug, item in reg.items():
+        item = item or {}
+        arq = ARTIFATOS / ("aula-%s.html" % slug)
+        if item.get("tipo") != "revisao" or not arq.is_file() or (estado.get(slug) or {}).get("feito"):
+            continue
+        candidatas.append({"slug": slug, "titulo": item.get("titulo") or slug, "data": _data_da_aula(arq)})
+    return min(candidatas, key=lambda r: (r["data"] or "9999", r["slug"])) if candidatas else None
+
+
+def _bloco_sprint(linhas, hoje):
+    """s226 (sprint-final-uerj part-3): Hoje / Proximos dias / Fora do sprint pela MESMA funcao que a
+    aba Listas e o boot leem (`plano.agenda_sprint`); cada tarefa pelo MESMO construtor da semana
+    (`_tarefa`). None = banco sem sprint (`dia_plano` todo NULL): a pagina desenha a semana antiga."""
+    import plano
+    ag = plano.agenda_sprint(linhas, hoje)
+    if ag is None:
+        return None
+    aulas = _aulas_por_tarefa()
+    no_hub = {int(l["id"]) for l in linhas if l.get("q_hub") and l.get("id") is not None}
+    tarefa = lambda t: _tarefa(t, aulas, no_hub)
+    return {
+        "hoje": [tarefa(t) for t in ag["hoje"]], "q_hoje": ag["q_hoje"],
+        "proximos": [{"data": p["data"], "q": p["q"], "tarefas": [tarefa(t) for t in p["tarefas"]]}
+                     for p in ag["proximos"]],
+        "fora": [dict(tarefa(t), motivo=t["motivo"]) for t in ag["fora"]],
+        "rd": _rd_nao_assinada(),
     }
 
 
@@ -293,6 +344,8 @@ def coletar(hoje=None):
         "titulo": TITULO,
         "dia": _bloco_dia(linhas, hoje),
         "semana": _bloco_semana(linhas, hoje),
+        # s226 (sprint-final-uerj part-3): a agenda por dia; None = sem sprint (a pagina usa a semana)
+        "sprint": _bloco_sprint(linhas, hoje),
         "ritmo": _bloco_ritmo(hoje),
         "blocos": _bloco_blocos(linhas),
         BLOCO_DOCS: _bloco_docs(),
@@ -552,6 +605,80 @@ def _html_semana(d):
             % (_e(d["semana"]), _e(janela), _e(resumo), lista, txt_prox))
 
 
+def _plural(n, um, varios):
+    """"3&nbsp;listas": espaco duro entre numero e palavra (o resumo quebra entre os pares)."""
+    return "%s&nbsp;%s" % (_n(n), um if n == 1 else varios)
+
+
+def _conta_do_dia(tarefas):
+    """"2 listas · 1 aula": o que o dia tem, pelo que se faz com cada tarefa (simulado pela area)."""
+    from app.utils import areas
+    nomes = (("simulado", "simulados"), ("lista", "listas"), ("aula", "aulas"), ("tarefa", "tarefas"))
+    conta = {u: 0 for u, _v in nomes}
+    for t in tarefas:
+        if t.get("area") in areas.AREAS_AGREGADAS:
+            conta["simulado"] += 1
+        else:
+            conta[{"lista": "lista", "caderno": "lista", "aula": "aula"}.get(t["classe"], "tarefa")] += 1
+    return " · ".join(_plural(conta[u], u, v) for u, v in nomes if conta[u])
+
+
+def _motivo_exibido(motivo):
+    """O motivo gravado pelo plano (sem acento, como a nota) na grafia da tela."""
+    return " ".join({"ate": "até", "ja": "já"}.get(p, p) for p in str(motivo or "").split(" "))
+
+
+def _html_rd(rd):
+    """A RD nao assinada mais antiga: a linha inteira abre o leitor (o atalho `data-hub-aula` do Painel;
+    o hub a marca "assinado" ao vivo, como as outras linhas com aula)."""
+    return ('<li class="tarefa rd"><a class="t-alvo" href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">'
+            '<p class="t-tema">%s</p><p class="t-meta"><span class="t-rot">RD</span>'
+            '<span>revisão direcionada ainda não assinada</span></p></a></li>'
+            % (_e(rd["slug"]), _e(rd["slug"]), _e(rd["titulo"]), _e(rd["titulo"])))
+
+
+def _html_sprint(s, cards):
+    """s226 (sprint-final-uerj part-3): Hoje (as tarefas do dia, o total de questoes, os cards do dia e
+    a RD nao assinada mais antiga) + Proximos dias (um dia por linha, recolhido) + Fora do sprint
+    (recolhido, pelo motivo). Sem semana e sem atraso: a tarefa de dia que passou ja vem no Hoje.
+    Cards = o que falta da dose do dia (`restantes`); sem contador, o teto."""
+    hoje = s["hoje"]
+    primeira = hoje[0]["id"] if hoje else None
+    if hoje:
+        resumo = "%s · %s" % (_plural(len(hoje), "tarefa", "tarefas"),
+                              _plural(s["q_hoje"], "questão", "questões"))
+    else:
+        resumo = "Nenhuma tarefa do plano para hoje"
+    n_cards = cards.get("restantes") if cards.get("consumo_hoje") is not None else cards.get("teto")
+    if n_cards:
+        resumo += " + %s" % _plural(n_cards, "card", "cards")
+    itens = "".join(_html_tarefa(t, proxima=t["id"] == primeira) for t in hoje)
+    if s.get("rd"):
+        itens += _html_rd(s["rd"])
+    corpo = '<h2>Hoje</h2>\n<p class="sub">%s.</p>\n' % resumo
+    if itens:
+        corpo += '<ol class="tarefas">%s</ol>\n' % itens
+    if s["proximos"]:
+        dias = []
+        for p in s["proximos"]:
+            dia = date.fromisoformat(p["data"])
+            conta = _conta_do_dia(p["tarefas"]) + (" · %s&nbsp;q" % _n(p["q"]) if p["q"] else "")
+            dias.append('<details class="rota-sem"><summary><span class="rota-tit">%s %s</span> '
+                        '<span class="rota-n">%s</span></summary><ol class="tarefas">%s</ol></details>'
+                        % (DIAS_SEMANA[dia.weekday()], dia.strftime("%d/%m"), conta,
+                           "".join(_html_tarefa(t) for t in p["tarefas"])))
+        corpo += '<div class="rota"><h3>Próximos dias</h3>%s</div>\n' % "".join(dias)
+    if s["fora"]:
+        grupos = {}
+        for t in s["fora"]:
+            grupos.setdefault(_motivo_exibido(t["motivo"]), []).append(t)
+        listas = "".join('<h3 class="t-grupo">%s · %d</h3><ol class="tarefas">%s</ol>'
+                         % (_e(m), len(ts), "".join(_html_tarefa(t) for t in ts)) for m, ts in grupos.items())
+        corpo += ('<details class="rota-sem fora"><summary><span class="rota-tit">Fora do sprint · %d</span>'
+                  '</summary>%s</details>' % (len(s["fora"]), listas))
+    return corpo
+
+
 def _html_ritmo(r):
     alvo = r["alvo_marco"]
     atras = alvo is not None and (r["real_7d"] or 0) < alvo
@@ -649,7 +776,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .ag-n{font-size:var(--fs-meta);color:var(--tinta2)}
 .ag-d{font-size:var(--fs-meta);color:var(--tinta3)}
 
-/* Semana */
+/* Tarefas: o Hoje do sprint (ou, sem sprint, a semana do plano) */
 .tarefas{list-style:none;margin:0;padding:0;display:grid;gap:0}
 .tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-1) var(--esp-4);align-items:baseline;
         padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
@@ -669,7 +796,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:var(--raio-p)}
 .t-sec{font-size:var(--fs-meta)}
 .t-sec a{font-weight:500}
-/* o atraso aparece UMA vez: no subtitulo "Atrasadas · N" (ambar + a palavra, nunca so cor) */
+/* sem sprint, o atraso aparece UMA vez: no subtitulo do grupo das atrasadas (ambar + a palavra, nunca so cor) */
 .t-grupo{margin:var(--esp-4) 0 0;font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
 .t-grupo.atrasadas{color:var(--aviso)}
 /* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- so o rotulo "Proxima", o mesmo controle das outras */
@@ -687,6 +814,9 @@ a{color:var(--acento);text-underline-offset:2px}
 .rota-tit{font-weight:650}
 .rota-n{color:var(--tinta3);font-size:var(--fs-meta);margin-left:var(--esp-1)}
 .rota-sem .tarefas{margin:var(--esp-1) 0 var(--esp-3)}
+/* s226 (sprint final): o que nao coube no plano, recolhido abaixo dos proximos dias, agrupado pelo motivo */
+.rota-sem.fora{margin-top:var(--esp-5)}
+.rota-sem.fora .t-grupo{margin-top:var(--esp-2)}
 
 /* Ritmo: quatro numeros sem caixa; o necessario por dia e a referencia (ciano); abaixo dele = ambar + texto */
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-5);margin-top:var(--esp-3)}
@@ -754,7 +884,10 @@ def render_html(d):
         _sec("dia", _html_dia(d["dia"], d["data"])),
         # s221 (pedido dele, 08/10): o Ritmo sobe para logo abaixo de "Hoje"
         _sec("ritmo", _html_ritmo(d["ritmo"])),
-        _sec("semana", _html_semana(d["semana"])),
+        # s226 (sprint-final-uerj part-3): com sprint, o bloco da semana vira Hoje / Proximos dias /
+        # Fora do sprint (o `data-bloco` segue "semana": o hub e os testes o acham pelo nome antigo)
+        _sec("semana", _html_sprint(d["sprint"], d["dia"]["cards"]) if d.get("sprint")
+             else _html_semana(d["semana"])),
         _sec("blocos", _html_blocos(d["blocos"])),
     ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"

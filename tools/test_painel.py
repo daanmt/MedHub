@@ -896,3 +896,87 @@ def test_proxima_so_pelo_rotulo_sem_botao_cheio(db_sintetico):
     assert ":first-child .t-acao" not in css and "var(--sobre)" not in css, "botao cheio voltou"
     pagina = _pagina()
     assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 1
+
+
+# ------------------------------- s226 (sprint-final-uerj part-3): Hoje · Proximos dias · Fora do sprint
+
+def _com_sprint(caminho):
+    """O banco sintetico com o sprint gravado: a #1 de ontem (rolou), a #3 hoje, a #5 amanha, o
+    simulado (#6) depois de amanha, a #8 fora com o motivo; a #2 (feita) com dia nao entra."""
+    con = sqlite3.connect(caminho)
+    con.execute("ALTER TABLE plano_tarefas ADD COLUMN dia_plano TEXT")
+    for tid, dia in ((1, "2026-09-22"), (3, "2026-09-23"), (5, "2026-09-24"), (6, "2026-09-25"),
+                     (2, "2026-09-23")):
+        con.execute("UPDATE plano_tarefas SET dia_plano = ? WHERE id = ?", (dia, tid))
+    con.execute("UPDATE plano_tarefas SET nota = 'sprint: fora (sem vaga ate 31/10 (80 q/dia))' WHERE id = 8")
+    con.commit()
+    con.close()
+
+
+def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
+    """DoD 2-4: com sprint, o bloco da semana vira Hoje (rolada + a de hoje, total de questoes, cards
+    do dia) + Proximos dias (um por linha, recolhido) + Fora do sprint (recolhido, com o motivo).
+    Some a semana, as atrasadas e a rota; o `li.tarefa[data-tarefa]` segue (o hub pinta por ele)."""
+    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
+    _com_sprint(db_sintetico)
+    d = painel.coletar()
+    s = d["sprint"]
+    assert [t["id"] for t in s["hoje"]] == [1, 3] and s["q_hoje"] == 72
+    assert [p["data"] for p in s["proximos"]] == ["2026-09-24", "2026-09-25"]
+    assert [(t["id"], t["motivo"]) for t in s["fora"]] == [(8, "sem vaga ate 31/10 (80 q/dia)")]
+    pagina = painel.render_html(d)
+    for proibido in ("Atrasadas", "Desta semana", "Semana ", "Até a prova", 'class="tarefa atrasada',
+                     'class="t-grupo atrasadas"'):
+        assert proibido not in pagina, proibido
+    bloco = pagina[pagina.index('data-bloco="semana"'):pagina.index('data-bloco="blocos"')]
+    assert "<h2>Hoje</h2>" in bloco
+    assert re.search(r'<p class="sub">2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
+    hoje_html = bloco.split('<div class="rota">')[0]
+    assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', hoje_html) == [
+        ("tarefa proxima", "1"), ("tarefa", "3")], "a rolada sem rotulo de atraso"
+    assert '<h3>Próximos dias</h3>' in bloco
+    assert '<span class="rota-tit">qui 24/09</span> <span class="rota-n">1&nbsp;lista · 60&nbsp;q</span>' in bloco
+    assert '<span class="rota-tit">sex 25/09</span> <span class="rota-n">1&nbsp;simulado · 60&nbsp;q</span>' in bloco
+    assert '<details class="rota-sem fora"><summary><span class="rota-tit">Fora do sprint · 1</span>' in bloco
+    assert "sem vaga até 31/10 (80 q/dia) · 1" in bloco
+    assert 'data-tarefa="8"' in bloco and "<details open" not in bloco, "proximos e fora recolhidos"
+
+
+def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, tmp_path, monkeypatch):
+    """O Hoje diz "+ N cards" (o que falta da dose do dia) e traz a RD NAO assinada mais antiga, a
+    linha inteira abrindo o leitor; a assinada (estado do quadro) e a sem arquivo nao entram."""
+    _com_sprint(db_sintetico)
+    reg = tmp_path / "quadro.json"
+    reg.write_text(json.dumps({"itens": {
+        "rd-velha": {"tipo": "revisao", "titulo": "RD velha"},
+        "rd-nova": {"tipo": "revisao", "titulo": "RD nova"},
+        "rd-lida": {"tipo": "revisao", "titulo": "RD lida"},
+        "rd-sem-arquivo": {"tipo": "revisao", "titulo": "Sem arquivo"},
+        "aula-x": {"tipo": "aula", "titulo": "Aula"}}}), encoding="utf-8")
+    for slug in ("rd-velha", "rd-nova", "rd-lida", "aula-x"):
+        (tmp_path / ("aula-%s.html" % slug)).write_text("<title>x</title>", encoding="utf-8")
+    estado = tmp_path / "estado"
+    estado.mkdir()
+    (estado / "rd-lida.json").write_text('{"feito": true}', encoding="utf-8")
+    datas = {"rd-velha": "2026-09-01", "rd-nova": "2026-09-20", "rd-lida": "2026-08-01", "aula-x": "2026-07-01"}
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
+    monkeypatch.setattr(painel, "_data_da_aula", lambda p: datas[Path(p).stem[5:]])
+    d = painel.coletar()
+    assert d["sprint"]["rd"] == {"slug": "rd-velha", "titulo": "RD velha", "data": "2026-09-01"}
+    bloco = painel._html_sprint(d["sprint"], {"consumo_hoje": 10, "restantes": 40, "teto": 50})
+    assert "72&nbsp;questões + 40&nbsp;cards." in bloco
+    assert ('<li class="tarefa rd"><a class="t-alvo" href="aulas/rd-velha.html" data-hub-aula="rd-velha" '
+            'data-titulo="RD velha">') in bloco
+    sem_contador = painel._html_sprint(dict(d["sprint"], rd=None), {"consumo_hoje": None, "restantes": None,
+                                                                   "teto": 100})
+    assert "+ 100&nbsp;cards." in sem_contador and "tarefa rd" not in sem_contador
+    assert "cards" not in painel._html_sprint(d["sprint"], {"consumo_hoje": 50, "restantes": 0, "teto": 50})
+
+
+def test_sem_sprint_o_painel_mostra_a_semana_antiga(db_sintetico):
+    """Degradacao declarada: `dia_plano` todo NULL (ou banco sem a coluna) = o bloco antigo."""
+    d = painel.coletar()
+    assert d["sprint"] is None
+    assert "Semana 2 do plano" in painel.render_html(d)

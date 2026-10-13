@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "anima": {
+      "source": "Garinmckayl/anima",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "25a5062f3368ab41f3791a10963cbb2940c77f1857546454238402698ae09211"
+    }
+  }
+}

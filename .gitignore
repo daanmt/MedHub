@@ -94,3 +94,6 @@ core/simulados/_s*_questoes.json
 
 # s202: sessao do operador para tools/emed_api.py (credencial; nunca no git)
 .emed_token
+
+# s226: skill de terceiro (anima, 13 MB com demos); versiona-se so o skills-lock.json -- reinstalar: npx skills experimental_install
+.claude/skills/anima/

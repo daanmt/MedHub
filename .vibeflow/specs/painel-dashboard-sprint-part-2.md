@@ -1,8 +1,11 @@
 # Spec: painel-dashboard-sprint -- part 2: uma figura (anima) em cada RD da UERJ 2022 -- TESTE
 
 > PRD: `.vibeflow/prds/painel-dashboard-sprint.md` (Solution 3). Gerada em 13/10/2026 (s226).
-> 🔒 **BLOQUEADA até ele instalar a skill** (`! npx skills add Garinmckayl/anima -g -a claude-code`): o agente não instala
-> código de terceiro. Antes de usar, ler o `SKILL.md` instalado inteiro (o que ele executa, rede, arquivos).
+> ✅ **Desbloqueada em 13/10 (s226):** ele autorizou (*"pode instalar a skill no medhub"*); instalada no PROJETO em
+> `.claude/skills/anima` (`npx skills add Garinmckayl/anima -a claude-code -y`; scanner: Gen Safe, Socket 1 alerta, Snyk Low).
+> Varredura do principal: o kit é JS puro gerando SVG; só `scripts/capture.mjs`/`drive.mjs` abrem Chrome headless e falam com
+> `127.0.0.1` (DevTools) -- sem rede externa achada. Pasta no `.gitignore` (13 MB de demos); versionado só o `skills-lock.json`.
+> Antes de usar, ler o `SKILL.md` instalado inteiro (DoD 1).
 
 ## Objetivo
 

@@ -111,7 +111,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Linha de lista | Teoria (`.qd-bloco`), Listas (`.qz-lista button`), Painel (`.tarefa`), revisão (`.qz-rev`), por bloco (`.qz-porobj li`), cadeia (`.qz-cadeia li`) | sem fundo e sem caixa; filete de baixo (`--linha`); título 600 em `tinta`, meta em `tinta3` |
 | Moldura | card do player, alternativa da questão, campo, assinatura de leitura | só o que é objeto de toque ou o foco da tela; `--card` + `--linha` + `--raio`; sem sombra |
 | Badge | área (`.qd-bl`, `.t-rot`), objetivo (`.qz-obj`), "Próxima" | pílula, `--afundado` + `tinta2` (o "Próxima" em ciano) |
-| Chip de estado | lista (`.qz-chip`) | "pronta" quieto (só texto); resolvendo = aviso; resolvida = ok + `✓` |
+| Chip de estado | lista (`.qz-chip`, `qzChip`) | só fora do normal: "pronta" não tem chip; em curso = aviso com respondidas/total (espelho do aparelho); resolvida = ok + `✓` |
 | Botão | global (`player.html`) | secundário: contorno `--linha-forte`, fundo transparente; `.primario`: ciano com texto `--sobre`; `.fantasma`: tracejado; 44 px de altura |
 | Segmentado | Questões/Simulados (`.qz-modo`), certeza (`.qz-seg`), declaração (`.qz-decl`) | raio de controle; ligado = cor do estado + lavagem |
 | Abas | `.hub-aba` | texto; ativa em `tinta` com sublinhado ciano de 2 px; o filete de baixo é o horizonte |
@@ -119,6 +119,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
 | Barra de progresso | painel (`.barra`), player (`.barra`, `.dist-barra`) | 6-8 px, trilho `--afundado`, preenchimento sólido ciano |
+| Leitura resiliente | `assinarResiliente(consulta, onDados, opts)` no `hub.html`: listas, quadro da Teoria, questões/respostas/análises da lista aberta | erro = `console.warn("[hub] leitura <coleção> falhou", código, tentativa)` + nova assinatura em 1/2/4 s com "Carregando…"; esgotadas, a mensagem + botão `.primario` **Tentar de novo** (`htmlRetentar`); reabrir a aba com ela morta reassina; um estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela |
 | Secções do card | `.bloco` (regra-mestre), `.bloco.alerta` (armadilha) | filete à esquerda (neutro / âmbar), nunca caixa dentro do card |
 
 ## 6. Telas: o que cada uma prioriza
@@ -152,6 +153,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`, que viaja embutido) | `test_painel.py::test_html_sem_jargao` |
+| leituras das abas pela assinatura resiliente (retentativa, botão, 1 ouvinte); chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | o `max-width` aparece no máximo 2 vezes na página do player e na do painel | os dois testes de contrato acima |
 
 ## 8. Como conferir (obrigatório antes de publicar tela nova)
@@ -199,11 +201,11 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 | A15 | O "próximo passo" não existia como elemento no Painel | painel | **resolvido**: a 1ª tarefa da Semana leva "Próxima" e a ação como botão primário |
 | A16 | Página de resumo publicada tem paleta própria (verde-água antigo) para quando abre fora do leitor | `hub.py` `CSS_RESUMO` | **pendente** (baixo impacto: no leitor o tema vem por cima; mudar republica 31 resumos) |
 | A17 | Tema claro só por `data-theme="light"`; o hub ignora `prefers-color-scheme: light` de propósito | `tema.css` | **decisão dele** (s224: escuro por padrão); o claro foi refeito na mesma semântica |
-| A18 | Aba que não carrega ("Não consegui ler as listas"): a assinatura de `listas` (e a do quadro da Teoria) é feita uma vez só e não tenta de novo depois de uma falha | `hub.html` `iniciarQuestoes` | **pendente**: PRD `.vibeflow/prds/hub-correcoes-pos-tema-v3.md` (relato dele, 13/10) |
+| A18 | Aba que não carrega ("Não consegui ler as listas"): a assinatura de `listas` (e a do quadro da Teoria) é feita uma vez só e não tenta de novo depois de uma falha | `hub.html` `iniciarQuestoes` | **resolvido** (s226, part-1): `assinarResiliente` (1/2/4 s + Tentar de novo) e log no console com o código para medir o gatilho real |
 | A19 | Cards: o Painel conta o saldo do dia (X de 150) e a aba Cards o lote no ar (3/100), que é de 10/10 (backend manual) | `painel.py`, `player.html`, `/hub-backend` | **pendente**: mesmo PRD (decisão dele: contador do dia + fila diária) |
 | A20 | Semana do Painel: "resolver no hub"/"abrir aula" repetidos por linha, "da semana N" em cada atrasada, a Próxima com controle de outro tipo | `painel.py` | **pendente**: mesmo PRD (linha clicável, aviso uma vez) |
-| A21 | Listas: chip "pronta" repetido em toda linha (informação nula) | `hub.html` `qzItem` | **pendente**: mesmo PRD (estado só quando foge do normal) |
-| A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **pendente**: mesmo PRD |
+| A21 | Listas: chip "pronta" repetido em toda linha (informação nula) | `hub.html` `qzItem` | **resolvido** (s226, part-1): `qzChip` |
+| A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **resolvido** (s226, part-1): 1,375rem, "Hub" em rosa |
 | A23 | Sem o espelho local `medhub.respostas.<lista>`, o 1º snapshot de `questoes` chega antes do de `respostas` e a Q1 aparece como nova mesmo respondida (lido no código pelo subagente, não medido) | `hub.html` | **pendente**: mesmo PRD (família do A18) |
 
 ## 11. Histórico de decisões
@@ -220,5 +222,9 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
   hub" saiu), a aula vira ação pequena fora do alvo, o atraso sobe para o subtítulo "Atrasadas · N" ("da semana N"
   saiu da linha) e a "Próxima" perde o botão cheio, fica só o rótulo. Travas: `test_painel.py::
   test_semana_linha_inteira_abre_a_lista`, `test_atrasadas_sob_subtitulo_unico`, `test_proxima_so_pelo_rotulo_sem_botao_cheio`.
+
+- **Abas que se recuperam sozinhas (13/10, s226, part-1, A18/A21/A22)**: leitura de Listas, Teoria e lista aberta pela
+  assinatura resiliente (1/2/4 s, depois "Tentar de novo"); o chip "pronta" saiu (em curso mostra respondidas/total);
+  marca em 1,375rem. O banco falso do `ui_harness.html` ganhou `?leitura=1x|0` (falha de leitura de coleção).
 
 Ele muda de ideia rápido: trocar paleta é trocar os dois blocos de cor do `tema.css`; nada além disso deve ser preciso.

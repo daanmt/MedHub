@@ -28,7 +28,7 @@
    componente do hub mora AQUI e so aqui. Linhas com filete em vez de cartoes; moldura so para o que e
    objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
 .hub-topo{margin-bottom:var(--esp-3)}
-.hub-marca{margin:0;font-weight:700;font-size:1.125rem;letter-spacing:-.01em;color:var(--tinta)}
+.hub-marca{margin:0;font-weight:700;font-size:1.375rem;letter-spacing:-.01em;color:var(--tinta)}
 .hub-marca span{color:var(--rosa)}
 
 /* as abas: texto + sublinhado ciano na ativa; o filete de baixo e o horizonte (o unico gradiente da UI) */
@@ -168,7 +168,8 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qz-lista li.qz-recente > button .qz-tema::before{content:"\2713\00A0";color:var(--ok)}
 .qz-lista .qz-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;grid-column:1}
 .qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;gap:2px var(--esp-3)}
-/* estado da lista: "pronta" e o normal (quieto); resolvendo = aviso; resolvida = ok com o check */
+/* estado da lista (s226, A21): "pronta" e o normal e nao tem chip; em curso = aviso com respondidas/total;
+   resolvida = ok com o check */
 .qz-chip{grid-column:2;grid-row:1 / span 2;font-size:var(--fs-meta);font-weight:600;padding:1px var(--esp-2);border-radius:var(--raio-pilula);color:var(--tinta3)}
 .qz-chip.resolvendo{background:var(--aviso-fraco);color:var(--aviso)}
 .qz-chip.resolvida{background:var(--ok-fraco);color:var(--ok)}
@@ -484,6 +485,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }
     if(aba === "painel"){ carregarPainel(); }
     if(aba === "questoes"){ iniciarQuestoes(); }
+    if(aba === "aulas" && quadroLeitura && quadroLeitura.estado() === "morta"){ quadroRetentar(); }
     // quadro medido com a aba escondida volta com altura 0: remede depois do reflow
     setTimeout(ajustarVisiveis, 60);
   }
@@ -1633,6 +1635,51 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }catch(e){}
   }
 
+  // ------------------------------------------------- assinatura resiliente
+  // s226 (part-1, A18: "Não consegui ler as listas" ficava preso ate recarregar): toda leitura de aba
+  // (listas, quadro, questoes/respostas/analises da lista aberta) passa por AQUI. Erro de leitura =
+  // console.warn com o codigo (a medicao do gatilho real) e nova assinatura com espera crescente
+  // (1 s, 2 s, 4 s); esgotadas, `aoMorrer` (a tela oferece "Tentar de novo" -> `reiniciar`). Um estado
+  // por assinatura (viva | esperando | morta | parada) e unsub antes de reassinar: nunca 2 ouvintes.
+  // `consulta` e uma funcao que devolve a referencia (refeita a cada tentativa).
+  var ESPERAS_LEITURA = [1000, 2000, 4000];
+  function assinarResiliente(consulta, onDados, opts){
+    opts = opts || {};
+    var esperas = opts.esperas || ESPERAS_LEITURA;
+    var st = {estado: "viva", tentativa: 0, unsub: null, timer: null, ger: 0};
+    function soltar(){
+      if(st.timer){ clearTimeout(st.timer); st.timer = null; }
+      if(st.unsub){ var u = st.unsub; st.unsub = null; try{ u(); }catch(e){} }
+    }
+    function chamar(f, x){ if(f){ try{ f(x); }catch(e){} } }
+    function falhou(g, err){
+      if(g !== st.ger){ return; }
+      st.ger++; soltar(); st.tentativa++;
+      try{ console.warn("[hub] leitura " + (opts.nome || "?") + " falhou", (err && (err.code || err.message)) || String(err), st.tentativa); }catch(e){}
+      if(st.tentativa <= esperas.length){
+        st.estado = "esperando"; chamar(opts.aoEsperar, st.tentativa);
+        st.timer = setTimeout(function(){ st.timer = null; assinar(); }, esperas[st.tentativa - 1]);
+      } else { st.estado = "morta"; chamar(opts.aoMorrer, st.tentativa); }
+    }
+    function assinar(){
+      soltar(); st.estado = "viva";
+      var g = ++st.ger, u = null;
+      try{
+        u = consulta().onSnapshot(function(s){ if(g !== st.ger){ return; } st.tentativa = 0; onDados(s); },
+                                  function(err){ falhou(g, err); });
+      }catch(e){ falhou(g, e); }
+      // a falha pode chegar antes do onSnapshot devolver o unsub: o ouvinte velho nao sobrevive
+      if(typeof u === "function"){ if(g === st.ger){ st.unsub = u; } else { try{ u(); }catch(e){} } }
+    }
+    assinar();
+    return {estado: function(){ return st.estado; }, tentativa: function(){ return st.tentativa; },
+            reiniciar: function(){ st.tentativa = 0; assinar(); },
+            parar: function(){ st.ger++; soltar(); st.estado = "parada"; }};
+  }
+  function htmlRetentar(texto, chave){
+    return texto + ' <button type="button" class="primario hub-retentar" data-retentar="' + chave + '">Tentar de novo</button>';
+  }
+
   // --------------------------------------------------------------- quadro
   // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na
   // declaracao do publish). P20 (s219): quem o grava e a ASSINATURA da leitura (`quadroMarcarFeito`);
@@ -1640,7 +1687,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   var qd = $("hub-quadro");
   // s214: a assinatura do leitor conclui o item do quadro; sem quadro (ou sem banco), nao faz nada
   var quadroMarcarFeito = function(){ return Promise.resolve(false); };
+  // s226 (part-1): a assinatura resiliente do quadro; reabrir a Teoria com ela morta (ou o botao do aviso) reassina
+  var quadroLeitura = null, quadroRetentar = function(){};
   if(qd){ iniciarQuadro(); try{ secoesQuadro(qd); }catch(e){} }
+  if($("hub-quadro-aviso")){ $("hub-quadro-aviso").addEventListener("click", function(e){
+    if(e.target.closest && e.target.closest("[data-retentar]")){ quadroRetentar(); } }); }
 
   function iniciarQuadro(){
     // os itens com a chave do quadro (data-slug): a aula que cumpre uma tarefa de aula, a avulsa, a RD
@@ -1832,7 +1883,16 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         if(!db){ semArmazenamento(); return; }
         try{ marcarListasEm(qd, db, aplicarLista); }catch(e){}
         colecao = db.collection("quadro");
-        colecao.onSnapshot(function(snap){
+        var aviso = $("hub-quadro-aviso");
+        // o aviso e dividido com o "nao consegui salvar": a leitura so limpa o que ela escreveu
+        function avisoLeitura(html){
+          if(!aviso){ return; }
+          if(html === null){ if(aviso.hasAttribute("data-leitura")){ aviso.removeAttribute("data-leitura"); aviso.hidden = true; aviso.textContent = ""; } return; }
+          aviso.setAttribute("data-leitura", "1"); aviso.innerHTML = html; aviso.hidden = false;
+        }
+        quadroRetentar = function(){ avisoLeitura("Carregando…"); quadroLeitura.reiniciar(); };
+        quadroLeitura = assinarResiliente(function(){ return db.collection("quadro"); }, function(snap){
+          avisoLeitura(null);
           var feito = {};
           (snap.docs || []).forEach(function(d){
             var dado = d.data && d.data();
@@ -1842,7 +1902,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
             var f = !!feito[li.getAttribute("data-slug")];
             if(f !== li.hasAttribute("data-feito")){ aplicar(li, f); }
           });
-        }, function(){ /* sem assinatura: vale o estado do build e o que for clicado */ });
+        }, {nome: "quadro", aoEsperar: function(){ avisoLeitura("Carregando…"); },
+            // sem assinatura: vale o estado do build e o que for clicado; o botao reassina
+            aoMorrer: function(){ avisoLeitura(htmlRetentar("Não consegui ler o que você já concluiu.", "quadro")); }});
       }).catch(semArmazenamento);
     }catch(e){
       semArmazenamento();
@@ -1864,7 +1926,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // respostas/<lista>_<num> e o veredito do operador em analises/<lista>_<num>. Regras de
   // leitura fechadas ao dono: conteudo do EMED nunca fica legivel por link.
   var QZ = {db:null, listas:[], lista:null, qs:[], resp:{}, ana:{}, grifos:{}, pos:-1, letra:null, conf:null,
-            t0:0, timer:null, unsubs:[], revendo:false, iniciado:false};
+            t0:0, timer:null, unsubs:[], revendo:false, iniciado:false, subListas:null, subsLista:{}};
   var ROT_QZ = {pendente:"pendente", em_curso:"em curso", capturada:"pronta", resolvendo:"em curso", resolvida:"resolvida"};
   function qzEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   function qzAgora(){ return new Date().toISOString(); }
@@ -1900,18 +1962,24 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzLs(k, v){ try{ if(v === undefined){ return JSON.parse(localStorage.getItem(k) || "null"); } localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
   function qzChave(){ return "medhub.respostas." + QZ.lista; }
 
+  // s226 (part-1): `QZ.iniciado` = a assinatura de `listas` esta viva (ou esperando a proxima tentativa);
+  // morta, reabrir a aba (ou o botao) reassina -- nunca um 2o ouvinte
   function iniciarQuestoes(){
     if(QZ.iniciado){ return; }
     QZ.iniciado = true;
+    if(QZ.subListas){ $("qz-listas").innerHTML = '<p class="qd-vazio">Carregando as listas…</p>'; QZ.subListas.reiniciar(); return; }
     try{
       window.claude.use("db").then(function(db){
         if(!db){ qzSemDb(); return; }
         QZ.db = db;
         // data() vem congelado: clonar antes de anexar o id (licao da s197)
-        db.collection("listas").orderBy("seq").onSnapshot(function(s){
+        QZ.subListas = assinarResiliente(function(){ return db.collection("listas").orderBy("seq"); }, function(s){
           QZ.listas = s.docs.map(function(d){ var x = Object.assign({}, d.data() || {}); x._id = d.id; return x; });
           qzRenderListas();
-        }, function(){ $("qz-listas").innerHTML = '<p class="qd-vazio">Não consegui ler as listas. Recarregue a página.</p>'; });
+        }, {nome: "listas",
+            aoEsperar: function(){ $("qz-listas").innerHTML = '<p class="qd-vazio">Carregando as listas…</p>'; },
+            aoMorrer: function(){ QZ.iniciado = false;
+              $("qz-listas").innerHTML = '<p class="qd-vazio">' + htmlRetentar("Não consegui ler as listas.", "listas") + '</p>'; }});
       }).catch(qzSemDb);
     }catch(e){ qzSemDb(); }
   }
@@ -1927,8 +1995,21 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function temaExibido(t){
     return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/^[ ·]+|[ ·]+$/g, "");
   }
-  function qzItemLista(l, atrasada){ var s = l.status || "capturada";
-    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  // s226 (part-1, A21): chip so quando a lista foge do normal -- "pronta" (capturada) nao tem chip; em curso
+  // (resposta no espelho local do aparelho, ou o status do doc) mostra respondidas/total; resolvida, o check.
+  // LIMITE DECLARADO: as respondidas vem do espelho `medhub.respostas.<lista>` -- lista comecada em outro
+  // aparelho aparece "em curso" so pelo status do doc. PURA salvo o aparelho.
+  function qzChip(l){
+    var s = l.status || "capturada", total = Math.round(l.q || l.q_previstas || 0);
+    if(s === "resolvida"){ return '<span class="qz-chip resolvida">resolvida</span>'; }
+    var esp = qzLs("medhub.respostas." + l._id), n = esp && typeof esp === "object" ? Object.keys(esp).length : 0;
+    if(n > 0 || s === "resolvendo" || s === "em_curso"){
+      return '<span class="qz-chip resolvendo">em curso' + (n > 0 ? " " + qzEsc(Math.min(n, total || n)) + "/" + qzEsc(total || n) : "") + '</span>'; }
+    if(s === "capturada"){ return ""; }
+    return '<span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span>';
+  }
+  function qzItemLista(l, atrasada){
+    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
   // ⚰️ P21 (s220, pedido do operador em 07/10, resolvendo listas: "o bloco 'listas' esta bugado, alternando
   // entre tarefas com e sem hiperlinks abaixo ... se estou em listas e clico na tarefa, naturalmente devo ir
   // especificamente para as questoes"): os links de aula (s216 part-2) e de resumo (s218 P2) debaixo das
@@ -1951,8 +2032,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   QZ.modo = qzLs("medhub.listas.modo") === "simulados" ? "simulados" : "questoes";
   $("qz-modo").addEventListener("click", function(e){ var b = e.target.closest("button[data-m]"); if(!b){ return; }
     QZ.modo = b.getAttribute("data-m"); qzLs("medhub.listas.modo", QZ.modo); qzRenderListas(); });
-  function qzItemSim(l, daVez){ var s = l.status || "capturada", q = Math.round(l.q || l.q_previstas || 0);
-    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  function qzItemSim(l, daVez){ var q = Math.round(l.q || l.q_previstas || 0);
+    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
   function qzRenderSimulados(ls){
     var abertos = ls.filter(function(l){ return l.status !== "resolvida"; }), feitos = ls.filter(function(l){ return l.status === "resolvida"; });
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhum simulado carregado ainda.</p>'; return; }
@@ -1990,6 +2071,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   }
   // delegacao: o HTML das Listas e refeito a cada snapshot, o ouvinte fica no conteiner
   function qzListasClique(e){
+    if(e.target.closest("[data-retentar]")){ iniciarQuestoes(); return; }
     var t = e.target.closest("[data-sec]");
     if(t){ secAlternar(t.parentNode, t.getAttribute("data-sec")); return; }
     var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); }
@@ -2007,7 +2089,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(!$("qz-questao").hidden && qzCompleta()){ qzFim(); } else { qzFecharLista(); }
   });
 
-  function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; }
+  function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; QZ.subsLista = {};
+    $("qz-aviso-lista").removeAttribute("data-leitura"); }
   function qzFecharLista(){
     qzLimpar(); qzParar(); QZ.lista = null; QZ.pos = -1;
     $("qz-player").hidden = true; $("qz-escolha").hidden = false;
@@ -2024,22 +2107,41 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     $("qz-modo-escolha").hidden = true; $("qz-modo-lista").hidden = true; $("qz-trilho").innerHTML = "";
     window.scrollTo(0, 0);
     if(!QZ.db){ return; }
-    QZ.unsubs.push(QZ.db.collection("questoes").where("lista", "==", id).onSnapshot(function(s){
+    qzAssinarLista("questoes", id, function(s){
       QZ.qs = s.docs.map(function(d){ return d.data() || {}; }).filter(function(q){ return q.num; }).sort(function(a, b){ return a.num - b.num; });
       if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
-    }, function(){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Não consegui ler as questões. Recarregue a página."; }));
-    QZ.unsubs.push(QZ.db.collection("respostas").where("lista", "==", id).onSnapshot(function(s){
+    });
+    qzAssinarLista("respostas", id, function(s){
       var noDb = {};
       s.docs.forEach(function(d){ var r = Object.assign({}, d.data() || {}); if(r.num){ noDb[r.num] = 1; var loc = QZ.resp[r.num]; if(!loc || !loc._pendente || (loc.respondido_em || "") <= (r.respondido_em || "")){ QZ.resp[r.num] = r; } } });
       // o banco manda: resposta que sumiu de la (reset pelo hub) sai do espelho local, salvo a pendente de envio
       if(!s.metadata || !s.metadata.fromCache){ Object.keys(QZ.resp).forEach(function(n){ if(!noDb[n] && QZ.resp[n] && !QZ.resp[n]._pendente){ delete QZ.resp[n]; } }); }
       qzLs(qzChave(), QZ.resp); qzReenviar(); if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
-    }, function(){}));
-    QZ.unsubs.push(QZ.db.collection("analises").where("lista", "==", id).onSnapshot(function(s){
+    });
+    qzAssinarLista("analises", id, function(s){
       QZ.ana = {}; s.docs.forEach(function(d){ var a = d.data() || {}; if(a.num){ QZ.ana[a.num] = Object.assign({_id: d.id}, a); } });
       if(QZ.pos >= 0 && !$("qz-depois").hidden){ qzAnalise(); }
-    }, function(){}));
+    });
   }
+  // s226 (part-1): as 3 leituras da lista aberta pela assinatura resiliente; a espera e a falha aparecem no
+  // aviso da lista (com a colecao em `data-leitura`, para so ela o limpar), e `qzLimpar` para tudo
+  var QZ_LEITURA = {questoes: "as questões", respostas: "as respostas salvas", analises: "as análises"};
+  function qzAvisoLeitura(col, html){
+    var av = $("qz-aviso-lista");
+    if(html === null){ if(av.getAttribute("data-leitura") === col){ av.removeAttribute("data-leitura"); av.hidden = true; av.textContent = ""; } return; }
+    av.setAttribute("data-leitura", col); av.innerHTML = html; av.hidden = false;
+  }
+  function qzAssinarLista(col, id, onDados){
+    var h = assinarResiliente(function(){ return QZ.db.collection(col).where("lista", "==", id); },
+      function(s){ qzAvisoLeitura(col, null); onDados(s); },
+      {nome: col, aoEsperar: function(){ qzAvisoLeitura(col, "Carregando " + QZ_LEITURA[col] + "…"); },
+       aoMorrer: function(){ qzAvisoLeitura(col, htmlRetentar("Não consegui ler " + QZ_LEITURA[col] + ".", col)); }});
+    QZ.subsLista[col] = h; QZ.unsubs.push(h.parar);
+  }
+  $("qz-aviso-lista").addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest("[data-retentar]"), h = b && QZ.subsLista[b.getAttribute("data-retentar")];
+    if(h){ qzAvisoLeitura(b.getAttribute("data-retentar"), "Carregando…"); h.reiniciar(); }
+  });
   function qzPosicionar(){
     if(!QZ.qs.length){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Esta lista ainda não tem questões carregadas."; $("qz-questao").hidden = true; return; }
     $("qz-aviso-lista").hidden = true;

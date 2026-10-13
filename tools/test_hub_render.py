@@ -543,6 +543,7 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                        re.search(r"\n  (var SECOES_CHAVE = [^\n]+;)", TEMPLATE).group(1)] +
                       [extrair_funcao(TEMPLATE, a) for a in (
                           "function qzEsc(s){", "function temaExibido(t){",   # P20: o titulo da lista
+                          "function qzLs(k, v){", "function qzChip(l){",       # s226: chip so fora do normal
                           "function qzItemLista(l, atrasada){",   # P21 (s220): sem qzAulasHtml
                           "function qzEhSimulado(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
@@ -1740,3 +1741,200 @@ def test_alternativa_sem_figura_nao_muda_o_render():
     so_url = _rodar(_q(figuras_alt={"B": ["https://emed.example/b.png"]}), None, None,
                     'SAIDA = {h: qzAltsHtml(q, null, false, {})};')["h"]
     assert so_url == base
+
+
+# ======================================================================== s226 part-1: abas que se recuperam
+# Relato dele (13/10): tocar em Listas ou Teoria deixava a tela presa em "Não consegui ler" ate recarregar --
+# a assinatura era feita uma vez so. Agora as leituras das abas passam por `assinarResiliente`: erro =
+# console.warn com o codigo + nova assinatura em 1/2/4 s; esgotadas, "Tentar de novo". O banco falso daqui
+# imita o `leitura=1x|0` do `core/templates/ui_harness.html` e CONTA os ouvintes vivos (risco: 2 listeners).
+# O relogio: as esperas >= 1 s sao anotadas e encurtadas 10x (o teste nao dorme 7 s).
+
+RELOGIO_JS = r"""
+var ESPERAS_VISTAS = [], AVISOS_LEITURA = [], _st = setTimeout;
+setTimeout = function(f, ms){ if(ms >= 1000){ ESPERAS_VISTAS.push(ms); ms = ms / 10; } return _st(f, ms); };
+console.warn = function(){ AVISOS_LEITURA.push(Array.prototype.slice.call(arguments)); };
+function dormir(ms){ return new Promise(function(ok){ _st(ok, ms); }); }
+// banco falso de leitura: `falhas[col]` = quantas assinaturas seguidas falham (99 = ate `bancoBom()`)
+var FALHAS = __FALHAS__, ATIVOS = {}, ASSINATURAS = {};
+function bancoBom(){ Object.keys(FALHAS).forEach(function(k){ FALHAS[k] = 0; }); }
+function consultaFalsa(col, docs){
+  var q = {where: function(){ return q; }, orderBy: function(){ return q; },
+    onSnapshot: function(ok, erro){
+      ASSINATURAS[col] = (ASSINATURAS[col] || 0) + 1;
+      if((FALHAS[col] || 0) > 0){ FALHAS[col]--; var vivo = true;
+        _st(function(){ if(vivo){ erro({code: "unavailable", message: "falha de leitura (db falso)"}); } }, 5);
+        return function(){ vivo = false; }; }
+      ATIVOS[col] = (ATIVOS[col] || 0) + 1; var vivo2 = true;
+      _st(function(){ if(vivo2){ ok({docs: docs().map(function(d){ return {id: d.id, data: function(){ return Object.freeze(d.dado); }}; }),
+                                    metadata: {fromCache: false}}); } }, 5);
+      return function(){ if(vivo2){ vivo2 = false; ATIVOS[col]--; } }; }};
+  return q;
+}
+"""
+
+QZ_LEITURA_JS = "\n".join([_var("ESPERAS_LEITURA"), _funcs(
+    "function assinarResiliente(consulta, onDados, opts){", "function htmlRetentar(texto, chave){",
+    "function iniciarQuestoes(){", "function qzSemDb(){", "function qzListasClique(e){")])
+
+HARNESS_QZ_LEITURA = RELOGIO_JS + r"""
+var els = {};
+function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "", hidden: false}; } return els[id]; }
+$("qz-listas").innerHTML = '<p class="qd-vazio">Carregando as listas…</p>';
+var QZ = {db: null, listas: [], iniciado: false, subListas: null};
+var RENDERS = 0;
+function qzRenderListas(){ RENDERS++; $("qz-listas").innerHTML = "LISTAS " + QZ.listas.map(function(l){ return l._id; }).join(","); }
+var DB = {collection: function(c){ return consultaFalsa(c, function(){ return [{id: "t49", dado: {seq: 1}}, {id: "t26", dado: {seq: 2}}]; }); }};
+var window = {claude: {use: function(){ return Promise.resolve(DB); }}};
+__FUNCS__
+function clicar(sel){ qzListasClique({target: {closest: function(s){ return s === sel ? {} : null; }}}); }
+var SAIDA = {};
+(async function(){
+__ACAO__
+  SAIDA.esperas = ESPERAS_VISTAS; SAIDA.avisos = AVISOS_LEITURA; SAIDA.ativos = ATIVOS; SAIDA.assinaturas = ASSINATURAS;
+  console.log(JSON.stringify(SAIDA));
+})();
+"""
+
+
+def _rodar_qz_leitura(acao, falhas):
+    return _node(HARNESS_QZ_LEITURA.replace("__FUNCS__", QZ_LEITURA_JS)
+                 .replace("__FALHAS__", json.dumps(falhas)).replace("__ACAO__", acao))
+
+
+def _rodar_quadro_leitura(acao, falhas, quadro=None):
+    """A Teoria REAL (`iniciarQuadro` + o quadro do build) sobre o banco falso do test_hub_quadro, com a
+    colecao `quadro` trocada pela consulta que falha."""
+    from tools.test_hub_quadro import BANCO_QD, DOM_QD, FUNCS_QD, _arvore
+    troca = r"""
+var _colQd = DB.collection;
+DB.collection = function(nome){ if(nome !== "quadro"){ return _colQd(nome); }
+  var c = consultaFalsa("quadro", function(){ return Object.keys(BANCO.quadro).map(function(id){ return {id: id, dado: BANCO.quadro[id]}; }); });
+  c.doc = _colQd(nome).doc; return c; };
+"""
+    prog = (DOM_QD.replace("__ARVORE__", json.dumps(_arvore(_pagina_quadro()), ensure_ascii=False)) + RELOGIO_JS.replace("__FALHAS__", json.dumps(falhas)) +
+            BANCO_QD.replace("__CFG__", json.dumps({"quadro": quadro or {}}, ensure_ascii=False)) + troca + _aparelho() +
+            FUNCS_QD + r"""
+var qd = $("hub-quadro"), SAIDA = {};
+function feitoEm(slug){ return qd.querySelector('.qd-item[data-slug="' + slug + '"]').hasAttribute("data-feito"); }
+function aviso(){ var a = $("hub-quadro-aviso"); return {oculto: a.hidden, html: a.hidden ? "" : String(a.innerHTML || a.textContent || "")}; }
+iniciarQuadro();
+(async function(){
+""" + acao + r"""
+  SAIDA.esperas = ESPERAS_VISTAS; SAIDA.avisos = AVISOS_LEITURA; SAIDA.ativos = ATIVOS; SAIDA.assinaturas = ASSINATURAS;
+  console.log(JSON.stringify(SAIDA));
+})();
+""")
+    return _node(prog)
+
+
+def test_listas_se_recuperam_da_falha_de_leitura():
+    """`leitura=1x`: a 1a assinatura de `listas` falha; a aba mostra "Carregando…", reassina em 1 s e as
+    listas aparecem sem recarregar (bem antes dos 5 s), com UM ouvinte vivo e o log com codigo e tentativa.
+    Reabrir a aba durante a espera nao cria um 2o ouvinte."""
+    acao = r"""
+  iniciarQuestoes(); await dormir(50);
+  SAIDA.na_espera = $("qz-listas").innerHTML;
+  iniciarQuestoes(); iniciarQuestoes();                      // tocar na aba de novo durante a espera
+  await dormir(200);
+  SAIDA.depois = $("qz-listas").innerHTML; SAIDA.estado = QZ.subListas.estado(); SAIDA.iniciado = QZ.iniciado;
+"""
+    out = _rodar_qz_leitura(acao, {"listas": 1})
+    assert "Carregando as listas" in out["na_espera"] and "Tentar de novo" not in out["na_espera"]
+    assert out["depois"] == "LISTAS t49,t26" and out["estado"] == "viva" and out["iniciado"] is True
+    assert out["esperas"] == [1000] and sum(out["esperas"]) <= 5000
+    assert out["avisos"] == [["[hub] leitura listas falhou", "unavailable", 1]]
+    assert out["ativos"] == {"listas": 1} and out["assinaturas"] == {"listas": 2}, "um ouvinte so, nunca dois"
+
+    # a Teoria: o "feito" do db chega depois da falha, sem recarregar; o aviso diz "Carregando…" e some
+    acao_qd = r"""
+  await dormir(50);
+  SAIDA.na_espera = aviso(); SAIDA.feito_na_espera = feitoEm("rd-hepato");
+  await dormir(200);
+  SAIDA.depois = aviso(); SAIDA.feito = feitoEm("rd-hepato"); SAIDA.estado = quadroLeitura.estado();
+"""
+    qd = _rodar_quadro_leitura(acao_qd, {"quadro": 1}, quadro={"rd-hepato": {"feito": True, "ts": "t"}})
+    assert qd["na_espera"] == {"oculto": False, "html": "Carregando…"} and qd["feito_na_espera"] is False
+    assert qd["depois"]["oculto"] is True and qd["feito"] is True and qd["estado"] == "viva"
+    assert qd["esperas"] == [1000] and qd["avisos"] == [["[hub] leitura quadro falhou", "unavailable", 1]]
+    assert qd["ativos"] == {"quadro": 1}
+
+
+def test_botao_tentar_de_novo_reassina():
+    """`leitura=0`: 1 + 3 tentativas (1 s, 2 s, 4 s) e a aba mostra a falha com "Tentar de novo"; com o
+    banco de volta, o toque carrega. Reabrir a aba com a assinatura morta tambem reassina."""
+    acao = r"""
+  iniciarQuestoes(); await dormir(1000);
+  SAIDA.morta = $("qz-listas").innerHTML; SAIDA.estado_morta = QZ.subListas.estado(); SAIDA.iniciado_morta = QZ.iniciado;
+  bancoBom(); clicar("[data-retentar]"); await dormir(50);
+  SAIDA.depois_botao = $("qz-listas").innerHTML; SAIDA.estado = QZ.subListas.estado();
+"""
+    out = _rodar_qz_leitura(acao, {"listas": 99})
+    assert "Não consegui ler as listas." in out["morta"] and 'data-retentar="listas"' in out["morta"]
+    assert 'class="primario hub-retentar"' in out["morta"] and ">Tentar de novo</button>" in out["morta"]
+    assert out["estado_morta"] == "morta" and out["iniciado_morta"] is False
+    assert out["esperas"] == [1000, 2000, 4000]
+    assert [a[2] for a in out["avisos"]] == [1, 2, 3, 4] and all(a[:2] == ["[hub] leitura listas falhou", "unavailable"] for a in out["avisos"])
+    assert out["depois_botao"] == "LISTAS t49,t26" and out["estado"] == "viva"
+    assert out["ativos"] == {"listas": 1} and out["assinaturas"] == {"listas": 5}
+
+    # reabrir a aba (ir("questoes") -> iniciarQuestoes) com a assinatura morta: reassina, mostra "Carregando…"
+    reabrir = r"""
+  iniciarQuestoes(); await dormir(1000); bancoBom();
+  iniciarQuestoes(); SAIDA.na_hora = $("qz-listas").innerHTML; await dormir(50);
+  SAIDA.depois = $("qz-listas").innerHTML;
+"""
+    out2 = _rodar_qz_leitura(reabrir, {"listas": 99})
+    assert "Carregando as listas" in out2["na_hora"] and out2["depois"] == "LISTAS t49,t26"
+    assert out2["ativos"] == {"listas": 1}
+
+    # a Teoria: morta = aviso com o botao; o botao (quadroRetentar) reassina; reabrir a aba usa o mesmo caminho
+    acao_qd = r"""
+  await dormir(1000);
+  SAIDA.morta = aviso(); SAIDA.estado_morta = quadroLeitura.estado();
+  bancoBom(); quadroRetentar(); SAIDA.na_hora = aviso(); await dormir(50);
+  SAIDA.depois = aviso(); SAIDA.feito = feitoEm("rd-hepato"); SAIDA.estado = quadroLeitura.estado();
+"""
+    qd = _rodar_quadro_leitura(acao_qd, {"quadro": 99}, quadro={"rd-hepato": {"feito": True, "ts": "t"}})
+    assert qd["estado_morta"] == "morta" and 'data-retentar="quadro"' in qd["morta"]["html"]
+    assert qd["na_hora"]["html"] == "Carregando…" and qd["depois"]["oculto"] is True
+    assert qd["feito"] is True and qd["estado"] == "viva" and qd["ativos"] == {"quadro": 1}
+    assert 'if(aba === "aulas" && quadroLeitura && quadroLeitura.estado() === "morta"){ quadroRetentar(); }' in TEMPLATE
+
+
+def test_leituras_das_abas_passam_pela_assinatura_resiliente():
+    """DoD 1: as cinco leituras (listas, quadro, questoes/respostas/analises da lista aberta) passam por UMA
+    funcao -- nenhum `.onSnapshot(` direto nelas; o `qzLimpar` para as da lista aberta (timer incluso)."""
+    assert TEMPLATE.count("function assinarResiliente(") == 1
+    ini = extrair_funcao(TEMPLATE, "function iniciarQuestoes(){")
+    qd = extrair_funcao(TEMPLATE, "function iniciarQuadro(){")
+    abrir = extrair_funcao(TEMPLATE, "function qzAbrir(id){")
+    assert "onSnapshot" not in ini and "assinarResiliente(" in ini and 'collection("listas")' in ini
+    assert ".onSnapshot(" not in qd and 'assinarResiliente(function(){ return db.collection("quadro"); }' in qd
+    assert "onSnapshot" not in abrir
+    assert [c for c in ("questoes", "respostas", "analises") if 'qzAssinarLista("%s", id,' % c in abrir] == \
+        ["questoes", "respostas", "analises"]
+    assert "Recarregue a página" not in TEMPLATE
+    assert "QZ.unsubs.push(h.parar)" in extrair_funcao(TEMPLATE, "function qzAssinarLista(col, id, onDados){")
+
+
+def test_chip_da_lista_so_fora_do_normal():
+    """DoD 4 (A21): "pronta" (capturada) sem chip; em curso = respondidas/total do espelho do aparelho;
+    resolvida segue com o check (CSS)."""
+    acao = r"""
+SAIDA.chips = {pronta: qzChip({_id: "t1", status: "capturada", q: 21}),
+  em_curso: qzChip({_id: "t68", status: "capturada", q: 21}),
+  resolvendo: qzChip({_id: "t2", status: "resolvendo", q: 10}),
+  resolvida: qzChip({_id: "t3", status: "resolvida", q: 19}),
+  sem_status: qzChip({_id: "t4", q: 5})};
+SAIDA.html = $("qz-listas").innerHTML;"""
+    out = _rodar_listas(acao, ls={"medhub.respostas.t68": json.dumps({"1": {"letra": "A"}, "2": {"letra": "B"}})})
+    c = out["chips"]
+    assert c["pronta"] == "" and c["sem_status"] == ""
+    assert c["em_curso"] == '<span class="qz-chip resolvendo">em curso 2/21</span>'
+    assert c["resolvendo"] == '<span class="qz-chip resolvendo">em curso</span>'
+    assert c["resolvida"] == '<span class="qz-chip resolvida">resolvida</span>'
+    assert "pronta" not in out["html"] and "em curso 2/21" in out["html"]
+    assert ".qz-chip.resolvida::before{content:\"\\2713\\00A0\"}" in TEMPLATE
+    assert re.search(r"\.hub-marca\{[^}]*font-size:1\.375rem", TEMPLATE)
+    assert ".hub-marca span{color:var(--rosa)}" in TEMPLATE

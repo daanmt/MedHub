@@ -23,6 +23,10 @@
   "use strict";
   var P = new URLSearchParams(location.search);
   var CENA = P.get("cena") || "", LISTA = P.get("lista") || "", NUM = P.get("num") || "", MODO = P.get("modo") || "";
+  // s226 (part-1): falha de LEITURA no onSnapshot de colecao -- `leitura=1x` = o 1o de cada colecao falha;
+  // `leitura=0` = todos falham ate `window.uiLeituraBoa()` (o banco "volta"). Sem o parametro, nada falha.
+  var LEITURA = P.get("leitura") || "", falhasPorCol = {};
+  window.uiLeituraBoa = function(){ LEITURA = ""; };
   var SEED = /*@ui:seed*/null;
 
   var erros = [];
@@ -65,7 +69,12 @@
         return consulta(col, filtros.concat([[campo, valor]])); },
       orderBy: function(){ return consulta(col, filtros); }, limit: function(){ return consulta(col, filtros); },
       get: function(){ return Promise.resolve(rodar()); },
-      onSnapshot: function(fn){ return assinar(rodar, fn); },
+      onSnapshot: function(fn, falha){
+        var n = falhasPorCol[col] = (falhasPorCol[col] || 0) + 1;
+        if(LEITURA === "0" || (LEITURA === "1x" && n === 1)){
+          var vivo = true; setTimeout(function(){ if(vivo && falha){ falha({code: "unavailable", message: "falha de leitura (db falso)"}); } }, 40);
+          return function(){ vivo = false; }; }
+        return assinar(rodar, fn); },
       doc: function(id){ return docRef(col + "/" + id); }};
   }
   var db = {doc: docRef, collection: function(p){ return consulta(p, []); }};

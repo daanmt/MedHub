@@ -846,7 +846,10 @@ FUNCS_QD = "\n".join(
     [re.search(r"\n  (var %s = [^\n]+;)" % n, TEMPLATE_HUB_REAL).group(1)
      for n in ("ASSINA", "PEND_ERRO", "PEND_LEITURA", "PEND_ABSORVIDO")] +
     [_opcional(r"\n  (var quadroMarcarFeito = [^\n]+;)")] +
+    # s226 (part-1): o quadro le pela assinatura resiliente (retentativa + "Tentar de novo")
+    [_opcional(r"\n  (var ESPERAS_LEITURA = [^\n]+;)"), _opcional(r"\n  (var quadroLeitura = [^\n]+;)")] +
     [extrair_funcao(TEMPLATE_HUB_REAL, a) for a in (
+        "function assinarResiliente(consulta, onDados, opts){", "function htmlRetentar(texto, chave){",
         "function pendDataCurta(iso){", "function pendEstadoDoc(item){",
         "function pendTextoInicial(estado, rascunho){", "function pendAssinatura(slug, comentario, agora){",
         "function assinaPintar(){", "function assinaEnviar(){", "function assinaVoltar(slug, ok){",

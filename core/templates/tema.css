@@ -1,4 +1,4 @@
-/* MedHub tema v2.3 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
+/* MedHub tema v2.4 -- VICE CITY CIANO (ciano conduz acao/identidade/informacao; rosa so alerta), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
    acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
    O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
    v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
@@ -104,40 +104,42 @@ tr.sim th,tr.sim td{color:var(--tinta2)}
 /* ============================================================ CARDS (player) */
 .card{box-shadow:none}
 .reason{border-radius:6px}
-/* ======================================================== ROSA (o rosa conduz acao e identidade; o ciano fica com informacao) */
+/* ======================================================== CIANO (v2.4, pedido dele em 12/10/2026: "agora temos muito rosa;
+   preferia a UI com mais ciano") -- o ciano conduz acao, identidade e informacao; o rosa fica SO como alerta (atrasadas,
+   erro). --rosa* segue definido para o alerta e para as aulas antigas que o citam. v2.3 (rosa) esta no git: commit bd84d04. */
 :root:not([data-theme="light"]),:root[data-theme="dark"]{--rosa:#FF5CA8;--rosa-fraco:#3A1238;--rosa-tinta:#FF9CCB}
 :root[data-theme="light"]{--rosa:#B8286B;--rosa-fraco:#F9E3EE;--rosa-tinta:#8A1A50}
-.hub-marca span{color:var(--rosa)}
-.hub-aba[aria-selected="true"]{border-bottom-color:var(--rosa)}
-.qd-bl,.qz-chip,.reason{background:var(--rosa-fraco);color:var(--rosa-tinta)}
-.qd-alvo:hover::after{color:var(--rosa)}
+.hub-marca span{color:var(--acento)}
+.hub-aba[aria-selected="true"]{border-bottom-color:var(--acento)}
+.qd-bl,.qz-chip,.reason{background:var(--acento-fraco);color:var(--acento-tinta)}
+.qd-alvo:hover::after{color:var(--acento)}
+.fracao b{color:var(--acento-tinta)}
+.fig.alvo{background:var(--acento-fraco)}
+.fig.alvo .fig-n{color:var(--acento-tinta)}
+.barra i{background:linear-gradient(90deg,var(--acento-tinta),var(--acento))}
+.ag-barras i{border-top-color:var(--acento);background:var(--acento-fraco)}
+.t-rot{color:var(--acento-tinta)}
+.dnum{color:var(--acento)}
+.rail a.on{box-shadow:inset 2px 0 0 var(--acento)}
+.rail a.on .rn{color:var(--acento-tinta)}
+.top h1{text-shadow:0 0 28px rgba(0,240,255,.22)}
+.aside{background:var(--acento-fraco)} .aside .albl{color:var(--acento-tinta)}
+
+/* botao principal, titulos, barras de progresso e selecao em ciano */
+::selection{background:var(--acento);color:var(--papel)}
+.hub-titulo,.qd-titulo,.qd-bib-tit,.bloco h2,.dia h2{color:var(--acento-tinta)}
 .qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--rosa-tinta)}
-.fracao b{color:var(--rosa-tinta)}
-.fig.alvo{background:var(--rosa-fraco)}
-.fig.alvo .fig-n{color:var(--rosa-tinta)}
-.barra i{background:linear-gradient(90deg,var(--rosa),var(--acento))}
-.ag-barras i{border-top-color:var(--rosa);background:var(--rosa-fraco)}
-.t-rot{color:var(--rosa-tinta)}
-.dnum{color:var(--rosa)}
-.rail a.on{box-shadow:inset 2px 0 0 var(--rosa)}
-.rail a.on .rn{color:var(--rosa-tinta)}
-.top h1{text-shadow:0 0 28px rgba(255,92,168,.25)}
-.aside{background:var(--rosa-fraco)} .aside .albl{color:var(--rosa-tinta)}
-
-/* v2.2 (escolhas dele em 12/10/2026): botao principal = ciano; titulos, barras de progresso e SELECAO em rosa */
-::selection{background:var(--rosa);color:var(--papel)}
-.hub-titulo,.qd-titulo,.qd-bib-tit,.bloco h2,.dia h2{color:var(--rosa-tinta)}
 .qd-n{color:var(--tinta3)}
-.dist-barra i,.qz-trilho i.f{background:linear-gradient(90deg,var(--rosa),var(--acento))}
-.qz-trilho i.atual{outline-color:var(--rosa)}
-.qz-alt.marcada{border-color:var(--rosa);background:var(--rosa-fraco)}
-.qz-elo button.on{border-color:var(--rosa);color:var(--rosa-tinta);background:var(--rosa-fraco)}
-.pausa[aria-pressed="true"]{border-color:var(--rosa);background:var(--rosa-fraco);color:var(--rosa-tinta)}
-.qz-lista li.qz-recente > button{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-fraco)}
-.hub-aba:focus-visible{outline-color:var(--rosa)}
+.dist-barra i,.qz-trilho i.f{background:linear-gradient(90deg,var(--acento-tinta),var(--acento))}
+.qz-trilho i.atual{outline-color:var(--acento)}
+.qz-alt.marcada{border-color:var(--acento);background:var(--acento-fraco)}
+.qz-elo button.on{border-color:var(--acento);color:var(--acento-tinta);background:var(--acento-fraco)}
+.pausa[aria-pressed="true"]{border-color:var(--acento);background:var(--acento-fraco);color:var(--acento-tinta)}
+.qz-lista li.qz-recente > button{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
+.hub-aba:focus-visible{outline-color:var(--acento)}
 
-/* grifo salvo (marca-texto do leitor e das Listas): o hub le --qz-grifo; era ambar, agora rosa como a selecao */
-:root:not([data-theme="light"]),:root[data-theme="dark"]{--qz-grifo:#FF5CA8;--qz-grifo-tinta:#0B0F2B}
-:root[data-theme="light"]{--qz-grifo:#FFB3D4;--qz-grifo-tinta:#3A1238}
-/* pontos pequenos de destaque: cabecalho de tabela em rosa claro */
-thead th{color:var(--rosa-tinta)}
+/* grifo salvo (marca-texto do leitor e das Listas): o hub le --qz-grifo; ciano como a selecao */
+:root:not([data-theme="light"]),:root[data-theme="dark"]{--qz-grifo:#00F0FF;--qz-grifo-tinta:#0B0F2B}
+:root[data-theme="light"]{--qz-grifo:#B3F5FF;--qz-grifo-tinta:#0B2B3A}
+/* pontos pequenos de destaque: cabecalho de tabela em ciano claro */
+thead th{color:var(--acento-tinta)}

@@ -2375,7 +2375,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || "";
       return '<li><button type="button" data-rev="' + i + '" class="qz-rev ' + cls + '"><b>Q' + qzEsc(q.num) + '</b><span>marcou ' + qzEsc(r.letra) + ' · gabarito ' + qzEsc(r.gabarito) + ' · ' + qzEsc(conf) + '</span><i>' + rot + (QZ.ana[q.num] ? " · análise" : "") + (qzDeclPendente(q, r) ? " · declarar" : "") + '</i></button></li>'; }).join("");
     // s211 (part-3): o bloco Elos -- o que revisar, elo por elo -- e a trava do concluir
-    $("qz-elos-fim").innerHTML = sim ? "" : qzElosFimHtml(QZ.qs, QZ.resp); $("qz-elos-fim").hidden = !$("qz-elos-fim").innerHTML;
+    // s225 (pedido dele, 12/10/2026: "toda lista/simulado deve ter os elos mapeados"): o simulado tambem mostra o bloco
+    $("qz-elos-fim").innerHTML = qzElosFimHtml(QZ.qs, QZ.resp); $("qz-elos-fim").hidden = !$("qz-elos-fim").innerHTML;
     qzConcluirUi(qzResumoElos(QZ.qs, QZ.resp).pendentes);
     window.scrollTo(0, 0);
   }

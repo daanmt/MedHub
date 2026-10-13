@@ -456,6 +456,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 </div>
 
 <script id="lote" type="application/json">{"sessao":"exemplo","gerado_em":"","total":0,"cards":[]}</script>
+<script id="hub-dia" type="application/json">"@hub:dia"</script>
 <!-- @hub:player-js -->
 <script>
 (function(){
@@ -1590,6 +1591,56 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       }, function(){});
     }catch(e){}
   }
+  // ------------------------------------------------ s226 (part-2): a aba Cards com o contador do Painel
+  // "O Painel e o referencial": o build injeta o Hoje dele (`#hub-dia` = consumo_hoje, teto, sessao_gravada,
+  // data) e a aba mostra "N de T hoje" com N = consumo_hoje + vivoCards -- a MESMA conta do "+K" do Painel
+  // (o lote ja gravado soma 0). A fila do lote fica como 2o numero, menor. Lote de dia ANTERIOR ao do
+  // aparelho: aviso unico acima do 1o card; os cards seguem drenaveis. Sem `#hub-dia`, a aba e a do lote.
+  function cardsDia(){ try{ return JSON.parse(($("hub-dia") || {}).textContent || "null"); }catch(e){ return null; } }
+  // {n, t} ou null (sem o contador do Painel). PURA.
+  function cardsContador(dia, notas, lote){
+    if(!dia || dia.consumo_hoje == null || dia.teto == null){ return null; }
+    return {n: Number(dia.consumo_hoje) + vivoCards(notas, lote, dia.sessao_gravada || ""), t: Number(dia.teto)};
+  }
+  // o dia local do `gerado_em`, como o `diaLocal` do player (data sem hora = meia-noite local). PURA.
+  function cardsDiaDoLote(iso){
+    if(!iso){ return ""; }
+    var s = String(iso), d = new Date(s.length > 10 ? s.replace(" ", "T") : s + "T00:00:00");
+    return isNaN(d.getTime()) ? s.slice(0, 10) : vivoDia(d);
+  }
+  // o texto do aviso: lote com cards de dia ANTERIOR ao do aparelho; o de hoje e o de vespera, "". PURA.
+  function cardsAvisoFila(lote, hojeLocal){
+    var d = cardsDiaDoLote(lote && lote.gerado_em);
+    if(!d || !((lote && lote.cards) || []).length || d >= hojeLocal){ return ""; }
+    return "Fila de " + d.slice(8, 10) + "/" + d.slice(5, 7) + " -- a de hoje ainda não saiu.";
+  }
+  function cardsPintar(notas){
+    var lote = loteNoAr(), c = cardsContador(cardsDia(), notas, lote);
+    var el = $("dia-contador"), aviso = $("aviso-fila"), txt = cardsAvisoFila(lote, vivoDia(Date.now()));
+    if(el && c){
+      $("dia-n").textContent = String(c.n);
+      $("dia-t").textContent = String(c.t);
+      el.hidden = false;
+      if($("metro-lote")){ $("metro-lote").hidden = true; }
+      if(el.parentNode && el.parentNode.classList){ el.parentNode.classList.add("com-dia"); }
+    }
+    if(aviso){ aviso.textContent = txt; aviso.hidden = !txt; }
+  }
+  // as notas do lote no ar pela assinatura resiliente; lote ja gravado (ou sem db) = o numero publicado
+  function iniciarCardsDia(){
+    var lote = loteNoAr(), dia = cardsDia();
+    cardsPintar([]);
+    if(!dia || !lote.sessao || lote.sessao === (dia.sessao_gravada || "")){ return; }
+    try{
+      window.claude.use("db").then(function(db){
+        if(!db){ return; }
+        assinarResiliente(function(){ return db.collection("sessoes/" + lote.sessao + "/notas"); }, function(s){
+          cardsPintar(((s && s.docs) || []).map(function(d){ return d.data ? d.data() : null; }));
+        }, {nome: "notas"});
+      }, function(){});
+    }catch(e){}
+  }
+  iniciarCardsDia();
   // s216 (part-4): marca "assinado" no li do Painel (a classe e o rotulo junto do link), idempotente
   function painelMarcarAssinado(li, sim){
     var m = li.querySelector(".t-assinado"), a = li.querySelector("a[data-hub-aula]");

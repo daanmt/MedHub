@@ -1938,3 +1938,83 @@ SAIDA.html = $("qz-listas").innerHTML;"""
     assert ".qz-chip.resolvida::before{content:\"\\2713\\00A0\"}" in TEMPLATE
     assert re.search(r"\.hub-marca\{[^}]*font-size:1\.375rem", TEMPLATE)
     assert ".hub-marca span{color:var(--rosa)}" in TEMPLATE
+
+
+# ---------------------------------------------------------------------------------------------------
+# s226 (hub-correcoes-pos-tema-v3 part-2): a aba Cards mostra o contador do Painel ("N de T hoje"), com
+# N = consumo_hoje + a MESMA conta do `vivoCards`; a fila do lote vem como 2o numero, menor; lote de dia
+# anterior ao do aparelho ganha 1 aviso acima do 1o card e segue drenavel.
+# ---------------------------------------------------------------------------------------------------
+
+CARDS_DIA = _funcs("function vivoDia(t){", "function vivoCards(notas, lote, sessaoGravada){",
+                   "function loteNoAr(){", "function cardsDia(){", "function cardsContador(dia, notas, lote){",
+                   "function cardsDiaDoLote(iso){", "function cardsAvisoFila(lote, hojeLocal){",
+                   "function cardsPintar(notas){")
+
+DOM_CARDS = r"""
+var els = {};
+function $(id){ return els[id] || null; }
+function el(id, txt){ var cl = {}; els[id] = {id: id, hidden: false, textContent: txt || "",
+  classList: {add: function(c){ cl[c] = 1; }, has: function(c){ return !!cl[c]; }}}; return els[id]; }
+var metros = el("metros");
+["dia-n", "dia-t", "metro-lote", "aviso-fila"].forEach(function(i){ el(i); });
+el("dia-contador").hidden = true; els["dia-contador"].parentNode = metros; els["aviso-fila"].hidden = true;
+el("lote", __LOTE__); el("hub-dia", __DIA__);
+"""
+
+
+def _rodar_cards(lote, dia, notas):
+    prog = (DOM_CARDS.replace("__LOTE__", json.dumps(json.dumps(lote)))
+            .replace("__DIA__", json.dumps(json.dumps(dia))) + CARDS_DIA + """
+cardsPintar(%s);
+console.log(JSON.stringify({n: $("dia-n").textContent, t: $("dia-t").textContent, visivel: !$("dia-contador").hidden,
+  lote_oculto: $("metro-lote").hidden, menor: $("metros").classList.has("com-dia"),
+  aviso: $("aviso-fila").hidden ? null : $("aviso-fila").textContent}));""" % json.dumps(notas))
+    return _node(prog)
+
+
+def _hoje_iso(delta=0):
+    from datetime import timedelta
+    return (date.today() + timedelta(days=delta)).isoformat()
+
+
+def test_cards_e_painel_mostram_o_mesmo_contador():
+    """DoD 1: o numero da aba = o do Painel com o "+K" ao vivo (base + vivoCards), lido do MESMO dado
+    (`hub.dia_do_painel` do HTML do painel); lote ja gravado (o `consumo_hoje` ja o inclui) soma 0."""
+    notas = list(COLECOES_VIVO["sessoes/2026-10-05b/notas"].values())
+    dia = hub.dia_do_painel(_painel_vivo_html("2026-10-05a"), date(2026, 10, 5))
+    assert (dia["consumo_hoje"], dia["teto"], dia["sessao_gravada"]) == (62, 100, "2026-10-05a")
+    lote = {"sessao": "2026-10-05b", "gerado_em": _hoje_iso() + "T06:00:00", "cards": [{"card_id": 1}]}
+    out = _rodar_cards(lote, dia, notas)
+    painel = _rodar_vivo(colecoes=COLECOES_VIVO)["cards"]                 # o Painel: 62 com "+2"
+    assert int(out["n"]) == int(painel["b"]) + int(painel["mais"].lstrip("+")) == 64
+    assert out["t"] == "100" and out["visivel"] and out["lote_oculto"] and out["menor"]
+    gravado = _rodar_cards(dict(lote, sessao="2026-10-05a"), dia, notas)
+    assert gravado["n"] == "62", "lote ja gravado: o consumo_hoje do build ja traz as notas dele"
+    sem = _rodar_cards(lote, None, notas)
+    assert not sem["visivel"] and not sem["lote_oculto"], "sem o contador do Painel: a aba e a do lote"
+    # o cabecalho: o contador e o numero; a fila segue visivel, com rotulo menor (DoD 2)
+    player = (ROOT / "core" / "templates" / "player.html").read_text(encoding="utf-8")
+    assert '<span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>' in player
+    assert '<span class="metro fila">fila <b id="pendentes">0</b></span>' in player
+    assert re.search(r"\.com-dia \.metro\.fila\{font-size:var\(--fs-meta\)\}", player)
+    assert "iniciarCardsDia();" in TEMPLATE and 'assinarResiliente(function(){ return db.collection("sessoes/" + lote.sessao + "/notas"); }' in TEMPLATE
+
+
+def test_fila_de_outro_dia_avisa_e_segue_drenavel():
+    """DoD 3: lote com `gerado_em` de ontem = aviso unico "Fila de DD/MM -- a de hoje ainda nao saiu.";
+    de hoje (ou a de vespera, amanha) = sem aviso. O aviso so pinta: a fila do player nao muda."""
+    ontem = _hoje_iso(-1)
+    rot = "Fila de %s/%s -- a de hoje ainda não saiu." % (ontem[8:10], ontem[5:7])
+    lote = {"sessao": "x", "gerado_em": ontem + "T21:40:00", "cards": [{"card_id": 1}, {"card_id": 2}]}
+    dia = {"data": ontem, "consumo_hoje": 3, "teto": 150, "sessao_gravada": ""}
+    assert _rodar_cards(lote, dia, [])["aviso"] == rot
+    assert _rodar_cards(dict(lote, gerado_em=_hoje_iso() + "T01:17:20"), dia, [])["aviso"] is None
+    assert _rodar_cards(dict(lote, gerado_em=_hoje_iso(1) + "T06:00:00"), dia, [])["aviso"] is None
+    assert _rodar_cards(dict(lote, cards=[]), dia, [])["aviso"] is None, "lote vazio: nada a drenar, sem aviso"
+    assert _rodar_cards(lote, None, [])["aviso"] == rot, "o aviso nao depende do contador"
+    player = (ROOT / "core" / "templates" / "player.html").read_text(encoding="utf-8")
+    corpo = player[player.index("<!-- @player:corpo:inicio -->"):player.index('<main id="drill">')]
+    assert corpo.count('id="aviso-fila"') == 1, "um aviso so, acima do 1o card"
+    assert "aviso-fila" not in player[player.index("<!-- @player:js:inicio -->"):], \
+        "o player nao le o aviso: a fila e a gravacao sao as de sempre (nota com o ts de hoje)"

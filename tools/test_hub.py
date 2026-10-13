@@ -651,5 +651,51 @@ def test_vivo_pula_com_motivo_sem_banco(tmp_path, monkeypatch):
     assert not ausente.exists() and not ausente.parent.exists(), "a guarda tem de vir antes do connect"
 
 
+# --------------------------------------------------------------------------
+# s226 (hub-correcoes-pos-tema-v3 part-2): lote de dia anterior no ar = o 1o tique do dia pede fila nova
+# (mesmo em curso; o `--record-lote` grava antes as notas ja dadas). A de vespera (`gerado_em` amanha) fica.
+
+def test_lote_de_ontem_pede_fila_nova(tmp_path):
+    lote = _lote(sessao="2026-09-21a", n=3)
+    lote["gerado_em"] = "2026-09-21T22:10:00"
+    proj = {"painel": "p", "quadro": "q", "resumos": None, "sessao": "2026-09-21a"}
+    hoje = AGORA.date()                                                   # 22/09
+    d = hub.precisa_publicar(proj, proj, lote, {100}, hoje)
+    assert d["acao"] == "nova_fila" and d["publicar"] and not d["drenado"] and d["notas"] == 1
+    assert d["motivos"][0] == "lote de 21/09 em curso (1/3): a fila de hoje ainda nao saiu"
+    # o mesmo lote no dia dele, em curso e com a projecao igual: nada (como antes)
+    assert hub.precisa_publicar(proj, proj, lote, {100}, date(2026, 9, 21))["acao"] == "nada"
+    # sem `hoje` (chamada antiga) a regra nao existe
+    assert hub.precisa_publicar(proj, proj, lote, {100})["acao"] == "nada"
+    # fila de vespera (gerado_em = amanha 06:00, F131): nao e velha
+    vespera = dict(lote, gerado_em="2026-09-23T06:00:00")
+    assert hub.precisa_publicar(proj, proj, vespera, set(), hoje)["acao"] == "nada"
+    # lote vazio de ontem segue o caminho do vazio (conferir o saldo), sem o motivo de fila velha
+    vazio = dict(lote, cards=[], total=0)
+    assert hub.precisa_publicar(proj, proj, vazio, set(), hoje)["motivos"][0].startswith("lote vazio")
+    # o `decidir` (o --precisa-publicar) passa o dia do relogio
+    raiz, data_fn = _repo(tmp_path, [])
+    dd = hub.decidir(lote, tmp_path / "out", raiz=raiz, notas=[100], quadro={}, data_fn=data_fn,
+                     plano_linhas=[], calendario={}, agora=AGORA, resumos=[])
+    assert dd["acao"] == "nova_fila" and dd["motivos"][0].startswith("lote de 21/09 em curso")
+    assert hub.decidir(lote, tmp_path / "out", raiz=raiz, notas=[100], quadro={}, data_fn=data_fn,
+                       plano_linhas=[], calendario={}, agora=datetime(2026, 9, 21, 23, 0),
+                       resumos=[])["acao"] == "mesmo_lote", "no dia do lote: sem registro, o mesmo lote"
+
+
+def test_build_injeta_o_contador_do_dia_do_painel():
+    painel_html = ('<div class="doses" data-sessao-gravada="2026-09-22g"><p class="fracao">'
+                   '<b data-vivo="cards" data-base="1203">1.203</b> de 1.500</p></div>')
+    dia = hub.dia_do_painel(painel_html, AGORA)
+    assert dia == {"data": "2026-09-22", "consumo_hoje": 1203, "teto": 1500, "sessao_gravada": "2026-09-22g"}
+    assert hub.dia_do_painel(None, AGORA)["consumo_hoje"] is None
+    assert hub.dia_do_painel('<p class="fracao"><b>--</b> de 150</p>', AGORA)["teto"] is None
+    pagina = hub.montar_index(TEMPLATE_HUB_REAL, TEMPLATE_PLAYER_REAL, _lote(), [], True, AGORA, dia=dia)
+    corpo = pagina.split('<script id="hub-dia" type="application/json">', 1)[1].split("</script>", 1)[0]
+    assert json.loads(corpo) == dia and pagina.count('id="hub-dia"') == 1
+    sem = hub.montar_index(TEMPLATE_HUB_REAL, TEMPLATE_PLAYER_REAL, _lote(), [], False, AGORA)
+    assert '<script id="hub-dia" type="application/json">null</script>' in sem
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

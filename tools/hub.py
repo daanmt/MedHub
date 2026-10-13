@@ -199,6 +199,8 @@ LUGARES_HUB = (
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
     ("semanas", "<!-- @hub:semanas -->"),
+    # s226 (part-2): o contador do dia do Painel para a aba Cards (`dia_do_painel`), um JSON so
+    ("dia", '"@hub:dia"'),
     # ⚰️ o lugar "ligacoes" (s216 part-2 -> P21, s220): o JSON tarefa -> aulas/resumos existia so para
     # os links debaixo das listas da aba Listas, que sairam
 )
@@ -1086,6 +1088,34 @@ def html_painel(tem_painel):
             'hidden></iframe>' % (PUB_PAINEL, PUB_PAINEL))
 
 
+#: s226 (part-2): o numero de cards do Painel ("<b data-vivo=cards data-base=N>N</b> de T") e o lote ja
+#: gravado (`data-sessao-gravada`) -- lidos do HTML que o painel publica, nunca recontados aqui.
+_RE_CARDS_PAINEL = re.compile(r'<b data-vivo="cards" data-base="(\d+)">[^<]*</b> de ([\d.]+)')
+_RE_GRAVADA_PAINEL = re.compile(r'data-sessao-gravada="([^"]*)"')
+
+
+def dia_do_painel(painel_texto, agora=None):
+    """O contador do dia que a aba Cards mostra (s226, part-2: "o Painel e o referencial"): o MESMO
+    `consumo_hoje`/`teto` do Hoje do painel publicado + a `sessao_gravada` (a pagina soma ao vivo as
+    notas do lote pela conta do `vivoCards`, que ja zera o lote gravado) + a `data` do build. PURA.
+    Painel ausente ou sem o numero (o "--" do contador que falhou) = consumo/teto None: a aba fica
+    com o lote, como fora do hub."""
+    texto = painel_texto or ""
+    m = _RE_CARDS_PAINEL.search(texto)
+    g = _RE_GRAVADA_PAINEL.search(texto)
+    return {"data": _hoje_de(agora).isoformat(),
+            "consumo_hoje": int(m.group(1)) if m else None,
+            "teto": int(m.group(2).replace(".", "")) if m else None,
+            "sessao_gravada": html.unescape(g.group(1)) if g else ""}
+
+
+def _json_no_script(obj):
+    """JSON para dentro de um `<script type=application/json>`: `<`, `>` e `&` em escape (o mesmo
+    cuidado do `injetar_lote`)."""
+    return (json.dumps(obj, ensure_ascii=False).replace("&", "\\u0026")
+            .replace("<", "\\u003c").replace(">", "\\u003e"))
+
+
 def _hoje_de(agora):
     """A data do quadro a partir do relogio recebido (datetime ou date); None = hoje."""
     if isinstance(agora, datetime):
@@ -1104,13 +1134,14 @@ def _ler_tema_aula():
 
 
 def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, quadro=None,
-                 estado=None, plano_linhas=None, calendario=None, resumos=()):
+                 estado=None, plano_linhas=None, calendario=None, resumos=(), dia=None):
     """A pagina: casca do hub + as 3 regioes do player + aulas/painel + o lote.
 
     `agora` nao vai para a tela (a linha "montado ... lote ... cards" saiu na s194, bastidor;
     o carimbo vive no manifesto): so data a semana do quadro. `plano_linhas`/`calendario` =
     as tarefas pendentes e as datas das semanas (s195); sem eles, o quadro sai so com as aulas.
-    `resumos` (s218) = os `Resumo` do lote publicado (Biblioteca e semanas)."""
+    `resumos` (s218) = os `Resumo` do lote publicado (Biblioteca e semanas). `dia` (s226, part-2) =
+    o `dia_do_painel` para o cabecalho da aba Cards; None = `null` (a aba mostra o lote)."""
     regioes = extrair_regioes_player(player_html)
     for _nome, marca in LUGARES_HUB:
         _exatamente_uma(template_hub, marca, "hub.html")
@@ -1124,6 +1155,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
                                 _hoje_de(agora), resumos)[0],
         "painel": html_painel(tem_painel),
         "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
+        "dia": _json_no_script(dia),
     }
     pagina = template_hub
     for nome, marca in LUGARES_HUB:
@@ -1271,12 +1303,23 @@ def ids_com_nota(notas):
     return ids
 
 
-def precisa_publicar(registro_projecao, atual, lote, com_nota):
+def dia_do_lote(lote):
+    """A data (date) do `gerado_em` do lote; ausente ou ilegivel = None. PURA."""
+    g = str((lote or {}).get("gerado_em") or "")[:10]
+    try:
+        return date.fromisoformat(g)
+    except ValueError:
+        return None
+
+
+def precisa_publicar(registro_projecao, atual, lote, com_nota, hoje=None):
     """A decisao do tique do /hub-backend, PURA. Devolve {"publicar", "acao", "motivos",
     "drenado", "notas", "total"}; `acao`:
 
     - `nova_fila`: o lote foi DRENADO (todo card tem doc) ou esta vazio -> gravar, exportar e
-      publicar a proxima fila (lote vazio: conferir se o saldo do dia voltou);
+      publicar a proxima fila (lote vazio: conferir se o saldo do dia voltou); ou (s226, part-2) o
+      lote no ar e de um dia ANTERIOR a `hoje`, mesmo em curso -> o 1o tique do dia grava as notas
+      ja dadas (`--record-lote`) e publica a fila de hoje (a de vespera, `gerado_em` amanha, fica);
     - `mesmo_lote`: lote em curso, mas o painel ou o quadro mudou (ou nao ha projecao confirmada,
       ou o lote no ar nao e o do registro) -> republicar com o MESMO lote -- mesmo `sessao`, mesmos
       cards; as notas ja dadas voltam do `db` no reload;
@@ -1298,10 +1341,16 @@ def precisa_publicar(registro_projecao, atual, lote, com_nota):
             motivos.append("quadro de aulas mudou")
         if reg.get("resumos") != atual.get("resumos"):
             motivos.append("resumos mudaram")
+    dia = dia_do_lote(lote)
+    velho = bool(cards) and hoje is not None and dia is not None and dia < hoje
     if drenado:
         acao = "nova_fila"
         motivos.insert(0, "lote drenado (%d/%d)" % (feitos, len(cards)) if cards
                        else "lote vazio: conferir se o saldo do dia voltou")
+    elif velho:
+        acao = "nova_fila"
+        motivos.insert(0, "lote de %s em curso (%d/%d): a fila de hoje ainda nao saiu"
+                       % (dia.strftime("%d/%m"), feitos, len(cards)))
     elif motivos:
         acao = "mesmo_lote"
     else:
@@ -2040,10 +2089,10 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     th = template_hub if template_hub is not None else TEMPLATE_HUB.read_text(encoding="utf-8")
     tp = (template_player if template_player is not None
           else TEMPLATE_PLAYER.read_text(encoding="utf-8"))
+    painel_texto = painel_path.read_text(encoding="utf-8") if tem_painel else None
     pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro,
-                          plano_linhas, calendario, resumos)
-    proj = projecao(painel_path.read_text(encoding="utf-8") if tem_painel else None,
-                    quadro_html, lote, hash_resumos(paginas))
+                          plano_linhas, calendario, resumos, dia_do_painel(painel_texto, agora))
+    proj = projecao(painel_texto, quadro_html, lote, hash_resumos(paginas))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -2093,7 +2142,8 @@ def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, q
                                     calendario, _hoje_de(agora or db.agora()), resumos)
     atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
                      quadro_html, lote, hash_resumos(paginas_resumos(resumos)))
-    decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas))
+    decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas),
+                               _hoje_de(agora or db.agora()))
     decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)
     return decisao
 

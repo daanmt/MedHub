@@ -54,6 +54,10 @@ kbd{
 .metros{display:flex;flex-wrap:wrap;gap:var(--esp-2) var(--esp-4);align-items:center}
 .metro{color:var(--tinta3);font-size:var(--fs-legenda)}
 .metro b{color:var(--tinta);font-size:1.05em;font-weight:650}
+/* s226 (part-2): no hub, o contador do Painel ("N de T hoje") e o numero; a fila do lote vem menor */
+.metro.dia b{font-size:1.3em;font-weight:700}
+.com-dia .metro.fila{font-size:var(--fs-meta)}
+.com-dia .metro.fila b{font-size:1em;font-weight:600;color:var(--tinta2)}
 .barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-4) 0 var(--esp-2);overflow:hidden}
 .barra i{display:block;height:100%;width:0;background:var(--acento);border-radius:inherit;transition:width var(--transicao)}
 .tally{display:flex;flex-wrap:wrap;gap:var(--esp-2) var(--esp-4);color:var(--tinta3);font-size:var(--fs-meta);margin-bottom:var(--esp-4)}
@@ -161,8 +165,9 @@ pre{
       <span id="sessao" hidden></span>
     </div>
     <div class="metros">
-      <span class="metro"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
-      <span class="metro">fila <b id="pendentes">0</b></span>
+      <span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>
+      <span class="metro" id="metro-lote"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
+      <span class="metro fila">fila <b id="pendentes">0</b></span>
       <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
       <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
     </div>
@@ -173,6 +178,7 @@ pre{
 
   <div id="aviso" class="aviso" hidden></div>
   <div id="aviso-momento" class="aviso" role="status" hidden></div>
+  <div id="aviso-fila" class="aviso" role="status" hidden></div>
 
   <main id="drill">
     <article class="card" id="card" tabindex="0" aria-live="polite">

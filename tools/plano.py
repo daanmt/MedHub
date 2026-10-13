@@ -1714,9 +1714,15 @@ def agenda_sprint(linhas, hoje):
     - `proximos`: um item por dia > hoje com pendente, em ordem de data;
     - `fora`: pendentes sem `dia_plano` com a marca `sprint: fora (<motivo>)` na nota;
     - feita e cortada nao entram (a agenda e do que falta)."""
-    if not any(l.get("dia_plano") for l in linhas or []):
+    dias_gravados = [str(l["dia_plano"]) for l in linhas or [] if l.get("dia_plano")]
+    if not dias_gravados:
         return None
     hoje_iso = hoje.isoformat()
+    # s226 (audit part-5, MEDIA-ALTA): o sprint acaba no ultimo dia gravado (o `fim` do sprint.json,
+    # 31/10); depois dele a agenda e None e as telas voltam ao bloco antigo -- sem isto, a sobra rolaria
+    # toda para "hoje" sem teto a partir de 01/11
+    if hoje_iso > max(dias_gravados):
+        return None
     pend = [(i, l) for i, l in enumerate(linhas) if l.get("status") == "pendente"]
     com_dia = sorted(((str(l["dia_plano"]), i, l) for i, l in pend if l.get("dia_plano")),
                      key=lambda x: (x[0], x[1]))

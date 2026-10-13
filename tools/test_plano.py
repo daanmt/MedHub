@@ -1659,6 +1659,15 @@ def test_agenda_sprint_sem_dia_plano_e_none():
     assert plano.agenda_sprint([], _HOJE) is None
 
 
+def test_agenda_sprint_acaba_no_ultimo_dia_gravado():
+    """s226 (audit part-5): depois do ultimo `dia_plano` (o fim do sprint, 31/10) a agenda e None --
+    a sobra NAO rola para "hoje" sem teto em 01/11 e a tela volta ao bloco antigo."""
+    from datetime import date
+    linhas = [_ag(1, "2026-10-30"), _ag(2, "2026-10-31")]
+    assert plano.agenda_sprint(linhas, date(2026, 10, 31)) is not None
+    assert plano.agenda_sprint(linhas, date(2026, 11, 2)) is None
+
+
 def test_motivo_fora_do_sprint_le_a_marca_do_compor():
     nota = plano.compor_nota_sprint("a; b", "sem vaga ate 31/10 (80 q/dia)")
     assert plano.motivo_fora_do_sprint(nota) == "sem vaga ate 31/10 (80 q/dia)"

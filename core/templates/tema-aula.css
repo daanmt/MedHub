@@ -65,7 +65,9 @@ main{max-width:38rem}
 .ato span{color:var(--plum-ink);font-size:13.5px;font-weight:600;letter-spacing:0}
 .lede{font-style:normal;font-size:17px;color:var(--ink2);margin-bottom:16px}
 .prose li{font-size:16.5px;line-height:1.62;color:var(--ink2)}
-h3.sub{font-size:16px;font-weight:650;margin:28px 0 8px;color:var(--ink)}
+:is(h3,h4).sub{font-size:16px;font-weight:650;margin:28px 0 8px;color:var(--ink)}
+/* rotulos que as aulas escreviam em caixa-alta espacada: sem caixa-alta, sem o espacamento (L3) */
+.kick,.tag,.tk,.vs h3,.vs h5,.cmap h4,.if3 h4{letter-spacing:0}
 
 /* =========================================================== callouts: filete + lavagem, por significado */
 .trap,.banca,.aside{border:0;border-left:3px solid var(--line2);border-radius:0 var(--raio-p) var(--raio-p) 0;padding:14px 16px;margin:20px 0;background:var(--sunk)}
@@ -84,7 +86,8 @@ h3.sub{font-size:16px;font-weight:650;margin:28px 0 8px;color:var(--ink)}
 blockquote{border-left-color:var(--line2);background:var(--sunk);border-radius:0 var(--raio-p) var(--raio-p) 0}
 
 /* =========================================================== quadros, tabelas e fluxos (preservados; so a moldura) */
-.vs,.cmap,.if3,.trig,.arms,.crit,.tw,.esc,details.ref{border:1px solid var(--line);border-radius:var(--raio);overflow:hidden}
+.vs,.cmap,.if3,.trig,.arms,.crit,.esc,details.ref{border:1px solid var(--line);border-radius:var(--raio);overflow:hidden}
+.tw{border:1px solid var(--line);border-radius:var(--raio);overflow-x:auto}   /* tabela larga ROLA na propria caixa (L1: o overflow:hidden cortava ate 424 px a 390) */
 .vs,.cmap,.if3,.trig,.arms{gap:1px;background:var(--line)}
 .vs>div,.cmap>div,.if3>div,.arm{background:var(--card)}
 .trig div{background:var(--sunk)}

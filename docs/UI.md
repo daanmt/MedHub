@@ -164,8 +164,17 @@ Regra da casa: tela nova do hub só publica conferida em navegador real, a 390 p
 
 ## 9. Leitor de aulas (`tema-aula.css`)
 
-Ver §10 (achados A19-A24) e o inventário completo em `tmp/ui_auditoria/aulas.md` da s225 (scratch; o destilado
-está aqui).
+Inventário completo das 43 aulas (s225, medido com parser + Edge): `docs/research/2026-10-13-05-ui-auditoria-aulas.md`
+(6 famílias de classe: EN15 com `.nav`/`.stats` sem `<main>`, ER6 com `.rail` + `main`, RS13, RG7, dossiê, autópsia). Achados
+L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
+- **L1** `.tw` cortada pelo `overflow:hidden` (até 424 px a 390): **resolvido** (hub v105; a tabela rola na caixa).
+- **L3** espaçamento de caixa-alta nos rótulos: **resolvido** nos rótulos citados (`.eye .kick .dstage .rlab .albl th .tag .tk`, `h3/h5` de `.vs`).
+- **L5** negrito ciano com exceções por descendente: **resolvido** (mesma especificidade das aulas).
+- **L7** `h4.sub` e **L8** `.dtitle h3`: **resolvidos**.
+- **L4** callouts sem critério único: **parcial** (trap = âmbar, banca = roxo, nota = neutro); faltam `.key`, `div.note`, `.disc`, `.fonte`, `.ext`, `.star`.
+- **L6** h3/h4/h5 como rótulo dentro de `.vs .tgrp .blk .cmap .if3`: **pendente**.
+- **L9** outliers de paleta (autópsia: 18 tokens próprios; neuromusculares: `--acc*`): **pendente** (mapeamento no §8.3 do inventário).
+- **L2, L10-L15**: **pendentes** (ver o inventário).
 
 ## 10. Achados da varredura s225 (13/10/2026)
 

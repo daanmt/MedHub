@@ -655,7 +655,7 @@ def _html_sprint(s, cards):
     itens = "".join(_html_tarefa(t, proxima=t["id"] == primeira) for t in hoje)
     if s.get("rd"):
         itens += _html_rd(s["rd"])
-    corpo = '<h2>Hoje</h2>\n<p class="sub">%s.</p>\n' % resumo
+    corpo = '<h2>Plano de hoje</h2>\n<p class="sub">%s.</p>\n' % resumo
     if itens:
         corpo += '<ol class="tarefas">%s</ol>\n' % itens
     if s["proximos"]:

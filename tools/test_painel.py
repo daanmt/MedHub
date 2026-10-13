@@ -929,7 +929,7 @@ def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
                      'class="t-grupo atrasadas"'):
         assert proibido not in pagina, proibido
     bloco = pagina[pagina.index('data-bloco="semana"'):pagina.index('data-bloco="blocos"')]
-    assert "<h2>Hoje</h2>" in bloco
+    assert "<h2>Plano de hoje</h2>" in bloco
     assert re.search(r'<p class="sub">2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
     hoje_html = bloco.split('<div class="rota">')[0]
     assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', hoje_html) == [

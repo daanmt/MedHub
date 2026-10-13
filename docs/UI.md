@@ -21,7 +21,7 @@ consistência entre telas; (4) minimalismo funcional; (5) identidade retrowave d
 
 Ele lê **no celular (390 px), à noite, entre plantões**. Toda decisão é conferida primeiro a 390 px.
 
-A identidade mora em poucos lugares: a marca (`Med` + `Hub` em rosa), a **linha do horizonte** sob as abas (o único
+A identidade mora em poucos lugares: a marca (`Med` + `Hub` em ciano, s226), a **linha do horizonte** sob as abas (o único
 gradiente da UI: rosa -> roxo -> ciano) e o roxo do gráfico de previsão do Painel. O resto é tipografia, filete e
 espaço.
 
@@ -110,11 +110,11 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 |---|---|---|
 | Linha de lista | Teoria (`.qd-bloco`), Listas (`.qz-lista button`), Painel (`.tarefa`), revisão (`.qz-rev`), por bloco (`.qz-porobj li`), cadeia (`.qz-cadeia li`) | sem fundo e sem caixa; filete de baixo (`--linha`); título 600 em `tinta`, meta em `tinta3` |
 | Moldura | card do player, alternativa da questão, campo, assinatura de leitura | só o que é objeto de toque ou o foco da tela; `--card` + `--linha` + `--raio`; sem sombra |
-| Badge | área (`.qd-bl`, `.t-rot`), objetivo (`.qz-obj`), "Próxima" | pílula, `--afundado` + `tinta2` (o "Próxima" em ciano) |
+| Badge | área (`.qd-bl`), objetivo (`.qz-obj`), "Próxima"; no Painel `.t-rot` | pílula, `--afundado` + `tinta2` (o "Próxima" em ciano); no Painel `.t-rot` em `--rosa-fraco` + `--rosa`, como o "novas" da Biblioteca (s226, pedido dele) |
 | Chip de estado | lista (`.qz-chip`, `qzChip`) | só fora do normal: "pronta" não tem chip; em curso = aviso com respondidas/total (espelho do aparelho); resolvida = ok + `✓` |
 | Botão | global (`player.html`) | secundário: contorno `--linha-forte`, fundo transparente; `.primario`: ciano com texto `--sobre`; `.fantasma`: tracejado; 44 px de altura |
 | Segmentado | Questões/Simulados (`.qz-modo`), certeza (`.qz-seg`), declaração (`.qz-decl`) | raio de controle; ligado = cor do estado + lavagem |
-| Abas | `.hub-aba` | texto; ativa em `tinta` com sublinhado ciano de 2 px; o filete de baixo é o horizonte |
+| Abas | `.hub-aba` | texto; ativa em `tinta` com uma barra de 2 px que é o TRECHO do horizonte sob ela (`background-size:400%`, posição por `nth-child`; s226, pedido dele); o filete de baixo é o horizonte |
 | Métricas | fim da lista (`.qz-tiles`), fim do lote (`.fim-grade`), Ritmo (`.fig`) | uma faixa entre dois filetes, número 700 + rótulo `tinta3`; sem uma caixa por número |
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
@@ -222,10 +222,12 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 | A19 | Cards: o Painel conta o saldo do dia (X de 150) e a aba Cards o lote no ar (3/100), que é de 10/10 (backend manual) | `painel.py`, `player.html`, `/hub-backend` | **pendente**: mesmo PRD (decisão dele: contador do dia + fila diária) |
 | A20 | Semana do Painel: "resolver no hub"/"abrir aula" repetidos por linha, "da semana N" em cada atrasada, a Próxima com controle de outro tipo | `painel.py` | **pendente**: mesmo PRD (linha clicável, aviso uma vez) |
 | A21 | Listas: chip "pronta" repetido em toda linha (informação nula) | `hub.html` `qzItem` | **resolvido** (s226, part-1): `qzChip` |
-| A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **resolvido** (s226, part-1): 1,375rem, "Hub" em rosa |
+| A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **resolvido** (s226, part-1): 1,375rem; "Hub" passou a ciano na s226 (pedido dele) |
 | A23 | Sem o espelho local `medhub.respostas.<lista>`, o 1º snapshot de `questoes` chega antes do de `respostas` e a Q1 aparece como nova mesmo respondida (lido no código pelo subagente, não medido) | `hub.html` | **pendente**: mesmo PRD (família do A18) |
 
 ## 11. Histórico de decisões
+
+- **s226 (13/10, tarde):** pedido dele com prints: "Hub" no azul da paleta; a barra da aba ativa acompanha o degradê; as tags do Painel com a cor das de Teoria (o "novas"), "Próxima" segue ciano; fora as legendas em prosa (Teoria, frase do Ritmo, "Fora da tabela"). O dashboard que integra Hoje + Ritmo + Por bloco e a meta única na tela vão para o PRD `painel-dashboard-sprint`.
 
 - **v1 (12/10/2026, s224)**: escuro índigo sobre preto, Atkinson, cartões viram linhas -- *"prefiro tema escuro / modo
   noite, pode ser assim por default"* (commit `1d71743`).

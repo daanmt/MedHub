@@ -518,19 +518,13 @@ def _ritmo(sprint=None):
             "fechando_q": 10500, "fim_fase1": "2026-11-01", "sprint": sprint}
 
 
-def test_ritmo_com_sprint_conta_o_sprint_e_declara_o_fora():
-    """s226 (part-5, acrescimo do principal): havendo sprint, a frase do Ritmo conta o SPRINT (o que tem
-    dia + os simulados dele), diz onde o acumulado fecha em 01/11 cumprindo-o e quanto fica fora; sem
-    sprint, a frase da Fase 1."""
+def test_ritmo_sem_legenda_em_prosa():
+    """s226 (pedido dele, 13/10): o Ritmo e o Por bloco perdem a legenda em prosa (a frase do sprint/Fase 1 e o
+    'Fora da tabela'); a cobertura do sprint vai para o dashboard do topo. ⚰️ Era
+    `test_ritmo_com_sprint_conta_o_sprint_e_declara_o_fora` (part-5 da sprint-final-uerj)."""
     sp = {"q": 1500, "simulados_q": 300, "fechando_q": 9500, "fim": "2026-10-31", "fora": 37, "q_fora": 997}
-    nota = re.sub(r"<[^>]+>", "", painel._html_ritmo(_ritmo(sp)).split('class="nota">')[1]).replace("&nbsp;", " ")
-    assert nota == ("O sprint até 31/10 tem 1.200 questões nas listas e 300 nos simulados. Cumprindo o "
-                    "sprint, você chega a 9.500 em 01/11 (500 abaixo da meta: o sprint não cobre a meta). "
-                    "Ficam fora do sprint 997 questões em 37 tarefas."), nota
-    assert "Fase 1" not in painel._html_ritmo(_ritmo(sp))
-    antiga = painel._html_ritmo(_ritmo())
-    assert "O plano da Fase 1 tem 2.200 questões nas listas e 300 nos simulados em aberto. Fechando tudo, " \
-           "você chega a 10.500 em 01/11 (500 acima da meta)." in antiga and "sprint" not in antiga
+    for html in (painel._html_ritmo(_ritmo(sp)), painel._html_ritmo(_ritmo())):
+        assert 'class="nota"' not in html and "Cumprindo o sprint" not in html and "Fechando tudo" not in html
 
 
 def test_simulado_fora_das_tarefas_por_bloco(db_sintetico):

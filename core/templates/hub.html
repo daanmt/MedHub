@@ -29,7 +29,7 @@
    objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
 .hub-topo{margin-bottom:var(--esp-3)}
 .hub-marca{margin:0;font-weight:700;font-size:1.375rem;letter-spacing:-.01em;color:var(--tinta)}
-.hub-marca span{color:var(--rosa)}
+.hub-marca span{color:var(--acento)}
 
 /* as abas: texto + sublinhado ciano na ativa; o filete de baixo e o horizonte (o unico gradiente da UI) */
 .hub-abas{
@@ -42,7 +42,10 @@
   background:transparent;color:var(--tinta3);font-weight:600;font-size:.9375rem;letter-spacing:0;
 }
 .hub-aba:hover{background:transparent;color:var(--tinta)}
-.hub-aba[aria-selected="true"]{color:var(--tinta);box-shadow:inset 0 -2px 0 var(--acento)}
+.hub-aba[aria-selected="true"]{color:var(--tinta);background-image:var(--horizonte);background-repeat:no-repeat;background-size:400% 2px;background-position-y:100%}
+/* s226 (pedido dele): a barra da aba ativa e o trecho do horizonte que passa por baixo dela (4 abas iguais) */
+.hub-aba:nth-child(1){background-position-x:0%}.hub-aba:nth-child(2){background-position-x:33.333%}
+.hub-aba:nth-child(3){background-position-x:66.667%}.hub-aba:nth-child(4){background-position-x:100%}
 
 .hub-secao{display:none}
 :root:not([data-aba]) #aba-painel,
@@ -361,7 +364,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
       <h2 class="hub-titulo">Teoria</h2>
-      <p class="hub-sub">No topo, as revisões direcionadas por assinar, da mais antiga; abaixo, a Biblioteca por área e disciplina, com as aulas, os resumos e as revisões. Tudo abre aqui dentro.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>

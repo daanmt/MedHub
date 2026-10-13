@@ -712,11 +712,6 @@ def _html_sprint(s, cards):
     return corpo
 
 
-def _comparacao_meta(dif, quem="o plano"):
-    return ("%s acima da meta" % _n(dif) if dif > 0 else
-            "%s abaixo da meta: %s não cobre a meta" % (_n(-dif), quem) if dif < 0 else "exatamente a meta")
-
-
 def _html_ritmo(r):
     alvo = r["alvo_marco"]
     atras = alvo is not None and (r["real_7d"] or 0) < alvo
@@ -731,25 +726,8 @@ def _html_ritmo(r):
                % (_n(alvo, 1), _n(r["faltam"]), _n(r["meta"])))
     fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
                'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
-    nota = ""
-    sp = r.get("sprint")
-    if sp:
-        # s226 (part-5): a cobertura do SPRINT -- o que tem dia ate o fim dele; o fora do sprint a parte
-        sim = sp["simulados_q"] or 0
-        partes = "%s questões nas listas" % _n(sp["q"] - sim) + (" e %s nos simulados" % _n(sim) if sim else "")
-        nota = ('<p class="nota">O sprint até %s tem %s. Cumprindo o sprint, você chega a %s em %s (%s). '
-                'Ficam fora do sprint %s em %s.</p>'
-                % (_dm(sp["fim"]), partes, _n(sp["fechando_q"]), _dm(r["fim_fase1"]),
-                   _comparacao_meta(sp["fechando_q"] - r["meta"], "o sprint"),
-                   _plural(sp["q_fora"], "questão", "questões"), _plural(sp["fora"], "tarefa", "tarefas")))
-    elif r["fechando_q"] is not None:
-        sim = r["fase1_simulados_q"] or 0
-        listas = (r["fase1_q"] or 0) - sim
-        partes = "%s questões nas listas" % _n(listas) + (" e %s nos simulados" % _n(sim) if sim else "")
-        nota = ('<p class="nota">O plano da Fase 1 tem %s em aberto. Fechando tudo, você chega a %s '
-                'em %s (%s).</p>' % (partes, _n(r["fechando_q"]), _dm(r["fim_fase1"]),
-                                     _comparacao_meta(r["fechando_q"] - r["meta"])))
-    return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n%s' % ("".join(fig), nota)
+    # s226 (pedido dele, 13/10): sem legenda em prosa -- a cobertura do sprint mora no dashboard do topo
+    return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n' % "".join(fig)
 
 
 def _html_blocos(b):
@@ -763,15 +741,11 @@ def _html_blocos(b):
                   '<td>%s</td></tr>'
                   % (s["feitas"], s["tarefas"], _n(s["q_feitas"]),
                      (_n(s["acerto"], 1) + "%") if s["acerto"] is not None else "--"))
-    nota = ""
-    if b["sem_bloco"]:
-        nota = ('<p class="nota">Fora da tabela: %s, sem área reconhecida.</p>'
-                % _e(", ".join('%s questões registradas só como "%s"' % (_n(v["feitas"]), k)
-                               for k, v in sorted(b["sem_bloco"].items()))))
+    # s226 (pedido dele, 13/10): a nota 'Fora da tabela' saiu (legenda)
     return ('<h2>Por bloco</h2>\n<table><thead><tr><th scope="col">Bloco</th>'
             '<th scope="col">Tarefas feitas</th><th scope="col">Questões</th>'
-            '<th scope="col">Acerto</th></tr></thead><tbody>%s</tbody></table>\n%s'
-            % ("".join(linhas), nota))
+            '<th scope="col">Acerto</th></tr></thead><tbody>%s</tbody></table>\n'
+            % "".join(linhas))
 
 
 def _sec(chave, corpo, extra=""):
@@ -828,7 +802,7 @@ a{color:var(--acento);text-underline-offset:2px}
         padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
 .t-tema{min-width:0;font-weight:600;line-height:1.35}
 .t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
-.t-rot{color:var(--tinta2);font-weight:600;background:var(--afundado);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.t-rot{color:var(--rosa);font-weight:650;background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
 .t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 var(--esp-4)}
 .t-acao br{display:none}   /* as acoes ficam lado a lado (o <br> separa no texto puro) */
 .t-acao a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}

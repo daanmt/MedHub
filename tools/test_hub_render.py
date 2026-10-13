@@ -2057,7 +2057,7 @@ SAIDA.html = $("qz-listas").innerHTML;"""
     assert "pronta" not in out["html"] and "em curso 2/21" in out["html"]
     assert ".qz-chip.resolvida::before{content:\"\\2713\\00A0\"}" in TEMPLATE
     assert re.search(r"\.hub-marca\{[^}]*font-size:1\.375rem", TEMPLATE)
-    assert ".hub-marca span{color:var(--rosa)}" in TEMPLATE
+    assert ".hub-marca span{color:var(--acento)}" in TEMPLATE   # s226: "Hub" no azul da paleta (pedido dele)
 
 
 # ---------------------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
-# Sessão 224 -- 12/10/2026 (segunda)
+# Sessão 224 -- 12/10/2026 (segunda) -- ENCERRADA 12/10 21:30
 
-**Ferramenta:** Claude Code / Sonnet 5.5.
+**Ferramenta:** Claude Code / Sonnet 5.5 (subagentes: análise de erros t68 e t881).
+**Suíte:** 1692 passando, 0 falhas (`python -m pytest tools/ -q`, 12/10 ~19:00).
 
 ## Tique (/loop 50 /hub-backend)
 - 17:00 banco-emed: t68 (Doenças Glomerulares) registrada 21q · acerto 52,4% (11/21) · sessoes_bulk 142 · `plano.py --concluir 68 --sessao 142`.
@@ -26,3 +27,22 @@
 - 20:00 hub-backend: lote 2026-10-10a em 2/100, projeção igual -- nada a fazer (0 listas novas, 0 pendências respondidas).
 - 20:10 design: ele voltou a preferir a v99 ("gostei mais do modo que estava antes, talvez algo no meio do caminho"); AskUserQuestion multiSelect por elemento. Marcou: logo e aba ativa, numeral dos degraus, título "Atrasadas", barras de progresso, destaque de seleção e títulos em geral (texto livre), + degradê rosa->ciano, números grandes, etiquetas de área, barras da agenda/ritmo. NÃO marcou: botão principal (volta ao ciano). `core/templates/tema.css` v2.2; hub Version 101; testes hub/painel 293. Observação: o conjunto marcado fica perto da v100, só o botão volta ao ciano e títulos/seleção ganharam rosa.
 - 20:45 design: (1) o grifo salvo (marca-texto do leitor/Listas) ficava âmbar enquanto a seleção já era rosa: o hub lê `--qz-grifo` do estilo computado; token passou a rosa `#FF5CA8` (escuro) / `#FFB3D4` (claro), conferido por probe no Edge. (2) "pequenos pontos de destaque, como nessa tabela": cabeçalhos de tabela em rosa claro (`thead th` e `.crit.hd` das aulas feitas com div), termo-chave em negrito em ciano claro, sub-títulos/etapa do degrau/"Degraus" em rosa claro. `core/templates/tema.css` v2.3 + `tema-aula.css`; hub Version 102; testes hub/painel 293.
+- 20:51 hub-backend: lote 2026-10-10a em 3/100, projeção igual -- nada a fazer (0 listas novas, 0 pendências respondidas).
+
+## O que ele pediu
+1. Abertura: listas de estudo hoje (Glomerulares feita), desatrasar as listas, simulado UERJ pendente no meio da semana, flashcards. -> panorama + tique `/loop 50 /hub-backend` (cadência de 50 min por ScheduleWakeup de 3000 s, o cron não fecha 50 uniforme).
+2. Design: *"peça ajuda ao /frontend-design [...] design mais minimalista para o medhub como um todo"*, depois escuro/preto + azuis, depois a paleta Vice City, depois mais rosa, depois "meio do caminho" (escolhas por elemento), depois grifo salvo em rosa e destaques pequenos. Cinco publicações do hub (v96 a v102).
+3. *"na verdade, passei a aula e a lista de rastreamento pra frente"* e depois a lista de Rastreamento aparece resolvida no hub (17/20); registrada como veio.
+4. *"pode encerrar formalmente. retorno com atualizações nos estudos na próxima sessão."*
+
+## Retomar (próxima sessão)
+- **Perguntas dele no hub (Painel -> Pendências):** `banco-t68_q13` (Q13, tabela/balanço: a/b/c), `banco-t881_q15` (banca-divergente x ensinar a regra; MS lista familiar de 1º grau com ovário em qualquer idade como alto risco), `banco-t881_q18` (qual princípio ético).
+- **Divergências clínicas a mostrar a ele (nada aplicado):** t68 Q6 alt. E (corticoide 6 sem diárias x 4 do ISKDC/IPNA, KDIGO 2021 4-6) e Q21 elo 2 (colesterol >= 240 no PCDT, não confirmado); t881 Q20 3ª assertiva (sobrediagnóstico "infla o benefício" em ECR), Q2 (velocidade do PSA 0,75 x 0,35 NCCN/AUA).
+- **Reforjar o card 1304 (VPP):** ele errou a Q18 da t881 mesmo com o card já existente (`recurate_cards.py`).
+- **Estudo:** simulado UERJ 2022 (da vez, S4 atrasada), Kawasaki (#651), Pré-natal (#22), MFC (#1), Infecções congênitas (#819); aula de Rastreamento está assinada no quadro (#881 concluída pela lista). Fila de cards: dívida 147 vencidos, teto 150, 3/100 do lote `2026-10-10a`.
+- **Design:** tema v2.3 no ar (Vice City + rosa). Abertos: botão de tema claro, tabelas largas a 390 px (rolam na caixa), 1 aula com tokens próprios, telas internas do player/Listas sem captura própria com o rosa, mais pontos de destaque (rótulo "Pede", número da questão, alternativas) se ele quiser.
+- **Tique:** loop parado ao encerrar; religar com `/loop 50 /hub-backend` ao abrir se ele for estudar.
+
+## Fechamento
+- Hub Version 102 no ar; commits da sessão no `origin/main` (último de design `4125c9d`).
+- Servidores de teste locais (portas 8765-8769) e `tmp/design/`, `tmp/site_*` ficam só na máquina (tmp não é versionado).

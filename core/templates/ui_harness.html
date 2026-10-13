@@ -10,7 +10,7 @@
      do doc), com o subconjunto que core/templates/hub.html e player.html usam: doc, collection,
      where(==), orderBy/limit (sem efeito), get, onSnapshot, set, update. 1o snapshot em 40 ms;
      escrita notifica as assinaturas e morre com a aba.
-  2. cena (?cena=NOME&lista=ID&num=N&modo=questoes|simulados): ANTES do hub rodar, prepara o
+  2. cena (?cena=NOME&lista=ID&num=N&modo=questoes|simulados[&tema=light|dark][&doc=aulas/x.html]): ANTES do hub rodar, prepara o
      aparelho (localStorage da aba e do modo) e poda o db falso; depois do DOMContentLoaded toca a
      tela como o operador tocaria (cliques), esperando cada passo. Sem ?cena= nada roda alem do db.
   3. medida: rolagem horizontal do documento (scrollWidth > clientWidth) e de cada iframe visivel
@@ -30,6 +30,10 @@
   // troca de versao do hub com a pagina aberta, v108 de 13/10).
   var LEITURA = P.get("leitura") || "", falhasPorCol = {};
   window.uiLeituraBoa = function(){ LEITURA = ""; };
+  // s227 (hub-tema-v4 part 4): `tema=light|dark` = o data-theme que o host poe no <html> (o hub le dele e passa
+  // aos quadros); `doc=aulas/x.html` = a cena aula/resumo abre ESTE documento da Teoria em vez do 1o link
+  var TEMA = P.get("tema") || "", DOC = P.get("doc") || "";
+  if(TEMA === "light" || TEMA === "dark"){ document.documentElement.setAttribute("data-theme", TEMA); }
   var SEED = /*@ui:seed*/null;
 
   var erros = [];
@@ -188,8 +192,8 @@
       return frenteDoCard().then(function(){ var b = $("btn-virar"); if(!visivel(b)){ throw new Error("sem o botão de virar (lote vazio?)"); } b.click();
         return esperar(function(){ return visivel($("verso")); }, 4000, "o card não virou"); })
         .then(function(){ return pausa(300); }).then(function(){ return "verso do 1º card"; }); }},
-    aula: {aba: "aulas", roteiro: function(){ return abrirDoc('a.hub-aula[href^="aulas/"]', "aula"); }},
-    resumo: {aba: "aulas", roteiro: function(){ return abrirDoc('a.hub-aula[href^="resumos/"]', "resumo"); }}
+    aula: {aba: "aulas", roteiro: function(){ return abrirDoc(DOC ? 'a.hub-aula[href="' + cssEsc(DOC) + '"]' : 'a.hub-aula[href^="aulas/"]', "aula"); }},
+    resumo: {aba: "aulas", roteiro: function(){ return abrirDoc(DOC ? 'a.hub-aula[href="' + cssEsc(DOC) + '"]' : 'a.hub-aula[href^="resumos/"]', "resumo"); }}
   };
   var C = CENAS[CENA];
   if(C){

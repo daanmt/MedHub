@@ -135,7 +135,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 
 | Padrão | Onde | Forma |
 |---|---|---|
-| Placa (s227) | uma por seção em todas as telas (parts 1-4 do tema v4) | primitiva `.placa` do `tema.css`: `--card` + borda 1 px `--borda-placa` + `--raio-placa` + fio cromado de 1 px no topo (`::before`, apagado nas pontas); padding 16 px no celular, 24 px acima de 520 px; sem sombra; a tela compõe, nunca redefine; dentro dela, as linhas com filete; nunca uma placa por número |
+| Placa (s227) | uma por seção em todas as telas (parts 1-4 do tema v4) | primitiva `.placa` do `tema.css`: `--card` + borda 1 px `--borda-placa` + `--raio-placa` + fio cromado de 1 px no topo (`::before`, apagado nas pontas); padding 16 px no celular, 24 px acima de 520 px; sem sombra; a tela compõe, nunca redefine; dentro dela, as linhas com filete; nunca uma placa por número. **Questão (part 4):** placa do enunciado (meta, texto, figuras) e placa do resultado (veredito, cadeia, análise, rodapé); alternativas, certeza e botões no fundo, com a moldura própria; no fim, métricas, por bloco, Elos e revisão, uma placa cada. **Leitor:** o iframe numa placa sem padding (a aula tem o próprio; com 16 px a coluna perderia 32 px a 390) e a assinatura na placa de baixo, da mesma largura (`.hub-assina.placa{margin-inline:0}` vence o alinhamento R9) |
 | Linha de lista | Teoria (`.qd-bloco`), Listas (`.qz-lista button`), Painel (`.tarefa`), revisão (`.qz-rev`), por bloco (`.qz-porobj li`), cadeia (`.qz-cadeia li`) | sem fundo e sem caixa própria, DENTRO da placa da seção (v4); filete de baixo (`--linha`); título 600 em `tinta`, meta em `tinta3` |
 | Moldura | card do player, alternativa da questão, campo, assinatura de leitura | só o que é objeto de toque ou o foco da tela; `--card` + `--linha` + `--raio`; sem sombra |
 | Badge | área (`.qd-bl`), objetivo (`.qz-obj`), "Próxima"; no Painel `.t-rot` | pílula, `--afundado` + `tinta2` (o "Próxima" em ciano); no Painel `.t-rot` em `--rosa-fraco` + `--rosa`, como o "novas" da Biblioteca (s226, pedido dele) |
@@ -175,7 +175,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   (recolhido, com o motivo; a lista aberta de tarefa sem dia cai aqui como "sem dia no plano"); resolvidas recolhidas
   no fim. Sem sprint (`hub-sprint` = `null`), as semanas antigas. **Simulados** na sua sub-aba, com a data do sprint
   ("dom 25/10"; o do dia, "hoje").
-- **Listas e simulados**: o trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê,
+- **Listas e simulados** (s227, part 4: barra e trilho no fundo, com a largura do corpo, `--wrap`; só wrappers e classes, nenhum id nem gesto mudou, travado por `test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram`): o trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê,
   veredito, cadeia com a declaração); a tela de fim mostra a faixa de métricas, o por bloco, o bloco Elos e a revisão.
 - **Leitor de aulas**: uma coluna só (`.wrap` de 46rem; a aula antiga com trilho lateral usa o `main` de 38rem);
   títulos brancos, rótulos lavanda; termo-chave em negrito ciano claro (pedido dele, s224: o único texto ciano da
@@ -204,6 +204,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | contraste do tema nos dois blocos (texto >= 4,5 nas 3 superfícies, `tinta` >= 7, controle >= 3, borda da placa >= 1,6, `--sobre` >= 4,5); `.placa` com uma regra só, sem sombra nem brilho, sem `max-width` no `tema.css` | `test_tema_contraste.py` (s227) |
 | shell v4: luz no `body`, `.hub-quadro` e documento do quadro transparentes, coluna larga, um `.wrap` | `test_hub.py::test_tema_v4_luz_no_shell_e_quadros_transparentes` (s227) |
 | Painel v4: cada parte do dashboard é uma placa + a grade; Hoje com dois anéis sem soma; Ritmo com a marca do sprint | `test_painel.py::test_dashboard_em_placas_e_a_grade`, `test_hoje_dois_aneis_sem_soma`, `test_ritmo_barra_com_marca_do_sprint` (s227) |
+| questão, fim e leitor em placas; ids, botões, `data-*` e ordem da questão e do leitor congelados | `test_hub_render.py::test_questao_fim_e_leitor_em_placas`, `test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram` (s227) |
 | Teoria, Listas e Cards em placas, grade de 2 colunas no desktop, standalone do player com a placa | `test_hub_quadro.py::test_teoria_em_duas_placas_lado_a_lado_no_desktop`, `test_hub_render.py::test_listas_em_placas_e_a_grade_de_duas_colunas_no_desktop`, `test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa` (s227) |
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
@@ -236,7 +237,8 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 - **L3** espaçamento de caixa-alta nos rótulos: **resolvido** nos rótulos citados (`.eye .kick .dstage .rlab .albl th .tag .tk`, `h3/h5` de `.vs`).
 - **L5** negrito ciano com exceções por descendente: **resolvido** (mesma especificidade das aulas).
 - **L7** `h4.sub` e **L8** `.dtitle h3`: **resolvidos**.
-- **L4** callouts sem critério único: **parcial** (trap = âmbar, banca = roxo, nota = neutro); faltam `.key`, `div.note`, `.disc`, `.fonte`, `.ext`, `.star`.
+- **L4** callouts sem critério único: **resolvido na v4** (s227: `.key`, `div.note`, `.disc`, `.fonte`, `.star` viraram nota neutra; trap = âmbar, banca = roxo); resta o `.ext` da `dmg`.
+- **v4 (s227, part 4):** no leitor, `--paper` = a cor da placa e `--card` = o elevado, para nenhuma caixa interna ter a cor da placa; `figure.fig-an` com fundo da placa e `--borda-placa`; `.trilho-box` sem moldura; `ol.esc` das RDs como lista. Conferido a 390 nos dois temas (RD com figura `rd-cir-1310`, ER `kawasaki`, EN `tb-360`). O `ui_harness.html` ganhou `?tema=light|dark` e `?doc=aulas/x.html` (o `ui_capturas.py` ainda não tem flag para eles).
 - **L6** h3/h4/h5 como rótulo dentro de `.vs .tgrp .blk .cmap .if3`: **pendente**.
 - **L9** outliers de paleta (autópsia: 18 tokens próprios; neuromusculares: `--acc*`): **pendente** (mapeamento no §8.3 do inventário).
 - **L2, L10-L15**: **pendentes** (ver o inventário).
@@ -288,7 +290,10 @@ declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esq
   só vai ao ar conferida até qui 15/10; senão, dom 18/10). Part 1 (`c633422`): tokens, luz, placa, casca. Parts 2 e 3
   (subagentes em paralelo, arquivos disjuntos): Painel em bento com os dois anéis; Teoria, Listas e Cards em placas.
   Decisões dos subagentes que ele pode reverter: Simulados com provas | resolvidos lado a lado; a tela de fim do lote de
-  cards numa placa.
+  cards numa placa. Part 4 (questão e leitor): JS idêntico ao de antes, só classes e wrappers; alternativas mantidas com
+  a moldura própria (não elevadas) pela segurança do simulado de 17/10. Riscos declarados: duas placas somem por `:has()`
+  (Elos sem cadeia; o leitor sem aula carregada) -- sem `:has`, uma placa vazia, nenhum gesto muda; a 390 o enunciado
+  ficou 34 px mais estreito.
 
 - **Dashboard do Painel (13/10, s226, painel-dashboard-sprint part-1)**: pedido dele ("integre estes dois blocos [...] com a modalidade de dashboard [...] e resolva as divergências entre metas"): Hoje + Ritmo + Por bloco viram um dashboard no topo (forma e cor pela skill `dataviz`, dentro dos tokens); com sprint, o único por-dia da tela é o do sprint ("0 de 76", não "0 de ~115"; o Ritmo contra 80/dia; "114,9 por dia até a prova" sai) e a meta 10.000 aparece uma vez, na barra de projeção (7.817 -> 9.306 -> 10.000, fora do sprint 997 q); a `<table>` do Por bloco virou linhas com barra de acerto. Regra s203 suspensa para a tela: `cronograma-contract` v1.7.
 - **s226 (13/10, tarde):** pedido dele com prints: "Hub" no azul da paleta; a barra da aba ativa acompanha o degradê; as tags do Painel com a cor das de Teoria (o "novas"), "Próxima" segue ciano; fora as legendas em prosa (Teoria, frase do Ritmo, "Fora da tabela"). O dashboard que integra Hoje + Ritmo + Por bloco e a meta única na tela vão para o PRD `painel-dashboard-sprint`.

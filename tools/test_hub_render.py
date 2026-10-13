@@ -766,6 +766,156 @@ def test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa():
     assert re.search(r"\n\.placa\{", embutir_tema(txt)), "o standalone leva a primitiva do tema"
 
 
+# ------------------------------------------------ s227 (hub-tema-v4 part-4): questao, fim e leitor em placas
+
+class _Cadeias(HTMLParser):
+    """Le o markup do template (o conteudo de <script>/<style> e dado para o parser): `ids` = id -> as listas de
+    classes da raiz ate o elemento (inclusive); `itens` = [tag, id, data-*/type/role, rotulo] de todo elemento com
+    id e de todo controle, em ordem de documento, com os ids dos ancestrais. Rotulo = o 1o texto direto do botao ou
+    do summary. Uma tag que fecha fecha tambem o que ficou aberto dentro dela."""
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.pilha, self.ids, self.itens = [], {}, []
+        self._rotulo = None
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        cls = (a.get("class") or "").split()
+        if a.get("id"):
+            self.ids[a["id"]] = [c for _t, c, _i in self.pilha] + [cls]
+        if a.get("id") or tag in ("button", "input", "textarea", "label", "form", "details", "summary"):
+            extra = " ".join("%s=%s" % (k, v) for k, v in sorted(a.items()) if k.startswith("data-") or k in ("type", "role"))
+            self.itens.append(([tag, a.get("id", ""), extra, ""], {i for _t, _c, i in self.pilha if i}))
+            if tag in ("button", "summary"):
+                self._rotulo = self.itens[-1][0]
+        if tag not in self.VOID:
+            self.pilha.append((tag, cls, a.get("id")))
+
+    def handle_endtag(self, tag):
+        if tag in ("button", "summary"):
+            self._rotulo = None
+        for i in range(len(self.pilha) - 1, -1, -1):
+            if self.pilha[i][0] == tag:
+                del self.pilha[i:]
+                break
+
+    def handle_data(self, data):
+        if self._rotulo is not None and not self._rotulo[3] and data.strip():
+            self._rotulo[3] = data.strip()
+
+
+def _cadeias(html):
+    p = _Cadeias()
+    p.feed(html)
+    return p
+
+
+def _itens_de(html, raiz):
+    """Os itens [tag, id, data-*/type/role, rotulo] do elemento de id `raiz` e de dentro dele, em ordem de documento."""
+    return [it for it, acima in _cadeias(html).itens if it[1] == raiz or raiz in acima]
+
+
+def test_questao_fim_e_leitor_em_placas():
+    """DoD 2 e 4: o enunciado (meta, texto, figuras) e uma placa; as alternativas, a certeza e os botoes ficam no
+    fundo (nunca caixa dentro de caixa); veredito + cadeia (+ analise e o rodape) formam a placa do resultado, com a
+    Proxima fora; no fim, metricas | por bloco | Elos | revisao, uma placa cada, os botoes fora; o leitor e uma placa
+    sem padding em volta do iframe e a assinatura e a placa de baixo, com a mesma largura. A barra e o trilho seguem
+    no fundo, com a largura do corpo (um max-width so no conteiner da tela, regra s212). Nenhuma placa dentro de
+    outra; a placa e composta, nunca redefinida. Camada de leitura: a pagina da aula e a placa, as caixas sobem um
+    degrau, a figura no idioma da placa, a medida de 46rem e a tabela que rola (L1) seguem."""
+    p = _cadeias(TEMPLATE)
+
+    def placa_de(id_):
+        cadeia = [c for c in p.ids[id_] if "placa" in c]
+        assert len(cadeia) <= 1, (id_, cadeia)   # nunca placa dentro de placa
+        return " ".join(cadeia[0]) if cadeia else None
+
+    for id_ in ("qz-pos", "qz-banca", "qz-tags", "qz-enun", "qz-figs", "qz-figura"):
+        assert placa_de(id_) == "placa qz-enun-placa", id_
+    for id_ in ("qz-veredito", "qz-medhub-box", "qz-medhub", "qz-analise", "qz-racional", "qz-defeito", "qz-sol-box",
+                "qz-forum-box"):
+        assert placa_de(id_) == "placa qz-resultado", id_
+    for id_ in ("qz-voltar", "qz-tema", "qz-modo-lista", "qz-relogio", "qz-trilho", "qz-aviso-lista", "qz-modo-escolha",
+                "qz-alts", "qz-antes", "qz-seg", "qz-flag", "qz-ant", "qz-pular", "qz-responder", "qz-status",
+                "qz-proxima", "qz-concluir", "qz-rever", "qz-fim-status", "hub-leitor-voltar", "hub-leitor-aviso"):
+        assert placa_de(id_) is None, id_
+    assert placa_de("qz-tiles") == placa_de("qz-erradas") == "placa qz-p-metricas"
+    assert placa_de("qz-porobj") == "placa qz-porobj"
+    assert placa_de("qz-elos-fim") == "placa qz-p-elos"
+    assert placa_de("qz-revisao") == "placa qz-p-revisao"
+    assert placa_de("hub-leitor-quadro") == "placa hub-leitor-placa"
+    assert placa_de("hub-assina") == placa_de("hub-assina-btn") == "hub-assina placa"
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert "#aba-cards,#hub-leitor,#qz-player{max-width:var(--wrap);margin-inline:auto}" in css
+    assert not re.search(r"\.(qz-trilho|hub-leitor-barra|qz-corpo|qz-enun-placa|qz-resultado)\{[^}]*max-width", css)
+    assert not re.search(r"(?:^|[}\n])\.placa(?:::before)?\{", css), "a placa e composta, nunca redefinida"
+    assert ".placa.hub-leitor-placa{padding:0}" in css
+    assert ".hub-assina.placa{margin-inline:0!important}" in css, "assinatura com a largura da placa do leitor"
+    assinatura = re.search(r"\n\.hub-assina\{([^}]*)\}", css).group(1)
+    assert "border" not in assinatura and "background" not in assinatura, "superficie e borda vem da .placa"
+    assert re.search(r"\.qz-p-elos:has\(> \.qz-elos-fim\[hidden\]\),\s*\.hub-leitor-placa:has\(> \.hub-quadro\[hidden\]\)"
+                     r"\{display:none\}", css), "placa vazia nao aparece"
+    assert not re.search(r"\.qz-tiles\{[^}]*border", css), "a placa de metricas faz o papel dos dois filetes"
+    aula = (ROOT / "core" / "templates" / "tema-aula.css").read_text(encoding="utf-8")
+    assert ":root{--leitor-placa:var(--card)}" in aula
+    assert "body{--paper:var(--leitor-placa);--card:var(--afundado)}" in aula
+    assert re.search(r"figure\.fig-an\{--card:var\(--leitor-placa\);background:var\(--leitor-placa\);"
+                     r"border-color:var\(--borda-placa\)", aula)
+    assert re.search(r"\.trilho-box\{background:var\(--sunk\);border:0", aula), ".trilho-box sem moldura dentro da placa"
+    assert ".wrap{max-width:46rem;" in aula, "a medida de leitura segue"
+    assert re.search(r"\n\.tw\{[^}]*overflow-x:auto", aula), "L1: a tabela larga rola na propria caixa"
+    assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", aula), "cor so por token"
+
+
+# o inventario da tela da questao e do leitor ANTES da part 4 (HEAD 232bab5): id, data-*/type/role e rotulo, na
+# ordem do documento. A part 4 so pos classe e wrapper: nenhum id, botao, ordem ou rotulo pode mudar
+INVENTARIO_QUESTAO = [
+    ["div", "qz-player", "", ""], ["button", "qz-voltar", "type=button", "‹ Todas as listas"], ["p", "qz-tema", "", ""],
+    ["button", "qz-modo-lista", "type=button", ""], ["span", "qz-relogio", "", ""], ["div", "qz-trilho", "", ""],
+    ["p", "qz-aviso-lista", "", ""], ["div", "qz-modo-escolha", "", ""],
+    ["button", "", "data-modo=estudo type=button", "Estudo"], ["button", "", "data-modo=prova type=button", "Prova"],
+    ["div", "qz-questao", "", ""], ["span", "qz-pos", "", ""], ["span", "qz-banca", "", ""], ["span", "qz-tags", "", ""],
+    ["p", "qz-enun", "", ""], ["div", "qz-figs", "", ""], ["p", "qz-figura", "", ""], ["div", "qz-alts", "role=radiogroup", ""],
+    ["div", "qz-antes", "", ""], ["div", "qz-seg", "", ""], ["button", "", "data-c=solida type=button", "Sólida"],
+    ["button", "", "data-c=duvida type=button", "Dúvida"], ["button", "", "data-c=chute type=button", "Chute"],
+    ["label", "", "", ""], ["input", "qz-flag", "type=checkbox", ""], ["button", "qz-ant", "type=button", "‹ Anterior"],
+    ["button", "qz-pular", "type=button", "Pular ›"], ["button", "qz-responder", "type=button", "Responder"],
+    ["div", "qz-depois", "", ""], ["p", "qz-veredito", "", ""], ["section", "qz-medhub-box", "", ""],
+    ["p", "qz-cad-tit", "", ""], ["span", "qz-obj", "", ""], ["span", "qz-conferir", "", ""], ["div", "qz-medhub", "", ""],
+    ["div", "qz-analise", "", ""], ["input", "qz-racional", "type=text", ""], ["div", "qz-defeito", "", ""],
+    ["button", "qz-defeito-abrir", "type=button", "Erro na cadeia"], ["form", "qz-defeito-form", "", ""],
+    ["input", "qz-defeito-motivo", "type=text", ""], ["button", "", "type=submit", "Enviar"], ["p", "qz-defeito-st", "", ""],
+    ["div", "qz-sol-pe", "", ""], ["details", "qz-sol-box", "", ""], ["summary", "", "", "Comentário do professor"],
+    ["div", "qz-sol", "", ""], ["details", "qz-forum-box", "", ""], ["summary", "", "", "Fórum"], ["div", "qz-forum", "", ""],
+    ["p", "qz-status", "", ""], ["button", "qz-proxima", "type=button", "Próxima"], ["div", "qz-fim", "", ""],
+    ["div", "qz-tiles", "", ""], ["p", "qz-erradas", "", ""], ["div", "qz-porobj", "", ""], ["div", "qz-elos-fim", "", ""],
+    ["ol", "qz-revisao", "", ""], ["button", "qz-concluir", "type=button", "Concluir lista"],
+    ["button", "qz-rever", "type=button", "Rever uma a uma"], ["p", "qz-fim-status", "", ""],
+]
+INVENTARIO_LEITOR = [
+    ["div", "hub-leitor", "", ""], ["button", "hub-leitor-voltar", "type=button", "‹ Teoria"], ["p", "hub-leitor-titulo", "", ""],
+    ["p", "hub-leitor-aviso", "", ""], ["a", "hub-leitor-link", "", ""], ["iframe", "hub-leitor-quadro", "", ""],
+    ["div", "hub-assina", "data-st=sem role=group", ""], ["p", "hub-assina-tit", "", ""],
+    ["textarea", "hub-assina-coment", "", ""], ["p", "hub-assina-retorno", "", ""], ["p", "hub-assina-st", "role=status", ""],
+    ["button", "hub-assina-btn", "type=button", "Assinar leitura"],
+]
+
+
+def test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram():
+    """DoD 3 (interacao identica; ele resolve o simulado de 17/10 nesta tela): os ids que o JS consome, os botoes
+    (data-*, tipo, rotulo), os campos e a ordem da questao, do fim e do leitor sao os de antes da part 4. Os atalhos
+    do teclado seguem os mesmos (A-E, 1-5, S/D/C, Enter)."""
+    assert _itens_de(TEMPLATE, "qz-player") == INVENTARIO_QUESTAO
+    assert _itens_de(TEMPLATE, "hub-leitor") == INVENTARIO_LEITOR
+    teclas = TEMPLATE[TEMPLATE.index('document.addEventListener("keydown"'):]
+    teclas = teclas[:teclas.index("\n  });")]
+    for trecho in ('"ABCDE".indexOf(k)', '"12345".indexOf(k)', '{S: "solida", D: "duvida", C: "chute"}[k]',
+                   '$("qz-responder").click()', '$("qz-proxima").click()'):
+        assert trecho in teclas, trecho
+
+
 def test_hub_sprint_no_build_e_null_sem_sprint():
     assert hub.html_sprint([dict(l, dia_plano=None) for l in PLANO_SPRINT], HOJE_SPRINT) == \
         '<script type="application/json" id="hub-sprint">null</script>'

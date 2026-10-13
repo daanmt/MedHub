@@ -1,21 +1,29 @@
-/* MedHub tema v3 -- camada de LEITURA (aulas e resumos no leitor do hub). Vai DEPOIS do tema.css; o shell, o painel e
+/* MedHub tema v4 -- camada de LEITURA (aulas e resumos no leitor do hub). Vai DEPOIS do tema.css; o shell, o painel e
    o player NAO a recebem. Mapa e regras: docs/UI.md (§6 e §9). As 43 aulas trazem CSS proprio (duas familias de classes:
    as antigas com .spec/.rail/.aside e as novas com .stats/.nav/.trilho/.ato); esta camada so ajusta, nunca reescreve aula.
    - UMA coluna (o .wrap) constrange tudo: nada de max-width por elemento ao lado de quadro com borda (zigue-zague
      de bordas que ele ja reprovou duas vezes; memoria feedback-artifact-width-alignment); titulos em branco, rotulos e fontes em lavanda; sem brilho e sem caixa-alta;
    - o termo-chave em negrito e o UNICO texto ciano da leitura (pedido dele, s224); link e navegacao tambem sao ciano;
    - callout por significado, sempre filete + lavagem: armadilha = ambar (como no card), banca = roxo, nota = neutro;
-     o que e errado ou proibido (.mal) = coral; numerais e marcos decorativos = roxo. */
+     o que e errado ou proibido (.mal) = coral; numerais e marcos decorativos = roxo.
+   - v4 (s227, part 4): no hub o documento e transparente e o iframe mora numa PLACA (hub.html). A pagina da aula
+     passa a ser a placa: --paper (fundo e as mascaras de linha e de circulo das aulas) = a cor da placa, e as
+     caixas e celulas que as aulas pintam com --card sobem um degrau (o elevado), para nunca terem a cor da placa.
+     O apelido muda do body para baixo; o :root guarda a cor da placa (--leitor-placa) para a moldura da figura. */
+:root{--leitor-placa:var(--card)}
+body{--paper:var(--leitor-placa);--card:var(--afundado)}
 
 /* =========================================================== coluna e tipo */
 body{font-size:17px;line-height:1.65}
-.wrap{max-width:46rem;padding:0 20px 96px}
+/* dentro da placa: o padding da aula e o da placa (16 px no celular, 24 acima), o topo nunca encosta na borda
+   (o resumo e a autopsia nao tem .top) e o pe e curto (a placa fecha a pagina) */
+.wrap{max-width:46rem;padding:var(--esp-5) var(--esp-5) var(--esp-6)}
 .wrap:has(.body){max-width:62rem}   /* aula antiga com trilho lateral (.rail) no desktop */
-@media(max-width:640px){.wrap{padding:0 16px 72px}}
+@media(max-width:520px){.wrap{padding:var(--esp-4) var(--esp-4) var(--esp-5)}}
 h1,h2,h3,h4{font-weight:650;letter-spacing:-.015em;line-height:1.25;color:var(--ink)}
 
 /* =========================================================== cabecalho */
-.top{padding:36px 0 24px;border-bottom:0}
+.top{padding:var(--esp-3) 0 24px;border-bottom:0}
 .eye{font-weight:500;font-size:14px;letter-spacing:0;color:var(--ink3);margin:0 0 10px}
 .top h1{font-size:clamp(30px,6.4vw,44px);font-weight:700;letter-spacing:-.025em;max-width:20ch;margin-bottom:12px;text-shadow:none}
 .top .sub{font-size:17px;color:var(--ink2)}
@@ -32,9 +40,11 @@ h1,h2,h3,h4{font-weight:650;letter-spacing:-.015em;line-height:1.25;color:var(--
 .nav{gap:6px;padding:22px 0 6px}
 .nav a{border:0;border-radius:var(--raio-p);background:var(--sunk);color:var(--ink2);font-size:14px;padding:6px 10px;min-height:34px;display:inline-flex;align-items:center}
 .nav a:hover{color:var(--ink);background:var(--teal-wash)}
-.trilho-box{background:transparent;border:1px solid var(--line);border-radius:var(--raio);padding:16px 14px 10px}
+/* v4: a trilha do cabecalho e uma superficie elevada SEM moldura (a borda dentro da placa seria caixa dentro de
+   caixa); o circulo numerado mascara a linha com a cor da propria trilha */
+.trilho-box{background:var(--sunk);border:0;border-radius:var(--raio);padding:16px 14px 10px}
 .trilho-box p{color:var(--ink3)}
-.trilho .n{border-color:var(--plum);color:var(--plum-ink);background:var(--paper)}
+.trilho .n{border-color:var(--plum);color:var(--plum-ink);background:var(--sunk)}
 .trilho li:not(:last-child)::before{background:var(--plum);opacity:.6}
 .trilho a:hover b{color:var(--teal-ink)}
 
@@ -70,9 +80,13 @@ main{max-width:38rem}
 .kick,.tag,.tk,.vs h3,.vs h5,.cmap h4,.if3 h4{letter-spacing:0}
 
 /* =========================================================== callouts: filete + lavagem, por significado */
-.trap,.banca,.aside{border:0;border-left:3px solid var(--line2);border-radius:0 var(--raio-p) var(--raio-p) 0;padding:14px 16px;margin:20px 0;background:var(--sunk)}
+/* v4 (L4): os callouts que as aulas pintavam de ciano ou ambar sem ser armadilha (.key, div.note, .disc, .fonte) e
+   a caixa .star viram NOTA neutra -- ciano e interacao, nunca rotulo de conteudo. Fora: .row.key (linha de tabela
+   da kawasaki), p.note (legenda das sinteses) e .ext (grade de fatos; so na dmg e callout) */
+.trap,.banca,.aside,:is(p,div).key:not(.row),div.note,.disc,.fonte,.star{border:0;border-left:3px solid var(--line2);border-radius:0 var(--raio-p) var(--raio-p) 0;padding:14px 16px;margin:20px 0;background:var(--sunk);color:var(--ink)}
 .albl{font-weight:650;font-size:13.5px;letter-spacing:0;color:var(--ink2)}
-.trap p,.banca p,.aside p{font-size:16px;line-height:1.58;color:var(--ink)}
+.trap p,.banca p,.aside p,.star p{font-size:16px;line-height:1.58;color:var(--ink)}
+:is(.key,.disc,.fonte,.star) .albl{color:var(--ink2)}
 .trap{border-left-color:var(--amber);background:var(--amber-wash)}
 .trap .albl{color:var(--amber)}
 .banca{border-left-color:var(--plum);background:var(--plum-wash)}
@@ -88,7 +102,16 @@ blockquote{border-left-color:var(--line2);background:var(--sunk);border-radius:0
 /* =========================================================== quadros, tabelas e fluxos (preservados; so a moldura) */
 .vs,.cmap,.if3,.trig,.arms,.crit,.esc,details.ref{border:1px solid var(--line);border-radius:var(--raio);overflow:hidden}
 .tw{border:1px solid var(--line);border-radius:var(--raio);overflow-x:auto}   /* tabela larga ROLA na propria caixa (L1: o overflow:hidden cortava ate 424 px a 390) */
-.vs,.cmap,.if3,.trig,.arms{gap:1px;background:var(--line)}
+.vs,.cmap,.if3,.trig,.arms,.tl{gap:1px;background:var(--line)}
+/* v4: as demais caixas das aulas (perguntas, passos, regua, grades, cadeias, elos) com o mesmo filete suave: dentro
+   da placa elas ja sobem pelo elevado; a borda forte (--line2) dobrava o contorno da placa */
+.q,ol.passo,ol.passos,.tl,.qa,.miss,.ruler,.grade,ol.chain,ul.chain,ol.elos,ul.elos,figure.fig,details.blk{border-color:var(--line)}
+/* a escada numerada das RDs da UERJ 2022 (ol.esc) e uma LISTA com filete entre os passos; a moldura acima e da
+   caixa .esc antiga (div, tb-360) e, sem fundo, virava uma caixa da cor da placa dentro dela */
+ol.esc{border:0;border-radius:0;overflow:visible}
+/* a figura de mecanismo (anima, RDs da UERJ 2022): moldura no idioma da placa -- a cor da placa (o furo do
+   esquema, pintado com --card, acompanha) e a borda da placa; o fundo do esquema (--sunk) fica elevado nela */
+figure.fig-an{--card:var(--leitor-placa);background:var(--leitor-placa);border-color:var(--borda-placa);border-radius:var(--raio)}
 .vs>div,.cmap>div,.if3>div,.arm{background:var(--card)}
 .trig div{background:var(--sunk)}
 .cmap .k3,.cmap .k34,.cmap .kn{border-top-width:2px}

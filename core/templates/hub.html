@@ -360,8 +360,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 .qz-fig.zoom img{max-width:none;width:200%;cursor:zoom-out}
 .qz-fig figcaption{font-size:var(--fs-meta);color:var(--tinta3);padding:var(--esp-1) var(--esp-2)}
 .qz-alt .qz-fig{grid-column:1 / -1;margin:0 var(--esp-3) var(--esp-2) calc(2.25rem + var(--esp-2) + var(--esp-3))}
-/* as metricas do fim: UMA faixa entre dois filetes (acertos, solidas, duvidas, chutes, tempo) */
-.qz-tiles{display:flex;flex-wrap:wrap;gap:var(--esp-3) var(--esp-6);padding:var(--esp-3) 0;border-block:1px solid var(--linha)}
+/* as metricas do fim: UMA faixa (acertos, solidas, duvidas, chutes, tempo); s227: dentro da placa de metricas,
+   que faz o papel dos dois filetes -- nunca uma caixa por numero */
+.qz-tiles{display:flex;flex-wrap:wrap;gap:var(--esp-3) var(--esp-6);min-width:0}
 .qz-tiles > div{min-width:0}
 .qz-analise{display:grid;gap:var(--esp-1);padding-top:var(--esp-3);border-top:1px solid var(--linha);min-width:0}
 .qz-analise p{margin:0;line-height:1.45}
@@ -371,8 +372,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 .qz-status{font-size:var(--fs-legenda);color:var(--tinta2);min-height:1.3em;margin:0}
 .qz-status.ruim{color:var(--erro)} .qz-status.ok{color:var(--ok)}
 /* s213 (alca fechada v0): assinatura de leitura no rodape do leitor -- um bloco so, no hub, para
-   aula e analise; o comentario e opcional e o texto nunca se perde (rascunho no aparelho) */
-.hub-assina{display:grid;gap:var(--esp-2);margin-top:var(--esp-4);padding:var(--esp-4);border:1px solid var(--linha);border-radius:var(--raio);background:var(--card);min-width:0}
+   aula e analise; o comentario e opcional e o texto nunca se perde (rascunho no aparelho).
+   s227 (part 4): a superficie, a borda e o padding vem da .placa (class="hub-assina placa") */
+.hub-assina{display:grid;gap:var(--esp-2);margin-top:var(--esp-4);min-width:0}
 .hub-assina-tit{margin:0;font-weight:650;color:var(--tinta)}
 .hub-assina textarea{min-height:72px;resize:vertical;line-height:1.45}
 .hub-assina-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
@@ -381,6 +383,31 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 .hub-assina-retorno{margin:0;padding:var(--esp-2) var(--esp-3);border-left:3px solid var(--acento);background:var(--acento-fraco);border-radius:var(--raio-p);font-size:var(--fs-legenda);color:var(--tinta)}
 .hub-assina[data-st="erro"] .qz-status,.hub-assina[data-st="leitura"] .qz-status{color:var(--erro);cursor:pointer}
 .hub-assina[data-st="assinado"] .qz-status,.hub-assina[data-st="absorvida"] .qz-status{color:var(--ok)}
+
+/* s227 (hub-tema-v4 part 4): a questao aberta, o fim da lista e o leitor em PLACAS -- so composicao (a .placa e
+   do tema.css). Interacao congelada (o simulado de 17/10 e nesta tela): nenhum id, botao, ordem, texto, atalho
+   ou gravacao muda; so uma classe a mais ou um wrapper em volta do que ja existia.
+   - questao: a barra e o trilho seguem no fundo, com a largura do corpo (s212); o enunciado (meta, texto,
+     figuras) e uma placa; as alternativas seguem objetos de toque com moldura propria, FORA de placa (nunca
+     caixa dentro de caixa); o resultado (veredito, cadeia, analise, rodape) e uma placa; os botoes, no fundo
+   - fim: metricas | por bloco | Elos | revisao, uma placa cada, o titulo dentro; o titulo da tela e os botoes fora
+   - leitor: a aula numa placa SEM padding (a aula tem o proprio; com o da placa a coluna encolhia 32 px a 390)
+     e a assinatura na placa logo abaixo, com a MESMA largura: o R9 (margem do rodape = a da coluna do documento)
+     servia ao documento solto no fundo; com as placas, borda alinha com borda */
+.qz-enun-placa{display:grid;gap:var(--esp-3);min-width:0}
+.qz-enun-placa .qz-figs,.qz-enun-placa .qz-figura{margin:0}
+.qz-resultado{display:grid;gap:var(--esp-4);min-width:0}
+.qz-p-metricas,.qz-p-revisao{display:grid;gap:var(--esp-3);min-width:0}
+.qz-p-metricas > .hub-sub{padding-top:var(--esp-3);border-top:1px solid var(--linha)}
+.qz-porobj > .qz-rot,.qz-elos-fim > .qz-rot{font-size:1.0625rem;font-weight:700;color:var(--tinta)}
+.qz-porobj ul{margin-top:var(--esp-2)}
+.qz-porobj li:last-child,
+.qz-elos-fim .qz-lista > li:last-child > button,
+.qz-p-revisao .qz-lista > li:last-child > button{border-bottom-color:transparent}
+.qz-p-elos:has(> .qz-elos-fim[hidden]),
+.hub-leitor-placa:has(> .hub-quadro[hidden]){display:none}
+.placa.hub-leitor-placa{padding:0}
+.hub-assina.placa{margin-inline:0!important}   /* vence o estilo em linha do assinaAlinhar (R9) */
 
 /* @hub:tema-css */
 </style>
@@ -413,8 +440,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         <p class="hub-leitor-titulo" id="hub-leitor-titulo"></p>
       </div>
       <p class="hub-aviso" id="hub-leitor-aviso" hidden>Nao consegui abrir a aula aqui dentro. <a id="hub-leitor-link" href="#">Abrir em pagina inteira</a>.</p>
-      <iframe class="hub-quadro" id="hub-leitor-quadro" title="Teoria"></iframe>
-      <div class="hub-assina" id="hub-assina" role="group" aria-labelledby="hub-assina-tit" data-st="sem" hidden>
+      <div class="placa hub-leitor-placa"><iframe class="hub-quadro" id="hub-leitor-quadro" title="Teoria"></iframe></div>
+      <div class="hub-assina placa" id="hub-assina" role="group" aria-labelledby="hub-assina-tit" data-st="sem" hidden>
         <p class="hub-assina-tit" id="hub-assina-tit">Leu? Assine a leitura.</p>
         <textarea class="qz-linha" id="hub-assina-coment" rows="2" maxlength="600" placeholder="Comentário para o agente (opcional)" aria-label="Comentário para o agente (opcional)"></textarea>
         <p class="hub-assina-retorno" id="hub-assina-retorno" hidden></p>
@@ -453,10 +480,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         <div class="qz-seg qz-seg2"><button type="button" data-modo="estudo">Estudo<small>gabarito e cadeia a cada questão</small></button><button type="button" data-modo="prova">Prova<small>tudo no fim, como no dia</small></button></div>
       </div>
       <div class="qz-corpo" id="qz-questao" hidden>
+        <div class="placa qz-enun-placa">
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
         <p class="qz-enun" id="qz-enun"></p>
         <div class="qz-figs" id="qz-figs" hidden></div>
         <p class="qd-aviso qz-figura" id="qz-figura" hidden></p>
+        </div>
         <div class="qz-alts" id="qz-alts" role="radiogroup" aria-label="Alternativas"></div>
         <div id="qz-antes">
           <p class="qz-rot">Antes de ver o gabarito: como está a sua certeza?</p>
@@ -471,6 +500,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
           </div>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:16px">
+          <div class="placa qz-resultado">
           <p class="qz-veredito" id="qz-veredito"></p>
           <section class="qz-cad" id="qz-medhub-box" hidden aria-labelledby="qz-cad-tit">
             <p class="qz-cad-tit" id="qz-cad-tit">Cadeia<span class="qz-obj" id="qz-obj" hidden></span><span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></p>
@@ -486,17 +516,24 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
             <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
             <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
           </div>
+          </div>
           <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
         </div>
       </div>
-      <div id="qz-fim" hidden style="display:grid;gap:12px">
+      <div id="qz-fim" hidden style="display:grid;gap:16px">
         <h2 class="hub-titulo">Lista concluída</h2>
+        <div class="placa qz-p-metricas">
         <div class="qz-tiles" id="qz-tiles"></div>
         <p class="hub-sub" id="qz-erradas" style="margin:0"></p>
-        <div class="qz-porobj" id="qz-porobj" hidden></div>
+        </div>
+        <div class="placa qz-porobj" id="qz-porobj" hidden></div>
+        <div class="placa qz-p-elos">
         <div class="qz-elos-fim" id="qz-elos-fim" hidden></div>
+        </div>
+        <div class="placa qz-p-revisao">
         <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito e a cadeia. Nas erradas, dúvidas e chutes, declare cada elo: é o que entra na revisão.</p>
         <ol class="qz-lista" id="qz-revisao"></ol>
+        </div>
         <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Concluir lista</button><button type="button" id="qz-rever">Rever uma a uma</button><p class="qz-status" id="qz-fim-status"></p></div>
       </div>
     </div>

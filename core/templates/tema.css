@@ -1,40 +1,51 @@
-/* MedHub tema v3 -- RETROWAVE CONTIDO (13/10/2026). Fonte UNICA de cor, tipo, espaco e raio de todo o MedHub:
+/* MedHub tema v4 -- FOSCO EM CAMADAS (13/10/2026, s227). Fonte UNICA de cor, tipo, espaco e raio de todo o MedHub:
    o hub (shell, Teoria, Listas), o player de cards, o painel e o leitor de aulas e resumos.
    Mapa das telas, semantica das cores, escalas e regras de uso: docs/UI.md (ler antes de mexer).
+   Referencia dele: o controle DualSense GTA VI -- corpo preto fosco (o fundo), cromado azul -> violeta (a luz e o
+   fio no topo de cada placa, nunca uma superficie), simbolos rosa (detalhe), texto em branco quente.
    - Trocar a paleta = trocar os DOIS blocos de cor abaixo (escuro e claro). Nada de cor literal fora daqui.
-   - Aqui so moram tokens e a base comum. Regra de componente mora no arquivo da tela: hub.html (shell, Teoria,
-     Listas), player.html (Cards), painel.py (Painel), tema-aula.css (leitor de aulas e resumos).
+   - Aqui moram tokens, a base comum e UMA primitiva de superficie (.placa), que as telas compoem e nunca
+     redefinem. Regra de componente mora no arquivo da tela: hub.html (shell, Teoria, Listas), player.html
+     (Cards), painel.py (Painel), tema-aula.css (leitor de aulas e resumos).
+   - Profundidade = degrau de superficie + borda + fio cromado. Sem brilho, sem sombra, sem halo.
    - Escuro por padrao (decisao dele, s224); o claro so com data-theme="light" (escolha explicita do visualizador).
    - Seletores (0,2,0) de proposito: vencem o @media escuro que cada aula traz no proprio CSS (o leitor injeta
      este arquivo DEPOIS do CSS da aula). Os apelidos em ingles (--paper, --ink, --teal...) servem as aulas.
-   v2.4 (ciano + rosa de alerta) esta no git: commit 730d884. */
+   v3 (retrowave contido, indigo) esta no git: commit c40c9f2. */
 :root{
   --fonte:"Atkinson Hyperlegible Next",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;
   /* espaco: multiplos de 4 */
   --esp-1:4px; --esp-2:8px; --esp-3:12px; --esp-4:16px; --esp-5:24px; --esp-6:32px; --esp-7:48px;
-  /* raio: cartoes e controles / pequeno (kbd, grifo, segmento) / pilula (so badges e chips) */
-  --raio:10px; --raio-p:6px; --raio-pilula:999px;
+  /* raio por nivel: placa (secao) > controle e cartao > pequeno (kbd, grifo, segmento) > pilula (so badges e chips) */
+  --raio-placa:14px; --raio:10px; --raio-p:6px; --raio-pilula:999px;
   /* tipo: pagina > secao > item > corpo > legenda > meta; numero = metrica de destaque */
   --fs-pagina:1.5rem; --fs-secao:1.125rem; --fs-item:1rem; --fs-legenda:.875rem; --fs-meta:.8125rem; --fs-numero:2rem;
-  /* a coluna unica do hub, do painel e do player (um .wrap so): ~85 caracteres por linha no desktop */
-  --wrap:46rem; --transicao:140ms ease;
+  /* --wrap = a medida de leitura (aula, enunciado, card): ~85 caracteres por linha no desktop.
+     --largura = a coluna larga do hub e do painel no desktop (as placas em grade); no celular as duas somem */
+  --wrap:46rem; --largura:72rem; --transicao:140ms ease;
 }
 :root:not([data-theme="light"]),:root[data-theme="dark"]{
-  /* superficies: fundo, secundaria, elevada/selecionada, divisoria, borda de controle (>= 3:1) */
-  --papel:#17132E; --card:#211C3A; --afundado:#29233F; --linha:#403858; --linha-forte:#776E99;
-  /* texto: principal 13,7-16,5:1 / secundario 7,4-8,9:1 / meta 5,3-6,4:1 sobre as tres superficies */
-  --tinta:#F8F5F2; --tinta2:#B8B3CC; --tinta3:#9C96B6;
-  /* identidade e interacao: ciano = navegacao ativa, foco, progresso, acao primaria; rosa = marca;
-     roxo = decoracao e dado visual; amarelo = marca-texto */
-  --acento:#00D9E8; --acento-tinta:#7DE8F0; --acento-fraco:#13334C;
-  --rosa:#FF4FA3; --rosa-fraco:#3C1D41;
-  --roxo:#AA71E8; --roxo-tinta:#BE95F0; --roxo-fraco:#2F224C;
+  /* superficies: fundo (o corpo do controle), placa, elevado/selecionado, filete interno, borda da placa,
+     borda de controle (>= 3:1). Contraste medido pelo teste de contraste do tema */
+  --papel:#0C0C12; --card:#15151E; --afundado:#1E1D2A; --linha:#2B2A3A; --borda-placa:#3A3852; --linha-forte:#6E6A8A;
+  /* texto em branco quente: principal 14,6-17,1:1 / secundario 8,6-10,0:1 / meta 5,4-6,3:1 sobre as tres superficies */
+  --tinta:#F6EFEA; --tinta2:#BDB7CC; --tinta3:#948FAA;
+  /* identidade e interacao: ciano = navegacao ativa, foco, progresso, acao primaria; rosa = marca e detalhe
+     (os simbolos do controle); roxo = decoracao e dado visual; amarelo = marca-texto */
+  --acento:#00D9E8; --acento-tinta:#7DE8F0; --acento-fraco:#0E2B36;
+  --rosa:#FF4FA3; --rosa-fraco:#33172C;
+  --roxo:#AA71E8; --roxo-tinta:#BE95F0; --roxo-fraco:#261C3E;
   --amarelo:#FFD447;
   /* estado: sucesso, erro, aviso (+ lavagem para fundo) */
-  --ok:#79D6A5; --ok-fraco:#273241; --erro:#FF7C87; --erro-fraco:#3C243C; --aviso:#FFBE72; --aviso-fraco:#3C2E39;
-  --sobre:#17132E;   /* texto sobre preenchimento (botao primario, declaracao ligada) */
-  --horizonte:linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8);   /* o unico gradiente: a linha do topo */
-  --qz-grifo:#FFD447; --qz-grifo-tinta:#17132E;   /* literal: o hub le o valor computado para o leitor */
+  --ok:#79D6A5; --ok-fraco:#172A26; --erro:#FF7C87; --erro-fraco:#331B24; --aviso:#FFBE72; --aviso-fraco:#33261C;
+  --sobre:#0C0C12;   /* texto sobre preenchimento (botao primario, declaracao ligada) */
+  /* o cromado: o fio de 1 px no topo de cada placa, aceso no meio e apagado nas pontas (reflexo, nao faixa) */
+  --cromado:linear-gradient(90deg,transparent,#2F7BFF 18%,#7A4DFF 55%,#B04FE0 82%,transparent);
+  /* a luz atras do topo (marca e abas): azul a esquerda, violeta a direita, fraca -- profundidade, nunca cor de texto */
+  --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,123,255,.24),transparent 70%),
+        radial-gradient(56rem 22rem at 96% -8rem,rgba(150,77,255,.2),transparent 70%);
+  --horizonte:linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8);   /* a linha sob as abas (marca) */
+  --qz-grifo:#FFD447; --qz-grifo-tinta:#0C0C12;   /* literal: o hub le o valor computado para o leitor */
   --sombra:none; color-scheme:dark;
   /* apelidos legados (hub e player): mesmo significado, nome antigo */
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
@@ -50,16 +61,19 @@
   --on:var(--sobre);
 }
 :root[data-theme="light"]{
-  --papel:#F7F5FB; --card:#FFFFFF; --afundado:#EFEBF7; --linha:#DCD5E8; --linha-forte:#8E87AD;
-  --tinta:#1C1733; --tinta2:#4B4466; --tinta3:#625B7E;
+  --papel:#F4F3F8; --card:#FFFFFF; --afundado:#ECEAF3; --linha:#DFDCE8; --borda-placa:#C2BCD4; --linha-forte:#7F7A9C;
+  --tinta:#1A1626; --tinta2:#4A4560; --tinta3:#5F5A78;
   --acento:#00737D; --acento-tinta:#005A62; --acento-fraco:#DDF1F4;
   --rosa:#C2176F; --rosa-fraco:#F8E1EE;
   --roxo:#7443B8; --roxo-tinta:#5E3596; --roxo-fraco:#ECE3F8;
   --amarelo:#FFE066;
   --ok:#1E7348; --ok-fraco:#E2F2E8; --erro:#B8303E; --erro-fraco:#FBE5E8; --aviso:#8F5200; --aviso-fraco:#FAEBD7;
   --sobre:#FFFFFF;
+  --cromado:linear-gradient(90deg,transparent,#2F6BE0 18%,#6A3FE0 55%,#9A3FC8 82%,transparent);
+  --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,107,224,.07),transparent 70%),
+        radial-gradient(56rem 22rem at 96% -8rem,rgba(106,63,224,.06),transparent 70%);
   --horizonte:linear-gradient(90deg,#C2176F,#7443B8 55%,#00737D);
-  --qz-grifo:#FFE066; --qz-grifo-tinta:#1C1733;
+  --qz-grifo:#FFE066; --qz-grifo-tinta:#1A1626;
   --sombra:none; color-scheme:light;
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
   --qz-ok:var(--ok); --qz-ok-fraco:var(--ok-fraco); --qz-duv:var(--aviso); --qz-duv-fraco:var(--aviso-fraco);
@@ -77,8 +91,19 @@
 /* uma familia so (Atkinson: 0/O e 1/l distintos em dose e corte); !important porque as aulas declaram a fonte
    em atalhos `font:` espalhados. Sem caixa-alta: os rotulos em maiusculas das aulas e do player viram texto comum */
 *{font-family:var(--fonte)!important;font-variant-numeric:tabular-nums;text-transform:none!important}
-body{background:var(--papel);color:var(--tinta);-webkit-font-smoothing:antialiased}
+/* o fundo: preto fosco com a luz no topo (rola com a pagina). Dentro do hub, o documento do painel e o do leitor
+   ficam transparentes (o hub injeta), para a luz do shell passar sem emenda */
+body{background-color:var(--papel);background-image:var(--luz);background-repeat:no-repeat;color:var(--tinta);-webkit-font-smoothing:antialiased}
 :focus-visible{outline:2px solid var(--acento);outline-offset:2px}
 ::selection{background:var(--acento);color:var(--sobre)}
 strong{font-weight:650}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ======================================================== PLACA (a superficie de uma secao)
+   Um bloco por SECAO, nunca uma caixa por numero: dentro da placa, as linhas com filete seguem. A tela compoe
+   (class="placa dash-hoje"), nunca redefine. O fio cromado acende o topo; a borda separa do fundo (>= 1,6:1). */
+.placa{position:relative;min-width:0;background:var(--card);border:1px solid var(--borda-placa);border-radius:var(--raio-placa);padding:var(--esp-4)}
+.placa::before{content:"";position:absolute;left:var(--raio-placa);right:var(--raio-placa);top:-1px;height:1px;background:var(--cromado);pointer-events:none}
+.placa > :first-child{margin-top:0}
+.placa > :last-child{margin-bottom:0}
+@media (min-width:521px){.placa{padding:var(--esp-5)}}   /* celular primeiro: 16 px; 24 px acima */

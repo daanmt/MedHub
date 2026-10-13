@@ -421,6 +421,18 @@ def test_celular_sem_sticky_sem_nowrap_e_um_wrap_so():
     assert pagina.count('class="wrap"') == 1
 
 
+def test_tema_v4_luz_no_shell_e_quadros_transparentes():
+    """s227 (hub-tema-v4 part-1): o fundo do shell e o preto fosco com a luz no topo; o painel e o leitor rodam
+    em iframe e ficam TRANSPARENTES (elemento e documento), senao a luz do shell e cortada numa emenda no topo
+    do quadro. O shell usa a coluna larga e um .wrap so."""
+    pagina = _pagina_real()
+    assert re.search(r"body\{[^}]*background-image:var\(--luz\)", pagina)
+    assert re.search(r"\.hub-quadro\{[^}]*background:transparent", pagina)
+    assert "html,body{background:transparent!important}" in pagina
+    assert ".wrap{max-width:var(--largura)}" in pagina
+    assert pagina.count('class="wrap"') == 1
+
+
 def test_abas_curtas_e_com_alvo_de_toque():
     pagina = _pagina_real()
     rotulos = re.findall(r'class="hub-aba"[^>]*>([^<]+)</button>', pagina)

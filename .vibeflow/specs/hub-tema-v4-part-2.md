@@ -31,17 +31,17 @@ de grade; o 5_43PM(2) a de celular (blocos empilhados).
    (abaixo = âmbar + "abaixo de 80/dia", em dia = verde + texto); sem gauge. Teste novo `test_ritmo_barra_com_marca_do_sprint`.
 5. **Grade:** no painel, `.wrap` usa `--largura`; até ~760 px uma coluna; acima, grade em que Hoje e Ritmo dividem a 1a
    linha, Até 01/11 ocupa uma linha, Por bloco e Revisões dividem a seguinte e o Plano de hoje fecha em largura total
-   (bordas de todas as placas alinhadas: mesma grade, mesmo `gap`). No hub, o `.wrap` do shell usa `--largura` (classe
-   própria no mesmo elemento: um `.wrap` só) e as abas Teoria, Listas e Cards ficam numa coluna `--wrap` centrada até a
-   part 3 (um `max-width` por tela, filhos 100%). `max-width` <= 2 na página do painel segue.
+   (bordas de todas as placas alinhadas: mesma grade, mesmo `gap`). `max-width` <= 2 na página do painel segue.
+   ⚰️ *13/10/2026 (s227): o `.wrap` largo do shell e a coluna `--wrap` provisória das outras abas foram feitos na part 1
+   (no `hub.html`), para esta part tocar só o painel e rodar em paralelo com a part 3. Redação anterior: "No hub, o
+   `.wrap` do shell usa `--largura` [...] e as abas Teoria, Listas e Cards ficam numa coluna `--wrap` centrada até a part 3".*
 6. Artesania: `ui_capturas.py` nas 11 cenas a 390/768/1280 "ok", zero erro de JS, lido a 390 e 1280 (painel, teoria,
    listas, cards); suíte inteira verde; `auto_check --changed` PASSED; cor só por token.
 7. `docs/UI.md` §5 (Dashboard: placas, anéis, barra do ritmo, grade), §6 (Painel), §7 (testes novos), §11.
 
 ## Escopo
 
-`tools/painel.py`, `tools/test_painel.py`, `core/templates/hub.html` (só `.wrap` do shell + coluna `--wrap` das outras
-abas), `tools/test_hub.py` (se a coluna precisar de trava), `docs/UI.md`.
+`tools/painel.py`, `tools/test_painel.py`. O `docs/UI.md` é escrito pelo principal (as parts 2 e 3 rodam em paralelo).
 
 ## Anti-escopo
 

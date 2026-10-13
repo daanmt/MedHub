@@ -36,8 +36,8 @@ metade da tela vazia; as linhas ficam soltas sobre o fundo.
 ## Escopo
 
 `core/templates/hub.html` (CSS `qd-*`/`qz-*` das listas e o JS que monta os grupos da aba Listas), `tools/hub.py` (markup
-da Teoria), `core/templates/player.html` (topo e card), `tools/test_hub_quadro.py`, `tools/test_hub_render.py`,
-`docs/UI.md`.
+da Teoria), `core/templates/player.html` (topo e card), `tools/test_hub_quadro.py`, `tools/test_hub_render.py`. O `docs/UI.md` é
+escrito pelo principal (as parts 2 e 3 rodam em paralelo).
 
 ## Anti-escopo
 

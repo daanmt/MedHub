@@ -22,7 +22,9 @@ decidiu (ele, 13/10): fosco em camadas, fundo preto frio + luz atmosférica, zer
    `--borda-placa`, `--cromado` (gradiente azul -> violeta do fio da placa), `--luz` (luz atmosférica, só escuro; no
    claro uma versão quase imperceptível ou `none`), texto branco quente; ciano, rosa, roxo, verde, coral, âmbar e o grifo
    mantidos (ajuste fino de lavagem `-fraco` sobre o preto). Apelidos legados e das aulas continuam todos definidos.
-   Token novo `--largura` (coluna larga do desktop, ~72rem) declarado e AINDA não usado (a part 2 usa).
+   Token novo `--largura` (coluna larga do desktop, ~72rem): o `.wrap` do shell passa a usá-lo e Teoria, Listas e Cards
+   ficam numa coluna `--wrap` centrada (um contêiner por aba) até a part 3 (movido da part 2 em 13/10, para as parts 2 e
+   3 rodarem em paralelo sem dividir o `hub.html`).
 3. Teste novo **`tools/test_tema_contraste.py`** (registrado no `pytest.ini`) que LÊ os hex do `tema.css` (escuro e claro)
    e asserta, por WCAG 2.x: `tinta`/`tinta2`/`tinta3`/`acento`/`acento-tinta`/`rosa`/`roxo-tinta`/`ok`/`erro`/`aviso`
    >= 4,5:1 sobre `papel`, `card` e `afundado`; `tinta` >= 7:1 nas três; `linha-forte` >= 3:1 sobre `card` e `afundado`;

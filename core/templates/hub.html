@@ -28,6 +28,11 @@
    componente do hub mora AQUI e so aqui. Linhas com filete em vez de cartoes; moldura so para o que e
    objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
 .hub-topo{margin-bottom:var(--esp-3)}
+/* s227 (tema v4): o shell usa a coluna LARGA no desktop (as placas em grade); a medida de leitura (--wrap) fica nas
+   telas de texto longo. Um so .wrap na pagina: esta regra so troca a largura do mesmo contêiner */
+.wrap{max-width:var(--largura)}
+/* provisorio ate a part 3 do tema v4: Teoria, Listas e Cards seguem na medida de leitura, centradas (um contêiner por aba) */
+#aba-aulas,#aba-questoes,#aba-cards{max-width:var(--wrap);margin-inline:auto}
 .hub-marca{margin:0;font-weight:700;font-size:1.375rem;letter-spacing:-.01em;color:var(--tinta)}
 .hub-marca span{color:var(--acento)}
 
@@ -151,7 +156,7 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
 .hub-leitor-barra > button:first-child{padding:var(--esp-2) var(--esp-3);color:var(--tinta2)}
 .hub-leitor-titulo{margin:0;min-width:0;font-weight:650;color:var(--tinta)}
-.hub-quadro{display:block;width:100%;min-height:50vh;border:0;background:var(--papel)}
+.hub-quadro{display:block;width:100%;min-height:50vh;border:0;background:transparent}   /* s227: a luz do shell passa (o documento de dentro e transparente) */
 .hub-quadro-rolavel{height:80vh}
 .hub-aviso{
   border-left:3px solid var(--aviso);background:var(--aviso-fraco);color:var(--tinta);
@@ -562,7 +567,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // fonte com data-backoffice; dentro do hub eles nao aparecem.
     if(doc.head){
       var oculto = doc.createElement("style");
-      oculto.textContent = "[data-backoffice]{display:none!important}";
+      // s227 (tema v4): o documento do quadro fica transparente -- o fundo e a luz sao os do shell, sem emenda
+      oculto.textContent = "[data-backoffice]{display:none!important}html,body{background:transparent!important}";
       doc.head.appendChild(oculto);
     }
     // s218: a linha "Fonte: resumos/X.md" das RDs vira link para o resumo publicado (antes dos atalhos)

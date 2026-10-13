@@ -9,6 +9,8 @@ Ele lê teoria no celular (390 px) em sessões longas, à noite. Hoje o MedHub t
 Um único usuário, médico em preparação para residência (UERJ/MFC em 01/11/2026; depois ENAMED/Psiquiatria), lendo no celular, majoritariamente no escuro.
 
 ## Proposed Solution
+⚰️ *Atualização (13/10/2026, s225): o tema v3 "retrowave contido" (brief dele de 13/10) substituiu a paleta e a semântica abaixo. Paleta, tokens, escalas, semântica das cores, mapa das camadas, contratos de teste e achados vivem desde então em [`docs/UI.md`](../../docs/UI.md), a fonte de verdade da UI. Este PRD fica como histórico da v1 e da v2.*
+
 Um sistema visual único, escuro por padrão, aplicado ao hub por uma **camada de tema** em vez de reescrever 43 aulas:
 - **⚰️ Atualização (12/10/2026, mesmo dia): a paleta passou a ser a Vice City** (`#0B0F2B` fundo, ciano `#00F0FF` acento, rosa `#FF5CA8` alerta, roxo `#BC6CFF` e pêssego `#FFB86B` realces; texto `#F4F1FF`), por escolha dele ("essa paleta me parece melhor"), acento e fundo confirmados via AskUserQuestion; tema v2 no ar (hub Version 99). O resto deste PRD (estrutura, tipo, mecanismo da camada, escopo) segue valendo; a v1 índigo está no commit `1d71743`. O texto abaixo descreve a v1.
 - **Cor da v1 (decidido por ele, 12/10/2026):** fundo preto `#000000`; superfícies em degraus de azul da paleta dele (`#06064D` cartão, `#10106A` faixa/cabeçalho, `#171775` realce); acento `#8484DB`; texto `#EDEDFF` (branco levemente azulado, para evitar o halo do branco puro sobre preto puro), secundário `#CCCCFF`, terciário `#9A9AE6`. Um único tom de alerta (amora `#FF9DB3` no escuro) para armadilha e atraso; callouts de "banca" e "aside" viram azul. Claro como alternativa por `data-theme="light"` (papel `#F7F7FF`, tinta `#000042`, acento `#4343A8`).

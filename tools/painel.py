@@ -531,7 +531,8 @@ def _html_ritmo(r):
     atras = alvo is not None and (r["real_7d"] or 0) < alvo
     fig = []
     fig.append('<div class="fig%s"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
-               'últimos 7 dias</p></div>' % (" abaixo" if atras else "", _n(r["real_7d"], 1)))
+               'últimos 7 dias</p>%s</div>' % (" abaixo" if atras else "", _n(r["real_7d"], 1),
+                                            '<p class="fig-r"><b>abaixo do necessário</b></p>' if atras else ""))
     fig.append('<div class="fig"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
                'últimos 14 dias</p></div>' % _n(r["real_14d"], 1))
     fig.append('<div class="fig alvo"><p class="fig-n">%s</p><p class="fig-r">por dia até a '
@@ -580,27 +581,9 @@ def _sec(chave, corpo, extra=""):
 
 
 CSS = """
-:root{
-  --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
-  --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
-  --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
-  --alerta:#a2412a; --alerta-fraco:#f6e4de;
-  --wrap:58rem; --raio:14px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --papel:#131519; --card:#1b1e24; --afundado:#23272f;
-    --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
-    --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
-    --alerta:#f0917a; --alerta-fraco:#3a221c;
-  }
-}
-:root[data-theme="dark"]{
-  --papel:#131519; --card:#1b1e24; --afundado:#23272f;
-  --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
-  --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
-  --alerta:#f0917a; --alerta-fraco:#3a221c;
-}
+/* Cor, tipo, espaco e raio: core/templates/tema.css (fonte unica, embutido logo depois deste bloco).
+   Aqui so a estrutura do Painel (docs/UI.md): secoes com filete, numeros sem caixa, a proxima tarefa em
+   destaque, atraso em ambar com texto (nunca so a cor). */
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
@@ -609,82 +592,85 @@ body{
   font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.5; overflow-wrap:break-word;
 }
 .wrap{max-width:var(--wrap);margin:0 auto;padding:4px 2px 40px}
-h2{font-size:1.08rem;margin:0 0 4px;letter-spacing:-.005em;text-wrap:balance}
-h3{font-size:.86rem;font-weight:600;color:var(--tinta2);margin:0 0 6px}
+h2{font-size:var(--fs-secao);font-weight:700;line-height:1.25;margin:0 0 var(--esp-1);letter-spacing:-.01em;text-wrap:balance;color:var(--tinta)}
+h3{font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2);margin:0 0 var(--esp-1)}
 p{margin:0}
 a{color:var(--acento);text-underline-offset:2px}
-a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
-.atualizado{color:var(--tinta3);font-size:.76em;margin:0 0 10px;text-align:right}
-.bloco{padding:18px 0 22px;border-top:1px solid var(--linha)}
-.bloco:first-of-type{border-top:0;padding-top:4px}
-.sub{color:var(--tinta2);font-size:.9em;margin:0 0 14px}
-.nota{color:var(--tinta3);font-size:.84em;margin-top:6px}
+.atualizado{color:var(--tinta3);font-size:var(--fs-meta);margin:0 0 var(--esp-2);text-align:right}
+.bloco{padding:var(--esp-5) 0;border-top:1px solid var(--linha)}
+.bloco:first-of-type{border-top:0;padding-top:var(--esp-1)}
+.sub{color:var(--tinta2);font-size:var(--fs-legenda);margin:0 0 var(--esp-3)}
+.nota{color:var(--tinta3);font-size:var(--fs-meta);margin-top:var(--esp-1)}
 .tenue{color:var(--tinta3)}
 
-/* Hoje: as duas doses do dia, o elemento que o olho acha primeiro */
-.dia h2{font-size:1.25rem;margin-bottom:14px}
-.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
-.dose{min-width:0;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
-      padding:14px 16px 16px;border-left:4px solid var(--acento)}
-.fracao{font-size:1.02rem;color:var(--tinta2);font-variant-numeric:tabular-nums}
-.fracao b{font-size:2.3rem;line-height:1.1;color:var(--tinta);font-weight:750;letter-spacing:-.02em;margin-right:4px}
-.barra{height:6px;background:var(--afundado);border-radius:99px;margin:10px 0 4px;overflow:hidden}
-.barra i{display:block;height:100%;background:var(--acento)}
-.ir{margin-top:10px;font-weight:600}
-.ir a{display:inline-block;padding:8px 0;min-height:44px}
-.agenda{margin-top:18px}
-.ag-barras{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
-           gap:6px;height:112px;align-items:end}
+/* Hoje: as duas doses do dia, o que o olho acha primeiro -- numero grande, barra fina, nota curta */
+.dia h2{font-size:1.25rem;margin-bottom:var(--esp-4)}   /* abaixo do titulo da aba ("Painel"), acima das secoes */
+.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--esp-5) var(--esp-6)}
+.dose{min-width:0}
+.fracao{font-size:1rem;color:var(--tinta2)}
+.fracao b{font-size:var(--fs-numero);line-height:1.1;color:var(--tinta);font-weight:700;letter-spacing:-.02em;margin-right:var(--esp-1)}
+.barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-2) 0 var(--esp-1);overflow:hidden}
+.barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
+.ir{margin-top:var(--esp-2);font-weight:600}
+.ir a{display:inline-flex;align-items:center;min-height:44px}
+.agenda{margin-top:var(--esp-5)}
+.ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,4.5rem));
+           gap:var(--esp-2);height:112px;align-items:end}
 .ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
-.ag-barras i{display:block;width:min(100%,34px);background:var(--acento-fraco);border-top:3px solid var(--acento);border-radius:4px 4px 0 0}
-.ag-n{font-size:.8em;font-variant-numeric:tabular-nums;color:var(--tinta2)}
-.ag-d{font-size:.74em;color:var(--tinta3)}
+/* previsao (dado, nao acao): roxo, a cor de detalhe visual do tema */
+.ag-barras i{display:block;width:min(100%,28px);background:var(--roxo-fraco);border-top:2px solid var(--roxo);border-radius:var(--raio-p) var(--raio-p) 0 0}
+.ag-n{font-size:var(--fs-meta);color:var(--tinta2)}
+.ag-d{font-size:var(--fs-meta);color:var(--tinta3)}
 
 /* Semana */
-.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;align-items:baseline;
-        padding:10px 12px;background:var(--card);border:1px solid var(--linha);border-radius:10px}
-.tarefa.atrasada{border-left:4px solid var(--alerta)}
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-1) var(--esp-4);align-items:baseline;
+        padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
 .t-tema{min-width:0;font-weight:600;line-height:1.35}
-.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
-.t-rot{color:var(--tinta2);font-weight:600}
-.t-atraso{color:var(--alerta)}
-.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:.88em;text-align:right}
-.prox{margin-top:12px}
-.mais{margin-top:8px}
-.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:10px 0;min-height:44px}
-.mais .tarefas{margin-top:4px}
+.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
+.t-rot{color:var(--tinta2);font-weight:600;background:var(--afundado);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.t-atraso{color:var(--aviso)}
+.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 var(--esp-4)}
+.t-acao br{display:none}   /* as acoes ficam lado a lado (o <br> separa no texto puro) */
+.t-acao a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+/* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- rotulo "Proxima" e a acao como botao */
+[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
+[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-acao a:first-child{padding:0 var(--esp-3);border-radius:var(--raio);background:var(--acento);color:var(--sobre);text-decoration:none}
+.prox{margin-top:var(--esp-3)}
+.mais{margin-top:var(--esp-2)}
+.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:var(--esp-2) 0;min-height:44px}
+.mais .tarefas{margin-top:var(--esp-1)}
 /* A rota ate a prova (s213): cada semana futura recolhida; o resumo quebra linha, nunca alarga */
-.rota{margin-top:16px}
+.rota{margin-top:var(--esp-5)}
 .rota h3{margin-bottom:2px}
 .rota-sem{border-top:1px solid var(--linha)}
 .rota-sem:last-child{border-bottom:1px solid var(--linha)}
-.rota-sem>summary{cursor:pointer;padding:11px 0;min-height:44px}
+.rota-sem>summary{cursor:pointer;padding:var(--esp-3) 0;min-height:44px}
 .rota-tit{font-weight:650}
-.rota-n{color:var(--tinta3);font-size:.84em;margin-left:4px}
-.rota-sem .tarefas{margin:4px 0 14px}
+.rota-n{color:var(--tinta3);font-size:var(--fs-meta);margin-left:var(--esp-1)}
+.rota-sem .tarefas{margin:var(--esp-1) 0 var(--esp-3)}
 
-/* Ritmo */
-.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:10px;margin-top:10px}
-.fig{min-width:0;background:var(--afundado);border-radius:10px;padding:10px 12px}
-.fig-n{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
-.fig-r{font-size:.78em;color:var(--tinta3)}
-.fig.abaixo .fig-n{color:var(--alerta)}
-.fig.alvo{background:var(--acento-fraco)}
+/* Ritmo: quatro numeros sem caixa; o necessario por dia e a referencia (ciano); abaixo dele = ambar + texto */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-5);margin-top:var(--esp-3)}
+.fig{min-width:0}
+.fig-n{font-size:1.5rem;font-weight:700;line-height:1.2;color:var(--tinta)}
+.fig-r{font-size:var(--fs-meta);color:var(--tinta3)}
+.fig.abaixo .fig-n,.fig.abaixo .fig-r b{color:var(--aviso)}
+.fig.alvo .fig-n{color:var(--acento)}
 
 /* Blocos */
-table{width:100%;border-collapse:collapse;font-size:.9em;font-variant-numeric:tabular-nums;margin-top:8px}
-th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--linha)}
-thead th{font-size:.78em;color:var(--tinta3);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-legenda);margin-top:var(--esp-2)}
+th,td{text-align:left;padding:var(--esp-2);border-bottom:1px solid var(--linha)}
+thead th{font-size:var(--fs-meta);color:var(--tinta3);font-weight:600}
 tbody th{font-weight:650}
 tr.sim th,tr.sim td{color:var(--tinta2)}
 
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr)}
-  .t-acao{grid-column:1;grid-row:auto;text-align:left}
+  .t-acao{grid-column:1;grid-row:auto;justify-content:flex-start}
   th,td{padding:6px 5px}
-  table{font-size:.84em}
+  table{font-size:var(--fs-meta)}
 }
 """
 

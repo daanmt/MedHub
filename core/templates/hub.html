@@ -23,27 +23,26 @@
 <style>
 /* @hub:player-css */
 
-/* ------------------------------------------------ casca do HUB (so acrescenta) */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){color-scheme:dark}
-}
-:root[data-theme="dark"]{color-scheme:dark}
+/* ------------------------------------------------ casca do HUB (s225: tema v3, mapa em docs/UI.md)
+   Cor, tipo, espaco e raio: tokens do core/templates/tema.css (injetado no fim deste <style>). Regra de
+   componente do hub mora AQUI e so aqui. Linhas com filete em vez de cartoes; moldura so para o que e
+   objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
+.hub-topo{margin-bottom:var(--esp-3)}
+.hub-marca{margin:0;font-weight:700;font-size:1.125rem;letter-spacing:-.01em;color:var(--tinta)}
+.hub-marca span{color:var(--rosa)}
 
-.hub-topo{margin-bottom:12px}
-.hub-marca{margin:0;font-weight:750;font-size:1.05rem;letter-spacing:.01em}
-.hub-marca span{color:var(--acento)}
-
+/* as abas: texto + sublinhado ciano na ativa; o filete de baixo e o horizonte (o unico gradiente da UI) */
 .hub-abas{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;
-  padding:4px;margin-bottom:24px;
-  background:var(--afundado);border:1px solid var(--linha);border-radius:12px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;
+  position:relative;margin-bottom:var(--esp-5);
 }
+.hub-abas::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--horizonte);opacity:.75}
 .hub-aba{
-  min-height:44px;padding:8px 6px;border:0;border-radius:9px;
-  background:transparent;color:var(--tinta2);font-weight:600;letter-spacing:.01em;
+  min-height:44px;padding:var(--esp-2) var(--esp-1);border:0;border-radius:0;
+  background:transparent;color:var(--tinta3);font-weight:600;font-size:.9375rem;letter-spacing:0;
 }
-.hub-aba:hover{background:var(--card);color:var(--tinta)}
-.hub-aba[aria-selected="true"]{background:var(--card);color:var(--acento);box-shadow:var(--sombra)}
+.hub-aba:hover{background:transparent;color:var(--tinta)}
+.hub-aba[aria-selected="true"]{color:var(--tinta);box-shadow:inset 0 -2px 0 var(--acento)}
 
 .hub-secao{display:none}
 :root:not([data-aba]) #aba-painel,
@@ -52,284 +51,288 @@
 :root[data-aba="questoes"] #aba-questoes,
 :root[data-aba="painel"] #aba-painel{display:block}
 
-.hub-titulo{font-size:clamp(1.15rem,1rem + .7vw,1.5rem);margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
-.hub-sub{color:var(--tinta3);font-size:.85em;margin:0 0 18px;max-width:40rem}
+.hub-titulo{font-size:var(--fs-pagina);font-weight:700;line-height:1.2;margin:0 0 var(--esp-1);letter-spacing:-.02em;text-wrap:balance;color:var(--tinta)}
+.hub-sub{color:var(--tinta3);font-size:var(--fs-legenda);margin:0 0 var(--esp-4)}
 .hub-vazio{color:var(--tinta3);margin:0}
 
-/* Quadro por semanas (s195): uma secao por semana, empilhadas; cada tarefa e um bloco com o peso,
-   as questoes e a acao. P20 (s219): sem o quadrado "feito" -- a assinatura da leitura risca e recolhe */
-.qd-semanas{display:grid;gap:26px}
+/* Teoria (s195; linhas desde a s224): uma secao por semana; cada tarefa e uma LINHA com filete -- titulo,
+   meta (area, questoes, prazo) e a acao. P20 (s219): a assinatura da leitura risca e recolhe */
+.qd-semanas{display:grid;gap:var(--esp-6)}
 .qd-sem{min-width:0}
-.qd-titulo{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 10px;font-size:.95rem;font-weight:650;color:var(--tinta2)}
-.qd-n{font-size:.78em;font-weight:600;color:var(--tinta3);font-variant-numeric:tabular-nums}
-.qd-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.qd-vazio{color:var(--tinta3);font-size:.88em;margin:0;padding:12px 0}
+.qd-titulo{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--esp-1) var(--esp-3);margin:0 0 var(--esp-1);font-size:1.0625rem;font-weight:700;color:var(--tinta)}
+.qd-n{font-size:var(--fs-meta);font-weight:500;color:var(--tinta3)}
+.qd-lista{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.qd-vazio{color:var(--tinta3);font-size:var(--fs-legenda);margin:0;padding:var(--esp-3) 0}
 .qd-item{min-width:0}
-.qd-bloco{position:relative;min-width:0;padding:12px 14px;background:var(--card);border:1px solid var(--linha);border-radius:12px}
+.qd-bloco{position:relative;min-width:0;padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
 .qd-prazo{color:var(--tinta2)}
-.qd-item.qd-atrasada .qd-bloco{border-left:4px solid var(--alerta)}
-.qd-tema{min-width:0;margin:0;font-weight:600;line-height:1.35}
-.qd-meta{margin:2px 0 0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
-.qd-bl{color:var(--tinta2);font-weight:600}
-.qd-atraso{color:var(--alerta)}
-.qd-registro{color:var(--qz-ok);font-weight:600}   /* s214: lista resolvida, plano ainda nao registrou */
-.qd-acao{margin:2px 0 0;font-size:.9em;display:flex;flex-wrap:wrap;gap:0 18px}
+.qd-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;color:var(--tinta)}
+.qd-meta{margin:var(--esp-1) 0 0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
+.qd-bl{color:var(--tinta2);background:var(--afundado);font-weight:600;padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.qd-atraso{color:var(--tinta3)}   /* o aviso aparece UMA vez: no titulo da secao Atrasadas */
+.qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--aviso)}
+.qd-registro{color:var(--ok);font-weight:600}   /* s214: lista resolvida, plano ainda nao registrou */
+.qd-acao{margin:2px 0 0;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;gap:0 var(--esp-4)}
 .qd-acao a,.qd-acao .tenue{display:inline-flex;align-items:center;min-height:44px}
 .qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
-.qd-acao a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
 .qd-acao .tenue{color:var(--tinta3)}
-/* P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): o cartao da
-   tarefa com 1 aula E o link dela (o bloco inteiro, a seta diz que abre); com 2+ aulas, cada uma e um alvo
-   de 44 px; sem aula, o cartao fica apagado e tracejado -- sem fundo, sem seta, sem nada de botao */
-.qd-alvo{display:block;color:inherit;text-decoration:none;padding-right:38px;-webkit-tap-highlight-color:transparent}
-.qd-alvo::after{content:"\203A";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.5em;line-height:1;color:var(--tinta3)}
-.qd-alvo:hover{background:var(--afundado)}
+/* P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): a linha da
+   tarefa com 1 aula E o link dela (a seta diz que abre); com 2+ aulas, cada uma e um alvo de 44 px; sem
+   aula, a linha fica apagada -- sem seta, sem nada de botao */
+.qd-alvo{display:block;color:inherit;text-decoration:none;padding-right:var(--esp-6);-webkit-tap-highlight-color:transparent}
+.qd-alvo::after{content:"\203A";position:absolute;right:var(--esp-1);top:50%;transform:translateY(-50%);font-size:1.5em;line-height:1;color:var(--tinta3)}
+.qd-alvo:hover .qd-tema{color:var(--acento-tinta)}
 .qd-alvo:hover::after{color:var(--acento)}
-.qd-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
-.qd-aulas{display:grid;margin:8px 0 -4px;border-top:1px solid var(--linha)}
-.qd-aulas a{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 0;color:var(--acento);font-weight:600;font-size:.9em;line-height:1.3;text-decoration:none;min-width:0}
-.qd-aulas a:hover{background:var(--afundado)}
-.qd-aulas a + a{border-top:1px solid var(--linha)}
+.qd-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:var(--raio-p)}
+.qd-aulas{display:grid;margin:var(--esp-2) 0 calc(-1 * var(--esp-1))}
+.qd-aulas a{display:flex;align-items:center;gap:var(--esp-3);min-height:44px;padding:var(--esp-1) 0;color:var(--acento);font-weight:600;font-size:var(--fs-legenda);line-height:1.3;text-decoration:none;min-width:0;border-top:1px solid var(--linha)}
 .qd-aulas a::after{content:"\203A";margin-left:auto;font-size:1.4em;line-height:1;color:var(--tinta3)}
-.qd-aulas a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
-.qd-sem-aula .qd-bloco{background:transparent;border-style:dashed}
+.qd-aulas a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:var(--raio-p)}
+.qd-sem-aula .qd-bloco{background:transparent}
 .qd-sem-aula .qd-tema{color:var(--tinta3)}
-.qd-item[data-feito] .qd-bloco{background:transparent}
 .qd-item[data-feito] .qd-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
 .qd-item.qd-chegou .qd-bloco{animation:qd-chegou 700ms ease-out}
-@keyframes qd-chegou{from{border-color:var(--acento);background:var(--acento-fraco)}}
+@keyframes qd-chegou{from{background:var(--acento-fraco)}}
 @media (prefers-reduced-motion: reduce){.qd-item.qd-chegou .qd-bloco{animation:none}}
 /* s216 (part-4): o item que acabou de ser concluido, marcado na aba de origem ao voltar do leitor */
-.qd-item.qd-recente .qd-bloco{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
-.qd-feitas{margin-top:26px;border-top:1px solid var(--linha);padding-top:6px}
-.qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
+.qd-item.qd-recente .qd-tema::before{content:"\2713\00A0";color:var(--ok)}
+.qd-feitas{margin-top:var(--esp-5);border-top:1px solid var(--linha);padding-top:var(--esp-1)}
+.qd-feitas summary{cursor:pointer;min-height:44px;padding:var(--esp-3) 0;font-weight:650;color:var(--tinta2)}
 /* s218 (pedido do operador em 07/10): a Biblioteca e o CORPO da aba, depois das semanas -- grande area
    (<details>, recolhida de partida, com a contagem e as RDs novas) -> disciplina (A-Z) -> resumos, aulas,
    revisoes. Area de uma disciplina so esconde o subtitulo (:only-child vale tambem para a criada ao vivo). */
-.qd-bib{margin-top:30px;padding-top:14px;border-top:1px solid var(--linha);min-width:0}
-.qd-bib-tit{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0;font-size:1.02rem;font-weight:700;color:var(--tinta)}
-.qd-novas{align-self:center;font-size:.72rem;font-weight:650;color:var(--acento);background:var(--acento-fraco);padding:2px 9px;border-radius:99px}
+.qd-bib{margin-top:var(--esp-7);min-width:0}
+.qd-bib-tit{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--esp-1) var(--esp-3);margin:0;font-size:1.0625rem;font-weight:700;color:var(--tinta)}
+.qd-novas{align-self:center;font-size:var(--fs-meta);font-weight:650;color:var(--rosa);background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
 .qd-novas[hidden]{display:none}
-.qd-areas{display:grid;margin-top:6px}
+.qd-areas{display:grid;margin-top:var(--esp-1)}
 details.qd-area{min-width:0;border-bottom:1px solid var(--linha)}
-details.qd-area > summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;min-height:48px;padding:6px 2px;font-weight:650;color:var(--tinta2);-webkit-tap-highlight-color:transparent}
+details.qd-area > summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3);min-height:48px;padding:var(--esp-1) 0;font-weight:600;color:var(--tinta);-webkit-tap-highlight-color:transparent}
 details.qd-area > summary::-webkit-details-marker{display:none}
-details.qd-area > summary:hover{color:var(--tinta)}
-details.qd-area > summary:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:8px}
+details.qd-area > summary:hover{color:var(--acento-tinta)}
 details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
-.qd-area-corpo{display:grid;gap:18px;padding:4px 0 18px;min-width:0}
+.qd-area-corpo{display:grid;gap:var(--esp-4);padding:var(--esp-1) 0 var(--esp-4);min-width:0}
 .qd-disc{min-width:0}
-.qd-disc-tit{margin:0 0 8px;font-size:.84rem;font-weight:650;color:var(--tinta3)}
+.qd-disc-tit{margin:0 0 var(--esp-1);font-size:var(--fs-meta);font-weight:650;color:var(--tinta3)}
 .qd-area-corpo > .qd-disc:only-child > .qd-disc-tit{display:none}
-.qd-nova{color:var(--acento);font-weight:700}
-.qd-lig{margin:2px 0 0;font-size:.84em;line-height:2.1;color:var(--tinta3);min-width:0}
-.qd-lig a{padding:12px 0;color:var(--tinta2);font-weight:600;text-underline-offset:2px}   /* inline: quebra com o texto; o padding da a area de toque sem mexer na linha */
-.qd-lig a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
-.qd-qsem{margin:0 0 10px;font-size:.9em;color:var(--tinta2)}
-.qd-qsem b{color:var(--tinta);font-variant-numeric:tabular-nums}
+.qd-nova{color:var(--rosa);font-weight:700}
+.qd-lig{margin:2px 0 0;font-size:var(--fs-meta);line-height:2.1;color:var(--tinta3);min-width:0}
+.qd-lig a{padding:var(--esp-3) 0;color:var(--tinta2);font-weight:600;text-underline-offset:2px}   /* inline: quebra com o texto; o padding da a area de toque sem mexer na linha */
+.qd-qsem{margin:0 0 var(--esp-2);font-size:var(--fs-legenda);color:var(--tinta2)}
+.qd-qsem b{color:var(--tinta)}
 .qd-qsem a{display:inline-flex;align-items:center;min-height:44px;color:var(--acento);font-weight:600;text-underline-offset:2px}
-.qd-resumos{margin-top:10px;border:1px solid var(--linha);border-radius:12px;background:var(--card);min-width:0}
-.qd-resumos > summary{cursor:pointer;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:8px 14px;font-weight:600;font-size:.92em;color:var(--tinta2)}
-.qd-rlista{list-style:none;margin:0;padding:0 14px 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));gap:0 18px}
+.qd-resumos{margin-top:var(--esp-1);min-width:0}
+.qd-resumos > summary{cursor:pointer;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3);padding:var(--esp-1) 0;font-weight:600;font-size:var(--fs-legenda);color:var(--tinta3)}
+.qd-rlista{list-style:none;margin:0;padding:0 0 var(--esp-2);display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));gap:0 var(--esp-4)}
 .qd-rlista li{min-width:0}
-.qd-rlista a{display:flex;align-items:center;min-height:44px;color:var(--acento);font-weight:600;font-size:.9em;line-height:1.3;text-underline-offset:2px}
+.qd-rlista a{display:flex;align-items:center;min-height:44px;color:var(--acento);font-weight:500;font-size:var(--fs-legenda);line-height:1.3;text-underline-offset:2px}
 [data-recolhida] > .qd-qsem,[data-recolhida] > .qd-resumos{display:none}
-.qd-aviso{color:var(--tinta3);font-size:.86em;margin:0 0 14px}
-/* s214 (pedido do operador, 04/10): secao recolhivel nas abas Aulas e Listas -- o titulo e o controle
+.qd-aviso{color:var(--tinta3);font-size:var(--fs-legenda);margin:0 0 var(--esp-3)}
+/* s214 (pedido do operador, 04/10): secao recolhivel nas abas Teoria e Listas -- o titulo e o controle
    (alvo de 44 px), a seta gira; recolhida, fica so o titulo com a contagem */
-.qd-titulo[data-sec]{cursor:pointer;min-height:44px;align-content:center;margin-bottom:6px;border-radius:8px;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-.qd-titulo[data-sec]:hover{color:var(--tinta)}
-.qd-titulo[data-sec]:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+.qd-titulo[data-sec]{cursor:pointer;min-height:44px;align-content:center;margin-bottom:0;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.qd-titulo[data-sec]:hover{color:var(--acento-tinta)}
+.qd-sem[data-secao=atrasadas] .qd-titulo[data-sec]:hover{color:var(--aviso)}
 .qd-seta{display:inline-block;width:.9em;text-align:center;color:var(--tinta3);transition:transform 150ms ease}
 .qd-seta::before{content:"\25B8"}
 .qd-titulo[aria-expanded="true"] .qd-seta{transform:rotate(90deg)}
 @media (prefers-reduced-motion: reduce){.qd-seta{transition:none}}
 [data-recolhida] > .qd-lista,[data-recolhida] > .qz-lista,[data-recolhida] > .qd-vazio{display:none}
-[data-recolhida] > .qd-titulo{margin-bottom:0}
-.qd-semanas > [data-recolhida] + [data-recolhida]{margin-top:-18px}   /* recolhidas em sequencia = uma lista de titulos */
-.qz-semanas > [data-recolhida] + [data-recolhida]{margin-top:-14px}
+.qd-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-5))}   /* recolhidas em sequencia = uma lista de titulos */
+.qz-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-4))}
 
-.hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
-.hub-leitor-titulo{margin:0;min-width:0;font-weight:650}
-.hub-quadro{
-  display:block;width:100%;min-height:50vh;border:0;
-  background:var(--papel);border-radius:var(--raio);
-}
+/* leitor (aula/resumo dentro da aba) e a barra das listas: voltar + titulo + controles */
+.hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
+.hub-leitor-barra > button:first-child{padding:var(--esp-2) var(--esp-3);color:var(--tinta2)}
+.hub-leitor-titulo{margin:0;min-width:0;font-weight:650;color:var(--tinta)}
+.hub-quadro{display:block;width:100%;min-height:50vh;border:0;background:var(--papel)}
 .hub-quadro-rolavel{height:80vh}
 .hub-aviso{
-  border-left:3px solid var(--alerta);background:var(--alerta-fraco);color:var(--tinta);
-  padding:12px 14px;border-radius:8px;margin:0 0 14px;font-size:.9em;
+  border-left:3px solid var(--aviso);background:var(--aviso-fraco);color:var(--tinta);
+  padding:var(--esp-3) var(--esp-4);border-radius:var(--raio-p);margin:0 0 var(--esp-3);font-size:var(--fs-legenda);
 }
 .hub-aviso a{color:var(--acento)}
 
-/* Aba Questões (s197): listas do EMED resolvidas aqui dentro. Tokens semânticos próprios (certo /
-   dúvida / chute) por cima dos do player; nada fixo na rolagem, texto sempre quebra, toque >= 44px. */
-:root{--qz-ok:#1f7a3a;--qz-ok-fraco:#e2f2e6;--qz-duv:#8a5a17;--qz-duv-fraco:#f3e6cc;--qz-chute:#5b4b8a;--qz-chute-fraco:#e9e3f5}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
-}
-:root[data-theme="dark"]{--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
-.qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+/* Aba Listas (s197): listas do EMED e simulados resolvidos aqui dentro. Estados (certo / duvida / chute,
+   os 4 da declaracao) por token do tema; nada fixo na rolagem, texto sempre quebra, toque >= 44px. */
+.qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:0}
 .qz-lista li{min-width:0}
 /* ⚰️ P21 (s220): os links de aula e de resumo irmaos do botao da lista (s216 part-2, s218 P2) */
+.qz-semanas{display:grid;gap:var(--esp-5)}
+.qz-semanas .qd-feitas{margin-top:var(--esp-1)}
+.qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px var(--esp-3);align-items:center;padding:var(--esp-3) 0;border:0;border-bottom:1px solid var(--linha);border-radius:0;background:transparent;color:var(--tinta);min-height:44px}
+.qz-lista button:hover{background:transparent}
+.qz-lista button:hover .qz-tema{color:var(--acento-tinta)}
 /* s216 (part-4): a lista que acabou de ser concluida, marcada ao voltar para a aba */
-.qz-lista li.qz-recente > button{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
-.qz-semanas{display:grid;gap:22px}
-.qz-semanas .qd-feitas{margin-top:4px}
-.qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);color:var(--tinta);min-height:44px}
-.qz-lista button:hover{background:var(--afundado)}
+.qz-lista li.qz-recente > button{box-shadow:inset 3px 0 0 var(--ok);padding-left:var(--esp-3)}
+.qz-lista li.qz-recente > button .qz-tema::before{content:"\2713\00A0";color:var(--ok)}
 .qz-lista .qz-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;grid-column:1}
-.qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
-.qz-chip{grid-column:2;grid-row:1 / span 2;font-size:.72em;font-weight:650;padding:2px 9px;border-radius:99px;background:var(--afundado);color:var(--tinta2)}
-.qz-chip.capturada{background:var(--acento-fraco);color:var(--acento)}
-.qz-chip.resolvendo{background:var(--qz-duv-fraco);color:var(--qz-duv)}
-.qz-chip.resolvida{background:var(--qz-ok-fraco);color:var(--qz-ok)}
-.qz-relogio{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;color:var(--tinta3);font-variant-numeric:tabular-nums}
-/* s212: o trilho e o corpo da questao ocupam a MESMA largura das abas (um so .wrap; nada de teto proprio) */
-.qz-trilho{display:grid;grid-template-columns:repeat(auto-fit,minmax(14px,1fr));gap:3px;margin:0 0 14px}
-.qz-trilho i{display:block;min-width:0;height:14px;border-radius:3px;background:var(--afundado);cursor:pointer}
+.qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;gap:2px var(--esp-3)}
+/* estado da lista: "pronta" e o normal (quieto); resolvendo = aviso; resolvida = ok com o check */
+.qz-chip{grid-column:2;grid-row:1 / span 2;font-size:var(--fs-meta);font-weight:600;padding:1px var(--esp-2);border-radius:var(--raio-pilula);color:var(--tinta3)}
+.qz-chip.resolvendo{background:var(--aviso-fraco);color:var(--aviso)}
+.qz-chip.resolvida{background:var(--ok-fraco);color:var(--ok)}
+.qz-chip.resolvida::before{content:"\2713\00A0"}
+.qz-relogio{margin-left:auto;font-size:var(--fs-legenda);color:var(--tinta3)}
+/* s212: o trilho e o corpo da questao ocupam a MESMA largura das abas (um so .wrap; nada de teto proprio).
+   s225: o segmento tem 10 px visiveis e 26 px de toque (borda transparente); respondida = preenchida
+   discreta, atual = o unico ciano, marcada para revisar = base ambar, nao respondida = trilho vazio */
+.qz-trilho{display:grid;grid-template-columns:repeat(auto-fit,minmax(14px,1fr));gap:0 3px;margin:0 0 var(--esp-3)}
+.qz-trilho i{display:block;min-width:0;height:26px;border-block:8px solid transparent;background:var(--afundado);background-clip:padding-box;border-radius:2px;cursor:pointer}
 @media (min-width:700px){.qz-trilho{grid-template-columns:repeat(auto-fit,minmax(10px,1fr))}}   /* tela larga: 60 questoes numa linha so */
-.qz-trilho i.f{background:var(--acento)} .qz-trilho i.atual{outline:2px solid var(--acento);outline-offset:1px}
-.qz-corpo{display:grid;gap:14px;min-width:0}
-.qz-metaq{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.8em;color:var(--tinta3);margin:0}
-.qz-enun{white-space:pre-wrap;margin:0;line-height:1.55}
-.qz-alts{display:grid;gap:6px}
-.qz-alt{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0;border:1px solid var(--linha);border-radius:10px;background:var(--card);min-width:0}
-.qz-alt-btn{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;text-align:left;padding:10px 12px;border:0;border-radius:10px 0 0 10px;background:transparent;color:var(--tinta);min-height:44px}
+.qz-trilho i.f{background-color:var(--linha-forte)}
+.qz-trilho i.flag{box-shadow:inset 0 -3px 0 var(--aviso)}
+.qz-trilho i.atual{background-color:var(--acento)}
+.qz-corpo{display:grid;gap:var(--esp-4);min-width:0}
+.qz-metaq{display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-3);font-size:var(--fs-meta);color:var(--tinta3);margin:0}
+.qz-enun{white-space:pre-wrap;margin:0;line-height:1.6;color:var(--tinta)}
+.qz-alts{display:grid;gap:var(--esp-2)}
+.qz-alt{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0;border:1px solid var(--linha);border-radius:var(--raio);background:var(--card);min-width:0}
+.qz-alt-btn{display:grid;grid-template-columns:2.25rem minmax(0,1fr);gap:var(--esp-2);align-items:start;text-align:left;padding:var(--esp-3);border:0;border-radius:var(--raio) 0 0 var(--raio);background:transparent;color:var(--tinta);min-height:44px}
 .qz-alt-btn{cursor:pointer}
-.qz-alt-btn:focus-visible{outline:3px solid var(--acento);outline-offset:-3px}
+.qz-alt-btn:focus-visible{outline:2px solid var(--acento);outline-offset:-2px}
 .qz-alt-btn[aria-disabled="true"]{cursor:default}
-.qz-alt-btn b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--tinta2);padding-top:1px}
+.qz-alt-btn b{color:var(--tinta3);font-weight:700;padding-top:1px}
 .qz-alt-btn span{white-space:pre-wrap;min-width:0}
-.qz-risca{border:0;border-left:1px solid var(--linha);border-radius:0 10px 10px 0;background:transparent;color:var(--tinta3);font-size:1.05em;padding:0;min-height:44px}
+.qz-risca{border:0;border-left:1px solid var(--linha);border-radius:0 var(--raio) var(--raio) 0;background:transparent;color:var(--tinta3);font-size:1.05em;padding:0;min-height:44px}
 .qz-risca:hover{background:var(--afundado)}
 .qz-alt.riscada .qz-alt-btn span,.qz-alt.riscada .qz-alt-btn b{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
-.qz-alt.riscada .qz-risca{color:var(--alerta)}
+.qz-alt.riscada .qz-risca{color:var(--tinta)}
 .qz-alt.marcada{border-color:var(--acento);background:var(--acento-fraco)}
-.qz-alt.gab{border-color:var(--qz-ok);background:var(--qz-ok-fraco)}
-.qz-alt.errada{border-color:var(--alerta);background:var(--alerta-fraco)}
+/* o gabarito e a errada marcada: cor + sinal (nunca so a cor) */
+.qz-alt.gab{border-color:var(--ok);background:var(--ok-fraco)}
+.qz-alt.gab .qz-alt-btn b::after{content:"\00A0\2713";color:var(--ok)}
+.qz-alt.errada{border-color:var(--erro);background:var(--erro-fraco)}
+.qz-alt.errada .qz-alt-btn b::after{content:"\00A0\2717";color:var(--erro)}
 .qz-alt button[disabled]{opacity:1;cursor:default}
-.qz-rot{margin:0 0 6px;color:var(--tinta2);font-weight:600;font-size:.9em}
-.qz-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.qz-seg button{display:grid;gap:2px;text-align:center;font-weight:650;font-size:.9em;padding:10px 6px;border:1px solid var(--linha);border-radius:10px;background:var(--card);color:var(--tinta2);min-height:48px}
-.qz-seg button small{font-weight:400;font-size:.78em;color:var(--tinta3)}
-.qz-seg button.on{border-width:2px}
-.qz-seg button[data-c="solida"].on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
-.qz-seg button[data-c="duvida"].on{border-color:var(--qz-duv);color:var(--qz-duv);background:var(--qz-duv-fraco)}
-.qz-seg button[data-c="chute"].on{border-color:var(--qz-chute);color:var(--qz-chute);background:var(--qz-chute-fraco)}
-.qz-pe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
-.qz-marca{display:flex;gap:6px;align-items:center;font-size:.86em;color:var(--tinta2)}
-.qz-marca input{width:18px;height:18px;margin:0}
-.qz-veredito{padding:10px 14px;border-radius:10px;font-weight:650;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:0}
-.qz-veredito.certa{background:var(--qz-ok-fraco);color:var(--qz-ok)} .qz-veredito.errada{background:var(--alerta-fraco);color:var(--alerta)}
+.qz-rot{margin:0 0 var(--esp-2);color:var(--tinta2);font-weight:600;font-size:var(--fs-legenda)}
+.qz-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2)}
+.qz-seg button{display:grid;gap:2px;text-align:center;font-weight:650;font-size:var(--fs-legenda);padding:var(--esp-2) var(--esp-1);border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta2);min-height:48px}
+.qz-seg button small{font-weight:400;font-size:var(--fs-meta);color:var(--tinta3)}
+.qz-seg button.on{box-shadow:inset 0 0 0 1px currentColor}
+.qz-seg button[data-c="solida"].on{border-color:var(--acento);color:var(--acento-tinta);background:var(--acento-fraco)}
+.qz-seg button[data-c="duvida"].on{border-color:var(--aviso);color:var(--aviso);background:var(--aviso-fraco)}
+.qz-seg button[data-c="chute"].on{border-color:var(--roxo);color:var(--roxo-tinta);background:var(--roxo-fraco)}
+.qz-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
+.qz-marca{display:flex;gap:var(--esp-2);align-items:center;font-size:var(--fs-legenda);color:var(--tinta2);min-height:44px}
+.qz-marca input{width:18px;height:18px;margin:0;accent-color:var(--acento)}
+.qz-veredito{padding:var(--esp-3) var(--esp-4);border-radius:var(--raio);font-weight:650;display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);align-items:baseline;margin:0}
+.qz-veredito.certa{background:var(--ok-fraco);color:var(--ok)} .qz-veredito.errada{background:var(--erro-fraco);color:var(--erro)}
 .qz-veredito small{font-weight:400;color:var(--tinta2)}
-details.qz-bloco{border:1px solid var(--linha);border-radius:10px;background:var(--card)}
-details.qz-bloco summary{cursor:pointer;padding:10px 12px;font-weight:650;font-size:.92em;min-height:44px;display:flex;align-items:center}
-details.qz-bloco .qz-texto{padding:0 12px 12px;white-space:pre-wrap;font-size:.94em}
+details.qz-bloco{border-top:1px solid var(--linha)}
+details.qz-bloco summary{cursor:pointer;padding:var(--esp-2) 0;font-weight:600;font-size:var(--fs-legenda);color:var(--tinta2);min-height:44px;display:flex;align-items:center}
+details.qz-bloco .qz-texto{padding:0 0 var(--esp-3);white-space:pre-wrap;font-size:.94em}
 details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
-details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
-.qz-obj{margin-left:8px;font-size:.78em;font-weight:600;color:var(--acento);background:var(--acento-fraco);padding:2px 8px;border-radius:999px}
-/* s211 (feedback-cadeia-declarada part-2): o porquê mora DENTRO da alternativa (seção do mesmo cartão,
-   não caixa aninhada); a cadeia é uma frase por elo + 4 pílulas que o aluno declara; nada é inferido. */
-.qz-porque{grid-column:1 / -1;margin:0;padding:8px 12px 10px 56px;border-top:1px solid var(--linha);color:var(--tinta2);font-size:.9em;line-height:1.45;min-width:0}
+details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
+.qz-obj{margin-left:var(--esp-2);font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--afundado);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+/* s211 (feedback-cadeia-declarada part-2): o porque mora DENTRO da alternativa (secao do mesmo cartao,
+   nao caixa aninhada); a cadeia e uma frase por elo + 4 botoes que o aluno declara; nada e inferido. */
+.qz-porque{grid-column:1 / -1;margin:0;padding:var(--esp-2) var(--esp-3) var(--esp-3) calc(2.25rem + var(--esp-2) + var(--esp-3));border-top:1px solid var(--linha);color:var(--tinta2);font-size:var(--fs-legenda);line-height:1.5;min-width:0}
 .qz-alt.tem-pq:not(.aberta) .qz-alt-txt::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
-/* s211 (part-4): marca-texto -- uma cor so, do token; tocar no grifo o remove */
-/* s211 (conferido no navegador): o tom "fraco" sumia no tema escuro; o grifo e um marca-texto ambar com tinta escura nos dois temas */
-:root{--qz-grifo:#f1d27c;--qz-grifo-tinta:#191817}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--qz-grifo:#e2a94f;--qz-grifo-tinta:#191817} }
-:root[data-theme="dark"]{--qz-grifo:#e2a94f;--qz-grifo-tinta:#191817}
+/* s211 (part-4): marca-texto -- uma cor so, do token (amarelo com tinta escura nos dois temas); tocar no grifo o remove */
 .qz-grifo{background:var(--qz-grifo);color:var(--qz-grifo-tinta);border-radius:3px;cursor:pointer}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
-.qz-cad{display:grid;gap:10px;min-width:0}
-.qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;font-weight:650;color:var(--tinta2)}
+.qz-cad{display:grid;gap:var(--esp-3);min-width:0}
+.qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2);margin:0;font-weight:700;color:var(--tinta)}
 .qz-cad-tit .qz-obj,.qz-cad-tit .qz-conferir{margin-left:0}
-.qz-sol{display:grid;gap:10px;min-width:0}
+.qz-sol{display:grid;gap:var(--esp-3);min-width:0}
 .qz-sol p{margin:0}
-.qz-pede{color:var(--tinta2);font-size:.92em;line-height:1.45}
-.qz-decl-nota{font-size:.84em;color:var(--tinta3)}
-.qz-pres summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:.84em;color:var(--tinta3)}
-.qz-pres[open] summary{margin-bottom:8px}
-.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:8px}
-.qz-cadeia li{display:grid;gap:8px;justify-items:center;text-align:center;padding:12px;border-radius:12px;background:var(--afundado);min-width:0}
-.qz-cadeia .qz-elo-n{font-size:.74em;font-weight:650;color:var(--tinta3)}
-.qz-cadeia b{font-weight:600;line-height:1.4;max-width:34rem;min-width:0}
-.qz-chave{color:var(--tinta2);font-size:.88em;line-height:1.4;max-width:34rem}
-.qz-cadeia em{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
-.qz-cadeia li.conflito{box-shadow:inset 0 0 0 1px var(--alerta)}
-.qz-decl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;max-width:30rem;min-width:0}
-.qz-decl button{min-height:44px;min-width:0;padding:6px 4px;border-radius:999px;font-size:.8em;font-weight:600;color:var(--tinta2);background:var(--card)}
-.qz-decl button.on{color:var(--papel)}
-.qz-decl button.sim.on{background:var(--qz-ok);border-color:var(--qz-ok)}
-.qz-decl button.incerteza.on{background:var(--qz-duv);border-color:var(--qz-duv)}
-.qz-decl button.desatencao.on{background:var(--qz-chute);border-color:var(--qz-chute)}
-.qz-decl button.nao.on{background:var(--alerta);border-color:var(--alerta)}
-.qz-decl button.sim.on.presumido{background:var(--qz-ok-fraco);color:var(--qz-ok);border-style:dashed}
+.qz-pede{color:var(--tinta2);font-size:var(--fs-legenda);line-height:1.5}
+.qz-decl-nota{font-size:var(--fs-meta);color:var(--tinta3)}
+.qz-pres summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:var(--fs-meta);color:var(--tinta3)}
+.qz-pres[open] summary{margin-bottom:var(--esp-2)}
+/* a cadeia e uma sequencia (identificar -> recordar -> descartar): linhas numeradas, alinhadas a esquerda */
+.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:0}
+.qz-cadeia li{display:grid;gap:var(--esp-2);justify-items:start;text-align:left;padding:var(--esp-3) 0;border-top:1px solid var(--linha);min-width:0}
+.qz-cadeia .qz-elo-n{font-size:var(--fs-meta);font-weight:650;color:var(--tinta3)}
+.qz-cadeia b{font-weight:600;line-height:1.45;max-width:38rem;min-width:0;color:var(--tinta)}
+.qz-chave{color:var(--tinta2);font-size:var(--fs-legenda);line-height:1.45;max-width:38rem}
+.qz-cadeia em{font-style:normal;font-size:var(--fs-meta);font-weight:650;color:var(--erro)}
+.qz-cadeia li.conflito{box-shadow:inset 3px 0 0 var(--erro);padding-left:var(--esp-3)}
+.qz-decl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--esp-2);width:100%;max-width:30rem;min-width:0}
+.qz-decl button{min-height:44px;min-width:0;padding:var(--esp-1);border:1px solid var(--linha-forte);border-radius:var(--raio);font-size:var(--fs-meta);font-weight:650;color:var(--tinta2);background:transparent}
+.qz-decl button.on{color:var(--sobre)}
+.qz-decl button.sim.on{background:var(--ok);border-color:var(--ok)}
+.qz-decl button.incerteza.on{background:var(--aviso);border-color:var(--aviso)}
+.qz-decl button.desatencao.on{background:var(--roxo);border-color:var(--roxo)}
+.qz-decl button.nao.on{background:var(--erro);border-color:var(--erro)}
+.qz-decl button.sim.on.presumido{background:var(--ok-fraco);color:var(--ok);border-style:dashed}
 @media (max-width:400px){.qz-decl{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.qz-rodape{display:grid;gap:8px;font-size:.88em;color:var(--tinta3);min-width:0}
+.qz-rodape{display:grid;gap:var(--esp-2);font-size:var(--fs-legenda);color:var(--tinta3);min-width:0}
 .qz-rodape p{margin:0}
-.qz-linha{font:inherit;font-size:1em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-width:0;min-height:44px}
+.qz-linha{font:inherit;font-size:1em;padding:var(--esp-2) var(--esp-3);border:1px solid var(--linha-forte);border-radius:var(--raio);background:var(--papel);color:var(--tinta);width:100%;min-width:0;min-height:44px}
 .qz-link{justify-self:start;background:transparent;border:0;padding:0 2px;min-height:44px;color:var(--tinta3);text-decoration:underline;text-underline-offset:3px;font-size:1em}
-.qz-defeito{display:grid;gap:6px;min-width:0}
-.qz-defeito-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;min-width:0}
+.qz-defeito{display:grid;gap:var(--esp-2);min-width:0}
+.qz-defeito-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-2);min-width:0}
 .qz-defeito-form button{min-height:44px}
 /* s211 (part-3): modo Estudo/Prova por lista + o bloco Elos da tela de fim */
-.qz-modo-lista{min-height:44px;padding:4px 12px;border-radius:999px;font-size:.8em;font-weight:600;color:var(--tinta2);background:var(--afundado)}
-.qz-modo-escolha{display:grid;gap:10px;min-width:0}
+.qz-modo-lista{min-height:44px;padding:var(--esp-1) var(--esp-3);border-radius:var(--raio);font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:transparent}
+.qz-modo-escolha{display:grid;gap:var(--esp-3);min-width:0}
 .qz-seg.qz-seg2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .qz-seg.qz-seg2 button{min-height:72px;font-size:1em}
-.qz-elos-fim{display:grid;gap:8px;min-width:0}
-.qz-elos-cont{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0;font-size:.88em;color:var(--tinta2)}
-.qz-elos-cont b{font-variant-numeric:tabular-nums}
-.qz-elos-cont .nao b{color:var(--alerta)} .qz-elos-cont .incerteza b{color:var(--qz-duv)} .qz-elos-cont .desatencao b{color:var(--qz-chute)} .qz-elos-cont .sim b{color:var(--qz-ok)}
-.qz-rev.elo{grid-template-columns:auto minmax(0,1fr);gap:4px 10px}
-.qz-rev.elo i{justify-self:start}
-.qz-rev.elo span{grid-column:1 / -1;line-height:1.4}
-.qz-rev.nao{border-left-color:var(--alerta)} .qz-rev.nao i{color:var(--alerta)}
-.qz-rev.incerteza{border-left-color:var(--qz-duv)} .qz-rev.incerteza i{color:var(--qz-duv)}
-.qz-rev.desatencao{border-left-color:var(--qz-chute)} .qz-rev.desatencao i{color:var(--qz-chute)}
-.qz-porobj ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
-.qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);min-width:0}
-.qz-porobj li b{font-variant-numeric:tabular-nums}
-.qz-porobj li small{grid-column:1 / -1;color:var(--tinta3)}
-.qz-porobj li.fraco b{color:var(--alerta)}
-.qz-conferir{margin-left:8px;font-size:.78em;font-weight:600;color:var(--alerta);background:var(--alerta-fraco);padding:2px 8px;border-radius:999px}
-.qz-elo{display:flex;flex-wrap:wrap;gap:6px}
-.qz-modo{margin:4px 0 10px}
-.qz-modo button small{font-weight:500;color:var(--tinta3);margin-left:4px}
-.qz-figura{margin:4px 0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);color:var(--tinta2)}
+.qz-elos-fim{display:grid;gap:var(--esp-2);min-width:0}
+.qz-elos-cont{display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);margin:0;font-size:var(--fs-legenda);color:var(--tinta2)}
+.qz-elos-cont b{font-weight:700}
+.qz-elos-cont .nao b{color:var(--erro)} .qz-elos-cont .incerteza b{color:var(--aviso)} .qz-elos-cont .desatencao b{color:var(--roxo-tinta)} .qz-elos-cont .sim b{color:var(--ok)}
+/* a revisao questao a questao e o bloco Elos: LINHAS -- numero | texto, e o estado embaixo com sinal + cor */
+.qz-lista .qz-rev{grid-template-columns:2.75rem minmax(0,1fr);gap:2px var(--esp-2);align-items:baseline}
+.qz-rev b{grid-row:1 / span 2;font-weight:700;color:var(--tinta)}
+.qz-rev span{grid-column:2;color:var(--tinta2);font-size:var(--fs-legenda);min-width:0}
+.qz-rev i{grid-column:2;justify-self:start;font-style:normal;font-size:var(--fs-meta);font-weight:650;color:var(--tinta3)}
+.qz-rev.certa i::before{content:"\2713\00A0";color:var(--ok)}
+.qz-rev.errada i{color:var(--erro)} .qz-rev.errada i::before{content:"\2717\00A0"}
+.qz-rev.chute i{color:var(--roxo-tinta)} .qz-rev.chute i::before{content:"?\00A0"}
+.qz-lista .qz-rev.elo{grid-template-columns:2.75rem minmax(0,1fr)}
+.qz-rev.elo b{grid-row:auto}
+.qz-rev.elo i{grid-row:1}
+.qz-rev.elo span{grid-column:1 / -1;line-height:1.45}
+.qz-rev.nao i{color:var(--erro)}
+.qz-rev.incerteza i{color:var(--aviso)}
+.qz-rev.desatencao i{color:var(--roxo-tinta)}
+/* por bloco / por objetivo: linhas com filete; firmes/feitas a direita; o bloco inteiro firme ganha o ok */
+.qz-porobj ul{list-style:none;margin:var(--esp-1) 0 0;padding:0;display:grid;gap:0}
+.qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 var(--esp-3);padding:var(--esp-2) 0;border-bottom:1px solid var(--linha);min-width:0}
+.qz-porobj li b{font-weight:700;color:var(--tinta)}
+.qz-porobj li small{grid-column:1 / -1;color:var(--tinta3);font-size:var(--fs-meta)}
+.qz-porobj li:not(.fraco) b{color:var(--ok)}
+.qz-conferir{margin-left:var(--esp-2);font-size:var(--fs-meta);font-weight:600;color:var(--aviso);background:var(--aviso-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.qz-elo{display:flex;flex-wrap:wrap;gap:var(--esp-2)}
+.qz-elo button{font-size:var(--fs-legenda);font-weight:600;padding:var(--esp-1) var(--esp-3);border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta2);min-height:44px}
+.qz-elo button.on{border-color:var(--acento);color:var(--acento-tinta);background:var(--acento-fraco)}
+/* Questoes | Simulados: um controle segmentado (navegacao) */
+.qz-modo{display:inline-grid;grid-auto-flow:column;gap:2px;margin:var(--esp-2) 0 var(--esp-3);padding:2px;border:1px solid var(--linha-forte);border-radius:var(--raio)}
+.qz-modo button{border:0;border-radius:var(--raio-p);min-height:44px}
+.qz-modo button small{font-weight:500;color:var(--tinta3);margin-left:var(--esp-1)}
+.qz-modo button.on small{color:inherit}
+.qz-figura{margin:var(--esp-1) 0 var(--esp-2);padding:var(--esp-2) var(--esp-3);border-radius:var(--raio);background:var(--afundado);color:var(--tinta2)}
 /* s221 (P22): a figura do enunciado embutida (data URI); toque amplia (rola na horizontal) */
-.qz-figs{display:grid;gap:10px;margin:6px 0 12px;min-width:0}
-.qz-fig{margin:0;min-width:0;overflow-x:auto;border:1px solid var(--linha);border-radius:10px;-webkit-overflow-scrolling:touch}
+.qz-figs{display:grid;gap:var(--esp-2);margin:var(--esp-1) 0 var(--esp-3);min-width:0}
+.qz-fig{margin:0;min-width:0;overflow-x:auto;border:1px solid var(--linha);border-radius:var(--raio);-webkit-overflow-scrolling:touch}
 .qz-fig img{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;cursor:zoom-in}
 .qz-fig.zoom img{max-width:none;width:200%;cursor:zoom-out}
-.qz-fig figcaption{font-size:.74em;color:var(--tinta3);padding:4px 8px}
-.qz-alt .qz-fig{grid-column:1 / -1;margin:0 12px 10px 56px}
-.qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:44px}
-.qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
-.qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
-.qz-tiles > div{min-width:0;background:var(--afundado);border-radius:10px;padding:12px 14px}
-.qz-analise{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--linha);min-width:0}
+.qz-fig figcaption{font-size:var(--fs-meta);color:var(--tinta3);padding:var(--esp-1) var(--esp-2)}
+.qz-alt .qz-fig{grid-column:1 / -1;margin:0 var(--esp-3) var(--esp-2) calc(2.25rem + var(--esp-2) + var(--esp-3))}
+/* as metricas do fim: UMA faixa entre dois filetes (acertos, solidas, duvidas, chutes, tempo) */
+.qz-tiles{display:flex;flex-wrap:wrap;gap:var(--esp-3) var(--esp-6);padding:var(--esp-3) 0;border-block:1px solid var(--linha)}
+.qz-tiles > div{min-width:0}
+.qz-analise{display:grid;gap:var(--esp-1);padding-top:var(--esp-3);border-top:1px solid var(--linha);min-width:0}
 .qz-analise p{margin:0;line-height:1.45}
-.qz-ag-rot{font-size:.8em;font-weight:650;color:var(--acento)}
-.qz-ag-arm{font-size:.9em;color:var(--tinta2)}
-.qz-ag-cards{font-size:.84em;color:var(--tinta3)}
-.qz-rev{width:100%;text-align:left;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 12px;border:1px solid var(--linha);border-left-width:4px;border-radius:10px;background:var(--card);color:var(--tinta);min-height:44px}
-.qz-rev span{color:var(--tinta2);font-size:.86em;min-width:0}
-.qz-rev i{font-style:normal;font-size:.78em;font-weight:650;color:var(--tinta3)}
-.qz-rev.certa{border-left-color:var(--qz-ok)} .qz-rev.errada{border-left-color:var(--alerta)} .qz-rev.errada i{color:var(--alerta)} .qz-rev.chute{border-left-color:var(--qz-chute)} .qz-rev.chute i{color:var(--qz-chute)}
-.qz-status{font-size:.84em;color:var(--tinta2);min-height:1.3em;margin:0}
-.qz-status.ruim{color:var(--alerta)} .qz-status.ok{color:var(--qz-ok)}
+.qz-ag-rot{font-size:var(--fs-meta);font-weight:650;color:var(--tinta2)}
+.qz-ag-arm{font-size:var(--fs-legenda);color:var(--tinta2)}
+.qz-ag-cards{font-size:var(--fs-meta);color:var(--tinta3)}
+.qz-status{font-size:var(--fs-legenda);color:var(--tinta2);min-height:1.3em;margin:0}
+.qz-status.ruim{color:var(--erro)} .qz-status.ok{color:var(--ok)}
 /* s213 (alca fechada v0): assinatura de leitura no rodape do leitor -- um bloco so, no hub, para
    aula e analise; o comentario e opcional e o texto nunca se perde (rascunho no aparelho) */
-.hub-assina{display:grid;gap:8px;margin-top:18px;padding:14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);min-width:0}
-.hub-assina-tit{margin:0;font-weight:650;color:var(--tinta2)}
+.hub-assina{display:grid;gap:var(--esp-2);margin-top:var(--esp-4);padding:var(--esp-4);border:1px solid var(--linha);border-radius:var(--raio);background:var(--card);min-width:0}
+.hub-assina-tit{margin:0;font-weight:650;color:var(--tinta)}
 .hub-assina textarea{min-height:72px;resize:vertical;line-height:1.45}
-.hub-assina-pe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.hub-assina-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
 .hub-assina-pe .qz-status{flex:1;min-width:0}
-.hub-assina button{min-height:44px;padding:0 16px}
-.hub-assina-retorno{margin:0;padding:8px 12px;border-left:3px solid var(--acento);background:var(--acento-fraco);border-radius:6px;font-size:.9em;color:var(--tinta)}
-.hub-assina[data-st="erro"] .qz-status,.hub-assina[data-st="leitura"] .qz-status{color:var(--alerta);cursor:pointer}
-.hub-assina[data-st="assinado"] .qz-status,.hub-assina[data-st="absorvida"] .qz-status{color:var(--qz-ok)}
+.hub-assina button{min-height:44px;padding:0 var(--esp-4)}
+.hub-assina-retorno{margin:0;padding:var(--esp-2) var(--esp-3);border-left:3px solid var(--acento);background:var(--acento-fraco);border-radius:var(--raio-p);font-size:var(--fs-legenda);color:var(--tinta)}
+.hub-assina[data-st="erro"] .qz-status,.hub-assina[data-st="leitura"] .qz-status{color:var(--erro);cursor:pointer}
+.hub-assina[data-st="assinado"] .qz-status,.hub-assina[data-st="absorvida"] .qz-status{color:var(--ok)}
 
 /* @hub:tema-css */
 </style>
@@ -846,7 +849,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       ":where(form.pend textarea){font:inherit;width:100%;min-width:0;min-height:88px;padding:10px 12px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;resize:vertical;box-sizing:border-box}" +
       ":where(form.pend button){min-height:44px;padding:0 16px;font:inherit;font-weight:600;border-radius:8px;cursor:pointer}" +
       ":where(form.pend [data-pend-estado]){font-size:.86em}" +
-      ":where(form.pend[data-pend-st=\"erro\"] [data-pend-estado],form.pend[data-pend-st=\"leitura\"] [data-pend-estado],form.pend[data-pend-st=\"invalido\"] [data-pend-estado]){color:#b3261e}" +
+      ":where(form.pend[data-pend-st=\"erro\"] [data-pend-estado],form.pend[data-pend-st=\"leitura\"] [data-pend-estado],form.pend[data-pend-st=\"invalido\"] [data-pend-estado]){color:var(--erro,#b3261e)}" +
       ":where(form.pend[data-pend-st=\"erro\"] [data-pend-estado],form.pend[data-pend-st=\"leitura\"] [data-pend-estado]){cursor:pointer}" +
       ":where(form.pend [data-pend-retorno]){margin:0;font-size:.92em}";
     doc.head.appendChild(s);
@@ -1492,10 +1495,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     if(doc.head && !doc.getElementById("hub-listas-estilo")){
       var s = doc.createElement("style");
       s.id = "hub-listas-estilo";
-      s.textContent = ".qd-registro,.t-assinado{color:var(--acento);font-weight:600}" +
+      s.textContent = ".qd-registro,.t-assinado{color:var(--ok);font-weight:600}" +
         ".vivo{margin-left:2px;font-size:1.02rem;font-weight:700;color:var(--acento);white-space:pre}" +
         "li.tarefa.t-resolvida .t-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}" +
-        "li.tarefa.qd-recente{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}";
+        "li.tarefa.qd-recente .t-tema::before{content:'\\2713\\00A0';color:var(--ok)}";
       doc.head.appendChild(s);
     }
     var depois = function(){ medir(quadro); };
@@ -2077,7 +2080,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var q = QZ.qs[QZ.pos]; if(q && !$("qz-questao").hidden && QZ.resp[q.num]){ qzMostrar(QZ.pos); } });
   function qzTrilho(){
     // modo prova: o trilho mostra so feita/nao feita (sem cor de acerto) e serve de navegacao
-    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + '"></i>'; }).join("");
+    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (r && r.flag ? " flag" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + (r && r.flag ? " (revisar depois)" : "") + '"></i>'; }).join("");
   }
   $("qz-trilho").addEventListener("click", function(e){ var i = e.target.closest("i[data-i]"); if(i && !$("qz-player").hidden){ QZ.revendo = false; qzMostrar(parseInt(i.getAttribute("data-i"), 10)); } });
   function qzAlts(txt){

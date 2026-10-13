@@ -154,6 +154,8 @@ CAMPOS_PLAYER = ("card_id", "frente_contexto", "frente_pergunta", "verso_respost
                  "selection_reason", "bucket")
 
 TEMPLATE_PLAYER = Path(__file__).resolve().parents[1] / "core" / "templates" / "player.html"
+#: s225: o tema (cor, tipo, espaco, raio) e o MESMO do hub -- o player.html so traz estrutura (docs/UI.md).
+TEMA_CSS = Path(__file__).resolve().parents[1] / "core" / "templates" / "tema.css"
 MARCA_ABRE = '<script id="lote" type="application/json">'
 MARCA_FECHA = "</script>"
 TETO_FALLBACK = 60
@@ -267,6 +269,18 @@ def anexar_agenda(lote, dias=DIAS_AGENDA, quando=None):
     lote["agenda_base"] = db.agenda_revisoes(
         dias=dias, excluir_ids=[c["card_id"] for c in lote.get("cards", [])])
     return lote
+
+
+def embutir_tema(html, tema=None):
+    """O standalone recebe o MESMO `core/templates/tema.css` que o hub injeta (s225): a fonte unica de
+    cor/tipo/espaco/raio; o `player.html` so traz estrutura. Entra antes de `</head>` (sem ele, no fim).
+    Idempotente: pagina que ja tem `id="medhub-tema"` volta igual."""
+    if 'id="medhub-tema"' in html:
+        return html
+    css = TEMA_CSS.read_text(encoding="utf-8") if tema is None else tema
+    bloco = '<style id="medhub-tema">\n%s</style>\n' % css
+    i = html.find("</head>")
+    return html[:i] + bloco + html[i:] if i >= 0 else html + bloco
 
 
 def injetar_lote(template, lote):
@@ -689,7 +703,7 @@ def main():
         if not args.lote:
             parser.error("--build-player exige --lote ARQ.json")
         lote = json.loads(Path(args.lote).read_text(encoding="utf-8"))
-        html = injetar_lote(TEMPLATE_PLAYER.read_text(encoding="utf-8"), lote)
+        html = embutir_tema(injetar_lote(TEMPLATE_PLAYER.read_text(encoding="utf-8"), lote))
         destino = (Path(args.out) if args.out
                    else Path("artifacts") / ("player-%s.html" % lote.get("sessao", "sessao")))
         destino.parent.mkdir(parents=True, exist_ok=True)

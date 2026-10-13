@@ -24,6 +24,7 @@ import contextlib
 import io
 import json
 import os
+import re
 import sqlite3
 import sys
 import tempfile
@@ -202,6 +203,15 @@ def test_build_injeta_o_lote_e_escapa_fechamento_de_script():
     assert html.count("<script") == 2, "nenhum <script> novo nasceu da injecao"
 
 
+def test_embutir_tema_entra_antes_do_head_e_e_idempotente():
+    """s225: o standalone ganha o tema (fonte unica de cor) antes de </head>; rodar 2x nao duplica."""
+    from tools.fsrs_queue import embutir_tema
+    p = embutir_tema("<html><head><title>x</title></head><body></body></html>", tema=":root{--papel:#000}")
+    assert p.index('<style id="medhub-tema">') < p.index("</head>") and ":root{--papel:#000}" in p
+    assert embutir_tema(p, tema="outro") == p
+    assert embutir_tema("<p>sem head</p>", tema="t").endswith('<style id="medhub-tema">\nt</style>\n')
+
+
 def test_build_recusa_template_sem_marcador():
     try:
         injetar_lote("<html></html>", {"cards": []})
@@ -223,11 +233,16 @@ def test_build_recusa_marcador_AMBIGUO():
 
 
 def test_template_real_e_injetavel_e_tem_wrap_unico():
-    from tools.fsrs_queue import TEMPLATE_PLAYER
+    from tools.fsrs_queue import TEMPLATE_PLAYER, embutir_tema
     txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
     assert txt.count("max-width") <= 2, "um .wrap unico constrange a pagina (memoria s151)"
-    assert 'prefers-color-scheme: dark' in txt and ':root[data-theme="dark"]' in txt
-    assert ':root:not([data-theme="light"])' in txt
+    # s225: a cor sai do core/templates/tema.css (fonte unica, docs/UI.md) -- escuro por padrao, claro so por
+    # escolha explicita (data-theme). O template so traz estrutura; o standalone embute o tema no --build-player.
+    css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
+    assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", css), "cor literal no player: ela mora no tema.css"
+    pagina = embutir_tema(txt)
+    assert ':root:not([data-theme="light"])' in pagina and ':root[data-theme="dark"]' in pagina
+    assert ':root[data-theme="light"]' in pagina
     assert "prefers-reduced-motion" in txt and "focus-visible" in txt
     assert 'claude.use("db")' in txt and "sessoes/" in txt
     # A unica persistencia da pagina e a capability db: nenhuma tabela do FSRS

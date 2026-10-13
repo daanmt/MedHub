@@ -1,70 +1,112 @@
-/* MedHub tema v1 -- so a camada das AULAS e dos RESUMOS (leitor). O shell, o painel e o player NAO a recebem:
-   .wrap, .body, .top, h1-h4 e o corpo a 17px so existem nas aulas. Vai DEPOIS de tema.css, no leitor. */
-/* =========================================================== AULAS */
-body{font-size:17px;line-height:1.62}
-.wrap{max-width:62rem;padding:0 20px 96px}
+/* MedHub tema v3 -- camada de LEITURA (aulas e resumos no leitor do hub). Vai DEPOIS do tema.css; o shell, o painel e
+   o player NAO a recebem. Mapa e regras: docs/UI.md (§6 e §9). As 43 aulas trazem CSS proprio (duas familias de classes:
+   as antigas com .spec/.rail/.aside e as novas com .stats/.nav/.trilho/.ato); esta camada so ajusta, nunca reescreve aula.
+   - UMA coluna (o .wrap) constrange tudo: nada de max-width por elemento ao lado de quadro com borda (zigue-zague
+     de bordas que ele ja reprovou duas vezes; memoria feedback-artifact-width-alignment); titulos em branco, rotulos e fontes em lavanda; sem brilho e sem caixa-alta;
+   - o termo-chave em negrito e o UNICO texto ciano da leitura (pedido dele, s224); link e navegacao tambem sao ciano;
+   - callout por significado, sempre filete + lavagem: armadilha = ambar (como no card), banca = roxo, nota = neutro;
+     o que e errado ou proibido (.mal) = coral; numerais e marcos decorativos = roxo. */
+
+/* =========================================================== coluna e tipo */
+body{font-size:17px;line-height:1.65}
+.wrap{max-width:46rem;padding:0 20px 96px}
+.wrap:has(.body){max-width:62rem}   /* aula antiga com trilho lateral (.rail) no desktop */
 @media(max-width:640px){.wrap{padding:0 16px 72px}}
-h1,h2,h3,h4{font-weight:650;letter-spacing:-.015em;line-height:1.2;color:var(--ink)}
+h1,h2,h3,h4{font-weight:650;letter-spacing:-.015em;line-height:1.25;color:var(--ink)}
 
+/* =========================================================== cabecalho */
 .top{padding:36px 0 24px;border-bottom:0}
-.eye{font-weight:500;font-size:14px;color:var(--ink3);margin:0 0 10px}
-.top h1{font-size:clamp(30px,6.4vw,46px);font-weight:700;letter-spacing:-.025em;max-width:20ch;margin-bottom:12px}
-.top .sub{font-size:17px;color:var(--ink2);max-width:60ch}
-
-.spec{display:grid;gap:0 28px;background:none;border:0;border-top:1px solid var(--line2);margin-top:22px}
+.eye{font-weight:500;font-size:14px;letter-spacing:0;color:var(--ink3);margin:0 0 10px}
+.top h1{font-size:clamp(30px,6.4vw,44px);font-weight:700;letter-spacing:-.025em;max-width:20ch;margin-bottom:12px;text-shadow:none}
+.top .sub{font-size:17px;color:var(--ink2)}
+/* os numeros-chave do tema (dose, prazo, corte): branco e grande, rotulo lavanda -- destaque por tamanho, nao por neon */
+.spec{display:grid;gap:0 28px;background:none;border:0;border-top:1px solid var(--line);margin-top:22px}
 .spec div{background:none;padding:12px 0;border-top:0;border-bottom:1px solid var(--line)}
 .spec div[class]{border-top:0}
-.spec .tn{font-size:15px;font-weight:650}
-.spec .tv{font-size:14px;color:var(--ink2)}
+.spec .tn{font-size:15px;font-weight:650;color:var(--ink)}
+.spec .tv{font-size:14px;color:var(--ink3)}
+.stats{gap:14px 24px;margin-top:18px}
+.stat b{font-size:22px;font-weight:650;color:var(--ink)}
+.stat span{font-size:13px;color:var(--ink3)}
+/* atalhos da aula: sem moldura; o atual em ciano (navegacao) */
+.nav{gap:6px;padding:22px 0 6px}
+.nav a{border:0;border-radius:var(--raio-p);background:var(--sunk);color:var(--ink2);font-size:14px;padding:6px 10px;min-height:34px;display:inline-flex;align-items:center}
+.nav a:hover{color:var(--ink);background:var(--teal-wash)}
+.trilho-box{background:transparent;border:1px solid var(--line);border-radius:var(--raio);padding:16px 14px 10px}
+.trilho-box p{color:var(--ink3)}
+.trilho .n{border-color:var(--plum);color:var(--plum-ink);background:var(--paper)}
+.trilho li:not(:last-child)::before{background:var(--plum);opacity:.6}
+.trilho a:hover b{color:var(--teal-ink)}
 
+/* =========================================================== corpo: duas colunas (aula antiga) */
 .body{grid-template-columns:11rem minmax(0,38rem);gap:52px;padding-top:28px}
 main{max-width:38rem}
 @media(max-width:920px){.body{grid-template-columns:minmax(0,1fr);gap:20px}}
-
-.rail .rlab{font-weight:600;color:var(--ink3);font-size:13px}
+.rail .rlab{font-weight:600;color:var(--ink3);font-size:13px;letter-spacing:0}
 .rail a{font-size:14.5px;border-left:0;padding:6px 0 6px 12px;box-shadow:inset 1px 0 0 var(--line2)}
 .rail a:hover{color:var(--ink)}
 .rail a.on{box-shadow:inset 2px 0 0 var(--teal);color:var(--ink);font-weight:600}
 .rail a .rn{color:var(--ink3)}
 @media(max-width:920px){
-  .rail a{padding:5px 12px;border:0;border-radius:999px;background:var(--sunk);box-shadow:none;color:var(--ink2)}
+  .rail a{padding:6px 10px;border:0;border-radius:var(--raio-p);background:var(--sunk);box-shadow:none;color:var(--ink2)}
   .rail a.on{background:var(--teal-wash);color:var(--teal-ink);box-shadow:none}
 }
 
+/* =========================================================== degraus e atos */
 .degrau{padding:34px 0;border-bottom:1px solid var(--line)}
 .dhead{gap:14px;align-items:flex-start}
-.dnum{width:auto;height:auto;min-width:36px;border:0;border-radius:0;display:block;
-  font-size:42px;font-weight:300;line-height:.9;margin-top:4px;letter-spacing:-.04em;color:var(--suave)}
-.dtitle .dstage{font-weight:500;font-size:13.5px;color:var(--ink3)}
-.dtitle h2{font-size:clamp(21px,4.2vw,27px)}
+/* o numeral do degrau: grande e leve, roxo -- a unica decoracao (a escada e mesmo uma sequencia) */
+.dnum{width:auto;height:auto;min-width:36px;border:0;border-radius:0;background:none;display:block;
+  font-size:42px;font-weight:300;line-height:.9;margin-top:4px;letter-spacing:-.04em;color:var(--plum-ink)}
+.dtitle .dstage{font-weight:500;font-size:13.5px;color:var(--ink3);letter-spacing:0}
+.dtitle h2,.dtitle h3{font-size:clamp(21px,4.2vw,26px);color:var(--ink)}
+.src{color:var(--ink3);font-size:12.5px}
+.ato{margin:44px 0 0;padding:20px 0 0;background:transparent;border-left:0;border-top:1px solid var(--line2)}
+.ato span{color:var(--plum-ink);font-size:13.5px;font-weight:600;letter-spacing:0}
 .lede{font-style:normal;font-size:17px;color:var(--ink2);margin-bottom:16px}
 .prose li{font-size:16.5px;line-height:1.62;color:var(--ink2)}
-h3.sub{font-size:16px;font-weight:650;margin:28px 0 8px}
+h3.sub{font-size:16px;font-weight:650;margin:28px 0 8px;color:var(--ink)}
 
-.trap,.banca,.aside{border:0;border-radius:12px;padding:14px 16px;margin:20px 0}
-.albl{font-weight:650;font-size:13.5px}
-.trap p,.banca p,.aside p{font-size:16px;line-height:1.58}
+/* =========================================================== callouts: filete + lavagem, por significado */
+.trap,.banca,.aside{border:0;border-left:3px solid var(--line2);border-radius:0 var(--raio-p) var(--raio-p) 0;padding:14px 16px;margin:20px 0;background:var(--sunk)}
+.albl{font-weight:650;font-size:13.5px;letter-spacing:0;color:var(--ink2)}
+.trap p,.banca p,.aside p{font-size:16px;line-height:1.58;color:var(--ink)}
+.trap{border-left-color:var(--amber);background:var(--amber-wash)}
+.trap .albl{color:var(--amber)}
+.banca{border-left-color:var(--plum);background:var(--plum-wash)}
+.banca .albl{color:var(--plum-ink)}
+.mal{color:var(--carmine-ink)}
+.synth.arm{border-left-color:var(--amber)}
+.synth.arm h2::before{background:var(--amber)}
 
-.vs,.cmap,.if3,.trig,.arms,.crit,.tw,details.ref{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+/* =========================================================== pagina de resumo (CSS proprio em hub.py: CSS_RESUMO) */
+.rs-olho{color:var(--ink3);font-weight:600}
+blockquote{border-left-color:var(--line2);background:var(--sunk);border-radius:0 var(--raio-p) var(--raio-p) 0}
+
+/* =========================================================== quadros, tabelas e fluxos (preservados; so a moldura) */
+.vs,.cmap,.if3,.trig,.arms,.crit,.tw,.esc,details.ref{border:1px solid var(--line);border-radius:var(--raio);overflow:hidden}
 .vs,.cmap,.if3,.trig,.arms{gap:1px;background:var(--line)}
 .vs>div,.cmap>div,.if3>div,.arm{background:var(--card)}
 .trig div{background:var(--sunk)}
 .cmap .k3,.cmap .k34,.cmap .kn{border-top-width:2px}
+.crit .k{color:var(--ink);font-weight:600}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{color:var(--ink2);letter-spacing:0;font-weight:650}
+.esc h5{color:var(--ink2);letter-spacing:0}
+.esc .p b{color:var(--ink)}
+ol.escada li::marker{color:var(--plum-ink)}
 table{font-size:15px}
-thead th{background:var(--sunk);color:var(--acento-tinta);font-weight:650;font-size:13.5px}
+thead th{background:var(--sunk);color:var(--ink2);font-weight:650;font-size:13.5px;letter-spacing:0}
 th,td{padding:10px 12px}
-.c{border-radius:6px}
-.flow span{border-radius:8px;border-color:var(--line);font-size:15px}
+.c{border-radius:var(--raio-p)}
+.flow span{border-radius:var(--raio-p);border-color:var(--line);font-size:15px}
 details.ref>summary{font-weight:600;color:var(--ink)}
-.synth{border:0;background:var(--sunk);border-radius:16px}
+.synth{border:0;background:var(--sunk);border-radius:var(--raio)}
 .synth h2{font-size:24px}
 code{background:var(--sunk);border-radius:4px;font-size:.9em}
 footer{border-top:1px solid var(--line)}
+footer p{color:var(--ink3)}
 
-/* pontos pequenos de destaque (pedido dele em 12/10/2026, apontando a tabela de exemplo): o termo-chave em negrito
-   fica ciano claro (informacao), sub-titulos e a etapa do degrau tambem em ciano claro (v2.4: ele pediu menos rosa). termo-chave */
-strong{color:var(--acento-tinta)}
-h3.sub{color:var(--acento-tinta)}
-.dtitle .dstage{color:var(--acento-tinta)}
-.rail .rlab{color:var(--acento-tinta)}
-.crit.hd .row:first-child>*{color:var(--acento-tinta)}   /* cabecalho de tabela feita com div (aulas novas) */
+/* o termo-chave em negrito: ciano claro (pedido dele em 12/10/2026, apontando a tabela de exemplo). A lista repete os
+   seletores com que as aulas pintam o negrito de branco (mesma especificidade; esta camada vem depois e vence) */
+strong,.prose li strong,.lede strong,.arm p strong,.crit .row .v b,.crit .v strong{color:var(--teal-ink)}

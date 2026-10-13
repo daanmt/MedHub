@@ -6,27 +6,9 @@
 <title>Painel MedHub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300;400;500;600;650;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
-  --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
-  --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
-  --alerta:#a2412a; --alerta-fraco:#f6e4de;
-  --wrap:58rem; --raio:14px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --papel:#131519; --card:#1b1e24; --afundado:#23272f;
-    --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
-    --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
-    --alerta:#f0917a; --alerta-fraco:#3a221c;
-  }
-}
-:root[data-theme="dark"]{
-  --papel:#131519; --card:#1b1e24; --afundado:#23272f;
-  --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
-  --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
-  --alerta:#f0917a; --alerta-fraco:#3a221c;
-}
+/* Cor, tipo, espaco e raio: core/templates/tema.css (fonte unica, embutido logo depois deste bloco).
+   Aqui so a estrutura do Painel (docs/UI.md): secoes com filete, numeros sem caixa, a proxima tarefa em
+   destaque, atraso em ambar com texto (nunca so a cor). */
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
@@ -35,248 +17,192 @@ body{
   font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.5; overflow-wrap:break-word;
 }
 .wrap{max-width:var(--wrap);margin:0 auto;padding:4px 2px 40px}
-h2{font-size:1.08rem;margin:0 0 4px;letter-spacing:-.005em;text-wrap:balance}
-h3{font-size:.86rem;font-weight:600;color:var(--tinta2);margin:0 0 6px}
+h2{font-size:var(--fs-secao);font-weight:700;line-height:1.25;margin:0 0 var(--esp-1);letter-spacing:-.01em;text-wrap:balance;color:var(--tinta)}
+h3{font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2);margin:0 0 var(--esp-1)}
 p{margin:0}
 a{color:var(--acento);text-underline-offset:2px}
-a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
-.atualizado{color:var(--tinta3);font-size:.76em;margin:0 0 10px;text-align:right}
-.bloco{padding:18px 0 22px;border-top:1px solid var(--linha)}
-.bloco:first-of-type{border-top:0;padding-top:4px}
-.sub{color:var(--tinta2);font-size:.9em;margin:0 0 14px}
-.nota{color:var(--tinta3);font-size:.84em;margin-top:6px}
+.atualizado{color:var(--tinta3);font-size:var(--fs-meta);margin:0 0 var(--esp-2);text-align:right}
+.bloco{padding:var(--esp-5) 0;border-top:1px solid var(--linha)}
+.bloco:first-of-type{border-top:0;padding-top:var(--esp-1)}
+.sub{color:var(--tinta2);font-size:var(--fs-legenda);margin:0 0 var(--esp-3)}
+.nota{color:var(--tinta3);font-size:var(--fs-meta);margin-top:var(--esp-1)}
 .tenue{color:var(--tinta3)}
 
-/* Hoje: as duas doses do dia, o elemento que o olho acha primeiro */
-.dia h2{font-size:1.25rem;margin-bottom:14px}
-.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
-.dose{min-width:0;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
-      padding:14px 16px 16px;border-left:4px solid var(--acento)}
-.fracao{font-size:1.02rem;color:var(--tinta2);font-variant-numeric:tabular-nums}
-.fracao b{font-size:2.3rem;line-height:1.1;color:var(--tinta);font-weight:750;letter-spacing:-.02em;margin-right:4px}
-.barra{height:6px;background:var(--afundado);border-radius:99px;margin:10px 0 4px;overflow:hidden}
-.barra i{display:block;height:100%;background:var(--acento)}
-.ir{margin-top:10px;font-weight:600}
-.ir a{display:inline-block;padding:8px 0;min-height:44px}
-.agenda{margin-top:18px}
-.ag-barras{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
-           gap:6px;height:112px;align-items:end}
+/* Hoje: as duas doses do dia, o que o olho acha primeiro -- numero grande, barra fina, nota curta */
+.dia h2{font-size:1.25rem;margin-bottom:var(--esp-4)}   /* abaixo do titulo da aba ("Painel"), acima das secoes */
+.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--esp-5) var(--esp-6)}
+.dose{min-width:0}
+.fracao{font-size:1rem;color:var(--tinta2)}
+.fracao b{font-size:var(--fs-numero);line-height:1.1;color:var(--tinta);font-weight:700;letter-spacing:-.02em;margin-right:var(--esp-1)}
+.barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-2) 0 var(--esp-1);overflow:hidden}
+.barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
+.ir{margin-top:var(--esp-2);font-weight:600}
+.ir a{display:inline-flex;align-items:center;min-height:44px}
+.agenda{margin-top:var(--esp-5)}
+.ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,4.5rem));
+           gap:var(--esp-2);height:112px;align-items:end}
 .ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
-.ag-barras i{display:block;width:min(100%,34px);background:var(--acento-fraco);border-top:3px solid var(--acento);border-radius:4px 4px 0 0}
-.ag-n{font-size:.8em;font-variant-numeric:tabular-nums;color:var(--tinta2)}
-.ag-d{font-size:.74em;color:var(--tinta3)}
+/* previsao (dado, nao acao): roxo, a cor de detalhe visual do tema */
+.ag-barras i{display:block;width:min(100%,28px);background:var(--roxo-fraco);border-top:2px solid var(--roxo);border-radius:var(--raio-p) var(--raio-p) 0 0}
+.ag-n{font-size:var(--fs-meta);color:var(--tinta2)}
+.ag-d{font-size:var(--fs-meta);color:var(--tinta3)}
 
 /* Semana */
-.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;align-items:baseline;
-        padding:10px 12px;background:var(--card);border:1px solid var(--linha);border-radius:10px}
-.tarefa.atrasada{border-left:4px solid var(--alerta)}
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-1) var(--esp-4);align-items:baseline;
+        padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
 .t-tema{min-width:0;font-weight:600;line-height:1.35}
-.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
-.t-rot{color:var(--tinta2);font-weight:600}
-.t-atraso{color:var(--alerta)}
-.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:.88em;text-align:right}
-.prox{margin-top:12px}
-.mais{margin-top:8px}
-.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:10px 0;min-height:44px}
-.mais .tarefas{margin-top:4px}
+.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
+.t-rot{color:var(--tinta2);font-weight:600;background:var(--afundado);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.t-atraso{color:var(--aviso)}
+.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 var(--esp-4)}
+.t-acao br{display:none}   /* as acoes ficam lado a lado (o <br> separa no texto puro) */
+.t-acao a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+/* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- rotulo "Proxima" e a acao como botao */
+[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
+[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-acao a:first-child{padding:0 var(--esp-3);border-radius:var(--raio);background:var(--acento);color:var(--sobre);text-decoration:none}
+.prox{margin-top:var(--esp-3)}
+.mais{margin-top:var(--esp-2)}
+.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:var(--esp-2) 0;min-height:44px}
+.mais .tarefas{margin-top:var(--esp-1)}
 /* A rota ate a prova (s213): cada semana futura recolhida; o resumo quebra linha, nunca alarga */
-.rota{margin-top:16px}
+.rota{margin-top:var(--esp-5)}
 .rota h3{margin-bottom:2px}
 .rota-sem{border-top:1px solid var(--linha)}
 .rota-sem:last-child{border-bottom:1px solid var(--linha)}
-.rota-sem>summary{cursor:pointer;padding:11px 0;min-height:44px}
+.rota-sem>summary{cursor:pointer;padding:var(--esp-3) 0;min-height:44px}
 .rota-tit{font-weight:650}
-.rota-n{color:var(--tinta3);font-size:.84em;margin-left:4px}
-.rota-sem .tarefas{margin:4px 0 14px}
+.rota-n{color:var(--tinta3);font-size:var(--fs-meta);margin-left:var(--esp-1)}
+.rota-sem .tarefas{margin:var(--esp-1) 0 var(--esp-3)}
 
-/* Ritmo */
-.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:10px;margin-top:10px}
-.fig{min-width:0;background:var(--afundado);border-radius:10px;padding:10px 12px}
-.fig-n{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
-.fig-r{font-size:.78em;color:var(--tinta3)}
-.fig.abaixo .fig-n{color:var(--alerta)}
-.fig.alvo{background:var(--acento-fraco)}
+/* Ritmo: quatro numeros sem caixa; o necessario por dia e a referencia (ciano); abaixo dele = ambar + texto */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-5);margin-top:var(--esp-3)}
+.fig{min-width:0}
+.fig-n{font-size:1.5rem;font-weight:700;line-height:1.2;color:var(--tinta)}
+.fig-r{font-size:var(--fs-meta);color:var(--tinta3)}
+.fig.abaixo .fig-n,.fig.abaixo .fig-r b{color:var(--aviso)}
+.fig.alvo .fig-n{color:var(--acento)}
 
 /* Blocos */
-table{width:100%;border-collapse:collapse;font-size:.9em;font-variant-numeric:tabular-nums;margin-top:8px}
-th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--linha)}
-thead th{font-size:.78em;color:var(--tinta3);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-legenda);margin-top:var(--esp-2)}
+th,td{text-align:left;padding:var(--esp-2);border-bottom:1px solid var(--linha)}
+thead th{font-size:var(--fs-meta);color:var(--tinta3);font-weight:600}
 tbody th{font-weight:650}
 tr.sim th,tr.sim td{color:var(--tinta2)}
 
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr)}
-  .t-acao{grid-column:1;grid-row:auto;text-align:left}
+  .t-acao{grid-column:1;grid-row:auto;justify-content:flex-start}
   th,td{padding:6px 5px}
-  table{font-size:.84em}
+  table{font-size:var(--fs-meta)}
 }
 </style>
-<style id="medhub-tema">/* MedHub tema v2.3 -- VICE CITY + ROSA (rosa conduz acao/identidade, ciano informacao), escuro por padrao (decisao dele, 12/10/2026: preto/noite + esta paleta;
-   acento ciano, fundo Ocean Night #0B0F2B, texto #F4F1FF; rosa = alerta; roxo e pessego = realces das aulas).
-   O claro (so com data-theme="light") segue indigo. Seletores (0,2,0) vencem o CSS de cada aula.
-   v1 (indigo sobre preto #000000) esta no git: commit 1d71743. */
-:root{--fonte:"Atkinson Hyperlegible Next",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif}
+<style id="medhub-tema">/* MedHub tema v3 -- RETROWAVE CONTIDO (13/10/2026). Fonte UNICA de cor, tipo, espaco e raio de todo o MedHub:
+   o hub (shell, Teoria, Listas), o player de cards, o painel e o leitor de aulas e resumos.
+   Mapa das telas, semantica das cores, escalas e regras de uso: docs/UI.md (ler antes de mexer).
+   - Trocar a paleta = trocar os DOIS blocos de cor abaixo (escuro e claro). Nada de cor literal fora daqui.
+   - Aqui so moram tokens e a base comum. Regra de componente mora no arquivo da tela: hub.html (shell, Teoria,
+     Listas), player.html (Cards), painel.py (Painel), tema-aula.css (leitor de aulas e resumos).
+   - Escuro por padrao (decisao dele, s224); o claro so com data-theme="light" (escolha explicita do visualizador).
+   - Seletores (0,2,0) de proposito: vencem o @media escuro que cada aula traz no proprio CSS (o leitor injeta
+     este arquivo DEPOIS do CSS da aula). Os apelidos em ingles (--paper, --ink, --teal...) servem as aulas.
+   v2.4 (ciano + rosa de alerta) esta no git: commit 730d884. */
+:root{
+  --fonte:"Atkinson Hyperlegible Next",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;
+  /* espaco: multiplos de 4 */
+  --esp-1:4px; --esp-2:8px; --esp-3:12px; --esp-4:16px; --esp-5:24px; --esp-6:32px; --esp-7:48px;
+  /* raio: cartoes e controles / pequeno (kbd, grifo, segmento) / pilula (so badges e chips) */
+  --raio:10px; --raio-p:6px; --raio-pilula:999px;
+  /* tipo: pagina > secao > item > corpo > legenda > meta; numero = metrica de destaque */
+  --fs-pagina:1.5rem; --fs-secao:1.125rem; --fs-item:1rem; --fs-legenda:.875rem; --fs-meta:.8125rem; --fs-numero:2rem;
+  /* a coluna unica do hub, do painel e do player (um .wrap so): ~85 caracteres por linha no desktop */
+  --wrap:46rem; --transicao:140ms ease;
+}
 :root:not([data-theme="light"]),:root[data-theme="dark"]{
-  /* Vice City: Ocean Night #0B0F2B, Vice Cyan #00F0FF, Sunset Pink #FF5CA8, Neon Purple #BC6CFF, Miami Peach #FFB86B */
-  --papel:#0B0F2B; --card:#131A45; --afundado:#1A2260;
-  --tinta:#F4F1FF; --tinta2:#CFC8F5; --tinta3:#8E92C9;
-  --linha:rgba(207,200,245,.16);
-  --acento:#00F0FF; --acento-fraco:#0C3347; --acento-tinta:#8CF7FF; --suave:#BC6CFF;
-  --alerta:#FF5CA8; --alerta-fraco:#3A1238;
+  /* superficies: fundo, secundaria, elevada/selecionada, divisoria, borda de controle (>= 3:1) */
+  --papel:#17132E; --card:#211C3A; --afundado:#29233F; --linha:#403858; --linha-forte:#776E99;
+  /* texto: principal 13,7-16,5:1 / secundario 7,4-8,9:1 / meta 5,3-6,4:1 sobre as tres superficies */
+  --tinta:#F8F5F2; --tinta2:#B8B3CC; --tinta3:#9C96B6;
+  /* identidade e interacao: ciano = navegacao ativa, foco, progresso, acao primaria; rosa = marca;
+     roxo = decoracao e dado visual; amarelo = marca-texto */
+  --acento:#00D9E8; --acento-tinta:#7DE8F0; --acento-fraco:#13334C;
+  --rosa:#FF4FA3; --rosa-fraco:#3C1D41;
+  --roxo:#AA71E8; --roxo-tinta:#BE95F0; --roxo-fraco:#2F224C;
+  --amarelo:#FFD447;
+  /* estado: sucesso, erro, aviso (+ lavagem para fundo) */
+  --ok:#79D6A5; --ok-fraco:#273241; --erro:#FF7C87; --erro-fraco:#3C243C; --aviso:#FFBE72; --aviso-fraco:#3C2E39;
+  --sobre:#17132E;   /* texto sobre preenchimento (botao primario, declaracao ligada) */
+  --horizonte:linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8);   /* o unico gradiente: a linha do topo */
+  --qz-grifo:#FFD447; --qz-grifo-tinta:#17132E;   /* literal: o hub le o valor computado para o leitor */
+  --sombra:none; color-scheme:dark;
+  /* apelidos legados (hub e player): mesmo significado, nome antigo */
+  --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
+  --qz-ok:var(--ok); --qz-ok-fraco:var(--ok-fraco); --qz-duv:var(--aviso); --qz-duv-fraco:var(--aviso-fraco);
+  --qz-chute:var(--roxo-tinta); --qz-chute-fraco:var(--roxo-fraco);
+  /* apelidos das aulas (CSS proprio de cada uma): teal = acento, amber = aviso, plum = roxo, carmine = erro */
   --paper:var(--papel); --sunk:var(--afundado); --ink:var(--tinta); --ink2:var(--tinta2); --ink3:var(--tinta3);
-  --line:var(--linha); --line2:rgba(207,200,245,.30);
-  --teal:#00F0FF; --teal-ink:#8CF7FF; --teal-wash:#0C3347;
-  --amber:#FFB86B; --amber-ink:#FFD3A0; --amber-wash:#3A2A1A;
-  --plum:#BC6CFF; --plum-ink:#D9AEFF; --plum-wash:#2A1A5C;
-  --carmine:#FF5CA8; --carmine-ink:#FF9CCB; --carmine-wash:#3A1238;
-  --on:#0B0F2B; --raio:12px; --sombra:none; color-scheme:dark;
+  --line:var(--linha); --line2:var(--linha-forte);
+  --teal:var(--acento); --teal-ink:var(--acento-tinta); --teal-wash:var(--acento-fraco);
+  --amber:var(--aviso); --amber-ink:#FFD3A0; --amber-wash:var(--aviso-fraco);
+  --plum:var(--roxo); --plum-ink:var(--roxo-tinta); --plum-wash:var(--roxo-fraco);
+  --carmine:var(--erro); --carmine-ink:#FFB3BA; --carmine-wash:var(--erro-fraco);
+  --on:var(--sobre);
 }
 :root[data-theme="light"]{
-  --papel:#F7F7FF; --card:#FFFFFF; --afundado:#ECECFB;
-  --tinta:#000042; --tinta2:#2E2E8A; --tinta3:#5959B8;
-  --linha:rgba(0,0,66,.13);
-  --acento:#4343A8; --acento-fraco:#E6E6FF; --acento-tinta:#171775; --suave:#8484DB;
-  --alerta:#9B2C4A; --alerta-fraco:#F8E5EA;
+  --papel:#F7F5FB; --card:#FFFFFF; --afundado:#EFEBF7; --linha:#DCD5E8; --linha-forte:#8E87AD;
+  --tinta:#1C1733; --tinta2:#4B4466; --tinta3:#625B7E;
+  --acento:#00737D; --acento-tinta:#005A62; --acento-fraco:#DDF1F4;
+  --rosa:#C2176F; --rosa-fraco:#F8E1EE;
+  --roxo:#7443B8; --roxo-tinta:#5E3596; --roxo-fraco:#ECE3F8;
+  --amarelo:#FFE066;
+  --ok:#1E7348; --ok-fraco:#E2F2E8; --erro:#B8303E; --erro-fraco:#FBE5E8; --aviso:#8F5200; --aviso-fraco:#FAEBD7;
+  --sobre:#FFFFFF;
+  --horizonte:linear-gradient(90deg,#C2176F,#7443B8 55%,#00737D);
+  --qz-grifo:#FFE066; --qz-grifo-tinta:#1C1733;
+  --sombra:none; color-scheme:light;
+  --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
+  --qz-ok:var(--ok); --qz-ok-fraco:var(--ok-fraco); --qz-duv:var(--aviso); --qz-duv-fraco:var(--aviso-fraco);
+  --qz-chute:var(--roxo-tinta); --qz-chute-fraco:var(--roxo-fraco);
   --paper:var(--papel); --sunk:var(--afundado); --ink:var(--tinta); --ink2:var(--tinta2); --ink3:var(--tinta3);
-  --line:var(--linha); --line2:rgba(0,0,66,.22);
-  --teal:#4343A8; --teal-ink:#171775; --teal-wash:#E6E6FF;
-  --amber:#6B6BC9; --amber-ink:#2E2E8A; --amber-wash:#EFEFFF;
-  --plum:#6B6BC9; --plum-ink:#2E2E8A; --plum-wash:#EFEFFF;
-  --carmine:#9B2C4A; --carmine-ink:#7A2039; --carmine-wash:#F8E5EA;
-  --on:#FFFFFF; color-scheme:light;
+  --line:var(--linha); --line2:var(--linha-forte);
+  --teal:var(--acento); --teal-ink:var(--acento-tinta); --teal-wash:var(--acento-fraco);
+  --amber:var(--aviso); --amber-ink:#7A4500; --amber-wash:var(--aviso-fraco);
+  --plum:var(--roxo); --plum-ink:var(--roxo-tinta); --plum-wash:var(--roxo-fraco);
+  --carmine:var(--erro); --carmine-ink:#962632; --carmine-wash:var(--erro-fraco);
+  --on:var(--sobre);
 }
 
-/* uma família só; !important porque as aulas declaram a fonte em atalhos `font:` espalhados */
-*{font-family:var(--fonte)!important;font-variant-numeric:tabular-nums}
+/* ======================================================== BASE (todas as telas, inclusive as aulas no leitor) */
+/* uma familia so (Atkinson: 0/O e 1/l distintos em dose e corte); !important porque as aulas declaram a fonte
+   em atalhos `font:` espalhados. Sem caixa-alta: os rotulos em maiusculas das aulas e do player viram texto comum */
+*{font-family:var(--fonte)!important;font-variant-numeric:tabular-nums;text-transform:none!important}
 body{background:var(--papel);color:var(--tinta);-webkit-font-smoothing:antialiased}
 :focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+::selection{background:var(--acento);color:var(--sobre)}
 strong{font-weight:650}
-
-/* ============================================================= HUB */
-.hub-marca{font-weight:700;letter-spacing:-.01em;font-size:1.1rem}
-.hub-abas{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:0;gap:0;margin-bottom:26px}
-.hub-aba{border-radius:0;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--tinta3);font-weight:600;letter-spacing:0}
-.hub-aba:hover{background:transparent;color:var(--tinta)}
-.hub-aba[aria-selected="true"]{background:transparent;box-shadow:none;color:var(--tinta);border-bottom-color:var(--acento)}
-.hub-titulo{font-weight:700;letter-spacing:-.02em}
-.hub-sub{color:var(--tinta3)}
-
-/* Teoria: de cartões para linhas */
-.qd-semanas{gap:34px}
-.qd-titulo{font-size:1.02rem;font-weight:700;color:var(--tinta);margin-bottom:2px}
-.qd-n{color:var(--tinta3);font-weight:500}
-.qd-lista{gap:0}
-.qd-bloco{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:14px 2px}
-.qd-item.qd-atrasada .qd-bloco{border-left:0}
-.qd-tema{font-weight:600;font-size:1.02em}
-.qd-meta{margin-top:5px;gap:4px 12px;align-items:center}
-.qd-bl{background:var(--acento-fraco);color:var(--acento-tinta);border-radius:6px;padding:1px 8px;font-size:.92em}
-.qd-atraso{color:var(--tinta3);font-weight:500}   /* o alerta aparece UMA vez, no titulo da secao */
-.qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--alerta)}
-.qd-alvo{padding-right:30px}
-.qd-alvo:hover{background:var(--afundado)}
-.qd-sem-aula .qd-bloco{border-style:solid}
-.qd-resumos{border:0;border-radius:0;background:transparent;margin-top:6px}
-.qd-resumos>summary{padding:8px 2px;color:var(--tinta3)}
-.qd-rlista{padding:0 2px 8px}
-.qd-rlista a,.qd-aulas a,.qd-acao a{font-weight:500;color:var(--acento-tinta)}
-.qd-bib{border-top:0;margin-top:40px}
-.qd-bib-tit{font-size:1.02rem;font-weight:700}
-details.qd-area>summary{font-weight:600;color:var(--tinta)}
-.qd-novas{border-radius:6px}
-.qd-disc-tit{font-weight:600}
-
-/* ======================================================== GLOBAL (todas as telas) */
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-/* sem caixa-alta: os eyebrows em maiusculas (aulas, player) viram texto comum */
-*{text-transform:none!important}
-.reason,.rot{letter-spacing:0}
-
-/* ============================================================ PAINEL (artifacts/painel.html) */
-.dia h2{font-weight:700;letter-spacing:-.02em}
-.dose{background:transparent;border:0;border-radius:0;padding:4px 0}
-.dose+.dose{border-top:1px solid var(--linha);padding-top:16px}
-.doses{gap:0 12px}
-.barra{background:var(--afundado)}
-.fig{background:transparent;border-top:1px solid var(--linha);border-radius:0;padding:10px 0}
-.fig.alvo{background:var(--acento-fraco);border-top:0;border-radius:12px;padding:10px 12px}
-.fig.abaixo .fig-n{color:var(--alerta)}
-.tarefa{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:12px 0}
-.tarefa.atrasada{border-left:0}
-.t-atraso{color:var(--tinta3)}
-.t-rot{color:var(--acento-tinta)}
-tr.sim th,tr.sim td{color:var(--tinta2)}
-
-/* ============================================================ LISTAS (aba Listas / Questoes) */
-.qz-lista{gap:0}
-.qz-lista button{background:transparent;border:0;border-bottom:1px solid var(--linha);border-radius:0;padding:14px 2px}
-.qz-lista button:hover{background:var(--afundado)}
-.qz-chip{background:var(--acento-fraco);color:var(--acento-tinta);border-radius:6px;font-weight:600}
-.qz-modo-lista{background:var(--afundado)}
-
-/* ============================================================ CARDS (player) */
-.card{box-shadow:none}
-.reason{border-radius:6px}
-/* ======================================================== ROSA (o rosa conduz acao e identidade; o ciano fica com informacao) */
-:root:not([data-theme="light"]),:root[data-theme="dark"]{--rosa:#FF5CA8;--rosa-fraco:#3A1238;--rosa-tinta:#FF9CCB}
-:root[data-theme="light"]{--rosa:#B8286B;--rosa-fraco:#F9E3EE;--rosa-tinta:#8A1A50}
-.hub-marca span{color:var(--rosa)}
-.hub-aba[aria-selected="true"]{border-bottom-color:var(--rosa)}
-.qd-bl,.qz-chip,.reason{background:var(--rosa-fraco);color:var(--rosa-tinta)}
-.qd-alvo:hover::after{color:var(--rosa)}
-.qd-sem[data-secao=atrasadas] .qd-titulo{color:var(--rosa-tinta)}
-.fracao b{color:var(--rosa-tinta)}
-.fig.alvo{background:var(--rosa-fraco)}
-.fig.alvo .fig-n{color:var(--rosa-tinta)}
-.barra i{background:linear-gradient(90deg,var(--rosa),var(--acento))}
-.ag-barras i{border-top-color:var(--rosa);background:var(--rosa-fraco)}
-.t-rot{color:var(--rosa-tinta)}
-.dnum{color:var(--rosa)}
-.rail a.on{box-shadow:inset 2px 0 0 var(--rosa)}
-.rail a.on .rn{color:var(--rosa-tinta)}
-.top h1{text-shadow:0 0 28px rgba(255,92,168,.25)}
-.aside{background:var(--rosa-fraco)} .aside .albl{color:var(--rosa-tinta)}
-
-/* v2.2 (escolhas dele em 12/10/2026): botao principal = ciano; titulos, barras de progresso e SELECAO em rosa */
-::selection{background:var(--rosa);color:var(--papel)}
-.hub-titulo,.qd-titulo,.qd-bib-tit,.bloco h2,.dia h2{color:var(--rosa-tinta)}
-.qd-n{color:var(--tinta3)}
-.dist-barra i,.qz-trilho i.f{background:linear-gradient(90deg,var(--rosa),var(--acento))}
-.qz-trilho i.atual{outline-color:var(--rosa)}
-.qz-alt.marcada{border-color:var(--rosa);background:var(--rosa-fraco)}
-.qz-elo button.on{border-color:var(--rosa);color:var(--rosa-tinta);background:var(--rosa-fraco)}
-.pausa[aria-pressed="true"]{border-color:var(--rosa);background:var(--rosa-fraco);color:var(--rosa-tinta)}
-.qz-lista li.qz-recente > button{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-fraco)}
-.hub-aba:focus-visible{outline-color:var(--rosa)}
-
-/* grifo salvo (marca-texto do leitor e das Listas): o hub le --qz-grifo; era ambar, agora rosa como a selecao */
-:root:not([data-theme="light"]),:root[data-theme="dark"]{--qz-grifo:#FF5CA8;--qz-grifo-tinta:#0B0F2B}
-:root[data-theme="light"]{--qz-grifo:#FFB3D4;--qz-grifo-tinta:#3A1238}
-/* pontos pequenos de destaque: cabecalho de tabela em rosa claro */
-thead th{color:var(--rosa-tinta)}
 </style>
 </head>
 <body>
 <div class="wrap">
-<p class="atualizado"><!--gerado--><span data-gerado="2026-10-12T20:41:00" data-gerado-iso="2026-10-12T20:41:00" data-fallback="atualizado em 12/10, 20:41">atualizado em 12/10, 20:41</span><!--/gerado--></p>
+<p class="atualizado"><!--gerado--><span data-gerado="2026-10-13T00:46:39" data-gerado-iso="2026-10-13T00:46:39" data-fallback="atualizado em 13/10, 00:46">atualizado em 13/10, 00:46</span><!--/gerado--></p>
 <section class="bloco dia" data-bloco="dia">
-<h2>Hoje, segunda 12/10</h2>
+<h2>Hoje, terça 13/10</h2>
 <div class="doses" data-sessao-gravada="2026-10-08b">
-  <div class="dose"><h3>Questões</h3><p class="fracao"><b data-vivo="questoes" data-base="41">41</b> de ~113</p><div class="barra"><i style="width:36.3%"></i></div><p class="nota">para 10.000 em 01/11: faltam 2.242 em 20 dias.</p></div>
-  <div class="dose"><h3>Cards</h3><p class="fracao"><b data-vivo="cards" data-base="0">0</b> de 150</p><div class="barra"><i style="width:0.0%"></i></div><p class="nota">faltam 150 hoje.</p><p class="nota">147 vencidos agora, 695 novos esperando, retenção de 89,3% em 7 dias.</p><p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>
+  <div class="dose"><h3>Questões</h3><p class="fracao"><b data-vivo="questoes" data-base="0">0</b> de ~118</p><div class="barra"><i style="width:0.0%"></i></div><p class="nota">para 10.000 em 01/11: faltam 2.242 em 19 dias.</p></div>
+  <div class="dose"><h3>Cards</h3><p class="fracao"><b data-vivo="cards" data-base="0">0</b> de 150</p><div class="barra"><i style="width:0.0%"></i></div><p class="nota">faltam 150 hoje.</p><p class="nota">178 vencidos agora, 695 novos esperando, retenção de 89,3% em 7 dias.</p><p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>
 </div>
-<div class="agenda"><h3>Revisões nos próximos 7 dias</h3><ol class="ag-barras" aria-label="Revisões por dia"><li><span class="ag-n">31</span><span class="ag-trilho"><i style="height:100%"></i></span><span class="ag-d">ter</span></li><li><span class="ag-n">30</span><span class="ag-trilho"><i style="height:97%"></i></span><span class="ag-d">qua</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:68%"></i></span><span class="ag-d">qui</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:68%"></i></span><span class="ag-d">sex</span></li><li><span class="ag-n">22</span><span class="ag-trilho"><i style="height:71%"></i></span><span class="ag-d">sáb</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:68%"></i></span><span class="ag-d">dom</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:45%"></i></span><span class="ag-d">seg</span></li></ol></div>
+<div class="agenda"><h3>Revisões nos próximos 7 dias</h3><ol class="ag-barras" aria-label="Revisões por dia"><li><span class="ag-n">30</span><span class="ag-trilho"><i style="height:100%"></i></span><span class="ag-d">qua</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">qui</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">sex</span></li><li><span class="ag-n">22</span><span class="ag-trilho"><i style="height:73%"></i></span><span class="ag-d">sáb</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">dom</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">seg</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">ter</span></li></ol></div>
 </section>
 <section class="bloco ritmo" data-bloco="ritmo">
 <h2>Ritmo de questões</h2>
-<div class="figs"><div class="fig abaixo"><p class="fig-n">30,0</p><p class="fig-r">por dia nos últimos 7 dias</p></div><div class="fig"><p class="fig-n">19,3</p><p class="fig-r">por dia nos últimos 14 dias</p></div><div class="fig alvo"><p class="fig-n">112,1</p><p class="fig-r">por dia até a prova de 01/11 (faltam 2.242 para 10.000)</p></div><div class="fig"><p class="fig-n">78,5%</p><p class="fig-r">de acerto em 7.758 questões</p></div></div>
+<div class="figs"><div class="fig abaixo"><p class="fig-n">27,0</p><p class="fig-r">por dia nos últimos 7 dias</p><p class="fig-r"><b>abaixo do necessário</b></p></div><div class="fig"><p class="fig-n">19,3</p><p class="fig-r">por dia nos últimos 14 dias</p></div><div class="fig alvo"><p class="fig-n">118,0</p><p class="fig-r">por dia até a prova de 01/11 (faltam 2.242 para 10.000)</p></div><div class="fig"><p class="fig-n">78,5%</p><p class="fig-r">de acerto em 7.758 questões</p></div></div>
 <p class="nota">O plano da Fase 1 tem 2.189 questões nas listas e 470 nos simulados em aberto. Fechando tudo, você chega a 10.417 em 01/11 (417 acima da meta).</p>
 </section>
 <section class="bloco semana" data-bloco="semana">
 <h2>Semana 5 do plano</h2>
-<p class="sub">12/10 a 18/10, 7 dia(s) contando hoje. 53 tarefa(s) em aberto, 1.541 questões. 22 vêm atrasadas de semana anterior.</p>
+<p class="sub">12/10 a 18/10, 6 dia(s) contando hoje. 53 tarefa(s) em aberto, 1.541 questões. 22 vêm atrasadas de semana anterior.</p>
 <ol class="tarefas"><li class="tarefa atrasada" data-tarefa="882"><p class="t-tema">Saúde mental na APS: depressão, luto e insônia no idoso; abstinência alcoólica; RAPS em 1 tela</p><p class="t-meta"><span class="t-rot">MFC</span> <span>20 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="1797"><p class="t-tema">Tuberculose 360: adulto, criança (RIP sem etambutol &lt; 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/tb-360.html" data-hub-aula="tb-360" data-titulo="Tuberculose 360">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="651"><p class="t-tema">Doença de Kawasaki</p><p class="t-meta"><span class="t-rot">PED</span> <span>30 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/kawasaki.html" data-hub-aula="kawasaki" data-titulo="Doença de Kawasaki">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="768"><p class="t-tema">Síndromes Aórticas Agudas · Cardiomiopatias · Pericardiopatias</p><p class="t-meta"><span class="t-rot">CM</span> <span>19 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/aorta-cardiomiopatias-pericardio.html" data-hub-aula="aorta-cardiomiopatias-pericardio" data-titulo="Aorta, Miocárdio e Pericárdio">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="1"><p class="t-tema">Medicina de Família e Comunidade</p><p class="t-meta"><span class="t-rot">MFC</span> <span>45 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="22"><p class="t-tema">Pré-Natal; Assistência ao Parto; Vitalidade Fetal</p><p class="t-meta"><span class="t-rot">GO</span> <span>34 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="5424"><p class="t-tema">Imagem obstétrica: cardiotocografia, partograma e estática fetal</p><p class="t-meta"><span class="t-rot">GO</span> <span>14 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/imagem-obstetrica.html" data-hub-aula="imagem-obstetrica" data-titulo="Imagem obstétrica">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="590"><p class="t-tema">Anatomia e Embriologia do Trato Genital Feminino · Doenças de vulva e vagina</p><p class="t-meta"><span class="t-rot">GO</span> <span>15 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/vulva-vagina-anatomia.html" data-hub-aula="vulva-vagina-anatomia" data-titulo="Embriologia, Vulva e Vagina">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="819"><p class="t-tema">Infecções Congênitas</p><p class="t-meta"><span class="t-rot">PED</span> <span>29 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="141"><p class="t-tema">Doenças Neuromusculares</p><p class="t-meta"><span class="t-rot">CM</span> <span>24 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/neuromusculares.html" data-hub-aula="neuromusculares" data-titulo="Doenças Neuromusculares">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="832"><p class="t-tema">Testes Diagnósticos</p><p class="t-meta"><span class="t-rot">MFC</span> <span>32 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="833"><p class="t-tema">Temas Gerais em Cirurgia</p><p class="t-meta"><span class="t-rot">CIR</span> <span>39 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="19"><p class="t-tema">Hipertensão Arterial Sistêmica</p><p class="t-meta"><span class="t-rot">CM</span> <span>40 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="63"><p class="t-tema">Sangramento da Segunda Metade</p><p class="t-meta"><span class="t-rot">GO</span> <span>20 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="393"><p class="t-tema">Apendicite Aguda · Colecistite e Colangite Aguda · Diverticulite Aguda</p><p class="t-meta"><span class="t-rot">CIR</span> <span>48 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="380"><p class="t-tema">Arboviroses · HIV · Tuberculose · Meningites e Meningoencefalites</p><p class="t-meta"><span class="t-rot">CM</span> <span>47 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="112"><p class="t-tema">Gestação Múltipla</p><p class="t-meta"><span class="t-rot">GO</span> <span>21 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="577"><p class="t-tema">Infecção de Trato Urinário em Pediatria</p><p class="t-meta"><span class="t-rot">PED</span> <span>41 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="376"><p class="t-tema">Meningites e Meningoencefalites</p><p class="t-meta"><span class="t-rot">CM</span> <span>30 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="683"><p class="t-tema">Vesícula e Vias Biliares</p><p class="t-meta"><span class="t-rot">CIR</span> <span>37 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa atrasada" data-tarefa="367"><p class="t-tema">Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia</p><p class="t-meta"><span class="t-rot">CM</span> <span>15 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/tireoide-nodulo-cancer.html" data-hub-aula="tireoide-nodulo-cancer" data-titulo="Nódulo e Câncer de Tireoide">abrir aula</a></p></li><li class="tarefa atrasada" data-tarefa="1794"><p class="t-tema">UERJ 2022 -- prova INTEIRA (60q), cronometrada, 5 blocos</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>60 questões</span> <span class="t-atraso">da semana 4</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li></ol><details class="mais"><summary>Ver as outras 31</summary><ol class="tarefas" start="23"><li class="tarefa" data-tarefa="122"><p class="t-tema">Complicações Pós-Operatórias</p><p class="t-meta"><span class="t-rot">CIR</span> <span>24 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="878"><p class="t-tema">Método Clínico Centrado na Pessoa e decisão compartilhada</p><p class="t-meta"><span class="t-rot">MFC</span> <span>15 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/mccp-decisao-compartilhada.html" data-hub-aula="mccp-decisao-compartilhada" data-titulo="MCCP e decisão compartilhada">abrir aula</a></p></li><li class="tarefa" data-tarefa="876"><p class="t-tema">Avaliação Multidimensional do Idoso</p><p class="t-meta"><span class="t-rot">MFC</span> <span>12 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/idoso-amg-polifarmacia.html" data-hub-aula="idoso-amg-polifarmacia" data-titulo="Idoso: avaliação e polifarmácia">abrir aula</a></p></li><li class="tarefa" data-tarefa="879"><p class="t-tema">Polifarmácia, desprescrição e RAM no idoso</p><p class="t-meta"><span class="t-rot">MFC</span> <span>10 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/idoso-amg-polifarmacia.html" data-hub-aula="idoso-amg-polifarmacia" data-titulo="Idoso: avaliação e polifarmácia">abrir aula</a></p></li><li class="tarefa" data-tarefa="5425"><p class="t-tema">Rodapés de retorno alto: lombalgia na APS, violência e negligência (notificação), dengue e prova do laço, SHU x PTT, derrame pleural (Light), síndrome de Down, pele na criança</p><p class="t-meta"><span class="t-rot">MFC</span> <span>14 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/rodapes-retorno-alto.html" data-hub-aula="rodapes-retorno-alto" data-titulo="Rodapés de retorno alto">abrir aula</a></p></li><li class="tarefa" data-tarefa="811"><p class="t-tema">Anemias macrocíticas · Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/anemias-macrociticas.html" data-hub-aula="anemias-macrociticas" data-titulo="Anemias Macrocíticas">Anemias Macrocíticas</a><br><a href="aulas/oncohemato-cronicas.html" data-hub-aula="oncohemato-cronicas" data-titulo="Leucemias Crônicas, Linfomas e Mieloproliferações">Leucemias Crônicas, Linfomas e Mieloproliferações</a></p></li><li class="tarefa" data-tarefa="98"><p class="t-tema">Incontinência Urinária</p><p class="t-meta"><span class="t-rot">GO</span> <span>21 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="1796"><p class="t-tema">Condições crônicas na APS: metas e manejo ambulatorial (HAS, DM2, DRC, DPOC, IC)</p><p class="t-meta"><span class="t-rot">MFC</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/cronicas-aps-metas.html" data-hub-aula="cronicas-aps-metas" data-titulo="Crônicas na APS: metas e manejo">abrir aula</a></p></li><li class="tarefa" data-tarefa="310"><p class="t-tema">Adrenal - Hipocortisolismo</p><p class="t-meta"><span class="t-rot">CM</span> <span>15 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/insuficiencia-adrenal.html" data-hub-aula="insuficiencia-adrenal" data-titulo="Insuficiência Adrenal">abrir aula</a></p></li><li class="tarefa" data-tarefa="777"><p class="t-tema">IAMCSSST (Infarto Agudo do Miocardio)</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/iamcsst.html" data-hub-aula="iamcsst" data-titulo="IAM com Supra de ST">abrir aula</a></p></li><li class="tarefa" data-tarefa="60"><p class="t-tema">Reanimação Neonatal</p><p class="t-meta"><span class="t-rot">PED</span> <span>18 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="127"><p class="t-tema">Endocardite Bacteriana - Endocardite Infecciosa</p><p class="t-meta"><span class="t-rot">CM</span> <span>17 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="144"><p class="t-tema">Complicações Pós-Operatórias</p><p class="t-meta"><span class="t-rot">CIR</span> <span>35 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="354"><p class="t-tema">Cardiopatias Congênitas · Cuidados Neonatais · Asma · Aleitamento Materno</p><p class="t-meta"><span class="t-rot">PED</span> <span>57 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="698"><p class="t-tema">Infertilidade Conjugal</p><p class="t-meta"><span class="t-rot">GO</span> <span>33 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="72"><p class="t-tema">Reanimação Neonatal</p><p class="t-meta"><span class="t-rot">PED</span> <span>32 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="887"><p class="t-tema">Oncologia pediátrica pelos sinais de alarme (leucemia, linfoma, neuroblastoma, tumor ósseo, tiflite) + Wilms x neuroblastoma</p><p class="t-meta"><span class="t-rot">PED</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="55"><p class="t-tema">Valvopatias</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="751"><p class="t-tema">Disnatremias</p><p class="t-meta"><span class="t-rot">CM</span> <span>35 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="58"><p class="t-tema">Diarreia; Pneumonias na Infância; Choque em Pediatria; Alergia Alimentar</p><p class="t-meta"><span class="t-rot">PED</span> <span>41 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="74"><p class="t-tema">Câncer de Colo Uterino</p><p class="t-meta"><span class="t-rot">GO</span> <span>25 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="308"><p class="t-tema">Anemias Hemolíticas</p><p class="t-meta"><span class="t-rot">CM</span> <span>25 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="91"><p class="t-tema">Valvopatias</p><p class="t-meta"><span class="t-rot">CM</span> <span>34 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="320"><p class="t-tema">Pancreatite Aguda e Crônica</p><p class="t-meta"><span class="t-rot">CM</span> <span>39 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="11"><p class="t-tema">Neoplasias de Estômago e Esôfago</p><p class="t-meta"><span class="t-rot">CM</span> <span>26 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="557"><p class="t-tema">Complicações da Cirrose Hepática</p><p class="t-meta"><span class="t-rot">CM</span> <span>23 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="620"><p class="t-tema">Anafilaxia e Urticária</p><p class="t-meta"><span class="t-rot">PED</span> <span>32 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="115"><p class="t-tema">Doenças Glomerulares Infecção do Trato Urinário</p><p class="t-meta"><span class="t-rot">CM</span> <span>32 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/glomerulopatias.html" data-hub-aula="glomerulopatias" data-titulo="Doenças Glomerulares">abrir aula</a></p></li><li class="tarefa" data-tarefa="125"><p class="t-tema">Obesidade Infantil e na Adolescência</p><p class="t-meta"><span class="t-rot">PED</span> <span>24 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="67"><p class="t-tema">Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica</p><p class="t-meta"><span class="t-rot">CM</span> <span>22 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="892"><p class="t-tema">UERJ 2024 -- prova INTEIRA (100q), cronometrada, 5 blocos</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>100 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li></ol></details>
 <div class="rota"><h3>Até a prova</h3><details class="rota-sem"><summary><span class="rota-tit">Semana 6 · 19/10 a 25/10</span> <span class="rota-n">22&nbsp;tarefas · 693&nbsp;questões</span></summary><ol class="tarefas"><li class="tarefa" data-tarefa="84"><p class="t-tema">Câncer de Colo Uterino</p><p class="t-meta"><span class="t-rot">GO</span> <span>38 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="880"><p class="t-tema">Cuidados paliativos e dor crônica na APS</p><p class="t-meta"><span class="t-rot">MFC</span> <span>15 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="483"><p class="t-tema">Doença Celíaca em Pediatria · Febre Reumática</p><p class="t-meta"><span class="t-rot">PED</span> <span>14 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="740"><p class="t-tema">Oncologia Ortopédica e Osteomielite</p><p class="t-meta"><span class="t-rot">CM</span> <span>10 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="97"><p class="t-tema">Abdome Agudo Obstrutivo</p><p class="t-meta"><span class="t-rot">CIR</span> <span>19 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="123"><p class="t-tema">Assistência à Vítima de Violência Sexual</p><p class="t-meta"><span class="t-rot">GO</span> <span>28 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="1795"><p class="t-tema">Abordagem familiar e ciclos de vida (genograma, ecomapa, tipos de família, crises)</p><p class="t-meta"><span class="t-rot">MFC</span> <span>15 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="325"><p class="t-tema">Pré-Natal · Distúrbios Hipertensivos da Gestação · Sífilis na Gestação e Sífilis Congênita · Sangramento da Primeira Metade</p><p class="t-meta"><span class="t-rot">GO</span> <span>49 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="110"><p class="t-tema">Abdome Agudo Obstrutivo</p><p class="t-meta"><span class="t-rot">CIR</span> <span>32 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="754"><p class="t-tema">Doença de Kawasaki · Distúrbios Metabólicos do Neonato · Síndromes Genéticas e Erros Inatos do Metabolismo · Tuberculose</p><p class="t-meta"><span class="t-rot">PED</span> <span>51 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/kawasaki.html" data-hub-aula="kawasaki" data-titulo="Doença de Kawasaki">abrir aula</a></p></li><li class="tarefa" data-tarefa="494"><p class="t-tema">Doença Inflamatória Intestinal</p><p class="t-meta"><span class="t-rot">CM</span> <span>32 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="805"><p class="t-tema">Nutrição em cirurgia</p><p class="t-meta"><span class="t-rot">CIR</span> <span>35 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="613"><p class="t-tema">Câncer do Corpo do Útero</p><p class="t-meta"><span class="t-rot">GO</span> <span>33 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="119"><p class="t-tema">Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância</p><p class="t-meta"><span class="t-rot">PED</span> <span>48 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="889"><p class="t-tema">Saúde mental do adolescente: anorexia nervosa, depressão e risco de suicídio (TEA em 1 tela)</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="102"><p class="t-tema">Disfagia, Alterações Estruturais e Dist. Mort.</p><p class="t-meta"><span class="t-rot">CM</span> <span>22 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="823"><p class="t-tema">Hemorragia Digestiva Alta Varicosa</p><p class="t-meta"><span class="t-rot">CM</span> <span>40 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="734"><p class="t-tema">Miomatose Uterina</p><p class="t-meta"><span class="t-rot">GO</span> <span>40 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="107"><p class="t-tema">Neoplasias Pulmonares</p><p class="t-meta"><span class="t-rot">CM</span> <span>16 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="114"><p class="t-tema">Osteoporose e Doença óssea de Paget</p><p class="t-meta"><span class="t-rot">CM</span> <span>19 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="467"><p class="t-tema">Tromboembolismo Pulmonar</p><p class="t-meta"><span class="t-rot">CM</span> <span>20 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="891"><p class="t-tema">UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>97 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li></ol></details><details class="rota-sem"><summary><span class="rota-tit">Semana 7 · 26/10 a 31/10</span> <span class="rota-n">9&nbsp;tarefas · 425&nbsp;questões</span></summary><ol class="tarefas"><li class="tarefa" data-tarefa="5426"><p class="t-tema">Revisão final por banca (LEITURA): caderno de reta final, capítulos 1 a 10</p><p class="t-meta"><span class="t-rot">MFC</span> <span>aula a preparar</span></p><p class="t-acao"></p></li><li class="tarefa" data-tarefa="890"><p class="t-tema">UERJ 2026 -- prova INTEIRA (100q), cronometrada, 5 blocos</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>100 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li><li class="tarefa" data-tarefa="1798"><p class="t-tema">Caderno UERJ 2017-2020 no banco do EMED (filtro instituição=UERJ, anos 2017-2020) -- parte 1</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>59 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li><li class="tarefa" data-tarefa="1799"><p class="t-tema">Caderno UERJ 2017-2020 no banco do EMED (filtro instituição=UERJ, anos 2017-2020) -- parte 2</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>54 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a></p></li><li class="tarefa" data-tarefa="106"><p class="t-tema">Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia</p><p class="t-meta"><span class="t-rot">GO</span> <span>45 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="498"><p class="t-tema">Reanimação neonatal · Crescimento · Tópicos em Pediatria</p><p class="t-meta"><span class="t-rot">PED</span> <span>47 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="826"><p class="t-tema">Disfagia, Alterações Estruturais e Distúrbios da Motilidade · Hemorragia Digestiva Alta Varicosa</p><p class="t-meta"><span class="t-rot">CM</span> <span>38 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="4"><p class="t-tema">Processo Saúde-Doença · Medicina de Família e Comunidade · Saúde do Idoso</p><p class="t-meta"><span class="t-rot">MFC</span> <span>35 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li><li class="tarefa" data-tarefa="846"><p class="t-tema">Pesquisa Epidemiológica e Medidas de Associação · História do SUS · Testes Diagnósticos</p><p class="t-meta"><span class="t-rot">MFC</span> <span>47 questões</span></p><p class="t-acao"><a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a></p></li></ol></details></div>
 </section>

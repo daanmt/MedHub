@@ -42,6 +42,36 @@ td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
 .q .tag{font-size:12px;color:var(--plum-ink);display:block;margin-bottom:3px}
 .q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;font-size:14px}
 .q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);font-size:15px}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
 </style>
 
 <div class="wrap">
@@ -81,7 +111,12 @@ td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
       <tr><td>5-7 dias</td><td>Infecção de ferida</td></tr>
       <tr><td>&gt; 7 dias</td><td>Abscesso intra-abdominal, fístula, deiscência, TEV</td></tr>
     </table></div>
-    <div class="trap">Você riscou a atelectasia. A cirurgia de pâncreas puxa para "complicação do pâncreas", mas fístula e pancreatite de coto não dão febre em 24 h.</div>
+    <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Febre: o dia escolhe a causa</b></p>
+  <svg viewBox="0 0 340 208" role="img" aria-label="Febre pós-operatória pelo dia: 0 a 48 h atelectasia e SIRS; 3 a 5 dias ITU e pneumonia; 5 a 7 dias infecção de ferida; após 7 dias abscesso, fístula, deiscência e TEV. A questão: 24 h, atelectasia."><text class="fa-m" x="0" y="46">Atelectasia, SIRS</text><rect class="fa-alvo" x="168.0" y="34" width="38.0" height="18" rx="4"/><text class="fa-m" x="0" y="80">ITU (sonda), pneumonia</text><rect class="fa-fundo" x="225.0" y="68" width="38.0" height="18" rx="4"/><text class="fa-m" x="0" y="114">Infecção de ferida</text><rect class="fa-fundo" x="263.0" y="102" width="38.0" height="18" rx="4"/><text class="fa-m" x="0" y="142">Abscesso, fístula,</text><text class="fa-m" x="0" y="156">deiscência, TEV</text><rect class="fa-fundo" x="301.0" y="136" width="26.6" height="18" rx="4"/><line class="fa-eixo" x1="168" y1="172" x2="327.6" y2="172"/><line class="fa-eixo" x1="168.0" y1="172" x2="168.0" y2="176"/><text class="fa-s" x="168.0" y="188" text-anchor="middle">0</text><line class="fa-eixo" x1="187.0" y1="172" x2="187.0" y2="176"/><text class="fa-s" x="187.0" y="188" text-anchor="middle">1</text><line class="fa-eixo" x1="206.0" y1="172" x2="206.0" y2="176"/><text class="fa-s" x="206.0" y="188" text-anchor="middle">2</text><line class="fa-eixo" x1="225.0" y1="172" x2="225.0" y2="176"/><text class="fa-s" x="225.0" y="188" text-anchor="middle">3</text><line class="fa-eixo" x1="244.0" y1="172" x2="244.0" y2="176"/><text class="fa-s" x="244.0" y="188" text-anchor="middle">4</text><line class="fa-eixo" x1="263.0" y1="172" x2="263.0" y2="176"/><text class="fa-s" x="263.0" y="188" text-anchor="middle">5</text><line class="fa-eixo" x1="282.0" y1="172" x2="282.0" y2="176"/><text class="fa-s" x="282.0" y="188" text-anchor="middle">6</text><line class="fa-eixo" x1="301.0" y1="172" x2="301.0" y2="176"/><text class="fa-s" x="301.0" y="188" text-anchor="middle">7</text><line class="fa-eixo" x1="320.0" y1="172" x2="320.0" y2="176"/><text class="fa-s" x="320.0" y="188" text-anchor="middle">7+</text><text class="fa-s" x="244.0" y="202" text-anchor="middle">dia de pós-operatório</text><line class="fa-marca" x1="187.0" y1="22" x2="187.0" y2="172"/><circle class="fa-ponto-av" cx="187.0" cy="22" r="3.5"/><text class="fa-av" x="177.0" y="14">Q: febre com 24 h</text></svg>
+  <figcaption>Esquema da tabela acima: o eixo é o dia de pós-operatório, cada faixa a causa típica; a linha marca as 24 h da questão, ainda na faixa da atelectasia. A fístula pancreática só se define após o 3º dia.<span class="fa-src">Fonte: resumos/Cirurgia/30. Complicações Pós-Operatórias.pdf (febre pós-operatória; íleo; infecção de sítio cirúrgico; fístula pancreática)</span></figcaption>
+</figure>
+  <div class="trap">Você riscou a atelectasia. A cirurgia de pâncreas puxa para "complicação do pâncreas", mas fístula e pancreatite de coto não dão febre em 24 h.</div>
   </div>
   <div class="blk">
     <h3>Íleo: o delgado volta primeiro</h3>

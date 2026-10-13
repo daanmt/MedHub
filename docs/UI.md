@@ -201,6 +201,13 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 - **L9** outliers de paleta (autópsia: 18 tokens próprios; neuromusculares: `--acc*`): **pendente** (mapeamento no §8.3 do inventário).
 - **L2, L10-L15**: **pendentes** (ver o inventário).
 
+**Figura de mecanismo na aula (s226, painel-dashboard-sprint part-2, teste nas 5 RDs da UERJ 2022):** `figure.fig-an`
+no CSS da própria aula -- moldura `--card` + `--line2` (cabeçalho "Fig n · esquema" à esquerda e o título à direita),
+SVG inline com `viewBox` e `max-width:26rem` dentro da moldura, `role="img"` + `aria-label` com o que a figura diz,
+legenda curta + `Fonte:` = a fonte da seção. Cor só pelos apelidos das aulas (`--teal*`, `--amber*`, `--plum*`, `--ink*`,
+`--line2`, `--sunk`, `--card`): herda o claro e o escuro do leitor. Nenhum fato que a seção não diga; dado ilustrativo
+declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esqueleto do `documentoCompleto` do leitor.
+
 ## 10. Achados da varredura s225 (13/10/2026)
 
 | # | Achado | Onde | Estado |

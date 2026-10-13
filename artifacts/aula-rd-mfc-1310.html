@@ -39,6 +39,36 @@ td.nao{color:var(--carmine-ink);font-weight:600}
 .q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
 .q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
 .q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
 </style>
 
 <div class="wrap">
@@ -63,6 +93,11 @@ td.nao{color:var(--carmine-ink);font-weight:600}
     <tr><td>Sensível</td><td>Falso negativo</td><td class="sim">Negativo</td><td>Exclui</td></tr>
     <tr><td>Específico</td><td>Falso positivo</td><td class="sim">Positivo</td><td>Confirma</td></tr>
   </table></div>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Cada teste decide por um lado</b></p>
+  <svg viewBox="0 0 344 214" role="img" aria-label="Teste sensível: os doentes caem quase todos no positivo, então o grupo negativo tem só sadios: negativo exclui. Teste específico: os sadios caem quase todos no negativo, então o grupo positivo tem só doentes: positivo confirma. Pontos ilustrativos, não são dados."><text class="fa-t" x="86" y="16" text-anchor="middle">Teste sensível</text><text class="fa-s" x="86" y="32" text-anchor="middle">quase não deixa doente passar</text><rect class="fa-fundo" x="12" y="44" width="66" height="96" rx="8"/><circle class="fa-doente" cx="26" cy="60" r="6"/><circle class="fa-doente" cx="45" cy="60" r="6"/><circle class="fa-doente" cx="64" cy="60" r="6"/><circle class="fa-doente" cx="26" cy="79" r="6"/><circle class="fa-doente" cx="45" cy="79" r="6"/><circle class="fa-doente" cx="64" cy="79" r="6"/><circle class="fa-doente" cx="26" cy="98" r="6"/><circle class="fa-doente" cx="45" cy="98" r="6"/><circle class="fa-sadio" cx="64" cy="98" r="6"/><circle class="fa-sadio" cx="26" cy="117" r="6"/><circle class="fa-sadio" cx="45" cy="117" r="6"/><text class="fa-m" x="45" y="156" text-anchor="middle">positivo</text><rect class="fa-alvo" x="86" y="44" width="66" height="96" rx="8"/><circle class="fa-sadio" cx="100" cy="60" r="6"/><circle class="fa-sadio" cx="119" cy="60" r="6"/><circle class="fa-sadio" cx="138" cy="60" r="6"/><circle class="fa-sadio" cx="100" cy="79" r="6"/><circle class="fa-sadio" cx="119" cy="79" r="6"/><text class="fa-m" x="119" y="156" text-anchor="middle">negativo</text><text class="fa-ok" x="119" y="176" text-anchor="middle">negativo exclui</text><line class="fa-eixo" x1="176" y1="8" x2="176" y2="186"/><text class="fa-t" x="270" y="16" text-anchor="middle">Teste específico</text><text class="fa-s" x="270" y="32" text-anchor="middle">quase não acusa sadio</text><rect class="fa-alvo" x="200" y="44" width="66" height="96" rx="8"/><circle class="fa-doente" cx="214" cy="60" r="6"/><circle class="fa-doente" cx="233" cy="60" r="6"/><circle class="fa-doente" cx="252" cy="60" r="6"/><circle class="fa-doente" cx="214" cy="79" r="6"/><circle class="fa-doente" cx="233" cy="79" r="6"/><text class="fa-m" x="233" y="156" text-anchor="middle">positivo</text><rect class="fa-fundo" x="274" y="44" width="66" height="96" rx="8"/><circle class="fa-doente" cx="288" cy="60" r="6"/><circle class="fa-doente" cx="307" cy="60" r="6"/><circle class="fa-doente" cx="326" cy="60" r="6"/><circle class="fa-sadio" cx="288" cy="79" r="6"/><circle class="fa-sadio" cx="307" cy="79" r="6"/><circle class="fa-sadio" cx="326" cy="79" r="6"/><circle class="fa-sadio" cx="288" cy="98" r="6"/><circle class="fa-sadio" cx="307" cy="98" r="6"/><circle class="fa-sadio" cx="326" cy="98" r="6"/><circle class="fa-sadio" cx="288" cy="117" r="6"/><circle class="fa-sadio" cx="307" cy="117" r="6"/><text class="fa-m" x="307" y="156" text-anchor="middle">negativo</text><text class="fa-ok" x="233" y="176" text-anchor="middle">positivo confirma</text><circle class="fa-doente" cx="10" cy="204" r="5"/><text class="fa-s" x="20" y="208">doente</text><circle class="fa-sadio" cx="76" cy="204" r="5"/><text class="fa-s" x="86" y="208">sadio</text><text class="fa-s" x="340" y="208" text-anchor="end">pontos ilustrativos</text></svg>
+  <figcaption>Os pontos são ilustrativos (não são números reais). O resultado que decide é o que o erro raro do teste torna confiável: no sensível o negativo, no específico o positivo.<span class="fa-src">Fonte: resumos/Preventiva/Medidas de Saúde Coletiva.md (§1.4 Valores Preditivos e Prevalência) e resumos/Preventiva/13. Testes Diagnósticos.pdf (teste sensível x específico)</span></figcaption>
+</figure>
   <div class="trap">Na Q58, a C copia a estrutura da B e acerta a primeira metade; erra a conclusão pelo negativo. Na Q60, a D acerta a quarentena e erra a premissa: "confirmar que não tem covid" com um negativo isolado.</div>
   <div class="note">Na Q60 você declarou todos os elos Sim: a página traz uma pergunta curta sobre o que você leu na D.</div>
   <p class="src">Fonte: resumos/Preventiva/Medidas de Saúde Coletiva.md (§1.4 Valores Preditivos e Prevalência) e resumos/Preventiva/13. Testes Diagnósticos.pdf (teste sensível x específico)</p>

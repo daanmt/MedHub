@@ -38,6 +38,36 @@ td:first-child{color:var(--ink);font-weight:600}
 .q details div{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);color:var(--ink2)}
 .src{margin:12px 0 0}
 .src code{overflow-wrap:anywhere}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
 </style>
 
 <div class="wrap">
@@ -78,6 +108,11 @@ td:first-child{color:var(--ink);font-weight:600}
       <tr><td>Lítico</td><td>Rim, tireoide, mieloma</td><td>Eletroforese se suspeita de mieloma</td></tr>
     </tbody>
   </table></div>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Blástico forma osso, lítico destrói</b></p>
+  <svg viewBox="0 0 344 208" role="img" aria-label="Duas vértebras esquemáticas. Blástica: forma osso; próstata e mama; no homem idoso, PSA. Lítica: destrói osso em saca-bocado; rim, tireoide e mieloma; eletroforese se suspeita de mieloma."><path class="fa-osso" d="M32 70 q0 -12 12 -12 h76 q12 0 12 12 v58 q0 12 -12 12 h-76 q-12 0 -12 -12 z"/><path class="fa-osso" d="M60 140 h44 l8 22 h-60 z"/><ellipse class="fa-blast" cx="62" cy="82" rx="12" ry="8"/><ellipse class="fa-blast" cx="100" cy="96" rx="14" ry="9"/><ellipse class="fa-blast" cx="72" cy="118" rx="10" ry="7"/><ellipse class="fa-blast" cx="110" cy="124" rx="8" ry="6"/><ellipse class="fa-blast" cx="88" cy="76" rx="6" ry="4"/><path class="fa-osso" d="M212 70 q0 -12 12 -12 h76 q12 0 12 12 v58 q0 12 -12 12 h-76 q-12 0 -12 -12 z"/><path class="fa-osso" d="M240 140 h44 l8 22 h-60 z"/><circle class="fa-furo" cx="242" cy="84" r="9"/><circle class="fa-furo" cx="282" cy="92" r="12"/><circle class="fa-furo" cx="256" cy="120" r="10"/><circle class="fa-furo" cx="294" cy="124" r="6"/><text class="fa-t" x="82" y="20" text-anchor="middle">Blástico</text><text class="fa-m" x="82" y="38" text-anchor="middle">forma osso</text><text class="fa-t" x="262" y="20" text-anchor="middle">Lítico</text><text class="fa-m" x="262" y="38" text-anchor="middle">destrói osso (saca-bocado)</text><text class="fa-m" x="82" y="182" text-anchor="middle">próstata, mama</text><text class="fa-ok" x="82" y="200" text-anchor="middle">homem idoso: PSA</text><text class="fa-m" x="262" y="182" text-anchor="middle">rim, tireoide, mieloma</text><text class="fa-ok" x="262" y="200" text-anchor="middle">eletroforese se mieloma</text><line class="fa-eixo" x1="172" y1="58" x2="172" y2="200"/></svg>
+  <figcaption>Esquemático, fora de escala. O padrão do osso aponta o primário; o pulmão dá padrão misto (tabela). A hipercalcemia do tumor sólido vem do PTHrP; a próstata, por formar osso, quase nunca a dá.<span class="fa-src">Fonte: <code>resumos/Cirurgia/Urologia.md</code> (câncer de próstata, doença metastática e PSA); <code>resumos/Clínica Médica/Endocrinologia/10. Metabolismo Ósseo e Mineral - Hipercalcemia.pdf</code> (§3.2 e tratamento); <code>resumos/Cirurgia/6. Oncologia Ortopédica e Osteomielite.pdf</code> (padrão das metástases)</span></figcaption>
+</figure>
   <div class="trap"><span class="albl">Armadilha</span><p>Idoso com dor lombar e compressão medular evoca mieloma. A palavra "osteoblásticas" o exclui. Na Q2, a alternativa com calcitriol troca o mecanismo do tumor sólido pelo do linfoma.</p></div>
   <div class="q"><p>Homem de 70 anos, lesões vertebrais blásticas. Primeiro exame?</p><details><summary>ver resposta</summary><div>PSA. Blástica em homem idoso = próstata; mieloma seria lítico.</div></details></div>
   <div class="q"><p>Ca 15 mg/dL, desidratado e confuso. Primeira medida?</p><details><summary>ver resposta</summary><div>Hidratação venosa com SF 0,9%. Bifosfonato depois.</div></details></div>

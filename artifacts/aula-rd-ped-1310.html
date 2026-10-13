@@ -41,6 +41,36 @@ td:first-child{color:var(--ink);font-weight:600}
 .pil li{padding:12px 0;border-top:1px solid var(--line);color:var(--ink2)}
 .pil li:first-child{border-top:0}
 .pil h3{font-size:17px;margin:0 0 6px}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
 </style>
 </head>
 <body>
@@ -76,6 +106,11 @@ td:first-child{color:var(--ink);font-weight:600}
     <li><span>A pressão alta abre varizes esofágicas, que sangram como HDA: melena em grande volume e anemia, num lactente eutrófico e ativo.</span></li>
     <li><span>A ECN fica fora pela idade e pelo raio X: é doença do período neonatal, e o achado patognomônico é a <strong>pneumatose intestinal</strong>. Raio X normal aos 6 meses não sustenta ECN.</span></li>
   </ol>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Do cateter à melena</b></p>
+  <svg viewBox="0 0 340 240" role="img" aria-label="Esquema: cateter umbilical no período neonatal, trombose da veia porta (pré-hepática), fígado normal. A pressão portal sobe, o Doppler mostra fluxo hepatofugal e as colaterais abrem varizes esofágicas, que sangram como melena volumosa."><path class="fa-osso" d="M22 44 C30 18 120 10 176 22 C198 27 204 44 190 58 C160 84 70 90 34 74 C20 68 18 56 22 44 z"/><text class="fa-t" x="104" y="44" text-anchor="middle">fígado normal</text><text class="fa-s" x="104" y="60" text-anchor="middle">sem ascite, sem icterícia</text><path class="fa-veia" d="M110 80 V204"/><text class="fa-m" x="100" y="150" text-anchor="end">veia porta</text><rect class="fa-trombo" x="102" y="100" width="16" height="26" rx="5"/><text class="fa-m" x="126" y="110">trombose da porta</text><text class="fa-s" x="126" y="124">pré-hepática (cavernoma)</text><path class="fa-cat" d="M8 226 Q60 228 104 208"/><text class="fa-s" x="8" y="198">cateter umbilical</text><text class="fa-s" x="8" y="212">neonatal</text><path class="fa-seta" d="M128 140 V172 M122 164 L128 173 L134 164"/><text class="fa-av" x="140" y="154">fluxo hepatofugal</text><text class="fa-s" x="140" y="168">(Doppler): pressão alta</text><path class="fa-colat" d="M114 198 C190 214 262 206 284 158"/><path class="fa-osso" d="M284 22 h22 v148 h-22 z"/><ellipse class="fa-var" cx="284" cy="112" rx="6" ry="9"/><ellipse class="fa-var" cx="306" cy="124" rx="6" ry="9"/><ellipse class="fa-var" cx="284" cy="138" rx="6" ry="8"/><ellipse class="fa-var" cx="306" cy="150" rx="5" ry="7"/><text class="fa-m" x="295" y="14" text-anchor="middle">esôfago</text><text class="fa-t" x="295" y="198" text-anchor="middle">varizes</text><text class="fa-ok" x="295" y="216" text-anchor="middle">sangram:</text><text class="fa-ok" x="295" y="232" text-anchor="middle">melena</text></svg>
+  <figcaption>Esquemático, fora de escala. Pré-hepática: o fígado é normal; o sangue portal sai do fígado em vez de entrar (hepatofugal) e procura as colaterais.<span class="fa-src">Fonte: <code>resumos/Clínica Médica/Hepatologia/6. Complicações da Cirrose Hepática.pdf</code> (§1.1.1.1 Trombose da veia porta) e <code>resumos/Cirurgia/Cirurgia Infantil.md</code> (ECN, pneumatose)</span></figcaption>
+</figure>
   <div class="trap"><b>Armadilha:</b> a história de UTI neonatal (antibióticos, nutrição parenteral) puxa para ECN. O dado que decide é o Doppler, não a história.</div>
   <div class="q"><p>Criança de 3 anos, hematêmese volumosa, fígado normal, sem ascite, cateter umbilical no período neonatal. Mecanismo?</p><details><summary>ver resposta</summary><div>Hipertensão portal pré-hepática por trombose da veia porta, com varizes esofágicas.</div></details></div>
   <p class="src">Fonte: <code>resumos/Clínica Médica/Hepatologia/6. Complicações da Cirrose Hepática.pdf</code> (§1.1.1.1 Trombose da veia porta) e <code>resumos/Cirurgia/Cirurgia Infantil.md</code> (ECN, pneumatose)</p>

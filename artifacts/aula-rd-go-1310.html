@@ -39,6 +39,36 @@ td.nao{color:var(--carmine-ink);font-weight:600}
 .q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
 .q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
 .q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
 </style>
 
 <div class="wrap">
@@ -65,6 +95,11 @@ td.nao{color:var(--carmine-ink);font-weight:600}
     <tr><td>IG &lt; 40 semanas</td><td class="nao">Não (o corte é &lt; 37)</td></tr>
     <tr><td>Rastreio positivo na gestação anterior</td><td class="nao">Não, sem filho com sepse</td></tr>
   </table></div>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Sem swab: os três cortes</b></p>
+  <svg viewBox="-8 0 344 236" role="img" aria-label="Sem swab de EGB, três cortes do intraparto indicam a profilaxia: idade gestacional abaixo de 37 semanas, bolsa rota de 18 h ou mais, febre de 38 graus ou mais. A questão: 12 h de bolsa rota, ainda não. Bacteriúria por EGB na gestação atual indica sempre; do passado, só conta o filho com doença por EGB."><text class="fa-t" x="16" y="14">Idade gestacional</text><rect class="fa-fundo" x="16" y="22" width="300" height="16" rx="4"/><rect class="fa-alvo" x="16.0" y="22" width="150.0" height="16" rx="4"/><text class="fa-ok" x="91.0" y="34" text-anchor="middle">indica</text><text class="fa-s" x="16.0" y="52" text-anchor="middle">33 sem</text><line class="fa-eixo" x1="16.0" y1="38" x2="16.0" y2="42"/><text class="fa-s" x="166.0" y="52" text-anchor="middle">&lt; 37 sem</text><line class="fa-eixo" x1="166.0" y1="38" x2="166.0" y2="42"/><text class="fa-s" x="278.5" y="52" text-anchor="middle">40 sem</text><line class="fa-eixo" x1="278.5" y1="38" x2="278.5" y2="42"/><text class="fa-t" x="16" y="70">Bolsa rota</text><rect class="fa-fundo" x="16" y="78" width="300" height="16" rx="4"/><rect class="fa-alvo" x="241.0" y="78" width="75.0" height="16" rx="4"/><text class="fa-ok" x="278.5" y="90" text-anchor="middle">indica</text><text class="fa-s" x="16.0" y="108" text-anchor="middle">0 h</text><line class="fa-eixo" x1="16.0" y1="94" x2="16.0" y2="98"/><text class="fa-s" x="241.0" y="108" text-anchor="middle">&gt;= 18 h</text><line class="fa-eixo" x1="241.0" y1="94" x2="241.0" y2="98"/><text class="fa-s" x="316.0" y="108" text-anchor="middle">24 h</text><line class="fa-eixo" x1="316.0" y1="94" x2="316.0" y2="98"/><line class="fa-marca" x1="166.0" y1="76" x2="166.0" y2="112"/><circle class="fa-ponto-av" cx="166.0" cy="112" r="3.5"/><text class="fa-av" x="166.0" y="128" text-anchor="middle">Q32: 12 h, ainda não</text><text class="fa-t" x="16" y="144">Febre intraparto</text><rect class="fa-fundo" x="16" y="152" width="300" height="16" rx="4"/><rect class="fa-alvo" x="166.0" y="152" width="150.0" height="16" rx="4"/><text class="fa-ok" x="241.0" y="164" text-anchor="middle">indica</text><text class="fa-s" x="16.0" y="182" text-anchor="middle">36 °C</text><line class="fa-eixo" x1="16.0" y1="168" x2="16.0" y2="172"/><text class="fa-s" x="166.0" y="182" text-anchor="middle">&gt;= 38 °C</text><line class="fa-eixo" x1="166.0" y1="168" x2="166.0" y2="172"/><text class="fa-s" x="316.0" y="182" text-anchor="middle">40 °C</text><line class="fa-eixo" x1="316.0" y1="168" x2="316.0" y2="172"/><text class="fa-m" x="16" y="212">Fora das réguas: bacteriúria por EGB atual indica sempre;</text><text class="fa-m" x="16" y="228">do passado, só conta o filho com doença por EGB.</text></svg>
+  <figcaption>A faixa realçada é onde o achado indica a profilaxia. Com 12 h de bolsa rota a termo, faltam 6 h para o corte.<span class="fa-src">Fonte: resumos/GO/Pré-Natal.md (§6, EGB; Armadilhas de Prova)</span></figcaption>
+</figure>
   <div class="trap">A resposta foi a alternativa que você riscou. E 12 h de bolsa rota parece "tempo demais", mas o corte é 18 h.</div>
   <div class="note">O card do corte de 18 h (#1120) já está na sua fila e nunca foi revisado.</div>
   <p class="src">Fonte: resumos/GO/Pré-Natal.md (§6, EGB; Armadilhas de Prova)</p>

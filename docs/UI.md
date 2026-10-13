@@ -12,24 +12,40 @@ relates_to: [core/templates/tema.css, core/templates/hub.html, core/templates/pl
 
 ## 1. Direção
 
-**Retrowave contido**: Vaporwave/Retrowave inspirado em GTA Vice City, reinterpretado como ferramenta de estudo
-médico. Princípio (do brief dele, 13/10/2026): *"a interface deve lembrar Vice City à primeira vista, mas desaparecer
-em segundo plano quando o estudante estiver concentrado no conteúdo."*
+**Fosco em camadas (tema v4, s227, 13/10/2026)**: o retrowave do v3 lido do controle DualSense GTA VI que ele trouxe
+como referência ("o exemplo que mais se aproxima"): o corpo preto fosco é o fundo; o cromado azul -> violeta é a luz
+(atrás do topo) e o fio de 1 px que acende o topo de cada placa, nunca uma superfície; os símbolos rosa são o detalhe
+(marca, etiquetas, o anel de cards); o texto é branco quente. Queixa que o v4 resolve, nas palavras dele: *"ainda muito
+'chapado' no fundo, sem blocos e divisões, fluidez e coesão, otimização do espaço"*. PRD:
+`.vibeflow/prds/hub-tema-v4-fosco-em-camadas.md` (specs `hub-tema-v4-part-1..4`).
+
+**A regra que concilia o v4 com o A5 da s225:** um bloco (`.placa`) por SEÇÃO, nunca uma caixa por número; dentro da
+placa, as linhas com filete seguem. Profundidade = degrau de superfície + borda + fio cromado. Sem glow, sem sombra, sem
+halo (decisão dele, 13/10: "fosco em camadas"; os mockups com borda neon ficaram de fora).
+
+Princípio que segue do v3 (do brief dele, 13/10/2026): *"a interface deve lembrar Vice City à primeira vista, mas
+desaparecer em segundo plano quando o estudante estiver concentrado no conteúdo."*
 
 Prioridade, nesta ordem: (1) clareza e baixa carga cognitiva; (2) legibilidade e acessibilidade; (3) hierarquia e
 consistência entre telas; (4) minimalismo funcional; (5) identidade retrowave deliberada e contida; (6) código simples.
 
 Ele lê **no celular (390 px), à noite, entre plantões**. Toda decisão é conferida primeiro a 390 px.
 
-A identidade mora em poucos lugares: a marca (`Med` + `Hub` em ciano, s226), a **linha do horizonte** sob as abas (o único
-gradiente da UI: rosa -> roxo -> ciano) e o roxo do gráfico de previsão do Painel. O resto é tipografia, filete e
-espaço.
+A identidade mora em poucos lugares: a marca (`Med` + `Hub` em ciano, s226), a **linha do horizonte** sob as abas (rosa ->
+roxo -> ciano), a **luz** atrás do topo e o **fio cromado** das placas (azul -> violeta), e o roxo do gráfico de previsão
+do Painel. O resto é tipografia, superfície, filete e espaço.
+⚰️ *13/10/2026 (s227, tema v4): era "a linha do horizonte sob as abas (o único gradiente da UI: rosa -> roxo -> ciano)". O
+v4 acrescentou dois gradientes de material (`--luz`, `--cromado`); nenhum deles é cor de dado nem fundo de texto.*
+
+Ele lê no celular, então a 390 px tudo é uma coluna de placas empilhadas; no desktop o shell e o Painel usam a coluna
+larga (`--largura`, 72rem) com placas em grade, e a leitura longa (aula, enunciado, card) segue na medida `--wrap`
+(46rem).
 
 ## 2. Onde mora cada coisa
 
 | Camada | Arquivo | O que tem | Quem recebe |
 |---|---|---|---|
-| Tokens + base | `core/templates/tema.css` | as duas paletas (escuro padrão, claro por `data-theme="light"`), escalas de espaço, raio e tipo, apelidos legados e das aulas, base comum (fonte, foco, seleção, movimento) | shell do hub, painel, player standalone, leitor de aulas e resumos |
+| Tokens + base | `core/templates/tema.css` | as duas paletas (escuro padrão, claro por `data-theme="light"`), escalas de espaço, raio e tipo, apelidos legados e das aulas, base comum (fonte, foco, seleção, movimento, o fundo com a luz) e a primitiva `.placa` (s227) | shell do hub, painel, player standalone, leitor de aulas e resumos |
 | Casca, Teoria, Listas, leitor | `core/templates/hub.html` (bloco `<style>`, depois de `/* @hub:player-css */`) | abas, Teoria (`qd-*`), Listas e questão (`qz-*`), barra do leitor, assinatura de leitura (`hub-assina*`) | o hub |
 | Cards | `core/templates/player.html` (região `@player:css`) | o player FSRS e a tela de fim | o hub (aba Cards) e o standalone do `fsrs_queue.py --build-player` |
 | Painel | `tools/painel.py` (constante `CSS`) | o dashboard (Hoje, Ritmo, Até 01/11, Por bloco, Revisões 7 dias), Plano de hoje / Semana, Documentação | `artifacts/painel.html` (iframe no hub) |
@@ -42,8 +58,12 @@ e, junto com o `tema-aula.css`, no leitor (`"@hub:tema-js"`, aplicado no `srcdoc
 `tools/painel.py` embute o `tema.css` depois do próprio CSS; o `--build-player` embute antes do `</head>`
 (`fsrs_queue.embutir_tema`).
 
-**Regra de casa:** cor literal só no `tema.css`. Componente mora no arquivo da tela, nunca no `tema.css`. Trocar a
-paleta = trocar os dois blocos de cor do `tema.css`, montar o hub em scratch e conferir (§8) antes de publicar.
+**Regra de casa:** cor literal só no `tema.css`. Componente mora no arquivo da tela, nunca no `tema.css` -- com UMA
+exceção declarada (s227): a primitiva `.placa`, usada pelas quatro telas; nenhuma tela a redefine, todas compõem
+(`class="placa dash-hoje"`), e o teste trava uma regra só. Trocar a paleta = trocar os dois blocos de cor do `tema.css`,
+montar o hub em scratch e conferir (§8) antes de publicar. Dentro do hub, o painel e o leitor rodam em iframe com fundo
+TRANSPARENTE (elemento `.hub-quadro` e documento, injetado no `preparar`): a luz é a do shell, sem emenda no topo do
+quadro; fora do hub eles pintam o próprio fundo.
 
 ## 3. Tokens
 
@@ -52,29 +72,34 @@ especificidade (0,2,0) de propósito: vencem o `@media` escuro que cada aula tra
 
 | Token | Escuro | Claro | Uso |
 |---|---|---|---|
-| `--papel` | `#17132E` | `#F7F5FB` | fundo da página |
-| `--card` | `#211C3A` | `#FFFFFF` | superfície secundária: card do player, alternativa, assinatura |
-| `--afundado` | `#29233F` | `#EFEBF7` | superfície elevada/selecionada; trilho vazio; badge |
-| `--linha` | `#403858` | `#DCD5E8` | divisória e filete (decorativo) |
-| `--linha-forte` | `#776E99` | `#8E87AD` | borda de controle (campo, botão secundário): >= 3:1 |
-| `--tinta` | `#F8F5F2` | `#1C1733` | texto principal, títulos, pergunta |
-| `--tinta2` | `#B8B3CC` | `#4B4466` | texto secundário, rótulos |
-| `--tinta3` | `#9C96B6` | `#625B7E` | metadados |
-| `--acento` / `-tinta` / `-fraco` | `#00D9E8` / `#7DE8F0` / `#13334C` | `#00737D` / `#005A62` / `#DDF1F4` | ciano: interação |
-| `--rosa` / `-fraco` | `#FF4FA3` / `#3C1D41` | `#C2176F` / `#F8E1EE` | marca e destaque pontual |
-| `--roxo` / `-tinta` / `-fraco` | `#AA71E8` / `#BE95F0` / `#2F224C` | `#7443B8` / `#5E3596` / `#ECE3F8` | decoração, dado visual, desatenção e chute |
-| `--ok` / `-fraco` | `#79D6A5` / `#273241` | `#1E7348` / `#E2F2E8` | sucesso |
-| `--erro` / `-fraco` | `#FF7C87` / `#3C243C` | `#B8303E` / `#FBE5E8` | erro (coral) |
-| `--aviso` / `-fraco` | `#FFBE72` / `#3C2E39` | `#8F5200` / `#FAEBD7` | aviso e atraso (âmbar) |
-| `--sobre` | `#17132E` | `#FFFFFF` | texto sobre preenchimento (botão primário, declaração ligada) |
-| `--qz-grifo` / `-tinta` | `#FFD447` / `#17132E` | `#FFE066` / `#1C1733` | marca-texto (literal: o hub lê o valor computado para o leitor) |
+| `--papel` | `#0C0C12` | `#F4F3F8` | fundo da página (o corpo do controle); leva a `--luz` no topo |
+| `--card` | `#15151E` | `#FFFFFF` | a placa (superfície de seção); card do player; alternativa; assinatura |
+| `--afundado` | `#1E1D2A` | `#ECEAF3` | superfície elevada/selecionada dentro da placa; trilho vazio; badge |
+| `--linha` | `#2B2A3A` | `#DFDCE8` | filete interno (linha de lista dentro da placa) |
+| `--borda-placa` | `#3A3852` | `#C2BCD4` | borda da placa contra o fundo (>= 1,6:1, s227) |
+| `--linha-forte` | `#6E6A8A` | `#7F7A9C` | borda de controle (campo, botão secundário): >= 3:1 |
+| `--tinta` | `#F6EFEA` | `#1A1626` | texto principal (branco quente), títulos, pergunta |
+| `--tinta2` | `#BDB7CC` | `#4A4560` | texto secundário, rótulos |
+| `--tinta3` | `#948FAA` | `#5F5A78` | metadados |
+| `--acento` / `-tinta` / `-fraco` | `#00D9E8` / `#7DE8F0` / `#0E2B36` | `#00737D` / `#005A62` / `#DDF1F4` | ciano: interação |
+| `--rosa` / `-fraco` | `#FF4FA3` / `#33172C` | `#C2176F` / `#F8E1EE` | marca e detalhe (os símbolos do controle) |
+| `--roxo` / `-tinta` / `-fraco` | `#AA71E8` / `#BE95F0` / `#261C3E` | `#7443B8` / `#5E3596` / `#ECE3F8` | decoração, dado visual, desatenção e chute |
+| `--ok` / `-fraco` | `#79D6A5` / `#172A26` | `#1E7348` / `#E2F2E8` | sucesso |
+| `--erro` / `-fraco` | `#FF7C87` / `#331B24` | `#B8303E` / `#FBE5E8` | erro (coral) |
+| `--aviso` / `-fraco` | `#FFBE72` / `#33261C` | `#8F5200` / `#FAEBD7` | aviso e atraso (âmbar) |
+| `--sobre` | `#0C0C12` | `#FFFFFF` | texto sobre preenchimento (botão primário, declaração ligada) |
+| `--qz-grifo` / `-tinta` | `#FFD447` / `#0C0C12` | `#FFE066` / `#1A1626` | marca-texto (literal: o hub lê o valor computado para o leitor) |
+| `--cromado` | azul `#2F7BFF` -> violeta `#7A4DFF` -> `#B04FE0`, apagado nas pontas | idem, mais escuros | o fio de 1 px no topo da placa (reflexo, não faixa) |
+| `--luz` | duas `radial-gradient` (azul à esquerda, violeta à direita, 20-24%) | idem a 6-7% | a luz atrás do topo (marca e abas) |
 | `--horizonte` | rosa -> roxo -> ciano | idem, escuros | a linha sob as abas |
 
-Contraste medido (WCAG 2.x) no escuro, sobre `papel` / `card` / `afundado`: `tinta` 16,5 / 15,0 / 13,8; `tinta2`
-8,9 / 8,0 / 7,4; `tinta3` 6,4 / 5,8 / 5,3; `acento` 10,3 / 9,4 / 8,6; `erro` 7,3 / 6,6 / 6,0; `aviso` 11,0 / 9,9 / 9,1;
-`ok` 10,2 / 9,3 / 8,5; `rosa` 5,9 / 5,3 / 4,9. O `roxo` puro fica em 4,4 sobre `afundado`: texto roxo usa `--roxo-tinta`
-(6,2+). `--sobre` sobre os preenchimentos: 5,3 (roxo) a 11,0 (aviso). No claro, todos os textos >= 4,8 sobre
-`afundado`, exceto `acento` sobre `acento-fraco` (4,4): texto sobre a lavagem ciano usa `--acento-tinta`.
+Contraste **medido pelo `tools/test_tema_contraste.py`** (lê os hex do `tema.css`, WCAG 2.x; s227: a tabela deixou de ser
+digitada), sobre `papel` / `card` / `afundado`. Escuro: `tinta` 17,1 / 15,9 / 14,6; `tinta2` 10,0 / 9,3 / 8,5; `tinta3`
+6,3 / 5,8 / 5,4; `acento` 11,2 / 10,4 / 9,6; `rosa` 6,4 / 6,0 / 5,5; `roxo-tinta` 8,1 / 7,6 / 6,9; `ok` 11,1 / 10,3 / 9,5;
+`erro` 7,9 / 7,3 / 6,7; `aviso` 11,9 / 11,1 / 10,2; `linha-forte` 3,8 / 3,5 / 3,2; borda da placa contra o fundo 1,73.
+Claro: todos os textos >= 4,7 nas três superfícies (`acento` 4,7 sobre o elevado); `linha-forte` 3,4+; borda da placa
+1,66. `--sobre` sobre os preenchimentos: 5,8 (roxo) a 11,9 (aviso) no escuro, 5,6+ no claro. O `roxo` puro como texto
+segue proibido (4,9 sobre o elevado escuro): texto roxo usa `--roxo-tinta`.
 
 Apelidos: `--alerta` = `--erro` (nome antigo); `--qz-ok/-duv/-chute` = ok/aviso/roxo-tinta; `--suave` = roxo. As aulas
 usam nomes próprios em inglês: `--paper --ink --ink2 --ink3 --line --line2 --sunk --card --on`, `--teal*` (= acento),
@@ -82,10 +107,11 @@ usam nomes próprios em inglês: `--paper --ink --ink2 --ink3 --line --line2 --s
 
 Escalas (em `:root`, valem nos dois temas):
 - espaço: `--esp-1` 4 · `--esp-2` 8 · `--esp-3` 12 · `--esp-4` 16 · `--esp-5` 24 · `--esp-6` 32 · `--esp-7` 48 px;
-- raio: `--raio` 10 px (cartões e controles) · `--raio-p` 6 px (kbd, grifo, aviso) · `--raio-pilula` (só badge e chip);
+- raio por nível (s227): `--raio-placa` 14 px (a placa) · `--raio` 10 px (cartões e controles) · `--raio-p` 6 px (kbd, grifo, aviso) · `--raio-pilula` (só badge e chip);
 - tipo: `--fs-pagina` 1,5rem · `--fs-secao` 1,125rem · `--fs-item` 1rem · `--fs-legenda` .875rem · `--fs-meta` .8125rem ·
   `--fs-numero` 2rem;
-- coluna: `--wrap` 46rem (um `.wrap` só por página; ~85 caracteres por linha no desktop).
+- coluna: `--wrap` 46rem = a medida de leitura (~85 caracteres por linha no desktop); `--largura` 72rem = a coluna larga do
+  shell e do painel no desktop (s227). Um `.wrap` só por página: o shell troca só a largura do mesmo contêiner.
 
 Tipo: **Atkinson Hyperlegible Next**, uma família só (decisão dele, s224: 0/O e 1/l distintos em dose e corte), com
 algarismos tabulares e sem caixa-alta (`text-transform:none` global).
@@ -108,7 +134,8 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 
 | Padrão | Onde | Forma |
 |---|---|---|
-| Linha de lista | Teoria (`.qd-bloco`), Listas (`.qz-lista button`), Painel (`.tarefa`), revisão (`.qz-rev`), por bloco (`.qz-porobj li`), cadeia (`.qz-cadeia li`) | sem fundo e sem caixa; filete de baixo (`--linha`); título 600 em `tinta`, meta em `tinta3` |
+| Placa (s227) | uma por seção em todas as telas (parts 1-4 do tema v4) | primitiva `.placa` do `tema.css`: `--card` + borda 1 px `--borda-placa` + `--raio-placa` + fio cromado de 1 px no topo (`::before`, apagado nas pontas); padding 16 px no celular, 24 px acima de 520 px; sem sombra; a tela compõe, nunca redefine; dentro dela, as linhas com filete; nunca uma placa por número |
+| Linha de lista | Teoria (`.qd-bloco`), Listas (`.qz-lista button`), Painel (`.tarefa`), revisão (`.qz-rev`), por bloco (`.qz-porobj li`), cadeia (`.qz-cadeia li`) | sem fundo e sem caixa própria, DENTRO da placa da seção (v4); filete de baixo (`--linha`); título 600 em `tinta`, meta em `tinta3` |
 | Moldura | card do player, alternativa da questão, campo, assinatura de leitura | só o que é objeto de toque ou o foco da tela; `--card` + `--linha` + `--raio`; sem sombra |
 | Badge | área (`.qd-bl`), objetivo (`.qz-obj`), "Próxima"; no Painel `.t-rot` | pílula, `--afundado` + `tinta2` (o "Próxima" em ciano); no Painel `.t-rot` em `--rosa-fraco` + `--rosa`, como o "novas" da Biblioteca (s226, pedido dele) |
 | Chip de estado | lista (`.qz-chip`, `qzChip`) | só fora do normal: "pronta" não tem chip; em curso = aviso com respondidas/total (espelho do aparelho); resolvida = ok + `✓` |
@@ -165,6 +192,8 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | nada `sticky`/`fixed`, nada `nowrap`, um `.wrap` só | `test_hub.py::test_celular_sem_sticky_sem_nowrap_e_um_wrap_so`, `test_painel.py::test_celular_sem_sticky_sem_nowrap_e_grid_item_encolhe`, `test_hub_render.py::test_forma_da_tela_revelada` |
 | abas com rótulo curto e 44 px; `.qd-tema` com `min-width:0` | `test_hub.py::test_abas_curtas_e_com_alvo_de_toque` |
 | tela revelada sem cor literal; 44 px nos botões; `.qz-cadeia li` com `min-width:0` | `test_hub_render.py::test_forma_da_tela_revelada` |
+| contraste do tema nos dois blocos (texto >= 4,5 nas 3 superfícies, `tinta` >= 7, controle >= 3, borda da placa >= 1,6, `--sobre` >= 4,5); `.placa` com uma regra só, sem sombra nem brilho, sem `max-width` no `tema.css` | `test_tema_contraste.py` (s227) |
+| shell v4: luz no `body`, `.hub-quadro` e documento do quadro transparentes, coluna larga, um `.wrap` | `test_hub.py::test_tema_v4_luz_no_shell_e_quadros_transparentes` (s227) |
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
@@ -216,7 +245,7 @@ declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esq
 | A2 | O `tema.css` misturava regras do hub, do painel, do player e das aulas, sobrescrevendo a regra-base por especificidade (duas definições por componente) | `tema.css` | **resolvido**: cada regra voltou ao arquivo da tela; o `tema.css` tem só tokens e base |
 | A3 | Rosa servia de alerta e de identidade; `--alerta` servia erro e aviso | todas | **resolvido**: rosa = marca; erro = coral; aviso = âmbar; `--alerta` é apelido de `--erro` |
 | A4 | Títulos, rótulos e cabeçalhos todos em ciano (v2.4) | hub, painel, aulas | **resolvido**: títulos em branco, hierarquia por tamanho e peso; ciano só na interação |
-| A5 | Caixas preenchidas em série: tiles do fim, por bloco, revisão com faixa lateral, cadeia em caixas centralizadas, regra-mestre e armadilha como caixas dentro do card, números do Ritmo, fim do lote | hub, player, painel | **resolvido**: linhas com filete; métricas numa faixa; cadeia alinhada à esquerda e numerada |
+| A5 | Caixas preenchidas em série: tiles do fim, por bloco, revisão com faixa lateral, cadeia em caixas centralizadas, regra-mestre e armadilha como caixas dentro do card, números do Ritmo, fim do lote | hub, player, painel | **resolvido**: linhas com filete; métricas numa faixa; cadeia alinhada à esquerda e numerada. **s227:** a superfície de SEÇÃO voltou (A24) -- a regra é uma placa por seção, nunca uma caixa por número |
 | A6 | Estado só por cor: gabarito/errada, revisão certa/errada/chute, ritmo abaixo, lista recém-concluída | hub, painel | **resolvido**: `✓ ✗ ?` e "abaixo do necessário" por extenso |
 | A7 | Trilho com todos os segmentos no mesmo brilho; "revisar depois" invisível nele; alvo de 14 px | Listas | **resolvido**: respondida, atual, marcada e vazia distintas; classe `flag` no JS; 26 px de toque |
 | A8 | Controles em pílula (declaração, Questões/Simulados) com o formato reservado a badge | Listas | **resolvido**: raio de controle |
@@ -234,9 +263,18 @@ declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esq
 | A20 | Semana do Painel: "resolver no hub"/"abrir aula" repetidos por linha, "da semana N" em cada atrasada, a Próxima com controle de outro tipo | `painel.py` | **pendente**: mesmo PRD (linha clicável, aviso uma vez) |
 | A21 | Listas: chip "pronta" repetido em toda linha (informação nula) | `hub.html` `qzItem` | **resolvido** (s226, part-1): `qzChip` |
 | A22 | Marca "MedHub" pequena no topo | `hub.html` `.hub-marca` | **resolvido** (s226, part-1): 1,375rem; "Hub" passou a ciano na s226 (pedido dele) |
+| A24 | "Chapado": toda tela uma folha só no mesmo fundo, seções separadas por filete de 1,3:1 que quase não se vê; nada à frente de nada; a 1280 px a coluna de 46rem deixa ~60% vazio | todas | **em curso** (s227, tema v4): fundo preto + placa por seção (borda 1,7:1 + fio cromado), coluna larga no desktop; parts 2-4 aplicam por tela |
 | A23 | Sem o espelho local `medhub.respostas.<lista>`, o 1º snapshot de `questoes` chega antes do de `respostas` e a Q1 aparece como nova mesmo respondida (lido no código pelo subagente, não medido) | `hub.html` | **pendente**: mesmo PRD (família do A18) |
 
 ## 11. Histórico de decisões
+
+- **Tema v4 "fosco em camadas" (13/10, s227)**: pedido dele com 7 referências na raiz (controle DualSense GTA VI, pins
+  Vice City, 5 mockups): *"manter a 'riqueza' do retrowave/95', mas deve ser sóbrio e minimalista como uma plataforma de
+  estudos deve ser [...] predomínio de tom escuro, rosa nos detalhes, azul/roxo para dar profundidade, branco/pêssego"*.
+  Decididas por ele no /discover: placa fosca com fio cromado (sem glow), fundo preto frio com luz azul/roxa no topo, dois
+  anéis sem soma no Hoje (o "226" dos mockups somava questões com cards), v0 inteira. Decididas pelo agente: coluna larga
+  no desktop, "pêssego" = o branco quente do texto, entrega em 4 parts e a guarda do simulado (a part 4, tela da questão,
+  só vai ao ar conferida até qui 15/10; senão, dom 18/10). Part 1 (`c633422`): tokens, luz, placa, casca.
 
 - **Dashboard do Painel (13/10, s226, painel-dashboard-sprint part-1)**: pedido dele ("integre estes dois blocos [...] com a modalidade de dashboard [...] e resolva as divergências entre metas"): Hoje + Ritmo + Por bloco viram um dashboard no topo (forma e cor pela skill `dataviz`, dentro dos tokens); com sprint, o único por-dia da tela é o do sprint ("0 de 76", não "0 de ~115"; o Ritmo contra 80/dia; "114,9 por dia até a prova" sai) e a meta 10.000 aparece uma vez, na barra de projeção (7.817 -> 9.306 -> 10.000, fora do sprint 997 q); a `<table>` do Por bloco virou linhas com barra de acerto. Regra s203 suspensa para a tela: `cronograma-contract` v1.7.
 - **s226 (13/10, tarde):** pedido dele com prints: "Hub" no azul da paleta; a barra da aba ativa acompanha o degradê; as tags do Painel com a cor das de Teoria (o "novas"), "Próxima" segue ciano; fora as legendas em prosa (Teoria, frase do Ritmo, "Fora da tabela"). O dashboard que integra Hoje + Ritmo + Por bloco e a meta única na tela vão para o PRD `painel-dashboard-sprint`.

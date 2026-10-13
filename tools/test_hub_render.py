@@ -704,6 +704,68 @@ def test_simulado_leva_a_data_do_sprint():
     assert '<span class="qz-quando">dom 25/10</span>' in html and "semana 4" not in html
 
 
+# ------------------------------------------------ s227 (hub-tema-v4 part-3): Listas e Cards em placas
+
+def test_listas_em_placas_e_a_grade_de_duas_colunas_no_desktop():
+    """DoD 3: Hoje e uma placa; Proximos dias + Fora do sprint + Outras listas, outra; Resolvidas, uma terceira --
+    grupos, ordem e rotulos os de antes (os testes acima seguem). A grade so ganha as duas colunas (`qz-duas`) com
+    a placa da direita; no desktop Proximos ocupa a coluna 2 nas duas linhas e Resolvidas sobe para baixo de Hoje.
+    Simulados no mesmo idioma; sem sprint, as semanas numa placa (secoes irmas diretas). O seletor e a legenda
+    ficam fora das placas."""
+    sprint = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    html = _listas("questoes", sprint, LISTAS_SPRINT)["html"]
+    assert html.startswith('<div class="qz-grade qz-duas"><div class="placa qz-p-hoje"><section data-grupo="hoje">')
+    hoje, resto = html.split('<div class="placa qz-p-prox">', 1)
+    prox, feitas = resto.split('<div class="placa qz-p-feitas">', 1)
+    assert 'data-grupo="d' not in hoje and 'data-grupo="fora"' not in hoje
+    assert prox.startswith('<h3 class="qz-grupo">Próximos dias</h3>')
+    assert all('data-grupo="%s"' % g in prox for g in ("d2026-10-14", "fora", "outras"))
+    assert feitas.startswith('<details class="qd-feitas"><summary>Resolvidas') and "data-grupo=" not in feitas
+    so_hoje = _listas("questoes", dict(sprint, proximos=[], fora=[]),
+                      [l for l in LISTAS_SPRINT if l["tarefa"] in (26, 49)])["html"]
+    assert so_hoje.startswith('<div class="qz-grade"><div class="placa qz-p-hoje">') and "qz-p-prox" not in so_hoje, \
+        "sem a placa da direita, uma coluna"
+    sims = _listas("simulados", sprint, LISTAS_SPRINT + [
+        {"_id": "t1790", "tarefa": 1790, "tema": "UERJ 2020 -- prova", "area": "Simulado", "semana": 1, "seq": 90,
+         "q": 60, "status": "resolvida"}])["html"]
+    assert sims.startswith('<div class="qz-grade qz-sim"><div class="placa qz-p-provas"><section>')
+    assert '<div class="placa qz-p-feitas"><details class="qd-feitas"><summary>Resolvidos' in sims
+    semanas = _listas("questoes", None, LISTAS_SPRINT)["html"]
+    assert semanas.startswith('<div class="qz-grade"><div class="placa qz-p-semanas"><section')
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert re.search(r"\n\.qz-grade\{display:grid;[^}]*align-items:start", css)
+    assert ".qz-grade .qz-lista > li:last-child > button{border-bottom-color:transparent}" in css
+    desk = re.search(r"@media \(min-width:900px\)\{(.*?)\n\}", css, re.S).group(1)
+    assert re.search(r"\.qz-duas,\.qz-sim\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}", desk)
+    assert ".qz-duas{grid-template-rows:auto 1fr}" in desk
+    assert ".qz-duas > .qz-p-prox{grid-column:2;grid-row:1 / span 2}" in desk
+    assert ".qz-duas > .qz-p-feitas{grid-column:1;grid-row:2}" in desk
+    i = TEMPLATE.index('<div class="qz-cabeca">')
+    cabeca = TEMPLATE[i:TEMPLATE.index("\n      </div>", i)]
+    assert 'id="qz-modo"' in cabeca and 'id="qz-sub"' in cabeca
+    assert TEMPLATE.index('class="qz-cabeca"') < TEMPLATE.index('id="qz-listas"'), "seletor e legenda fora das placas"
+
+
+def test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa():
+    """DoD 4: o topo do player (titulo, contadores, relogio, pausa, barra, tally) e UMA placa; o card, a placa
+    ELEVADA (--afundado) logo abaixo, com os botoes fora dela; a tela de fim, uma placa. O standalone do
+    --build-player embute o tema (a primitiva .placa vem junto). Ids e ordem do corpo: os de antes."""
+    from tools.fsrs_queue import TEMPLATE_PLAYER, embutir_tema
+    txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
+    corpo = txt[txt.index("@player:corpo:inicio"):txt.index("@player:corpo:fim")]
+    topo = re.search(r'<div class="placa cards-topo">(.*?)\n  </div>', corpo, re.S).group(1)
+    for id_ in ("dia-contador", "pendentes", "relogio", "btn-pausa", "progresso", "tally"):
+        assert 'id="%s"' % id_ in topo, id_
+    card = re.search(r'<article class="card placa" id="card"[^>]*>(.*?)</article>', corpo, re.S).group(1)
+    assert "btn-virar" not in card and "notas-botoes" not in card, "os botoes ficam fora da placa do card"
+    assert corpo.index("cards-topo") < corpo.index('id="card"') < corpo.index('id="btn-virar"') < corpo.index('id="fim"')
+    assert '<section class="painel-fim placa" id="fim" hidden>' in corpo
+    css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
+    assert ".card.placa{background:var(--afundado)}" in css
+    assert not re.search(r"(?:^|[}\n])\.placa(?:::before)?\{", css), "a placa e composta, nunca redefinida"
+    assert re.search(r"\n\.placa\{", embutir_tema(txt)), "o standalone leva a primitiva do tema"
+
+
 def test_hub_sprint_no_build_e_null_sem_sprint():
     assert hub.html_sprint([dict(l, dia_plano=None) for l in PLANO_SPRINT], HOJE_SPRINT) == \
         '<script type="application/json" id="hub-sprint">null</script>'

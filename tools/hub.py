@@ -1056,14 +1056,16 @@ def html_quadro(secoes, biblioteca=(), rds=None):
     mapa = {i["resumo"].caminho: {"href": i["resumo"].publicado, "slug": i["resumo"].slug,
                                   "titulo": i["resumo"].titulo}
             for i in biblioteca if i["tipo"] == "resumo"}
+    # s227 (hub-tema-v4 part-3): o quadro e a grade da aba -- duas placas (RDs, Biblioteca), lado a lado no
+    # desktop pelo CSS do hub.html; as secoes seguem irmas diretas de `.qd-semanas` (o recolher usa isso)
     return ('<div class="qd" id="hub-quadro">\n'
             # P20 (s219): so o aviso de quando o db nao salvou a assinatura (o texto vem do JS)
             '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>\n'
-            '<div class="qd-semanas">%s</div>\n'
+            '<div class="qd-semanas placa">%s</div>\n'
             # s218: a Biblioteca e o corpo da aba (o id `hub-quadro-feitas` e o da s216, que o JS conhece)
-            '<section class="qd-bib" id="hub-quadro-feitas" aria-labelledby="hub-bib-tit">'
+            '<div class="placa qd-placa-bib"><section class="qd-bib" id="hub-quadro-feitas" aria-labelledby="hub-bib-tit">'
             '<h3 class="qd-bib-tit" id="hub-bib-tit">Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">%d'
-            '</span>%s</h3>%s</section>\n'
+            '</span>%s</h3>%s</section></div>\n'
             '<script type="application/json" id="hub-resumos">%s</script>\n</div>'
             % ("".join(partes), len(unicos),
                _html_novas(sum(1 for i in unicos.values() if i.get("nova")), "hub-quadro-novas"),

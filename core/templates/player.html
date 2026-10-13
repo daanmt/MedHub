@@ -58,12 +58,17 @@ kbd{
 .metro.dia b{font-size:1.3em;font-weight:700}
 .com-dia .metro.fila{font-size:var(--fs-meta)}
 .com-dia .metro.fila b{font-size:1em;font-weight:600;color:var(--tinta2)}
-.barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-4) 0 var(--esp-2);overflow:hidden}
+.barra{height:6px;background:var(--trilho);border-radius:var(--raio-pilula);margin:var(--esp-4) 0 var(--esp-2);overflow:hidden}
 .barra i{display:block;height:100%;width:0;background:var(--acento);border-radius:inherit;transition:width var(--transicao)}
 .tally{display:flex;flex-wrap:wrap;gap:var(--esp-2) var(--esp-4);color:var(--tinta3);font-size:var(--fs-meta);margin-bottom:var(--esp-4)}
 .tally b{color:var(--tinta2)}
-/* o card e o UNICO objeto com moldura na tela: pergunta > resposta > auxiliares (regra, armadilha, assunto) */
-.card{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:var(--esp-5) var(--esp-5) var(--esp-5);min-height:190px}
+/* s227 (tema v4 part 3): duas placas -- o topo (contadores, barra, tally) e, logo abaixo, o card ELEVADO (a
+   superficie --afundado, um degrau acima da placa): pergunta > resposta > auxiliares (regra, armadilha, assunto).
+   Os botoes ficam fora da placa do card. A .placa vem do tema.css; aqui so a composicao */
+.cards-topo{margin-bottom:var(--esp-4)}
+#drill{margin-top:var(--esp-4)}
+.card{min-height:190px}
+.card.placa{background:var(--afundado)}
 .card:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
 .reason{display:block;font-size:var(--fs-meta);font-weight:600;color:var(--tinta3);margin-bottom:var(--esp-3)}
 .contexto{color:var(--tinta2);font-size:.95em;margin-bottom:var(--esp-3)}
@@ -112,8 +117,8 @@ button[disabled]{opacity:.45;cursor:not-allowed}
 }
 .defeito-opcoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--esp-2);margin-top:var(--esp-3)}
 .defeito-opcoes button{min-height:44px;font-size:var(--fs-legenda);text-align:left}
-/* tela de fim (s194): desempenho + agenda dos proximos 7 dias -- secao da pagina, sem moldura */
-.painel-fim{margin-top:var(--esp-6);padding-top:var(--esp-5);border-top:1px solid var(--linha)}
+/* tela de fim (s194): desempenho + agenda dos proximos 7 dias -- s227: uma placa (as linhas com filete por dentro) */
+.painel-fim{margin-top:var(--esp-5)}
 .painel-fim h2{font-size:var(--fs-secao);font-weight:700;margin-bottom:var(--esp-1)}
 pre{
   background:var(--afundado);border:1px solid var(--linha);border-radius:var(--raio);
@@ -130,7 +135,7 @@ pre{
 .dist{display:grid;gap:var(--esp-2)}
 .dist-linha{display:grid;grid-template-columns:minmax(0,7.5rem) minmax(0,1fr) 2.2rem;gap:var(--esp-3);align-items:center;font-size:var(--fs-legenda)}
 .dist-rot{min-width:0;color:var(--tinta2)}
-.dist-barra{height:8px;background:var(--afundado);border-radius:var(--raio-pilula);overflow:hidden}
+.dist-barra{height:8px;background:var(--trilho);border-radius:var(--raio-pilula);overflow:hidden}
 .dist-barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
 .dist-barra i.fraca{background:var(--aviso)}
 .dist-n{text-align:right;font-weight:650}
@@ -159,29 +164,31 @@ pre{
 <body>
 <div class="wrap">
 <!-- @player:corpo:inicio -->
-  <header class="topo">
-    <div>
-      <h1>Cards de hoje</h1>
-      <span id="sessao" hidden></span>
-    </div>
-    <div class="metros">
-      <span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>
-      <span class="metro" id="metro-lote"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
-      <span class="metro fila">fila <b id="pendentes">0</b></span>
-      <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
-      <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
-    </div>
-  </header>
-
-  <div class="barra"><i id="progresso"></i></div>
-  <p class="tally" id="tally"></p>
+  <!-- s227 (tema v4 part 3): o topo e UMA placa (titulo, contadores, relogio, pausa, barra, tally) -->
+  <div class="placa cards-topo">
+    <header class="topo">
+      <div>
+        <h1>Cards de hoje</h1>
+        <span id="sessao" hidden></span>
+      </div>
+      <div class="metros">
+        <span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>
+        <span class="metro" id="metro-lote"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
+        <span class="metro fila">fila <b id="pendentes">0</b></span>
+        <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
+        <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
+      </div>
+    </header>
+    <div class="barra"><i id="progresso"></i></div>
+    <p class="tally" id="tally"></p>
+  </div>
 
   <div id="aviso" class="aviso" hidden></div>
   <div id="aviso-momento" class="aviso" role="status" hidden></div>
   <div id="aviso-fila" class="aviso" role="status" hidden></div>
 
   <main id="drill">
-    <article class="card" id="card" tabindex="0" aria-live="polite">
+    <article class="card placa" id="card" tabindex="0" aria-live="polite">
       <p class="reason" id="reason" hidden></p>
       <p class="contexto" id="contexto" hidden></p>
       <h2 class="pergunta" id="pergunta">Carregando os cards...</h2>
@@ -223,7 +230,7 @@ pre{
 
   </main>
 
-  <section class="painel-fim" id="fim" hidden>
+  <section class="painel-fim placa" id="fim" hidden>
     <h2 id="fim-titulo">Lote concluido</h2>
     <p class="sub" id="fim-sub"></p>
     <p class="dica" id="fim-origem"></p>

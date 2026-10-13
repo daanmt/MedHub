@@ -69,6 +69,9 @@ def test_borda_de_controle_e_borda_da_placa(tema):
     # a placa precisa se separar do fundo a olho (o 'chapado' da v3 era a falta disso)
     c = contraste(_hex(bloco, "borda-placa"), _hex(bloco, "papel"))
     assert c >= 1.6, "%s: borda da placa contra o fundo = %.2f (< 1,6:1)" % (tema, c)
+    # o trilho vazio (barra, anel) aparece sobre a placa: o 0 de 76 da manha nao pode sumir (s227)
+    c = contraste(_hex(bloco, "trilho"), _hex(bloco, "card"))
+    assert c >= 1.35, "%s: trilho sobre a placa = %.2f (< 1,35:1)" % (tema, c)
 
 
 @pytest.mark.parametrize("tema", ["escuro", "claro"])

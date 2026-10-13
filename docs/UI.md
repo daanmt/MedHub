@@ -77,6 +77,7 @@ especificidade (0,2,0) de propósito: vencem o `@media` escuro que cada aula tra
 | `--afundado` | `#1E1D2A` | `#ECEAF3` | superfície elevada/selecionada dentro da placa; trilho vazio; badge |
 | `--linha` | `#2B2A3A` | `#DFDCE8` | filete interno (linha de lista dentro da placa) |
 | `--borda-placa` | `#3A3852` | `#C2BCD4` | borda da placa contra o fundo (>= 1,6:1, s227) |
+| `--trilho` | `#312F49` | `#D3CFE1` | trilho vazio de barra e anel sobre a placa (>= 1,35:1, s227) |
 | `--linha-forte` | `#6E6A8A` | `#7F7A9C` | borda de controle (campo, botão secundário): >= 3:1 |
 | `--tinta` | `#F6EFEA` | `#1A1626` | texto principal (branco quente), títulos, pergunta |
 | `--tinta2` | `#BDB7CC` | `#4A4560` | texto secundário, rótulos |
@@ -142,11 +143,11 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Botão | global (`player.html`) | secundário: contorno `--linha-forte`, fundo transparente; `.primario`: ciano com texto `--sobre`; `.fantasma`: tracejado; 44 px de altura |
 | Segmentado | Questões/Simulados (`.qz-modo`), certeza (`.qz-seg`), declaração (`.qz-decl`) | raio de controle; ligado = cor do estado + lavagem |
 | Abas | `.hub-aba` | texto; ativa em `tinta` com uma barra de 2 px que é o TRECHO do horizonte sob ela (`background-size:400%`, posição por `nth-child`; s226, pedido dele); o filete de baixo é o horizonte |
-| Dashboard | topo do Painel (`section.dash`, `data-bloco="dia"`; Ritmo e Por bloco com o `data-bloco` deles por dentro, `.dash-sec`) | s226: Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias, cada parte sob um filete; tiles = um número por tile (`.fracao b`), barra fina e rótulo curto `tinta3` (`.kpi-r`), sem caixa e **sem `p.nota`**; com sprint o único por-dia é o do sprint (`q_hoje` no tile, real 7 d contra a `capacidade_q` no Ritmo) e a meta aparece uma vez, como alvo da **barra de projeção** (`.proj-barra`: feito ciano · cumprindo o sprint lavagem ciano com contorno · fora do sprint `--linha` tracejado em `--tinta3`, 2 px de fundo entre trechos, `role=img` com os números no `aria-label`); **Por bloco** em linhas (`.bl`: nome · barra de acerto 0-100% · % · feitas/total), o de menor acerto em âmbar com o rótulo "mais fraco", Simulados na última linha com barra neutra; `title` em cada linha e trecho = dica ao passar o mouse; HTML/CSS puro (o painel não carrega lib) |
+| Dashboard | topo do Painel (`section.dash`, `data-bloco="dia"`; Ritmo e Por bloco com o `data-bloco` deles por dentro, `.dash-sec`) | s226: Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias, cada parte sob um filete; tiles = um número por tile (`.fracao b`), barra fina e rótulo curto `tinta3` (`.kpi-r`), sem caixa e **sem `p.nota`**; com sprint o único por-dia é o do sprint (`q_hoje` no tile, real 7 d contra a `capacidade_q` no Ritmo) e a meta aparece uma vez, como alvo da **barra de projeção** (`.proj-barra`: feito ciano · cumprindo o sprint lavagem ciano com contorno · fora do sprint `--linha` tracejado em `--tinta3`, 2 px de fundo entre trechos, `role=img` com os números no `aria-label`); **Por bloco** em linhas (`.bl`: nome · barra de acerto 0-100% · % · feitas/total), o de menor acerto em âmbar com o rótulo "mais fraco", Simulados na última linha com barra neutra; `title` em cada linha e trecho = dica ao passar o mouse; HTML/CSS puro (o painel não carrega lib) **v4 (s227, tema v4 part-2):** a `section.dash` é a GRADE de cinco `.placa` (Hoje · Ritmo · Até 01/11 · Por bloco · Revisões), uma coluna e, com o iframe a partir de 760 px, duas (Hoje | Ritmo, Até 01/11 em `1 / -1`, Por bloco | Revisões), vão `--esp-4`, o mesmo até as placas do Plano de hoje e da Documentação; sem filete entre seções. **Hoje** = dois anéis concêntricos em SVG inline (viewBox 120, traço 10, `pathLength=100`): externo `--acento` = questões / `q_hoje` (sem sprint, o alvo da meta), interno `--rosa` = cards / teto, trilho `--trilho`, 0% = só o trilho, centro = o dia; nenhum número soma as duas unidades (o '226' dos mockups ficou de fora); legenda com 'X de Y' + `kpi-r` + 'Ir para os cards', ao lado do anel a partir de 26rem (`@container`); o `b[data-vivo]` fica na legenda e o anel no valor publicado. **Ritmo** = barra `.rb` do real 7 d contra UMA marca (`--tinta`, '80/dia'; sem sprint, o necessário por dia), escala 1,25x o maior, âmbar abaixo / verde em dia; sem gauge. |
 | Métricas | fim da lista (`.qz-tiles`), fim do lote (`.fim-grade`), Ritmo (`.fig`) | uma faixa entre dois filetes, número 700 + rótulo `tinta3`; sem uma caixa por número |
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
-| Barra de progresso | painel (`.barra`), player (`.barra`, `.dist-barra`) | 6-8 px, trilho `--afundado`, preenchimento sólido ciano |
+| Barra de progresso | painel (`.bl-barra`, `.rb`), player (`.barra`, `.dist-barra`) | 6-10 px, trilho `--trilho` (s227: o `--afundado` some sobre a placa, 1,1:1; o `--trilho` dá 1,4:1), preenchimento sólido ciano |
 | Leitura resiliente | `assinarResiliente(consulta, onDados, opts)` no `hub.html`: listas, quadro da Teoria, questões/respostas/análises da lista aberta, notas do lote | `consulta(db)` monta a referência sobre o `db` recebido (1ª tentativa = `opts.db`; da 2ª em diante e no "Tentar de novo", conexão nova por `claude.use("db")`, avisada em `opts.aoReconectar` -- o `QZ.db`); erro = `console.warn("[hub] leitura <coleção> falhou", código, tentativa)` + nova assinatura em 1/2/4 s com "Carregando…"; esgotadas, a mensagem + botão `.primario` **Tentar de novo** (`htmlRetentar`); reabrir a aba com ela morta reassina; um estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela |
 | Secções do card | `.bloco` (regra-mestre), `.bloco.alerta` (armadilha) | filete à esquerda (neutro / âmbar), nunca caixa dentro do card |
 
@@ -183,7 +184,15 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 **Largura (regra dele, reprovada duas vezes quando quebrou):** UM `max-width` no contêiner (`.wrap`) e todos os
 filhos herdam 100% dele. Nunca `max-width` por elemento (parágrafo, lede, lista) ao lado de quadro com fundo ou
 borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.top h1`).
-- **Cards**: o card é o único objeto com moldura; pergunta > resposta > regra/armadilha > assunto.
+- **Cards**: o topo (título, 'N de 150 hoje', fila, relógio, pausar, barra, tally) é uma placa; o card é a placa
+  elevada (`.card.placa`, `--afundado`) logo abaixo, na medida `--wrap`; os botões ficam fora dela; a tela de fim do lote
+  numa placa (s227, part 3). Pergunta > resposta > regra/armadilha > assunto.
+- **Teoria, Listas e Cards em placas (s227, tema v4 part 3):** uma placa por seção, título dentro, linhas com filete por
+  dentro e sem filete na última. Teoria = RDs | Biblioteca (`.qd` em grade; lado a lado a partir de 900 px,
+  `align-items:start`). Listas = seletor + legenda (`.qz-cabeca`) fora das placas; Hoje | Próximos dias + Fora do sprint +
+  Outras listas (os dias são linhas de 44 px) | Resolvidas; no desktop (`qz-duas`) Próximos ocupa a coluna 2 nas duas
+  linhas e Resolvidas sobe para baixo de Hoje; Simulados = provas | resolvidos (`qz-sim`, só com os dois). Na medida
+  `--wrap` ficam só o card, o leitor e a questão aberta (`#aba-cards,#hub-leitor,#qz-player`).
 
 ## 7. Contratos travados por teste
 
@@ -194,6 +203,8 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | tela revelada sem cor literal; 44 px nos botões; `.qz-cadeia li` com `min-width:0` | `test_hub_render.py::test_forma_da_tela_revelada` |
 | contraste do tema nos dois blocos (texto >= 4,5 nas 3 superfícies, `tinta` >= 7, controle >= 3, borda da placa >= 1,6, `--sobre` >= 4,5); `.placa` com uma regra só, sem sombra nem brilho, sem `max-width` no `tema.css` | `test_tema_contraste.py` (s227) |
 | shell v4: luz no `body`, `.hub-quadro` e documento do quadro transparentes, coluna larga, um `.wrap` | `test_hub.py::test_tema_v4_luz_no_shell_e_quadros_transparentes` (s227) |
+| Painel v4: cada parte do dashboard é uma placa + a grade; Hoje com dois anéis sem soma; Ritmo com a marca do sprint | `test_painel.py::test_dashboard_em_placas_e_a_grade`, `test_hoje_dois_aneis_sem_soma`, `test_ritmo_barra_com_marca_do_sprint` (s227) |
+| Teoria, Listas e Cards em placas, grade de 2 colunas no desktop, standalone do player com a placa | `test_hub_quadro.py::test_teoria_em_duas_placas_lado_a_lado_no_desktop`, `test_hub_render.py::test_listas_em_placas_e_a_grade_de_duas_colunas_no_desktop`, `test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa` (s227) |
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
@@ -274,7 +285,10 @@ declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esq
   Decididas por ele no /discover: placa fosca com fio cromado (sem glow), fundo preto frio com luz azul/roxa no topo, dois
   anéis sem soma no Hoje (o "226" dos mockups somava questões com cards), v0 inteira. Decididas pelo agente: coluna larga
   no desktop, "pêssego" = o branco quente do texto, entrega em 4 parts e a guarda do simulado (a part 4, tela da questão,
-  só vai ao ar conferida até qui 15/10; senão, dom 18/10). Part 1 (`c633422`): tokens, luz, placa, casca.
+  só vai ao ar conferida até qui 15/10; senão, dom 18/10). Part 1 (`c633422`): tokens, luz, placa, casca. Parts 2 e 3
+  (subagentes em paralelo, arquivos disjuntos): Painel em bento com os dois anéis; Teoria, Listas e Cards em placas.
+  Decisões dos subagentes que ele pode reverter: Simulados com provas | resolvidos lado a lado; a tela de fim do lote de
+  cards numa placa.
 
 - **Dashboard do Painel (13/10, s226, painel-dashboard-sprint part-1)**: pedido dele ("integre estes dois blocos [...] com a modalidade de dashboard [...] e resolva as divergências entre metas"): Hoje + Ritmo + Por bloco viram um dashboard no topo (forma e cor pela skill `dataviz`, dentro dos tokens); com sprint, o único por-dia da tela é o do sprint ("0 de 76", não "0 de ~115"; o Ritmo contra 80/dia; "114,9 por dia até a prova" sai) e a meta 10.000 aparece uma vez, na barra de projeção (7.817 -> 9.306 -> 10.000, fora do sprint 997 q); a `<table>` do Por bloco virou linhas com barra de acerto. Regra s203 suspensa para a tela: `cronograma-contract` v1.7.
 - **s226 (13/10, tarde):** pedido dele com prints: "Hub" no azul da paleta; a barra da aba ativa acompanha o degradê; as tags do Painel com a cor das de Teoria (o "novas"), "Próxima" segue ciano; fora as legendas em prosa (Teoria, frase do Ritmo, "Fora da tabela"). O dashboard que integra Hoje + Ritmo + Por bloco e a meta única na tela vão para o PRD `painel-dashboard-sprint`.

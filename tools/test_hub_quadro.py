@@ -429,6 +429,31 @@ def test_quadro_celular_alvo_de_toque_e_grid_item_encolhe(tmp_path):
     assert "prefers-reduced-motion" in pagina
 
 
+def test_teoria_em_duas_placas_lado_a_lado_no_desktop(tmp_path):
+    """s227 (hub-tema-v4 part-3, DoD 2 e 5): "Revisoes direcionadas" e "Biblioteca" sao DUAS placas (a primitiva
+    do tema.css, so composta) na grade do quadro -- empilhadas no celular, duas colunas a partir de 900 px (RDs a
+    esquerda: a 1a na ordem), sem esticar (align-items:start). As secoes seguem irmas diretas de `.qd-semanas`
+    (o recolher em sequencia usa o seletor-irmao) e a Teoria sai da medida provisoria da part 1; a medida de
+    leitura fica so no card, no leitor e na questao aberta."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn)
+    pagina = _index(raiz)
+    quadro = pagina.split('id="hub-quadro"', 1)[1].split('id="hub-resumos"', 1)[0]
+    assert '<div class="qd-semanas placa"><section class="qd-sem qd-rds" data-secao="rd"' in quadro
+    assert '<div class="placa qd-placa-bib"><section class="qd-bib" id="hub-quadro-feitas"' in quadro
+    assert quadro.index("qd-semanas placa") < quadro.index("qd-placa-bib"), "RDs primeiro (a esquerda no desktop)"
+    css = pagina[pagina.index("<style>"):pagina.index("</style>")]
+    assert re.search(r"(?:^|[}\n])\.qd\{[^}]*display:grid[^}]*align-items:start", css)
+    desk = re.search(r"@media \(min-width:900px\)\{(.*?)\n\}", css, re.S).group(1)
+    assert re.search(r"(?:^|[\s,])\.qd[,{][^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)", desk)
+    assert ".qd-semanas > [data-recolhida] + [data-recolhida]{" in css
+    assert "#aba-aulas,#aba-questoes,#aba-cards{max-width" not in css, "a regra provisoria da part 1 saiu"
+    assert "#aba-cards,#hub-leitor,#qz-player{max-width:var(--wrap);margin-inline:auto}" in css
+    # a placa e composta (class="placa ..."), nunca redefinida fora do tema.css
+    hub_css = TEMPLATE_HUB_REAL[TEMPLATE_HUB_REAL.index("<style>"):TEMPLATE_HUB_REAL.index("</style>")]
+    assert not re.search(r"(?:^|[}\n])\.placa(?:::before)?\{", hub_css)
+
+
 def test_ler_estado_do_dump_do_artifactdata(tmp_path):
     d = tmp_path / "db" / "quadro"
     d.mkdir(parents=True)

@@ -31,12 +31,14 @@
 /* s227 (tema v4): o shell usa a coluna LARGA no desktop (as placas em grade); a medida de leitura (--wrap) fica nas
    telas de texto longo. Um so .wrap na pagina: esta regra so troca a largura do mesmo contêiner */
 .wrap{max-width:var(--largura)}
-/* provisorio ate a part 3 do tema v4: Teoria, Listas e Cards seguem na medida de leitura, centradas (um contêiner por aba) */
-#aba-aulas,#aba-questoes,#aba-cards{max-width:var(--wrap);margin-inline:auto}
+/* s227 (part 3): Teoria e Listas usam a coluna larga, em placas (grade de 2 colunas no desktop, abaixo). Ficam na
+   medida de leitura, centradas, so as telas de leitura: o card, o leitor de aulas e a questao aberta (um max-width
+   por conteiner de tela; os filhos herdam 100%) */
+#aba-cards,#hub-leitor,#qz-player{max-width:var(--wrap);margin-inline:auto}
 .hub-marca{margin:0;font-weight:700;font-size:1.375rem;letter-spacing:-.01em;color:var(--tinta)}
 .hub-marca span{color:var(--acento)}
 
-/* as abas: texto + sublinhado ciano na ativa; o filete de baixo e o horizonte (o unico gradiente da UI) */
+/* as abas: texto + a barra da ativa; o filete de baixo e o horizonte (a marca; a luz e o cromado sao os outros gradientes, s227) */
 .hub-abas{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;
   position:relative;margin-bottom:var(--esp-5);
@@ -109,8 +111,8 @@
 /* s218 (pedido do operador em 07/10): a Biblioteca e o CORPO da aba, depois das semanas -- grande area
    (<details>, recolhida de partida, com a contagem e as RDs novas) -> disciplina (A-Z) -> resumos, aulas,
    revisoes. Area de uma disciplina so esconde o subtitulo (:only-child vale tambem para a criada ao vivo). */
-.qd-bib{margin-top:var(--esp-7);min-width:0}
-.qd-bib-tit{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--esp-1) var(--esp-3);margin:0;font-size:1.0625rem;font-weight:700;color:var(--tinta)}
+.qd-bib{min-width:0}
+.qd-bib-tit{display:flex;flex-wrap:wrap;align-items:baseline;align-content:center;gap:var(--esp-1) var(--esp-3);min-height:44px;margin:0;font-size:1.0625rem;font-weight:700;color:var(--tinta)}
 .qd-novas{align-self:center;font-size:var(--fs-meta);font-weight:650;color:var(--rosa);background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
 .qd-novas[hidden]{display:none}
 .qd-areas{display:grid;margin-top:var(--esp-1)}
@@ -147,10 +149,45 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 @media (prefers-reduced-motion: reduce){.qd-seta{transition:none}}
 [data-recolhida] > .qd-lista,[data-recolhida] > .qz-lista,[data-recolhida] > .qd-vazio{display:none}
 .qd-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-5))}   /* recolhidas em sequencia = uma lista de titulos */
-.qz-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-4))}
-/* s226 (sprint-final-uerj part-4): o rotulo que junta os dias recolhidos da aba Listas; a data do simulado */
-.qz-grupo{margin:var(--esp-5) 0 0;font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
+/* s226 (sprint-final-uerj part-4): a data do simulado */
 .qz-quando{color:var(--tinta2);font-weight:600}
+
+/* s227 (hub-tema-v4 part 3): Teoria e Listas em PLACAS -- uma por secao (a primitiva do tema.css, so composta
+   aqui), o titulo dentro dela. Celular: empilhadas. Desktop (>= 900 px): duas colunas, align-items:start (placas
+   de alturas diferentes nao esticam). Dentro da placa as linhas com filete seguem; a ultima perde o filete
+   (a borda da placa fecha a lista). Seletor-irmao do recolher: as secoes seguem irmas diretas */
+#hub-aulas-lista > .hub-titulo{margin-bottom:var(--esp-4)}
+.qd{display:grid;gap:var(--esp-4);align-items:start;min-width:0}
+.qd > .qd-aviso{grid-column:1 / -1;margin:0}
+.qd-semanas:empty{display:none}
+.qd-semanas > section > .qd-lista > li:last-child > .qd-bloco,
+.qd-areas > details.qd-area:last-child{border-bottom-color:transparent}
+/* Listas: o seletor e a legenda numa faixa fora das placas; Hoje | Proximos dias (+ Fora, Outras) | Resolvidas */
+.qz-cabeca{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-5);margin:var(--esp-2) 0 var(--esp-4);min-width:0}
+.qz-cabeca .qz-modo{margin:0}
+.qz-cabeca .hub-sub{flex:1 1 20rem;min-width:0;margin:0}
+.qz-grade{display:grid;gap:var(--esp-4);align-items:start;min-width:0}
+.qz-grade .qd-titulo{min-height:44px;align-content:center;margin-bottom:0}
+.qz-grade .qz-lista > li:last-child > button{border-bottom-color:transparent}
+.qz-grupo{display:flex;align-items:center;min-height:44px;margin:0;font-size:1.0625rem;font-weight:700;color:var(--tinta)}
+/* os dias (e Fora, Outras) sao linhas da placa: titulo de 44 px, filete entre elas; o titulo da placa manda */
+.qz-p-prox > section + section,.qz-p-semanas > section + section{border-top:1px solid var(--linha)}
+.qz-p-prox .qd-titulo{font-size:var(--fs-item);font-weight:600}
+.qz-p-feitas > .qd-feitas{margin:0;border-top:0;padding-top:0}
+.qz-p-feitas > .qd-feitas > summary{list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;align-content:center;gap:var(--esp-1) var(--esp-3);padding:0;font-size:1.0625rem;font-weight:700;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.qz-p-feitas > .qd-feitas > summary::-webkit-details-marker{display:none}
+.qz-p-feitas > .qd-feitas > summary::before{content:"\25B8";display:inline-block;width:.9em;text-align:center;color:var(--tinta3);transition:transform 150ms ease}
+.qz-p-feitas > .qd-feitas[open] > summary::before{transform:rotate(90deg)}
+.qz-p-feitas > .qd-feitas > summary:hover{color:var(--acento-tinta)}
+@media (prefers-reduced-motion: reduce){.qz-p-feitas > .qd-feitas > summary::before{transition:none}}
+@media (min-width:900px){
+  .qd,.qz-grade{gap:var(--esp-5)}
+  .qd,.qz-duas,.qz-sim{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Proximos ocupa a coluna da direita nas duas linhas: Resolvidas sobe para logo abaixo de Hoje */
+  .qz-duas{grid-template-rows:auto 1fr}
+  .qz-duas > .qz-p-prox{grid-column:2;grid-row:1 / span 2}
+  .qz-duas > .qz-p-feitas{grid-column:1;grid-row:2}
+}
 
 /* leitor (aula/resumo dentro da aba) e a barra das listas: voltar + titulo + controles */
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
@@ -169,8 +206,7 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:0}
 .qz-lista li{min-width:0}
 /* ⚰️ P21 (s220): os links de aula e de resumo irmaos do botao da lista (s216 part-2, s218 P2) */
-.qz-semanas{display:grid;gap:var(--esp-5)}
-.qz-semanas .qd-feitas{margin-top:var(--esp-1)}
+.qz-semanas{display:grid;gap:var(--esp-5);min-width:0}   /* s227: o conteiner da grade de placas (ou do aviso) */
 .qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px var(--esp-3);align-items:center;padding:var(--esp-3) 0;border:0;border-bottom:1px solid var(--linha);border-radius:0;background:transparent;color:var(--tinta);min-height:44px}
 .qz-lista button:hover{background:transparent}
 .qz-lista button:hover .qz-tema{color:var(--acento-tinta)}
@@ -396,8 +432,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     <!-- @hub:sprint -->
     <div id="qz-escolha">
       <h2 class="hub-titulo">Listas</h2>
-      <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
-      <p class="hub-sub" id="qz-sub"></p>
+      <div class="qz-cabeca">
+        <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
+        <p class="hub-sub" id="qz-sub"></p>
+      </div>
       <p class="qd-aviso" id="qz-aviso" hidden></p>
       <div class="qz-semanas" id="qz-listas"><p class="qd-vazio">Carregando as listas…</p></div>
     </div>
@@ -2156,8 +2194,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzRenderSimulados(ls){
     var abertos = ls.filter(function(l){ return l.status !== "resolvida"; }), feitos = ls.filter(function(l){ return l.status === "resolvida"; });
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhum simulado carregado ainda.</p>'; return; }
-    $("qz-listas").innerHTML = (abertos.length ? '<section><h3 class="qd-titulo">Provas UERJ <span class="qd-n">' + abertos.length + (abertos.length === 1 ? " prova" : " provas") + '</span></h3><ul class="qz-lista">' + abertos.map(function(l, i){ return qzItemSim(l, i === 0); }).join("") + '</ul></section>' : '<p class="qd-vazio">Todos os simulados carregados estão resolvidos.</p>') +
-      (feitos.length ? '<details class="qd-feitas"><summary>Resolvidos <span class="qd-n">' + feitos.length + '</span></summary><ul class="qz-lista">' + feitos.map(function(l){ return qzItemSim(l, false); }).join("") + '</ul></details>' : "");
+    // s227 (tema v4 part 3): o mesmo idioma das Listas -- uma placa para as provas, outra para as resolvidas;
+    // no desktop (`qz-sim`, so com as duas) lado a lado: o que fazer a esquerda, como o Hoje
+    $("qz-listas").innerHTML = '<div class="qz-grade' + (abertos.length && feitos.length ? ' qz-sim' : '') + '">' + (abertos.length ? '<div class="placa qz-p-provas"><section><h3 class="qd-titulo">Provas UERJ <span class="qd-n">' + abertos.length + (abertos.length === 1 ? " prova" : " provas") + '</span></h3><ul class="qz-lista">' + abertos.map(function(l, i){ return qzItemSim(l, i === 0); }).join("") + '</ul></section></div>' : '<p class="qd-vazio">Todos os simulados carregados estão resolvidos.</p>') +
+      (feitos.length ? '<div class="placa qz-p-feitas"><details class="qd-feitas"><summary>Resolvidos <span class="qd-n">' + feitos.length + '</span></summary><ul class="qz-lista">' + feitos.map(function(l){ return qzItemSim(l, false); }).join("") + '</ul></details></div>' : "") + '</div>';
   }
   function qzRenderListas(){
     var todas = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; })
@@ -2181,10 +2221,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var feitas = ls.filter(function(l){ return l.status === "resolvida"; });
     // s214: cada semana recolhe (o titulo e o controle); o estado vem de secAberta a cada renderizacao
     var corrente = secSemanaAtual(atual, grupos.map(function(g){ return g.semana; }).filter(Boolean));
-    $("qz-listas").innerHTML = grupos.map(function(g){ var n = g.itens.length, id = "listas:" + g.chave, alvo = "qz-sec-" + g.chave, ab = secAberta(id, secPadraoAberta(g.chave, corrente));
-      return '<section' + (ab ? '' : ' data-recolhida') + '>' + secTituloHtml(id, alvo, ab, qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span>') + '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") +
-      (feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
-      (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
+    // s227 (tema v4 part 3): as semanas numa placa (as secoes seguem irmas diretas), as resolvidas noutra
+    $("qz-listas").innerHTML = '<div class="qz-grade">' + (grupos.length ? '<div class="placa qz-p-semanas">' + grupos.map(function(g){ var n = g.itens.length, id = "listas:" + g.chave, alvo = "qz-sec-" + g.chave, ab = secAberta(id, secPadraoAberta(g.chave, corrente));
+      return '<section' + (ab ? '' : ' data-recolhida') + '>' + secTituloHtml(id, alvo, ab, qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span>') + '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") + '</div>' : "") +
+      (feitas.length ? '<div class="placa qz-p-feitas"><details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details></div>' : "") +
+      (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>') + '</div>';
     // s216 (part-4): a marca da recem-concluida vale ate ela aparecer JA resolvida (1 rerender la), e rola ate ela
     if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];
       if(rec && rec.status === "resolvida"){ QZ.recente = null; qzRolarRecente(); } }
@@ -2200,12 +2241,16 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       return '<section' + (ab ? '' : ' data-recolhida') + ' data-grupo="' + qzEsc(g.chave) + '">' + secTituloHtml(id, alvo, ab, titulo) +
         (g.itens.length ? '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, false, g.motivos[l._id]); }).join("") + '</ul>'
           : '<p class="qd-vazio">' + vazio + '</p>') + '</section>'; }
-    var html = secao(gs.hoje, "Hoje" + conta(gs.hoje), "Nenhuma lista do plano para hoje.");
-    if(gs.proximos.length){ html += '<h3 class="qz-grupo">Próximos dias</h3>' + gs.proximos.map(function(g){ return secao(g, qzEsc(g.titulo) + conta(g), ""); }).join(""); }
-    if(gs.fora.itens.length){ html += secao(gs.fora, "Fora do sprint · " + gs.fora.itens.length, ""); }
-    if(gs.outras.itens.length){ html += secao(gs.outras, "Outras listas · " + gs.outras.itens.length, ""); }
-    html += feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "";
-    $("qz-listas").innerHTML = html;
+    // s227 (tema v4 part 3): tres placas -- Hoje; Proximos dias + Fora do sprint + Outras listas; Resolvidas.
+    // No desktop (`qz-duas`, so com a 2a placa) Hoje a esquerda e Proximos a direita. Grupos, ordem e rotulos: os de antes
+    var prox = "";
+    if(gs.proximos.length){ prox += '<h3 class="qz-grupo">Próximos dias</h3>' + gs.proximos.map(function(g){ return secao(g, qzEsc(g.titulo) + conta(g), ""); }).join(""); }
+    if(gs.fora.itens.length){ prox += secao(gs.fora, "Fora do sprint · " + gs.fora.itens.length, ""); }
+    if(gs.outras.itens.length){ prox += secao(gs.outras, "Outras listas · " + gs.outras.itens.length, ""); }
+    var html = '<div class="placa qz-p-hoje">' + secao(gs.hoje, "Hoje" + conta(gs.hoje), "Nenhuma lista do plano para hoje.") + '</div>' +
+      (prox ? '<div class="placa qz-p-prox">' + prox + '</div>' : "");
+    html += feitas.length ? '<div class="placa qz-p-feitas"><details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details></div>' : "";
+    $("qz-listas").innerHTML = '<div class="qz-grade' + (prox ? ' qz-duas' : '') + '">' + html + '</div>';
     if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];
       if(rec && rec.status === "resolvida"){ QZ.recente = null; qzRolarRecente(); } }
   }

@@ -1136,3 +1136,124 @@ def test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado():
     assert html.count("mais fraco") == 1 and '<span class="bl-tag">mais fraco</span>' in html
     assert '<i style="width:77.2%"></i></span><span class="bl-pct">77,2%</span><span class="bl-t">67/351</span>' in html
     assert '<span class="bl-pct">--</span><span class="bl-t">31/117</span>' in html, "sem questao: sem acerto"
+
+
+# ------------------------------- s227 (hub-tema-v4 part-2): o Painel em placas, dois aneis, a barra do ritmo
+
+def _dia_aneis(feitas=30, q_hoje=76, consumo=50, teto=150):
+    return {"questoes": {"feitas_hoje": feitas, "alvo_dia": 114.9, "meta": 10000, "faltam": 2183, "dias": 19,
+                         "data_meta": "2026-11-01", "q_hoje": q_hoje},
+            "cards": {"vencidos": 176, "novos": 733, "teto": teto, "consumo_hoje": consumo,
+                      "restantes": None if consumo is None else max(0, teto - consumo),
+                      "retencao_7d": {"retencao": None}}, "sessao_gravada": ""}
+
+
+def test_hoje_dois_aneis_sem_soma():
+    """DoD 3 (decisao dele, 13/10): o Hoje e UMA placa com dois aneis concentricos em SVG inline -- externo
+    ciano = questoes feitas / `q_hoje`, interno rosa = cards consumidos / teto, trilho `--afundado`,
+    `pathLength="100"` com o % no `stroke-dasharray`; o centro e o dia; 0% = so o trilho (sem ponto solto).
+    Os numeros moram na LEGENDA, com as ancoras do "Hoje ao vivo"; o `aria-label` diz os dois. Nenhum
+    numero soma as duas unidades (o "226" dos mockups = 76 + 150)."""
+    html_ = painel._html_dia(_dia_aneis(), "2026-10-13")
+    assert html_.startswith('<div class="placa dash-hoje">') and "<h2>Hoje, terça 13/10</h2>" in html_
+    svg = re.search(r'<svg class="aneis" viewBox="0 0 120 120" role="img" aria-label="([^"]+)">(.*?)</svg>',
+                    html_, re.S)
+    assert svg, html_
+    assert svg.group(1) == "Questões: 30 de 76. Cards: 50 de 150."
+    arcos = re.findall(r'<circle class="an-arco (an-[qc])" cx="60" cy="60" r="(\d+)" pathLength="100" '
+                       r'stroke-dasharray="(\d+) 100" transform="rotate\(-90 60 60\)"/>', svg.group(2))
+    assert arcos == [("an-q", str(painel.ANEL_Q), "39"), ("an-c", str(painel.ANEL_C), "33")], arcos
+    assert painel.ANEL_Q > painel.ANEL_C, "questoes por fora, cards por dentro"
+    assert svg.group(2).count('class="an-trilho"') == 2
+    assert re.search(r'<text class="an-d"[^>]*>ter</text><text class="an-n"[^>]*>13</text>', svg.group(2))
+    # a legenda: os dois numeros, cada um contra a propria meta, com a ancora do ao vivo
+    assert '<b data-vivo="questoes" data-base="30">30</b> de 76</p>' in html_
+    assert '<b data-vivo="cards" data-base="50">50</b> de 150</p>' in html_
+    assert html_.count("data-vivo=") == 2 and "data-vivo" not in svg.group(0), "o anel fica no publicado"
+    assert "Ir para os cards" in html_ and "faltam 46 do plano de hoje" in html_ and "faltam 100 hoje" in html_
+    numeros = set(re.findall(r"\d+", _visivel(html_)))
+    assert "80" not in numeros and "226" not in numeros, "nenhum numero soma questoes com cards"
+    # 0% desenha so o trilho; 100% fecha o anel (feito acima do alvo nao passa de 100)
+    zero = painel._html_dia(_dia_aneis(feitas=0, consumo=0), "2026-10-13")
+    assert "an-arco" not in zero and zero.count('class="an-trilho"') == 2
+    cheio = painel._html_dia(_dia_aneis(feitas=120, consumo=150), "2026-10-13")
+    assert cheio.count('stroke-dasharray="100 100"') == 2
+    # sem contador de cards: o anel de cards fica no trilho e o nome diz a frase da legenda
+    sem = painel._html_dia(_dia_aneis(consumo=None), "2026-10-13")
+    assert "an-arco an-c" not in sem and "Cards: não consegui contar as revisões de hoje." in sem
+    css = painel.CSS
+    for regra in (".an-trilho{stroke:var(--trilho)}", ".an-arco.an-q{stroke:var(--acento)}",
+                  ".an-arco.an-c{stroke:var(--rosa)}", ".an-arco{stroke-linecap:round}"):
+        assert regra in css, regra
+
+
+def test_ritmo_barra_com_marca_do_sprint():
+    """DoD 4 (decisao dele, 13/10: "barra com a marca dos 80/dia, sem gauge"): acima dos numeros, o real de
+    7 dias numa barra contra UMA marca vertical -- com sprint, a `capacidade_q`; sem sprint, o necessario
+    por dia da meta. Escala = 1,25x o maior dos dois. Abaixo = ambar com "abaixo de 80/dia"; em dia =
+    verde com "em dia"; os 3 numeros de hoje ficam."""
+    sp = {"q": 1500, "simulados_q": 300, "fechando_q": 9500, "fim": "2026-10-31", "fora": 37, "q_fora": 997,
+          "capacidade_q": 80}
+    abaixo = painel._html_ritmo(_ritmo(sp))                      # real 50 contra 80: escala 100
+    assert abaixo.startswith('<div class="placa dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>')
+    barra = re.search(r'<div class="rb([^"]*)" role="img" aria-label="([^"]+)" title="[^"]+">'
+                      r'<span class="rb-trilho"><i style="width:([\d.]+)%"></i></span>'
+                      r'<span class="rb-marca" style="left:([\d.]+)%"><span class="rb-alvo">([^<]+)</span>', abaixo)
+    assert barra, abaixo
+    assert barra.groups() == (" abaixo", "50,0 por dia nos últimos 7 dias, abaixo de 80/dia", "50.0", "80.0", "80/dia")
+    assert abaixo.index('class="rb') < abaixo.index('class="figs"'), "a barra fica acima dos numeros"
+    assert "abaixo de 80/dia" in _visivel(abaixo.split('class="figs"')[1])
+    assert len(re.findall(r'<div class="fig[^"]*"><p class="fig-n">', abaixo)) == 3, "os 3 numeros de hoje"
+    em_dia = painel._html_ritmo(dict(_ritmo(sp), real_7d=90.0))  # 90 contra 80: escala 112,5
+    assert re.search(r'<div class="rb em-dia"[^>]*><span class="rb-trilho"><i style="width:80.0%"></i></span>'
+                     r'<span class="rb-marca" style="left:71.1%">', em_dia)
+    assert "em dia" in em_dia
+    sem_sprint = painel._html_ritmo(_ritmo())                    # real 50 contra o necessario 100: escala 125
+    assert re.search(r'<div class="rb abaixo"[^>]*><span class="rb-trilho"><i style="width:40.0%"></i></span>'
+                     r'<span class="rb-marca" style="left:80.0%"><span class="rb-alvo">100,0/dia</span>', sem_sprint)
+    sem_config = painel._html_ritmo(_ritmo(dict(sp, capacidade_q=None)))
+    assert 'class="rb' not in sem_config, "sem marca, sem barra"
+    for html_ in (abaixo, em_dia, sem_sprint):
+        assert "<svg" not in html_ and "gauge" not in html_
+    css = painel.CSS
+    assert ".rb.abaixo .rb-trilho i{background:var(--aviso)}" in css
+    assert ".rb.em-dia .rb-trilho i{background:var(--ok)}" in css
+    assert ".rb-marca{position:absolute" in css
+
+
+def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
+    """DoD 2 e 5: cada parte do dashboard e uma `.placa` (Hoje, Ritmo, Ate 01/11, Por bloco, Revisoes, nessa
+    ordem) dentro da secao `data-bloco="dia"`, que e a GRADE; o Plano de hoje e a Documentacao sao placas
+    tambem (Proximos dias e Fora do sprint recolhidos DENTRO da placa). O CSS: `.wrap` na `--largura`, uma
+    coluna e, de 760 px, duas, com o Ate 01/11 em largura total; o mesmo vao entre placas e entre secoes;
+    nenhum filete entre secoes; a `.placa` do tema e composta, nunca redefinida aqui."""
+    import plano
+    monkeypatch.setattr(plano, "ler_sprint", lambda caminho=None: {"capacidade_q": 80, "fim": "2026-10-31"})
+    _com_sprint(db_sintetico)
+    (tmp_path / "aula-dossie.html").write_text("<title>x</title>", encoding="utf-8")
+    reg = tmp_path / "quadro.json"
+    reg.write_text(json.dumps({"itens": {"dossie": {"tipo": "analise", "titulo": "Dossiê"}}}), encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    pagina = painel.render_html(painel.coletar())
+    assert '<section class="bloco dia dash" data-bloco="dia">' in pagina
+    dash = _dash(pagina)
+    partes = re.findall(r'<div class="placa ([^"]+)"( data-bloco="[a-z]+")?>', dash)
+    assert partes == [("dash-hoje", ""), ("dash-sec", ' data-bloco="ritmo"'), ("dash-sec proj", ""),
+                      ("dash-sec", ' data-bloco="blocos"'), ("dash-sec agenda", "")], partes
+    assert "<section" not in dash[1:], "as placas sao filhas da grade, sem secao dentro"
+    assert '<section class="bloco semana placa" data-bloco="semana">' in pagina
+    assert '<section class="bloco docs placa" data-bloco="docs">' in pagina
+    i = pagina.index('data-bloco="semana"')
+    plano_html = pagina[i:pagina.index("</section>", i)]
+    assert plano_html.count('<details class="rota-sem') >= 2 and "<details open" not in plano_html
+    css = painel.CSS
+    assert ".wrap{max-width:var(--largura)" in css
+    assert ".dash{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--esp-4)}" in css
+    assert ".bloco + .bloco{margin-top:var(--esp-4)}" in css, "entre secoes, o mesmo vao da grade"
+    grade = css.split("@media (min-width:760px){", 1)[1].split("\n}", 1)[0]
+    assert ".dash{grid-template-columns:repeat(2,minmax(0,1fr))}" in grade
+    assert ".dash > .proj{grid-column:1 / -1}" in grade
+    assert not re.search(r"\.(bloco|dash-sec)\{[^}]*border-top", css), "filete entre secoes voltou"
+    assert not re.search(r"(^|[}\s,])\.placa\s*\{", css), "a .placa e do tema: aqui so se compoe"
+    assert pagina.count("max-width") <= 2

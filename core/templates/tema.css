@@ -28,6 +28,7 @@
   /* superficies: fundo (o corpo do controle), placa, elevado/selecionado, filete interno, borda da placa,
      borda de controle (>= 3:1). Contraste medido pelo teste de contraste do tema */
   --papel:#0C0C12; --card:#15151E; --afundado:#1E1D2A; --linha:#2B2A3A; --borda-placa:#3A3852; --linha-forte:#6E6A8A;
+  --trilho:#312F49;   /* o trilho vazio de barra e anel sobre a placa (1,4:1: visivel no 0 de 76 da manha) */
   /* texto em branco quente: principal 14,6-17,1:1 / secundario 8,6-10,0:1 / meta 5,4-6,3:1 sobre as tres superficies */
   --tinta:#F6EFEA; --tinta2:#BDB7CC; --tinta3:#948FAA;
   /* identidade e interacao: ciano = navegacao ativa, foco, progresso, acao primaria; rosa = marca e detalhe
@@ -61,7 +62,7 @@
   --on:var(--sobre);
 }
 :root[data-theme="light"]{
-  --papel:#F4F3F8; --card:#FFFFFF; --afundado:#ECEAF3; --linha:#DFDCE8; --borda-placa:#C2BCD4; --linha-forte:#7F7A9C;
+  --papel:#F4F3F8; --card:#FFFFFF; --afundado:#ECEAF3; --linha:#DFDCE8; --borda-placa:#C2BCD4; --linha-forte:#7F7A9C; --trilho:#D3CFE1;
   --tinta:#1A1626; --tinta2:#4A4560; --tinta3:#5F5A78;
   --acento:#00737D; --acento-tinta:#005A62; --acento-fraco:#DDF1F4;
   --rosa:#C2176F; --rosa-fraco:#F8E1EE;

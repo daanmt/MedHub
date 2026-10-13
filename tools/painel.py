@@ -35,6 +35,7 @@ import argparse
 import html
 import json
 import math
+import re
 import subprocess
 import sys
 from datetime import date
@@ -500,12 +501,40 @@ def _acao(t):
     return "<br>".join(partes)
 
 
+#: Os dois aneis do Hoje (s227, tema v4 part-2), num viewBox de 120 com traco de 10: o externo =
+#: questoes, o interno = cards, 3 de folga entre eles; o centro (raio 35) leva o dia.
+ANEL_Q, ANEL_C = 53, 40
+
+
+def _anel(classe, raio, pct, dica):
+    """Um anel: o trilho e o arco por cima. `pathLength="100"`: o traco do arco E o % (inteiro, ja
+    arredondado aqui; 0 < % < 1 vira 1 para o feito nao sumir). 0% = so o trilho, sem o ponto solto
+    que o `linecap` redondo desenharia num traco de comprimento 0."""
+    p = 0 if pct <= 0 else max(1, int(round(pct)))
+    arco = ('<circle class="an-arco %s" cx="60" cy="60" r="%d" pathLength="100" stroke-dasharray="%d 100" '
+            'transform="rotate(-90 60 60)"/>' % (classe, raio, p)) if p else ""
+    return ('<g><title>%s</title><circle class="an-trilho" cx="60" cy="60" r="%d"/>%s</g>'
+            % (_e(dica), raio, arco))
+
+
+def _texto(trecho):
+    """O texto visivel de um trecho de HTML (para o `aria-label` e a dica dizerem o MESMO da legenda)."""
+    return html.unescape(re.sub(r"<[^>]+>", "", trecho))
+
+
 def _html_dia(d, data_iso):
-    """O topo do dashboard: o titulo do dia e os dois tiles (Questoes, Cards) -- um numero por tile,
-    barra fina, rotulo curto (`kpi-r`), nunca legenda em prosa (s226, painel-dashboard-sprint part-1).
+    """O Hoje do dashboard, uma placa: o titulo do dia, os DOIS aneis concentricos e a legenda com os
+    numeros (s227, tema v4 part-2: decisao dele em 13/10). Externo ciano = questoes feitas contra o alvo
+    do dia; interno rosa = cards consumidos contra o teto. Cada anel contra a PROPRIA meta: nenhum numero
+    soma as duas unidades (o "226" dos mockups). O centro e o dia, nunca uma conta.
 
     Com sprint (`questoes.q_hoje` nao-None), Questoes = feitas de `q_hoje` (o MESMO do "Plano de hoje"
-    e do boot); sem sprint, o ritmo da meta (s203)."""
+    e do boot); sem sprint, o ritmo da meta (s203).
+
+    Hoje ao vivo: as ancoras `b[data-vivo]` ficam nos numeros da LEGENDA (o hub poe o "+K" ao lado
+    delas); o anel fica no valor PUBLICADO -- o hub so le a ancora, nao redesenha o SVG, e o "+K" ao
+    lado do numero ja diz o que entrou depois do publish.
+    ⚰️ *Ate 13/10 eram dois tiles (Questoes, Cards) com uma barra fina cada.*"""
     hoje = date.fromisoformat(data_iso)
     q, c = d["questoes"], d["cards"]
 
@@ -553,19 +582,27 @@ def _html_dia(d, data_iso):
     if ret.get("retencao") is not None:
         extra_c.append("retenção %s%% em 7 dias" % _n(ret["retencao"] * 100, 1))
 
+    # o nome do anel diz o que a legenda diz (sem contador de cards, a frase da legenda)
+    txt_q = "Questões: %s" % _texto(num_q)
+    txt_c = "Cards: %s" % (_texto(num_c) if c["consumo_hoje"] is not None else nota_c)
+    aneis = ('<svg class="aneis" viewBox="0 0 120 120" role="img" aria-label="%s">%s%s'
+             '<text class="an-d" x="60" y="55" text-anchor="middle">%s</text>'
+             '<text class="an-n" x="60" y="80" text-anchor="middle">%d</text></svg>'
+             % (_e("%s. %s." % (txt_q, txt_c)), _anel("an-q", ANEL_Q, barra_q, txt_q),
+                _anel("an-c", ANEL_C, barra_c, txt_c), DIAS_SEMANA[hoje.weekday()], hoje.day))
     return (
+        '<div class="placa dash-hoje">\n'
         '<h2>Hoje, %s %s</h2>\n'
-        '<div class="doses" data-sessao-gravada="%s">\n'
-        '  <div class="dose"><h3>Questões</h3><p class="fracao">%s</p>'
-        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="kpi-r">%s</p></div>\n'
-        '  <div class="dose"><h3>Cards</h3><p class="fracao">%s</p>'
-        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="kpi-r">%s</p>'
-        '<p class="kpi-r">%s</p>'
+        '<div class="hoje" data-sessao-gravada="%s">%s\n'
+        '<div class="hoje-leg">\n'
+        '  <div class="dose"><h3><i class="sw-anel an-q"></i>Questões</h3><p class="fracao">%s</p>'
+        '<p class="kpi-r">%s</p></div>\n'
+        '  <div class="dose"><h3><i class="sw-anel an-c"></i>Cards</h3><p class="fracao">%s</p>'
+        '<p class="kpi-r">%s</p><p class="kpi-r">%s</p>'
         '<p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>\n'
-        '</div>\n'
-        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"), _e(d.get("sessao_gravada") or ""),
-           num_q, barra_q, _e(nota_q),
-           num_c, barra_c, _e(nota_c), _e(" · ".join(extra_c))))
+        '</div></div>\n</div>\n'
+        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"), _e(d.get("sessao_gravada") or ""), aneis,
+           num_q, _e(nota_q), num_c, _e(nota_c), _e(" · ".join(extra_c))))
 
 
 def _html_agenda(ag):
@@ -576,7 +613,7 @@ def _html_agenda(ag):
         '<span class="ag-d">%s</span></li>'
         % (x["n"], max(4.0, 100.0 * x["n"] / maior), DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()])
         for x in ag["dias"])
-    return ('<div class="dash-sec agenda"><h3>Revisões nos próximos 7 dias</h3>'
+    return ('<div class="placa dash-sec agenda"><h3>Revisões nos próximos 7 dias</h3>'
             '<ol class="ag-barras" aria-label="Revisões por dia">%s</ol></div>' % barras)
 
 
@@ -781,9 +818,37 @@ def _html_ritmo(r):
                    % (_n(alvo, 1), _n(r["faltam"]), _n(r["meta"])))
     fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
                'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
-    # s226 (pedido dele, 13/10): sem legenda em prosa
-    return ('<div class="dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>\n'
-            '<div class="figs">%s</div></div>\n' % "".join(fig))
+    # s226 (pedido dele, 13/10): sem legenda em prosa. s227 (tema v4 part-2): a barra acima dos numeros
+    return ('<div class="placa dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>\n'
+            '%s<div class="figs">%s</div></div>\n' % (_html_ritmo_barra(r), "".join(fig)))
+
+
+def _html_ritmo_barra(r):
+    """s227 (tema v4 part-2, decisao dele em 13/10: "barra com a marca dos 80/dia, sem gauge"): o real de
+    7 dias como UMA barra contra UMA marca vertical -- com sprint, a capacidade dele (`capacidade_q`);
+    sem sprint, o necessario por dia da meta (`alvo_marco`). Escala = 1,25x o maior dos dois: a marca
+    nunca cola na ponta. A cor de estado so vem com o rotulo que os numeros abaixo ja trazem (abaixo =
+    ambar, "abaixo de 80/dia"; em dia com sprint = verde, "em dia"); sem rotulo de estado, ciano.
+    Sem marca (sprint sem config, meta sem data), sem barra: barra sem referencia nao diz nada."""
+    sp = r.get("sprint")
+    alvo = sp.get("capacidade_q") if sp else r.get("alvo_marco")
+    if not alvo:
+        return ""
+    real = float(r.get("real_7d") or 0)
+    escala = max(real, float(alvo)) * 1.25
+    abaixo = real < alvo
+    marca = "%s/dia" % (_n(alvo) if sp else _n(alvo, 1))
+    if sp:
+        classe = " abaixo" if abaixo else " em-dia"
+        alt = "%s por dia nos últimos 7 dias, %s %s" % (_n(real, 1), "abaixo de" if abaixo else "em dia com", marca)
+    else:
+        classe = " abaixo" if abaixo else ""
+        alt = ("%s por dia nos últimos 7 dias; o necessário até a prova: %s%s"
+               % (_n(real, 1), marca, " (abaixo do necessário)" if abaixo else ""))
+    return ('<div class="rb%s" role="img" aria-label="%s" title="%s">'
+            '<span class="rb-trilho"><i style="width:%.1f%%"></i></span>'
+            '<span class="rb-marca" style="left:%.1f%%"><span class="rb-alvo">%s</span></span></div>\n'
+            % (classe, _e(alt), _e(alt), 100.0 * real / escala, 100.0 * alvo / escala, marca))
 
 
 def _html_projecao(r, data_meta):
@@ -810,7 +875,7 @@ def _html_projecao(r, data_meta):
                       % (c, _n(v), t) for c, v, t in leg)
     fora = ("fora do sprint: %s&nbsp;q · faltam %s para a meta" % (_n(sp["q_fora"]), _n(falta)) if falta
             else "fora do sprint: %s&nbsp;q · o sprint chega à meta" % _n(sp["q_fora"]))
-    return ('<div class="dash-sec proj"><h3>Até %s</h3>'
+    return ('<div class="placa dash-sec proj"><h3>Até %s</h3>'
             '<div class="proj-barra" role="img" aria-label="%s">%s</div>'
             '<ol class="proj-leg" aria-hidden="true">%s</ol>'
             '<p class="kpi-r proj-fora" aria-hidden="true"><i class="sw p-fora"></i>%s</p></div>\n'
@@ -838,7 +903,7 @@ def _html_blocos(b):
     linhas = [linha(nome, v, "fraco" if nome == fraco else "") for nome, v in b["blocos"].items()]
     linhas.append(linha("Simulados", b["simulados"], "sim"))
     # s226 (pedido dele, 13/10): a nota 'Fora da tabela' saiu (legenda) e nao volta
-    return ('<div class="dash-sec" data-bloco="blocos"><h3>Por bloco</h3>'
+    return ('<div class="placa dash-sec" data-bloco="blocos"><h3>Por bloco</h3>'
             '<p class="bl bl-cab" aria-hidden="true"><span></span><span></span><span>acerto</span>'
             '<span>tarefas</span></p>'
             '<ol class="bls" aria-label="Acerto e tarefas feitas por bloco">%s</ol></div>\n' % "".join(linhas))
@@ -847,7 +912,10 @@ def _html_blocos(b):
 def _html_dash(d):
     """O dashboard do topo (s226, painel-dashboard-sprint part-1): Hoje · Ritmo · Ate 01/11 · Por bloco ·
     Revisoes 7 dias, numa secao so (`data-bloco="dia"`; Ritmo e Por bloco mantem o `data-bloco` deles por
-    dentro). Nenhuma legenda em prosa (`p.nota`) aqui dentro."""
+    dentro). Nenhuma legenda em prosa (`p.nota`) aqui dentro.
+    s227 (tema v4 part-2): cada parte e uma `.placa` (a primitiva do tema) e a secao e a GRADE delas --
+    uma coluna no celular; no desktop, Hoje | Ritmo, Ate 01/11 inteira, Por bloco | Revisoes (CSS).
+    ⚰️ *Ate 13/10 as cinco partes eram empilhadas, cada uma sob um filete.*"""
     return "".join([_html_dia(d["dia"], d["data"]), _html_ritmo(d["ritmo"]),
                     _html_projecao(d["ritmo"], d["dia"]["questoes"].get("data_meta")),
                     _html_blocos(d["blocos"]), _html_agenda(d["dia"]["agenda"])])
@@ -860,8 +928,9 @@ def _sec(chave, corpo, extra=""):
 
 CSS = """
 /* Cor, tipo, espaco e raio: core/templates/tema.css (fonte unica, embutido logo depois deste bloco).
-   Aqui so a estrutura do Painel (docs/UI.md): secoes com filete, numeros sem caixa, a proxima tarefa em
-   destaque, atraso em ambar com texto (nunca so a cor). */
+   Aqui so a estrutura do Painel (docs/UI.md): uma placa por secao (a .placa do tema, composta, nunca
+   redefinida), as do topo em grade; dentro da placa, linhas com filete e numeros sem caixa; a proxima
+   tarefa em destaque, atraso em ambar com texto (nunca so a cor). */
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
@@ -869,32 +938,70 @@ body{
   font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.5; overflow-wrap:break-word;
 }
-.wrap{max-width:var(--wrap);margin:0 auto;padding:4px 2px 40px}
+.wrap{max-width:var(--largura);margin:0 auto;padding:4px 2px 40px}
 h2{font-size:var(--fs-secao);font-weight:700;line-height:1.25;margin:0 0 var(--esp-1);letter-spacing:-.01em;text-wrap:balance;color:var(--tinta)}
 h3{font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2);margin:0 0 var(--esp-1)}
 p{margin:0}
 a{color:var(--acento);text-underline-offset:2px}
 .atualizado{color:var(--tinta3);font-size:var(--fs-meta);margin:0 0 var(--esp-2);text-align:right}
-.bloco{padding:var(--esp-5) 0;border-top:1px solid var(--linha)}
-.bloco:first-of-type{border-top:0;padding-top:var(--esp-1)}
+/* secoes: o dashboard (a grade das placas do topo), depois o Plano de hoje e a Documentacao, uma placa
+   cada; entre elas o MESMO vao da grade (as bordas alinham), nunca filete */
+.bloco{margin:0}
+.bloco + .bloco{margin-top:var(--esp-4)}
+/* o titulo da placa (o 1o filho): o mesmo em todas -- o Hoje se distingue pelos aneis, nao pelo titulo */
+.placa > h2:first-child,.placa > h3:first-child{font-size:var(--fs-item);font-weight:650;line-height:1.3;color:var(--tinta);margin:0 0 var(--esp-3)}
+.placa > h2:first-child + .sub{margin-top:calc(-1 * var(--esp-2))}
 .sub{color:var(--tinta2);font-size:var(--fs-legenda);margin:0 0 var(--esp-3)}
 .nota{color:var(--tinta3);font-size:var(--fs-meta);margin-top:var(--esp-1)}
 .tenue{color:var(--tinta3)}
 
-/* Dashboard do topo (s226): Hoje · Ritmo · Ate 01/11 · Por bloco · Revisoes 7 dias. Um numero por tile,
-   barra fina, rotulo curto; sem caixa por numero e sem legenda em prosa. Cada parte separada por filete. */
-.dia h2{font-size:1.25rem;margin-bottom:var(--esp-4)}   /* abaixo do titulo da aba ("Painel"), acima das secoes */
-.dash-sec{margin-top:var(--esp-5);padding-top:var(--esp-4);border-top:1px solid var(--linha)}
-.dash-sec h3{margin-bottom:var(--esp-2)}
-.kpi-r{color:var(--tinta3);font-size:var(--fs-meta)}
-.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-6)}
+/* Dashboard do topo (s226; s227 em placas): Hoje · Ritmo · Ate 01/11 · Por bloco · Revisoes 7 dias, cada
+   parte uma placa. Uma coluna no celular; no desktop (o iframe a partir de 760 px), duas: Hoje | Ritmo,
+   Ate 01/11 inteira, Por bloco | Revisoes. Mesma grade e mesmo vao: as bordas alinham. A ousadia mora so
+   nos aneis do Hoje; o resto quieto. Sem caixa por numero e sem legenda em prosa. */
+.dash{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--esp-4)}
+.kpi-r{color:var(--tinta3);font-size:var(--fs-meta);text-wrap:pretty}
+/* Hoje: dois aneis concentricos, cada um contra a propria meta (externo ciano = questoes, interno rosa =
+   cards), nenhum numero somando os dois; o centro e o dia. Pela largura da PLACA, nao da tela: a legenda
+   vai abaixo dos aneis (2 colunas); a partir de 26rem, ao lado (empilhada); de 38rem, ao lado em 2 colunas */
+.dash-hoje{container-type:inline-size}
+.hoje{display:grid;justify-items:center;gap:var(--esp-4)}
+.aneis{display:block;width:9.5rem;height:auto}
+.aneis circle{fill:none;stroke-width:10}
+.an-trilho{stroke:var(--trilho)}
+.an-arco{stroke-linecap:round}
+.an-arco.an-q{stroke:var(--acento)}
+.an-arco.an-c{stroke:var(--rosa)}
+.an-d{font-size:13px;font-weight:600;fill:var(--tinta2)}
+.an-n{font-size:28px;font-weight:700;fill:var(--tinta)}
+.hoje-leg{justify-self:stretch;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-4)}
+.sw-anel{display:inline-block;width:12px;height:12px;border-radius:50%;border:3px solid var(--acento);margin-right:var(--esp-2);vertical-align:-1px}
+.sw-anel.an-c{border-color:var(--rosa)}
+@container (min-width:26rem){
+  .hoje{grid-template-columns:auto minmax(0,1fr);justify-items:stretch;align-items:center;gap:var(--esp-4) var(--esp-6)}
+  .aneis{width:11.5rem}
+  .hoje-leg{grid-template-columns:minmax(0,1fr)}
+}
+@container (min-width:38rem){
+  .hoje-leg{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-4) var(--esp-6)}
+}
 .dose{min-width:0}
+.dose h3{margin-bottom:var(--esp-1)}
 .fracao{font-size:1rem;color:var(--tinta2)}
 .fracao b{font-size:var(--fs-numero);line-height:1.1;color:var(--tinta);font-weight:700;letter-spacing:-.02em;margin-right:var(--esp-1)}
-.barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-2) 0 var(--esp-1);overflow:hidden}
-.barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
+.fracao + .kpi-r{margin-top:var(--esp-1)}
 .ir{margin-top:var(--esp-1);font-weight:600}
 .ir a{display:inline-flex;align-items:center;min-height:44px}
+/* Ritmo: o real de 7 dias numa barra contra UMA marca vertical (com sprint, a capacidade dele; sem, o
+   necessario por dia da meta). Abaixo = ambar, em dia = verde, sempre com o rotulo nos numeros; sem
+   rotulo de estado, ciano. Sem gauge */
+.rb{position:relative;margin:var(--esp-2) 0 var(--esp-6)}
+.rb-trilho{display:block;height:10px;background:var(--trilho);border-radius:var(--raio-pilula);overflow:hidden}
+.rb-trilho i{display:block;height:100%;background:var(--acento);border-radius:inherit}
+.rb.abaixo .rb-trilho i{background:var(--aviso)}
+.rb.em-dia .rb-trilho i{background:var(--ok)}
+.rb-marca{position:absolute;top:-5px;width:2px;height:20px;margin-left:-1px;background:var(--tinta);border-radius:1px}
+.rb-alvo{position:absolute;top:calc(100% + var(--esp-1));left:50%;transform:translateX(-50%);width:max-content;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2)}
 /* Ate 01/11: uma barra empilhada -- feito (ciano) | cumprindo o sprint (lavagem ciano com contorno) | o
    que falta para a meta = fora do sprint (filete tracejado neutro: nao e erro); 2 px de fundo entre trechos */
 .proj-barra{display:flex;gap:2px;height:12px;margin:var(--esp-1) 0 var(--esp-3)}
@@ -919,7 +1026,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .bl-cab{padding:0;border:0;color:var(--tinta3);font-size:var(--fs-meta)}
 .bl-nome{font-weight:650;color:var(--tinta)}
 .bl-tag{display:block;font-size:var(--fs-meta);font-weight:600;color:var(--aviso)}
-.bl-barra{display:block;height:6px;background:var(--afundado);border-radius:var(--raio-pilula);overflow:hidden}
+.bl-barra{display:block;height:6px;background:var(--trilho);border-radius:var(--raio-pilula);overflow:hidden}
 .bl-barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
 .bl-pct,.bl-t,.bl-cab span:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums}
 .bl-pct{font-weight:650;color:var(--tinta)}
@@ -928,9 +1035,11 @@ a{color:var(--acento);text-underline-offset:2px}
 .bl.fraco .bl-pct{color:var(--aviso)}
 .bl.sim .bl-nome{color:var(--tinta2);font-weight:500}
 .bl.sim .bl-barra i{background:var(--linha-forte)}
-.ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,4.5rem));
-           gap:var(--esp-2);height:112px;align-items:end}
-.ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+/* Revisoes 7 dias: as barras ocupam a placa (na grade, a altura da linha vem do Por bloco ao lado) */
+.agenda{display:flex;flex-direction:column}
+.ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+           gap:var(--esp-2);flex:1 1 auto;min-height:112px;align-items:stretch}
+.ag-barras li{min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
 /* previsao (dado, nao acao): roxo, a cor de detalhe visual do tema */
 .ag-barras i{display:block;width:min(100%,28px);background:var(--roxo-fraco);border-top:2px solid var(--roxo);border-radius:var(--raio-p) var(--raio-p) 0 0}
@@ -981,7 +1090,7 @@ a{color:var(--acento);text-underline-offset:2px}
 
 /* Ritmo: numeros sem caixa; com sprint, o real contra a capacidade do sprint (abaixo = ambar + texto,
    em dia = verde + texto); sem sprint, o necessario por dia da meta e a referencia (ciano) */
-.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.5rem),1fr));gap:var(--esp-4)}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6rem),1fr));gap:var(--esp-4) var(--esp-3)}
 .fig{min-width:0}
 .fig-n{font-size:1.5rem;font-weight:700;line-height:1.2;color:var(--tinta)}
 .fig-r{font-size:var(--fs-meta);color:var(--tinta3)}
@@ -989,6 +1098,19 @@ a{color:var(--acento);text-underline-offset:2px}
 .fig.em-dia .fig-r b{color:var(--ok)}
 .fig.alvo .fig-n{color:var(--acento)}
 
+/* a grade no desktop: o media mede o iframe (= a coluna larga do shell) */
+@media (min-width:760px){
+  .dash{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dash > .proj{grid-column:1 / -1}
+  /* o Ritmo divide a linha com o Hoje: os numeros viram linhas (numero | rotulo) com filete entre elas,
+     de alturas iguais, ocupando a placa ate a borda de baixo (a linha da grade tem a altura do Hoje) */
+  .dash > [data-bloco="ritmo"]{display:flex;flex-direction:column}
+  .figs{flex:1 1 auto;grid-template-columns:minmax(0,1fr);grid-auto-rows:1fr;gap:0}
+  .fig{display:grid;grid-template-columns:5.5rem minmax(0,1fr);column-gap:var(--esp-3);align-items:baseline;align-content:center;padding:var(--esp-2) 0}
+  .fig + .fig{border-top:1px solid var(--linha)}
+  .fig-n{grid-row:1 / span 2}
+  .fig-r{grid-column:2}
+}
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr)}
   .t-acao{grid-column:1;grid-row:auto;justify-content:flex-start}
@@ -1040,9 +1162,10 @@ def render_html(d):
         _sec("dia", _html_dash(d), "dia dash"),
         # s226 (sprint-final-uerj part-3): com sprint, o bloco da semana vira Hoje / Proximos dias /
         # Fora do sprint (o `data-bloco` segue "semana": o hub e os testes o acham pelo nome antigo)
+        # s227 (tema v4 part-2): o Plano de hoje (ou a semana) e a Documentacao, uma placa cada
         _sec("semana", _html_sprint(d["sprint"], d["dia"]["cards"]) if d.get("sprint")
-             else _html_semana(d["semana"])),
-    ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
+             else _html_semana(d["semana"]), "semana placa"),
+    ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]), "docs placa")] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             "<title>%s</title>\n%s<style>%s</style>\n<style id=\"medhub-tema\">%s</style>\n"

@@ -93,7 +93,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 ## 4. Semântica das cores
 
 - **Ciano**: navegação ativa (aba, segmento), foco, progresso (barras, trilho atual, o "necessário por dia"), ação
-  primária (botão `.primario`, "Próxima" do Painel) e link. Nunca título nem rótulo.
+  primária (botão `.primario`), o rótulo "Próxima" do Painel e link. Nunca título nem rótulo.
 - **Rosa**: a marca e destaque pontual (`nova` na Biblioteca). Nunca estado.
 - **Roxo**: decoração e dado visual (gráfico de previsão, número do degrau das aulas) e os estados chute/desatenção.
 - **Amarelo**: marca-texto (grifo).
@@ -124,9 +124,11 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 ## 6. Telas: o que cada uma prioriza
 
 - **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos), o que está atrasado
-  (Semana: "da semana N" em âmbar) e o próximo passo (a 1ª tarefa da Semana leva o rótulo "Próxima" e a ação como
-  botão primário; CSS `[data-bloco="semana"] > .tarefas > .tarefa:first-child`). O Ritmo fica logo abaixo de Hoje
-  (pedido dele, s221).
+  (Semana: o subtítulo "Atrasadas · N" em âmbar, uma vez, nunca por linha) e o próximo passo (a 1ª tarefa da Semana
+  leva só o rótulo "Próxima", `li.tarefa.proxima`, o mesmo controle das outras). Na Semana, a tarefa com questões no
+  hub é UM alvo (`a.t-alvo` com `data-hub-aba`: a linha inteira abre a lista); a aula ligada fica fora dele, pequena
+  ("aula"). Fora do hub (lista externa, PDF), a coluna de ação de antes. O Ritmo fica logo abaixo de Hoje (pedido
+  dele, s221).
 - **Teoria**: linhas; o aviso de atraso aparece uma vez, no título da seção "Atrasadas"; a linha inteira abre a aula.
 - **Listas e simulados**: o trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê,
   veredito, cadeia com a declaração); a tela de fim mostra a faixa de métricas, o por bloco, o bloco Elos e a revisão.
@@ -214,5 +216,9 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 - **v3 retrowave contido (13/10, s225)**: o brief dele (paleta de referência `#17132E #211C3A #29233F #403858`, ciano
   `#00D9E8`, rosa `#FF4FA3`, roxo `#AA71E8`, amarelo `#FFD447`, verde `#79D6A5`, coral `#FF7C87`, âmbar `#FFBE72`) com
   semântica fixa por cor, hierarquia por tipo e menos caixas. Este arquivo nasce aqui.
+- **Semana do Painel no padrão da Teoria (13/10, s226, P21)**: a linha inteira abre a lista no hub ("resolver no
+  hub" saiu), a aula vira ação pequena fora do alvo, o atraso sobe para o subtítulo "Atrasadas · N" ("da semana N"
+  saiu da linha) e a "Próxima" perde o botão cheio, fica só o rótulo. Travas: `test_painel.py::
+  test_semana_linha_inteira_abre_a_lista`, `test_atrasadas_sob_subtitulo_unico`, `test_proxima_so_pelo_rotulo_sem_botao_cheio`.
 
 Ele muda de ideia rápido: trocar paleta é trocar os dois blocos de cor do `tema.css`; nada além disso deve ser preciso.

@@ -378,10 +378,10 @@ def test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed():
     abre a aba Listas -- modo Questoes para lista, Simulados para simulado -- e o link do EMED some.
     Fora do banco, "abrir lista" externo segue como era."""
     base = {"classe": "lista", "url_lista": "https://exemplo/40", "area": "Endocrinologia"}
-    no_hub = painel._acao(dict(base, no_hub=True))
-    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in no_hub
+    no_hub = _li(**dict(base, no_hub=True))
+    assert '<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">' in no_hub
     assert "exemplo/40" not in no_hub and "abrir lista" not in no_hub
-    sim = painel._acao(dict(base, area="Simulado", no_hub=True))
+    sim = _li(**dict(base, area="Simulado", no_hub=True))
     assert 'data-hub-modo="simulados"' in sim
     assert painel._acao(base) == '<a href="https://exemplo/40" rel="noopener noreferrer">abrir lista</a>'
 
@@ -676,7 +676,8 @@ def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
     modo Simulados); caminho local sem questoes segue texto, nunca link para o disco.
     s213: o modo sai da AREA (Simulado -> simulados; o resto -> questoes), por isso a `area`."""
     base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf", "area": "Simulado"}
-    assert 'data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in painel._acao(dict(base, no_hub=True))
+    assert 'data-hub-aba="questoes" data-hub-modo="simulados">' in _li(**dict(base, no_hub=True))
+    assert painel._acao(dict(base, no_hub=True)) == "", "no hub, a linha e o alvo: nada sobra na acao"
     assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'
 
 
@@ -791,7 +792,7 @@ def test_teoria_painel_e_boot_contam_o_banco_do_hub(db_sintetico, capsys):
     assert teoria[7] == t[7]["q"] == 15 and teoria[11] == 12
     pagina = painel.render_html(d)
     li7 = re.search(r'<li class="tarefa" data-tarefa="7">.*?</li>', pagina, re.S).group(0)
-    assert "<span>15 questões</span>" in li7 and "resolver no hub" in li7 and "abrir aula" in li7
+    assert "<span>15 questões</span>" in li7 and 'class="t-alvo"' in li7 and ">aula</a>" in li7
 
 
 def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
@@ -812,8 +813,86 @@ def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
     remit = t(q=20, no_hub=True, aula="remit", aulas=[{"slug": "remit", "titulo": "REMIT"}],
               tema="Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas")
     assert "<span>20 questões</span>" in remit and "sem lista" not in remit
-    assert 'data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/remit.html"' in remit
+    assert ('</p></a><p class="t-acao t-sec"><a href="aulas/remit.html" data-hub-aula="remit" '
+            'data-titulo="REMIT">aula</a></p></li>') in remit, "a aula, pequena, FORA do alvo"
     assert '<p class="t-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de Feridas</p>' in remit
     caderno = t(classe="caderno", q=43)
     assert '<span>43 questões</span> <span>caderno a montar</span>' in caderno
     assert '<p class="t-acao"></p>' in caderno, "a classe nunca mais na coluna de acao"
+
+
+# ------------------------------------------ s226 (part-3): a Semana no padrao da Teoria (P21)
+
+def _li(**kw):
+    base = {"id": 9, "semana": 4, "atrasada": False, "tema": "Tema", "q": 20, "classe": "lista",
+            "url_lista": None, "area": "Cirurgia", "rotulo": "CIR", "aula": None, "aulas": [],
+            "no_hub": False}
+    base.update(kw)
+    return painel._html_tarefa(base)
+
+
+def _semana(tarefas):
+    return painel._html_semana({"semana": 4, "inicio": None, "fim": None, "dias": None, "tarefas": tarefas,
+                                "total": len(tarefas), "q": 0, "atrasadas": sum(t["atrasada"] for t in tarefas),
+                                "rota": [], "proxima": None})
+
+
+def _t(i, **kw):
+    base = {"id": i, "semana": 4, "atrasada": False, "tema": "Tema %d" % i, "q": 20, "classe": "lista",
+            "url_lista": None, "area": "Cirurgia", "rotulo": "CIR", "aula": None, "aulas": [], "no_hub": True}
+    base.update(kw)
+    return base
+
+
+def test_semana_linha_inteira_abre_a_lista():
+    """P21 (decisao dele, 13/10): tarefa com questoes no hub = UM alvo -- o `<a data-hub-aba>` envolve
+    tema e meta (o atalho que o hub ja trata, sem JS novo); "resolver no hub" sumiu. A aula ligada
+    fica FORA do alvo (link dentro de link e invalido), pequena, e so quando existe. O `<li>` segue
+    a raiz com `data-tarefa` (o `painelListas` risca a resolvida por ele)."""
+    html_ = _semana([_t(1, aulas=[{"slug": "remit", "titulo": "REMIT"}]), _t(2),
+                     _t(3, no_hub=False, url_lista="https://exemplo/3")])
+    assert "resolver no hub" not in html_
+    li1 = re.search(r'<li class="tarefa[^"]*" data-tarefa="1">(.*?)</li>', html_, re.S).group(1)
+    alvo = re.match(r'<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">'
+                    r'(<p class="t-tema">Tema 1</p><p class="t-meta">.*?</p>)</a>(.*)$', li1, re.S)
+    assert alvo, li1
+    assert "<a " not in alvo.group(1), "nada clicavel dentro do alvo"
+    assert alvo.group(2) == ('<p class="t-acao t-sec"><a href="aulas/remit.html" data-hub-aula="remit" '
+                             'data-titulo="REMIT">aula</a></p>')
+    li2 = re.search(r'<li class="tarefa[^"]*" data-tarefa="2">(.*?)</li>', html_, re.S).group(1)
+    assert li2.endswith("</a>") and "t-acao" not in li2, "sem aula, nao ha acao secundaria"
+    # fora do banco do hub: o comportamento de antes (lista externa na coluna de acao, sem alvo)
+    li3 = re.search(r'<li class="tarefa[^"]*" data-tarefa="3">(.*?)</li>', html_, re.S).group(1)
+    assert "t-alvo" not in li3 and '<p class="t-acao"><a href="https://exemplo/3"' in li3
+    assert ([int(i) for i in re.findall(r'<li class="tarefa[^"]*" data-tarefa="(\d+)">', html_)] == [1, 2, 3])
+
+
+def test_atrasadas_sob_subtitulo_unico():
+    """P21: o atraso aparece UMA vez, no subtitulo "Atrasadas · N"; nenhuma linha diz "da semana N"
+    e o resumo nao repete. As da semana vem depois, sob o proprio subtitulo; ordem do plano intacta."""
+    html_ = _semana([_t(1, semana=2, atrasada=True), _t(2, semana=3, atrasada=True), _t(3), _t(4)])
+    assert html_.count("Atrasadas · 2") == 1
+    assert "da semana" not in html_ and "t-atraso" not in html_ and "vêm atrasadas" not in html_
+    assert html_.index("Atrasadas · 2") < html_.index('data-tarefa="1"') < html_.index("Desta semana · 2") \
+        < html_.index('data-tarefa="3"')
+    sem_atraso = _semana([_t(3), _t(4)])
+    assert "Atrasadas" not in sem_atraso and "Desta semana" not in sem_atraso
+    # a vista: todas as atrasadas e as primeiras da semana ate VISIVEIS_SEMANA; o resto recolhido
+    muitas = _semana([_t(i, atrasada=i < 3) for i in range(1, 12)])
+    vista = muitas.split('<details class="mais">')[0]
+    assert vista.count('<li class="tarefa') == painel.VISIVEIS_SEMANA
+    assert 'Ver as outras %d' % (11 - painel.VISIVEIS_SEMANA) in muitas
+    assert 'start="%d"' % (painel.VISIVEIS_SEMANA - 2 + 1) in muitas
+
+
+def test_proxima_so_pelo_rotulo_sem_botao_cheio(db_sintetico):
+    """P21: a Proxima e a 1a tarefa da semana e se distingue SO pelo rotulo "Proxima" -- o mesmo
+    controle das outras linhas. ⚰️ *Era a acao dela pintada como botao cheio (fundo ciano).*"""
+    html_ = _semana([_t(1, semana=2, atrasada=True), _t(2), _t(3)])
+    assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', html_) == [
+        ("tarefa atrasada proxima", "1"), ("tarefa", "2"), ("tarefa", "3")]
+    css = painel.CSS
+    assert ".tarefa.proxima .t-tema::before{content:\"Próxima\"" in css
+    assert ":first-child .t-acao" not in css and "var(--sobre)" not in css, "botao cheio voltou"
+    pagina = _pagina()
+    assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 1

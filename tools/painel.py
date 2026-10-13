@@ -362,22 +362,27 @@ def _html_docs(docs):
     return '<h2>Documentação</h2>\n<ol class="tarefas">%s</ol>' % itens
 
 
+def _modo_hub(t):
+    """Modo da aba Listas para a tarefa com questoes no banco do hub: Simulados para simulado,
+    Questoes para o resto (s213: o modo sai da AREA)."""
+    from app.utils import areas
+    return "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
+
+
 def _acao(t):
-    """O que fazer com a tarefa: as questoes (hub, lista ou prova) e, embaixo, cada aula ligada.
+    """O que fazer com a tarefa FORA do alvo da linha: a lista externa (ou a prova em PDF) e cada
+    aula ligada.
 
     s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): tarefa com questoes no banco do
-    hub (`no_hub`) abre a aba Listas -- modo Simulados para simulado, Questoes para o resto -- e o
-    link do EMED some; so fora do banco o "abrir lista" externo aparece. ⚰️ *Era o EMED primeiro:
-    14 listas ja importadas abriam o site.* P20 (s219): com ou sem link (os 26 cadernos da s219 nao
-    tem `url_lista`); ⚰️ 'montar caderno no banco' / 'sem lista ainda' / 'aula a preparar' nesta
-    coluna -- a tarefa sem acao diz a classe na META, apagada (`plano.meta_da_tarefa`, a regra da
-    Teoria)."""
-    from app.utils import areas
+    hub (`no_hub`) abre a aba Listas e o link do EMED some; so fora do banco o "abrir lista" externo
+    aparece. s226 (part-3, padrao da Teoria): na `no_hub` a LINHA INTEIRA e o alvo (`_html_tarefa`);
+    aqui sobra so a aula, pequena e secundaria ("aula", ou o titulo quando ha varias). ⚰️ *Era o
+    "resolver no hub" em toda linha.* P20 (s219): a tarefa sem acao diz a classe na META, apagada
+    (`plano.meta_da_tarefa`, a regra da Teoria)."""
     partes = []
-    if t.get("no_hub"):
-        modo = "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
-        partes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
-                      'resolver no hub</a>' % modo)
+    no_hub = bool(t.get("no_hub"))
+    if no_hub:
+        pass
     elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
         partes.append(_link(t["url_lista"], "abrir lista"))
     elif t["url_lista"]:
@@ -389,7 +394,7 @@ def _acao(t):
         # s216 (part-2): o titulo vai no link -- o hub abre o leitor direto, sem achar o link na Teoria
         partes.append('<a href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
                       % (_e(a["slug"]), _e(a["slug"]), _e(a.get("titulo") or a["slug"]),
-                         _e(a.get("titulo") or a["slug"]) if varias else "abrir aula"))
+                         _e(a.get("titulo") or a["slug"]) if varias else ("aula" if no_hub else "abrir aula")))
     return "<br>".join(partes)
 
 
@@ -454,20 +459,30 @@ def _html_dia(d, data_iso):
            barras))
 
 
-def _html_tarefa(t):
-    """Um `<li class="tarefa">`: tema, rotulo, questoes, atraso e acao -- o MESMO na semana
-    corrente e na rota. s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e
-    por ele que o hub pinta, sem publish, a lista resolvida na aba Listas. P20 (s219): a meta segue
-    a regra da Teoria (`plano.meta_da_tarefa`) e o titulo, a correcao de exibicao (`plano.tema_exibido`)."""
+def _html_tarefa(t, proxima=False):
+    """Um `<li class="tarefa">`: tema, rotulo, questoes e acao -- o MESMO na semana corrente e na
+    rota. s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e por ele que o hub
+    pinta, sem publish, a lista resolvida na aba Listas. P20 (s219): a meta segue a regra da Teoria
+    (`plano.meta_da_tarefa`) e o titulo, a correcao de exibicao (`plano.tema_exibido`).
+    s226 (part-3, P21): com questoes no banco do hub, tema + meta viram UM alvo (`a.t-alvo` com
+    `data-hub-aba`, o atalho que o hub ja trata); a aula fica fora dele (link dentro de link e
+    invalido). O atraso sai da linha: o subtitulo "Atrasadas · N" diz uma vez (`_html_semana`).
+    `proxima` = a 1a tarefa da semana: so o rotulo "Proxima", o mesmo controle das outras."""
     import plano
     meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
     meta += ["<span>%s</span>" % _e(x) for x in plano.meta_da_tarefa(t["q"], t["classe"], plano.tem_acao(t))]
-    if t["atrasada"]:
-        meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
-    return ('<li class="tarefa%s" data-tarefa="%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
-            '<p class="t-acao">%s</p></li>'
-            % (" atrasada" if t["atrasada"] else "", _e(t["id"]), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
-               " ".join(meta), _acao(t)))
+    classes = "tarefa" + (" atrasada" if t["atrasada"] else "") + (" proxima" if proxima else "")
+    corpo = ('<p class="t-tema">%s</p><p class="t-meta">%s</p>'
+             % (_e(plano.tema_exibido(t["tema"]) or "(sem tema)"), " ".join(meta)))
+    acao = _acao(t)
+    if t.get("no_hub"):
+        corpo = ('<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">%s</a>'
+                 % (_modo_hub(t), corpo))
+        if acao:
+            corpo += '<p class="t-acao t-sec">%s</p>' % acao
+    else:
+        corpo += '<p class="t-acao">%s</p>' % acao
+    return '<li class="%s" data-tarefa="%s">%s</li>' % (classes, _e(t["id"]), corpo)
 
 
 def _html_rota(rota):
@@ -502,9 +517,12 @@ def _html_semana(d):
     else:
         # s213 (audit R2): semana corrente sem pendencia nao desenha "0 tarefa(s)" nem lista vazia
         resumo = "Sem tarefa em aberto nesta semana."
-    if d["atrasadas"]:
-        resumo += " %d vêm atrasadas de semana anterior." % d["atrasadas"]
-    itens = [_html_tarefa(t) for t in d["tarefas"]]
+    # s226 (part-3, P21): o atraso aparece UMA vez, no subtitulo "Atrasadas · N" (a ordem do plano
+    # ja as traz primeiro); ⚰️ *era "vem atrasadas" no resumo e "da semana N" em toda linha*
+    atrasadas = [t for t in d["tarefas"] if t["atrasada"]]
+    correntes = [t for t in d["tarefas"] if not t["atrasada"]]
+    primeira = d["tarefas"][0]["id"] if d["tarefas"] else None
+    html_t = lambda t: _html_tarefa(t, proxima=t["id"] == primeira)
     prox = d.get("proxima")
     txt_prox = ""
     if d.get("rota"):
@@ -516,8 +534,16 @@ def _html_semana(d):
                     % (_e(prox["semana"]), quando, prox["tarefas"], _n(prox["q"])))
     # A semana inteira passa de 20 tarefas: as primeiras (e todas as atrasadas) ficam a vista, o
     # resto recolhido na MESMA ordem do plano -- nada some, so para de gritar.
-    corte = max(VISIVEIS_SEMANA, sum(1 for t in d["tarefas"] if t["atrasada"]))
-    lista = '<ol class="tarefas">%s</ol>' % "".join(itens[:corte]) if itens else ""
+    lista = ""
+    if atrasadas:
+        lista += ('<h3 class="t-grupo atrasadas">Atrasadas · %d</h3><ol class="tarefas">%s</ol>'
+                  % (len(atrasadas), "".join(html_t(t) for t in atrasadas)))
+        if correntes:
+            lista += '<h3 class="t-grupo">Desta semana · %d</h3>' % len(correntes)
+    corte = max(0, VISIVEIS_SEMANA - len(atrasadas))
+    itens = [html_t(t) for t in correntes]
+    if itens[:corte]:
+        lista += '<ol class="tarefas">%s</ol>' % "".join(itens[:corte])
     if len(itens) > corte:
         lista += ('<details class="mais"><summary>Ver as outras %d</summary>'
                   '<ol class="tarefas" start="%d">%s</ol></details>'
@@ -630,13 +656,24 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-tema{min-width:0;font-weight:600;line-height:1.35}
 .t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
 .t-rot{color:var(--tinta2);font-weight:600;background:var(--afundado);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
-.t-atraso{color:var(--aviso)}
 .t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 var(--esp-4)}
 .t-acao br{display:none}   /* as acoes ficam lado a lado (o <br> separa no texto puro) */
 .t-acao a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
-/* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- rotulo "Proxima" e a acao como botao */
-[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
-[data-bloco="semana"] > .tarefas > .tarefa:first-child .t-acao a:first-child{padding:0 var(--esp-3);border-radius:var(--raio);background:var(--acento);color:var(--sobre);text-decoration:none}
+/* s226 (P21): com questoes no hub, tema + meta sao UM alvo (a linha abre a lista); a aula fica ao lado, pequena */
+.t-alvo{grid-column:1 / -1;grid-row:1 / span 2;min-width:0;display:grid;gap:var(--esp-1);align-content:center;min-height:44px;
+        position:relative;padding-right:var(--esp-6);color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.t-alvo:not(:last-child){grid-column:1}
+.t-alvo::after{content:"›";position:absolute;right:var(--esp-1);top:50%;transform:translateY(-50%);font-size:1.5em;line-height:1;color:var(--tinta3)}
+.t-alvo:hover .t-tema{color:var(--acento-tinta)}
+.t-alvo:hover::after{color:var(--acento)}
+.t-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:var(--raio-p)}
+.t-sec{font-size:var(--fs-meta)}
+.t-sec a{font-weight:500}
+/* o atraso aparece UMA vez: no subtitulo "Atrasadas · N" (ambar + a palavra, nunca so cor) */
+.t-grupo{margin:var(--esp-4) 0 0;font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
+.t-grupo.atrasadas{color:var(--aviso)}
+/* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- so o rotulo "Proxima", o mesmo controle das outras */
+.tarefa.proxima .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
 .prox{margin-top:var(--esp-3)}
 .mais{margin-top:var(--esp-2)}
 .mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:var(--esp-2) 0;min-height:44px}

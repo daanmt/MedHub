@@ -36,9 +36,12 @@ Uso:
     python tools/plano.py --confirmar-area Preventiva --feitas "1,4" --pendentes "2" --dry-run
     python tools/plano.py --pendencia-revisao
     python tools/plano.py --reserva > docs/RESERVA-FASE1.md
+    python tools/plano.py --sprint
+    python tools/plano.py --sprint --apply --expect N
 
 Camada fina sobre `app.utils.db` -- nao abre `sqlite3` proprio (toda escrita e
-`plano_upsert_tarefas`, `plano_set_status`, `plano_mover` ou `plano_confirmar_area`).
+`plano_upsert_tarefas`, `plano_set_status`, `plano_mover`, `plano_confirmar_area` ou
+`plano_set_dias`, a agenda do `--sprint`).
 Assinatura canonica em `.claude/commands/engenharia-cli.md`.
 """
 import argparse
@@ -1501,6 +1504,246 @@ def pendencia_revisao(como_json=False, out=print):
     return 0, linhas
 
 
+# ------------------------------------------------- sprint final (s226, part-2)
+# PRD `sprint-final-uerj` (Solution 1 e 2): cada pendente da Fase 1 ganha um DIA (`dia_plano`) de
+# 13/10 a 31/10 que cabe na capacidade diaria; o que nao cabe fica "fora do sprint" com o motivo.
+# Datas, capacidade, simulados e cortes moram em `core/sprint.json` -- nenhum numero do sprint aqui.
+
+P_SPRINT = os.path.join(ROOT, "core", "sprint.json")
+
+#: Prefixo da marca do sprint na `nota` (a coluna logica "fora do sprint" = dia NULL + esta marca).
+MARCA_SPRINT = "sprint:"
+MOTIVO_CORTE_SPRINT = "sprint final: fora dos simulados"
+
+_PLACAR_BLOCO = re.compile(r"\b(CM|CIR|GO|PED|MFC)\s+(\d+)(?:/(\d+))?\b")
+
+
+def ler_sprint(caminho=None):
+    """`core/sprint.json` validado: datas AAAA-MM-DD, capacidade > 0, simulados {id: data}."""
+    cfg = _ler(caminho or P_SPRINT)
+    for chave in ("inicio", "fim"):
+        data_valida(cfg[chave])
+    if int(cfg["capacidade_q"]) <= 0:
+        raise ValueError(f"capacidade_q invalida: {cfg['capacidade_q']!r}")
+    for tid, dia in (cfg.get("simulados") or {}).items():
+        int(tid)
+        data_valida(dia)
+    return cfg
+
+
+def peso_dos_blocos(sessoes, padrao=None):
+    """Peso do bloco para o desempate do sprint: `{bloco: posto}`, 0 = o MAIS FRACO. PURA.
+
+    Fonte (decisao tecnica da spec): o acerto ACUMULADO das provas UERJ registradas em
+    `sessoes_bulk` (area Simulado, `observacoes` com "UERJ" e o placar por bloco, ex.
+    "CM 13 · CIR 8 · GO 11 · PED 12 · MFC 16"). Vale o ULTIMO placar de cada bloco na linha
+    (a correcao pos-recurso e anexada depois); "MFC 9/11" traz o denominador, os demais dividem
+    o resto das `questoes_feitas`. Sessao cujo placar nao soma `questoes_acertadas` e
+    descartada (ilegivel, nunca chute). Empate e bloco sem placar caem na ordem de `PESO_BLOCO`.
+    Nenhuma prova legivel -> `PESO_BLOCO` puro. Devolve `(peso, fonte)` -- `fonte` diz qual
+    regua foi usada e com quantas provas."""
+    padrao = padrao or PESO_BLOCO
+    acertos, total, provas = {}, {}, 0
+    for s in sessoes or []:
+        obs = s.get("observacoes") or ""
+        if "UERJ" not in obs:
+            continue
+        placar = {}
+        for m in _PLACAR_BLOCO.finditer(obs):
+            placar[m.group(1)] = (int(m.group(2)), int(m.group(3)) if m.group(3) else None)
+        if len(placar) != len(padrao):
+            continue
+        if sum(a for a, _d in placar.values()) != int(s.get("questoes_acertadas") or -1):
+            continue
+        feitas = float(s.get("questoes_feitas") or 0)
+        explicitos = [d for _a, d in placar.values() if d]
+        sem_den = [b for b, (_a, d) in placar.items() if not d]
+        resto = (feitas - sum(explicitos)) / len(sem_den) if sem_den else 0
+        for b, (a, d) in placar.items():
+            acertos[b] = acertos.get(b, 0) + a
+            total[b] = total.get(b, 0) + (d or resto)
+        provas += 1
+    if not provas:
+        return dict(padrao), "PESO_BLOCO (nenhuma prova UERJ legivel em sessoes_bulk)"
+    taxa = {b: acertos[b] / total[b] for b in padrao if total.get(b)}
+    ordem = sorted(padrao, key=lambda b: (taxa.get(b, 2.0), padrao[b]))
+    return ({b: i for i, b in enumerate(ordem)},
+            f"acerto acumulado de {provas} prova(s) UERJ: "
+            + " < ".join(f"{b} {taxa[b]:.0%}" for b in ordem if b in taxa))
+
+
+def com_faixa(linhas, prevalencia):
+    """Copia das linhas com `faixa` (`faixa_uerj`), o insumo de ordem do `montar_sprint`. PURA."""
+    return [dict(l, faixa=faixa_uerj(l.get("area"), l.get("tema"), prevalencia))
+            for l in linhas or []]
+
+
+def _dias_do_sprint(config, hoje):
+    """Os dias ABERTOS do sprint: de max(inicio, hoje) ate o fim. Dia passado nao entra."""
+    dia = max(date.fromisoformat(config["inicio"]), hoje)
+    fim = date.fromisoformat(config["fim"])
+    dias = []
+    while dia <= fim:
+        dias.append(dia.isoformat())
+        dia = date.fromordinal(dia.toordinal() + 1)
+    return dias
+
+
+def montar_sprint(linhas, config, hoje, peso):
+    """O plano POR DIA do sprint. PURA. Devolve `{dias: {data: [ids]}, fora: [{id, motivo}],
+    cortadas: [ids]}`.
+
+    - entram as PENDENTES das semanas da Fase 1 (`SEMANAS_FASE1`); feita/cortada, sem semana
+      e Fase 2 nao entram (anti-escopo);
+    - `cortadas`: ids de `config["cortar"]` ainda pendentes -- saem do sprint (o CLI as corta);
+    - simulados de `config["simulados"]` no dia fixo e SOZINHOS; data ja passada ou fora da
+      janela -> `fora`, com o motivo (o dia fixo nao rola sozinho: editar `core/sprint.json`);
+    - as demais, ordenadas por (faixa UERJ alta > media > baixa > sem faixa, `peso` do bloco --
+      0 = o mais fraco --, semana e ordem do plano, id), vao para o 1o dia >= hoje com vaga:
+      soma de `q_da_tarefa` <= `capacidade_q`; tarefa maior que a capacidade ocupa um dia
+      VAZIO sozinha. Dia passado nunca recebe tarefa (os dias comecam em max(inicio, hoje)).
+    A `faixa` vem na linha (`com_faixa`); linha sem a chave = sem faixa (ultima)."""
+    cap = int(config["capacidade_q"])
+    simulados = {int(k): v for k, v in (config.get("simulados") or {}).items()}
+    cortar_ids = {int(x) for x in config.get("cortar") or []}
+    dias = {d: [] for d in _dias_do_sprint(config, hoje)}
+    carga = {d: 0 for d in dias}
+    fixos = set()
+    fora, cortadas, livres = [], [], []
+    alvo = [l for l in linhas or [] if l.get("status") == "pendente"
+            and l.get("semana_plano") in SEMANAS_FASE1]
+    for l in sorted(alvo, key=lambda l: int(l["id"])):
+        tid = int(l["id"])
+        if tid in cortar_ids:
+            cortadas.append(tid)
+        elif tid in simulados:
+            dia = simulados[tid]
+            if dia in dias and dia not in fixos:
+                dias[dia].append(tid)
+                carga[dia] += q_da_tarefa(l)
+                fixos.add(dia)
+            else:
+                fora.append({"id": tid, "motivo": (
+                    f"simulado com dia fixo {_dm(dia)} fora dos dias abertos do sprint"
+                    if dia not in dias else f"dia {_dm(dia)} ja tem outro simulado")})
+        else:
+            livres.append(l)
+
+    def chave(l):
+        return (ORDEM_FAIXA.get(l.get("faixa"), len(ORDEM_FAIXA)),
+                peso.get(l.get("bloco") or db.bloco_de(l.get("area")), len(peso)),
+                l.get("semana_plano") or 0, l.get("ordem") or 0, int(l["id"]))
+
+    for l in sorted(livres, key=chave):
+        q = q_da_tarefa(l)
+        vaga = next((d for d in dias if d not in fixos and (
+            carga[d] + q <= cap if q <= cap else not dias[d])), None)
+        if vaga is None:
+            fora.append({"id": int(l["id"]), "motivo": (
+                f"sem vaga ate {_dm(config['fim'])} ({cap} q/dia)" if q <= cap
+                else f"{q} q > {cap} q/dia e nenhum dia vazio")})
+            continue
+        dias[vaga].append(int(l["id"]))
+        carga[vaga] += q
+    return {"dias": dias, "fora": fora, "cortadas": cortadas}
+
+
+def compor_nota_sprint(nota_atual, motivo_fora):
+    """A marca do sprint na `nota`: `sprint: fora (<motivo>)` ANEXADA, substituindo a anterior;
+    `motivo_fora=None` (a tarefa tem dia) tira a marca. PURA. As demais marcas da nota ficam.
+
+    🔴 Mesma divida do `compor_nota_corte`: `nota` esta em `db.CAMPOS_SEMEADOS` e um
+    `--semear --apply` a reescreve; o proximo `--sprint` recoloca a marca (o `dia_plano` nao e
+    campo semeado e sobrevive)."""
+    pedacos = [p.strip() for p in str(nota_atual or "").split(";")
+               if p.strip() and not p.strip().casefold().startswith(MARCA_SPRINT)]
+    if motivo_fora:
+        pedacos.append(f"{MARCA_SPRINT} fora ({motivo_fora})")
+    return "; ".join(pedacos) or None
+
+
+def mudancas_do_sprint(linhas, plano_dia):
+    """`plano_dia` (de `montar_sprint`) -> `[{id, dia_plano, nota}]` para `db.plano_set_dias`,
+    so das linhas que o sprint decide (no dia ou fora). PURA."""
+    por_id = {int(l["id"]): l for l in linhas}
+    saida = []
+    for dia, ids in plano_dia["dias"].items():
+        for tid in ids:
+            saida.append({"id": tid, "dia_plano": dia,
+                          "nota": compor_nota_sprint(por_id[tid].get("nota"), None)})
+    for f in plano_dia["fora"]:
+        saida.append({"id": f["id"], "dia_plano": None,
+                      "nota": compor_nota_sprint(por_id[f["id"]].get("nota"), f["motivo"])})
+    return saida
+
+
+def _fixar_antes(ato):
+    """F137 parte 2: o ponto de retorno FIXADO do inicio do ato (`backup_db`), como os outros
+    writers em lote. Levanta `SemPontoDeRetorno` -- quem chama RECUSA e nada e gravado."""
+    import backup_db
+    return backup_db.fixar_antes_do_ato(ato, db=db.DB_PATH, out=lambda *_: None)
+
+
+def sprint(apply=False, expect=None, hoje=None, config=None, out=print):
+    """`--sprint`: tabela por dia + fora do sprint + cortadas (dry-run); `--apply --expect N`
+    grava (`N` = linhas cujo `dia_plano`/`nota` mudam + as cortadas). Devolve `(exit, plano)`."""
+    hoje = hoje or db.hoje()
+    config = config or ler_sprint()
+    linhas = com_faixa(linhas_com_q_hub(db.plano_listar()), ler_prevalencia())
+    peso, fonte_peso = peso_dos_blocos(db.sessoes_bulk_listar(area=AREA_SIMULADO))
+    plano_dia = montar_sprint(linhas, config, hoje, peso)
+    por_id = {int(l["id"]): l for l in linhas}
+    sims = {int(k) for k in (config.get("simulados") or {})}
+
+    out(f"[plano] sprint {_dm(config['inicio'])} -> {_dm(config['fim'])} "
+        f"(hoje {_dm(hoje.isoformat())}), capacidade {config['capacidade_q']} q/dia")
+    out(f"  desempate por bloco: {fonte_peso}")
+    total_q = 0
+    for dia, ids in plano_dia["dias"].items():
+        soma = sum(q_da_tarefa(por_id[t]) for t in ids)
+        total_q += soma
+        sim = "  (simulado)" if sims & set(ids) else ""
+        out(f"  {_dm(dia)}  {len(ids):>2} tarefa(s) {soma:>4} q{sim}")
+        for t in ids:
+            l = por_id[t]
+            out(f"      #{t:<5} {l.get('bloco') or '--':<4} {l.get('faixa') or '-':<6} "
+                f"{q_da_tarefa(l):>4} q  {tema_exibido(l.get('tema'))[:70]}")
+    no_sprint = sum(len(v) for v in plano_dia["dias"].values())
+    out(f"  no sprint: {no_sprint} tarefa(s), {total_q} q")
+    out(f"  fora do sprint: {len(plano_dia['fora'])}")
+    for f in plano_dia["fora"]:
+        l = por_id[f["id"]]
+        out(f"      #{f['id']:<5} {q_da_tarefa(l):>4} q  "
+            f"{tema_exibido(l.get('tema'))[:60]} -- {f['motivo']}")
+    out(f"  cortadas ({MOTIVO_CORTE_SPRINT}): {plano_dia['cortadas'] or 'nenhuma'}")
+
+    medida = db.plano_set_dias(mudancas_do_sprint(linhas, plano_dia), aplicar=False)
+    n = len(medida["mudam"]) + len(plano_dia["cortadas"])
+    out(f"  COUNT-ASSERT: {len(medida['mudam'])} linha(s) com dia_plano/nota a mudar + "
+        f"{len(plano_dia['cortadas'])} corte(s) = {n}  <- o N do --expect")
+    if not apply:
+        out(f"  DRY-RUN: nada gravado. Para aplicar: --sprint --apply --expect {n}")
+        return 0, plano_dia
+    if expect is None or int(expect) != n:
+        out(f"  RECUSADO: --expect {expect} != {n} medido(s) na hora. Nada gravado.")
+        return 2, plano_dia
+    if n == 0:
+        out("  OK: nada a mudar (o plano do banco ja e este).")
+        return 0, plano_dia
+    import backup_db
+    try:
+        _fixar_antes("plano --sprint --apply")
+    except backup_db.SemPontoDeRetorno as e:
+        out(f"  RECUSADO: sem ponto de retorno ({e}). Nada gravado.")
+        return 2, plano_dia
+    for tid in plano_dia["cortadas"]:
+        cortar(tid, MOTIVO_CORTE_SPRINT, out=lambda *_: None)
+    final = db.plano_set_dias(mudancas_do_sprint(linhas, plano_dia), aplicar=True)
+    out(f"  OK: {len(final['mudam'])} linha(s) com dia_plano/nota gravados, "
+        f"{len(plano_dia['cortadas'])} cortada(s).")
+    return 0, plano_dia
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Plano de estudo como dado (plano_tarefas): semeadura, listagem "
@@ -1557,6 +1800,9 @@ def main(argv=None):
                     help="o plano EM ABERTO para o boot: semana de calendario, tarefas pendentes "
                          "com o que fazer em cada (lista / caderno / aula / sem_lista), sequencia "
                          "de simulados, proxima semana -- Markdown no stdout (read-only)")
+    ap.add_argument("--sprint", action="store_true",
+                    help="plano POR DIA do sprint final (core/sprint.json): tabela por dia, fora "
+                         "do sprint e cortadas (dry-run por default; --apply exige --expect N)")
     args = ap.parse_args(argv)
 
     modos = {
@@ -1571,6 +1817,7 @@ def main(argv=None):
         "--pendencia-revisao": args.pendencia_revisao,
         "--reserva": args.reserva,
         "--panorama": args.panorama,
+        "--sprint": args.sprint,
     }
     ligados = [nome for nome, ativo in modos.items() if ativo]
     if len(ligados) != 1:
@@ -1584,6 +1831,15 @@ def main(argv=None):
         if args.apply and args.expect is None:
             ap.error("--apply exige --expect N")
         code, _, _ = semear(apply=args.apply, expect=args.expect)
+        return code
+    if modo == "--sprint":
+        if args.apply and args.expect is None:
+            ap.error("--apply exige --expect N")
+        try:
+            code, _ = sprint(apply=args.apply, expect=args.expect)
+        except (ValueError, KeyError) as e:
+            print(f"[plano] RECUSADO: core/sprint.json invalido: {e}")
+            return 2
         return code
     if modo == "--concluir":
         if args.leitura:

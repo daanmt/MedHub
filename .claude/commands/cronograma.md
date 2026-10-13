@@ -70,6 +70,34 @@ python tools/cronograma.py --radar [--desde N]    # cobertura futura × performa
 - 🟢 coberta pré-ENAMED · 🟡 só pós-ENAMED (tarde) · 🔴 fraca SEM cobertura restante · ⚪ gap total (0q feito · 0 no cronograma restante).
 - Normaliza rótulos sujos na leitura (W4): `GO` sinalizado (split não-trivial), mojibake `Obstetrícia` corrigido. **Não toca o db.**
 
+## Sprint final: `tools/plano.py --sprint` (s226, PRD `sprint-final-uerj`)
+
+> Um plano POR DIA até a véspera da UERJ. Não é o `cronograma.py` (que segue read-only): é o
+> `plano.py`, que escreve `plano_tarefas` só pelos writers do `db.py`. Demais flags do `plano.py`
+> em [`/engenharia-cli`](engenharia-cli.md).
+
+```bash
+python tools/plano.py --sprint                         # dry-run: tabela por dia, fora do sprint, cortadas, o N
+python tools/plano.py --sprint --apply --expect N      # grava dia_plano + nota e corta (COUNT-ASSERT; diverge = exit 2)
+```
+
+- **Config** = `core/sprint.json` (versionado; nenhum número do sprint no código): `inicio`, `fim`,
+  `capacidade_q` (q/dia), `simulados` `{id: AAAA-MM-DD}` (dia fixo, sozinho no dia), `cortar` (ids que saem
+  com o motivo `sprint final: fora dos simulados`). Mudar data de simulado = editar o arquivo e rodar de novo.
+- **Quem entra:** as pendentes das semanas 1-7 do plano. Feita, cortada, sem semana e Fase 2 ficam de fora e
+  **intocadas**; `semana_plano` não muda (o dia é a agenda, a semana é a origem).
+- **Ordem:** faixa UERJ (`alta > media > baixa > sem faixa`, `prevalencia_uerj.json`), depois o bloco mais
+  fraco no **acerto acumulado das provas UERJ** de `sessoes_bulk` (sem prova legível: `PESO_BLOCO`; a linha
+  `desempate por bloco` diz qual valeu), depois a ordem do plano. Cada tarefa vai para o 1º dia ≥ hoje com
+  vaga (soma de `q_da_tarefa`, a régua do Painel, ≤ capacidade); tarefa maior que a capacidade ocupa um dia
+  vazio sozinha. Dia passado nunca recebe tarefa.  <!-- CHECK: test_sprint_capacidade_nunca_excedida_e_dia_passado_vazio -->
+- **Fora do sprint** = `dia_plano` NULL + `sprint: fora (<motivo>)` anexado à `nota` (a tarefa que volta a
+  caber perde a marca). **Rolamento sem estado:** o `--sprint` de amanhã recomputa a partir de hoje com as
+  pendentes de hoje; rodar de novo sem mudança dá `N = 0`.
+- **`--apply`:** `N` = linhas cujo `dia_plano`/`nota` mudam + as cortadas; fixa o backup do início do ato
+  (`backup_db.fixar_antes_do_ato`) antes do 1º write e recusa sem ele. 🔴 Um `--semear --apply` reescreve a
+  `nota` (campo semeado) e apaga a marca; o `dia_plano` sobrevive e o próximo `--sprint` a recoloca.
+
 ## API para consumidores (import, não reparseia)
 
 `day_plan.py`/`performance.py`/`/refrescar`/`/revisar` **importam** funções, não reparseiam o PDF (Cláusula 4):

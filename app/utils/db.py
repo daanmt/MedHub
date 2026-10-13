@@ -1698,7 +1698,7 @@ CAMPOS_SEMEADOS = ("semana_plano", "ordem", "area", "tema", "tipo", "tipo_norm",
 _COLUNAS_PLANO = ("id", "fonte", "ref_semana_fonte", "tarefa_fonte", "semana_plano",
                   "ordem", "area", "tema", "tipo", "tipo_norm", "url_lista",
                   "q_previstas", "status", "data_conclusao", "sessao_bulk_id",
-                  "origem_conclusao", "nota", "criado_em", "atualizado_em")
+                  "origem_conclusao", "nota", "dia_plano", "criado_em", "atualizado_em")
 
 
 def bloco_de(area):
@@ -1744,6 +1744,33 @@ def _ensure_plano_table(conn):
     ''')
     conn.execute('CREATE INDEX IF NOT EXISTS ix_plano_semana '
                  'ON plano_tarefas (semana_plano, ordem)')
+    _ensure_plano_dia_column(conn)
+
+
+def _ensure_plano_dia_column(conn):
+    """Sprint final (s226, spec sprint-final-uerj part-2): coluna `dia_plano TEXT NULL`
+    (AAAA-MM-DD) -- a AGENDA do sprint, ao lado de `semana_plano` (que segue sendo a origem
+    e o historico). `ALTER TABLE ... ADD COLUMN` so se ausente (mesmo padrao idempotente de
+    `_ensure_sessoes_bulk_tarefa_id`). Roda so pelos WRITERS (via `_ensure_plano_table`):
+    abrir conexao nao a cria, e o leitor usa `_tem_coluna_dia_plano`."""
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(plano_tarefas)")}
+    if cols and "dia_plano" not in cols:
+        conn.execute("ALTER TABLE plano_tarefas ADD COLUMN dia_plano TEXT")
+
+
+def _tem_coluna_dia_plano(conn):
+    """A coluna existe? Usado pelos LEITORES, que nao criam nem alteram nada."""
+    try:
+        return "dia_plano" in {r[1] for r in conn.execute("PRAGMA table_info(plano_tarefas)")}
+    except sqlite3.OperationalError:
+        return False
+
+
+def _select_plano(conn, colunas):
+    """Lista do SELECT de `plano_tarefas`: `dia_plano` vira `NULL` no banco anterior a
+    coluna (o leitor nunca roda DDL para se consertar)."""
+    tem_dia = _tem_coluna_dia_plano(conn)
+    return ", ".join(c if (c != "dia_plano" or tem_dia) else "NULL" for c in colunas)
 
 
 def _chaves_plano(conn):
@@ -1850,7 +1877,7 @@ def plano_listar(semana=None, bloco=None, status=None, fonte=None, area=None):
     colunas = [c for c in _COLUNAS_PLANO if c not in ("criado_em", "atualizado_em")]
     conn = get_connection()
     try:
-        sql = "SELECT " + ", ".join(colunas) + " FROM plano_tarefas"
+        sql = "SELECT " + _select_plano(conn, colunas) + " FROM plano_tarefas"
         onde, params = [], []
         if semana is not None:
             onde.append("semana_plano = ?")
@@ -1898,7 +1925,7 @@ def plano_obter(tarefa_id):
     colunas = [c for c in _COLUNAS_PLANO if c not in ("criado_em", "atualizado_em")]
     conn = get_connection()
     try:
-        sql = "SELECT " + ", ".join(colunas) + " FROM plano_tarefas WHERE id = ?"
+        sql = "SELECT " + _select_plano(conn, colunas) + " FROM plano_tarefas WHERE id = ?"
         try:
             row = conn.execute(sql, (int(tarefa_id),)).fetchone()
         except sqlite3.OperationalError:
@@ -2020,6 +2047,55 @@ def plano_mover(tarefa_id, semana, ordem=None):
     finally:
         conn.close()
     return {"antes": antes, "depois": plano_obter(tarefa_id)}
+
+
+def plano_set_dias(mudancas, aplicar=True):
+    """Writer da AGENDA do sprint (s226, spec sprint-final-uerj part-2): regrava `dia_plano`
+    e `nota` de cada `{id, dia_plano, nota}`. Devolve `{mudam: [ids], inexistentes: [ids]}`.
+
+    Mede e grava no MESMO caminho (`aplicar=False` = so a conta, sem DDL): conta como mudanca
+    so a linha cujo `dia_plano` ou `nota` difere do banco -- e esse o N do COUNT-ASSERT, e a
+    2a corrida igual da 0. Nao toca `status`, `semana_plano`, `ordem` nem `origem_conclusao`:
+    agendar e replanejar, nao concluir. `dia_plano` e `AAAA-MM-DD` ou `None` (fora do sprint);
+    outro formato -> `ValueError` antes de qualquer escrita."""
+    preparadas = []
+    for m in mudancas or []:
+        dia = m.get("dia_plano")
+        if dia is not None:
+            try:
+                datetime.strptime(str(dia), "%Y-%m-%d")
+            except ValueError:
+                raise ValueError(f"dia_plano invalido: {dia!r} (esperado AAAA-MM-DD ou None)")
+            dia = str(dia)
+        preparadas.append((int(m["id"]), dia, m.get("nota")))
+    conn = get_connection()
+    try:
+        tem_dia = _tem_coluna_dia_plano(conn)
+        atuais = {}
+        try:
+            campo_dia = "dia_plano" if tem_dia else "NULL"
+            for r in conn.execute(f"SELECT id, {campo_dia}, nota FROM plano_tarefas"):
+                atuais[r[0]] = (r[1], r[2])
+        except sqlite3.OperationalError:
+            atuais = {}
+        mudam, inexistentes, alvo = [], [], []
+        for tid, dia, nota in preparadas:
+            if tid not in atuais:
+                inexistentes.append(tid)
+            elif atuais[tid] != (dia, nota):
+                mudam.append(tid)
+                alvo.append((dia, nota, tid))
+        if not aplicar or inexistentes:
+            return {"mudam": mudam, "inexistentes": inexistentes}
+        _ensure_plano_table(conn)
+        ts = carimbo()
+        for dia, nota, tid in alvo:
+            conn.execute("UPDATE plano_tarefas SET dia_plano = ?, nota = ?, atualizado_em = ? "
+                         "WHERE id = ?", (dia, nota, ts, tid))
+        conn.commit()
+        return {"mudam": mudam, "inexistentes": inexistentes}
+    finally:
+        conn.close()
 
 
 def plano_confirmar_area(area, feitas=(), pendentes=(), origem_conclusao=ORIGEM_USUARIO,

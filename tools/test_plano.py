@@ -1432,3 +1432,197 @@ def test_tema_exibido_junta_o_hifen_quebrado_e_troca_o_pipe():
         "Endocardite Bacteriana - Endocardite Infecciosa", "hifen solto (com espaco) nao e quebra"
     assert plano.tema_exibido("A |B") == "A · B" and plano.tema_exibido("| A |") == "A"
     assert plano.tema_exibido(None) == "" and plano.tema_exibido("Pré-Natal; Parto") == "Pré-Natal; Parto"
+
+
+# ------------------------------------------- sprint final (s226, sprint-final-uerj part-2)
+
+from datetime import date as _date  # noqa: E402
+
+_CFG = {"inicio": "2026-10-13", "fim": "2026-10-17", "capacidade_q": 80,
+        "simulados": {"900": "2026-10-15"}, "cortar": [901]}
+_PESO = {"CIR": 0, "PED": 1, "GO": 2, "CM": 3, "MFC": 4}
+_HOJE = _date(2026, 10, 13)
+
+
+def _t(tid, q, area="Cirurgia", faixa="alta", semana=5, ordem=1, status="pendente", **extra):
+    return {"id": tid, "q_previstas": q, "area": area, "bloco": db.bloco_de(area),
+            "faixa": faixa, "semana_plano": semana, "ordem": ordem, "status": status,
+            "tema": f"t{tid}", "nota": None, **extra}
+
+
+def _sprint_linhas():
+    return [_t(900, 100, area="Simulado", faixa=None), _t(901, 60, area="Simulado"),
+            _t(1, 50), _t(2, 40, area="Pediatria"), _t(3, 30, area="Preventiva"),
+            _t(4, 45, faixa="media"), _t(5, 20, faixa=None), _t(6, 35, area="Pediatria"),
+            _t(7, 10, status="feita"), _t(8, 10, semana=None), _t(9, 10, semana=12),
+            _t(10, 95, area="Pediatria")]
+
+
+def test_sprint_json_e_a_unica_fonte_dos_numeros():
+    """DoD 1: o arquivo versionado tem a forma decidida; o codigo le so dele."""
+    cfg = plano.ler_sprint()
+    assert cfg == {"inicio": "2026-10-13", "fim": "2026-10-31", "capacidade_q": 80,
+                   "simulados": {"892": "2026-10-17", "891": "2026-10-21", "890": "2026-10-25"},
+                   "cortar": [1798, 1799]}
+    fonte = Path(plano.__file__).read_text(encoding="utf-8")
+    trecho = fonte[fonte.index("# ------------------------------------------------- sprint final"):
+                   fonte.index("def main(argv=None):")]
+    for literal in ("2026-10", "1798", "1799", "892", "891", "890", "capacidade_q\": 80", "= 80"):
+        assert literal not in trecho, f"numero do sprint no codigo: {literal}"
+
+
+def test_sprint_capacidade_nunca_excedida_e_dia_passado_vazio():
+    p = plano.montar_sprint(_sprint_linhas(), _CFG, _HOJE, _PESO)
+    por_id = {l["id"]: l for l in _sprint_linhas()}
+    for dia, ids in p["dias"].items():
+        soma = sum(plano.q_da_tarefa(por_id[i]) for i in ids)
+        assert soma <= 80 or len(ids) == 1, (dia, ids, soma)
+    assert list(p["dias"])[0] == "2026-10-13"
+    p2 = plano.montar_sprint(_sprint_linhas(), _CFG, _date(2026, 10, 14), _PESO)
+    assert "2026-10-13" not in p2["dias"], "dia passado nunca recebe tarefa"
+    assert p["dias"]["2026-10-16"] == [10], "tarefa > capacidade ocupa um dia vazio sozinha"
+
+
+def test_sprint_simulado_sozinho_no_dia_fixo_e_cortadas():
+    p = plano.montar_sprint(_sprint_linhas(), _CFG, _HOJE, _PESO)
+    assert p["dias"]["2026-10-15"] == [900]
+    assert p["cortadas"] == [901]
+    todos = [i for ids in p["dias"].values() for i in ids] + [f["id"] for f in p["fora"]]
+    assert 901 not in todos
+    # simulado cujo dia ja passou: fora, com o motivo, sem rolar sozinho
+    p2 = plano.montar_sprint(_sprint_linhas(), _CFG, _date(2026, 10, 16), _PESO)
+    assert any(f["id"] == 900 and "dia fixo" in f["motivo"] for f in p2["fora"])
+
+
+def test_sprint_ordem_por_faixa_e_peso_do_bloco():
+    p = plano.montar_sprint(_sprint_linhas(), _CFG, _HOJE, _PESO)
+    # 13/10: CIR alta (#1, 50) entra primeiro; PED alta #2 (40) nao cabe -> 14/10; MFC alta #3 cabe no 13
+    assert p["dias"]["2026-10-13"][0] == 1
+    ordem = [i for d in p["dias"] for i in p["dias"][d] if i != 900]
+    assert ordem.index(1) < ordem.index(2) < ordem.index(4), "alta antes de media; CIR antes de PED"
+    linhas = [_t(1, 80, faixa=None), _t(2, 80, area="Preventiva", faixa="baixa")]
+    p3 = plano.montar_sprint(linhas, dict(_CFG, simulados={}), _HOJE, _PESO)
+    assert p3["dias"]["2026-10-13"] == [2], "sem faixa (tarefa custom) vai por ultimo"
+
+
+def test_sprint_deterministico_e_feita_nao_entra():
+    import random
+    linhas = _sprint_linhas()
+    base = plano.montar_sprint(linhas, _CFG, _HOJE, _PESO)
+    for semente in range(5):
+        embaralhadas = linhas[:]
+        random.Random(semente).shuffle(embaralhadas)
+        assert plano.montar_sprint(embaralhadas, _CFG, _HOJE, _PESO) == base
+    todos = [i for ids in base["dias"].values() for i in ids] + [f["id"] for f in base["fora"]]
+    assert 7 not in todos, "tarefa feita nao entra"
+    assert 8 not in todos and 9 not in todos, "sem semana e Fase 2 ficam fora do sprint (intocadas)"
+    assert all("sem vaga" in f["motivo"] or "dia" in f["motivo"] or "q/dia" in f["motivo"]
+               for f in base["fora"])
+
+
+def test_peso_dos_blocos_le_o_acumulado_das_provas_uerj():
+    sessoes = [
+        {"observacoes": "UERJ 2023: CM 13 · CIR 7 · GO 9 · PED 11 · MFC 16 | final CM 13 · CIR 8 · "
+                        "GO 11 · PED 12 · MFC 16", "questoes_feitas": 100, "questoes_acertadas": 60},
+        {"observacoes": "UERJ 2022: CM 7 · CIR 5 · GO 10 · PED 7 · MFC 9/11",
+         "questoes_feitas": 59, "questoes_acertadas": 38},
+        {"observacoes": "ENAMED: CM 50", "questoes_feitas": 100, "questoes_acertadas": 50},
+        {"observacoes": "UERJ ilegivel: CM 1 · CIR 1 · GO 1 · PED 1 · MFC 1",
+         "questoes_feitas": 100, "questoes_acertadas": 70}]
+    peso, fonte = plano.peso_dos_blocos(sessoes)
+    assert peso["CIR"] == 0 and peso["MFC"] == 4 and "2 prova(s) UERJ" in fonte
+    assert plano.peso_dos_blocos([]) == (plano.PESO_BLOCO, plano.peso_dos_blocos([])[1])
+    assert "PESO_BLOCO" in plano.peso_dos_blocos([])[1]
+
+
+def test_compor_nota_sprint_marca_e_desmarca():
+    n = plano.compor_nota_sprint("q_estimada; corte: x", "sem vaga ate 31/10 (80 q/dia)")
+    assert n == "q_estimada; corte: x; sprint: fora (sem vaga ate 31/10 (80 q/dia))"
+    assert plano.compor_nota_sprint(n, "outro") == "q_estimada; corte: x; sprint: fora (outro)"
+    assert plano.compor_nota_sprint(n, None) == "q_estimada; corte: x"
+    assert plano.compor_nota_sprint(None, None) is None
+
+
+def _semear_sprint(caminho):
+    """Linhas do sprint no banco sintetico (ids fixos, como o plano real)."""
+    conn = db.get_connection()
+    try:
+        db._ensure_plano_table(conn)
+        for l in _sprint_linhas():
+            conn.execute(
+                "INSERT INTO plano_tarefas (id, fonte, ref_semana_fonte, tarefa_fonte, semana_plano, "
+                "ordem, area, tema, q_previstas, status) VALUES (?, 'custom', 0, ?, ?, ?, ?, ?, ?, ?)",
+                (l["id"], l["id"], l["semana_plano"], l["ordem"], l["area"], l["tema"],
+                 l["q_previstas"], l["status"]))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def test_sprint_apply_grava_e_segunda_corrida_da_zero(db_sintetico, monkeypatch):
+    """DoD 2/4: dry-run nao grava; --expect errado recusa; apply grava dia/nota, corta e fixa o
+    backup; a 2a corrida igual = 0 mudancas."""
+    _semear_sprint(db_sintetico)
+    monkeypatch.setattr(plano, "ler_prevalencia", lambda: {"temas": []})
+    cfg = dict(_CFG, fim="2026-10-16")
+    saida = []
+    code, p = plano.sprint(hoje=_HOJE, config=cfg, out=saida.append)
+    assert code == 0 and any("DRY-RUN" in s for s in saida)
+    assert all(l.get("dia_plano") is None for l in db.plano_listar())
+    n = int([s for s in saida if "COUNT-ASSERT" in s][0].split("= ")[1].split()[0])
+    assert n == len([i for ids in p["dias"].values() for i in ids]) + len(p["fora"]) + 1
+    assert plano.sprint(apply=True, expect=n + 1, hoje=_HOJE, config=cfg, out=_mudo())[0] == 2
+    assert all(l.get("dia_plano") is None for l in db.plano_listar())
+    assert plano.sprint(apply=True, expect=n, hoje=_HOJE, config=cfg, out=_mudo())[0] == 0
+    gravadas = {l["id"]: l for l in db.plano_listar()}
+    assert gravadas[900]["dia_plano"] == "2026-10-15"
+    assert gravadas[901]["status"] == "cortada" and "sprint final" in gravadas[901]["nota"]
+    assert gravadas[7]["dia_plano"] is None and gravadas[7]["status"] == "feita"
+    assert len(p["fora"]) == 2, "a janela curta (13-16/10) deixa 2 de fora"
+    for f in p["fora"]:
+        assert gravadas[f["id"]]["dia_plano"] is None
+        assert gravadas[f["id"]]["nota"].startswith("sprint: fora (")
+    assert os.listdir(os.path.join(os.path.dirname(db_sintetico), "backups")), "backup fixado antes"
+    saida2 = []
+    plano.sprint(hoje=_HOJE, config=cfg, out=saida2.append)
+    assert any("= 0  <-" in s for s in saida2), saida2
+    assert gravadas[1]["semana_plano"] == 5, "o sprint nao muda semana_plano"
+
+
+def test_dia_plano_ddl_idempotente_e_leitor_sem_coluna(tmp_path, monkeypatch):
+    """DoD 2: banco anterior a coluna -- o leitor devolve as linhas com dia_plano None e NAO cria
+    a coluna; o writer a cria uma vez (2a chamada no-op)."""
+    caminho = _usar_db(tmp_path, monkeypatch)
+    conn = sqlite3.connect(caminho)
+    conn.execute("CREATE TABLE plano_tarefas (id INTEGER PRIMARY KEY, fonte TEXT, ref_semana_fonte "
+                 "INTEGER, tarefa_fonte INTEGER, semana_plano INTEGER, ordem INTEGER, area TEXT, "
+                 "tema TEXT, tipo TEXT, tipo_norm TEXT, url_lista TEXT, q_previstas REAL, status TEXT, "
+                 "data_conclusao TEXT, sessao_bulk_id INTEGER, origem_conclusao TEXT, nota TEXT, "
+                 "criado_em TEXT, atualizado_em TEXT)")
+    conn.execute("INSERT INTO plano_tarefas (id, fonte, status, semana_plano) VALUES (1, 'rf', 'pendente', 5)")
+    conn.commit()
+    conn.close()
+    assert db.plano_listar()[0]["dia_plano"] is None
+    assert db.plano_obter(1)["dia_plano"] is None
+    colunas = lambda: {r[1] for r in sqlite3.connect(caminho).execute("PRAGMA table_info(plano_tarefas)")}
+    assert "dia_plano" not in colunas(), "leitor nao roda DDL"
+    assert db.plano_set_dias([{"id": 1, "dia_plano": "2026-10-13", "nota": None}],
+                             aplicar=False)["mudam"] == [1]
+    assert "dia_plano" not in colunas(), "dry-run nao roda DDL"
+    db.plano_set_dias([{"id": 1, "dia_plano": "2026-10-13", "nota": None}])
+    db.plano_set_dias([{"id": 1, "dia_plano": "2026-10-13", "nota": None}])
+    assert db.plano_obter(1)["dia_plano"] == "2026-10-13"
+    assert db.plano_set_dias([{"id": 1, "dia_plano": "2026-10-13", "nota": None}],
+                             aplicar=False)["mudam"] == []
+    import pytest
+    with pytest.raises(ValueError):
+        db.plano_set_dias([{"id": 1, "dia_plano": "13/10", "nota": None}])
+    assert db.plano_set_dias([{"id": 99, "dia_plano": None, "nota": None}])["inexistentes"] == [99]
+
+
+def test_cli_sprint_apply_sem_expect_e_erro(tmp_path, monkeypatch):
+    _usar_db(tmp_path, monkeypatch)
+    import pytest
+    with pytest.raises(SystemExit) as e:
+        plano.main(["--sprint", "--apply"])
+    assert e.value.code == 2

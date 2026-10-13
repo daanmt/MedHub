@@ -25,6 +25,8 @@ ALLOWLIST = {
     # plano_tarefas (PRD plano-ssot-e-cards-v2 P1, s183): o plano de estudo como DADO.
     # `tools/plano.py` NAO aparece nesta lista de proposito -- ele e camada fina e nao
     # escreve nada por conta propria; todo INSERT/UPDATE passa por `plano_upsert_tarefas`.
+    # s226 (sprint-final-uerj part-2): writer novo `plano_set_dias` (coluna `dia_plano` + a marca
+    # `sprint:` da nota), chamado so pelo `plano.py --sprint --apply`; mesma tabela, mesmo arquivo.
     # sessoes_bulk (part-6, s184): `vincular_sessao_tarefa` e o UNICO writer do elo
     # sessao -> lista (`tarefa_id`). O volume em si continua sendo escrito so por
     # `tools/registrar_sessao_bulk.py`; `tools/listas.py` tambem NAO aparece aqui --

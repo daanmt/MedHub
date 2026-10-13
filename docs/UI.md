@@ -119,7 +119,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
 | Barra de progresso | painel (`.barra`), player (`.barra`, `.dist-barra`) | 6-8 px, trilho `--afundado`, preenchimento sólido ciano |
-| Leitura resiliente | `assinarResiliente(consulta, onDados, opts)` no `hub.html`: listas, quadro da Teoria, questões/respostas/análises da lista aberta | erro = `console.warn("[hub] leitura <coleção> falhou", código, tentativa)` + nova assinatura em 1/2/4 s com "Carregando…"; esgotadas, a mensagem + botão `.primario` **Tentar de novo** (`htmlRetentar`); reabrir a aba com ela morta reassina; um estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela |
+| Leitura resiliente | `assinarResiliente(consulta, onDados, opts)` no `hub.html`: listas, quadro da Teoria, questões/respostas/análises da lista aberta, notas do lote | `consulta(db)` monta a referência sobre o `db` recebido (1ª tentativa = `opts.db`; da 2ª em diante e no "Tentar de novo", conexão nova por `claude.use("db")`, avisada em `opts.aoReconectar` -- o `QZ.db`); erro = `console.warn("[hub] leitura <coleção> falhou", código, tentativa)` + nova assinatura em 1/2/4 s com "Carregando…"; esgotadas, a mensagem + botão `.primario` **Tentar de novo** (`htmlRetentar`); reabrir a aba com ela morta reassina; um estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela |
 | Secções do card | `.bloco` (regra-mestre), `.bloco.alerta` (armadilha) | filete à esquerda (neutro / âmbar), nunca caixa dentro do card |
 
 ## 6. Telas: o que cada uma prioriza
@@ -154,6 +154,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`, que viaja embutido) | `test_painel.py::test_html_sem_jargao` |
 | leituras das abas pela assinatura resiliente (retentativa, botão, 1 ouvinte); chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
+| a retentativa pede conexão nova ao banco (e o `QZ.db` passa a ser ela) | `test_hub_render.py::test_retentativa_pede_conexao_nova` |
 | o `max-width` aparece no máximo 2 vezes na página do player e na do painel | os dois testes de contrato acima |
 
 ## 8. Como conferir (obrigatório antes de publicar tela nova)
@@ -226,5 +227,9 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 - **Abas que se recuperam sozinhas (13/10, s226, part-1, A18/A21/A22)**: leitura de Listas, Teoria e lista aberta pela
   assinatura resiliente (1/2/4 s, depois "Tentar de novo"); o chip "pronta" saiu (em curso mostra respondidas/total);
   marca em 1,375rem. O banco falso do `ui_harness.html` ganhou `?leitura=1x|0` (falha de leitura de coleção).
+- **A retentativa pede conexão nova (13/10, s226, sprint-final-uerj part-1)**: a v108 publicada com a página aberta
+  deixou Listas em "Não consegui ler as listas" até ele sair do artifact e voltar -- as 3 tentativas reusavam o `db`
+  morto. Da 2ª tentativa em diante a assinatura pede `claude.use("db")` de novo e a consulta recebe o `db` novo
+  (`consulta(db)`); `QZ.db` acompanha. O harness ganhou `?leitura=conexao` (a 1ª conexão falha em toda leitura).
 
 Ele muda de ideia rápido: trocar paleta é trocar os dois blocos de cor do `tema.css`; nada além disso deve ser preciso.

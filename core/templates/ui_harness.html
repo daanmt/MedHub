@@ -25,6 +25,9 @@
   var CENA = P.get("cena") || "", LISTA = P.get("lista") || "", NUM = P.get("num") || "", MODO = P.get("modo") || "";
   // s226 (part-1): falha de LEITURA no onSnapshot de colecao -- `leitura=1x` = o 1o de cada colecao falha;
   // `leitura=0` = todos falham ate `window.uiLeituraBoa()` (o banco "volta"). Sem o parametro, nada falha.
+  // s226 (sprint-final-uerj part-1): `leitura=conexao` = a 1a conexao (o db que `use("db")` entrega ate a 1a
+  // leitura falhar) falha em TODA leitura; depois da falha, `use("db")` entrega uma conexao nova e boa (a
+  // troca de versao do hub com a pagina aberta, v108 de 13/10).
   var LEITURA = P.get("leitura") || "", falhasPorCol = {};
   window.uiLeituraBoa = function(){ LEITURA = ""; };
   var SEED = /*@ui:seed*/null;
@@ -57,7 +60,8 @@
       onSnapshot: function(fn){ return assinar(function(){ return snapDoc(path); }, fn); },
       collection: function(c){ return consulta(path + "/" + c, []); }};
   }
-  function consulta(col, filtros){
+  var conexaoCaiu = false;
+  function consulta(col, filtros, morta){
     function rodar(){
       var docs = Object.keys(store).filter(direto(col)).sort().map(snapDoc).filter(function(s){
         var d = s.data(); return filtros.every(function(f){ return !!d && d[f[0]] === f[1]; }); });
@@ -65,20 +69,25 @@
               docChanges: function(){ return []; }, forEach: function(fn){ docs.forEach(fn); }};
     }
     return {path: col,
-      where: function(campo, op, valor){ if(op !== "=="){ erro("db falso: where('" + campo + "', '" + op + "') sem suporte -- filtro ignorado"); return consulta(col, filtros); }
-        return consulta(col, filtros.concat([[campo, valor]])); },
-      orderBy: function(){ return consulta(col, filtros); }, limit: function(){ return consulta(col, filtros); },
-      get: function(){ return Promise.resolve(rodar()); },
+      where: function(campo, op, valor){ if(op !== "=="){ erro("db falso: where('" + campo + "', '" + op + "') sem suporte -- filtro ignorado"); return consulta(col, filtros, morta); }
+        return consulta(col, filtros.concat([[campo, valor]]), morta); },
+      orderBy: function(){ return consulta(col, filtros, morta); }, limit: function(){ return consulta(col, filtros, morta); },
+      get: function(){ if(morta){ return new Promise(function(ok, nao){ setTimeout(function(){ conexaoCaiu = true;
+          nao({code: "unavailable", message: "conexao morta (db falso)"}); }, 40); }); }
+        return Promise.resolve(rodar()); },
       onSnapshot: function(fn, falha){
         var n = falhasPorCol[col] = (falhasPorCol[col] || 0) + 1;
-        if(LEITURA === "0" || (LEITURA === "1x" && n === 1)){
-          var vivo = true; setTimeout(function(){ if(vivo && falha){ falha({code: "unavailable", message: "falha de leitura (db falso)"}); } }, 40);
+        if(morta || LEITURA === "0" || (LEITURA === "1x" && n === 1)){
+          var vivo = true; setTimeout(function(){ if(morta){ conexaoCaiu = true; }
+            if(vivo && falha){ falha({code: "unavailable", message: "falha de leitura (db falso)"}); } }, 40);
           return function(){ vivo = false; }; }
         return assinar(rodar, fn); },
       doc: function(id){ return docRef(col + "/" + id); }};
   }
   var db = {doc: docRef, collection: function(p){ return consulta(p, []); }};
-  window.claude = {use: function(nome){ return Promise.resolve(nome === "db" ? db : null); }};
+  var dbMorto = {doc: docRef, collection: function(p){ return consulta(p, [], true); }};
+  window.claude = {use: function(nome){ if(nome !== "db"){ return Promise.resolve(null); }
+    return Promise.resolve(LEITURA === "conexao" && !conexaoCaiu ? dbMorto : db); }};
 
   if(!CENA){ return; }
 

@@ -1634,9 +1634,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     try{
       window.claude.use("db").then(function(db){
         if(!db){ return; }
-        assinarResiliente(function(){ return db.collection("sessoes/" + lote.sessao + "/notas"); }, function(s){
+        assinarResiliente(function(db){ return db.collection("sessoes/" + lote.sessao + "/notas"); }, function(s){
           cardsPintar(((s && s.docs) || []).map(function(d){ return d.data ? d.data() : null; }));
-        }, {nome: "notas"});
+        }, {nome: "notas", db: db});
       }, function(){});
     }catch(e){}
   }
@@ -1692,12 +1692,16 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // console.warn com o codigo (a medicao do gatilho real) e nova assinatura com espera crescente
   // (1 s, 2 s, 4 s); esgotadas, `aoMorrer` (a tela oferece "Tentar de novo" -> `reiniciar`). Um estado
   // por assinatura (viva | esperando | morta | parada) e unsub antes de reassinar: nunca 2 ouvintes.
-  // `consulta` e uma funcao que devolve a referencia (refeita a cada tentativa).
+  // `consulta(db)` e uma funcao que devolve a referencia (refeita a cada tentativa) sobre o `db` que recebe.
+  // s226 (sprint-final-uerj part-1, a v108 que so voltou saindo do artifact): da 2a tentativa em diante (e no
+  // "Tentar de novo") a assinatura pede o banco DE NOVO por `window.claude.use("db")` -- a conexao velha
+  // pode ter morrido com a troca de versao; `opts.aoReconectar(db)` avisa quem guarda o `db` (o `QZ.db`).
+  // `use` devolvendo null na reconexao = a tentativa conta como falha. A 1a tentativa usa `opts.db`.
   var ESPERAS_LEITURA = [1000, 2000, 4000];
   function assinarResiliente(consulta, onDados, opts){
     opts = opts || {};
     var esperas = opts.esperas || ESPERAS_LEITURA;
-    var st = {estado: "viva", tentativa: 0, unsub: null, timer: null, ger: 0};
+    var st = {estado: "viva", tentativa: 0, unsub: null, timer: null, ger: 0, db: opts.db || null};
     function soltar(){
       if(st.timer){ clearTimeout(st.timer); st.timer = null; }
       if(st.unsub){ var u = st.unsub; st.unsub = null; try{ u(); }catch(e){} }
@@ -1709,22 +1713,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       try{ console.warn("[hub] leitura " + (opts.nome || "?") + " falhou", (err && (err.code || err.message)) || String(err), st.tentativa); }catch(e){}
       if(st.tentativa <= esperas.length){
         st.estado = "esperando"; chamar(opts.aoEsperar, st.tentativa);
-        st.timer = setTimeout(function(){ st.timer = null; assinar(); }, esperas[st.tentativa - 1]);
+        st.timer = setTimeout(function(){ st.timer = null; assinar(true); }, esperas[st.tentativa - 1]);
       } else { st.estado = "morta"; chamar(opts.aoMorrer, st.tentativa); }
     }
-    function assinar(){
-      soltar(); st.estado = "viva";
-      var g = ++st.ger, u = null;
+    function ligar(g, db){
+      var u = null;
       try{
-        u = consulta().onSnapshot(function(s){ if(g !== st.ger){ return; } st.tentativa = 0; onDados(s); },
-                                  function(err){ falhou(g, err); });
+        u = consulta(db).onSnapshot(function(s){ if(g !== st.ger){ return; } st.tentativa = 0; onDados(s); },
+                                    function(err){ falhou(g, err); });
       }catch(e){ falhou(g, e); }
       // a falha pode chegar antes do onSnapshot devolver o unsub: o ouvinte velho nao sobrevive
       if(typeof u === "function"){ if(g === st.ger){ st.unsub = u; } else { try{ u(); }catch(e){} } }
     }
-    assinar();
+    function assinar(reconectar){
+      soltar(); st.estado = "viva";
+      var g = ++st.ger;
+      if(!reconectar){ ligar(g, st.db); return; }
+      try{
+        window.claude.use("db").then(function(db){
+          if(g !== st.ger){ return; }
+          if(!db){ falhou(g, {code: "sem-db"}); return; }
+          st.db = db; chamar(opts.aoReconectar, db); ligar(g, db);
+        }, function(err){ falhou(g, err); });
+      }catch(e){ falhou(g, e); }
+    }
+    assinar(false);
     return {estado: function(){ return st.estado; }, tentativa: function(){ return st.tentativa; },
-            reiniciar: function(){ st.tentativa = 0; assinar(); },
+            reiniciar: function(){ st.tentativa = 0; assinar(true); },
             parar: function(){ st.ger++; soltar(); st.estado = "parada"; }};
   }
   function htmlRetentar(texto, chave){
@@ -1942,7 +1957,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
           aviso.setAttribute("data-leitura", "1"); aviso.innerHTML = html; aviso.hidden = false;
         }
         quadroRetentar = function(){ avisoLeitura("Carregando…"); quadroLeitura.reiniciar(); };
-        quadroLeitura = assinarResiliente(function(){ return db.collection("quadro"); }, function(snap){
+        quadroLeitura = assinarResiliente(function(db){ return db.collection("quadro"); }, function(snap){
           avisoLeitura(null);
           var feito = {};
           (snap.docs || []).forEach(function(d){
@@ -1953,7 +1968,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
             var f = !!feito[li.getAttribute("data-slug")];
             if(f !== li.hasAttribute("data-feito")){ aplicar(li, f); }
           });
-        }, {nome: "quadro", aoEsperar: function(){ avisoLeitura("Carregando…"); },
+        }, {nome: "quadro", db: db, aoEsperar: function(){ avisoLeitura("Carregando…"); },
             // sem assinatura: vale o estado do build e o que for clicado; o botao reassina
             aoMorrer: function(){ avisoLeitura(htmlRetentar("Não consegui ler o que você já concluiu.", "quadro")); }});
       }).catch(semArmazenamento);
@@ -2024,10 +2039,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         if(!db){ qzSemDb(); return; }
         QZ.db = db;
         // data() vem congelado: clonar antes de anexar o id (licao da s197)
-        QZ.subListas = assinarResiliente(function(){ return db.collection("listas").orderBy("seq"); }, function(s){
+        QZ.subListas = assinarResiliente(function(db){ return db.collection("listas").orderBy("seq"); }, function(s){
           QZ.listas = s.docs.map(function(d){ var x = Object.assign({}, d.data() || {}); x._id = d.id; return x; });
           qzRenderListas();
-        }, {nome: "listas",
+        }, {nome: "listas", db: db, aoReconectar: function(novo){ QZ.db = novo; },
             aoEsperar: function(){ $("qz-listas").innerHTML = '<p class="qd-vazio">Carregando as listas…</p>'; },
             aoMorrer: function(){ QZ.iniciado = false;
               $("qz-listas").innerHTML = '<p class="qd-vazio">' + htmlRetentar("Não consegui ler as listas.", "listas") + '</p>'; }});
@@ -2183,9 +2198,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     av.setAttribute("data-leitura", col); av.innerHTML = html; av.hidden = false;
   }
   function qzAssinarLista(col, id, onDados){
-    var h = assinarResiliente(function(){ return QZ.db.collection(col).where("lista", "==", id); },
+    var h = assinarResiliente(function(db){ return db.collection(col).where("lista", "==", id); },
       function(s){ qzAvisoLeitura(col, null); onDados(s); },
-      {nome: col, aoEsperar: function(){ qzAvisoLeitura(col, "Carregando " + QZ_LEITURA[col] + "…"); },
+      {nome: col, db: QZ.db, aoReconectar: function(novo){ QZ.db = novo; },
+       aoEsperar: function(){ qzAvisoLeitura(col, "Carregando " + QZ_LEITURA[col] + "…"); },
        aoMorrer: function(){ qzAvisoLeitura(col, htmlRetentar("Não consegui ler " + QZ_LEITURA[col] + ".", col)); }});
     QZ.subsLista[col] = h; QZ.unsubs.push(h.parar);
   }

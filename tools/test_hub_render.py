@@ -1802,7 +1802,7 @@ def _rodar_qz_leitura(acao, falhas):
                  .replace("__FALHAS__", json.dumps(falhas)).replace("__ACAO__", acao))
 
 
-def _rodar_quadro_leitura(acao, falhas, quadro=None):
+def _rodar_quadro_leitura(acao, falhas, quadro=None, conexao=""):
     """A Teoria REAL (`iniciarQuadro` + o quadro do build) sobre o banco falso do test_hub_quadro, com a
     colecao `quadro` trocada pela consulta que falha."""
     from tools.test_hub_quadro import BANCO_QD, DOM_QD, FUNCS_QD, _arvore
@@ -1813,7 +1813,7 @@ DB.collection = function(nome){ if(nome !== "quadro"){ return _colQd(nome); }
   c.doc = _colQd(nome).doc; return c; };
 """
     prog = (DOM_QD.replace("__ARVORE__", json.dumps(_arvore(_pagina_quadro()), ensure_ascii=False)) + RELOGIO_JS.replace("__FALHAS__", json.dumps(falhas)) +
-            BANCO_QD.replace("__CFG__", json.dumps({"quadro": quadro or {}}, ensure_ascii=False)) + troca + _aparelho() +
+            BANCO_QD.replace("__CFG__", json.dumps({"quadro": quadro or {}}, ensure_ascii=False)) + troca + conexao + _aparelho() +
             FUNCS_QD + r"""
 var qd = $("hub-quadro"), SAIDA = {};
 function feitoEm(slug){ return qd.querySelector('.qd-item[data-slug="' + slug + '"]').hasAttribute("data-feito"); }
@@ -1910,12 +1910,60 @@ def test_leituras_das_abas_passam_pela_assinatura_resiliente():
     qd = extrair_funcao(TEMPLATE, "function iniciarQuadro(){")
     abrir = extrair_funcao(TEMPLATE, "function qzAbrir(id){")
     assert "onSnapshot" not in ini and "assinarResiliente(" in ini and 'collection("listas")' in ini
-    assert ".onSnapshot(" not in qd and 'assinarResiliente(function(){ return db.collection("quadro"); }' in qd
+    assert ".onSnapshot(" not in qd and 'assinarResiliente(function(db){ return db.collection("quadro"); }' in qd
     assert "onSnapshot" not in abrir
     assert [c for c in ("questoes", "respostas", "analises") if 'qzAssinarLista("%s", id,' % c in abrir] == \
         ["questoes", "respostas", "analises"]
     assert "Recarregue a página" not in TEMPLATE
     assert "QZ.unsubs.push(h.parar)" in extrair_funcao(TEMPLATE, "function qzAssinarLista(col, id, onDados){")
+
+
+# s226 (sprint-final-uerj part-1): a v108 publicada com a pagina aberta deixou as Listas em "Nao consegui ler"
+# ate ele sair do artifact e voltar -- as 3 tentativas reusavam a conexao morta. O banco falso daqui imita o
+# `leitura=conexao` do ui_harness: a 1a conexao (`use("db")` no. 1) falha em toda leitura; a 2a funciona.
+CONEXAO_JS = r"""
+var USOS_DB = 0, _dbBom = DB;
+var DB_MORTO = {collection: function(c){ var q = consultaFalsa(c, function(){ return []; }); var on = q.onSnapshot;
+  q.onSnapshot = function(ok, erro){ FALHAS[c] = 1; return on(ok, erro); }; q.doc = function(){ return {set: function(){ return Promise.reject({code: "unavailable"}); }}; };
+  return q; }};
+window.claude.use = function(){ USOS_DB++; return Promise.resolve(USOS_DB === 1 ? DB_MORTO : _dbBom); };
+"""
+
+
+def test_retentativa_pede_conexao_nova():
+    """DoD 1-3: a 1a tentativa usa o `db` de quem assinou; da 2a em diante a assinatura pede `use("db")` de
+    novo, a consulta recebe o `db` novo e o `QZ.db` passa a ser ele -- as Listas e a Teoria carregam sem
+    recarregar, com 2 chamadas a `use("db")` (a da aba + a da reconexao) e um ouvinte so."""
+    acao = r"""
+  iniciarQuestoes(); await dormir(50);
+  SAIDA.morto_antes = QZ.db === DB_MORTO;
+  await dormir(200);
+  SAIDA.depois = $("qz-listas").innerHTML; SAIDA.estado = QZ.subListas.estado();
+  SAIDA.qz_db_novo = QZ.db === _dbBom; SAIDA.usos = USOS_DB;
+"""
+    prog = (HARNESS_QZ_LEITURA.replace("__FUNCS__", QZ_LEITURA_JS + chr(10) + CONEXAO_JS)
+            .replace("__FALHAS__", json.dumps({})).replace("__ACAO__", acao))
+    out = _node(prog)
+    assert out["morto_antes"] is True, "a 1a tentativa usa o db obtido pela aba"
+    assert out["depois"] == "LISTAS t49,t26" and out["estado"] == "viva"
+    assert out["qz_db_novo"] is True, "a gravacao de respostas usa o db da reconexao"
+    assert out["usos"] == 2 and out["esperas"] == [1000]
+    assert out["avisos"] == [["[hub] leitura listas falhou", "unavailable", 1]]
+    assert out["ativos"] == {"listas": 1}
+
+    # a Teoria: o mesmo caminho; o db de `iniciarQuadro` e o morto, o da 2a tentativa o bom
+    acao_qd = r"""
+  await dormir(250);
+  SAIDA.depois = aviso(); SAIDA.feito = feitoEm("rd-hepato"); SAIDA.estado = quadroLeitura.estado(); SAIDA.usos = USOS_DB;
+"""
+    qd = _rodar_quadro_leitura(acao_qd, {}, quadro={"rd-hepato": {"feito": True, "ts": "t"}}, conexao=CONEXAO_JS)
+    assert qd["depois"]["oculto"] is True and qd["feito"] is True and qd["estado"] == "viva"
+    assert qd["usos"] == 2 and qd["ativos"] == {"quadro": 1}
+
+    # a forma: os 4 chamadores montam a consulta sobre o db RECEBIDO, nunca o capturado
+    assert TEMPLATE.count("assinarResiliente(function(db){ return db.collection(") == 4
+    assert "assinarResiliente(function(){" not in TEMPLATE and "QZ.db.collection(col)" not in TEMPLATE
+    assert TEMPLATE.count("aoReconectar: function(novo){ QZ.db = novo; }") == 2
 
 
 def test_chip_da_lista_so_fora_do_normal():
@@ -1998,7 +2046,7 @@ def test_cards_e_painel_mostram_o_mesmo_contador():
     assert '<span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>' in player
     assert '<span class="metro fila">fila <b id="pendentes">0</b></span>' in player
     assert re.search(r"\.com-dia \.metro\.fila\{font-size:var\(--fs-meta\)\}", player)
-    assert "iniciarCardsDia();" in TEMPLATE and 'assinarResiliente(function(){ return db.collection("sessoes/" + lote.sessao + "/notas"); }' in TEMPLATE
+    assert "iniciarCardsDia();" in TEMPLATE and 'assinarResiliente(function(db){ return db.collection("sessoes/" + lote.sessao + "/notas"); }' in TEMPLATE
 
 
 def test_fila_de_outro_dia_avisa_e_segue_drenavel():

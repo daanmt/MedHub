@@ -1,0 +1,96 @@
+<title>Revisão direcionada · MFC · UERJ 2022</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.note{margin:14px 0;padding:10px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · MFC · UERJ 2022</p>
+  <h1>MFC: o que o resultado do teste deixa concluir</h1>
+  <p class="sub">Duas erradas no mesmo eixo: qual resultado decide em cada teste, e quanto um negativo vale quando a suspeita é alta. Mais uma certa em dúvida de DM2.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Testes diagnósticos · Q58 e Q60</span>
+  <h2>Cada teste decide por um lado só</h2>
+  <p class="pede"><b>Pedia:</b> na Q58, qual conclusão cada tipo de teste permite; na Q60, o que fazer com o enfermeiro sintomático e RT-PCR negativo no pico da pandemia.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Cada teste é bom em evitar um erro. O <strong>sensível</strong> quase não deixa doente passar (poucos falsos negativos); o <strong>específico</strong> quase não acusa sadio (poucos falsos positivos).</span></li>
+    <li><span class="n">2</span><span>O resultado que decide é o que esse erro raro torna confiável. Sensível <strong>negativo exclui</strong>; específico <strong>positivo confirma</strong>. O negativo do específico pode ser falso negativo, e o positivo do sensível pode ser falso positivo.</span></li>
+    <li><span class="n">3</span><span>Sensibilidade e especificidade não mudam com a prevalência; os valores preditivos mudam. Pré-teste alta derruba o VPN: um negativo passa a pesar menos.</span></li>
+    <li><span class="n">4</span><span>Sintomático, profissional de saúde, pico da pandemia: pré-teste alta, e o RT-PCR erra por coleta e momento. O negativo vira <strong>provável falso negativo</strong>: isolamento, quarentena dos contactantes e vigilância.</span></li>
+  </ol>
+  <div class="tw"><table>
+    <tr><th>Teste</th><th>Erro que evita</th><th>Resultado que decide</th><th>Conclusão</th></tr>
+    <tr><td>Sensível</td><td>Falso negativo</td><td class="sim">Negativo</td><td>Exclui</td></tr>
+    <tr><td>Específico</td><td>Falso positivo</td><td class="sim">Positivo</td><td>Confirma</td></tr>
+  </table></div>
+  <div class="trap">Na Q58, a C copia a estrutura da B e acerta a primeira metade; erra a conclusão pelo negativo. Na Q60, a D acerta a quarentena e erra a premissa: "confirmar que não tem covid" com um negativo isolado.</div>
+  <div class="note">Na Q60 você declarou todos os elos Sim: a página traz uma pergunta curta sobre o que você leu na D.</div>
+  <p class="src">Fonte: resumos/Preventiva/Medidas de Saúde Coletiva.md (§1.4 Valores Preditivos e Prevalência) e resumos/Preventiva/13. Testes Diagnósticos.pdf (teste sensível x específico)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Pílulas</span>
+  <h2>Uma linha para cada uma</h2>
+  <div class="blk">
+    <h3>Q53 · DM2 aos 78 anos com alto risco CV</h3>
+    <ul class="pt">
+      <li>DM de longa data + microalbuminúria + tabagismo + disfunção de VE: <strong>estatina</strong>.</li>
+      <li>Metformina só sai com TFG &lt; 30 (dose reduzida entre 30 e 45); TFG 58 mantém.</li>
+      <li>Meta de HbA1c acima de 75 anos: 7,5-8,5%; &lt; 6,5% é agressiva demais.</li>
+      <li>AAS não se indica por IC, e FE 47% não é IC de fração reduzida.</li>
+    </ul>
+    <p class="src">Fonte: resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md (metas e metformina) e resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md (estatina)</p>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Teste muito específico deu negativo. Dá para dizer que a pessoa é sadia?</p><details><summary>ver resposta</summary><div>Não: ele evita falso positivo, não falso negativo. Quem exclui pelo negativo é o sensível.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Qual resultado de um teste muito sensível tem valor para decidir?</p><details><summary>ver resposta</summary><div>O negativo: exclui a doença.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Sintomático no pico da epidemia com teste negativo. Como ler?</p><details><summary>ver resposta</summary><div>Pré-teste alta: provável falso negativo; isolar, quarentena dos contactantes e vigiar.</div></details></div>
+    <div class="q"><span class="tag">Q53</span><p>Abaixo de que TFG a metformina é suspensa?</p><details><summary>ver resposta</summary><div>30 mL/min/1,73 m2 (entre 30 e 45, reduz a dose).</div></details></div>
+  </div>
+</section>
+</div>

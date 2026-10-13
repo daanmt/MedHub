@@ -380,6 +380,83 @@
       "tarefas": [
         141
       ]
+    },
+    "rd-cir-1310": {
+      "tipo": "revisao",
+      "titulo": "Cirurgia da UERJ 2022: pós-operatório, perioperatório e reto",
+      "disciplinas": [
+        "Cirurgia",
+        "Gastroenterologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
+        "Clínica Médica/Hematologia/Hemostasia.md",
+        "Cirurgia/[CIR] Trauma.md",
+        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+      ]
+    },
+    "rd-cm-1310": {
+      "tipo": "revisao",
+      "titulo": "Clínica Médica da UERJ 2022: tumor, sopro, rim e reticulócito",
+      "disciplinas": [
+        "Cardiologia",
+        "Cirurgia",
+        "Endocrinologia",
+        "Hematologia",
+        "Nefrologia",
+        "Neurologia",
+        "Pneumologia",
+        "Reumatologia"
+      ],
+      "resumos": [
+        "Cirurgia/Urologia.md",
+        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md",
+        "Clínica Médica/Nefrologia/Doença Renal Crônica.md",
+        "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
+        "Clínica Médica/Pneumologia/Asma.md",
+        "Clínica Médica/Reumatologia/DITC II.md"
+      ]
+    },
+    "rd-go-1310": {
+      "tipo": "revisao",
+      "titulo": "GO da UERJ 2022: EGB, fisiologia da gestação e histologia antes de tratar",
+      "disciplinas": [
+        "Ginecologia",
+        "Obstetrícia"
+      ],
+      "resumos": [
+        "GO/Pré-Natal.md",
+        "GO/[GIN] Rastreamento Colo.md",
+        "GO/[GIN] CA de Mama.md",
+        "GO/Endometriose.md",
+        "GO/[GIN] CA de Endométrio.md"
+      ]
+    },
+    "rd-mfc-1310": {
+      "tipo": "revisao",
+      "titulo": "MFC da UERJ 2022: o que o resultado do teste permite concluir",
+      "disciplinas": [
+        "Preventiva",
+        "Endocrinologia"
+      ],
+      "resumos": [
+        "Preventiva/Medidas de Saúde Coletiva.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md"
+      ]
+    },
+    "rd-ped-1310": {
+      "tipo": "revisao",
+      "titulo": "Pediatria da UERJ 2022: ITU, hipertensão portal, HAC e tubulopatia",
+      "disciplinas": [
+        "Pediatria"
+      ],
+      "resumos": [
+        "Pediatria/Infecção de Trato Urinário em Pediatria (ITU).md",
+        "Cirurgia/Cirurgia Infantil.md",
+        "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
+        "Clínica Médica/Nefrologia/Distúrbios do Potássio.md"
+      ]
     }
   }
 }

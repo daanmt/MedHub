@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Revisão direcionada · Pediatria · UERJ 2022</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-size:16px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+h1,h2,h3{margin:0;line-height:1.2;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font-size:13px;color:var(--ink3);margin:0 0 10px}
+.top h1{font-size:clamp(26px,5vw,36px);margin-bottom:12px}
+.top .sub{color:var(--ink2);margin:0}
+.sec{padding:28px 0;border-bottom:1px solid var(--line);min-width:0}
+.sec:last-of-type{border-bottom:0}
+.kick{font-size:13px;color:var(--ink3);display:block;margin-bottom:4px}
+.sec h2{font-size:clamp(20px,3.2vw,24px);margin-bottom:10px}
+.pede{margin:0 0 14px;color:var(--ink2)}
+.pede b{color:var(--ink)}
+ol.esc{list-style:none;margin:0 0 14px;padding:0;counter-reset:d}
+ol.esc li{counter-increment:d;display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc li::before{content:counter(d);font-size:24px;line-height:1;font-weight:300;color:var(--plum)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:14px 0;padding:11px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);color:var(--ink)}
+.trap b{color:var(--amber-ink)}
+.q{margin:14px 0 0;padding:12px 14px;background:var(--card);border:1px solid var(--line2);border-radius:var(--raio,10px)}
+.q p{margin:0 0 6px;color:var(--ink);font-weight:500}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;font-size:14px}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2)}
+.src{margin:12px 0 0;font-size:12.5px;color:var(--ink3);overflow-wrap:anywhere}
+.pil{margin:0;padding:0;list-style:none}
+.pil li{padding:12px 0;border-top:1px solid var(--line);color:var(--ink2)}
+.pil li:first-child{border-top:0}
+.pil h3{font-size:17px;margin:0 0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eye">Revisão direcionada · Pediatria · UERJ 2022</p>
+  <h1>Pediatria: o dado que já fecha a questão</h1>
+  <p class="sub">Cinco erros e duas certas frágeis. Em quase todos, um dado do enunciado (o Gram, o Doppler, o potássio, a insulina) já decidia, e a escolha foi pela história.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · ITU na criança (Q37)</span>
+  <h2>O Gram escolhe o agente</h2>
+  <p class="pede"><b>Pedia:</b> pré-escolar com RVU, ITU grave, nitrito negativo e coco Gram-positivo na urina. Qual o agente?</p>
+  <ol class="esc">
+    <li><span>Comece pelo Gram. E. coli, Klebsiella e Proteus são <strong>bacilos Gram-negativos</strong>, e enterobactérias reduzem nitrato a nitrito. Coco Gram-positivo com nitrito negativo exclui as três de uma vez.</span></li>
+    <li><span>Sobram dois cocos: Enterococcus e Staphylococcus. Em criança com <strong>uropatia</strong> (RVU), instrumentação ou antibiótico prévio, o coco da urina é o <strong>Enterococcus</strong>.</span></li>
+    <li><span>O estafilococo urinário tem dono. O <strong>S. saprophyticus</strong> é da cistite de adolescente e mulher jovem sexualmente ativa (até ~15% nessa faixa). O S. aureus na urina sugere via hematogênica.</span></li>
+  </ol>
+  <div class="trap"><b>Armadilha:</b> Proteus é "o agente da ITU obstrutiva" e atrai em criança com anomalia urológica, mas é bacilo. O Gram já o tinha tirado.</div>
+  <div class="q"><p>ITU com coco Gram-positivo em criança com bexiga neurogênica. Agente?</p><details><summary>ver resposta</summary><div>Enterococcus. Proteus e Klebsiella são bacilos Gram-negativos.</div></details></div>
+  <p class="src">Fonte: <code>resumos/Pediatria/Infecção de Trato Urinário em Pediatria (ITU).md</code> (§1 Etiologia) e <code>resumos/Pediatria/3. Infecção de Trato Urinário em Pediatria (ITU).pdf</code> (S. saprophyticus, Proteus)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · HDA no lactente (Q38)</span>
+  <h2>Cateter umbilical + fluxo hepatofugal = trombose portal</h2>
+  <p class="pede"><b>Pedia:</b> lactente de 6 meses, egresso de UTI neonatal com cateter umbilical, melena volumosa, raio X normal e Doppler com fluxo hepatofugal. Causa?</p>
+  <ol class="esc">
+    <li><span><strong>Hepatofugal</strong> = o sangue portal sai do fígado em vez de entrar. Só acontece quando a pressão portal sobe e o fluxo procura as colaterais: é hipertensão portal.</span></li>
+    <li><span>Na criança, a principal causa <strong>pré-hepática</strong> é a <strong>trombose da veia porta</strong> (cavernoma), e o fator clássico é o cateterismo umbilical neonatal (ou onfalite). O fígado é normal: sem ascite, sem icterícia.</span></li>
+    <li><span>A pressão alta abre varizes esofágicas, que sangram como HDA: melena em grande volume e anemia, num lactente eutrófico e ativo.</span></li>
+    <li><span>A ECN fica fora pela idade e pelo raio X: é doença do período neonatal, e o achado patognomônico é a <strong>pneumatose intestinal</strong>. Raio X normal aos 6 meses não sustenta ECN.</span></li>
+  </ol>
+  <div class="trap"><b>Armadilha:</b> a história de UTI neonatal (antibióticos, nutrição parenteral) puxa para ECN. O dado que decide é o Doppler, não a história.</div>
+  <div class="q"><p>Criança de 3 anos, hematêmese volumosa, fígado normal, sem ascite, cateter umbilical no período neonatal. Mecanismo?</p><details><summary>ver resposta</summary><div>Hipertensão portal pré-hepática por trombose da veia porta, com varizes esofágicas.</div></details></div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Hepatologia/6. Complicações da Cirrose Hepática.pdf</code> (§1.1.1.1 Trombose da veia porta) e <code>resumos/Cirurgia/Cirurgia Infantil.md</code> (ECN, pneumatose)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · HAC (Q44)</span>
+  <h2>Perda de sal pede o corticoide que retém sódio</h2>
+  <p class="pede"><b>Pedia:</b> RN de 9 dias com vômitos, desidratação, Na 124, K 6,5 e genitália atípica. Hipótese e tratamento.</p>
+  <ol class="esc">
+    <li><span>Na baixo + K alto + desidratação na 2ª semana = <strong>crise perdedora de sal</strong> da HAC (21-hidroxilase). A estenose de piloro faria o contrário: alcalose hipoclorêmica com K baixo.</span></li>
+    <li><span>Falta cortisol e falta aldosterona. Por isso a crise exige um corticoide que faça as duas coisas: a <strong>hidrocortisona</strong> EV ou IM, junto com expansão com SF 0,9%.</span></li>
+    <li><span>Metilprednisolona e dexametasona são glicocorticoides quase puros: não retêm sódio nem baixam o potássio. Na manutenção, a HAC perdedora de sal usa hidrocortisona + fludrocortisona + sal.</span></li>
+  </ol>
+  <div class="trap"><b>Armadilha:</b> as duas finais têm o diagnóstico certo. A banca separa pelo corticoide.</div>
+  <div class="q"><p>Por que não metilprednisolona na crise perdedora de sal?</p><details><summary>ver resposta</summary><div>Não tem ação mineralocorticoide relevante; a hidrocortisona tem.</div></details></div>
+  <p class="src">Fonte: <code>resumos/Pediatria/10. Hiperplasia Adrenal Congênita.pdf</code> (§7.1-7.2 Tratamento e crise adrenal)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Hipoglicemia na criança (Q46)</span>
+  <h2>Insulina detectável na hipoglicemia já é demais</h2>
+  <p class="pede"><b>Pedia:</b> menino de 8 anos com crises e hipoglicemia de jejum (46), sem cetonúria, exame físico normal, insulina 10 microU/mL. Causa?</p>
+  <ol class="esc">
+    <li><span>Primeiro classifique pela cetose. Hipoglicemia <strong>sem corpos cetônicos</strong> = algo bloqueia a lipólise: excesso de insulina (ou defeito de oxidação de ácidos graxos).</span></li>
+    <li><span>Na hipoglicemia, a insulina deveria estar suprimida. Com glicose &lt;= 55 mg/dL, insulina <strong>&gt;= 3 microU/mL</strong> é inapropriada e documenta hiperinsulinismo endógeno. O valor 10 parece normal, mas é alto para glicose 46.</span></li>
+    <li><span>A glicogenose tipo I faz hipoglicemia de jejum com <strong>hepatomegalia</strong>, lactato alto e insulina baixa. Exame físico normal e insulina detectável a afastam.</span></li>
+  </ol>
+  <div class="tw"><table>
+    <tr><th>Padrão</th><th>Cetose</th><th>Insulina</th><th>Pista</th></tr>
+    <tr><td>Hiperinsulinismo (insulinoma)</td><td>Ausente</td><td>&gt;= 3, inapropriada</td><td>Exame normal</td></tr>
+    <tr><td>Glicogenose I</td><td>Ausente ou leve, lactato alto</td><td>Suprimida</td><td>Hepatomegalia</td></tr>
+    <tr><td>Hipoglicemia cetótica / jejum</td><td>Presente</td><td>Suprimida</td><td>Criança magra, jejum longo</td></tr>
+  </table></div>
+  <div class="trap"><b>Armadilha:</b> criança + atraso + hipoglicemia de jejum puxam para erro inato. Sem hepatomegalia e com insulina detectável, é hiperinsulinismo.</div>
+  <div class="q"><p>Glicose 48, cetonúria ausente, insulina 6 microU/mL. A insulina está adequada?</p><details><summary>ver resposta</summary><div>Não: &gt;= 3 com glicose &lt;= 55 é inapropriada (hiperinsulinismo).</div></details></div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Endocrinologia/24. Hipoglicemia no Paciente não Diabético.pdf</code> (critérios de hiperinsulinismo endógeno, p. 17)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">05 · Tubulopatia (Q47)</span>
+  <h2>K 2,0 explica a paralisia; a urina explica o K</h2>
+  <p class="pede"><b>Pedia:</b> menina de 6 anos com fraqueza ascendente, hiporreflexia, sensibilidade normal, K 2,0, Cl 120, HCO3 10, pH urinário 6. Exame que corrobora?</p>
+  <ol class="esc">
+    <li><span>Faça a conta: AG = 138 - 120 - 10 = 8, normal. É acidose <strong>hiperclorêmica</strong>, de perda de base, e sem diarreia.</span></li>
+    <li><span>Acidose grave com pH urinário 6 (&gt; 5,5) = o rim não acidifica a urina: <strong>ATR distal (tipo I)</strong>, que cursa com hipocalemia.</span></li>
+    <li><span>Com K <strong>&lt; 2,5</strong>, a fraqueza ascendente pode chegar à paralisia flácida com hiporreflexia e sensibilidade preservada. O potássio já explica o quadro neurológico: não é caso de líquor.</span></li>
+    <li><span>Para corroborar, localize a perda: <strong>K urinário alto</strong> em vigência de hipocalemia = perda renal (contra perda digestiva).</span></li>
+  </ol>
+  <div class="trap"><b>Armadilha:</b> fraqueza ascendente + arreflexia vende Guillain-Barré e o líquor. A sensibilidade normal e o K 2,0 dizem paralisia hipocalêmica.</div>
+  <div class="q"><p>Hipocalemia grave com acidose de AG normal e pH urinário 6,5. Tipo de ATR?</p><details><summary>ver resposta</summary><div>Distal (tipo I): não acidifica a urina.</div></details></div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md</code> (ATR) e <code>resumos/Clínica Médica/Nefrologia/Distúrbios do Potássio.md</code> (§2.2 Quadro clínico)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">06 · Infecção congênita (Q41, certa com incerteza)</span>
+  <h2>CMV deixa surdez; toxo deixa o olho</h2>
+  <p class="pede"><b>Pedia:</b> RN com petéquias, hepatoesplenomegalia, microcefalia e calcificações periventriculares. Sequela mais comum?</p>
+  <ol class="esc">
+    <li><span>Calcificação <strong>periventricular</strong> = CMV; <strong>difusa</strong> com hidrocefalia = toxoplasmose. As petéquias e a plaquetopenia reforçam o CMV.</span></li>
+    <li><span>O CMV é a causa infecciosa mais comum de surdez na infância: a <strong>perda auditiva neurossensorial</strong> é a sequela mais frequente, e pode surgir tardiamente.</span></li>
+    <li><span>A coriorretinite também ocorre no CMV, mas é a marca da toxoplasmose (tétrade de Sabin). Na prova, o que separa é a frequência, não a presença.</span></li>
+  </ol>
+  <div class="tw"><table>
+    <tr><th>Infecção</th><th>Calcificação</th><th>Sequela marca</th></tr>
+    <tr><td>CMV</td><td>Periventricular</td><td>Surdez neurossensorial</td></tr>
+    <tr><td>Toxoplasmose</td><td>Difusa</td><td>Coriorretinite</td></tr>
+    <tr><td>Rubéola</td><td>--</td><td>Surdez, catarata, cardiopatia</td></tr>
+  </table></div>
+  <div class="trap"><b>Armadilha:</b> "cegueira" atrai porque coriorretinite também existe no CMV. A mais comum é a auditiva.</div>
+  <div class="q"><p>Sequela de longo prazo mais comum do CMV congênito?</p><details><summary>ver resposta</summary><div>Perda auditiva neurossensorial.</div></details></div>
+  <p class="src">Fonte: <code>resumos/Pediatria/20. Infecções Congênitas.pdf</code> (quadro-resumo p. 5; CMV p. 17)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Pílulas</span>
+  <h2>Uma linha cada</h2>
+  <ul class="pil">
+    <li><h3>Hérnia umbilical &gt; 2 cm: relativa, não absoluta (Q48)</h3>
+      ~80% fecham sozinhas e o reparo eletivo espera até ~5 anos. Defeito &gt; 2 cm fecha pouco e antecipa o reparo, sem urgência; reparo imediato só no encarceramento. A inguinal é sempre cirúrgica.
+      <div class="q"><p>Única indicação de reparo imediato da hérnia umbilical infantil?</p><details><summary>ver resposta</summary><div>Encarceramento.</div></details></div>
+      <p class="src">Fonte: <code>resumos/Cirurgia/Cirurgia Infantil.md</code> (§16-17)</p>
+    </li>
+  </ul>
+</section>
+
+</div>
+</body>
+</html>

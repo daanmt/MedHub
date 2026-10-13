@@ -32,7 +32,7 @@ espaço.
 | Tokens + base | `core/templates/tema.css` | as duas paletas (escuro padrão, claro por `data-theme="light"`), escalas de espaço, raio e tipo, apelidos legados e das aulas, base comum (fonte, foco, seleção, movimento) | shell do hub, painel, player standalone, leitor de aulas e resumos |
 | Casca, Teoria, Listas, leitor | `core/templates/hub.html` (bloco `<style>`, depois de `/* @hub:player-css */`) | abas, Teoria (`qd-*`), Listas e questão (`qz-*`), barra do leitor, assinatura de leitura (`hub-assina*`) | o hub |
 | Cards | `core/templates/player.html` (região `@player:css`) | o player FSRS e a tela de fim | o hub (aba Cards) e o standalone do `fsrs_queue.py --build-player` |
-| Painel | `tools/painel.py` (constante `CSS`) | Hoje, Ritmo, Semana, Blocos, Documentação | `artifacts/painel.html` (iframe no hub) |
+| Painel | `tools/painel.py` (constante `CSS`) | o dashboard (Hoje, Ritmo, Até 01/11, Por bloco, Revisões 7 dias), Plano de hoje / Semana, Documentação | `artifacts/painel.html` (iframe no hub) |
 | Leitor de aulas e resumos | `core/templates/tema-aula.css` | a camada de leitura sobre o CSS próprio de cada aula (43 em `artifacts/aula-*.html`) e da página de resumo | só o leitor (injetada depois do `tema.css`) |
 | Página de resumo | `tools/hub.py` (constante `CSS_RESUMO`) | paleta e estrutura próprias da página de resumo publicada | a página aberta fora do leitor; no leitor o tema vem por cima |
 | CSS injetado pelo JS do hub | `core/templates/hub.html`: `painelListas` (selos e "+N" no painel), `pendEstilo` (formulário de pergunta nos documentos), `grifoEstilo` (marca-texto no leitor) | estilos que o hub põe dentro dos iframes | painel e leitor |
@@ -115,6 +115,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Botão | global (`player.html`) | secundário: contorno `--linha-forte`, fundo transparente; `.primario`: ciano com texto `--sobre`; `.fantasma`: tracejado; 44 px de altura |
 | Segmentado | Questões/Simulados (`.qz-modo`), certeza (`.qz-seg`), declaração (`.qz-decl`) | raio de controle; ligado = cor do estado + lavagem |
 | Abas | `.hub-aba` | texto; ativa em `tinta` com uma barra de 2 px que é o TRECHO do horizonte sob ela (`background-size:400%`, posição por `nth-child`; s226, pedido dele); o filete de baixo é o horizonte |
+| Dashboard | topo do Painel (`section.dash`, `data-bloco="dia"`; Ritmo e Por bloco com o `data-bloco` deles por dentro, `.dash-sec`) | s226: Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias, cada parte sob um filete; tiles = um número por tile (`.fracao b`), barra fina e rótulo curto `tinta3` (`.kpi-r`), sem caixa e **sem `p.nota`**; com sprint o único por-dia é o do sprint (`q_hoje` no tile, real 7 d contra a `capacidade_q` no Ritmo) e a meta aparece uma vez, como alvo da **barra de projeção** (`.proj-barra`: feito ciano · cumprindo o sprint lavagem ciano com contorno · fora do sprint `--linha` tracejado em `--tinta3`, 2 px de fundo entre trechos, `role=img` com os números no `aria-label`); **Por bloco** em linhas (`.bl`: nome · barra de acerto 0-100% · % · feitas/total), o de menor acerto em âmbar com o rótulo "mais fraco", Simulados na última linha com barra neutra; `title` em cada linha e trecho = dica ao passar o mouse; HTML/CSS puro (o painel não carrega lib) |
 | Métricas | fim da lista (`.qz-tiles`), fim do lote (`.fim-grade`), Ritmo (`.fig`) | uma faixa entre dois filetes, número 700 + rótulo `tinta3`; sem uma caixa por número |
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
@@ -125,6 +126,8 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 ## 6. Telas: o que cada uma prioriza
 
 - **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos) e o que vem depois.
+  Desde a s226 (painel-dashboard-sprint part-1) Hoje + Ritmo + Até 01/11 + Por bloco + Revisões nos próximos 7 dias são
+  UM dashboard no topo (§5); o Plano de hoje vem logo abaixo, como a lista do que fazer.
   Com o sprint gravado (s226, `plano.agenda_sprint`, a fonte única do "hoje" do Painel, da aba Listas e do boot), o
   bloco das tarefas é **Plano de hoje** (título; o bloco do topo segue "Hoje") (as tarefas do dia, a que rolou de um dia passado sem rótulo de atraso, o total de
   questões, "+ N cards" que faltam da dose do dia e a RD não assinada mais antiga, a linha inteira abrindo o leitor;
@@ -168,6 +171,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | Painel com sprint: Plano de hoje / Próximos dias / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga; sem estado do quadro, nenhuma RD | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga`, `test_sem_estado_do_quadro_o_painel_nao_afirma_rd_nao_assinada` |
 | Teoria sem semana: backlog de RDs no topo + Biblioteca; a assinada some do backlog ao vivo | `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`, `test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca`, `test_hub_render.py::test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca` |
 | Listas = o mesmo "hoje" do Painel (Hoje / Próximos dias / Fora do sprint); simulado com a data | `test_hub_render.py::test_listas_e_painel_mesmo_hoje`, `test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint`, `test_simulado_leva_a_data_do_sprint`, `test_sem_hub_sprint_as_listas_caem_nas_semanas` |
+| dashboard: com sprint o tile de Questões = `q_hoje` do sprint e o Ritmo contra a `capacidade_q`, sem "por dia até a prova", meta 1x; sem sprint, a meta; projeção com os 3 números; Por bloco em linhas com "mais fraco"; nenhum `p.nota` no dashboard; o `q_hoje` do tile = o do boot | `test_painel.py::test_dashboard_questoes_usa_o_q_hoje_do_sprint`, `test_dashboard_sem_sprint_volta_a_meta`, `test_barra_de_projecao_feito_sprint_meta`, `test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado`, `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`, que viaja embutido) | `test_painel.py::test_html_sem_jargao` |
 | leituras das abas pela assinatura resiliente (retentativa, botão, 1 ouvinte); chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | a retentativa pede conexão nova ao banco (e o `QZ.db` passa a ser ela) | `test_hub_render.py::test_retentativa_pede_conexao_nova` |
@@ -227,6 +231,7 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 
 ## 11. Histórico de decisões
 
+- **Dashboard do Painel (13/10, s226, painel-dashboard-sprint part-1)**: pedido dele ("integre estes dois blocos [...] com a modalidade de dashboard [...] e resolva as divergências entre metas"): Hoje + Ritmo + Por bloco viram um dashboard no topo (forma e cor pela skill `dataviz`, dentro dos tokens); com sprint, o único por-dia da tela é o do sprint ("0 de 76", não "0 de ~115"; o Ritmo contra 80/dia; "114,9 por dia até a prova" sai) e a meta 10.000 aparece uma vez, na barra de projeção (7.817 -> 9.306 -> 10.000, fora do sprint 997 q); a `<table>` do Por bloco virou linhas com barra de acerto. Regra s203 suspensa para a tela: `cronograma-contract` v1.7.
 - **s226 (13/10, tarde):** pedido dele com prints: "Hub" no azul da paleta; a barra da aba ativa acompanha o degradê; as tags do Painel com a cor das de Teoria (o "novas"), "Próxima" segue ciano; fora as legendas em prosa (Teoria, frase do Ritmo, "Fora da tabela"). O dashboard que integra Hoje + Ritmo + Por bloco e a meta única na tela vão para o PRD `painel-dashboard-sprint`.
 
 - **v1 (12/10/2026, s224)**: escuro índigo sobre preto, Atkinson, cartões viram linhas -- *"prefiro tema escuro / modo

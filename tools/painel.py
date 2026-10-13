@@ -7,7 +7,8 @@ que outra superficie tambem usa -- o painel nao tem regra propria de semana, de 
 
     semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot), sobre as linhas
                          com a contagem do banco do hub (`plano.linhas_com_q_hub`, P20 -- s219)
-    meta do dia       -> `performance.volume_vs_marco` (a MESMA linha Meta do boot; s203)
+    meta do dia       -> `performance.volume_vs_marco` (a MESMA linha Meta do boot; s203); com sprint, a
+                         TELA usa o `q_hoje` de `plano.agenda_sprint` e a `capacidade_q` (s226, contrato v1.7)
     saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `consumo_logico` (P09, s216)
     agenda de 7 dias  -> `db.agenda_revisoes` (o MESMO da tela de fim da aba Cards)
     ritmo             -> `db.get_ritmo_real` + `performance.volume_vs_marco` + `day_plan._cronograma_hoje`
@@ -315,6 +316,15 @@ def _bloco_ritmo(hoje):
     # s226 (sprint-final-uerj part-5): havendo sprint, a cobertura conta o SPRINT (o mesmo
     # `plano.resumo_sprint` do boot); None = a frase da Fase 1
     sp = cron.get("sprint")
+    # s226 (painel-dashboard-sprint part-1): com sprint, o Ritmo compara o real com a capacidade do
+    # sprint (`core/sprint.json`, lido pelo `plano.ler_sprint`); ilegivel = None (sem comparacao)
+    capacidade = None
+    if sp:
+        import plano
+        try:
+            capacidade = int(plano.ler_sprint()["capacidade_q"])
+        except Exception:  # noqa: BLE001 -- leitura de exibicao: sem config, o tile fica sem rotulo
+            capacidade = None
     return {
         "real_7d": db.get_ritmo_real(7),
         "real_14d": db.get_ritmo_real(14),
@@ -328,7 +338,8 @@ def _bloco_ritmo(hoje):
         "fechando_q": cron.get("fechando_q"),
         "fim_fase1": cron.get("fim_conteudo_alvo"),
         "sprint": ({"q": sp["q_sprint"], "simulados_q": sp["simulados_q"], "fechando_q": sp["fechando_q"],
-                    "fim": sp["fim"], "fora": sp["fora"], "q_fora": sp["q_fora"]} if sp else None),
+                    "fim": sp["fim"], "fora": sp["fora"], "q_fora": sp["q_fora"],
+                    "capacidade_q": capacidade} if sp else None),
         "acumulado": vm["total"],
         "acerto": (round(vm["acertos"] / vm["total"] * 100, 1) if vm["total"] else None),
     }
@@ -371,14 +382,19 @@ def coletar(hoje=None):
     # P20 (s219): as questoes de cada tarefa contam o banco do hub quando ela tem questoes la -- o MESMO
     # numero da Teoria, da aba Listas e do boot (`plano.q_da_tarefa`)
     linhas = plano.linhas_com_q_hub(db.plano_listar())
+    # s226 (sprint-final-uerj part-3): a agenda por dia; None = sem sprint (a pagina usa a semana)
+    sprint = _bloco_sprint(linhas, hoje)
+    dia = _bloco_dia(linhas, hoje)
+    # s226 (painel-dashboard-sprint part-1): com sprint, o tile de Questoes conta contra o `q_hoje` do
+    # sprint -- o MESMO do "Plano de hoje" e do boot (`plano.agenda_sprint`); None = o ritmo da meta
+    dia["questoes"]["q_hoje"] = sprint["q_hoje"] if sprint else None
     return {
         "gerado_em": db.agora().isoformat(timespec="seconds"),
         "data": hoje.isoformat(),
         "titulo": TITULO,
-        "dia": _bloco_dia(linhas, hoje),
+        "dia": dia,
         "semana": _bloco_semana(linhas, hoje),
-        # s226 (sprint-final-uerj part-3): a agenda por dia; None = sem sprint (a pagina usa a semana)
-        "sprint": _bloco_sprint(linhas, hoje),
+        "sprint": sprint,
         "ritmo": _bloco_ritmo(hoje),
         "blocos": _bloco_blocos(linhas),
         BLOCO_DOCS: _bloco_docs(),
@@ -485,64 +501,83 @@ def _acao(t):
 
 
 def _html_dia(d, data_iso):
+    """O topo do dashboard: o titulo do dia e os dois tiles (Questoes, Cards) -- um numero por tile,
+    barra fina, rotulo curto (`kpi-r`), nunca legenda em prosa (s226, painel-dashboard-sprint part-1).
+
+    Com sprint (`questoes.q_hoje` nao-None), Questoes = feitas de `q_hoje` (o MESMO do "Plano de hoje"
+    e do boot); sem sprint, o ritmo da meta (s203)."""
     hoje = date.fromisoformat(data_iso)
-    q, c, ag = d["questoes"], d["cards"], d["agenda"]
+    q, c = d["questoes"], d["cards"]
 
     # s216 (part-6, P08 v0): o numero publicado leva a ancora do "Hoje ao vivo" -- a pagina soma "+K"
     # AO LADO (o que ela gravou depois do publish), nunca o substitui
     b_q = '<b data-vivo="questoes" data-base="%s">%s</b>' % (_e(q["feitas_hoje"]), _n(q["feitas_hoje"]))
-    if q["alvo_dia"] is not None:
+    q_hoje = q.get("q_hoje")
+    if q_hoje is not None:
+        if q_hoje:
+            num_q = '%s de %s' % (b_q, _n(q_hoje))
+            barra_q = _pct(q["feitas_hoje"], q_hoje)
+            falta = max(0, q_hoje - (q["feitas_hoje"] or 0))
+            nota_q = "faltam %s do plano de hoje" % _n(falta) if falta else "dose do dia cumprida ✓"
+        else:
+            num_q = '%s feitas' % b_q
+            barra_q = 0.0
+            nota_q = "nenhuma lista no plano de hoje"
+    elif q["alvo_dia"] is not None:
         alvo = math.ceil(q["alvo_dia"])
-        nota_q = ("para %s em %s: faltam %s em %s dias."
+        nota_q = ("para %s em %s: faltam %s em %s dias"
                   % (_n(q["meta"]), _dm(q["data_meta"]), _n(q["faltam"]), _n(q["dias"])))
         num_q = '%s de ~%s' % (b_q, _n(alvo))
         barra_q = _pct(q["feitas_hoje"], alvo)
     elif q["faltam"] == 0:
-        nota_q = "meta de %s atingida." % _n(q["meta"])
+        nota_q = "meta de %s atingida" % _n(q["meta"])
         num_q = '%s feitas' % b_q
         barra_q = 100.0
     else:
-        nota_q = "a data da meta passou."
+        nota_q = "a data da meta passou"
         num_q = '%s feitas' % b_q
         barra_q = 0.0
 
     if c["consumo_hoje"] is None:
         num_c = '<b>--</b> de %s' % _n(c["teto"])
-        nota_c = "não consegui contar as revisões de hoje."
+        nota_c = "não consegui contar as revisões de hoje"
         barra_c = 0.0
     else:
         num_c = '<b data-vivo="cards" data-base="%s">%s</b> de %s' % (
             _e(c["consumo_hoje"]), _n(c["consumo_hoje"]), _n(c["teto"]))
         barra_c = _pct(c["consumo_hoje"], c["teto"])
-        nota_c = ("faltam %d: saldo do dia cumprido." % c["restantes"] if c["restantes"] == 0
-                  else "faltam %d hoje." % c["restantes"])
+        nota_c = ("faltam 0: saldo do dia cumprido ✓" if c["restantes"] == 0
+                  else "faltam %d hoje" % c["restantes"])
     ret = c["retencao_7d"]
-    extra_c = ["%s vencidos agora" % _n(c["vencidos"]), "%s novos esperando" % _n(c["novos"])]
+    extra_c = ["%s vencidos" % _n(c["vencidos"]), "%s novos" % _n(c["novos"])]
     if ret.get("retencao") is not None:
-        extra_c.append("retenção de %s%% em 7 dias" % _n(ret["retencao"] * 100, 1))
+        extra_c.append("retenção %s%% em 7 dias" % _n(ret["retencao"] * 100, 1))
 
+    return (
+        '<h2>Hoje, %s %s</h2>\n'
+        '<div class="doses" data-sessao-gravada="%s">\n'
+        '  <div class="dose"><h3>Questões</h3><p class="fracao">%s</p>'
+        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="kpi-r">%s</p></div>\n'
+        '  <div class="dose"><h3>Cards</h3><p class="fracao">%s</p>'
+        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="kpi-r">%s</p>'
+        '<p class="kpi-r">%s</p>'
+        '<p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>\n'
+        '</div>\n'
+        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"), _e(d.get("sessao_gravada") or ""),
+           num_q, barra_q, _e(nota_q),
+           num_c, barra_c, _e(nota_c), _e(" · ".join(extra_c))))
+
+
+def _html_agenda(ag):
+    """Revisoes nos proximos 7 dias: o grafico de previsao de antes, agora dentro do dashboard."""
     maior = max([x["n"] for x in ag["dias"]] + [1])
     barras = "".join(
         '<li><span class="ag-n">%d</span><span class="ag-trilho"><i style="height:%.0f%%"></i></span>'
         '<span class="ag-d">%s</span></li>'
         % (x["n"], max(4.0, 100.0 * x["n"] / maior), DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()])
         for x in ag["dias"])
-    return (
-        '<h2>Hoje, %s %s</h2>\n'
-        '<div class="doses" data-sessao-gravada="%s">\n'
-        '  <div class="dose"><h3>Questões</h3><p class="fracao">%s</p>'
-        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="nota">%s</p></div>\n'
-        '  <div class="dose"><h3>Cards</h3><p class="fracao">%s</p>'
-        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="nota">%s</p>'
-        '<p class="nota">%s.</p>'
-        '<p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>\n'
-        '</div>\n'
-        '<div class="agenda"><h3>Revisões nos próximos 7 dias</h3>'
-        '<ol class="ag-barras" aria-label="Revisões por dia">%s</ol></div>'
-        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"), _e(d.get("sessao_gravada") or ""),
-           num_q, barra_q, _e(nota_q),
-           num_c, barra_c, _e(nota_c), _e(", ".join(extra_c)),
-           barras))
+    return ('<div class="dash-sec agenda"><h3>Revisões nos próximos 7 dias</h3>'
+            '<ol class="ag-barras" aria-label="Revisões por dia">%s</ol></div>' % barras)
 
 
 def _html_tarefa(t, proxima=False):
@@ -713,39 +748,109 @@ def _html_sprint(s, cards):
 
 
 def _html_ritmo(r):
-    alvo = r["alvo_marco"]
-    atras = alvo is not None and (r["real_7d"] or 0) < alvo
+    """Ritmo de questoes. s226 (painel-dashboard-sprint part-1): com sprint, o UNICO por-dia da tela e o
+    do sprint -- o real de 7 dias contra a `capacidade_q` ("abaixo de 80/dia" / "em dia"), o real de 14
+    dias e o acerto; o por-dia da meta (`alvo_marco`) nao aparece. Sem sprint, o de antes: o real contra
+    o por-dia da meta (s203). ⚰️ *Com sprint, ate 13/10 a tela mostrava os dois: "114,9 por dia ate a
+    prova" no Ritmo e "76 questoes" no Plano de hoje.*"""
+    sp = r.get("sprint")
     fig = []
-    fig.append('<div class="fig%s"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
-               'últimos 7 dias</p>%s</div>' % (" abaixo" if atras else "", _n(r["real_7d"], 1),
-                                            '<p class="fig-r"><b>abaixo do necessário</b></p>' if atras else ""))
-    fig.append('<div class="fig"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
-               'últimos 14 dias</p></div>' % _n(r["real_14d"], 1))
-    fig.append('<div class="fig alvo"><p class="fig-n">%s</p><p class="fig-r">por dia até a '
-               'prova de 01/11 (faltam %s para %s)</p></div>'
-               % (_n(alvo, 1), _n(r["faltam"]), _n(r["meta"])))
+    if sp:
+        cap = sp.get("capacidade_q")
+        if cap:
+            abaixo = (r["real_7d"] or 0) < cap
+            rot = ('<p class="fig-r"><b>abaixo de %s/dia</b></p>' % _n(cap) if abaixo
+                   else '<p class="fig-r"><b>em dia ✓</b></p>')
+            classe = " abaixo" if abaixo else " em-dia"
+        else:
+            rot, classe = "", ""
+        fig.append('<div class="fig%s"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+                   'últimos 7 dias</p>%s</div>' % (classe, _n(r["real_7d"], 1), rot))
+        fig.append('<div class="fig"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+                   'últimos 14 dias</p></div>' % _n(r["real_14d"], 1))
+    else:
+        alvo = r["alvo_marco"]
+        atras = alvo is not None and (r["real_7d"] or 0) < alvo
+        fig.append('<div class="fig%s"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+                   'últimos 7 dias</p>%s</div>' % (" abaixo" if atras else "", _n(r["real_7d"], 1),
+                                                '<p class="fig-r"><b>abaixo do necessário</b></p>' if atras else ""))
+        fig.append('<div class="fig"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+                   'últimos 14 dias</p></div>' % _n(r["real_14d"], 1))
+        fig.append('<div class="fig alvo"><p class="fig-n">%s</p><p class="fig-r">por dia até a '
+                   'prova de 01/11 (faltam %s para %s)</p></div>'
+                   % (_n(alvo, 1), _n(r["faltam"]), _n(r["meta"])))
     fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
                'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
-    # s226 (pedido dele, 13/10): sem legenda em prosa -- a cobertura do sprint mora no dashboard do topo
-    return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n' % "".join(fig)
+    # s226 (pedido dele, 13/10): sem legenda em prosa
+    return ('<div class="dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>\n'
+            '<div class="figs">%s</div></div>\n' % "".join(fig))
+
+
+def _html_projecao(r, data_meta):
+    """Ate a prova: UMA barra -- feito -> cumprindo o sprint -> meta, com o fora do sprint como o trecho
+    que falta (s226, painel-dashboard-sprint part-1). A meta 10.000 aparece aqui, uma vez, como o alvo.
+    So com sprint (sem ele, o por-dia da meta mora no Ritmo). O texto alternativo leva os numeros."""
+    sp = r.get("sprint")
+    if not sp:
+        return ""
+    feito, fecha, meta = int(r["acumulado"] or 0), int(sp["fechando_q"] or 0), int(r["meta"] or 0)
+    escala = max(meta, fecha, feito, 1)
+    falta = max(0, meta - fecha)
+    quando = _dm(data_meta) if data_meta else "a prova"
+    seg = [("p-feito", feito, "feito: %s" % _n(feito)),
+           ("p-sprint", max(0, fecha - feito), "cumprindo o sprint até %s: %s" % (_dm(sp["fim"]), _n(fecha))),
+           ("p-fora", falta, "fora do sprint: %s q; faltam %s para %s" % (_n(sp["q_fora"]), _n(falta), _n(meta)))]
+    barra = "".join('<i class="%s" style="width:%.1f%%" title="%s"></i>' % (c, 100.0 * v / escala, _e(t))
+                    for c, v, t in seg if v > 0)
+    alt = ("Até %s: feito %s; cumprindo o sprint até %s, %s; meta %s; %s questões fora do sprint, "
+           "faltam %s para a meta." % (quando, _n(feito), _dm(sp["fim"]), _n(fecha), _n(meta),
+                                       _n(sp["q_fora"]), _n(falta)))
+    leg = [("p-feito", feito, "feito"), ("p-sprint", fecha, "cumprindo o sprint"), ("p-fora", meta, "meta")]
+    legenda = "".join('<li><span class="proj-n"><i class="sw %s"></i>%s</span><span class="proj-r">%s</span></li>'
+                      % (c, _n(v), t) for c, v, t in leg)
+    fora = ("fora do sprint: %s&nbsp;q · faltam %s para a meta" % (_n(sp["q_fora"]), _n(falta)) if falta
+            else "fora do sprint: %s&nbsp;q · o sprint chega à meta" % _n(sp["q_fora"]))
+    return ('<div class="dash-sec proj"><h3>Até %s</h3>'
+            '<div class="proj-barra" role="img" aria-label="%s">%s</div>'
+            '<ol class="proj-leg" aria-hidden="true">%s</ol>'
+            '<p class="kpi-r proj-fora" aria-hidden="true"><i class="sw p-fora"></i>%s</p></div>\n'
+            % (quando, _e(alt), barra, legenda, fora))
 
 
 def _html_blocos(b):
-    linhas = []
-    for nome, v in b["blocos"].items():
-        linhas.append('<tr><th scope="row">%s</th><td>%d de %d</td><td>%s</td><td>%s</td></tr>'
-                      % (_e(nome), v["feitas"], v["tarefas"], _n(v["q_feitas"]),
-                         (_n(v["acerto"], 1) + "%") if v["acerto"] is not None else "--"))
-    s = b["simulados"]
-    linhas.append('<tr class="sim"><th scope="row">Simulados</th><td>%d de %d</td><td>%s</td>'
-                  '<td>%s</td></tr>'
-                  % (s["feitas"], s["tarefas"], _n(s["q_feitas"]),
-                     (_n(s["acerto"], 1) + "%") if s["acerto"] is not None else "--"))
-    # s226 (pedido dele, 13/10): a nota 'Fora da tabela' saiu (legenda)
-    return ('<h2>Por bloco</h2>\n<table><thead><tr><th scope="col">Bloco</th>'
-            '<th scope="col">Tarefas feitas</th><th scope="col">Questões</th>'
-            '<th scope="col">Acerto</th></tr></thead><tbody>%s</tbody></table>\n'
-            % "".join(linhas))
+    """Por bloco: uma linha por bloco com a barra de acerto (0-100%) e as tarefas feitas/total; o bloco
+    de MENOR acerto leva o rotulo "mais fraco" (nunca so a cor); Simulados na ultima linha (termometro,
+    nao bloco: fora da disputa do mais fraco). ⚰️ *Ate 13/10 era uma `<table>` com 4 colunas.*"""
+    com_acerto = [(v["acerto"], nome) for nome, v in b["blocos"].items() if v.get("acerto") is not None]
+    fraco = min(com_acerto)[1] if com_acerto else None
+
+    def linha(nome, v, classe=""):
+        ac = v.get("acerto")
+        dica = "%s: %s de acerto em %s questões · %d de %d tarefas feitas" % (
+            nome, (_n(ac, 1) + "%") if ac is not None else "sem questões", _n(v.get("q_feitas")),
+            v["feitas"], v["tarefas"])
+        tag = '<span class="bl-tag">mais fraco</span>' if classe == "fraco" else ""
+        return ('<li class="bl%s" title="%s"><span class="bl-nome">%s%s</span>'
+                '<span class="bl-barra" aria-hidden="true"><i style="width:%.1f%%"></i></span>'
+                '<span class="bl-pct">%s</span><span class="bl-t">%d/%d</span></li>'
+                % ((" " + classe) if classe else "", _e(dica), _e(nome), tag, ac or 0.0,
+                   (_n(ac, 1) + "%") if ac is not None else "--", v["feitas"], v["tarefas"]))
+    linhas = [linha(nome, v, "fraco" if nome == fraco else "") for nome, v in b["blocos"].items()]
+    linhas.append(linha("Simulados", b["simulados"], "sim"))
+    # s226 (pedido dele, 13/10): a nota 'Fora da tabela' saiu (legenda) e nao volta
+    return ('<div class="dash-sec" data-bloco="blocos"><h3>Por bloco</h3>'
+            '<p class="bl bl-cab" aria-hidden="true"><span></span><span></span><span>acerto</span>'
+            '<span>tarefas</span></p>'
+            '<ol class="bls" aria-label="Acerto e tarefas feitas por bloco">%s</ol></div>\n' % "".join(linhas))
+
+
+def _html_dash(d):
+    """O dashboard do topo (s226, painel-dashboard-sprint part-1): Hoje · Ritmo · Ate 01/11 · Por bloco ·
+    Revisoes 7 dias, numa secao so (`data-bloco="dia"`; Ritmo e Por bloco mantem o `data-bloco` deles por
+    dentro). Nenhuma legenda em prosa (`p.nota`) aqui dentro."""
+    return "".join([_html_dia(d["dia"], d["data"]), _html_ritmo(d["ritmo"]),
+                    _html_projecao(d["ritmo"], d["dia"]["questoes"].get("data_meta")),
+                    _html_blocos(d["blocos"]), _html_agenda(d["dia"]["agenda"])])
 
 
 def _sec(chave, corpo, extra=""):
@@ -776,17 +881,53 @@ a{color:var(--acento);text-underline-offset:2px}
 .nota{color:var(--tinta3);font-size:var(--fs-meta);margin-top:var(--esp-1)}
 .tenue{color:var(--tinta3)}
 
-/* Hoje: as duas doses do dia, o que o olho acha primeiro -- numero grande, barra fina, nota curta */
+/* Dashboard do topo (s226): Hoje · Ritmo · Ate 01/11 · Por bloco · Revisoes 7 dias. Um numero por tile,
+   barra fina, rotulo curto; sem caixa por numero e sem legenda em prosa. Cada parte separada por filete. */
 .dia h2{font-size:1.25rem;margin-bottom:var(--esp-4)}   /* abaixo do titulo da aba ("Painel"), acima das secoes */
-.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--esp-5) var(--esp-6)}
+.dash-sec{margin-top:var(--esp-5);padding-top:var(--esp-4);border-top:1px solid var(--linha)}
+.dash-sec h3{margin-bottom:var(--esp-2)}
+.kpi-r{color:var(--tinta3);font-size:var(--fs-meta)}
+.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-6)}
 .dose{min-width:0}
 .fracao{font-size:1rem;color:var(--tinta2)}
 .fracao b{font-size:var(--fs-numero);line-height:1.1;color:var(--tinta);font-weight:700;letter-spacing:-.02em;margin-right:var(--esp-1)}
 .barra{height:6px;background:var(--afundado);border-radius:var(--raio-pilula);margin:var(--esp-2) 0 var(--esp-1);overflow:hidden}
 .barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
-.ir{margin-top:var(--esp-2);font-weight:600}
+.ir{margin-top:var(--esp-1);font-weight:600}
 .ir a{display:inline-flex;align-items:center;min-height:44px}
-.agenda{margin-top:var(--esp-5)}
+/* Ate 01/11: uma barra empilhada -- feito (ciano) | cumprindo o sprint (lavagem ciano com contorno) | o
+   que falta para a meta = fora do sprint (filete tracejado neutro: nao e erro); 2 px de fundo entre trechos */
+.proj-barra{display:flex;gap:2px;height:12px;margin:var(--esp-1) 0 var(--esp-3)}
+.proj-barra i{display:block;height:100%;min-width:2px}
+.proj-barra i:first-child{border-radius:var(--raio-pilula) 0 0 var(--raio-pilula)}
+.proj-barra i:last-child{border-radius:0 var(--raio-pilula) var(--raio-pilula) 0}
+.p-feito{background:var(--acento)}
+.p-sprint{background:var(--acento-fraco);border:1px solid var(--acento)}
+.p-fora{background:var(--linha);border:1px dashed var(--tinta3)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:var(--esp-1);vertical-align:0}
+.proj-leg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2)}
+.proj-leg li{min-width:0;display:grid}
+.proj-n{font-size:var(--fs-secao);font-weight:700;color:var(--tinta)}
+.proj-r{font-size:var(--fs-meta);color:var(--tinta3)}
+.proj-leg li:last-child{text-align:right}
+.proj-fora{margin-top:var(--esp-2)}
+/* Por bloco: nome | barra de acerto (0-100%) | % | feitas/total; o mais fraco em ambar + o rotulo */
+.bls{list-style:none;margin:0;padding:0}
+.bl{display:grid;grid-template-columns:4.75rem minmax(0,1fr) 3.25rem 4rem;gap:var(--esp-2);align-items:center;
+    padding:var(--esp-2) 0;border-bottom:1px solid var(--linha);font-size:var(--fs-legenda)}
+.bl>span{min-width:0}
+.bl-cab{padding:0;border:0;color:var(--tinta3);font-size:var(--fs-meta)}
+.bl-nome{font-weight:650;color:var(--tinta)}
+.bl-tag{display:block;font-size:var(--fs-meta);font-weight:600;color:var(--aviso)}
+.bl-barra{display:block;height:6px;background:var(--afundado);border-radius:var(--raio-pilula);overflow:hidden}
+.bl-barra i{display:block;height:100%;background:var(--acento);border-radius:inherit}
+.bl-pct,.bl-t,.bl-cab span:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums}
+.bl-pct{font-weight:650;color:var(--tinta)}
+.bl-t{color:var(--tinta3);font-size:var(--fs-meta)}
+.bl.fraco .bl-barra i{background:var(--aviso)}
+.bl.fraco .bl-pct{color:var(--aviso)}
+.bl.sim .bl-nome{color:var(--tinta2);font-weight:500}
+.bl.sim .bl-barra i{background:var(--linha-forte)}
 .ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,4.5rem));
            gap:var(--esp-2);height:112px;align-items:end}
 .ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
@@ -838,26 +979,19 @@ a{color:var(--acento);text-underline-offset:2px}
 .rota-sem.fora{margin-top:var(--esp-5)}
 .rota-sem.fora .t-grupo{margin-top:var(--esp-2)}
 
-/* Ritmo: quatro numeros sem caixa; o necessario por dia e a referencia (ciano); abaixo dele = ambar + texto */
-.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:var(--esp-4) var(--esp-5);margin-top:var(--esp-3)}
+/* Ritmo: numeros sem caixa; com sprint, o real contra a capacidade do sprint (abaixo = ambar + texto,
+   em dia = verde + texto); sem sprint, o necessario por dia da meta e a referencia (ciano) */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.5rem),1fr));gap:var(--esp-4)}
 .fig{min-width:0}
 .fig-n{font-size:1.5rem;font-weight:700;line-height:1.2;color:var(--tinta)}
 .fig-r{font-size:var(--fs-meta);color:var(--tinta3)}
 .fig.abaixo .fig-n,.fig.abaixo .fig-r b{color:var(--aviso)}
+.fig.em-dia .fig-r b{color:var(--ok)}
 .fig.alvo .fig-n{color:var(--acento)}
-
-/* Blocos */
-table{width:100%;border-collapse:collapse;font-size:var(--fs-legenda);margin-top:var(--esp-2)}
-th,td{text-align:left;padding:var(--esp-2);border-bottom:1px solid var(--linha)}
-thead th{font-size:var(--fs-meta);color:var(--tinta3);font-weight:600}
-tbody th{font-weight:650}
-tr.sim th,tr.sim td{color:var(--tinta2)}
 
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr)}
   .t-acao{grid-column:1;grid-row:auto;justify-content:flex-start}
-  th,td{padding:6px 5px}
-  table{font-size:var(--fs-meta)}
 }
 """
 
@@ -901,14 +1035,13 @@ def render_html(d):
     gerado = d["gerado_em"]
     fallback = "atualizado em %s, %s" % (_dm(gerado[:10]), gerado[11:16])
     corpo = "\n".join([
-        _sec("dia", _html_dia(d["dia"], d["data"])),
-        # s221 (pedido dele, 08/10): o Ritmo sobe para logo abaixo de "Hoje"
-        _sec("ritmo", _html_ritmo(d["ritmo"])),
+        # s226 (painel-dashboard-sprint part-1): Hoje + Ritmo + Ate 01/11 + Por bloco + Revisoes 7 dias
+        # num dashboard so no topo (Ritmo e Por bloco levam o `data-bloco` deles por dentro)
+        _sec("dia", _html_dash(d), "dia dash"),
         # s226 (sprint-final-uerj part-3): com sprint, o bloco da semana vira Hoje / Proximos dias /
         # Fora do sprint (o `data-bloco` segue "semana": o hub e os testes o acham pelo nome antigo)
         _sec("semana", _html_sprint(d["sprint"], d["dia"]["cards"]) if d.get("sprint")
              else _html_semana(d["semana"])),
-        _sec("blocos", _html_blocos(d["blocos"])),
     ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"

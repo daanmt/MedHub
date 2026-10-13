@@ -318,6 +318,7 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: rosa = alerta/armadilha | .claude/commands/aula-base.md §2b, semantica de cor do tema v2 (13/10/2026, s225) -- o tema v3 fixou rosa = marca, aviso e armadilha = ambar, erro = coral; a semantica viva mora em docs/UI.md §4 -->
 <!-- TERMO-REVOGADO: um raio só (12 px) | .claude/commands/aula-base.md §2b, estrutura da aula (13/10/2026, s225) -- os raios viraram tokens do tema v3 (--raio 10 px, --raio-p, --raio-pilula; docs/UI.md §3) -->
 <!-- TERMO-REVOGADO: ONDE ESTAMOS — semana do plano | cronograma-contract v1.6 (13/10/2026, s226, sprint-final-uerj part-5) -- o item (2) do contrato do boot (tools/hooks/memory_boot.py _CONTRATO) passou a pedir o HOJE DO SPRINT (plano.agenda_sprint, o mesmo Plano de hoje do Painel e da aba Listas); a semana do plano so volta sem dia_plano no banco -->
+<!-- TERMO-REVOGADO: o único "por dia" do boot, do painel | cronograma-contract v1.7 (13/10/2026, s226, painel-dashboard-sprint part-1) -- na tela do Painel, com sprint, o unico por-dia e o do sprint (q_hoje e capacidade_q); a meta 10.000 aparece uma vez, como alvo da barra de projecao; a regra da meta segue para o boot, o HANDOFF e o recomendador -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

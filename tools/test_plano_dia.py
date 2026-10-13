@@ -439,6 +439,14 @@ def test_boot_painel_listas_mesmo_hoje(tmp_db, monkeypatch):
     assert do_boot == [ids[1], ids[2]], "a rolada de ontem entra no hoje; a feita nao"
     assert do_boot == [t["id"] for t in no_painel["hoje"]] == nas_listas["hoje"]
     assert c["sprint"]["q_hoje"] == no_painel["q_hoje"] == nas_listas["q_hoje"] == 50
+    # s226 (painel-dashboard-sprint part-1): o tile de Questoes do dashboard e o MESMO q_hoje (o coletar o
+    # amarra ao `_bloco_sprint`; aqui o render do tile com ele)
+    dia = {"questoes": {"feitas_hoje": 0, "alvo_dia": 114.9, "meta": 10000, "faltam": 2183, "dias": 19,
+                        "data_meta": "2026-11-01", "q_hoje": no_painel["q_hoje"]},
+           "cards": {"vencidos": 0, "novos": 0, "teto": 150, "consumo_hoje": 0, "restantes": 150,
+                     "retencao_7d": {"retencao": None}}, "sessao_gravada": ""}
+    tile = painel._html_dia(dia, HOJE_SPRINT.isoformat())
+    assert '<b data-vivo="questoes" data-base="0">0</b> de 50</p>' in tile and "114,9" not in tile
     # o TEXTO do boot e do panorama mostra as mesmas tarefas, na mesma ordem
     render = day_plan.render(_p_render(c))
     pos = [render.index("#%d " % i) for i in do_boot]

@@ -944,7 +944,9 @@ def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
     for proibido in ("Atrasadas", "Desta semana", "Semana ", "Até a prova", 'class="tarefa atrasada',
                      'class="t-grupo atrasadas"'):
         assert proibido not in pagina, proibido
-    bloco = pagina[pagina.index('data-bloco="semana"'):pagina.index('data-bloco="blocos"')]
+    # s226 (painel-dashboard-sprint part-1): o Por bloco subiu para o dashboard; a secao vai ate o </section>
+    i = pagina.index('data-bloco="semana"')
+    bloco = pagina[i:pagina.index("</section>", i)]
     assert "<h2>Plano de hoje</h2>" in bloco
     assert re.search(r'<p class="sub">2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
     hoje_html = bloco.split('<div class="rota">')[0]
@@ -1037,3 +1039,100 @@ def test_sem_sprint_o_painel_mostra_a_semana_antiga(db_sintetico):
     d = painel.coletar()
     assert d["sprint"] is None
     assert "Semana 2 do plano" in painel.render_html(d)
+
+
+# ------------------------------- s226 (painel-dashboard-sprint part-1): dashboard no topo, uma meta na tela
+
+def _dash(pagina):
+    """O dashboard: a secao `data-bloco="dia"` inteira (Hoje, Ritmo, Ate 01/11, Por bloco, Revisoes)."""
+    i = pagina.index('data-bloco="dia"')
+    return pagina[i:pagina.index("</section>", i)]
+
+
+def _visivel(trecho):
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", trecho))
+
+
+def test_dashboard_questoes_usa_o_q_hoje_do_sprint(db_sintetico, tmp_path, monkeypatch):
+    """DoD 2: com sprint, o tile Questoes = feitas de `q_hoje` (o MESMO `plano.agenda_sprint` do Plano de
+    hoje e do boot) e o Ritmo compara o real de 7 dias com a `capacidade_q` do sprint; "por dia ate a
+    prova" e o `alvo_marco` nao aparecem; nenhuma legenda em prosa (`p.nota`) no dashboard."""
+    import plano
+    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
+    monkeypatch.setattr(plano, "ler_sprint", lambda caminho=None: {"capacidade_q": 80, "fim": "2026-10-31"})
+    _com_sprint(db_sintetico)
+    d = painel.coletar()
+    from app.utils import db as dbmod
+    ag = plano.agenda_sprint(plano.linhas_com_q_hub(dbmod.plano_listar()), HOJE)
+    assert d["dia"]["questoes"]["q_hoje"] == d["sprint"]["q_hoje"] == ag["q_hoje"] == 72
+    assert d["ritmo"]["sprint"]["capacidade_q"] == 80
+    pagina = painel.render_html(d)
+    dash = _dash(pagina)
+    feitas = d["dia"]["questoes"]["feitas_hoje"]
+    assert '<b data-vivo="questoes" data-base="%d">%s</b> de 72</p>' % (feitas, painel._n(feitas)) in dash
+    assert "por dia até a" not in pagina and "~" not in _visivel(dash)
+    assert painel._n(d["ritmo"]["alvo_marco"], 1) not in _visivel(dash), "o por-dia da meta sumiu da tela"
+    rotulo = "abaixo de 80/dia" if d["ritmo"]["real_7d"] < 80 else "em dia"
+    assert rotulo in dash
+    assert 'class="nota"' not in dash
+    for chave in ("ritmo", "blocos"):
+        assert 'data-bloco="%s"' % chave in dash, "Ritmo e Por bloco moram dentro do dashboard"
+    assert "Revisões nos próximos 7 dias" in dash and 'class="ag-barras"' in dash
+    assert _visivel(dash).count("10.000") == 1, "a meta aparece UMA vez, como alvo da projecao"
+
+
+def test_dashboard_sem_sprint_volta_a_meta(db_sintetico):
+    """DoD 2 (sem sprint): o comportamento de antes -- Questoes contra o ritmo da meta, o Ritmo com o
+    por-dia ate a prova; sem barra de projecao; e ainda sem `p.nota` dentro do dashboard."""
+    import math
+    d = painel.coletar()
+    assert d["sprint"] is None and d["dia"]["questoes"]["q_hoje"] is None
+    dash = _dash(painel.render_html(d))
+    alvo = d["dia"]["questoes"]["alvo_dia"]
+    assert "de ~%s" % painel._n(math.ceil(alvo)) in dash
+    assert "por dia até a prova de 01/11" in dash and painel._n(d["ritmo"]["alvo_marco"], 1) in dash
+    assert "proj-barra" not in dash and 'class="nota"' not in dash
+
+
+def _ritmo_proj(fechando=9306):
+    return {"acumulado": 7817, "meta": 10000,
+            "sprint": {"q": 1489, "simulados_q": 297, "fechando_q": fechando, "fim": "2026-10-31",
+                       "fora": 37, "q_fora": 997, "capacidade_q": 80}}
+
+
+def test_barra_de_projecao_feito_sprint_meta():
+    """DoD 3: UMA barra -- feito -> cumprindo o sprint -> meta, com o fora do sprint como o trecho que
+    falta (neutro, nao erro); os 3 numeros a vista e no texto alternativo."""
+    html = painel._html_projecao(_ritmo_proj(), "2026-11-01")
+    assert "<h3>Até 01/11</h3>" in html
+    assert re.findall(r'<i class="(p-[a-z]+)" style="width:([\d.]+)%"', html) == [
+        ("p-feito", "78.2"), ("p-sprint", "14.9"), ("p-fora", "6.9")]
+    alt = re.search(r'role="img" aria-label="([^"]+)"', html).group(1)
+    for n in ("7.817", "9.306", "10.000", "997", "694"):
+        assert n in alt, n
+    vis = _visivel(html)
+    assert "7.817 feito" in vis and "9.306 cumprindo o sprint" in vis and "10.000 meta" in vis
+    assert "fora do sprint: 997" in vis and "faltam 694 para a meta" in vis
+    css = painel.CSS
+    assert ".p-fora{background:var(--linha);border:1px dashed var(--tinta3)}" in css, "fora = neutro"
+    assert "horizonte" not in css, "o --horizonte nao vira cor de dado"
+    passa = painel._html_projecao(_ritmo_proj(fechando=10200), "2026-11-01")
+    assert "p-fora" not in passa.split("proj-leg")[0] and "o sprint chega à meta" in passa
+    assert painel._html_projecao({"acumulado": 1, "meta": 10000, "sprint": None}, "2026-11-01") == ""
+
+
+def test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado():
+    """DoD 4: uma linha por bloco com a barra de acerto (0-100%) e feitas/total; o de MENOR acerto leva
+    "mais fraco" (nao so a cor); Simulados na ultima linha e fora da disputa; a `<table>` some e a nota
+    "Fora da tabela" nao volta."""
+    b = {"blocos": {"CIR": {"tarefas": 102, "feitas": 26, "q_feitas": 937, "acerto": 77.9},
+                    "CM": {"tarefas": 351, "feitas": 67, "q_feitas": 2585, "acerto": 77.2},
+                    "PED": {"tarefas": 117, "feitas": 31, "q_feitas": 926, "acerto": None}},
+         "simulados": {"tarefas": 9, "feitas": 3, "q_feitas": 1150, "acerto": 69.1}, "sem_bloco": {}}
+    html = painel._html_blocos(b)
+    assert "<table" not in html and "Fora da tabela" not in html
+    linhas = re.findall(r'<li class="(bl[^"]*)"[^>]*><span class="bl-nome">([^<]+)', html)
+    assert linhas == [("bl", "CIR"), ("bl fraco", "CM"), ("bl", "PED"), ("bl sim", "Simulados")]
+    assert html.count("mais fraco") == 1 and '<span class="bl-tag">mais fraco</span>' in html
+    assert '<i style="width:77.2%"></i></span><span class="bl-pct">77,2%</span><span class="bl-t">67/351</span>' in html
+    assert '<span class="bl-pct">--</span><span class="bl-t">31/117</span>' in html, "sem questao: sem acerto"

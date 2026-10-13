@@ -276,7 +276,8 @@ def test_ligacoes_obsidian_resumo_citado_e_fontes_da_rd():
             '<a class="hub-aula" href="aulas/tb-360.html" data-titulo="Tuberculose 360">Tuberculose 360</a> · '
             '<a class="hub-aula" href="aulas/rd-pilulas.html" data-titulo="Pílulas">Pílulas</a></p>') in tb
     assert '<a class="hub-aula" href="resumos/resumo-tuberculose.html" data-titulo="Tuberculose">abrir resumo</a>' in tb
-    rd = re.search(r'<li class="qd-item"[^>]*data-slug="rd-pilulas".*?</li>', pagina, re.S).group(0)
+    bib = pagina.split('id="hub-quadro-feitas"', 1)[1]   # s226: a copia do backlog de RDs vem antes, sem fontes
+    rd = re.search(r'<li class="qd-item"[^>]*data-slug="rd-pilulas".*?</li>', bib, re.S).group(0)
     assert ('<p class="qd-lig"><span class="tenue">Fontes:</span> <a class="hub-aula" href="resumos/resumo-tuberculose.html" '
             'data-titulo="Tuberculose">Tuberculose</a> · <span>Diarreia</span></p>') in rd, "nao publicado = texto"
     mapa = json.loads(re.search(r'<script type="application/json" id="hub-resumos">(.*?)</script>', pagina).group(1))
@@ -285,92 +286,12 @@ def test_ligacoes_obsidian_resumo_citado_e_fontes_da_rd():
 
 
 # ======================================================================== 4. semana
+# ⚰️ s226 (sprint-final-uerj part-4): `test_semana_conta_tarefas_e_resumos_e_diz_o_total_real_do_plano`,
+# `_RE_CABECALHO_SEM`, `_semanas_divergentes`, o vivo `test_semana_4_do_plano_real_diz_a_soma_das_pendentes`
+# e o gemeo `test_gemeo_semana_com_total_ou_resumos_errados_e_acusada` -- a Teoria nao tem mais semana (nem
+# total de questoes, nem "Resumos desta semana"): o resumo mora na Biblioteca. A Teoria sem semana:
+# `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`.
 
-def test_semana_conta_tarefas_e_resumos_e_diz_o_total_real_do_plano():
-    pagina, _ = _quadro()
-    sem4 = re.search(r'<section class="qd-sem" data-secao="4".*?</section>', pagina, re.S).group(0)
-    assert re.search(r'<h3 class="qd-titulo">Semana 4 · 05/10 a 11/10 <span class="qd-n"><span data-n>0</span> '
-                     r'<span data-nrot>tarefas</span> · 2 resumos</span></h3>', sem4)
-    assert ('<p class="qd-qsem">Questões da semana: <b>178</b>, na <a href="#questoes" data-hub-aba="questoes" '
-            'data-hub-modo="questoes">aba Listas</a></p>') in sem4, "19 + 22 + 23: TODAS as pendentes da semana"
-    assert ('<details class="qd-resumos"><summary>Resumos desta semana <span class="qd-n">2</span></summary>'
-            '<ul class="qd-rlista"><li><a class="hub-aula" href="resumos/resumo-has.html" data-titulo="HAS">HAS</a></li>'
-            '<li><a class="hub-aula" href="resumos/resumo-pre-natal.html"') in sem4
-    assert "questões</span>" not in sem4, "a soma parcial saiu do cabecalho"
-
-
-#: O cabeçalho de uma seção de SEMANA da Teoria: "<N> tarefa(s)" e, quando há, " · <N> resumo(s)".
-_RE_CABECALHO_SEM = re.compile(r'<section class="qd-sem" data-secao="(\d+)"[^>]*><h3 class="qd-titulo">[^<]*'
-                               r'<span class="qd-n"><span data-n>\d+</span> <span data-nrot>tarefas?</span>'
-                               r'(?: · (\d+) resumos?)?</span></h3>')
-
-
-def _semanas_divergentes(pagina, linhas, resumos):
-    """[(semana, campo, na página, esperado)] das seções de SEMANA da Teoria -- a forma do s218 em TODA
-    semana que a página mostra (part-2b; antes, só a S4): a linha "Questões da semana" = a soma de `_q_de`
-    das pendentes da semana no plano (0 = linha ausente) e o "N resumos" do cabeçalho = os resumos cujas
-    tarefas estão pendentes nela. Cabeçalho fora da forma também é acusado. [] = ok."""
-    q_pagina = _q_teoria(pagina)
-    cabecalhos = {m.group(1): int(m.group(2) or 0) for m in _RE_CABECALHO_SEM.finditer(pagina)}
-    saida = []
-    for semana in sorted((k for k in q_pagina if k.isdigit()), key=int):
-        da_semana = [l for l in linhas if l.get("status") == "pendente"
-                     and l.get("semana_plano") is not None and int(l["semana_plano"]) == int(semana)]
-        esperado = int(sum(hub._q_de(l) for l in da_semana))
-        if q_pagina[semana][0] != esperado:
-            saida.append((semana, "questões", q_pagina[semana][0], esperado))
-        n_resumos = len(hub._resumos_de(resumos, da_semana))
-        if semana not in cabecalhos:
-            saida.append((semana, "cabeçalho", None, n_resumos))
-        elif cabecalhos[semana] != n_resumos:
-            saida.append((semana, "resumos", cabecalhos[semana], n_resumos))
-    return saida
-
-
-@pytest.mark.vivo
-def test_semana_4_do_plano_real_diz_a_soma_das_pendentes(monkeypatch):
-    """O plano REAL: toda semana que a Teoria mostra diz o total REAL de questões pendentes dela e conta
-    os seus resumos (`_semanas_divergentes`). Nasceu na S4 (s218: "69 questões" nas semanas 4 a 7, que
-    tinham 2.750 pendentes); a part-2b mede TODAS as semanas da página -- a S4 sem pendentes, ou fora
-    da página, não derruba mais a suíte.
-
-    Pula com motivo (`VIVO:`) sem banco, sem plano ou sem semana no quadro; a guarda vem antes de
-    qualquer conexão e o `db.DB_PATH` aponta para o banco que ela conferiu."""
-    if not REAL_DB.is_file():
-        pytest.skip("VIVO: ipub.db ausente -- total por semana da Teoria no plano real não medido")
-    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
-    linhas, aviso = hub._ler_plano()
-    if aviso or not linhas:
-        pytest.skip("VIVO: plano real indisponível (%s) -- total por semana não medido" % (aviso or "vazio"))
-    cal = hub.calendario_trilha()
-    reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    resumos, _ = hub.coletar_resumos(ROOT)
-    aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
-    pagina, _ = hub.html_quadro_de(aulas, reg, {}, linhas, cal, date(2026, 10, 7), resumos)
-    semanas = [k for k in _q_teoria(pagina) if k.isdigit()]
-    if not semanas:
-        pytest.skip("VIVO: plano real sem semana na Teoria de 07/10 -- total por semana não medido")
-    print(f"  semanas na Teoria: {semanas}")
-    # ⚰️ 10/10/2026 (part-2b): `re.search(... data-secao="4" ...).group(0)` -- só a S4, que levantava
-    # quando ela saía da página -- e o cabeçalho da S4 obrigado a ter resumo (s222: "31 -> 30 ao concluir
-    # a t40"). A forma vale agora para toda semana, com ou sem resumo.
-    assert _semanas_divergentes(pagina, linhas, resumos) == []
-    assert not re.search(r"\d+ questões</span></h3>", pagina), "nenhum cabecalho soma questoes"
-
-
-def test_gemeo_semana_com_total_ou_resumos_errados_e_acusada():
-    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_semanas_divergentes` sobre o quadro sintético
-    (`test_semana_conta_tarefas_e_resumos_e_diz_o_total_real_do_plano` é o golden dele). Correto, nada a
-    acusar; a soma PARCIAL do s218 plantada na S4 e a contagem de resumos errada são acusadas."""
-    pagina, _ = _quadro()
-    resumos = [R_TB, R_HAS, R_PN]
-    assert _semanas_divergentes(pagina, PLANO, resumos) == []
-    parcial = pagina.replace("Questões da semana: <b>178</b>", "Questões da semana: <b>69</b>")
-    assert parcial != pagina
-    assert _semanas_divergentes(parcial, PLANO, resumos) == [("4", "questões", 69, 178)]
-    um = pagina.replace("tarefas</span> · 2 resumos</span>", "tarefas</span> · 1 resumo</span>")
-    assert um != pagina
-    assert _semanas_divergentes(um, PLANO, resumos) == [("4", "resumos", 1, 2)]
 
 
 # ======================================================================== 5. manifesto e build
@@ -444,108 +365,16 @@ def test_p21_aba_listas_sem_resumo_da_tarefa_e_a_teoria_segue_com_ele():
     assert "fonteLigar(doc)" in js and 'id="hub-resumos"' not in js, "o mapa vem do build, a ligacao do leitor"
 
 
-# ======================================================================== 6. Teoria x Painel (adendo do principal)
-
-def _q_teoria(pagina):
-    """{secao: (q da semana, q com as atrasadas | None)} das linhas "Questoes ..." da Teoria."""
-    saida = {}
-    for chave, corpo in re.findall(r'<section class="qd-sem" data-secao="([^"]+)".*?>(.*?)</section>', pagina, re.S):
-        m = re.search(r'<p class="qd-qsem">[^:]+: <b>(\d+)</b>(?: · com as atrasadas: <b>(\d+)</b>)?', corpo)
-        saida[chave] = (int(m.group(1)), int(m.group(2)) if m.group(2) else None) if m else (0, None)
-    return saida
+# ======================================================================== 6. Teoria x Painel
+# ⚰️ s226 (sprint-final-uerj part-4): `_q_teoria`, `_divergencias_painel`, `_confere_com_o_painel`,
+# `test_total_da_semana_na_teoria_e_o_do_painel_com_e_sem_atrasadas`, o vivo
+# `test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana` e o gemeo
+# `test_gemeo_teoria_que_diverge_do_painel_e_acusada` -- a Teoria nao conta mais questoes por semana (o
+# "hoje" mora no Painel e na aba Listas, da mesma `plano.agenda_sprint`: `test_listas_e_painel_mesmo_hoje`).
 
 
-def _divergencias_painel(linhas, cal, hoje, pagina):
-    """(panorama | None, q da Teoria, [(semana, campo, na Teoria, no Painel)]): a semana corrente do Painel
-    (`q_abertas`, que SOMA as atrasadas) e cada semana da rota contra a linha "Questões" da Teoria. A
-    corrente do Painel sem seção na Teoria também diverge (part-2b: antes, `KeyError`). [] = as duas
-    telas dizem o mesmo. O vivo e o gêmeo passam por aqui."""
-    from tools import plano
-    pan = plano.panorama(linhas, cal, hoje)
-    q = _q_teoria(pagina)
-    if pan is None:
-        return None, q, []
-    divergencias = []
-    atual = str(pan["semana"])
-    if atual not in q:
-        divergencias.append((atual, "seção", None, pan["q_abertas"]))
-    else:
-        corrente = q[atual][1] if q[atual][1] is not None else q[atual][0]
-        if corrente != pan["q_abertas"]:
-            divergencias.append((atual, "corrente", corrente, pan["q_abertas"]))
-    for r in pan["rota"]:
-        semana = str(r["semana"])
-        if semana in q and q[semana][0] != r["q"]:
-            divergencias.append((semana, "rota", q[semana][0], r["q"]))
-    return pan, q, divergencias
 
-
-def _confere_com_o_painel(linhas, cal, hoje, pagina):
-    pan, q, divergencias = _divergencias_painel(linhas, cal, hoje, pagina)
-    assert pan is not None, "o plano sintético tem semana corrente"
-    assert divergencias == [], "a semana corrente: o Painel soma as atrasadas -- %s" % divergencias
-    return pan, q
-
-
-def test_total_da_semana_na_teoria_e_o_do_painel_com_e_sem_atrasadas():
-    """A mesma regua (`_q_de` = `plano._q`, so pendentes): a rota do Painel (`r["q"]`) e a semana da Teoria
-    batem; a corrente do Painel (`q_abertas`) INCLUI as atrasadas -- a Teoria diz o mesmo numero ao lado."""
-    linhas = [_t(10, 3, "Atrasada com aula", 30, fonte="custom"), _t(11, 3, "Atrasada lista", 20),
-              _t(19, 4, "HAS", 42, area="Cardiologia"), _t(22, 4, "PN", 36, bloco="GO"),
-              _t(30, 5, "Outra", 50), _t(31, 5, "Feita", 70, status="feita")]
-    r_atr = hub.Resumo("Clínica Médica/Pneumologia/X.md", "resumo-x", "X", "CM", "Pneumologia", (11,), "# X\n")
-    pagina, _ = hub.html_quadro_de(AULAS, REG, {}, linhas, CAL, date(2026, 10, 7), [R_HAS, R_PN, r_atr])
-    pan, q = _confere_com_o_painel(linhas, CAL, date(2026, 10, 7), pagina)
-    assert q["atrasadas"] == (50, None) and q["4"] == (78, 128) and pan["q_abertas"] == 128
-    sem_atraso = [l for l in linhas if l["semana_plano"] != 3]
-    pagina, _ = hub.html_quadro_de(AULAS, REG, {}, sem_atraso, CAL, date(2026, 10, 7), [R_HAS, R_PN])
-    assert _q_teoria(pagina)["4"] == (78, None), "sem atrasada, um numero so"
-
-
-@pytest.mark.vivo
-def test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana(monkeypatch):
-    """O plano REAL: a Teoria e o Painel dizem o mesmo total por semana (`_divergencias_painel`) -- a
-    corrente com as atrasadas, as da rota sem elas. Part-2b: a corrente do Painel sem seção na Teoria
-    vira divergência nomeada (antes, `KeyError`), e o plano sem semana corrente pula.
-
-    Pula com motivo (`VIVO:`) sem banco, sem plano ou sem semana corrente; a guarda vem antes de
-    qualquer conexão e o `db.DB_PATH` aponta para o banco que ela conferiu."""
-    if not REAL_DB.is_file():
-        pytest.skip("VIVO: ipub.db ausente -- Teoria x Painel no plano real não medido")
-    monkeypatch.setattr(hub.db, "DB_PATH", str(REAL_DB))
-    linhas, aviso = hub._ler_plano()
-    if aviso or not linhas:
-        pytest.skip("VIVO: plano real indisponível (%s) -- Teoria x Painel não medido" % (aviso or "vazio"))
-    cal = hub.calendario_trilha()
-    reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    resumos, _ = hub.coletar_resumos(ROOT)
-    aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
-    hoje = date(2026, 10, 7)
-    pagina, _ = hub.html_quadro_de(aulas, reg, {}, linhas, cal, hoje, resumos)
-    pan, _q, divergencias = _divergencias_painel(linhas, cal, hoje, pagina)
-    if pan is None:
-        pytest.skip("VIVO: plano real sem semana corrente em 07/10 -- Teoria x Painel não medido")
-    assert divergencias == [], "Teoria x Painel: %s" % divergencias
-
-
-def test_gemeo_teoria_que_diverge_do_painel_e_acusada():
-    """Gêmeo hermético do vivo acima (part-2b): o MESMO `_divergencias_painel` sobre o quadro sintético
-    (`test_total_da_semana_na_teoria_e_o_do_painel_com_e_sem_atrasadas` cobre as atrasadas). As duas
-    telas batendo, nada a acusar; a Teoria com outro número na semana corrente, ou sem a seção dela,
-    é acusada."""
-    hoje = date(2026, 10, 7)
-    pagina, _ = _quadro()
-    pan, _q, div = _divergencias_painel(PLANO, CAL, hoje, pagina)
-    assert pan["semana"] == 4 and div == [], div
-    torta = pagina.replace("Questões da semana: <b>178</b>", "Questões da semana: <b>69</b>")
-    assert _divergencias_painel(PLANO, CAL, hoje, torta)[2] == [("4", "corrente", 69, 178)]
-    sem_s4 = re.sub(r'<section class="qd-sem" data-secao="4".*?</section>', "", pagina, flags=re.S)
-    assert _divergencias_painel(PLANO, CAL, hoje, sem_s4)[2] == [("4", "seção", None, 178)]
-
-
-@pytest.mark.parametrize("vivo", ["test_registro_real_do_lote_existe_inteiro_e_sem_slug_repetido",
-                                  "test_semana_4_do_plano_real_diz_a_soma_das_pendentes",
-                                  "test_plano_real_teoria_e_painel_dizem_o_mesmo_total_por_semana"])
+@pytest.mark.parametrize("vivo", ["test_registro_real_do_lote_existe_inteiro_e_sem_slug_repetido"])
 def test_vivos_pulam_com_motivo_sem_o_dado(tmp_path, monkeypatch, vivo):
     """DoD 1 da part-2b: sem o registro de resumos e sem o banco do plano, cada vivo PULA com motivo
     `VIVO:` -- não volta verde nem cai em asserção sobre dado vazio -- e não cria o banco."""

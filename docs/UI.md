@@ -126,8 +126,9 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 
 - **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos) e o que vem depois.
   Com o sprint gravado (s226, `plano.agenda_sprint`, a fonte única do "hoje" do Painel, da aba Listas e do boot), o
-  bloco das tarefas é **Hoje** (as tarefas do dia, a que rolou de um dia passado sem rótulo de atraso, o total de
-  questões, "+ N cards" que faltam da dose do dia e a RD não assinada mais antiga, a linha inteira abrindo o leitor)
+  bloco das tarefas é **Plano de hoje** (título; o bloco do topo segue "Hoje") (as tarefas do dia, a que rolou de um dia passado sem rótulo de atraso, o total de
+  questões, "+ N cards" que faltam da dose do dia e a RD não assinada mais antiga, a linha inteira abrindo o leitor;
+  sem o estado do quadro (`tmp/hub_db/quadro`), nenhuma RD: o Painel nunca afirma "não assinada" no escuro)
   + **Próximos dias** (um dia por linha, "qua 14/10 · 2 listas · 72 q", recolhido) + **Fora do sprint · N**
   (recolhido, agrupado pelo motivo). Sem "Semana", "Atrasadas", "Desta semana" nem "Até a prova". Sem sprint
   (`dia_plano` todo NULL), a semana antiga: o subtítulo "Atrasadas · N" em âmbar, uma vez, nunca por linha. Nos
@@ -135,7 +136,14 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   hub é UM alvo (`a.t-alvo` com `data-hub-aba`: a linha inteira abre a lista); a aula ligada fica fora dele, pequena
   ("aula"). Fora do hub (lista externa, PDF), a coluna de ação de antes. O Ritmo fica logo abaixo de Hoje (pedido
   dele, s221).
-- **Teoria**: linhas; o aviso de atraso aparece uma vez, no título da seção "Atrasadas"; a linha inteira abre a aula.
+- **Teoria** (s226, consulta): no topo, **Revisões direcionadas · N** (as RDs não assinadas, da mais antiga para a
+  mais nova, a linha inteira abrindo o leitor; a assinada some ao vivo e fica só na Biblioteca); abaixo, a Biblioteca
+  por área e disciplina com toda aula, resumo e RD. Sem semana, sem "Atrasadas" e sem contagem de questões.
+- **Listas** (s226): na ordem do Plano de hoje, pelo `<script id="hub-sprint">` (`hub.dados_sprint` =
+  `plano.agenda_sprint`): **Hoje** (aberto) + **Próximos dias** (um grupo por data, recolhido) + **Fora do sprint · N**
+  (recolhido, com o motivo; a lista aberta de tarefa sem dia cai aqui como "sem dia no plano"); resolvidas recolhidas
+  no fim. Sem sprint (`hub-sprint` = `null`), as semanas antigas. **Simulados** na sua sub-aba, com a data do sprint
+  ("dom 25/10"; o do dia, "hoje").
 - **Listas e simulados**: o trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê,
   veredito, cadeia com a declaração); a tela de fim mostra a faixa de métricas, o por bloco, o bloco Elos e a revisão.
 - **Leitor de aulas**: uma coluna só (`.wrap` de 46rem; a aula antiga com trilho lateral usa o `main` de 38rem);
@@ -157,7 +165,9 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
-| Painel com sprint: Hoje / Próximos dias / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga` |
+| Painel com sprint: Plano de hoje / Próximos dias / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga; sem estado do quadro, nenhuma RD | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga`, `test_sem_estado_do_quadro_o_painel_nao_afirma_rd_nao_assinada` |
+| Teoria sem semana: backlog de RDs no topo + Biblioteca; a assinada some do backlog ao vivo | `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`, `test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca`, `test_hub_render.py::test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca` |
+| Listas = o mesmo "hoje" do Painel (Hoje / Próximos dias / Fora do sprint); simulado com a data | `test_hub_render.py::test_listas_e_painel_mesmo_hoje`, `test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint`, `test_simulado_leva_a_data_do_sprint`, `test_sem_hub_sprint_as_listas_caem_nas_semanas` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`, que viaja embutido) | `test_painel.py::test_html_sem_jargao` |
 | leituras das abas pela assinatura resiliente (retentativa, botão, 1 ouvinte); chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | a retentativa pede conexão nova ao banco (e o `QZ.db` passa a ser ela) | `test_hub_render.py::test_retentativa_pede_conexao_nova` |

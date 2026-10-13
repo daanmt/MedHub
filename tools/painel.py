@@ -34,6 +34,7 @@ import argparse
 import html
 import json
 import math
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
@@ -54,8 +55,8 @@ ARTIFATOS = ROOT / "artifacts"
 #: (o "Hoje ao vivo" da pagina so soma as notas de lote que ainda nao foi gravado). Ausente = "".
 MARCADOR_GRAVACAO = ROOT / "tmp" / "hub" / "ultima_gravacao_hub.json"
 #: s226 (sprint-final-uerj part-3): o estado `quadro/<slug>` que o tique baixa do db do hub (o mesmo
-#: `--quadro-estado tmp/hub_db` do `hub.py`) -- a RD sem assinatura entra no "Hoje". Ausente = nenhuma
-#: assinada (toda RD com arquivo conta como nao assinada).
+#: `--quadro-estado tmp/hub_db` do `hub.py`) -- a RD sem assinatura entra no "Hoje". s226 (part-4, audit
+#: da part-3): AUSENTE = estado desconhecido -- o Painel nao afirma "nao assinada" (nenhuma RD no Hoje).
 QUADRO_ESTADO = ROOT / "tmp" / "hub_db" / "quadro"
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
@@ -169,30 +170,57 @@ def _bloco_semana(linhas, hoje):
     }
 
 
-def _data_da_aula(caminho):
-    """A data de criacao da aula pela regra do hub (`hub.data_de_criacao`: 1o commit; sem git, o
-    arquivo). Injetavel nos testes."""
-    import hub
-    return hub.data_de_criacao(caminho, ROOT)[0]
+def _datas_das_aulas(caminhos):
+    """{caminho: AAAA-MM-DD}: a data em que cada aula ENTROU no git (1o commit que a adicionou), numa
+    chamada SO de `git log` para todas (s226 part-4, audit da part-3: era um `git log --follow` por
+    candidata). Sem `--follow` (o rename conta como entrada: limite aceito, so ordena o backlog); fora
+    do git ou fora do repo, a data do arquivo. Injetavel nos testes."""
+    rels = {}
+    for c in caminhos:
+        c = Path(c)
+        try:
+            rels[c.resolve().relative_to(ROOT.resolve()).as_posix()] = c
+        except ValueError:
+            rels[c.as_posix()] = c
+    datas, atual = {}, None
+    if rels:
+        try:
+            saida = subprocess.run(["git", "-c", "core.quotepath=off", "log", "--diff-filter=A",
+                                    "--format=@@%as", "--name-only", "--"] + sorted(rels),
+                                   cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", timeout=30)
+            for linha in (saida.stdout or "").splitlines() if saida.returncode == 0 else ():
+                if linha.startswith("@@"):
+                    atual = linha[2:].strip()
+                elif linha.strip() and atual:
+                    datas[linha.strip()] = atual   # o log vem do mais novo ao mais velho: fica a ultima vista
+        except (OSError, ValueError, subprocess.SubprocessError):
+            pass
+    return {c: datas.get(rel) or date.fromtimestamp(c.stat().st_mtime).isoformat() for rel, c in rels.items()}
 
 
 def _rd_nao_assinada():
     """A Revisao Direcionada NAO assinada mais antiga: item `revisao` do quadro (`core/hub_quadro.json`)
     com arquivo em `artifacts/` e sem `feito` no estado do quadro (`QUADRO_ESTADO`, lido por
-    `hub.ler_estado_quadro`). None = nenhuma. Registro ilegivel = None (o Hoje so perde a linha da RD)."""
+    `hub.ler_estado_quadro`). None = nenhuma. Registro ilegivel = None (o Hoje so perde a linha da RD).
+    s226 (part-4, audit da part-3): sem a pasta do estado, o estado e DESCONHECIDO e a funcao devolve
+    None -- falha para o lado certo (nunca chamar de "nao assinada" a RD que ele pode ja ter assinado)."""
     import hub
+    if not Path(QUADRO_ESTADO).exists():
+        return None
     try:
         reg = json.loads(QUADRO.read_text(encoding="utf-8")).get("itens") or {}
-        estado = hub.ler_estado_quadro(QUADRO_ESTADO if Path(QUADRO_ESTADO).exists() else None)
+        estado = hub.ler_estado_quadro(QUADRO_ESTADO)
     except (OSError, ValueError):
         return None
-    candidatas = []
+    arqs = {}
     for slug, item in reg.items():
         item = item or {}
         arq = ARTIFATOS / ("aula-%s.html" % slug)
         if item.get("tipo") != "revisao" or not arq.is_file() or (estado.get(slug) or {}).get("feito"):
             continue
-        candidatas.append({"slug": slug, "titulo": item.get("titulo") or slug, "data": _data_da_aula(arq)})
+        arqs[slug] = (arq, item.get("titulo") or slug)
+    datas = _datas_das_aulas([a for a, _t in arqs.values()]) if arqs else {}
+    candidatas = [{"slug": s, "titulo": t, "data": datas.get(a)} for s, (a, t) in arqs.items()]
     return min(candidatas, key=lambda r: (r["data"] or "9999", r["slug"])) if candidatas else None
 
 

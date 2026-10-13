@@ -140,6 +140,9 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 [data-recolhida] > .qd-lista,[data-recolhida] > .qz-lista,[data-recolhida] > .qd-vazio{display:none}
 .qd-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-5))}   /* recolhidas em sequencia = uma lista de titulos */
 .qz-semanas > [data-recolhida] + [data-recolhida]{margin-top:calc(-1 * var(--esp-4))}
+/* s226 (sprint-final-uerj part-4): o rotulo que junta os dias recolhidos da aba Listas; a data do simulado */
+.qz-grupo{margin:var(--esp-5) 0 0;font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
+.qz-quando{color:var(--tinta2);font-weight:600}
 
 /* leitor (aula/resumo dentro da aba) e a barra das listas: voltar + titulo + controles */
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
@@ -358,7 +361,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
       <h2 class="hub-titulo">Teoria</h2>
-      <p class="hub-sub">As aulas e os resumos do plano por semana; abaixo, a Biblioteca por área e disciplina, com os resumos e as revisões direcionadas. Tudo abre aqui dentro.</p>
+      <p class="hub-sub">No topo, as revisões direcionadas por assinar, da mais antiga; abaixo, a Biblioteca por área e disciplina, com as aulas, os resumos e as revisões. Tudo abre aqui dentro.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>
@@ -383,6 +386,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 
   <section class="hub-secao" id="aba-questoes" role="tabpanel" aria-labelledby="hub-tab-questoes">
     <!-- @hub:semanas -->
+    <!-- @hub:sprint -->
     <div id="qz-escolha">
       <h2 class="hub-titulo">Listas</h2>
       <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
@@ -714,7 +718,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function marcarRecente(aba, slug){
     var li = null;
     if(aba === "aulas"){
-      li = qd ? (qd.querySelector('.qd-item[data-slug="' + slug + '"]') || qd.querySelector('.qd-item[data-resumo="' + slug + '"]')) : null;
+      li = qd ? (qd.querySelector('.qd-item[data-slug="' + slug + '"]:not([hidden])') || qd.querySelector('.qd-item[data-resumo="' + slug + '"]')) : null;
       var bib = $("hub-quadro-feitas");
       if(li && bib && bib.contains(li)){
         var grupo = qdGrupoDe(li);
@@ -1836,10 +1840,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // sai em cada uma), cada area e cada disciplina o seu, e as RDs novas -- o grupo que esvazia sai.
     function recontar(){
       Array.prototype.forEach.call(qd.querySelectorAll(".qd-sem"), function(sec){
-        var n = sec.querySelectorAll(".qd-item").length;
-        var rot = sec.getAttribute("data-rotulo") || "item";
+        var n = sec.querySelectorAll(".qd-item:not([hidden])").length;
+        var rot = sec.getAttribute("data-rotulo") || "item", nrot = sec.querySelector("[data-nrot]");
         sec.querySelector("[data-n]").textContent = String(n);
-        sec.querySelector("[data-nrot]").textContent = n === 1 ? rot : rot + "s";
+        if(nrot){ nrot.textContent = n === 1 ? rot : rot + "s"; }
         sec.querySelector(".qd-vazio").hidden = n > 0;
         if(!sec.hasAttribute("data-fixa")){ sec.hidden = n === 0; }
       });
@@ -1893,6 +1897,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 
     function aplicar(li, feito){
       if(feito){ li.setAttribute("data-feito", "1"); } else { li.removeAttribute("data-feito"); }
+      // s226 (sprint-final-uerj part-4): a copia do backlog de RDs (topo da Teoria) nao vai a lugar
+      // nenhum -- assinada some, desfeita volta; a copia da Biblioteca segue a regra de sempre
+      if(li.getAttribute("data-secao") === "rd"){ li.hidden = !!feito; recontar(); return; }
       etiquetaNova(li, feito);
       // s218: o que MORA na Biblioteca (a RD, a aula avulsa) fica na sua disciplina e so reordena
       var mora = li.getAttribute("data-secao") === "biblioteca" && li.parentNode;
@@ -2057,6 +2064,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // s200 (pedido do operador): listas agrupadas por semana do plano, na ordem do plano (seq),
   // como no quadro de Aulas; semana anterior a de hoje = Atrasadas; resolvidas recolhidas no fim.
   var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
+  // s226 (sprint-final-uerj part-4): a agenda do sprint (`plano.agenda_sprint`, a MESMA do "Plano de hoje"
+  // do Painel) -- ids das tarefas por dia; null = banco sem sprint (a aba cai nas semanas acima)
+  var QZ_SPRINT = (function(){ try{ var v = JSON.parse(($("hub-sprint") || {}).textContent || "null"); return v && v.hoje ? v : null; }catch(e){ return null; } })();
+  var QZ_DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  // "dom 25/10" a partir de "2026-10-25" (meio-dia: o fuso nunca troca o dia). PURA.
+  function qzDia(iso){ var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || "")); if(!m){ return ""; }
+    return QZ_DIAS[new Date(+m[1], +m[2] - 1, +m[3], 12).getDay()] + " " + m[3] + "/" + m[2]; }
+  // os grupos da aba Listas pelo sprint: Hoje, um por dia dos Proximos e Fora do sprint, na ordem do plano
+  // (a ordem da agenda; listas da mesma tarefa pelo `seq`). Lista aberta cuja tarefa nao tem dia nem marca
+  // de fora (concluida/cortada no plano, ou sem tarefa) vai para o Fora, com o motivo "sem dia no plano". PURA.
+  function qzGruposSprint(sp, ls){
+    var lugar = {}, pos = 0, grupos = [];
+    function grupo(chave, titulo, tarefas, aberto){
+      var g = {chave: chave, titulo: titulo, itens: [], q: 0, aberto: aberto, motivos: {}};
+      (tarefas || []).forEach(function(t){ var id = String(typeof t === "object" ? t.id : t);
+        if(!lugar[id]){ lugar[id] = {g: g, pos: pos++, motivo: typeof t === "object" ? t.motivo : null}; } });
+      grupos.push(g); return g;
+    }
+    var hoje = grupo("hoje", "Hoje", sp.hoje, true);
+    var proximos = (sp.proximos || []).map(function(p){ return grupo("d" + p.data, qzDia(p.data), p.tarefas, false); });
+    var fora = grupo("fora", "Fora do sprint", sp.fora, false);
+    ls.map(function(l){ return {l: l, x: lugar[String(l.tarefa)] || {g: fora, pos: Infinity, motivo: "sem dia no plano"}}; })
+      .sort(function(a, b){ return (a.x.pos === b.x.pos ? 0 : (a.x.pos < b.x.pos ? -1 : 1)) || ((a.l.seq || 0) - (b.l.seq || 0)) || String(a.l._id).localeCompare(String(b.l._id)); })
+      .forEach(function(o){ o.x.g.itens.push(o.l); o.x.g.q += Math.round(o.l.q || o.l.q_previstas || 0);
+        if(o.x.g === fora){ fora.motivos[o.l._id] = o.x.motivo || "fora do sprint"; } });
+    return {hoje: hoje, proximos: proximos.filter(function(g){ return g.itens.length; }), fora: fora};
+  }
   // P20 (s219): o titulo herdado do EMED ('Endócrino- | Metabólica ... | Cicatrização') como a Teoria e o
   // Painel o mostram -- hifen colado antes do ' | ' junta; os demais ' | ' viram ' · '. Paridade com
   // `plano.tema_exibido` presa por teste; o doc no banco nao muda. PURA.
@@ -2076,8 +2110,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(s === "capturada"){ return ""; }
     return '<span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span>';
   }
-  function qzItemLista(l, atrasada){
-    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  function qzItemLista(l, atrasada, motivo){
+    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + (motivo ? '<span>' + qzEsc(motivo) + '</span>' : '') + '</p></button></li>'; }
   // ⚰️ P21 (s220, pedido do operador em 07/10, resolvendo listas: "o bloco 'listas' esta bugado, alternando
   // entre tarefas com e sem hiperlinks abaixo ... se estou em listas e clico na tarefa, naturalmente devo ir
   // especificamente para as questoes"): os links de aula (s216 part-2) e de resumo (s218 P2) debaixo das
@@ -2100,8 +2134,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   QZ.modo = qzLs("medhub.listas.modo") === "simulados" ? "simulados" : "questoes";
   $("qz-modo").addEventListener("click", function(e){ var b = e.target.closest("button[data-m]"); if(!b){ return; }
     QZ.modo = b.getAttribute("data-m"); qzLs("medhub.listas.modo", QZ.modo); qzRenderListas(); });
-  function qzItemSim(l, daVez){ var q = Math.round(l.q || l.q_previstas || 0);
-    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  // s226 (part-4): no sprint, o simulado leva a DATA do plano ("dom 25/10"; o do dia ou rolado, "hoje");
+  // sem sprint, a semana, como antes. PURA salvo o JSON do build.
+  function qzQuandoSim(l){
+    var d = QZ_SPRINT && QZ_SPRINT.dias ? QZ_SPRINT.dias[String(l.tarefa)] : null;
+    if(d){ return d <= (QZ_SPRINT.hoje_data || "") ? "hoje" : qzDia(d); }
+    return QZ_SPRINT ? "" : (l.semana ? "semana " + l.semana : "");
+  }
+  function qzItemSim(l, daVez){ var q = Math.round(l.q || l.q_previstas || 0), quando = qzQuandoSim(l);
+    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (quando ? '<span class="qz-quando">' + qzEsc(quando) + '</span>' : '') + '</p></button></li>'; }
   function qzRenderSimulados(ls){
     var abertos = ls.filter(function(l){ return l.status !== "resolvida"; }), feitos = ls.filter(function(l){ return l.status === "resolvida"; });
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhum simulado carregado ainda.</p>'; return; }
@@ -2119,6 +2160,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     $("qz-sub").textContent = QZ_SUB[QZ.modo];
     if(QZ.modo === "simulados"){ qzRenderSimulados(sims); return; }
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhuma lista capturada ainda.</p>'; return; }
+    if(QZ_SPRINT){ qzRenderSprint(ls); return; }
     var atual = QZ_SEM.atual || 0, datas = QZ_SEM.datas || {}, grupos = [], porChave = {};
     ls.filter(function(l){ return l.status !== "resolvida"; }).forEach(function(l){
       var atr = !!(atual && l.semana && l.semana < atual), k = atr ? "atrasadas" : (l.semana ? "s" + l.semana : "sem");
@@ -2134,6 +2176,25 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       (feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
       (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
     // s216 (part-4): a marca da recem-concluida vale ate ela aparecer JA resolvida (1 rerender la), e rola ate ela
+    if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];
+      if(rec && rec.status === "resolvida"){ QZ.recente = null; qzRolarRecente(); } }
+  }
+  // s226 (sprint-final-uerj part-4): a aba Listas reflete o "Plano de hoje" do Painel -- Hoje (aberto), os
+  // Proximos dias (um por data, recolhidos) e Fora do sprint (recolhido, com o motivo); sem semana nem
+  // atraso. Resolvidas recolhidas no fim, como antes. A escolha de abrir/recolher fica no aparelho.
+  function qzRenderSprint(ls){
+    var abertas = ls.filter(function(l){ return l.status !== "resolvida"; }), feitas = ls.filter(function(l){ return l.status === "resolvida"; });
+    var gs = qzGruposSprint(QZ_SPRINT, abertas);
+    function conta(g){ var n = g.itens.length; return ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span>'; }
+    function secao(g, titulo, vazio){ var id = "listas:sprint:" + g.chave, alvo = "qz-sec-" + g.chave, ab = secAberta(id, g.aberto);
+      return '<section' + (ab ? '' : ' data-recolhida') + ' data-grupo="' + qzEsc(g.chave) + '">' + secTituloHtml(id, alvo, ab, titulo) +
+        (g.itens.length ? '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, false, g.motivos[l._id]); }).join("") + '</ul>'
+          : '<p class="qd-vazio">' + vazio + '</p>') + '</section>'; }
+    var html = secao(gs.hoje, "Hoje" + conta(gs.hoje), "Nenhuma lista do plano para hoje.");
+    if(gs.proximos.length){ html += '<h3 class="qz-grupo">Próximos dias</h3>' + gs.proximos.map(function(g){ return secao(g, qzEsc(g.titulo) + conta(g), ""); }).join(""); }
+    if(gs.fora.itens.length){ html += secao(gs.fora, "Fora do sprint · " + gs.fora.itens.length, ""); }
+    html += feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "";
+    $("qz-listas").innerHTML = html;
     if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];
       if(rec && rec.status === "resolvida"){ QZ.recente = null; qzRolarRecente(); } }
   }

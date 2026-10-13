@@ -95,7 +95,7 @@ from tools.fsrs_queue import (  # noqa: E402
 # So leitores PUROS do plano (s195): a semana da prova, o calendario da trilha e a classe da
 # tarefa -- a mesma regua do `plano.py --panorama`. O hub nunca grava o plano.
 from tools.plano import (  # noqa: E402
-    SEMANAS_FASE1, calendario_trilha, classe_da_tarefa, com_q_hub, meta_da_tarefa,
+    SEMANAS_FASE1, agenda_sprint, calendario_trilha, classe_da_tarefa, com_q_hub, meta_da_tarefa,
     q_da_tarefa, questoes_no_hub, tema_exibido)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
@@ -199,6 +199,8 @@ LUGARES_HUB = (
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
     ("semanas", "<!-- @hub:semanas -->"),
+    # s226 (part-4): a agenda do sprint para a aba Listas (`html_sprint`, de `plano.agenda_sprint`)
+    ("sprint", "<!-- @hub:sprint -->"),
     # s226 (part-2): o contador do dia do Painel para a aba Cards (`dia_do_painel`), um JSON so
     ("dia", '"@hub:dia"'),
     # ⚰️ o lugar "ligacoes" (s216 part-2 -> P21, s220): o JSON tarefa -> aulas/resumos existia so para
@@ -591,7 +593,7 @@ def _resumos_de(resumos, linhas):
 
 
 def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=None, estado=None,
-                     quadro=None, semana_final=SEMANA_FINAL_QUADRO, resumos=()):
+                     quadro=None, semana_final=SEMANA_FINAL_QUADRO, resumos=(), semanas=True):
     """O quadro por SEMANAS (pedido do operador, s195): (secoes, biblioteca, avisos). PURA.
 
     O defeito que encerra: a aba listava aulas por tipo, sem dizer de que tarefa eram nem quantas
@@ -682,7 +684,9 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
                        "q_com_atrasadas": q + q_atrasadas if q_atrasadas else None,
                        "resumos": _resumos_de(resumos, todas), "itens": vivos})
 
-    if atual is not None:
+    # s226 (sprint-final-uerj part-4): `semanas=False` = a Teoria sem cronograma proprio (nenhuma secao
+    # por semana): toda aula, inclusive a ligada a tarefa pendente, mora na Biblioteca
+    if atual is not None and semanas:
         atrasadas_todas = [l for l in pendentes if int(l["semana_plano"]) < atual]
         atrasadas = [l for l in atrasadas_todas if na_teoria(l)]
         if atrasadas or _resumos_de(resumos, atrasadas_todas):
@@ -983,7 +987,35 @@ def _html_resumos_semana(chave, resumos):
                        % (_e(r.publicado), _e(r.titulo), _e(r.titulo)) for r in resumos)))
 
 
-def html_quadro(secoes, biblioteca=()):
+def rds_nao_assinadas(classificadas, estado=None):
+    """O backlog de Revisoes Direcionadas da Teoria (s226, sprint-final-uerj part-4): a RD (`tipo:
+    revisao` no registro do quadro) do lote SEM `feito` no estado do quadro, da mais antiga para a mais
+    nova -- a MESMA regra do "Hoje" do Painel (`painel._rd_nao_assinada`: revisao + arquivo + sem
+    `feito`; ordem (data, slug)). PURA. A assinada sai daqui e fica so na Biblioteca."""
+    feitos = {s for s, v in (estado or {}).items() if v.get("feito")}
+    rds = [{"slug": a.slug, "aula": a, "titulo": titulo, "data": a.data}
+           for a, tipo, titulo, _t in classificadas if tipo == "revisao" and a.slug not in feitos]
+    return sorted(rds, key=lambda r: (r["data"] or "9999", r["slug"]))
+
+
+def html_rds(rds):
+    """A secao "Revisoes direcionadas · N" do topo da Teoria (s226, part-4): cada RD e uma linha que
+    abre no leitor (`a.qd-bloco.qd-alvo.hub-aula`); a copia leva `data-slug` -- a assinatura a esconde
+    ao vivo (`aplicar`, `data-secao="rd"`) e a copia da Biblioteca fica. Fixa: vazia, diz que nao ha."""
+    itens = "".join(
+        '<li class="qd-item" data-secao="rd" data-ordem="%d" data-slug="%s" data-tipo="revisao" data-titulo="%s">'
+        '<a class="qd-bloco qd-alvo hub-aula" href="%s" data-titulo="%s"><p class="qd-tema">%s</p>'
+        '<p class="qd-meta"><span class="qd-bl">%s</span><span>%s</span></p></a></li>'
+        % (i, _e(r["slug"]), _e(r["titulo"]), _e(r["aula"].publicado), _e(r["titulo"]), _e(r["titulo"]),
+           _e(ROTULO_ITEM.get("revisao", "Revisão")), _e(_data_curta(r["data"])))
+        for i, r in enumerate(rds))
+    return ('<section class="qd-sem qd-rds" data-secao="rd" aria-label="Revisões direcionadas" data-fixa="1">'
+            '<h3 class="qd-titulo">Revisões direcionadas <span class="qd-n">· <span data-n>%d</span></span></h3>'
+            '<ul class="qd-lista">%s</ul><p class="qd-vazio"%s>Nenhuma revisão direcionada por assinar.</p>'
+            '</section>' % (len(rds), itens, " hidden" if rds else ""))
+
+
+def html_quadro(secoes, biblioteca=(), rds=None):
     """A aba Teoria: secoes por semana (empilhadas), cada tarefa um bloco; depois, a BIBLIOTECA -- o
     corpo da aba desde a s218 (era um `<details>` recolhido no fim; s216 part-3 "Outras aulas" +
     "Concluidas"): o que esta feito no `db` (riscado), as aulas sem tarefa pendente, as RDs e os
@@ -993,10 +1025,13 @@ def html_quadro(secoes, biblioteca=()):
     s218: o cabecalho da semana conta o que a Teoria MOSTRA (tarefas + resumos) e, dentro, UMA linha
     com o total REAL de questoes pendentes da semana no plano (`q_plano`), com atalho para a aba
     Listas; o mapa caminho -> resumo publicado vai num `<script id="hub-resumos">` (a pagina liga a
-    linha "Fonte: resumos/X.md" das RDs abertas no leitor)."""
-    if not any(s["itens"] or s.get("resumos") for s in secoes) and not biblioteca:
+    linha "Fonte: resumos/X.md" das RDs abertas no leitor).
+
+    s226 (sprint-final-uerj part-4): `rds` (lista, mesmo vazia) = a Teoria do sprint -- no topo, so o
+    backlog "Revisoes direcionadas · N" (`html_rds`); as secoes por semana nao sao mais montadas."""
+    if not any(s["itens"] or s.get("resumos") for s in secoes) and not biblioteca and not rds:
         return '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
-    partes = []
+    partes = [html_rds(rds)] if rds is not None else []
     for s in secoes:
         n = len(s["itens"])
         contagem = ('<span data-n>%d</span> <span data-nrot>%s</span>'
@@ -1042,9 +1077,15 @@ def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calen
     (`montar_index`) e para a projecao (`construir`/`decidir`): um so quadro, nunca dois. `resumos`
     (s218) = os `Resumo` publicados (`coletar_resumos`)."""
     classificadas, avisos = classificar(aulas_sel, quadro or {})
+    # s226 (sprint-final-uerj part-4): a Teoria e consulta -- Biblioteca + o backlog de RDs; sem
+    # semanas, atrasadas nem contagem de questoes (o "hoje" mora no Painel e na aba Listas). Sem o
+    # estado do quadro (`estado` None), toda RD entra no backlog SEM rotulo de pendente: a pagina le
+    # o `quadro` do db ao vivo e esconde a ja assinada (nunca afirma "nao assinada" no escuro).
     secoes, biblioteca, avisos_secoes = secoes_do_quadro(classificadas, plano_linhas, calendario,
-                                                         hoje, estado, quadro, resumos=resumos)
-    return html_quadro(secoes, biblioteca), avisos + avisos_secoes
+                                                         hoje, estado, quadro, resumos=resumos,
+                                                         semanas=False)
+    return (html_quadro(secoes, biblioteca, rds_nao_assinadas(classificadas, estado)),
+            avisos + avisos_secoes)
 
 
 def html_aulas(aulas_sel, quadro=None, estado=None):
@@ -1067,6 +1108,39 @@ def html_semanas(plano_linhas=None, calendario=None, hoje=None, semana_final=SEM
                        for s, (ini, fim) in sorted((calendario or {}).items())}}
     return ('<script type="application/json" id="hub-semanas">%s</script>'
             % json.dumps(dados, ensure_ascii=False).replace("<", "\\u003c"))
+
+
+#: O motivo do "fora do sprint" como a nota o grava (sem acento) na grafia da tela -- a mesma troca do
+#: `painel._motivo_exibido`.
+_GRAFIA_MOTIVO = {"ate": "até", "ja": "já"}
+
+
+def dados_sprint(plano_linhas, hoje):
+    """A agenda do sprint para a aba Listas (s226, sprint-final-uerj part-4): `plano.agenda_sprint` --
+    a MESMA funcao do "Plano de hoje" do Painel e do boot -- reduzida aos ids das tarefas, que a pagina
+    casa com o campo `tarefa` dos docs `listas/*`. PURA. None = banco sem sprint (a aba cai nas semanas).
+    `{hoje: [id], q_hoje, proximos: [{data, tarefas: [id], q}], fora: [{id, motivo}], dias: {id: data}}`;
+    `dias` = o `dia_plano` de cada tarefa com dia (o simulado mostra a data dele)."""
+    ag = agenda_sprint(plano_linhas or [], hoje)
+    if ag is None:
+        return None
+    ids = lambda ts: [int(t["id"]) for t in ts if t.get("id") is not None]
+    dias = {str(int(t["id"])): str(t["dia_plano"]) for t in ag["hoje"] + [x for p in ag["proximos"]
+                                                                         for x in p["tarefas"]]
+            if t.get("id") is not None and t.get("dia_plano")}
+    return {"hoje": ids(ag["hoje"]), "q_hoje": ag["q_hoje"],
+            "proximos": [{"data": p["data"], "tarefas": ids(p["tarefas"]), "q": p["q"]} for p in ag["proximos"]],
+            "fora": [{"id": int(t["id"]), "motivo": " ".join(_GRAFIA_MOTIVO.get(w, w)
+                                                             for w in str(t["motivo"]).split(" "))}
+                     for t in ag["fora"] if t.get("id") is not None],
+            "hoje_data": hoje.isoformat(), "dias": dias}
+
+
+def html_sprint(plano_linhas=None, hoje=None):
+    """O `<script id="hub-sprint">` da aba Listas (s226, part-4): `dados_sprint` em JSON; `null` sem
+    sprint."""
+    return ('<script type="application/json" id="hub-sprint">%s</script>'
+            % _json_no_script(dados_sprint(plano_linhas, hoje or date.today())))
 
 
 # ⚰️ `dados_ligacoes` / `html_ligacoes` (s216 part-2, s218 P2 -> P21, s220): o `<script id="hub-ligacoes">`
@@ -1155,6 +1229,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
                                 _hoje_de(agora), resumos)[0],
         "painel": html_painel(tem_painel),
         "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
+        "sprint": html_sprint(plano_linhas, _hoje_de(agora)),
         "dia": _json_no_script(dia),
     }
     pagina = template_hub
@@ -2092,7 +2167,10 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     painel_texto = painel_path.read_text(encoding="utf-8") if tem_painel else None
     pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro,
                           plano_linhas, calendario, resumos, dia_do_painel(painel_texto, agora))
-    proj = projecao(painel_texto, quadro_html, lote, hash_resumos(paginas))
+    # s226 (part-4): a agenda do sprint da aba Listas entra na conta do quadro -- o plano que mudou o
+    # dia de uma lista republica, mesmo sem a Teoria mudar
+    proj = projecao(painel_texto, quadro_html + html_sprint(plano_linhas, _hoje_de(agora)), lote,
+                    hash_resumos(paginas))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -2141,7 +2219,8 @@ def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, q
     quadro_html, _ = html_quadro_de(selecionadas, quadro, estado, plano_linhas,
                                     calendario, _hoje_de(agora or db.agora()), resumos)
     atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
-                     quadro_html, lote, hash_resumos(paginas_resumos(resumos)))
+                     quadro_html + html_sprint(plano_linhas, _hoje_de(agora or db.agora())), lote,
+                     hash_resumos(paginas_resumos(resumos)))
     decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas),
                                _hoje_de(agora or db.agora()))
     decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)

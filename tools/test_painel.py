@@ -962,7 +962,7 @@ def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, t
     monkeypatch.setattr(painel, "QUADRO", reg)
     monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
     monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
-    monkeypatch.setattr(painel, "_data_da_aula", lambda p: datas[Path(p).stem[5:]])
+    monkeypatch.setattr(painel, "_datas_das_aulas", lambda ps: {p: datas[Path(p).stem[5:]] for p in ps})
     d = painel.coletar()
     assert d["sprint"]["rd"] == {"slug": "rd-velha", "titulo": "RD velha", "data": "2026-09-01"}
     bloco = painel._html_sprint(d["sprint"], {"consumo_hoje": 10, "restantes": 40, "teto": 50})
@@ -973,6 +973,47 @@ def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, t
                                                                    "teto": 100})
     assert "+ 100&nbsp;cards." in sem_contador and "tarefa rd" not in sem_contador
     assert "cards" not in painel._html_sprint(d["sprint"], {"consumo_hoje": 50, "restantes": 0, "teto": 50})
+
+
+def test_sem_estado_do_quadro_o_painel_nao_afirma_rd_nao_assinada(tmp_path, monkeypatch):
+    """s226 (part-4, audit da part-3): sem a pasta do estado do quadro, a assinatura e DESCONHECIDA --
+    o Hoje nao mostra RD nenhuma (antes, toda RD com arquivo virava "nao assinada")."""
+    reg = tmp_path / "quadro.json"
+    reg.write_text(json.dumps({"itens": {"rd-a": {"tipo": "revisao", "titulo": "RD A"}}}), encoding="utf-8")
+    (tmp_path / "aula-rd-a.html").write_text("<title>x</title>", encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", tmp_path / "nao-existe")
+    monkeypatch.setattr(painel, "_datas_das_aulas", lambda ps: {p: "2026-09-01" for p in ps})
+    assert painel._rd_nao_assinada() is None
+    estado = tmp_path / "estado"
+    estado.mkdir()
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
+    assert painel._rd_nao_assinada()["slug"] == "rd-a", "com o estado (vazio), a RD e nao assinada"
+
+
+def test_datas_das_aulas_numa_chamada_so_de_git(tmp_path, monkeypatch):
+    """s226 (part-4): as datas das candidatas saem de UM `git log` (era um `--follow` por aula); a
+    1a entrada no git (a mais velha) vence; fora do log, a data do arquivo."""
+    chamadas = []
+
+    class Saida:
+        returncode = 0
+        stdout = "@@2026-09-20\n\nartifacts/aula-b.html\n@@2026-09-01\n\nartifacts/aula-a.html\nartifacts/aula-b.html\n"
+
+    def falso(cmd, **kw):
+        chamadas.append(cmd)
+        return Saida()
+    monkeypatch.setattr(painel, "ROOT", tmp_path)
+    monkeypatch.setattr(painel.subprocess, "run", falso)
+    (tmp_path / "artifacts").mkdir()
+    arqs = [tmp_path / "artifacts" / n for n in ("aula-a.html", "aula-b.html", "aula-c.html")]
+    for a in arqs:
+        a.write_text("x", encoding="utf-8")
+    datas = painel._datas_das_aulas(arqs)
+    assert len(chamadas) == 1 and "--follow" not in chamadas[0]
+    assert datas[arqs[0]] == "2026-09-01" and datas[arqs[1]] == "2026-09-01"
+    assert datas[arqs[2]] == date.today().isoformat(), "fora do log = a data do arquivo"
 
 
 def test_sem_sprint_o_painel_mostra_a_semana_antiga(db_sintetico):

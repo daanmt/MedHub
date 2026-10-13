@@ -544,8 +544,11 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                       [extrair_funcao(TEMPLATE, a) for a in (
                           "function qzEsc(s){", "function temaExibido(t){",   # P20: o titulo da lista
                           "function qzLs(k, v){", "function qzChip(l){",       # s226: chip so fora do normal
-                          "function qzItemLista(l, atrasada){",   # P21 (s220): sem qzAulasHtml
+                          "function qzItemLista(l, atrasada, motivo){",   # P21 (s220): sem qzAulasHtml
                           "function qzEhSimulado(l){",
+                          # s226 (sprint part-4): os grupos do sprint e a data do simulado
+                          "function qzDia(iso){", "function qzGruposSprint(sp, ls){", "function qzRenderSprint(ls){",
+                          "function qzQuandoSim(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
                           "function secoesLer(){", "function secAberta(id, padrao){", "function secSemanaAtual(atual, comItens){",
                           "function secPadraoAberta(chave, corrente){", "function secTituloHtml(id, alvo, aberta, miolo){",
@@ -563,6 +566,8 @@ function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "",
   querySelectorAll: function(){ return id === "qz-modo" ? BOT : []; }}; } return els[id]; }
 var QZ = {listas: __LISTAS__, modo: __MODO__};
 var QZ_SEM = {atual: 2, datas: {"2": ["21/09", "27/09"]}};
+var QZ_SPRINT = __SPRINT__;
+var QZ_DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
 __FUNCS__
 qzRenderListas();
 console.log(JSON.stringify({html: $("qz-listas").innerHTML, sub: $("qz-sub").textContent,
@@ -578,11 +583,12 @@ LISTAS = [
 ]
 
 
-def _listas(modo):
+def _listas(modo, sprint=None, listas=None):
     if not NODE:
         pytest.skip("node ausente no PATH: divisao da aba nao verificada (skip declarado)")
-    prog = (HARNESS_LISTAS.replace("__FUNCS__", LISTAS_JS).replace("__LISTAS__", json.dumps(LISTAS))
-            .replace("__MODO__", json.dumps(modo)))
+    prog = (HARNESS_LISTAS.replace("__FUNCS__", LISTAS_JS)
+            .replace("__LISTAS__", json.dumps(LISTAS if listas is None else listas))
+            .replace("__MODO__", json.dumps(modo)).replace("__SPRINT__", json.dumps(sprint)))
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
         f.write(prog)
         caminho = f.name
@@ -611,6 +617,98 @@ def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
     assert "UERJ 2021 <span class=\"qd-n\">· a da vez</span>" in html and html.count("a da vez") == 1
     assert "60 questões" in html and "~3 h" in html and " -- prova INTEIRA" not in html
     assert out["botoes"][1][1] is True and out["sub"].startswith("As provas da UERJ")
+
+
+# ------------------------------------------------ s226 (sprint-final-uerj part-4): Listas pelo sprint
+
+#: o mesmo plano sintetico para o Painel e as Listas: hoje = 13/10; a #49 rolou de ontem, a #26 e de hoje,
+#: a #30 de amanha, o simulado #1793 no domingo 25/10, a #77 fora com o motivo; a #12 feita nao entra
+HOJE_SPRINT = date(2026, 10, 13)
+PLANO_SPRINT = [
+    {"id": 12, "status": "concluida", "dia_plano": "2026-10-13", "tema": "Feita", "area": "Cirurgia",
+     "bloco": "CIR", "q_previstas": 20, "semana_plano": 1},
+    {"id": 26, "status": "pendente", "dia_plano": "2026-10-13", "tema": "Diabetes na Gestação",
+     "area": "Obstetrícia", "bloco": "GO", "q_previstas": 19, "semana_plano": 2},
+    {"id": 49, "status": "pendente", "dia_plano": "2026-10-12", "tema": "Hérnias", "area": "Cirurgia",
+     "bloco": "CIR", "q_previstas": 21, "semana_plano": 2},
+    {"id": 30, "status": "pendente", "dia_plano": "2026-10-14", "tema": "Asma", "area": "Pediatria",
+     "bloco": "PED", "q_previstas": 30, "semana_plano": 3},
+    {"id": 1793, "status": "pendente", "dia_plano": "2026-10-25", "tema": "UERJ 2026 -- prova INTEIRA",
+     "area": "Simulado", "bloco": "SIM", "q_previstas": 100, "semana_plano": 4},
+    {"id": 77, "status": "pendente", "dia_plano": None, "tema": "Fora", "area": "Clínica Médica",
+     "bloco": "CM", "q_previstas": 40, "semana_plano": 5, "nota": "sprint: fora (sem vaga ate 31/10)"},
+]
+LISTAS_SPRINT = [
+    {"_id": "t26", "tarefa": 26, "tema": "Diabetes na Gestação", "area": "Obstetrícia", "semana": 2, "seq": 2, "q": 19, "status": "capturada"},
+    {"_id": "t49_2", "tarefa": 49, "tema": "Hérnias parte 2", "area": "Cirurgia", "semana": 2, "seq": 9, "q": 10, "status": "capturada"},
+    {"_id": "t49_1", "tarefa": 49, "tema": "Hérnias parte 1", "area": "Cirurgia", "semana": 2, "seq": 8, "q": 11, "status": "capturada"},
+    {"_id": "t30", "tarefa": 30, "tema": "Asma", "area": "Pediatria", "semana": 3, "seq": 1, "q": 30, "status": "capturada"},
+    {"_id": "t77", "tarefa": 77, "tema": "Fora", "area": "Clínica Médica", "semana": 5, "seq": 1, "q": 40, "status": "capturada"},
+    {"_id": "t12", "tarefa": 12, "tema": "Feita", "area": "Cirurgia", "semana": 1, "seq": 1, "q": 20, "status": "capturada"},
+    {"_id": "t5", "tarefa": 5, "tema": "Resolvida", "area": "Cirurgia", "semana": 1, "seq": 1, "q": 20, "status": "resolvida"},
+    {"_id": "t1793", "tarefa": 1793, "tema": "UERJ 2026 -- prova INTEIRA (100q)", "area": "Simulado", "semana": 4, "seq": 90, "q": 100, "status": "capturada"},
+]
+
+
+def _ids_do_grupo(html, grupo):
+    """Os ids das listas de uma secao `data-grupo` da aba Listas, na ordem da tela."""
+    m = re.search(r'<section[^>]* data-grupo="%s">(.*?)</section>' % re.escape(grupo), html)
+    return re.findall(r'data-qzl="([^"]+)"', m.group(1)) if m else []
+
+
+def test_listas_e_painel_mesmo_hoje(monkeypatch):
+    """O "Hoje" da aba Listas e o "Plano de hoje" do Painel saem do MESMO `plano.agenda_sprint`: do mesmo
+    plano sintetico, as tarefas das listas de Hoje = as tarefas do Painel, na mesma ordem."""
+    from tools import painel
+    monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {})
+    monkeypatch.setattr(painel, "_rd_nao_assinada", lambda: None)
+    do_painel = [t["id"] for t in painel._bloco_sprint(PLANO_SPRINT, HOJE_SPRINT)["hoje"]]
+    sprint = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    assert sprint["hoje"] == do_painel == [49, 26], "a rolada de ontem entra no hoje, na ordem do dia"
+    assert sprint["q_hoje"] == painel._bloco_sprint(PLANO_SPRINT, HOJE_SPRINT)["q_hoje"]
+    out = _listas("questoes", sprint, LISTAS_SPRINT)
+    hoje = _ids_do_grupo(out["html"], "hoje")
+    tarefas = []
+    for i in hoje:
+        t = next(l["tarefa"] for l in LISTAS_SPRINT if l["_id"] == i)
+        if t not in tarefas:
+            tarefas.append(t)
+    assert tarefas == do_painel and hoje == ["t49_1", "t49_2", "t26"], "a mesma tarefa pelo seq"
+
+
+def test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint():
+    sprint = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    html = _listas("questoes", sprint, LISTAS_SPRINT)["html"]
+    assert "Semana" not in html and "Atrasadas" not in html and "qd-atraso" not in html
+    assert html.index('data-grupo="hoje"') < html.index("Próximos dias") < html.index('data-grupo="d2026-10-14"') \
+        < html.index('data-grupo="fora"') < html.index("Resolvidas")
+    assert "Hoje <span class=\"qd-n\">3 listas · 40 questões</span>" in html
+    assert "qua 14/10 <span class=\"qd-n\">1 lista · 30 questões</span>" in html
+    assert _ids_do_grupo(html, "d2026-10-14") == ["t30"]
+    assert _ids_do_grupo(html, "fora") == ["t77", "t12"], "a de tarefa sem dia (feita no plano) cai no fora"
+    assert "sem vaga até 31/10" in html and "sem dia no plano" in html
+    assert re.search(r'<section data-grupo="hoje">', html) and re.search(r'<section data-recolhida data-grupo="fora">', html)
+    assert "UERJ" not in html, "o simulado segue na sua sub-aba"
+
+
+def test_sem_hub_sprint_as_listas_caem_nas_semanas():
+    html = _listas("questoes", None, LISTAS_SPRINT)["html"]
+    assert "Semana 2" in html and 'data-grupo=' not in html
+
+
+def test_simulado_leva_a_data_do_sprint():
+    sprint = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    html = _listas("simulados", sprint, LISTAS_SPRINT)["html"]
+    assert '<span class="qz-quando">dom 25/10</span>' in html and "semana 4" not in html
+
+
+def test_hub_sprint_no_build_e_null_sem_sprint():
+    assert hub.html_sprint([dict(l, dia_plano=None) for l in PLANO_SPRINT], HOJE_SPRINT) == \
+        '<script type="application/json" id="hub-sprint">null</script>'
+    d = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    assert d["proximos"] == [{"data": "2026-10-14", "tarefas": [30], "q": 30},
+                             {"data": "2026-10-25", "tarefas": [1793], "q": 100}]
+    assert d["fora"] == [{"id": 77, "motivo": "sem vaga até 31/10"}] and d["dias"]["1793"] == "2026-10-25"
 
 
 # ------------------------------------------------ s211 part-3: modo Estudo/Prova + tela de fim com os elos
@@ -943,10 +1041,11 @@ def _abertas(estado):
     return {k: v["aberta"] for k, v in estado.items() if not v["oculta"]}
 
 
-def test_padrao_abre_atrasadas_e_a_semana_da_vez():
+def test_padrao_abre_o_backlog_de_rds():
+    """s226 (sprint-final-uerj part-4): a Teoria nao tem semana; a unica secao e o backlog "Revisoes
+    direcionadas", aberto de partida e recolhivel como as outras (titulo = controle)."""
     out = _rodar_secoes()
-    # s216 (part-3): "Outras aulas" virou a Biblioteca, fora das secoes de semana; s218: ⚰️ "revisoes"
-    assert _abertas(out["inicio"]) == {"atrasadas": True, "3": True, "4": False, "5": False}
+    assert _abertas(out["inicio"]) == {"rd": True}
     for chave, s in out["inicio"].items():
         assert (s["role"], s["tab"], s["seta"]) == ("button", "0", True), chave
         assert s["expanded"] == ("true" if s["aberta"] else "false"), chave
@@ -954,49 +1053,33 @@ def test_padrao_abre_atrasadas_e_a_semana_da_vez():
     assert out["ls"] == {}, "sem toque, nada gravado no aparelho"
 
 
-def test_semana_atual_vazia_abre_a_proxima_com_itens():
-    """Hoje = semana 3 sem nada pendente: a fixa fica ("Nada em aberto") e a semana 4 vira a da vez."""
-    plano = [l for l in PLANO_SEC if l["semana_plano"] != 3]
-    out = _rodar_secoes(plano=plano)
-    assert _abertas(out["inicio"]) == {"atrasadas": True, "3": True, "4": True, "5": False}
+def test_semana_da_vez_e_padrao_puros_seguem_para_as_listas_sem_sprint():
+    """As puras da semana da vez seguem (a aba Listas sem sprint ainda agrupa por semana)."""
     puras = _node(SECOES_JS + "\nconsole.log(JSON.stringify({a: secSemanaAtual(3, [5, 4]), b: secSemanaAtual(3, []),"
-                  " c: secSemanaAtual(0, [6, 2]), d: [\"revisoes\", \"atrasadas\", \"biblioteca\", \"sem\", \"4\", \"s4\", \"5\", \"s5\"]"
+                  " c: secSemanaAtual(0, [6, 2]), d: [\"revisoes\", \"atrasadas\", \"biblioteca\", \"sem\", \"4\", \"s4\", \"5\", \"s5\", \"rd\"]"
                   ".map(function(k){ return secPadraoAberta(k, 4); })}));")
-    assert puras == {"a": 4, "b": 3, "c": 2, "d": [True, True, False, True, True, True, False, False]}
+    assert puras == {"a": 4, "b": 3, "c": 2, "d": [True, True, False, True, True, True, False, False, True]}
 
 
 def test_toque_e_teclado_alternam_e_o_aparelho_lembra():
-    out = _rodar_secoes('tocar("atrasadas"); tocar("5"); tecla("3", "Enter"); tecla("3", " ");'
-                        ' tecla("4", " "); tecla("3", "a");')
-    fim = _abertas(out["fim"])
-    assert fim == {"atrasadas": False, "3": True, "4": True, "5": True}
-    assert out["fim"]["5"]["expanded"] == "true" and out["fim"]["atrasadas"]["expanded"] == "false"
-    assert out["teclas"] == 3, "Enter e Espaco viram toque (preventDefault: a pagina nao rola); 'a' nao"
-    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:atrasadas": False, "aulas:5": True,
-                                                      "aulas:3": True, "aulas:4": True}
-    # recarregar: o mesmo aparelho, uma pagina nova -- vale o que ele escolheu; o resto segue o padrao
-    de_novo = _rodar_secoes(ls=out["ls"])
-    assert _abertas(de_novo["inicio"]) == fim
+    out = _rodar_secoes('tocar("rd"); tecla("rd", "Enter"); tecla("rd", " "); tecla("rd", "a");')
+    assert _abertas(out["fim"]) == {"rd": False} and out["fim"]["rd"]["expanded"] == "false"
+    assert out["teclas"] == 2, "Enter e Espaco viram toque (preventDefault: a pagina nao rola); 'a' nao"
+    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:rd": False}
+    # recarregar: o mesmo aparelho, uma pagina nova -- vale o que ele escolheu
+    assert _abertas(_rodar_secoes(ls=out["ls"])["inicio"]) == {"rd": False}
 
 
 def test_sem_storage_tudo_funciona_e_so_nao_lembra():
-    out = _rodar_secoes('tocar("atrasadas"); tocar("4");', quebrado=True)
-    assert _abertas(out["fim"])["atrasadas"] is False and _abertas(out["fim"])["4"] is True
-    de_novo = _rodar_secoes(quebrado=True)
-    assert _abertas(de_novo["inicio"])["atrasadas"] is True and _abertas(de_novo["inicio"])["4"] is False
+    out = _rodar_secoes('tocar("rd");', quebrado=True)
+    assert _abertas(out["fim"]) == {"rd": False}
+    assert _abertas(_rodar_secoes(quebrado=True)["inicio"]) == {"rd": True}
 
 
-def test_recontar_e_biblioteca_nao_desfazem_a_secao_recolhida():
-    """A aula que cumpre a tarefa 70 mora na semana 4 (recolhida): feito -> Biblioteca (s216, part-3; era
-    "Concluidas"), a semana conta 1 (a lista 68 fica), segue recolhida; desfeito -> volta para a semana 4
-    (a origem gravada no `data-secao` do item), ainda recolhida."""
-    out = _rodar_secoes('feito("aorta"); SAIDA.meio = {onde: onde("aorta"), sec: secoes()["4"]};'
-                        ' return espera().then(function(){ feito("aorta"); });')
-    meio = out["meio"]
-    assert meio["onde"] == "feitas"
-    assert meio["sec"]["n"] == "1" and meio["sec"]["aberta"] is False and meio["sec"]["oculta"] is False
-    assert out["fim"]["4"]["n"] == "2" and out["fim"]["4"]["aberta"] is False
-    assert out["fim"]["4"]["vazio_oculto"] is True
+# ⚰️ s226 (sprint-final-uerj part-4): `test_recontar_e_biblioteca_nao_desfazem_a_secao_recolhida` -- a
+# aula que cumpre a tarefa mora na Biblioteca desde o build (sem semana de origem); o recontar do backlog
+# esta em `test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca`.
+
 
 
 def test_aula_avulsa_mora_na_biblioteca_recolhida():
@@ -1007,8 +1090,9 @@ def test_aula_avulsa_mora_na_biblioteca_recolhida():
                         ' feito("avulsa-x"); SAIDA.meio = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x"),'
                         ' n: $("hub-quadro-nfeitas").textContent};')
     # s218: a Biblioteca guarda tambem a RD (rd-hepato): 2 documentos
-    assert out["antes"] == {"onde": "feitas", "feito": False, "n": "2"}
-    assert out["meio"] == {"onde": "feitas", "feito": True, "n": "2"}, "feita, fica na Biblioteca, riscada"
+    # s226 (part-4): sem semanas, a aorta e a prep-x tambem moram na Biblioteca: 4 documentos
+    assert out["antes"] == {"onde": "feitas", "feito": False, "n": "4"}
+    assert out["meio"] == {"onde": "feitas", "feito": True, "n": "4"}, "feita, fica na Biblioteca, riscada"
     assert "outras" not in out["inicio"] and "outras" not in out["fim"]
     assert _rodar_secoes()["areas_abertas"] == [False, False], "s218: as grandes areas nascem recolhidas"
 
@@ -1042,44 +1126,29 @@ function novas(){ var e = $("hub-quadro-novas"); return e.hidden ? "" : e.textCo
 """
 
 
-def test_feito_cai_na_disciplina_e_a_rd_nova_perde_a_etiqueta_no_lugar():
-    """s218: a Biblioteca e area -> disciplina. No build: CM (a RD de hepato, nova, 'Outros') e GO (a aula
-    avulsa). A aorta (tarefa 70, CM, `area` Cardiologia) feita cai em CM -> Cardiologia, disciplina que
-    nasce ao vivo ANTES de 'Outros'; a RD lida perde "nova" e desce para depois das aulas, sem sair da
-    disciplina (e o lugar dela); desmarcar a aorta a devolve a semana 4 e a disciplina vazia sai."""
-    plano = [dict(l, area="Cardiologia") if l["id"] == 70 else l for l in PLANO_SEC]
+def test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca():
+    """s226 (sprint-final-uerj part-4): a Teoria nao tem semana -- nada viaja de uma secao para a
+    Biblioteca. A RD assinada (a assinatura grava `quadro/<slug>`) SOME do backlog do topo, que reconta e
+    diz "Nenhuma..."; a copia da Biblioteca fica no lugar e perde "nova". Desfeita no db, volta aos dois."""
     acao = GRUPOS_JS + r"""
-SAIDA.g0 = grupos(); SAIDA.n0 = nfeitas(); SAIDA.v0 = novas();
-feito("aorta"); SAIDA.g1 = grupos(); SAIDA.n1 = nfeitas();
-return espera().then(function(){ feito("rd-hepato"); SAIDA.g2 = grupos(); SAIDA.v2 = novas(); SAIDA.onde2 = onde("rd-hepato"); return espera(); })
-  .then(function(){ feito("aorta"); SAIDA.g3 = grupos(); SAIDA.onde3 = onde("aorta"); SAIDA.n3 = nfeitas(); return espera(); })
-  .then(function(){ feito("rd-hepato"); SAIDA.g4 = grupos(); SAIDA.v4 = novas(); });"""
-    out = _rodar_secoes(acao, plano=plano)
-    go = {"area": "GO", "n": "1", "novas": "", "discs": [["Outros", "1", ["avulsa-x"]]], "aberta": False,
-          "tag": "DETAILS", "sumario": True}
-    cm = dict(go, area="CM", novas="1 nova", discs=[["Outros", "1", ["*rd-hepato"]]])
-    assert out["g0"] == [cm, go] and out["n0"] == "2" and out["v0"] == "1 nova"
-    assert out["g1"][0]["discs"] == [["Cardiologia", "1", ["aorta"]], ["Outros", "1", ["*rd-hepato"]]]
-    assert out["g1"][0]["n"] == "2" and out["n1"] == "3" and out["fim"]["4"]["n"] == "2"
-    assert out["g2"][0]["discs"][1] == ["Outros", "1", ["rd-hepato"]] and out["g2"][0]["novas"] == ""
-    assert out["v2"] == "" and out["onde2"] == "feitas", "lida, a RD fica na Biblioteca"
-    assert out["onde3"] == "4" and out["g3"][0]["discs"] == [["Outros", "1", ["rd-hepato"]]] and out["n3"] == "2"
-    assert out["g4"][0]["discs"] == [["Outros", "1", ["*rd-hepato"]]] and out["v4"] == "1 nova", "desmarcada, nova de novo"
+SAIDA.g0 = grupos(); SAIDA.v0 = novas();
+feito("rd-hepato"); SAIDA.s1 = secoes()["rd"]; SAIDA.g1 = grupos(); SAIDA.v1 = novas();
+SAIDA.oculta1 = qd.querySelector('.qd-sem[data-secao="rd"] .qd-item').hidden;
+return espera().then(function(){ feito("rd-hepato"); SAIDA.s2 = secoes()["rd"]; SAIDA.v2 = novas();
+  SAIDA.oculta2 = qd.querySelector('.qd-sem[data-secao="rd"] .qd-item').hidden; });"""
+    out = _rodar_secoes(acao)
+    assert out["inicio"]["rd"]["n"] == "1" and out["inicio"]["rd"]["vazio_oculto"] is True
+    assert out["v0"] == "1 nova" and "*rd-hepato" in out["g0"][0]["discs"][-1][2]
+    assert out["s1"]["n"] == "0" and out["s1"]["vazio_oculto"] is False and out["oculta1"] is True
+    assert out["v1"] == "" and "rd-hepato" in out["g1"][0]["discs"][-1][2], "lida, fica na Biblioteca"
+    assert out["s2"]["n"] == "1" and out["oculta2"] is False and out["v2"] == "1 nova", "desfeita, volta"
     assert out["avisos"] == []
 
 
-def test_grande_area_que_nao_existia_nasce_na_ordem():
-    """A aorta numa tarefa de PED (o plano diz): a grande area PED nasce ao vivo entre CM e GO, um
-    <details> recolhido com a disciplina dentro; desmarcar a tira de novo."""
-    plano = [dict(l, bloco="PED", area="Pediatria") if l["id"] == 70 else l for l in PLANO_SEC]
-    acao = GRUPOS_JS + r"""
-feito("aorta"); SAIDA.g1 = grupos();
-return espera().then(function(){ feito("aorta"); SAIDA.g2 = grupos(); });"""
-    out = _rodar_secoes(acao, plano=plano)
-    assert [g["area"] for g in out["g1"]] == ["CM", "PED", "GO"]
-    assert out["g1"][1] == {"area": "PED", "n": "1", "novas": "", "discs": [["Pediatria", "1", ["aorta"]]],
-                            "aberta": False, "tag": "DETAILS", "sumario": True}
-    assert [g["area"] for g in out["g2"]] == ["CM", "GO"], "o grupo que esvaziou saiu"
+# ⚰️ s226 (sprint-final-uerj part-4): `test_feito_cai_na_disciplina_e_a_rd_nova_perde_a_etiqueta_no_lugar` e
+# `test_grande_area_que_nao_existia_nasce_na_ordem` -- sem semanas na Teoria, nenhum item viaja de uma
+# secao para a Biblioteca (o grupo que nasce ao vivo so servia a esse movimento); a etiqueta "nova" da RD
+# lida segue presa acima.
 
 
 def test_grupo_da_biblioteca_recolhe_e_o_aparelho_lembra():
@@ -1138,6 +1207,7 @@ function qzAbrir(id){ ABRIU.push(id); }
 var ABRIU_AULA = []; function abrirNaTeoria(href, titulo){ ABRIU_AULA.push([href, titulo]); }
 var QZ = {listas: __LISTAS__, modo: "questoes"};
 var QZ_SEM = {atual: __ATUAL__, datas: {}};
+var QZ_SPRINT = null;   // s226 (part-4): sem sprint, as semanas de sempre
 __FUNCS__
 // a secao renderizada, como o navegador a teria: atributos + o titulo dentro dela
 function secaoDe(chave){

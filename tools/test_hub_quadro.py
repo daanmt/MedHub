@@ -123,7 +123,7 @@ def _repo_datas(raiz):
 def _secoes(pagina):
     """[(chave, titulo, [ids de tarefa | slugs])] na ordem da pagina."""
     saida = []
-    for m in re.finditer(r'<section class="qd-sem" data-secao="([^"]+)"[^>]*aria-label="([^"]+)"[^>]*>'
+    for m in re.finditer(r'<section class="qd-sem[^"]*" data-secao="([^"]+)"[^>]*aria-label="([^"]+)"[^>]*>'
                          r'(.*?)</section>', pagina, re.S):
         itens = re.findall(r'<li class="qd-item[^"]*"[^>]*?(?:data-tarefa="(\d+)"|data-slug="([\w-]+)")',
                            m.group(3))
@@ -255,62 +255,71 @@ def test_tipo_invalido_ou_tarefas_malformadas_falham_alto(tmp_path):
 # 2. O quadro por semanas no index
 # --------------------------------------------------------------------------
 
-def test_secoes_atrasadas_primeiro_depois_semanas_ate_a_prova_e_biblioteca_por_ultimo(tmp_path):
-    """s216 (part-1): a Teoria so mostra tarefa de aula e tarefa com aula ligada -- a lista sem aula
-    (26, 1793, 68) mora no Painel; semana sem nada a mostrar (a 3) sai, a corrente fica. s216
-    (part-3): "Outras aulas" virou a Biblioteca, no fim (e vazia aqui: a analise mora no Painel)."""
+def test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca(tmp_path):
+    """s226 (sprint-final-uerj part-4, DoD 1): a Teoria e consulta -- sem as secoes por semana (nem
+    "Atrasadas", nem "Semana N"), sem a contagem "Questoes da semana/atrasadas ... na aba Listas" e sem
+    tarefa nenhuma; no topo, "Revisoes direcionadas · N" (a RD nao assinada, cada uma abre no leitor);
+    toda aula (a ligada a tarefa pendente tambem) mora na Biblioteca, que nao mudou."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     pagina = _index(raiz)
-    secoes = _secoes(pagina)
-    # s218: ⚰️ a secao "Revisoes direcionadas" do topo -- a RD mora so na Biblioteca
-    assert [s[0] for s in secoes] == ["atrasadas", "2"]
-    assert [s[1] for s in secoes] == ["Atrasadas", "Semana 2 · 21/09 a 27/09"]
-    assert secoes[0][2] == ["877"], "semana 1 < atual = atrasada, na ordem do plano"
-    assert secoes[1][2] == ["49", "875"]
-    assert _biblioteca(pagina) == ["rd-renal"], "a RD na Biblioteca; a analise (autopsia) so no Painel"
-    assert pagina.index('id="hub-quadro-feitas"') > pagina.index('data-secao="2"'), "a Biblioteca vem por ultimo"
-    pagina = _index(raiz)
-    for tid in (900, 901, 902, 903):
-        assert 'data-tarefa="%d"' % tid not in pagina, "fase 2, reserva, cortada e feita ficam fora"
+    teoria = pagina.split('id="hub-quadro"', 1)[1].split('id="hub-resumos"', 1)[0]
+    for fora in ("Atrasadas", "Semana ", "Questões da semana", "Questões atrasadas", "qd-qsem",
+                 'data-hub-aba="questoes"', "data-tarefa="):
+        assert fora not in teoria, fora
+    assert _secoes(pagina) == [("rd", "Revisões direcionadas", ["rd-renal"])]
+    rds = re.search(r'<section class="qd-sem qd-rds".*?</section>', pagina, re.S).group(0)
+    assert ('<h3 class="qd-titulo">Revisões direcionadas <span class="qd-n">· <span data-n>1</span></span></h3>'
+            in rds)
+    assert ('<li class="qd-item" data-secao="rd" data-ordem="0" data-slug="rd-renal" data-tipo="revisao"'
+            in rds) and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/rd-renal.html"' in rds
+    assert sorted(_biblioteca(pagina)) == ["bayes", "hernias", "rd-renal"], \
+        "a aula ligada a tarefa pendente vai para a Biblioteca; a analise segue so no Painel"
+    assert pagina.index('data-secao="rd"') < pagina.index('id="hub-quadro-feitas"'), "o backlog vem no topo"
+    for proibido in ("–", "—", "→", "$$", "\\rightarrow"):
+        assert proibido not in teoria, "caractere proibido na Teoria: %r" % proibido
 
 
-def test_teoria_so_com_tarefas_de_aula_ou_com_aula_ligada(tmp_path):
-    """s216 (hub-integracao part-1, pedido do operador em 05/10): o plano inteiro aparecia
-    duas vezes (92 tarefas no Painel e as mesmas 92 em Aulas; so 12 de aula). A Teoria fica com a
-    tarefa de aula (`classe == "aula"`) e a tarefa de QUALQUER classe com aula ligada (prepara ou
-    cumpre); a analise sai de toda secao, inclusive de Concluidas. O filtro e de EXIBICAO: a semana
-    de hoje continua saindo de TODOS os pendentes (A2)."""
-    raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn, estado={"autopsia": {"feito": True, "ts": "x"}})
+def test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca(tmp_path):
+    """DoD 1: o backlog lista as RDs NAO assinadas da mais antiga para a mais nova (a regra do Painel:
+    revisao + sem `feito`, ordem (data, slug)); a assinada sai do backlog e fica na Biblioteca, riscada."""
+    raiz, data_fn = _repo(tmp_path, slugs=("rd-b", "rd-a", "rd-c", "hernias"))
+    quadro = dict(QUADRO, **{s: {"tipo": "revisao", "titulo": "RD " + s, "bloco": "CM"} for s in ("rd-a", "rd-b", "rd-c")})
+    _construir(raiz, data_fn, quadro=quadro, estado={"rd-c": {"feito": True, "ts": "x"}})
     pagina = _index(raiz)
-    quadro = pagina.split('id="hub-quadro"', 1)[1]
-    ids = set(re.findall(r'data-tarefa="(\d+)"', quadro))
-    assert ids == {"877", "49", "875"}, ids
-    assert {"26", "1793", "68"}.isdisjoint(ids), "lista sem aula ligada nao aparece na Teoria"
-    assert 'data-slug="autopsia"' not in quadro, "analise nem em secao nem em Concluidas"
-    # A2: com o filtro antes da regua, a semana de hoje viraria a 2 (a 1a com tarefa de aula)
+    # datas do _repo_datas: pela ordem alfabetica dos arquivos (hernias 10, rd-a 11, rd-b 12, rd-c 13)
+    assert _secoes(pagina) == [("rd", "Revisões direcionadas", ["rd-a", "rd-b"])]
+    assert "rd-c" in _biblioteca(pagina) and 'data-feito="1"' in _item(pagina.split('id="hub-quadro-feitas"')[1],
+                                                                        'data-slug="rd-c"')
+    tudo = hub.rds_nao_assinadas([(hub.Aula(s, s, d, ""), "revisao", s, None)
+                                  for s, d in (("z", "2026-10-01"), ("y", "2026-09-01"), ("x", "2026-10-01"))])
+    assert [r["slug"] for r in tudo] == ["y", "x", "z"]
+    _construir(raiz, data_fn, quadro=quadro, estado={s: {"feito": True} for s in ("rd-a", "rd-b", "rd-c")})
+    vazio = re.search(r'<section class="qd-sem qd-rds".*?</section>', _index(raiz), re.S).group(0)
+    assert '<span data-n>0</span>' in vazio and '<p class="qd-vazio">Nenhuma revisão direcionada por assinar.</p>' in vazio
+
+
+def test_secoes_do_quadro_puro_segue_a_regua_da_semana():
+    """A2 (s216): a funcao pura `secoes_do_quadro` (sem a Teoria por semana desde a s226) segue medindo a
+    semana de hoje em TODOS os pendentes; com `semanas=False` (a Teoria do sprint), nenhuma secao."""
     plano = [_t(26, 1, "Lista sem aula", 19, URL), _t(877, 2, "Raciocinio", 0, None, fonte="custom")]
     secoes, _c, _a = hub.secoes_do_quadro([], plano_linhas=plano, calendario={}, hoje=date(2026, 9, 1))
     assert [(s["chave"], [i["id"] for i in s["itens"]]) for s in secoes if s["chave"].isdigit()] == \
         [("1", []), ("2", [877])], \
         "semana corrente = a 1, de TODOS os pendentes; fica fixa e vazia"
-    assert not [i for s in secoes for i in s["itens"] if i.get("atrasada")]
-    for proibido in ("–", "—", "→", "$$", "\\rightarrow"):
-        assert proibido not in quadro, "caractere proibido na Teoria: %r" % proibido
+    assert hub.secoes_do_quadro([], plano_linhas=plano, calendario={}, hoje=date(2026, 9, 1),
+                                semanas=False)[0] == []
 
 
 def test_revisao_direcionada_mora_na_biblioteca_nova_ate_ser_lida(tmp_path):
-    """s210 (01/10) a RD ganhou bloco proprio no topo da aba; s218 (pedido do operador em 07/10: "as
-    revisoes podem entrar na biblioteca ... com a taxonomia correta") ⚰️ esse bloco: a RD mora SO na
-    Biblioteca; a ainda nao lida leva "nova" (classe 0, topo da disciplina) e o cabecalho conta as novas;
-    lida (assinada no leitor), perde a etiqueta e fica no lugar (classe 3), sem secao de origem. P20 (s219):
-    sem o quadrado 'feito' -- o `data-slug` (a chave do `quadro/<slug>` que a assinatura grava) segue."""
+    """s218: a RD mora na Biblioteca; a ainda nao lida leva "nova" (classe 0, topo da disciplina) e o
+    cabecalho conta as novas; lida, perde a etiqueta e fica no lugar (classe 3). s226 (part-4): ALEM dela,
+    a copia do backlog no topo enquanto nao assinada."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     pagina = _index(raiz)
-    assert 'data-secao="revisoes"' not in pagina and "Revisões direcionadas" not in pagina
-    item = _item(pagina, 'data-slug="rd-renal"')
+    bib = pagina.split('id="hub-quadro-feitas"', 1)[1]
+    item = _item(bib, 'data-slug="rd-renal"')
     assert "qd-feito" not in item and 'data-secao="biblioteca"' in item and 'data-bib="0"' in item
     assert '<span class="qd-nova">nova</span>' in item
     assert '<span class="qd-novas" id="hub-quadro-novas" data-novas>1 nova</span>' in pagina
@@ -318,115 +327,43 @@ def test_revisao_direcionada_mora_na_biblioteca_nova_ate_ser_lida(tmp_path):
     pagina = _index(raiz)
     item = _item(pagina, 'data-slug="rd-renal"')
     assert 'data-feito="1"' in item and 'data-bib="3"' in item and "qd-nova" not in item
+    assert 'data-secao="rd" data-ordem' not in pagina, "assinada, sai do backlog"
     assert '<span class="qd-novas" id="hub-quadro-novas" data-novas hidden></span>' in pagina
 
 
-def test_cabecalho_da_semana_conta_tarefas_e_questoes(tmp_path):
-    """s218 (07/10, o "69 questoes" que ele estranhou): o cabecalho somava so as questoes das tarefas
-    MOSTRADAS. Agora ele conta o que a Teoria mostra (tarefas; resumos quando ha) e, dentro, UMA linha
-    com o total REAL de questoes pendentes da semana no plano -- inclusive a lista sem aula, que mora no
-    Painel -- com atalho para a aba Listas."""
-    raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn)
-    pagina = _index(raiz)
-    cab = re.findall(r'<h3 class="qd-titulo">([^<]+) <span class="qd-n">(.*?)</span></h3>', pagina)
-    contagem = {t: re.sub(r"<[^>]+>", "", c) for t, c in cab}
-    assert contagem["Atrasadas"] == "1 tarefa"
-    assert contagem["Semana 2 · 21/09 a 27/09"] == "2 tarefas", "a soma parcial (21) saiu do cabecalho"
-    assert "Semana 3 · 28/09 a 04/10" not in contagem, "semana futura sem tarefa de aula nao aparece"
-    assert "Revisões direcionadas" not in contagem and "Outras aulas" not in contagem
-    sec = dict((k, v) for k, v, _i in _secoes(pagina))
-    atalho = ', na <a href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">aba Listas</a></p>'
-    sem2 = re.search(r'data-secao="2".*?</section>', pagina, re.S).group(0)
-    # 49 (21) + 875 (0) + 1793 (60, simulado sem aula); a cortada (902) e a feita (903) fora
-    assert '<p class="qd-qsem">Questões da semana: <b>81</b> · com as atrasadas: <b>100</b>' + atalho in sem2,         "a corrente diz tambem o numero do Painel (`q_abertas` inclui as atrasadas)"
-    atr = re.search(r'data-secao="atrasadas".*?</section>', pagina, re.S).group(0)
-    assert '<p class="qd-qsem">Questões atrasadas: <b>19</b>' + atalho in atr, "26 (19) + 877 (0)"
-    assert sec and '<h3 class="qd-bib-tit" id="hub-bib-tit">Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">1</span>' in pagina
-
-
-def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
-    # s216 (part-1): lista so aparece na Teoria com aula ligada -- a aula das hernias prepara 26 e 1793
-    raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[26, 49, 1793])))
-    pagina = _index(raiz)
-    lista = _item(pagina, 'data-tarefa="26"')
-    assert '<p class="qd-tema">Diabetes na Gestacao</p>' in lista
-    # prazo (s195, pedido dele): atrasada diz a semana e quando venceu; a corrente diz "ate dd/mm"
-    venceu = "semana 1" + (" · venceu %s" % CAL[1][1].strftime("%d/%m") if 1 in CAL else "")
-    assert ('<span class="qd-bl">GO</span><span>19 questões</span><span class="qd-atraso">%s</span>'
-            % venceu) in lista
-    # P21 (s220): na Teoria o cartao E a aula -- a lista do EMED mora no Painel e as questoes na aba Listas
-    assert lista.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias"><p class="qd-tema">' in lista
-    assert "abrir lista" not in lista and URL not in lista and "qd-acao" not in lista
-    assert "qd-atrasada" in lista and "qd-feito" not in lista, "tarefa de lista nao tem botao feito"
-    assert "qd-sem-botao" not in lista, "s195: todo bloco tem a mesma largura; o botao mora dentro"
-    hernias = _item(pagina, 'data-tarefa="49"')
-    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in hernias, \
-        "aula que PREPARA a tarefa (tarefas: [49]): o toque no cartao a abre (P21)"
-    assert "abrir lista" not in hernias and "abrir aula" not in hernias and "qd-feito" not in hernias
-    assert '<span class="qd-prazo">até %s</span>' % CAL[2][1].strftime("%d/%m") in hernias
-    preparar = _item(pagina, 'data-tarefa="875"')
-    # P20 (s219): sem questoes, sem lista e sem aula, a classe e o ultimo recurso -- texto da META (apagada),
-    # nunca no lugar de um link; a linha de acao nem existe
-    assert ('<p class="qd-meta"><span class="qd-bl">MFC</span><span>aula a preparar</span>'
-            '<span class="qd-prazo">até %s</span></p>' % CAL[2][1].strftime("%d/%m")) in preparar
-    assert "qd-acao" not in preparar and "tenue" not in preparar and "<span>aula</span>" not in preparar
-    assert 'class="qd-item qd-sem-aula"' in preparar and "<a " not in preparar, "P21: sem aula, cartao sem acao"
-    simulado = _item(pagina, 'data-tarefa="1793"')
-    # P21: a prova em PDF (texto, nunca link: morre na pagina publicada) mora no Painel; na Teoria, a aula
-    assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
-    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in simulado
-
-
-def test_aula_que_cumpre_tarefa_de_aula_leva_o_slug_e_nao_o_botao(tmp_path):
-    """P20 (s219, print de 07/10: "alguns blocos tendo checkbox, outros nao (pode ate ser removido...,
-    considerando que assinar resolve automaticamente)"): o quadrado so existia na tarefa de classe `aula`
-    -- a `sem_lista` cuja aula a CUMPRE (#530, #768) nao o tinha. Saiu de toda a Teoria; o `data-slug`
-    fica: e por ele que a assinatura no leitor risca o item e o tique conclui a tarefa."""
-    raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn)
-    bayes = _item(_index(raiz), 'data-tarefa="877"')
-    assert 'data-slug="bayes" data-tipo="aula" data-titulo="A Escada de Bayes"' in bayes
-    assert ('<a class="qd-bloco qd-alvo hub-aula" href="aulas/bayes.html" data-titulo="A Escada de Bayes">'
-            '<p class="qd-tema">') in bayes and "qd-feito" not in bayes
-    assert "<button" not in bayes and "aria-pressed" not in bayes
-    assert bayes.count("<a ") == 1 and "abrir aula" not in bayes, "P21: o cartao inteiro e o alvo"
-    assert '<p class="qd-meta"><span class="qd-bl">MFC</span><span class="qd-atraso">' in bayes, \
-        "com a aula como acao, a meta nao repete a classe ('aula')"
+# ⚰️ s226 (sprint-final-uerj part-4): `test_cabecalho_da_semana_conta_tarefas_e_questoes`,
+# `test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao` e `test_aula_que_cumpre_tarefa_de_aula_leva_o_slug_e_nao_o_botao`
+# -- a Teoria nao tem mais semana nem tarefa; a aula que cumpre a tarefa segue com o `data-slug` (a
+# assinatura a conclui) na Biblioteca: `test_feito_sai_riscado_na_biblioteca_no_build`.
 
 
 def test_feito_sai_riscado_na_biblioteca_no_build(tmp_path):
-    # s216 (part-1): a autopsia vira aula avulsa aqui (analise nao mora na Teoria) e a aula das
-    # hernias prepara a 26, para Atrasadas seguir com uma tarefa depois do Bayes feito. s216 (part-3):
-    # "Concluidas" virou a Biblioteca -- o feito vai riscado para la, e a aula avulsa (sem tarefa
-    # pendente) mora la desde o build, sem riscar; ordem = data de criacao, mais nova primeiro.
+    # s216 (part-3): o feito vai riscado para a Biblioteca, e a aula avulsa mora la desde o build, sem
+    # riscar. s226 (part-4): sem semanas, a aula que CUMPRE a tarefa (bayes, `tarefa_id` 877) tambem e
+    # avulsa -- com o `data-slug` que a assinatura grava e o tique converte em `--concluir`.
     raiz, data_fn = _repo(tmp_path)
-    quadro = dict(QUADRO, autopsia=dict(QUADRO["autopsia"], tipo="aula", bloco="VARIAS"),
-                  hernias=dict(QUADRO["hernias"], tarefas=[26, 49]))
+    quadro = dict(QUADRO, autopsia=dict(QUADRO["autopsia"], tipo="aula", bloco="VARIAS"))
     _construir(raiz, data_fn, quadro=quadro, estado={"bayes": {"feito": True, "ts": "x"},
                                                      "rd-renal": {"feito": True, "ts": "y"},
                                                      "autopsia": {"feito": False, "ts": "z"}})
     pagina = _index(raiz)
-    secoes, feitas = pagina.split('id="hub-quadro-feitas"', 1)
-    assert 'data-tarefa="877"' not in secoes and 'data-slug="rd-renal"' not in secoes
-    bayes = _item(feitas, 'data-tarefa="877"')
-    assert 'data-feito="1"' in bayes and 'data-secao="atrasadas"' in bayes and "qd-feito" not in bayes
-    assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">3<' in feitas
+    _topo, feitas = pagina.split('id="hub-quadro-feitas"', 1)
+    bayes = _item(feitas, 'data-slug="bayes"')
+    assert 'data-feito="1"' in bayes and 'data-secao="biblioteca"' in bayes and "qd-feito" not in bayes
+    assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">4<' in feitas
     autopsia = _item(feitas, 'data-slug="autopsia"')
     assert "data-feito" not in autopsia and 'data-secao="biblioteca"' in autopsia, "desmarcado nao risca"
-    assert _biblioteca(pagina) == ["rd-renal", "877", "autopsia"], "por area: CM, MFC, Varias areas (s218)"
     assert '<section class="qd-bib" id="hub-quadro-feitas"' in pagina, "s218: o corpo da aba, nao um <details>"
     assert not re.search(r'<details class="qd-area"[^>]*\bopen\b', pagina), "as areas nascem recolhidas"
     assert ".qd-item[data-feito] .qd-tema{text-decoration:line-through" in pagina
-    assert dict((k, v) for k, _t, v in _secoes(pagina))["atrasadas"] == ["26"],         "Atrasadas perde o Bayes feito"
+
 
 
 def test_sem_plano_tudo_vai_para_a_biblioteca_e_sem_aula_nem_plano_diz(tmp_path):
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn, plano=[], cal={})
     secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == [], "s218: sem plano nao ha semana; a RD mora na Biblioteca"
+    assert [s[0] for s in secoes] == ["rd"], "sem plano nao ha semana; s226: so o backlog de RDs no topo"
     assert _biblioteca(_index(raiz)) == ["rd-renal", "hernias", "bayes"], \
         "CM (a RD) e 'Sem área' (sem plano, a tarefa nao resolve), a mais nova primeiro; a analise nao entra"
     assert hub.html_aulas([]) == '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
@@ -456,7 +393,7 @@ def test_plano_indisponivel_degrada_declarado(tmp_path, monkeypatch):
         calendario={})
     assert problemas == []
     assert any("plano indisponivel" in a and "banco trancado" in a for a in avisos), avisos
-    assert [s[0] for s in _secoes(_index(raiz))] == [] and _biblioteca(_index(raiz)) == ["hernias"]
+    assert [s[0] for s in _secoes(_index(raiz))] == ["rd"] and _biblioteca(_index(raiz)) == ["hernias"]
 
 
 def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
@@ -469,8 +406,8 @@ def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
     pagina = _index(raiz)
     assert "qd-feito" not in pagina and "Marcar como feita" not in pagina and "como feita\"" not in pagina
     assert '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>' in pagina
-    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 2, \
-        "bayes + a RD avulsa (s216: a analise saiu) seguem com a chave do quadro"
+    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 4, \
+        "s226: hernias e bayes na Biblioteca + a RD (backlog e Biblioteca) com a chave do quadro"
     js = pagina.split("function iniciarQuadro()", 1)[1].split("// ---", 1)[0]
     assert 'db.collection("quadro")' in js and "semArmazenamento" in js
     assert ".set({feito: novo, ts: new Date().toISOString()})" in js
@@ -585,16 +522,18 @@ def test_plano_mudou_republica_o_mesmo_lote(tmp_path):
     """s195: tarefa concluida (ou nova) muda o quadro, logo a projecao -- sem lote novo. s216
     (part-1): a tarefa da TEORIA (de aula ou com aula ligada); lista sem aula concluida muda so o
     Painel (o E01: o `mesmo_lote` sobe so o `painel.html`)."""
+    # s226 (sprint-final-uerj part-4): a Teoria nao tem mais semana nem tarefa -- o plano entra na
+    # projecao pela agenda do sprint (`hub-sprint`, a aba Listas): o dia de uma lista que muda republica;
+    # a tarefa concluida sem sprint muda so o Painel
     raiz, data_fn = _repo(tmp_path)
     _publicado(raiz, data_fn)
     plano = [dict(l) for l in PLANO]
-    plano[1]["status"] = "feita"                        # a 877, tarefa de aula
+    plano[0]["dia_plano"] = "2026-09-24"                # o --sprint deu dia a 26
     d = _decidir(raiz, plano=plano)
     assert d["acao"] == "mesmo_lote" and d["motivos"] == ["quadro de aulas mudou"]
     plano = [dict(l) for l in PLANO]
-    plano[0]["status"] = "feita"                        # a 26, lista sem aula: fora da Teoria, MAS
-    # s218: o total real de questoes da semana (a linha "Questoes atrasadas") muda -- republica
-    assert _decidir(raiz, plano=plano)["motivos"] == ["quadro de aulas mudou"]
+    plano[1]["status"] = "feita"                        # a 877 concluida, sem sprint: a Teoria nao muda
+    assert _decidir(raiz, plano=plano)["acao"] == "nada"
     plano = [dict(l) for l in PLANO]
     plano[0]["q_previstas"] = 19.0                      # o mesmo numero: nada muda
     assert _decidir(raiz, plano=plano)["acao"] == "nada"
@@ -715,33 +654,9 @@ def test_pagina_real_leva_o_calendario_das_semanas_uma_vez():
     assert "@hub:semanas" not in pagina
 
 
-def test_simulado_no_hub_na_teoria_abre_a_aula_e_nao_a_lista(tmp_path):
-    """⚰️ s201 na Teoria: o simulado com questoes no banco ganhava 'resolver no hub' (aba Listas em
-    Simulados). P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a
-    aula"): o cartao da Teoria abre a aula; o atalho para as questoes segue no Painel."""
-    raiz, data_fn = _repo(tmp_path)
-    plano = [dict(l, no_hub=True) if l["id"] == 1793 else l for l in PLANO]
-    # s216 (part-1): so com aula ligada o simulado aparece na Teoria
-    _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 1793])))
-    simulado = _item(_index(raiz), 'data-tarefa="1793"')
-    assert "resolver no hub" not in simulado and "data-hub-aba" not in simulado
-    assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
-    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in simulado
-
-
-def test_lista_na_teoria_nao_leva_link_de_lista_nem_do_emed(tmp_path):
-    """⚰️ s213 (D4-1) na Teoria: a lista com questoes no banco abria a aba Listas, e fora do banco o
-    "abrir lista" do EMED. P21 (s220): a Teoria e a aula -- nenhum link de lista, com ou sem banco; a
-    precedencia D4-1 ("nao sair do medhub") segue no Painel (`test_painel`)."""
-    raiz, data_fn = _repo(tmp_path)
-    plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
-    # s216 (part-1): a 68 so aparece na Teoria com aula ligada
-    _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 68])))
-    pagina = _index(raiz)
-    for tid in (49, 68):
-        item = _item(pagina, 'data-tarefa="%d"' % tid)
-        assert "resolver no hub" not in item and "abrir lista" not in item and URL not in item, tid
-        assert item.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in item, "a aula que prepara e o alvo"
+# ⚰️ s226 (sprint-final-uerj part-4): `test_simulado_no_hub_na_teoria_abre_a_aula_e_nao_a_lista` e
+# `test_lista_na_teoria_nao_leva_link_de_lista_nem_do_emed` -- a Teoria nao tem mais tarefa (nem simulado
+# nem lista); nenhum link de lista nela continua preso por `test_teoria_sem_semanas_*` abaixo do topo.
 
 
 def test_painel_remede_ao_abrir_semana():
@@ -975,15 +890,17 @@ def _rodar_qd(**cfg):
 
 
 def test_o_quadro_de_partida_e_o_do_dia():
-    """Sanidade do cenario: as 3 RD na Biblioteca (s218), as listas em Atrasadas/Semana 3, nada feito."""
+    """Sanidade do cenario: as 3 RD na Biblioteca (s218) e, s226, no backlog do topo; a aula que prepara
+    as listas na Biblioteca (sem semana nem tarefa na Teoria); nada feito."""
     out = _rodar_qd()
     assert {k: v["onde"] for k, v in out["itens"].items()} == {
-        "rd-hemostasia": "feitas", "rd-hepato": "feitas", "rd-vias-biliares": "feitas",
-        "t26": "atrasadas", "t49": "atrasadas", "t1793": "atrasadas", "t68": "3"}
-    assert out["escritas"] == [] and out["nfeitas"] == "3" and out["novas"] == "3 novas"
+        "rd-hemostasia": "feitas", "rd-hepato": "feitas", "rd-vias-biliares": "feitas", "prep": "feitas"}
+    assert out["secoes"] == {"rd": "3"}
+    assert out["escritas"] == [] and out["nfeitas"] == "4" and out["novas"] == "3 novas"
 
 
 # ------------------------------------------------ 5a. assinar = concluir
+
 
 def test_assinar_a_leitura_conclui_o_item_do_quadro():
     """O 04/10 dele: rd-hemostasia ja feita; assina rd-hepato -> quadro/rd-hepato feito, sem 2o toque."""
@@ -993,7 +910,8 @@ def test_assinar_a_leitura_conclui_o_item_do_quadro():
     assert out["escritas"][0][2]["feito"] is True and out["escritas"][0][2]["ts"].startswith("20")
     assert out["itens"]["rd-hepato"] == {"onde": "feitas", "feito": True, "marca": None}
     assert out["itens"]["rd-vias-biliares"] == {"onde": "feitas", "feito": False, "marca": None}
-    assert out["nfeitas"] == "3" and out["novas"] == "1 nova", "s218: lida, a RD deixa de ser nova"
+    assert out["nfeitas"] == "4" and out["novas"] == "1 nova", "s218: lida, a RD deixa de ser nova"
+    assert out["secoes"]["rd"] == "1", "s226: a assinada (e a ja feita no db) some do backlog; fica so a 3a"
     assert out["st"] == "Assinado e concluído", out["st"]
 
 
@@ -1025,22 +943,17 @@ def test_quadro_que_nao_salva_desfaz_a_tela_e_avisa():
 
 # ------------------------------------------------ 5b. lista resolvida sai da semana
 
-def test_lista_resolvida_vai_para_concluidas_com_selo_sem_gravar():
-    out = _rodar_qd(listas=LISTAS)
-    for t in ("t26", "t1793"):
-        assert out["itens"][t] == {"onde": "feitas", "feito": True, "marca": "resolvida · registro pendente"}
-    assert out["itens"]["t49"] == {"onde": "atrasadas", "feito": False, "marca": None}
-    assert out["itens"]["t68"]["onde"] == "3"
-    assert out["escritas"] == [], "a lista resolvida so muda a tela; o plano e do backend"
-    assert out["secoes"]["atrasadas"] == "1" and out["nfeitas"] == "5", "2 listas + as 3 RDs da Biblioteca"
+def test_lista_resolvida_nao_mexe_na_teoria():
+    """s226 (sprint-final-uerj part-4): a Teoria nao tem mais tarefa -- a lista resolvida na aba Listas
+    so pinta o Painel (`marcarListasEm`); na Teoria nada nasce nem se move, e nada e gravado. Sem a
+    leitura de listas (link compartilhado), idem."""
+    for cfg in ({"listas": LISTAS}, {"listas": LISTAS, "negar": ["listas"], "quadro": {"rd-hemostasia": FEITA}}):
+        out = _rodar_qd(**cfg)
+        assert not [k for k in out["itens"] if k.startswith("t")], out["itens"]
+        assert out["escritas"] == [] and out["nfeitas"] == "4"
+        assert out["grupos"] == [["CM", ["rd-hemostasia", "rd-hepato"]], ["CIR", ["rd-vias-biliares"]],
+                                 ["GO", ["prep"]]], out["grupos"]
 
-
-def test_sem_leitura_de_listas_o_quadro_fica_como_o_build():
-    """Hub aberto por link (regra `listas` = leitura do dono): nada se move, o resto do quadro segue."""
-    out = _rodar_qd(listas=LISTAS, negar=["listas"], quadro={"rd-hemostasia": FEITA})
-    assert out["itens"]["t26"] == {"onde": "atrasadas", "feito": False, "marca": None}
-    assert out["itens"]["rd-hemostasia"]["onde"] == "feitas"
-    assert out["escritas"] == []
 
 
 # ------------------------------------------------ 6. s216 (hub-integracao part-2): o Painel le listas/*
@@ -1240,15 +1153,15 @@ def test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador():
     assert _grupos(pagina) == [
         ("CM", "Clínica Médica", 2, ["tireoide", "rd-hepato"]),
         ("CIR", "Cirurgia", 2, ["remit", "rd-hernias"]),
-        ("MFC", "Medicina de Família e Comunidade", 1, ["875"]),
+        ("MFC", "Medicina de Família e Comunidade", 1, ["prevq"]),   # s226: a aula, sem a tarefa da semana
         ("PED", "Pediatria", 1, ["mista"]),
         ("GO", "Ginecologia e Obstetrícia", 1, ["dmg"]),
         ("VARIAS", "Várias áreas", 1, ["rd-pilulas"])]
     assert 'Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">8</span>' in pagina
     assert 'data-slug="dossie"' not in pagina, "a analise segue fora da Teoria"
     assert not [a for a in avisos if "grande area" in a], avisos
-    prevq = _item(pagina, 'data-tarefa="875"')
-    assert 'data-feito="1"' in prevq and 'data-secao="3"' in prevq, "riscado, com a origem para desmarcar"
+    prevq = _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="prevq"')
+    assert 'data-feito="1"' in prevq and 'data-secao="biblioteca"' in prevq, "riscado, mora na Biblioteca"
     # a ordem e os rotulos dos grupos vem do build, para a pagina criar o grupo que ainda nao existe
     areas = re.search(r'<div class="qd-areas" data-areas="([^"]+)" data-disc-fim="Outros">', pagina).group(1)
     assert json.loads(html.unescape(areas)) == [list(p) for p in hub.AREAS_BIBLIOTECA]
@@ -1260,18 +1173,20 @@ def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
     nao aparecem. Todo item (secao ou Biblioteca) leva `data-area`: e o que o cliente le para mover o
     feito para o grupo certo sem publish."""
     pagina, _ = hub.html_quadro_de(AULAS_BIB, REG_BIB, {}, PLANO_BIB, CAL, HOJE)
-    # s218: a RD mora na Biblioteca desde o build (nova); so a MFC (a Prevencao Quaternaria na semana) falta
-    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "PED", "GO", "VARIAS"]
-    assert 'class="qd-area" data-area="MFC"' not in pagina
+    # s218: a RD mora na Biblioteca desde o build (nova); s226 (part-4): sem semanas, a Prevencao
+    # Quaternaria (pendente na semana 3) tambem -- a MFC aparece
+    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "MFC", "PED", "GO", "VARIAS"]
     assert [g[3] for g in _grupos(pagina)][:2] == [["rd-hepato", "tireoide"], ["rd-hernias", "remit"]], \
         "a RD nova sobe ao topo da disciplina"
-    assert 'data-area="VARIAS"' in _item(pagina, 'data-slug="rd-pilulas"')
-    assert 'data-area="MFC"' in _item(pagina, 'data-tarefa="875"')
-    assert all("data-area=" in li for li in re.findall(r'<li class="qd-item[^"]*"[^>]*>', pagina))
+    assert 'data-area="VARIAS"' in _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="rd-pilulas"')
+    assert 'data-area="MFC"' in _item(pagina, 'data-slug="prevq"')
+    # s226 (part-4): a copia do backlog de RDs (`data-secao="rd"`) nao muda de grupo -- so some ao assinar
+    assert all("data-area=" in li for li in re.findall(r'<li class="qd-item[^"]*"[^>]*>', pagina)
+               if 'data-secao="rd"' not in li)
+    # ⚰️ s226 (part-4): a "Biblioteca vazia com aula pendente" -- sem semanas, toda aula mora nela
     vazia, _ = hub.html_quadro_de(AULAS_BIB[:1], REG_BIB, {}, [_t(530, 3, "REMIT", fonte="custom", bloco="CIR")],
                                   CAL, HOJE)
-    assert _grupos(vazia) == [] and '<div class="qd-areas" data-areas=' in vazia, \
-        "Biblioteca vazia: sem grupo, mas com a ordem para o primeiro feito"
+    assert [g[3] for g in _grupos(vazia)] == [["remit"]] and '<div class="qd-areas" data-areas=' in vazia
 
 
 def test_area_da_aula_vem_da_tarefa_do_plano_e_a_da_rd_do_registro():
@@ -1445,41 +1360,14 @@ def test_vivos_pulam_com_motivo_sem_o_dado(tmp_path, monkeypatch, vivo, quadro):
     assert not ausente.exists() and not ausente.parent.exists(), "a guarda tem de vir antes do connect"
 
 
-def test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa():
-    """A lista resolvida na aba Listas sai da semana na hora para o grupo do BLOCO dela (a 26 e GO; o
-    simulado 1793 tem area "Simulado", que o plano le como CM) -- o grupo nasce na ordem."""
-    out = _rodar_qd(listas=LISTAS)
-    # s218: no grupo CM, as disciplinas A-Z (Hematologia, Hepatologia, Simulado); a RD nova no topo da sua
-    assert out["grupos"] == [["CM", ["rd-hemostasia", "rd-hepato", "t1793"]], ["CIR", ["rd-vias-biliares"]],
-                             ["GO", ["t26"]]], out["grupos"]
-    assert out["nfeitas"] == "5"
+# ⚰️ s226 (sprint-final-uerj part-4): `test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa` -- a
+# Teoria nao tem mais lista; os grupos da Biblioteca sem lista: `test_lista_resolvida_nao_mexe_na_teoria`.
 
 
 # ------------------------------------------------ 9. P20 (s219): a tarefa na Teoria, uma regra com o Painel
 
-def test_tarefa_sem_link_com_questoes_no_banco_conta_o_banco_e_abre_a_aula(tmp_path):
-    """s219: 26 tarefas ganharam caderno no hub sem `url_lista` (t530 REMIT, t768 aorta, t875...). O
-    "resolver no hub" exigia o link -- a REMIT mostrava so "abrir aula", e a meta dizia "sem lista"
-    com 20 questoes esperando na aba Listas. Agora: questoes no banco = "resolver no hub" e "N
-    questoes" (a contagem do banco), sem rotulo de classe; o titulo do EMED sai sem o ' | '. P21 (s220):
-    o "resolver no hub" saiu da Teoria -- o cartao abre a aula; as questoes moram na aba Listas."""
-    raiz, data_fn = _repo(tmp_path, slugs=("remit", "rd-renal"))
-    remit = dict(_t(530, 2, "Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas",
-                    0, None, fonte="extensivo", bloco="CIR", area="Cirurgia"), no_hub=True, q_hub=20)
-    sem_nada = _t(531, 2, "Tema sem nada", 0, None, fonte="extensivo", bloco="CIR", area="Cirurgia")
-    quadro = {"remit": {"tipo": "aula", "titulo": "REMIT", "tarefa_id": 530},
-              "rd-renal": QUADRO["rd-renal"], "x": {"tipo": "aula", "titulo": "X", "tarefas": [531]}}
-    _construir(raiz, data_fn, quadro=quadro, plano=[remit, sem_nada])
-    pagina = _index(raiz)
-    item = _item(pagina, 'data-tarefa="530"')
-    assert ('<p class="qd-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de '
-            'Feridas</p>') in item, "o titulo na tela; o `tema` do banco nao muda"
-    assert '<span class="qd-bl">CIR</span><span>20 questões</span>' in item
-    assert "resolver no hub" not in item and "data-hub-aba" not in item
-    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/remit.html" data-titulo="REMIT">' in item
-    assert "sem lista" not in item and "qd-feito" not in item
-    sem = re.search(r'data-secao="2".*?</section>', pagina, re.S).group(0)
-    assert '<p class="qd-qsem">Questões da semana: <b>20</b>' in sem, "o cabecalho conta o banco"
+# ⚰️ s226 (sprint-final-uerj part-4): `test_tarefa_sem_link_com_questoes_no_banco_conta_o_banco_e_abre_a_aula`
+# -- a contagem de questoes da tarefa saiu da Teoria (mora no Painel e na aba Listas).
 
 
 def test_p21_tarefa_sem_aula_e_cartao_sem_acao_e_diz_aula_a_preparar():
@@ -1521,7 +1409,7 @@ def test_aba_listas_mostra_o_titulo_pela_mesma_regra_da_teoria():
         Path(caminho).unlink(missing_ok=True)
     assert out.returncode == 0, out.stderr
     assert json.loads(out.stdout) == [plano.tema_exibido(c) for c in casos]
-    lista = extrair_funcao(TEMPLATE_HUB_REAL, "function qzItemLista(l, atrasada){")
+    lista = extrair_funcao(TEMPLATE_HUB_REAL, "function qzItemLista(l, atrasada, motivo){")
     assert "qzEsc(temaExibido(l.tema))" in lista
     assert '$("qz-tema").textContent = (temaExibido(l.tema) || id)' in TEMPLATE_HUB_REAL
 
@@ -1539,29 +1427,8 @@ def test_sem_db_o_quadro_nao_acusa_controle_que_nao_existe():
 # naturalmente devo ir especificamente para as questoes e, por outro lado, se estou na teoria, abro
 # automaticamente a aula." O lado da aba Listas mora em `test_hub_render` (`test_p21_lista_e_so_a_lista...`).
 
-def test_p21_tarefa_com_duas_aulas_mostra_as_duas_como_alvos_e_nenhuma_lista(tmp_path):
-    """2+ aulas (a #811 tem duas): o cartao NAO e alvo -- cada aula e um alvo proprio de 1 toque, com o
-    titulo dela, e nenhum link de lista. A aula dividida por 2 tarefas (#876/#879) e o alvo inteiro de
-    cada cartao."""
-    raiz, data_fn = _repo(tmp_path, slugs=("hernias", "hernias-b", "bayes"))
-    quadro = {"hernias": {"tipo": "aula", "titulo": "A Escada das Hernias", "tarefas": [49, 68]},
-              "hernias-b": {"tipo": "aula", "titulo": "Hernias <II> & cia", "tarefas": [49]},
-              "bayes": QUADRO["bayes"]}
-    plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
-    _construir(raiz, data_fn, plano=plano, quadro=quadro)
-    pagina = _index(raiz)
-    duas = _item(pagina, 'data-tarefa="49"')
-    assert '<div class="qd-bloco"><p class="qd-tema">Hernias da Parede Abdominal</p>' in duas, "o cartao nao e alvo"
-    # a ordem e a das ligacoes (a aula mais nova primeiro, como sempre foi no bloco)
-    assert re.findall(r'<div class="qd-aulas">(.*?)</div>', duas, re.S) == [
-        '<a class="hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">A Escada das Hernias</a>'
-        '<a class="hub-aula" href="aulas/hernias-b.html" data-titulo="Hernias &lt;II&gt; &amp; cia">'
-        'Hernias &lt;II&gt; &amp; cia</a>']
-    assert duas.count("<a ") == 2 and "qd-alvo" not in duas
-    for fora in ("resolver no hub", "abrir lista", "abrir aula", URL, "qd-acao"):
-        assert fora not in duas, fora
-    dividida = _item(pagina, 'data-tarefa="68"')   # a mesma aula prepara a 49 e a 68
-    assert dividida.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias"><p class="qd-tema">' in dividida
+# ⚰️ s226 (sprint-final-uerj part-4): `test_p21_tarefa_com_duas_aulas_mostra_as_duas_como_alvos_e_nenhuma_lista`
+# -- a Teoria nao mostra mais tarefa (nem cartao de 2 aulas): cada aula mora na Biblioteca.
 
 
 def test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao(tmp_path):

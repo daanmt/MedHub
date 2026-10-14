@@ -73,7 +73,8 @@ compor. O que copiar dele:
 
 ## 2b. O tema do hub (s224, pedido dele em 12/10/2026): a aula NÃO traz paleta nem fonte
 
-Decisão dele: *"prefiro tema escuro / modo noite [...]"* (12/10/2026); desde 13/10/2026 (s225) vale o **tema v3, retrowave contido**, do brief dele: *"a interface deve lembrar Vice City à primeira vista, mas desaparecer em segundo plano quando o estudante estiver concentrado no conteúdo"*. Quem aplica é o **leitor do hub**: injeta `core/templates/tema.css` + `core/templates/tema-aula.css` depois do CSS da aula (e remove o `<link>` de Google Fonts dela). Uma fonte só (Atkinson Hyperlegible Next), fundo `#17132E`, texto `#F8F5F2`. A semântica das cores é fixa e mora em [`docs/UI.md`](../../docs/UI.md) §4: ciano = link, navegação, progresso, ação, e o termo-chave em negrito (ciano claro, o único texto ciano da leitura); âmbar = armadilha e aviso; coral = erro e o que é proibido; roxo = numeral do degrau, marcos e "como a banca cobra"; rosa = só a marca do hub. Títulos em branco, rótulos e fontes em lavanda; neon nunca no corpo do texto.  <!-- NAO-VERIFICAVEL: paleta e escolha de design dele; nenhum gate le as cores do hub nem o uso de neon so como acento (revisar: 2027-03-31) -->
+Decisão dele: *"prefiro tema escuro / modo noite [...]"* (12/10/2026); desde 13/10/2026 (s227) vale o **tema v4, fosco em camadas** (o controle DualSense GTA VI que ele trouxe: preto fosco, cromado azul -> violeta, rosa nos detalhes, branco quente), sobre o princípio do v3: *"a interface deve lembrar Vice City à primeira vista, mas desaparecer em segundo plano quando o estudante estiver concentrado no conteúdo"*. Quem aplica é o **leitor do hub**: injeta `core/templates/tema.css` + `core/templates/tema-aula.css` depois do CSS da aula (e remove o `<link>` de Google Fonts dela) e mostra a aula numa **placa** (`#15151E` sobre o fundo `#0C0C12`). Uma fonte só (Atkinson Hyperlegible Next), texto `#F6EFEA`; dentro da aula, `--card` é a superfície ELEVADA (as caixas nunca têm a cor da placa). A semântica das cores é fixa e mora em [`docs/UI.md`](../../docs/UI.md) §4: ciano = link, navegação, progresso, ação, e o termo-chave em negrito (ciano claro, o único texto ciano da leitura); âmbar = armadilha e aviso; coral = erro e o que é proibido; roxo = numeral do degrau, marcos e "como a banca cobra"; rosa = só a marca do hub. Títulos em branco, rótulos e fontes em lavanda; neon nunca no corpo do texto.  <!-- NAO-VERIFICAVEL: paleta e escolha de design dele; nenhum gate le as cores do hub nem o uso de neon so como acento (revisar: 2027-03-31) -->
+⚰️ *13/10/2026 (s227): era "desde 13/10/2026 (s225) vale o **tema v3, retrowave contido** [...] fundo `#17132E`, texto `#F8F5F2`". Motivo: a queixa dele ("chapado no fundo, sem blocos") levou ao v4 (`.vibeflow/prds/hub-tema-v4-fosco-em-camadas.md`); a semântica das cores não mudou.*
 ⚰️ *13/10/2026 (s225): substituída pela v3 acima. Era: "a **Vice City** (`#0B0F2B` Ocean Night, `#00F0FF` ciano, `#FF5CA8` rosa, `#BC6CFF` roxo, `#FFB86B` pêssego) [...] fundo `#0B0F2B`, texto `#F4F1FF`; os neons só como acento (ciano = link/aba/progresso; rosa = alerta/armadilha; roxo = numeral e ícones; pêssego = "como a banca pede")". Motivo: o brief dele de 13/10 fixou rosa = marca e aviso = âmbar, e a armadilha passou a ter a mesma cor no card e na aula (`docs/UI.md` §10, achado A3).*
 
 Para a aula nova isso muda a régua da seção 2:
@@ -135,3 +136,27 @@ e laboriosa. Precisamos valorizar cada segundo de estudos."*
 ⚰️ *A memória `feedback_aula_base_prosa_enxuta` (s150: "prosa enxuta, não bullet-pilha") fica
 restringida: prosa só no lede; o corpo é em tópicos. "Descomprimir" (s090/s092) significa explicar o
 mecanismo, nunca escrever mais texto.*  <!-- NAO-VERIFICAVEL: 'descomprimir = mecanismo, nao comprimento' e julgamento de autoria; nao ha gate de comprimento de aula (revisar: 2027-03-31) -->
+
+## 6. Referências no fim, como num artigo (s227)
+
+Pedido dele em 13/10/2026: *"remover todos os 'Fonte:...' espalhados pelo texto, e concentrá-los ao final, tal como um
+artigo. Preferir referências de guidelines/pcdt/ms/sociedades, tanto para os resumos quanto para as aulas."* Vale para
+aula-base, Revisão Direcionada, dossiê e autópsia.
+
+- **Nenhuma linha "Fonte:" no meio do texto** (nem em `p.src`, nem na legenda de figura). No lugar, um número
+  sobrescrito discreto: `<sup class="ref"><a href="#ref-N">N</a></sup>`, no fim da frase ou da legenda que ele sustenta.
+- **O documento termina em `<section class="refs" id="refs"><h2>Referências</h2><ol>`**, um `<li id="ref-N">` por
+  fonte, na ordem de aparição, sem repetir a mesma fonte. Cada item: sociedade ou órgão, título curto, ano (e PMID/DOI
+  quando houver), no formato do `evidence-governance` §7.
+- **Ordem de preferência = a hierarquia do `core/contracts/evidence-governance.md` §2:** (1) diretrizes de sociedades
+  brasileiras e Ministério da Saúde (PCDT, Cadernos de Atenção Básica, manuais, calendário PNI); (2) guidelines
+  internacionais e revisões sistemáticas; (3) livro-texto. A aula cita a diretriz que sustenta o fato, não o caminho por
+  onde o agente chegou a ele. Fato que só tem apoio de material de curso (a apostila do EMED) ou da banca é declarado
+  assim, nunca vestido de diretriz; nada de diretriz citada de memória (§7 "nada de memória").  <!-- NAO-VERIFICAVEL: escolha da fonte que sustenta o fato e julgamento de autoria; nenhum gate le a hierarquia das referencias da aula (revisar: 2027-03-31) -->
+- **A base interna NÃO é referência:** o resumo do MedHub (`resumos/X.md`), o verso de um card e o PDF do curso vão
+  numa linha final separada, `<p class="base">Base deste documento: ...</p>`, depois da lista (o hub liga
+  `resumos/X.md` ao resumo publicado). O registro da RD (`"resumos"`, `/revisar` 8a) é essa linha.
+- **Figura (`figure.fig-an`, /anima):** legenda curta + o número da referência; sem "Fonte:" na legenda.
+- **Desde 13/10/2026 o leitor do hub já faz isso nas aulas antigas** (`hub-tema-v4-part-7`): tira toda "Fonte:" do
+  meio e monta as Referências no fim. Isso é a camada de apresentação; a aula NOVA nasce no formato desta seção, e as
+  antigas migram na fonte junto com a reforma de estética com a /anima (decisão dele: "isso será evoluído depois").  <!-- NAO-VERIFICAVEL: autoria do HTML da aula nova; o leitor normaliza a apresentacao das antigas e nenhum gate le a ordem de preferencia das fontes (revisar: 2027-03-31) -->

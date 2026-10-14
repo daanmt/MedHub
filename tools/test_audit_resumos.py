@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from audit_resumos import _spec_proibicoes  # noqa: E402
+from audit_resumos import _spec_proibicoes, _fonte_inline  # noqa: E402
 
 
 # --- cada sub-check tem que DISPARAR sobre o caso que ele existe para pegar ---
@@ -73,3 +73,34 @@ def test_os_resumos_desta_sessao_estao_conformes():
     for f in alvos:
         if f.exists():  # tolerante a rename; o que existe tem que estar limpo
             assert _spec_proibicoes(f.read_text(encoding="utf-8")) == [], f.name
+
+
+
+
+# s227 (pedido dele): "Fonte:" de referencia no meio do texto -> WARN FONTE_INLINE; a fonte clinica fica.
+def test_fonte_de_referencia_no_meio_do_texto_e_pega():
+    texto = ("# T\n\n> Fonte: Apostila Estratégia MED -- Prof. X (2024)\n\n"
+             "## 1. A\n- **Fonte:** MS/Fiocruz-IFF 2023\n")
+    assert _fonte_inline(texto) == [3, 6]
+
+
+def test_fonte_clinica_nao_e_referencia():
+    # TCE.md: a fonte do SANGRAMENTO, nao uma citacao
+    texto = ("## 2. Hematoma\n- **Fonte:** arterial em cerca de 85% dos casos -- artéria meníngea média\n"
+             "- **Fonte:** venosa -- ruptura das veias-ponte\n")
+    assert _fonte_inline(texto) == []
+
+
+def test_fonte_dentro_das_referencias_nao_dispara():
+    texto = "## 9. Armadilhas de Prova\n- x [1]\n\n## Referências\n1. Fonte: SBC. Diretriz de HAS, 2020.\n"
+    assert _fonte_inline(texto) == []
+
+
+def test_a_palavra_fonte_no_meio_da_frase_nao_dispara():
+    assert _fonte_inline("- a principal fonte de erro em 2024 e o atraso\n") == []
+
+
+def test_tce_real_nao_dispara():
+    f = Path(__file__).parent.parent / "resumos" / "Clínica Médica" / "Neurologia" / "TCE.md"
+    if f.exists():
+        assert _fonte_inline(f.read_text(encoding="utf-8")) == []

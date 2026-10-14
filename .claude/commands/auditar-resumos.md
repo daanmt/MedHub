@@ -32,6 +32,7 @@ Não requer argumentos. Varre `resumos/**/*.md` recursivamente.
 | Campo `estilo:` no frontmatter | **Crítico** | Frontmatter não deve conter campo `estilo:` |
 | Rodapé editorial | **Crítico** | Arquivo não deve terminar com linhas em itálico de origem/autoria (`*Este resumo...`) |
 | Marcadores visuais | Aviso | Pelo menos um de: `⚠️`, `🔴`, `⭐` |
+| `FONTE_INLINE` (s227) | Aviso | Linha `Fonte:` de REFERÊNCIA (ano, caminho, PMID/DOI, órgão, diretriz, apostila) antes da seção final `## Referências`: a fonte vira `[N]` + item das Referências (`/estilo-resumo` §Referências). "Fonte:" clínica (a fonte do sangramento no TCE) não conta. Regra nova, nasce aviso |
 
 ---
 

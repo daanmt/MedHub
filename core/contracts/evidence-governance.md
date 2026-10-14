@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.3
+version: 1.4
 relates_to: [AGENTE, fsrs-management-contract, reconcile-contract]
 ---
 
 # Contrato de Governança de Evidência (Evidence Governance)
-**Versão 1.3 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2), fonte da Solução MedHub em 2026-10-11 (Fase 0 Lote 2, 2.2) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
+**Versão 1.4 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2), fonte da Solução MedHub em 2026-10-11 (Fase 0 Lote 2, 2.2), Referências no fim do resumo e da aula em 2026-10-13 (s227) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
 
 > Documento normativo. Define como o MedHub garante que **toda afirmação clínica decisória seja a mais consistente com a melhor evidência que a sustenta** — e como essa evidência é buscada, hierarquizada, auditada e rastreada.
 > Referenciado por: `AGENTE.md` (§6 decisões, §7 skills), `.claude/commands/{analisar-questao,estilo-resumo,auditar-resumos,estilo-flashcard,pesquisar-evidencia}.md`, `.claude/agents/evidence-researcher.md`, `docs/SOLUCAO-MEDHUB-BRIEF.md` (§7.1).
@@ -118,7 +118,8 @@ Isto espelha o princípio do irmão *"drift clínico é falha estrutural — div
 
 ## 7. Rastreabilidade e honestidade
 
-- **Citação obrigatória** em toda afirmação decisória auditada: **fonte + ano** (`SBD 2024`, `ADA 2025`) e/ou **PMID/DOI** quando `canonico`. A citação vai na regra-mestre/armadilha do resumo e do card — densidade clínica, como manda o `estilo-resumo`.
+- **Citação obrigatória** em toda afirmação decisória auditada: **fonte + ano** (`SBD 2024`, `ADA 2025`) e/ou **PMID/DOI** quando `canonico`. **Onde ela vai (v1.4, s227, pedido do operador de 13/10/2026: "concentrá-los ao final, tal como um artigo"):** no **resumo e na aula**, um número `[N]` no fim da frase e o item N da seção **Referências** no fim do documento (forma em `.claude/commands/estilo-resumo.md` §Referências e `.claude/commands/aula-base.md` §6), sem linha "Fonte:" no meio do texto; no **card** (sem lista de referências), compacta na regra-mestre (`SBD 2024`). As Referências seguem a ordem do §2 (Tier 1 primeiro); a base interna (resumo do MedHub, verso de card, apostila do curso) não é referência e vai numa linha "Base deste documento" depois da lista.  <!-- NAO-VERIFICAVEL: onde a citacao vai e medido so no resumo (audit_resumos FONTE_INLINE); na aula e no card e autoria, sem gate (revisar: 2027-03-31) -->
+  ⚰️ *13/10/2026 (v1.4): era "A citação vai na regra-mestre/armadilha do resumo e do card — densidade clínica, como manda o `estilo-resumo`." Motivo: a fonte espalhada no meio do texto do resumo e da aula; o card não muda.*
 - **Honest-negative (invariante):** se a busca precisa (cap 2 tentativas) não sustenta a afirmação → `NÃO-VERIFICÁVEL`, declarado. **Jamais fabricar** uma confirmação, um PMID ou uma cifra.
 - **Substrato declarado:** um `CONFIRMADO` via `fallback` (WebSearch) **não** tem a mesma força que via `canonico` (PubMed PMID/DOI) — a diferença fica registrada.
 
@@ -164,7 +165,7 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 - **Varredura retroativa** dos 45 resumos existentes (auditoria em ondas) — candidata a uma v1.1 se o go-forward provar valor.
 - **Capacidade B do irmão:** detecção proativa de drift guideline×literatura, scoring de robustez, cobertura automática de SR/MA recentes.
 - **Pipeline programático em batch** (fetch/dedup/scoring) — só se a Capacidade A provar valor.
-- **Persistência claim-level em DB** (o irmão tem banco de claims; o MedHub registra a citação inline no resumo/card, sem tabela de claims). A Solução ganha `referencia` + `solucao_referencia` na v1.3 (§7.1): elas estruturam a FONTE da Solução, não o claim.
+- **Persistência claim-level em DB** (o irmão tem banco de claims; o MedHub registra a citação no próprio documento -- número + Referências no resumo/aula, compacta no card --, sem tabela de claims). A Solução ganha `referencia` + `solucao_referencia` na v1.3 (§7.1): elas estruturam a FONTE da Solução, não o claim.
 
 ---
 
@@ -188,6 +189,8 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 ---
 
 ## 14. Changelog
+
+**v1.4 — 2026-10-13 (s227, pedido do operador)** — **Referências no fim, como num artigo.** §7: no resumo e na aula a citação vira `[N]` + a seção Referências no fim (Tier 1 do §2 primeiro: sociedades BR, MS/PCDT); a base interna (resumo, card, apostila) sai da lista para a linha "Base deste documento"; o card segue com a citação compacta. ⚰️ Revogado (AGENTE §10.10, 3 passos no mesmo commit): "A citação vai na regra-mestre/armadilha do resumo e do card" -- lápide no §7; termo cadastrado no §12 do `docs/MEMORIA-AUDITORIA.md`. Portadores da forma: `estilo-resumo` §Referências, `aula-base` §6; sensor: `audit_resumos` WARN `FONTE_INLINE` (regra nova nasce WARN).
 
 **v1.3 — 2026-10-11 (Fase 0 Lote 2, part 2.2; ai-eng, ordem do operador de 11/10)** — **A fonte da Solução MedHub entra no contrato.** §1 ganha a Solução (`emed_solucoes.fontes`, ao cunhar ou alterar). §7.1, nova: a gramática do `fontes` e o parser único `db.fonte_estruturada` (o da part 2.1); prosa e nota de captura fora de `fontes`; o `tipo` derivado, com `terceiro` que marca e não recusa (M-002, M-068); a fonte que sai ou troca só com 2ª lente declarada (`troca_fonte`, lição da s222); `verificada_em` nulo como estado explícito. Quem cumpre é o writer `db.emed_upsert_solucoes`: recusa o delta (Solução nova ou `fontes` alterado) com o motivo no `--json`, e o estoque fica com o sensor da part 2.1. §11: a Solução ganha `referencia`; o claim-level segue fora. O brief da Solução (`docs/SOLUCAO-MEDHUB-BRIEF.md`) passa a portador varrido pelo gate `CONTRATO_REVOGADO`. Hierarquia de fontes, taxonomia de vereditos, §3, query Entrez e budget: **inalterados**.
 ⚰️ *Revogada nesta versão (AGENTE.md §10.10, 3 passos no mesmo commit): a instrução do brief de dizer a disputa "no `porque` da certa e em `fontes`" (regra do `divergente`). A disputa vai ao `porque` e ao `conferir`; `fontes` só leva referência. Lápide no brief; termo cadastrado no §12 do `docs/MEMORIA-AUDITORIA.md`.*

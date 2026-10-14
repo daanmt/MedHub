@@ -27,7 +27,19 @@
    Cor, tipo, espaco e raio: tokens do core/templates/tema.css (injetado no fim deste <style>). Regra de
    componente do hub mora AQUI e so aqui. Linhas com filete em vez de cartoes; moldura so para o que e
    objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
-.hub-topo{margin-bottom:var(--esp-3)}
+.hub-topo{margin-bottom:var(--esp-3);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-2) var(--esp-4)}
+/* s227 (part 6, pedido dele): a cor do marca-texto, a direita da marca. Tres amostras de 44 px (o texto sobre a
+   lavagem, como o grifo fica); a ativa ganha o contorno ciano e aria-pressed, nunca so a cor. Vale para todos os
+   grifos (questoes e leitor) e fica lembrada no aparelho */
+.hub-grifo-cor{display:flex;align-items:center;gap:var(--esp-1);min-width:0}
+.hub-grifo-rot{font-size:var(--fs-meta);color:var(--tinta3);margin-right:var(--esp-1)}
+.hub-grifo-cor button{min-width:44px;min-height:44px;padding:0;border:2px solid transparent;border-radius:var(--raio);display:inline-flex;align-items:center;justify-content:center;background:transparent}
+.hub-grifo-cor button:hover{background:transparent;border-color:var(--linha-forte)}
+.hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}
+.hub-grifo-am{padding:1px var(--esp-1);border-radius:var(--raio-p);font-size:var(--fs-legenda);font-weight:650;line-height:1.35;color:var(--tinta)}
+.hub-grifo-cor button[data-cor="rosa"] .hub-grifo-am{background:var(--grifo-rosa)}
+.hub-grifo-cor button[data-cor="ciano"] .hub-grifo-am{background:var(--grifo-ciano)}
+.hub-grifo-cor button[data-cor="amarelo"] .hub-grifo-am{background:var(--grifo-amarelo)}
 /* s227 (tema v4): o shell usa a coluna LARGA no desktop (as placas em grade); a medida de leitura (--wrap) fica nas
    telas de texto longo. Um so .wrap na pagina: esta regra so troca a largura do mesmo contêiner */
 .wrap{max-width:var(--largura)}
@@ -277,8 +289,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
    nao caixa aninhada); a cadeia e uma frase por elo + 4 botoes que o aluno declara; nada e inferido. */
 .qz-porque{grid-column:1 / -1;margin:0;padding:var(--esp-2) var(--esp-3) var(--esp-3) calc(2.25rem + var(--esp-2) + var(--esp-3));border-top:1px solid var(--linha);color:var(--tinta2);font-size:var(--fs-legenda);line-height:1.5;min-width:0}
 .qz-alt.tem-pq:not(.aberta) .qz-alt-txt::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
-/* s211 (part-4): marca-texto -- uma cor so, do token (amarelo com tinta escura nos dois temas); tocar no grifo o remove */
-.qz-grifo{background:var(--qz-grifo);color:var(--qz-grifo-tinta);border-radius:3px;cursor:pointer}
+/* s211 (part-4): marca-texto; tocar no grifo o remove. s227 (part 6, pedido dele): pinta so o FUNDO e o texto fica com
+   a cor dele; a cor e a ativa do seletor do topo (--qz-grifo, uma so para todos os grifos) */
+.qz-grifo{background:var(--qz-grifo);color:inherit;border-radius:3px;cursor:pointer}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
 .qz-cad{display:grid;gap:var(--esp-3);min-width:0}
 .qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2);margin:0;font-weight:700;color:var(--tinta)}
@@ -416,6 +429,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 
   <header class="hub-topo">
     <p class="hub-marca">Med<span>Hub</span></p>
+    <div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do grifo">
+      <span class="hub-grifo-rot" aria-hidden="true">Grifo</span>
+      <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+      <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+      <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+    </div>
   </header>
 
   <nav class="hub-abas" role="tablist" aria-label="Secoes do MedHub">
@@ -646,6 +665,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       oculto.textContent = "[data-backoffice]{display:none!important}html,body{background:transparent!important}";
       doc.head.appendChild(oculto);
     }
+    // s227 (part 7): as "Fonte:" do meio do texto viram Referencias no fim -- ANTES do fonteLigar (que liga o
+    // resumos/X.md dentro da lista), dos atalhos (a ancora do sobrescrito) e do grifoLigar (os blocos ja finais)
+    if(quadro.id === "hub-leitor-quadro"){ try{ refsMontar(doc); }catch(e){} }
     // s218: a linha "Fonte: resumos/X.md" das RDs vira link para o resumo publicado (antes dos atalhos)
     if(quadro.id === "hub-leitor-quadro"){ try{ fonteLigar(doc); }catch(e){} }
     // Atalhos do painel (s194): "Ir para os cards" troca de aba; "abrir aula" abre o leitor.
@@ -701,6 +723,183 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       a.setAttribute("href", r.href); a.setAttribute("data-hub-aula", r.slug); a.setAttribute("data-titulo", r.titulo);
       c.parentNode.insertBefore(a, c); a.appendChild(c);
     });
+  }
+
+  // ------------------------------------------------ Referencias no fim (s227, hub-tema-v4 part 7)
+  // Pedido dele: "nos resumos, favor remover todos os 'Fonte:...' espalhados pelo texto, e concentra-los ao final,
+  // tal como um artigo". So no leitor, antes do fonteLigar, dos atalhos e do grifoLigar; a fonte da aula nao muda.
+  // Move o bloco que comeca por "Fonte:" e a "Fonte:" que fecha um paragrafo, so se tiver cara de referencia
+  // (ehReferencia; "Fonte: arterial" do TCE e conteudo e fica). Base interna (ehBaseInterna) = "Base deste
+  // documento", sem numero; o resto = lista numerada com o sobrescrito no lugar. O bloco que sai deixa um marcador
+  // vazio do mesmo tipo: a contagem de blocos do grifo nao muda. Aula com section.refs usa a dela. Idempotente.
+  var REF_PREFIXO = /^\s*Fontes?\s*:\s*/;
+  var REF_FIM = /([.;!?)\]])(\s+)Fontes?\s*:/g;
+  var REF_SINAL = /\b(?:19|20)\d{2}\b|resumos\/|\.pdf\b|\.md\b|\bet al\b|\b(?:apostilas?|diretriz(?:es)?|guidelines?|protocolos?|manual|manuais|cadernos?|portarias?|fiocruz|estrat[eé]gia|minist[eé]rio)\b|\bverso d[eo]s? cards?\b|\bcards? \d/i;
+  var REF_SIGLA = /\b(?:PMID|DOI|PCDT|EMED|FEBRASGO|SB[A-Z]{1,4}|AHA|ACC|ESC|ADA|KDIGO|WHO|OMS|MS)\b/;
+  var REF_BASE = /^(?:resumos\/|verso d[eo]s? cards?\b|PDFs? (?:d[oe] )?(?:EMED|curso)\b|apostilas?\b|Estrat[eé]gia MED\b|flashcards?\b)/i;
+  var REF_EXT_SIGLA = /\b(?:PMID|DOI|PCDT|FEBRASGO|SB[A-Z]{1,4}|AHA|ACC|ESC|ADA|KDIGO|WHO|OMS|MS|NICE|CDC|IDSA|ACOG|USPSTF)\b/;
+  var REF_EXT_PALAVRA = /\b(?:diretriz(?:es)?|guidelines?|consenso|sociedade|minist[eé]rio|portarias?|protocolos?|cadernos?|manua(?:l|is)|et al)\b/i;
+  var REF_CANDIDATO = "p, li, small, div, span";
+  var REF_FORA = "section.hub-refs, section.refs, .hub-base, p.base, form.pend, script, style, svg, nav";
+  var REF_BLOCO = "p, li, ul, ol, div, table, blockquote, figure, details, section, pre, h1, h2, h3, h4, h5, h6";
+  // o texto depois de "Fonte:" tem cara de referencia? (ano, caminho de resumo/PDF, PMID/DOI, diretriz, sociedade,
+  // apostila, verso de card). O que nao casa e conteudo e FICA. PURA (o linter dos resumos replica a mesma regra)
+  function ehReferencia(texto){ var t = String(texto || ""); return REF_SINAL.test(t) || REF_SIGLA.test(t); }
+  // a base interna do MedHub (nao e referencia): comeca por resumo, verso de card, PDF do curso ou apostila, ou so
+  // cita arquivos .pdf/.md do curso sem nenhuma diretriz, sociedade ou PMID/DOI junto. PURA
+  function ehBaseInterna(texto){
+    var t = refChave(texto);
+    return REF_BASE.test(t) || (/\.(?:pdf|md)\b|resumos\//i.test(t) && !REF_EXT_SIGLA.test(t) && !REF_EXT_PALAVRA.test(t));
+  }
+  // o texto da fonte: sem o prefixo, so a 1a linha (no "> Fonte: Apostila ...(2024)" do resumo a linha de baixo e
+  // o olho do tema, nao a fonte), branco colapsado
+  function refChave(texto){ return String(texto || "").replace(REF_PREFIXO, "").split("\n")[0].replace(/\s+/g, " ").trim(); }
+  function refTirarPrefixo(no){
+    var nos = grifoTextos(no), m = REF_PREFIXO.exec(nos.map(function(t){ return t.data; }).join("")), falta = m ? m[0].length : 0;
+    nos.forEach(function(t){ var k = Math.min(falta, t.data.length); if(k > 0){ t.data = t.data.slice(k); falta -= k; } });
+    Array.prototype.slice.call(no.querySelectorAll("strong, b, em, i, span, small")).forEach(function(e){   // o <strong> do "Fonte:"
+      if(!/\S/.test(e.textContent || "") && !e.querySelector("img, svg, br") && e.parentNode){ e.parentNode.removeChild(e); } });
+    refPodarFim(no);
+  }
+  // so o FIM do bloco: o branco e os inline vazios que o corte deixou (o texto antes nao muda: offsets do grifo intactos)
+  function refPodarFim(no){
+    for(var u = no.lastChild; u; u = no.lastChild){
+      if(u.nodeType === 3 && !/\S/.test(u.data)){ no.removeChild(u); continue; }
+      if(u.nodeType === 1 && /^(STRONG|B|EM|I|SPAN|SMALL)$/.test(u.tagName) && !/\S/.test(u.textContent || "") && !u.querySelector("img, svg, br")){ no.removeChild(u); continue; }
+      break;
+    }
+    if(u && u.nodeType === 3){ u.data = u.data.replace(/\s+$/, ""); }
+  }
+  // o bloco onde o sobrescrito entra: o fim do ultimo texto visivel dentro de `el`; desce por bloco e por item de
+  // grade/flex (o sobrescrito nunca vira um item novo do layout), nunca para dentro de details, figura ou link
+  var REF_NAO_DESCE = /^(DETAILS|SUMMARY|IMG|BR|SUP|A|BUTTON|INPUT|TEXTAREA|SELECT|SVG|CODE|PRE)$/i;
+  function refFimDe(el){
+    var alvo = el, win = el.ownerDocument && el.ownerDocument.defaultView;
+    for(var u = alvo.lastElementChild; u; u = alvo.lastElementChild){
+      var depois = !!u.nextSibling && /\S/.test(u.nextSibling.textContent || "");
+      var bloco = /^(UL|OL|LI|DIV|P|BLOCKQUOTE|DL|DD|DT|FIGURE|FIGCAPTION|TABLE|TBODY|TR|TD|TH)$/.test(u.tagName);
+      var caixa = !!win && /flex|grid/.test(win.getComputedStyle(alvo).display);
+      if(depois || u.hidden || REF_NAO_DESCE.test(u.tagName) || !/\S/.test(u.textContent || "") || !(bloco || caixa)){ break; }
+      alvo = u;
+    }
+    return alvo;
+  }
+  function refAnterior(el){
+    if(el.closest("footer")){ return null; }   // a fonte do rodape e do documento inteiro: sem sobrescrito
+    for(var p = el.previousElementSibling; p; p = p.previousElementSibling){
+      if(!p.classList.contains("hub-ref-lugar") && !p.hidden && /\S/.test(p.textContent || "")){ return refFimDe(p); }
+    }
+    return null;
+  }
+  // os achados, em ordem de documento: {el, fim: false} = o elemento inteiro; {el, fim: true, ini} = do offset ate o fim
+  function refsAchar(doc){
+    var cands = Array.prototype.filter.call(doc.body.querySelectorAll(REF_CANDIDATO), function(el){
+      return !el.closest(REF_FORA) && el.getAttribute("aria-hidden") !== "true" && REF_PREFIXO.test(el.textContent || "") &&
+        ehReferencia(refChave(el.textContent));
+    });
+    // o mais interno que ainda tem a fonte inteira: <li><b>Fonte:</b> X</li> move o li; <div><p>Fonte: X</p>..</div> move o p
+    var inteiros = cands.filter(function(el){ return !cands.some(function(o){ return o !== el && el.contains(o); }); }).map(function(el){
+      while(/^(SPAN|SMALL)$/.test(el.tagName) && el.parentElement && /^(P|LI|DIV|SMALL|SPAN)$/.test(el.parentElement.tagName) &&
+            !el.parentElement.closest(REF_FORA) && el.parentElement.textContent.trim() === el.textContent.trim()){ el = el.parentElement; }
+      return el;
+    });
+    // a fonte e a 1a linha: o que vem depois de uma quebra (o olho do tema no "> Fonte:" do resumo) fica no bloco
+    var out = inteiros.map(function(el){
+      var t = el.textContent || "", pre = REF_PREFIXO.exec(t)[0].length, q = /\n\s*\S/.exec(t.slice(pre));
+      return q ? {el: el, fim: false, ate: pre + q.index} : {el: el, fim: false};
+    });
+    Array.prototype.forEach.call(doc.body.querySelectorAll("p, li, figcaption"), function(el){
+      if(el.closest(REF_FORA) || el.querySelector(REF_BLOCO) || inteiros.some(function(o){ return o === el || o.contains(el) || el.contains(o); })){ return; }
+      var t = el.textContent || "", m; REF_FIM.lastIndex = 0;
+      while((m = REF_FIM.exec(t))){
+        if(ehReferencia(t.slice(m.index + m[0].length))){ out.push({el: el, fim: true, ini: m.index + m[1].length}); break; }
+      }
+    });
+    out.sort(function(a, b){ return a.el === b.el ? 0 : (a.el.compareDocumentPosition(b.el) & 4 ? -1 : 1); });
+    return out;
+  }
+  function refSup(doc, n, id){
+    var s = doc.createElement("sup"), a = doc.createElement("a");
+    s.className = "hub-ref"; a.setAttribute("href", "#" + id); a.setAttribute("aria-label", "Referência " + n); a.textContent = String(n);
+    s.appendChild(a); return s;
+  }
+  function refsMontar(doc){
+    if(!doc || !doc.body || !doc.documentElement || doc.documentElement.hasAttribute("data-hub-refs")){ return null; }
+    doc.documentElement.setAttribute("data-hub-refs", "");
+    var achados = refsAchar(doc);
+    if(!achados.length){ return {referencias: 0, base: 0, movidas: 0}; }
+    var sec = doc.querySelector("section.refs"), nova = !sec, ol = sec ? sec.querySelector("ol") : null, base = null, lista = null;
+    var nums = {}, vistas = {}, n = ol ? ol.children.length : 0, stats = {referencias: 0, base: 0, movidas: achados.length};
+    if(ol){ Array.prototype.forEach.call(ol.children, function(li, i){ nums[refChave(li.textContent)] = {n: i + 1, id: li.id || ""}; }); }
+    if(nova){
+      sec = doc.createElement("section"); sec.className = "hub-refs"; sec.id = "hub-refs";
+      var h = doc.createElement("h2"); h.textContent = "Referências"; sec.appendChild(h);
+    } else { base = sec.querySelector("p.base") || doc.querySelector("p.base"); }
+    achados.forEach(function(a){
+      var frag = doc.createDocumentFragment(), el = a.el, lugar = null;
+      var parte = a.fim || a.ate !== undefined;
+      if(parte){   // um trecho do bloco (do ponto ate o fim; ou do comeco ate a quebra): o bloco fica, mais curto
+        var nos = grifoTextos(el), pos = 0, rg = doc.createRange(), corte = a.fim ? a.ini : a.ate, achou = false;
+        for(var i = 0; i < nos.length && !achou; i++){
+          if(pos + nos[i].data.length > corte){ if(a.fim){ rg.setStart(nos[i], corte - pos); } else { rg.setEnd(nos[i], corte - pos); } achou = true; }
+          else { pos += nos[i].data.length; } }
+        if(!achou){ return; }
+        if(a.fim){ rg.setEnd(el, el.childNodes.length); } else { rg.setStart(el, 0); }
+        frag.appendChild(rg.extractContents());
+        if(a.fim){ refPodarFim(el); }
+      } else {
+        while(el.firstChild){ frag.appendChild(el.firstChild); }
+        if(/^(P|LI|DIV)$/.test(el.tagName)){   // bloco: o marcador vazio do mesmo tipo guarda a contagem do grifo
+          lugar = doc.createElement(el.tagName.toLowerCase()); lugar.className = "hub-ref-lugar"; lugar.hidden = true; lugar.style.display = "none";
+          el.parentNode.replaceChild(lugar, el);
+        }
+      }
+      var caixa = doc.createElement("div"); caixa.appendChild(frag); refTirarPrefixo(caixa);
+      var chave = refChave(caixa.textContent), sup = null;
+      if(ehBaseInterna(chave)){
+        if(!vistas[chave]){
+          vistas[chave] = 1; stats.base++;
+          if(base){ base.appendChild(doc.createTextNode(" · ")); while(caixa.firstChild){ base.appendChild(caixa.firstChild); } }
+          else {
+            if(!lista){ var div = doc.createElement("div"), p = doc.createElement("p"); div.className = "hub-base"; p.textContent = "Base deste documento:";
+              lista = doc.createElement("ul"); div.appendChild(p); div.appendChild(lista); sec.appendChild(div); }
+            var lb = doc.createElement("li"); while(caixa.firstChild){ lb.appendChild(caixa.firstChild); } lista.appendChild(lb);
+          }
+        }
+      } else {
+        var r = nums[chave];
+        if(!r){
+          if(!ol){ ol = doc.createElement("ol"); var depois = sec.querySelector(".hub-base, p.base"); sec.insertBefore(ol, depois && depois.parentNode === sec ? depois : null); }
+          n++; r = nums[chave] = {n: n, id: "hub-ref-" + n}; stats.referencias++;
+          var li = doc.createElement("li"); li.id = r.id; while(caixa.firstChild){ li.appendChild(caixa.firstChild); } ol.appendChild(li);
+        }
+        sup = refSup(doc, r.n, r.id || ("hub-ref-" + r.n));
+      }
+      if(sup){
+        var alvo = a.fim ? refFimDe(el) : (parte ? refAnterior(el) : (lugar ? refAnterior(lugar) : null));
+        if(!parte && !lugar){ el.parentNode.replaceChild(sup, el); el = null; }   // inline (a legenda): no lugar dele
+        else if(alvo){ refPodarFim(alvo); alvo.appendChild(sup); }
+      }
+      if(el && !parte && !lugar && el.parentNode){ el.parentNode.removeChild(el); }   // inline da base: sai do texto
+      // o conteiner que ficou so com o marcador (o rodape antigo, o "> Fonte:" do resumo) some junto
+      for(var c = lugar ? lugar.parentElement : null; c && c !== doc.body && !c.matches(".wrap, main, article, section") &&
+          !/\S/.test(c.textContent || "") && !c.querySelector("img, svg, video, canvas, iframe, input, textarea, select, button, table, hr"); c = c.parentElement){
+        c.hidden = true; c.style.display = "none";
+      }
+    });
+    if(nova && sec.childElementCount > 1){
+      // no FIM do conteiner do ultimo bloco de texto (main, article ou .wrap; depois do rodape, como num artigo):
+      // os blocos novos vem depois de todos os de antes, e nenhum grifo salvo muda de indice
+      var blocos = grifoBlocos(doc), ultimo = blocos.length ? blocos[blocos.length - 1] : null, win = doc.defaultView;
+      var cont = (ultimo && ultimo.closest("main, article, .wrap")) || doc.querySelector("main, article, .wrap") || doc.body;
+      cont.appendChild(sec);
+      // a secao de cima ja fecha com um filete (.degrau, .sec): a de Referencias nao desenha um segundo
+      var ant = sec.previousElementSibling;
+      while(ant && (ant.hidden || (win && win.getComputedStyle(ant).display === "none"))){ ant = ant.previousElementSibling; }
+      var cs = ant && win ? win.getComputedStyle(ant) : null;
+      if(cs && parseFloat(cs.borderBottomWidth) > 0 && !parseFloat(cs.borderLeftWidth) && !parseFloat(cs.borderRightWidth)){ sec.classList.add("hub-refs-colada"); }
+    }
+    return stats;
   }
 
   function carregar(quadro, href, aviso){
@@ -1389,14 +1588,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(GRIFO.ctx !== ctx || (ctx.grifouEm && Date.now() - ctx.grifouEm < 500) || !(k >= 0 && k < ctx.grifos.length)){ return; }
     grifoMudar(ctx, ctx.grifos.filter(function(g, i){ return i !== k; }));
   }
+  // s227 (part 6): o estilo do grifo no documento aberto e ATUALIZADO quando a cor muda no topo (antes, injetado uma
+  // vez so). O fundo e a cor ativa do shell (valor computado de --qz-grifo); o texto fica com a cor dele (inherit)
   function grifoEstilo(doc){
-    if(!doc.head || doc.getElementById("hub-grifo-estilo")){ return; }
-    var cs = window.getComputedStyle(raiz), s = doc.createElement("style");
-    s.id = "hub-grifo-estilo";
-    s.textContent = "mark.hub-grifo{background:" + (cs.getPropertyValue("--qz-grifo").trim() || "Mark") + ";color:" +
-      (cs.getPropertyValue("--qz-grifo-tinta").trim() || "MarkText") + ";border-radius:3px;padding:0;cursor:pointer;" +
-      "-webkit-box-decoration-break:clone;box-decoration-break:clone}span.hub-grifo-caixa{display:inline}";
-    doc.head.appendChild(s);
+    if(!doc || !doc.head){ return; }
+    var s = doc.getElementById("hub-grifo-estilo");
+    if(!s){ s = doc.createElement("style"); s.id = "hub-grifo-estilo"; doc.head.appendChild(s); }
+    var cs = window.getComputedStyle(raiz), cor = raiz.getAttribute("data-grifo");
+    if(cor && doc.documentElement){ doc.documentElement.setAttribute("data-grifo", cor); }
+    s.textContent = "mark.hub-grifo{background:" + (cs.getPropertyValue("--qz-grifo").trim() || "Mark") + ";color:inherit;" +
+      "border-radius:3px;padding:0;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}" +
+      "span.hub-grifo-caixa{display:inline}";
   }
   // o banco ao abrir: reconcilia com o aparelho e repinta so se mudou
   function grifoLer(ctx){
@@ -1436,6 +1638,36 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }, true);
     grifoLer(ctx);
   }
+
+  // ------------------------------------------------ cor do grifo (s227, hub-tema-v4 part 6)
+  // Pedido dele: "Seria ate interessante se desse para ter as 3 cores [...] troca-las". Decidido por ele: UMA cor
+  // ativa (rosa por padrao) para todos os grifos, trocada no topo do hub e lembrada no aparelho
+  // (localStorage["medhub.grifo"]); sem armazenamento, rosa. O dado de cada grifo nao muda: a cor e so a
+  // apresentacao (data-grifo no <html> do shell; o tema.css troca o --qz-grifo). O leitor aberto troca na hora.
+  var GRIFO_CORES = ["rosa", "ciano", "amarelo"], GRIFO_COR_CHAVE = "medhub.grifo";
+  function grifoCorValida(c){ return GRIFO_CORES.indexOf(c) >= 0 ? c : "rosa"; }   // PURA
+  function grifoCorLer(){
+    try{ return grifoCorValida(localStorage.getItem(GRIFO_COR_CHAVE)); }catch(e){ return "rosa"; }
+  }
+  function grifoCorAplicar(cor, gravar){
+    cor = grifoCorValida(cor);
+    raiz.setAttribute("data-grifo", cor);
+    var caixa = $("hub-grifo-cor");
+    if(caixa){ Array.prototype.forEach.call(caixa.querySelectorAll("button[data-cor]"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-cor") === cor ? "true" : "false"); }); }
+    if(gravar){ try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){} }
+    // o documento aberto no leitor: so se o marca-texto ja estiver ligado nele (falha aqui nunca derruba o leitor)
+    try{ var q = $("hub-leitor-quadro"), d = q ? q.contentDocument : null;
+      if(d && d.getElementById("hub-grifo-estilo")){ grifoEstilo(d); } }catch(e){}
+    return cor;
+  }
+  (function(){
+    var caixa = $("hub-grifo-cor");
+    grifoCorAplicar(grifoCorLer(), false);
+    if(caixa){ caixa.addEventListener("click", function(e){
+      var b = (e.target && e.target.closest) ? e.target.closest("button[data-cor]") : null;
+      if(b){ grifoCorAplicar(b.getAttribute("data-cor"), true); } }); }
+  })();
 
   // ------------------------------------------------ secoes recolhiveis (s214, pedido do operador em 04/10/2026)
   // "Seria bacana poder recolher as semanas, deixando apenas a que eu quisesse (ate os proprios blocos,

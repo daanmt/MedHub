@@ -133,6 +133,26 @@ code{background:var(--sunk);border-radius:4px;font-size:.9em}
 footer{border-top:1px solid var(--line)}
 footer p{color:var(--ink3)}
 
+/* =========================================================== referencias no fim, como num artigo (s227, part 7)
+   As duas familias com a MESMA regra: a que o leitor monta das "Fonte:" antigas (sup.hub-ref, section.hub-refs,
+   .hub-base) e a que a aula nova traz (sup.ref, section.refs, p.base; aula-base.md secao 6). O sobrescrito e pequeno e
+   ciano (link); a secao abre com um filete, o titulo no peso das secoes e a lista em legenda lavanda; a base
+   interna (resumo, card, apostila) fica abaixo, em meta. Texto longo (caminho de resumo) quebra na caixa */
+sup.hub-ref,sup.ref{font-size:.7em;line-height:0;vertical-align:super;margin-left:1px}
+sup.hub-ref a,sup.ref a{color:var(--teal-ink);font-weight:650;text-decoration:none;padding:0 2px}
+sup.hub-ref a:hover,sup.ref a:hover{text-decoration:underline}
+section.hub-refs,section.refs{margin:var(--esp-6) 0 0;padding:var(--esp-5) 0 0;border:0;border-top:1px solid var(--line);min-width:0}
+section.hub-refs.hub-refs-colada{margin-top:0;border-top:0}   /* a secao de cima ja fecha com o filete dela (o leitor mede) */
+section.hub-refs h2,section.refs h2{font-size:var(--fs-secao);font-weight:650;margin:0 0 var(--esp-3);color:var(--ink)}
+section.hub-refs ol,section.refs ol{margin:0;padding-left:1.5em;font-size:var(--fs-legenda);line-height:1.5;color:var(--ink2)}
+section.hub-refs li,section.refs li,.hub-base li{margin:0 0 var(--esp-2);min-width:0;overflow-wrap:anywhere}
+.hub-base,p.base{margin:var(--esp-4) 0 0;font-size:var(--fs-meta);line-height:1.5;color:var(--ink3);overflow-wrap:anywhere}
+section.hub-refs h2 + .hub-base{margin-top:0}
+.hub-base p{margin:0 0 var(--esp-1);font-size:inherit;color:inherit}
+.hub-base ul{margin:0;padding-left:1.25em}
+.hub-base li{margin-bottom:var(--esp-1)}
+.hub-base code,section.hub-refs code,section.refs code,p.base code{font-size:inherit;overflow-wrap:anywhere}
+
 /* o termo-chave em negrito: ciano claro (pedido dele em 12/10/2026, apontando a tabela de exemplo). A lista repete os
    seletores com que as aulas pintam o negrito de branco (mesma especificidade; esta camada vem depois e vence) */
 strong,.prose li strong,.lede strong,.arm p strong,.crit .row .v b,.crit .v strong{color:var(--teal-ink)}

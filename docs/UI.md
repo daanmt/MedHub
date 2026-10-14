@@ -123,7 +123,13 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   primária (botão `.primario`), o rótulo "Próxima" do Painel e link. Nunca título nem rótulo.
 - **Rosa**: a marca e destaque pontual (`nova` na Biblioteca). Nunca estado.
 - **Roxo**: decoração e dado visual (gráfico de previsão, número do degrau das aulas) e os estados chute/desatenção.
-- **Amarelo**: marca-texto (grifo).
+- **Marca-texto (grifo), s227 (part-6, pedido dele: "poderia apenas manter a cor do texto e mudar o fundo dele"):** pinta
+  só o FUNDO (lavagem `--grifo-*` a 32%; 70% no amarelo do claro) e o texto mantém a cor (`color:inherit`). Uma cor
+  ativa vale para todos os grifos: **rosa (padrão), ciano ou amarelo**, escolhida no seletor "Grifo" do topo do hub
+  (3 botões de 44 px, `aria-pressed`) e lembrada no aparelho (`medhub.grifo`). O `data-grifo` no `<html>` troca o
+  `--qz-grifo`; o leitor aberto troca na hora. A cor nunca entra no dado do grifo (decisão dele: "uma cor ativa,
+  trocável").
+  ⚰️ *13/10/2026 (s227): era "**Amarelo**: marca-texto (grifo)", com o texto escuro sobre o amarelo cheio.*
 - **Verde / coral / âmbar**: sucesso, erro, aviso. Atraso é aviso (âmbar), não erro.
 - **Branco suave**: pergunta, resposta, títulos, conteúdo. **Lavanda**: secundário e metadado.
 - Estado nunca só por cor: gabarito `✓`, errada `✗`, chute `?`, resolvida `✓`, "abaixo do necessário" por extenso,
@@ -143,11 +149,11 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 | Botão | global (`player.html`) | secundário: contorno `--linha-forte`, fundo transparente; `.primario`: ciano com texto `--sobre`; `.fantasma`: tracejado; 44 px de altura |
 | Segmentado | Questões/Simulados (`.qz-modo`), certeza (`.qz-seg`), declaração (`.qz-decl`) | raio de controle; ligado = cor do estado + lavagem |
 | Abas | `.hub-aba` | texto; ativa em `tinta` com uma barra de 2 px que é o TRECHO do horizonte sob ela (`background-size:400%`, posição por `nth-child`; s226, pedido dele); o filete de baixo é o horizonte |
-| Dashboard | topo do Painel (`section.dash`, `data-bloco="dia"`; Ritmo e Por bloco com o `data-bloco` deles por dentro, `.dash-sec`) | s226: Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias, cada parte sob um filete; tiles = um número por tile (`.fracao b`), barra fina e rótulo curto `tinta3` (`.kpi-r`), sem caixa e **sem `p.nota`**; com sprint o único por-dia é o do sprint (`q_hoje` no tile, real 7 d contra a `capacidade_q` no Ritmo) e a meta aparece uma vez, como alvo da **barra de projeção** (`.proj-barra`: feito ciano · cumprindo o sprint lavagem ciano com contorno · fora do sprint `--linha` tracejado em `--tinta3`, 2 px de fundo entre trechos, `role=img` com os números no `aria-label`); **Por bloco** em linhas (`.bl`: nome · barra de acerto 0-100% · % · feitas/total), o de menor acerto em âmbar com o rótulo "mais fraco", Simulados na última linha com barra neutra; `title` em cada linha e trecho = dica ao passar o mouse; HTML/CSS puro (o painel não carrega lib) **v4 (s227, tema v4 part-2):** a `section.dash` é a GRADE de cinco `.placa` (Hoje · Ritmo · Até 01/11 · Por bloco · Revisões), uma coluna e, com o iframe a partir de 760 px, duas (Hoje | Ritmo, Até 01/11 em `1 / -1`, Por bloco | Revisões), vão `--esp-4`, o mesmo até as placas do Plano de hoje e da Documentação; sem filete entre seções. **Hoje** = dois anéis concêntricos em SVG inline (viewBox 120, traço 10, `pathLength=100`): externo `--acento` = questões / `q_hoje` (sem sprint, o alvo da meta), interno `--rosa` = cards / teto, trilho `--trilho`, 0% = só o trilho, centro = o dia; nenhum número soma as duas unidades (o '226' dos mockups ficou de fora); legenda com 'X de Y' + `kpi-r` + 'Ir para os cards', ao lado do anel a partir de 26rem (`@container`); o `b[data-vivo]` fica na legenda e o anel no valor publicado. **Ritmo** = barra `.rb` do real 7 d contra UMA marca (`--tinta`, '80/dia'; sem sprint, o necessário por dia), escala 1,25x o maior, âmbar abaixo / verde em dia; sem gauge. |
+| Dashboard | topo do Painel (`section.dash`, `data-bloco="dia"`; Ritmo e Por bloco com o `data-bloco` deles por dentro, `.dash-sec`) | s226: Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias, cada parte sob um filete; tiles = um número por tile (`.fracao b`), barra fina e rótulo curto `tinta3` (`.kpi-r`), sem caixa e **sem `p.nota`**; com sprint o único por-dia é o do sprint (`q_hoje` no tile, real 7 d contra a `capacidade_q` no Ritmo) e a meta aparece uma vez, como alvo da **barra de projeção** (`.proj-barra`: feito ciano · cumprindo o sprint lavagem ciano com contorno · fora do sprint `--linha` tracejado em `--tinta3`, 2 px de fundo entre trechos, `role=img` com os números no `aria-label`); **Por bloco** em linhas (`.bl`: nome · barra de acerto 0-100% · % · feitas/total), o de menor acerto em âmbar com o rótulo "mais fraco", Simulados na última linha com barra neutra; `title` em cada linha e trecho = dica ao passar o mouse; HTML/CSS puro (o painel não carrega lib) **v4 (s227, tema v4 part-2):** a `section.dash` é a GRADE de cinco `.placa` (Hoje · Ritmo · Até 01/11 · Por bloco · Revisões), uma coluna e, com o iframe a partir de 760 px, duas (Hoje | Ritmo, Até 01/11 em `1 / -1`, Por bloco | Revisões), vão `--esp-4`, o mesmo até as placas do Plano de hoje e da Documentação; sem filete entre seções. **Hoje** = dois anéis concêntricos em SVG inline (viewBox 120, traço 10, `pathLength=100`): externo `--acento` = questões / `q_hoje` (sem sprint, o alvo da meta), interno `--rosa` = cards / teto, trilho `--trilho`, 0% = só o trilho, centro = o dia; nenhum número soma as duas unidades (o '226' dos mockups ficou de fora); legenda com 'X de Y' + `kpi-r` + 'Ir para os cards', ao lado do anel a partir de 26rem (`@container`); o `b[data-vivo]` fica na legenda e o anel no valor publicado. **Ritmo** = barra `.rb` do real 7 d contra UMA marca (`--tinta`, '80/dia'; sem sprint, o necessário por dia), escala 1,25x o maior, âmbar abaixo / verde em dia; sem gauge. **v4.1 (s227, part-5, pedido dele: "o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam aparecer junto no topo, através desses anéis com percentual"):** o topo é UMA placa "Hoje, terça 13/10" com 4 anéis (`.an4`, % no centro, rótulo + valor + uma linha abaixo): Questões (`--acento`, contra o `q_hoje`), Cards (`--rosa`, contra o teto, com 'Ir para os cards'), Ritmo em 7 dias (`--aviso` abaixo / `--ok` em dia, sempre com o texto; `data-bloco="ritmo"` no anel; '23,5 em 14 dias · 78,4% de acerto'), Até 01/11 (`--roxo`: feito contra a meta + um 2º arco, roxo a 50%, até o que o sprint entrega; a meta 10.000 só aqui); 2 x 2 a 390, 4 em linha a partir de 600 px de iframe. Abaixo, Por bloco | **Flashcards da semana** (ex-'Revisões nos próximos 7 dias'), lado a lado a partir de 760 px, mesma altura. A barra de projeção e a barra do Ritmo saíram (`cronograma-contract` v1.8). |
 | Métricas | fim da lista (`.qz-tiles`), fim do lote (`.fim-grade`), Ritmo (`.fig`) | uma faixa entre dois filetes, número 700 + rótulo `tinta3`; sem uma caixa por número |
 | Aviso | `.hub-aviso`, `.aviso` (player) | filete âmbar de 3 px + lavagem âmbar; `.aviso.forte` (banco fora) com borda inteira |
 | Trilho | `.qz-trilho i` | 10 px visíveis, 26 px de toque; respondida = `--linha-forte`, atual = ciano, marcada para revisar = base âmbar (`flag`), vazia = `--afundado` |
-| Barra de progresso | painel (`.bl-barra`, `.rb`), player (`.barra`, `.dist-barra`) | 6-10 px, trilho `--trilho` (s227: o `--afundado` some sobre a placa, 1,1:1; o `--trilho` dá 1,4:1), preenchimento sólido ciano |
+| Barra de progresso | painel (`.bl-barra`; o `.rb` do Ritmo virou anel na s227), player (`.barra`, `.dist-barra`) | 6-10 px, trilho `--trilho` (s227: o `--afundado` some sobre a placa, 1,1:1; o `--trilho` dá 1,4:1), preenchimento sólido ciano |
 | Leitura resiliente | `assinarResiliente(consulta, onDados, opts)` no `hub.html`: listas, quadro da Teoria, questões/respostas/análises da lista aberta, notas do lote | `consulta(db)` monta a referência sobre o `db` recebido (1ª tentativa = `opts.db`; da 2ª em diante e no "Tentar de novo", conexão nova por `claude.use("db")`, avisada em `opts.aoReconectar` -- o `QZ.db`); erro = `console.warn("[hub] leitura <coleção> falhou", código, tentativa)` + nova assinatura em 1/2/4 s com "Carregando…"; esgotadas, a mensagem + botão `.primario` **Tentar de novo** (`htmlRetentar`); reabrir a aba com ela morta reassina; um estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela |
 | Secções do card | `.bloco` (regra-mestre), `.bloco.alerta` (armadilha) | filete à esquerda (neutro / âmbar), nunca caixa dentro do card |
 
@@ -155,7 +161,7 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
 
 - **Painel**: responde, nesta ordem, o que fazer hoje (Hoje), quanto avancei (Ritmo, Blocos) e o que vem depois.
   Desde a s226 (painel-dashboard-sprint part-1) Hoje + Ritmo + Até 01/11 + Por bloco + Revisões nos próximos 7 dias são
-  UM dashboard no topo (§5); o Plano de hoje vem logo abaixo, como a lista do que fazer.
+  UM dashboard no topo (§5); desde a s227 (part-5) ele é uma placa com 4 anéis + Por bloco | Flashcards da semana. O Plano de hoje vem logo abaixo, como a lista do que fazer.
   Com o sprint gravado (s226, `plano.agenda_sprint`, a fonte única do "hoje" do Painel, da aba Listas e do boot), o
   bloco das tarefas é **Plano de hoje** (título; o bloco do topo segue "Hoje") (as tarefas do dia, a que rolou de um dia passado sem rótulo de atraso, o total de
   questões, "+ N cards" que faltam da dose do dia e a RD não assinada mais antiga, a linha inteira abrindo o leitor;
@@ -203,7 +209,7 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | tela revelada sem cor literal; 44 px nos botões; `.qz-cadeia li` com `min-width:0` | `test_hub_render.py::test_forma_da_tela_revelada` |
 | contraste do tema nos dois blocos (texto >= 4,5 nas 3 superfícies, `tinta` >= 7, controle >= 3, borda da placa >= 1,6, `--sobre` >= 4,5); `.placa` com uma regra só, sem sombra nem brilho, sem `max-width` no `tema.css` | `test_tema_contraste.py` (s227) |
 | shell v4: luz no `body`, `.hub-quadro` e documento do quadro transparentes, coluna larga, um `.wrap` | `test_hub.py::test_tema_v4_luz_no_shell_e_quadros_transparentes` (s227) |
-| Painel v4: cada parte do dashboard é uma placa + a grade; Hoje com dois anéis sem soma; Ritmo com a marca do sprint | `test_painel.py::test_dashboard_em_placas_e_a_grade`, `test_hoje_dois_aneis_sem_soma`, `test_ritmo_barra_com_marca_do_sprint` (s227) |
+| Painel v4.1: topo com 4 anéis (Questões, Cards, Ritmo contra o sprint, Até 01/11 com o 2º arco do sprint), Por bloco e Flashcards da semana em placas | `test_painel.py::test_topo_quatro_aneis`, `test_ate_01_11_anel_com_projecao_do_sprint`, `test_ritmo_anel_contra_o_sprint_com_a_cor_e_o_texto`, `test_flashcards_da_semana_renomeado`, `test_dashboard_em_placas_e_a_grade` (s227; os de dois anéis e da barra do Ritmo viraram ⚰️) |
 | questão, fim e leitor em placas; ids, botões, `data-*` e ordem da questão e do leitor congelados | `test_hub_render.py::test_questao_fim_e_leitor_em_placas`, `test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram` (s227) |
 | Teoria, Listas e Cards em placas, grade de 2 colunas no desktop, standalone do player com a placa | `test_hub_quadro.py::test_teoria_em_duas_placas_lado_a_lado_no_desktop`, `test_hub_render.py::test_listas_em_placas_e_a_grade_de_duas_colunas_no_desktop`, `test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa` (s227) |
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
@@ -238,6 +244,15 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 - **L5** negrito ciano com exceções por descendente: **resolvido** (mesma especificidade das aulas).
 - **L7** `h4.sub` e **L8** `.dtitle h3`: **resolvidos**.
 - **L4** callouts sem critério único: **resolvido na v4** (s227: `.key`, `div.note`, `.disc`, `.fonte`, `.star` viraram nota neutra; trap = âmbar, banca = roxo); resta o `.ext` da `dmg`.
+- **Referências no fim (s227, part-7, pedido dele: "remover todos os 'Fonte:...' espalhados pelo texto, e concentrá-los
+  ao final, tal como um artigo"):** no leitor, a "Fonte:" com cara de referência sai do texto (`ehReferencia`, pura; a
+  "Fonte:" clínica, como a do sangramento no TCE, fica). Referência externa vira lista numerada no fim
+  (`section.hub-refs`, título "Referências") com um sobrescrito ciano no lugar; base interna (`ehBaseInterna`: resumo do
+  MedHub, verso de card, PDF/apostila do curso) vai para "Base deste documento", sem número. O bloco que sai deixa um
+  marcador vazio (os grifos não mudam de índice). A aula nova traz `sup.ref`, `section.refs` e `p.base` (`aula-base`
+  §6), com a mesma regra no `tema-aula.css`; a aula na fonte não muda (migra na reforma com a /anima). Alcance medido
+  em 13/10: 116 "Fonte:" em 36 aulas e 8 resumos; nas aulas publicadas, quase tudo é base interna (a troca por diretriz
+  é o trabalho seguinte).
 - **v4 (s227, part 4):** no leitor, `--paper` = a cor da placa e `--card` = o elevado, para nenhuma caixa interna ter a cor da placa; `figure.fig-an` com fundo da placa e `--borda-placa`; `.trilho-box` sem moldura; `ol.esc` das RDs como lista. Conferido a 390 nos dois temas (RD com figura `rd-cir-1310`, ER `kawasaki`, EN `tb-360`). O `ui_harness.html` ganhou `?tema=light|dark` e `?doc=aulas/x.html` (o `ui_capturas.py` ainda não tem flag para eles).
 - **L6** h3/h4/h5 como rótulo dentro de `.vs .tgrp .blk .cmap .if3`: **pendente**.
 - **L9** outliers de paleta (autópsia: 18 tokens próprios; neuromusculares: `--acc*`): **pendente** (mapeamento no §8.3 do inventário).
@@ -246,9 +261,11 @@ L1-L15 (§14 de lá; medidos na camada ANTIGA, def2fdd) e o estado na camada v3:
 **Figura de mecanismo na aula (s226, painel-dashboard-sprint part-2, teste nas 5 RDs da UERJ 2022):** `figure.fig-an`
 no CSS da própria aula -- moldura `--card` + `--line2` (cabeçalho "Fig n · esquema" à esquerda e o título à direita),
 SVG inline com `viewBox` e `max-width:26rem` dentro da moldura, `role="img"` + `aria-label` com o que a figura diz,
-legenda curta + `Fonte:` = a fonte da seção. Cor só pelos apelidos das aulas (`--teal*`, `--amber*`, `--plum*`, `--ink*`,
+legenda curta + o número da referência (s227: sem "Fonte:" na legenda; as fontes vão para as Referências no fim, `aula-base` §6).
+Cor só pelos apelidos das aulas (`--teal*`, `--amber*`, `--plum*`, `--ink*`,
 `--line2`, `--sunk`, `--card`): herda o claro e o escuro do leitor. Nenhum fato que a seção não diga; dado ilustrativo
 declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esqueleto do `documentoCompleto` do leitor.
+⚰️ *13/10/2026 (s227): era "legenda curta + `Fonte:` = a fonte da seção". Motivo: pedido dele de concentrar as fontes no fim, como num artigo.*
 
 ## 10. Achados da varredura s225 (13/10/2026)
 

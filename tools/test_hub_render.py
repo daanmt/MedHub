@@ -1091,10 +1091,12 @@ SAIDA = {antes: antes, docs: docs, volta: volta, alts: qzAltsHtml(q, QZ.resp[q.n
 
 
 def test_grifo_uma_cor_de_token_e_limite_declarado():
-    """Uma cor so, por token proprio (`--qz-grifo`, ambar nos dois temas -- o tom fraco sumia no escuro, s211); sem barra flutuante, menu ou
-    seletor de cor; o limite (selecao por toque no celular nao testada) declarado no template e no brief."""
+    """Uma cor ATIVA por vez, por token (`--qz-grifo`; s227, part 6: rosa, ciano ou amarelo, escolhida no topo do hub,
+    nunca por grifo); pinta so o fundo, o texto fica com a cor dele (`color:inherit`); sem barra flutuante nem menu
+    na questao; o limite (selecao por toque no celular nao testada) declarado no template e no brief."""
     (regra,) = [l for l in TEMPLATE.splitlines() if l.startswith(".qz-grifo{")]
-    assert "background:var(--qz-grifo)" in regra and "color:var(--qz-grifo-tinta)" in regra and "#" not in regra
+    assert "background:var(--qz-grifo)" in regra and "color:inherit" in regra and "#" not in regra
+    assert "--qz-grifo-tinta" not in regra, "o grifo nao troca a cor do texto (pedido dele, s227)"
     assert TEMPLATE.count('class="qz-grifo"') == 1                        # um so tipo de grifo
     for proibido in ("qz-grifo-cor", "qz-grifo-menu", "qz-grifo-barra"):
         assert proibido not in TEMPLATE
@@ -1671,7 +1673,9 @@ def test_grifo_mora_em_analises_e_nao_toca_a_alca_nem_os_controles():
     salvar = extrair_funcao(TEMPLATE, "function grifoSalvar(slug, grifos){")
     assert salvar.index("grifoLocal(slug,") < salvar.index("grifoEnviar(slug)"), "aparelho ANTES do banco"
     estilo = extrair_funcao(TEMPLATE, "function grifoEstilo(doc){")
-    assert '"--qz-grifo"' in estilo and '"--qz-grifo-tinta"' in estilo, "a cor e o token das questoes"
+    assert '"--qz-grifo"' in estilo, "a cor e o token das questoes"
+    assert "color:inherit" in estilo and "--qz-grifo-tinta" not in estilo and "MarkText" not in estilo, \
+        "s227 (part 6): no leitor o grifo tambem pinta so o fundo"
 
 
 # ======================================================================== 6. s216: hub-integracao
@@ -2350,3 +2354,322 @@ def test_fila_de_outro_dia_avisa_e_segue_drenavel():
     assert corpo.count('id="aviso-fila"') == 1, "um aviso so, acima do 1o card"
     assert "aviso-fila" not in player[player.index("<!-- @player:js:inicio -->"):], \
         "o player nao le o aviso: a fila e a gravacao sao as de sempre (nota com o ts de hoje)"
+
+
+# ======================================================================== s227: hub-tema-v4 parts 6 e 7
+# Pedido dele sobre a Version 113 (13/10/2026): "o destaque nao fica mais em rosa ou ciano, mas no amarelo antigo.
+# Seria ate interessante se desse para ter as 3 cores [...] o destaque esta mudando a cor do texto e ele poderia
+# apenas manter a cor do texto e mudar o fundo dele [...] nos resumos, favor remover todos os 'Fonte:...' espalhados
+# pelo texto, e concentra-los ao final, tal como um artigo." Specs `.vibeflow/specs/hub-tema-v4-part-6.md` (UMA cor
+# ativa trocavel, rosa por padrao, decidido por ele) e `hub-tema-v4-part-7.md` (Referencias no leitor). A parte de
+# DOM real da part 7 (Range, querySelector, estilo computado) roda no Edge headless; sem Edge, PULADA (declarado).
+
+def _topo():
+    return TEMPLATE[TEMPLATE.index('<header class="hub-topo">'):TEMPLATE.index("</header>")]
+
+
+def test_seletor_da_cor_do_grifo_no_topo_com_tres_amostras_de_44px():
+    """Part 6 DoD 2: no topo (a direita da marca, antes das abas e fora da questao), um grupo "Cor do grifo" com tres
+    botoes (rosa, ciano, amarelo) de nome acessivel; a ativa por aria-pressed + contorno (nunca so a cor); 44 px; cor
+    so por token; grava no aparelho com try/catch; nada sticky/fixed."""
+    topo = _topo()
+    assert topo.index('class="hub-marca"') < topo.index('id="hub-grifo-cor"')
+    assert TEMPLATE.index("</header>") < TEMPLATE.index('<nav class="hub-abas"') < TEMPLATE.index('id="qz-player"')
+    grupo = re.search(r'<div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do grifo">(.*?)</div>', topo, re.S)
+    assert grupo, "o grupo com o nome acessivel"
+    botoes = re.findall(r'<button type="button" data-cor="(\w+)" aria-pressed="(true|false)" aria-label="(\w+)"', grupo.group(1))
+    assert botoes == [("rosa", "true", "Rosa"), ("ciano", "false", "Ciano"), ("amarelo", "false", "Amarelo")]
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    regras = [l for l in css.splitlines() if "hub-grifo" in l and "{" in l]
+    assert any(".hub-grifo-cor button{min-width:44px;min-height:44px;" in l for l in regras), "alvo de 44 px"
+    assert '.hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}' in css, "a ativa ganha o contorno"
+    for cor in ("rosa", "ciano", "amarelo"):
+        assert '.hub-grifo-cor button[data-cor="%s"] .hub-grifo-am{background:var(--grifo-%s)}' % (cor, cor) in css
+    for l in regras:
+        assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|sticky|fixed|nowrap", l), l
+    js = TEMPLATE[TEMPLATE.index("// ------------------------------------------------ cor do grifo"):]
+    js = js[:js.index("// ------------------------------------------------ secoes recolhiveis")]
+    assert 'GRIFO_COR_CHAVE = "medhub.grifo"' in js and "grifoCorAplicar(grifoCorLer(), false);" in js
+    assert "try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){}" in js
+
+
+COR_GRIFO_JS = r"""
+var LS = __LS__, LANCA = __LANCA__;
+var localStorage = {getItem: function(k){ if(LANCA){ throw new Error("bloqueado"); } return Object.prototype.hasOwnProperty.call(LS, k) ? LS[k] : null; },
+  setItem: function(k, v){ if(LANCA){ throw new Error("bloqueado"); } LS[k] = String(v); }};
+var attrs = {}, docAttrs = {};
+var raiz = {setAttribute: function(k, v){ attrs[k] = v; }, getAttribute: function(k){ return Object.prototype.hasOwnProperty.call(attrs, k) ? attrs[k] : null; }};
+function botao(c){ var a = {"data-cor": c, "aria-pressed": "?"}; return {a: a, getAttribute: function(k){ return a[k]; }, setAttribute: function(k, v){ a[k] = v; }}; }
+var BOTOES = ["rosa", "ciano", "amarelo"].map(botao), caixa = {querySelectorAll: function(){ return BOTOES; }};
+var VALOR = {rosa: "color-mix(in srgb,#FF4FA3 32%,transparent)", ciano: "color-mix(in srgb,#00D9E8 32%,transparent)",
+             amarelo: "color-mix(in srgb,#FFD447 32%,transparent)"};
+var window = {getComputedStyle: function(){ return {getPropertyValue: function(p){ return p === "--qz-grifo" ? " " + VALOR[attrs["data-grifo"] || "rosa"] : ""; }}; }};
+var estilo = __COM_ESTILO__ ? {id: "hub-grifo-estilo", textContent: "mark.hub-grifo{background:velho}"} : null;
+var docLeitor = {head: {appendChild: function(s){ estilo = s; }}, documentElement: {setAttribute: function(k, v){ docAttrs[k] = v; }},
+  getElementById: function(id){ return id === "hub-grifo-estilo" ? estilo : null; }, createElement: function(){ return {}; }};
+function $(id){ return id === "hub-grifo-cor" ? caixa : (id === "hub-leitor-quadro" ? {contentDocument: docLeitor} : null); }
+function foto(){ return {attr: attrs["data-grifo"], pressed: BOTOES.map(function(b){ return b.a["aria-pressed"]; }).join(","),
+  ls: LANCA ? null : (LS["medhub.grifo"] || null), estilo: estilo ? estilo.textContent : null, doc: docAttrs["data-grifo"] || null}; }
+var lida = grifoCorLer(); grifoCorAplicar(lida, false); var antes = foto();
+grifoCorAplicar("ciano", true); var depois = foto();
+console.log(JSON.stringify({lida: lida, antes: antes, depois: depois}));
+"""
+
+
+def _cor_grifo(ls=None, lanca=False, com_estilo=True):
+    prog = "\n".join([_var("GRIFO_CORES")] + [extrair_funcao(TEMPLATE, a) for a in (
+        "function grifoCorValida(c){", "function grifoCorLer(){", "function grifoCorAplicar(cor, gravar){", "function grifoEstilo(doc){")])
+    return _node(prog + COR_GRIFO_JS.replace("__LS__", json.dumps(ls or {})).replace("__LANCA__", json.dumps(lanca))
+                 .replace("__COM_ESTILO__", json.dumps(com_estilo)))
+
+
+def test_cor_do_grifo_padrao_rosa_o_aparelho_lembra_e_o_leitor_troca_na_hora():
+    """Part 6 DoD 2, 3 e 5: sem nada no aparelho (ou valor invalido, ou storage bloqueado) = rosa; o aparelho lembra a
+    escolha; a troca grava `data-grifo` no <html> do shell, marca o botao (aria-pressed) e REESCREVE o estilo do grifo
+    no documento aberto no leitor (fundo = valor computado da cor nova, texto `inherit`), sem reabrir a aula."""
+    vazio = _cor_grifo()
+    assert vazio["lida"] == "rosa" and vazio["antes"]["attr"] == "rosa" and vazio["antes"]["pressed"] == "true,false,false"
+    assert vazio["antes"]["ls"] is None, "abrir nao grava: so o toque grava"
+    assert vazio["depois"] == {"attr": "ciano", "pressed": "false,true,false", "ls": "ciano", "doc": "ciano",
+                               "estilo": vazio["depois"]["estilo"]}
+    est = vazio["depois"]["estilo"]
+    assert "mark.hub-grifo{background:color-mix(in srgb,#00D9E8 32%,transparent);color:inherit;" in est and "velho" not in est
+    assert _cor_grifo({"medhub.grifo": "amarelo"})["antes"]["attr"] == "amarelo", "o aparelho lembra"
+    assert _cor_grifo({"medhub.grifo": "verde"})["lida"] == "rosa", "valor fora das tres = rosa"
+    bloqueado = _cor_grifo(lanca=True)
+    assert bloqueado["lida"] == "rosa" and bloqueado["depois"]["attr"] == "ciano", "sem armazenamento: troca na tela, nao lembra"
+    sem = _cor_grifo(com_estilo=False)
+    assert sem["depois"]["estilo"] is None, "documento sem o grifo ligado nao ganha estilo pela troca"
+
+
+def test_cor_do_grifo_nao_entra_no_registro_dos_grifos():
+    """Part 6 DoD 4: a cor e so apresentacao -- nada de cor no que se grava (respostas `grifos`, analises/grifos)."""
+    for assinatura in ("function grifoSalvar(slug, grifos){", "function grifoEnviar(slug){", "function qzGrifosSalvar(q, g){",
+                       "function qzGrifoHtml(texto, intervalos){", "function grifoPintar(ctx){"):
+        corpo = extrair_funcao(TEMPLATE, assinatura)
+        assert not re.search(r"\bcor\b|data-grifo|GRIFO_COR|medhub\.grifo\b", corpo), assinatura
+
+
+# ------------------------------------------------------------------ part 7: Referencias no fim (leitor)
+REF_VARS = ("REF_PREFIXO", "REF_FIM", "REF_SINAL", "REF_SIGLA", "REF_BASE", "REF_EXT_SIGLA", "REF_EXT_PALAVRA",
+            "REF_CANDIDATO", "REF_FORA", "REF_BLOCO", "REF_NAO_DESCE", "GRIFO_BLOCO")
+REF_FUNCS = ("function grifoTextos(bloco){", "function grifoBlocos(doc){", "function grifoValido(g){",
+             "function grifoResolver(textos, g){", "function ehReferencia(texto){", "function ehBaseInterna(texto){",
+             "function refChave(texto){", "function refTirarPrefixo(no){", "function refPodarFim(no){",
+             "function refFimDe(el){", "function refAnterior(el){", "function refsAchar(doc){",
+             "function refSup(doc, n, id){", "function refsMontar(doc){")
+
+
+def _refs_js():
+    return "\n".join(_var(v) for v in REF_VARS) + "\n" + "\n".join(extrair_funcao(TEMPLATE, a) for a in REF_FUNCS)
+
+
+def test_eh_referencia_separa_fonte_bibliografica_de_conteudo_clinico():
+    """Part 7 (correcao do principal): "Fonte:" tambem e CONTEUDO -- a fonte do sangramento no TCE fica. So move o que
+    tem cara de referencia; a base interna (resumo, verso de card, apostila, PDF do curso) vai para a linha da base."""
+    casos = {
+        "arterial em cerca de 85% dos casos -- classicamente a artéria meníngea média, lesada por fratura do osso "
+        "temporal (a escama temporal é a região mais fina da calota).": [False, False],
+        "venosa -- ruptura das veias-ponte que atravessam o espaço subdural.": [False, False],
+        "Apostila Estratégia MED -- Prof. Alexandre Melitto (2024)": [True, True],
+        "resumos/Cirurgia/30. Complicações Pós-Operatórias.pdf (febre pós-operatória; íleo)": [True, True],
+        "verso dos cards 1778 e 1779 + PDF EMED resumos/Cirurgia/19. Vesícula.pdf": [True, True],
+        "verso do card (sem resumo local)": [True, True],
+        "R1 Cirurgia/3. Doenças da Coluna Vertebral.pdf (Cir/3) e Cirurgia/Coluna.md": [True, True],
+        "MS/Fiocruz-IFF, Portal de Boas Práticas (2023, selo MS) + FEBRASGO Protocolo nº 8 (2018).": [True, False],
+        "PMID 42366997, DOI 10.1161/CIR.0000000000001455.": [True, False],
+        "SBC. Diretriz Brasileira de Insuficiência Cardíaca, 2023": [True, False],
+        "carne vermelha, feijão e folhas verdes": [False, False],
+    }
+    prog = _refs_js() + "\nvar C = %s, o = {}; Object.keys(C).forEach(function(k){ o[k] = [ehReferencia(k), ehBaseInterna(k)]; });" \
+        "console.log(JSON.stringify(o));" % json.dumps(casos, ensure_ascii=False)
+    assert _node(prog) == casos
+    # a regra e uma funcao pura com nome (o linter dos resumos replica): nada de DOM dentro dela
+    for a in ("function ehReferencia(texto){", "function ehBaseInterna(texto){"):
+        assert "doc" not in extrair_funcao(TEMPLATE, a)
+
+
+def test_preparar_monta_as_referencias_antes_da_fonte_dos_atalhos_e_do_grifo_sem_poder_derrubar():
+    """Part 7 DoD 1 e 3: so no quadro do leitor, ANTES do fonteLigar (que liga o resumos/X.md dentro da lista), do
+    laco das ancoras (o sobrescrito rola ate a referencia) e do grifoLigar; num try/catch, como o fonteLigar."""
+    corpo = extrair_funcao(TEMPLATE, "function preparar(quadro){")
+    liga = 'if(quadro.id === "hub-leitor-quadro"){ try{ refsMontar(doc); }catch(e){} }'
+    assert corpo.count("refsMontar(") == 1 and liga in corpo
+    assert corpo.index(liga) < corpo.index("fonteLigar(doc)") < corpo.index('querySelectorAll("a[href]")') < corpo.index("grifoLigar(doc")
+
+
+def test_tema_aula_estiliza_as_duas_familias_de_referencias_com_a_mesma_regra():
+    """Part 7 DoD 5 + complemento do principal: sobrescrito pequeno em ciano de link; secao com filete em cima, titulo
+    no peso das secoes, lista em legenda lavanda; a base em meta; a familia do leitor (.hub-ref, section.hub-refs,
+    .hub-base) e a da aula nova (sup.ref, section.refs, p.base) no MESMO seletor; cor so por token."""
+    aula = (ROOT / "core" / "templates" / "tema-aula.css").read_text(encoding="utf-8")
+    assert re.search(r"\nsup\.hub-ref,sup\.ref\{font-size:\.7em;[^}]*vertical-align:super", aula)
+    assert "sup.hub-ref a,sup.ref a{color:var(--teal-ink);" in aula
+    assert re.search(r"\nsection\.hub-refs,section\.refs\{[^}]*border-top:1px solid var\(--line\)", aula)
+    assert re.search(r"\nsection\.hub-refs ol,section\.refs ol\{[^}]*font-size:var\(--fs-legenda\)[^}]*color:var\(--ink2\)", aula)
+    assert re.search(r"\n\.hub-base,p\.base\{[^}]*font-size:var\(--fs-meta\)[^}]*color:var\(--ink3\)", aula)
+    assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|sticky|fixed|nowrap", aula)
+
+
+def _edge_rodar(js_do_teste, nome):
+    """Roda `js_do_teste` (que preenche SAIDA e chama fim()) numa pagina local no Edge headless e devolve SAIDA."""
+    from tools import ui_capturas as uc
+    edge = uc.achar_edge()
+    if not edge:
+        pytest.skip("Edge ausente: a transformacao das Referencias no DOM real nao foi verificada (skip declarado)")
+    pasta = Path(tempfile.mkdtemp(prefix="medhub_refs_"))
+    pagina = pasta / ("%s.html" % nome)
+    pagina.write_text("""<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><pre id="saida"></pre><script>
+var SAIDA = {};
+function fim(){ document.getElementById("saida").textContent = JSON.stringify(SAIDA).replace(/[\\u007f-\\uffff]/g,
+  function(c){ return "\\\\u" + ("000" + c.charCodeAt(0).toString(16)).slice(-4); }); }
+function carregar(html){ return new Promise(function(ok){ var f = document.createElement("iframe"); f.style.width = "390px";
+  f.srcdoc = html; f.onload = function(){ ok(f.contentDocument); }; document.body.appendChild(f); }); }   // srcdoc ANTES de entrar: o 1o load e o dele
+function txt(el){ return el ? el.textContent.replace(/\\s+/g, " ").trim() : null; }
+function fontesFora(d){ var out = [], w = d.createTreeWalker(d.body, 4), t;
+  while((t = w.nextNode())){ if(/Fontes?\\s*:/.test(t.data) && !t.parentElement.closest("section.hub-refs, section.refs, p.base")){
+    out.push(txt(t.parentElement.closest("p, li, div, figcaption, blockquote, td") || t.parentElement)); } }
+  return out; }
+%s
+%s
+</script></body></html>""" % (_refs_js(), js_do_teste), encoding="utf-8")
+    perfil = tempfile.mkdtemp(prefix="medhub_edge_")
+    try:
+        r = subprocess.run([edge, "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
+                            "--disable-extensions", "--user-data-dir=%s" % perfil, "--virtual-time-budget=8000",
+                            "--dump-dom", pagina.as_uri()], capture_output=True, timeout=120)
+    finally:
+        shutil.rmtree(perfil, ignore_errors=True)
+        shutil.rmtree(pasta, ignore_errors=True)
+    m = re.search(r'<pre id="saida">(.*?)</pre>', r.stdout.decode("utf-8", "replace"), re.S)
+    assert m and m.group(1).strip(), "a pagina de teste nao terminou: %s" % r.stderr.decode("utf-8", "replace")[-400:]
+    import html as _html
+    return json.loads(_html.unescape(m.group(1)))
+
+
+DOC_REFS = """<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><style>.esc li{display:grid;grid-template-columns:auto 1fr}</style></head><body><div class="wrap">
+<section class="sec"><h2>Um</h2>
+  <p id="a">A principal fonte de ferro na dieta é a carne. Fonte de calor alta.</p>
+  <ol class="esc"><li id="passo"><span class="n">1</span><span>Passo um da escada.</span></li></ol>
+  <div class="trap" id="trap">Armadilha um.</div>
+  <p class="src">Fonte: resumos/Cirurgia/30. Complicações Pós-Operatórias.pdf (febre)</p>
+</section>
+<section class="sec"><h2>Dois</h2>
+  <figure class="fig-an"><svg viewBox="0 0 10 10" role="img" aria-label="x"></svg>
+    <figcaption id="cap">Legenda da figura, ainda na faixa.<span class="fa-src">Fonte: SBC. Diretriz de IC 2023</span></figcaption></figure>
+  <p id="b">Depois da figura vem o texto grifado aqui.</p>
+  <p class="src">Fonte: SBC. Diretriz de IC 2023</p>
+  <ul><li id="tce"><strong>Fonte:</strong> arterial em cerca de 85% dos casos -- a artéria meníngea média.</li></ul>
+  <ul><li id="trail">Armadilha de IC no gabarito clássico. Fonte: PMID 42366997, DOI 10.1161/CIR.1.</li></ul>
+  <ol class="esc"><li id="passo2"><span class="n">2</span><span>Passo dois da escada.</span></li></ol>
+  <p class="src">Fonte: Ministério da Saúde. PCDT de Hepatites Virais, 2022</p>
+  <blockquote><p id="olho">Fonte: Apostila Estratégia MED -- Prof. X (2024)
+Câncer mais frequente nas mulheres</p></blockquote>
+</section>
+<footer><p><strong>Fonte:</strong> <code>resumos/Pediatria/34. Kawasaki.pdf</code> (EMED)</p></footer>
+</div></body></html>"""
+
+DOC_SEM_FONTE = """<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><div class="wrap">
+<p>A principal fonte de ferro: carne vermelha.</p><p>Fonte de calor alta.</p><ul><li>Fonte: arterial, 85%.</li></ul></div></body></html>"""
+
+DOC_REFS_NOVA = """<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><div class="wrap">
+<p id="x">Texto novo.<sup class="ref"><a href="#ref-1">1</a></sup></p>
+<p id="y">Outro texto.</p><p class="src">Fonte: KDIGO 2021</p><p class="src">Fonte: verso do card 12</p>
+<section class="refs" id="refs"><h2>Referências</h2><ol><li id="ref-1">AHA 2020</li></ol><p class="base">Base deste documento: resumos/X.md</p></section>
+</div></body></html>"""
+
+JS_REFS = """
+var GRIFOS = [["b", "texto grifado"], ["cap", "ainda na faixa"], ["trail", "gabarito clássico"], ["olho", "mais frequente"],
+              ["passo2", "Passo dois"], ["tce", "arterial"]];
+(async function(){
+  try{
+    var d = await carregar(%s), b1 = grifoBlocos(d), t1 = b1.map(function(b){ return b.textContent; });
+    var gs = GRIFOS.map(function(p){ var i = b1.indexOf(d.getElementById(p[0])), ini = t1[i].indexOf(p[1]);
+      return {b: i, ini: ini, fim: ini + p[1].length, txt: p[1], id: p[0]}; });   // o grifo salvo ANTES (s214)
+    SAIDA.stats = refsMontar(d);
+    var b2 = grifoBlocos(d), t2 = b2.map(function(b){ return b.textContent; });
+    SAIDA.grifos = gs.map(function(g){ var r = grifoResolver(t2, g); return {id: g.id, mesmo_bloco: !!r && r.b === g.b,
+      mesmo_offset: !!r && r.ini === g.ini, el: r && b2[r.b].id}; });
+    SAIDA.blocos = {antes: b1.length, prefixo_igual: b1.every(function(b, i){ return b2[i] === b || b2[i].classList.contains("hub-ref-lugar"); })};
+    SAIDA.fora = fontesFora(d);
+    SAIDA.txt = {a: txt(d.getElementById("a")), cap: txt(d.getElementById("cap")), b: txt(d.getElementById("b")), trap: txt(d.getElementById("trap")),
+      trail: txt(d.getElementById("trail")), tce: txt(d.getElementById("tce")), passo2: txt(d.getElementById("passo2")), olho: txt(d.getElementById("olho"))};
+    SAIDA.sups = Array.prototype.map.call(d.querySelectorAll("sup.hub-ref a"), function(a){ return [a.getAttribute("href"), a.textContent, (a.closest("[id]") || {}).id]; });
+    SAIDA.sup_no_texto_do_passo = !!d.querySelector("#passo2 > span:last-child > sup.hub-ref");
+    SAIDA.refs = Array.prototype.map.call(d.querySelectorAll("section.hub-refs ol > li"), function(li){ return [li.id, txt(li)]; });
+    SAIDA.base = Array.prototype.map.call(d.querySelectorAll("section.hub-refs .hub-base li"), function(li){ return txt(li); });
+    var sec = d.querySelectorAll("section.hub-refs");
+    SAIDA.sec = {n: sec.length, h2: txt(sec[0] && sec[0].querySelector("h2")), base_tit: txt(sec[0] && sec[0].querySelector(".hub-base > p")),
+      pai: sec[0] && sec[0].parentNode.className, ultima: !!sec[0] && sec[0].parentNode.lastElementChild === sec[0],
+      depois_do_rodape: !!sec[0] && sec[0].previousElementSibling.tagName === "FOOTER"};
+    SAIDA.ocultos = {rodape: d.querySelector("footer").hidden, olho_visivel: !d.getElementById("olho").closest("[hidden]"),
+      lugares: d.querySelectorAll(".hub-ref-lugar").length, lugares_escondidos: Array.prototype.every.call(d.querySelectorAll(".hub-ref-lugar"),
+      function(e){ return e.hidden && d.defaultView.getComputedStyle(e).display === "none" && !e.textContent; })};
+    var html1 = d.body.innerHTML; SAIDA.de_novo = refsMontar(d); SAIDA.idempotente = d.body.innerHTML === html1;
+    var d2 = await carregar(%s); refsMontar(d2); SAIDA.reabrir_igual = d2.body.innerHTML === html1;
+    var d3 = await carregar(%s), h3 = d3.body.innerHTML; SAIDA.sem = {stats: refsMontar(d3), igual: d3.body.innerHTML === h3, sec: !!d3.querySelector("section.hub-refs, .hub-base")};
+    var d4 = await carregar(%s); SAIDA.nova = {stats: refsMontar(d4), hub: d4.querySelectorAll("section.hub-refs").length,
+      refs: Array.prototype.map.call(d4.querySelectorAll("section.refs ol > li"), function(li){ return [li.id, txt(li)]; }),
+      sup: Array.prototype.map.call(d4.querySelectorAll("#y sup a"), function(a){ return [a.getAttribute("href"), a.textContent]; }),
+      base: txt(d4.querySelector("p.base")), fora: fontesFora(d4)};
+  }catch(e){ SAIDA.erro = String(e && e.stack || e); }
+  fim();
+})();
+""" % (json.dumps(DOC_REFS), json.dumps(DOC_REFS), json.dumps(DOC_SEM_FONTE), json.dumps(DOC_REFS_NOVA))
+
+
+@pytest.fixture(scope="module")
+def refs_saida():
+    return _edge_rodar(JS_REFS, "refs")
+
+
+def test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim(refs_saida):
+    """Part 7 DoD 1, 2 e 6: p.src, span.fa-src na legenda, a "Fonte:" que fecha o item e o rodape saem do texto; o que
+    so CITA a palavra (ou e conteudo: o TCE) fica; a base interna vai para "Base deste documento" sem numero; as
+    referencias de verdade viram a lista numerada na ordem de aparicao, a repetida com o MESMO numero; o sobrescrito na
+    legenda, no fim do bloco anterior (dentro do item da grade, nunca um item novo) e no proprio item; a secao no fim
+    do conteiner do ultimo texto (depois do rodape, como num artigo)."""
+    s = refs_saida
+    assert "erro" not in s, s.get("erro")
+    assert s["fora"] == ["Fonte: arterial em cerca de 85% dos casos -- a artéria meníngea média."], "so o TCE fica"
+    assert s["stats"] == {"referencias": 3, "base": 3, "movidas": 7}
+    assert s["refs"] == [["hub-ref-1", "SBC. Diretriz de IC 2023"], ["hub-ref-2", "PMID 42366997, DOI 10.1161/CIR.1."],
+                         ["hub-ref-3", "Ministério da Saúde. PCDT de Hepatites Virais, 2022"]]
+    assert s["base"] == ["resumos/Cirurgia/30. Complicações Pós-Operatórias.pdf (febre)", "Apostila Estratégia MED -- Prof. X (2024)",
+                         "resumos/Pediatria/34. Kawasaki.pdf (EMED)"]
+    assert s["sups"] == [["#hub-ref-1", "1", "cap"], ["#hub-ref-1", "1", "b"], ["#hub-ref-2", "2", "trail"], ["#hub-ref-3", "3", "passo2"]]
+    assert s["sup_no_texto_do_passo"] is True, "na linha em grade o sobrescrito entra no texto, nunca vira um item novo"
+    assert s["txt"]["a"] == "A principal fonte de ferro na dieta é a carne. Fonte de calor alta.", "citar a palavra nao move"
+    assert s["txt"]["cap"] == "Legenda da figura, ainda na faixa.1" and s["txt"]["b"] == "Depois da figura vem o texto grifado aqui.1"
+    assert s["txt"]["trail"] == "Armadilha de IC no gabarito clássico.2"
+    assert s["txt"]["trap"] == "Armadilha um.", "fonte interna nao deixa numero"
+    assert s["txt"]["passo2"] == "2Passo dois da escada.3"
+    assert s["txt"]["olho"] == "Câncer mais frequente nas mulheres", "no '> Fonte:' do resumo so a 1a linha e a fonte"
+    assert s["sec"] == {"n": 1, "h2": "Referências", "base_tit": "Base deste documento:", "pai": "wrap", "ultima": True,
+                        "depois_do_rodape": True}
+    assert s["ocultos"] == {"rodape": True, "olho_visivel": True, "lugares": 4, "lugares_escondidos": True}
+
+
+def test_referencias_preservam_os_grifos_salvos_antes(refs_saida):
+    """Part 7 DoD 4: o bloco que sai deixa um marcador vazio do MESMO tipo e a secao entra depois de todo bloco de
+    antes -- os blocos de antes ficam no mesmo indice e o grifo salvo antes (inclusive DEPOIS de uma fonte movida)
+    re-ancora pelo proprio offset, no mesmo elemento."""
+    s = refs_saida
+    assert s["blocos"]["prefixo_igual"] is True
+    for g in s["grifos"]:
+        assert g["mesmo_bloco"] and g["el"] == g["id"], g
+        # o olho do resumo perde a 1a linha (a fonte) no COMECO: o trecho re-ancora pelo texto no mesmo bloco
+        assert g["mesmo_offset"] is (g["id"] != "olho"), g
+
+
+def test_referencias_idempotentes_sem_fonte_nada_e_aula_nova_usa_a_lista_dela(refs_saida):
+    """Part 7 DoD 3 + complemento do principal: rodar de novo nao duplica e reabrir da o mesmo documento; sem "Fonte:"
+    (ou so conteudo) nada muda e nenhuma secao nasce; documento com section.refs nao ganha uma segunda -- a fonte que
+    sobrou entra na lista dela (numero seguinte, a mesma ancora) e a base interna no p.base."""
+    s = refs_saida
+    assert s["de_novo"] is None and s["idempotente"] is True and s["reabrir_igual"] is True
+    assert s["sem"] == {"stats": {"referencias": 0, "base": 0, "movidas": 0}, "igual": True, "sec": False}
+    n = s["nova"]
+    assert n["hub"] == 0 and n["stats"] == {"referencias": 1, "base": 1, "movidas": 2}
+    assert n["refs"] == [["ref-1", "AHA 2020"], ["hub-ref-2", "KDIGO 2021"]] and n["sup"] == [["#hub-ref-2", "2"]]
+    assert n["base"] == "Base deste documento: resumos/X.md · verso do card 12" and n["fora"] == []

@@ -46,7 +46,11 @@
   --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,123,255,.24),transparent 70%),
         radial-gradient(56rem 22rem at 96% -8rem,rgba(150,77,255,.2),transparent 70%);
   --horizonte:linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8);   /* a linha sob as abas (marca) */
-  --qz-grifo:#FFD447; --qz-grifo-tinta:#0C0C12;   /* literal: o hub le o valor computado para o leitor */
+  /* marca-texto (s227, pedido dele): pinta so o FUNDO, o texto fica com a cor dele; tres cores, UMA ativa (data-grifo
+     no :root, escolhida no topo do hub; rosa por padrao). O hub le o valor computado para o leitor */
+  --grifo-rosa:color-mix(in srgb,var(--rosa) 32%,transparent); --grifo-ciano:color-mix(in srgb,var(--acento) 32%,transparent);
+  --grifo-amarelo:color-mix(in srgb,var(--amarelo) 32%,transparent);
+  --qz-grifo:var(--grifo-rosa); --qz-grifo-tinta:inherit;
   --sombra:none; color-scheme:dark;
   /* apelidos legados (hub e player): mesmo significado, nome antigo */
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
@@ -74,7 +78,9 @@
   --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,107,224,.07),transparent 70%),
         radial-gradient(56rem 22rem at 96% -8rem,rgba(106,63,224,.06),transparent 70%);
   --horizonte:linear-gradient(90deg,#C2176F,#7443B8 55%,#00737D);
-  --qz-grifo:#FFE066; --qz-grifo-tinta:#1A1626;
+  --grifo-rosa:color-mix(in srgb,var(--rosa) 26%,transparent); --grifo-ciano:color-mix(in srgb,var(--acento) 26%,transparent);
+  --grifo-amarelo:color-mix(in srgb,var(--amarelo) 70%,transparent);
+  --qz-grifo:var(--grifo-rosa); --qz-grifo-tinta:inherit;
   --sombra:none; color-scheme:light;
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
   --qz-ok:var(--ok); --qz-ok-fraco:var(--ok-fraco); --qz-duv:var(--aviso); --qz-duv-fraco:var(--aviso-fraco);
@@ -87,6 +93,9 @@
   --carmine:var(--erro); --carmine-ink:#962632; --carmine-wash:var(--erro-fraco);
   --on:var(--sobre);
 }
+/* a cor ativa do marca-texto: depois dos dois blocos de tema, mesma especificidade -- vence pela ordem */
+:root[data-grifo="ciano"]{--qz-grifo:var(--grifo-ciano)}
+:root[data-grifo="amarelo"]{--qz-grifo:var(--grifo-amarelo)}
 
 /* ======================================================== BASE (todas as telas, inclusive as aulas no leitor) */
 /* uma familia so (Atkinson: 0/O e 1/l distintos em dose e corte); !important porque as aulas declaram a fonte

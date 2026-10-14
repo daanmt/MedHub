@@ -90,3 +90,35 @@ def test_placa_e_primitiva_unica_sem_sombra_nem_brilho():
     assert "max-width" not in css, "o painel e o player contam max-width <= 2 na pagina pronta"
     for nome in ("--cromado", "--luz", "--borda-placa", "--largura", "--raio-placa"):
         assert nome + ":" in css, "%s ausente do tema" % nome
+
+
+def _mistura(cor, base, a):
+    c = [int(cor[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(base[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#%02X%02X%02X" % tuple(round(a * x + (1 - a) * y) for x, y in zip(c, b))
+
+
+@pytest.mark.parametrize("tema", ["escuro", "claro"])
+def test_marca_texto_mantem_o_texto_legivel_nas_tres_cores(tema):
+    """s227 (pedido dele): o grifo pinta so o FUNDO (lavagem da cor sobre a superficie) e o texto fica com a cor
+    dele. Nas tres cores (rosa, ciano, amarelo) e sobre as tres superficies, o texto principal segue >= 4,5:1."""
+    bloco = _blocos()[tema]
+    assert re.search(r"--qz-grifo-tinta:\s*inherit", bloco), "o grifo nao troca a cor do texto"
+    falhas = []
+    for nome in ("rosa", "ciano", "amarelo"):
+        m = re.search(r"--grifo-%s:color-mix\(in srgb,var\(--([\w-]+)\) (\d+)%%,transparent\)" % nome, bloco)
+        assert m, "--grifo-%s fora da forma color-mix(var(--cor) N%%, transparent)" % nome
+        cor, alfa = _hex(bloco, m.group(1)), int(m.group(2)) / 100
+        for s in SUPERFICIES:
+            c = contraste(_hex(bloco, "tinta"), _mistura(cor, _hex(bloco, s), alfa))
+            if c < 4.5:
+                falhas.append("%s sobre %s = %.2f" % (nome, s, c))
+    assert not falhas, "%s: %s" % (tema, "; ".join(falhas))
+
+
+def test_a_cor_ativa_do_grifo_troca_por_atributo():
+    css = TEMA.read_text(encoding="utf-8")
+    assert ':root[data-grifo="ciano"]{--qz-grifo:var(--grifo-ciano)}' in css
+    assert ':root[data-grifo="amarelo"]{--qz-grifo:var(--grifo-amarelo)}' in css
+    # depois dos dois blocos de tema (mesma especificidade: vence pela ordem)
+    assert css.index('data-grifo="ciano"') > css.index(':root[data-theme="light"]{')

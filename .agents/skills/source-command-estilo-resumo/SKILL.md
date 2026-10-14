@@ -17,7 +17,7 @@ Use this skill when the user asks to run the migrated source command `estilo-res
 
 > Este documento define o padrão de formatação para todos os resumos em `resumos/`.
 > Qualquer agente que criar ou editar resumos DEVE seguir estas regras.
-> **Conteúdo decisório** (conduta/dose/cutoff/critério controverso) segue, além da forma, a **governança de evidência** de `core/contracts/evidence-governance.md`: auditar contra a melhor fonte (sociedades BR > RCT/INT > consenso), citar fonte/ano, e registrar conflito banca × evidência como 🔴 armadilha banca-dependente.
+> **Conteúdo decisório** (conduta/dose/cutoff/critério controverso) segue, além da forma, a **governança de evidência** de `core/contracts/evidence-governance.md`: auditar contra a melhor fonte (sociedades BR > RCT/INT > consenso), citar pela seção **Referências** do fim (§Referências, s227), e registrar conflito banca × evidência como 🔴 armadilha banca-dependente.
 
 ---
 
@@ -48,11 +48,34 @@ Use this skill when the user asks to run the migrated source command `estilo-res
 - **Emojis em headers (H1/H2/H3)** -- proibido usar 🧭, 🕒, 🚨, 🟢, 🟡, 🔴, 🔵 ou qualquer emoji como prefixo de título de seção. Emojis são permitidos apenas inline no corpo do texto como marcadores (`⭐`, `⚠️`, `🔴`).
 - **`✅` e `❌` como marcadores de bullet** -- substituir por bullets `-` normais com negrito para destacar status (ex: `- **Conduta recomendada:**` / `- **Proscrito:**`).
 - **Campo `estilo:` no frontmatter** -- o frontmatter aceita apenas `area`, `tema`, `type`, `especialidade`, `status`, `aliases`. Campos como `estilo: Gold Standard` são não-padrão e devem ser removidos.
-- **Rodapés editoriais** -- proibido encerrar o arquivo com frases como `*Este resumo foi cristalizado a partir de...*` ou qualquer nota de origem/autoria. O arquivo termina na última armadilha de prova.
+- **Rodapés editoriais** -- proibido encerrar o arquivo com frases como `*Este resumo foi cristalizado a partir de...*` ou qualquer nota de origem/autoria. O arquivo termina na seção `## Referências`, logo depois das Armadilhas de Prova (§Referências).  <!-- NAO-VERIFICAVEL: o linter mede a Fonte fora das Referencias (FONTE_INLINE), nao que a secao seja a ultima do arquivo; resumo antigo sem a secao segue valido ate a migracao (revisar: 2027-03-31) -->
+  ⚰️ *13/10/2026 (s227): era "O arquivo termina na última armadilha de prova." Motivo: pedido dele de concentrar as fontes no fim, como num artigo.*
+- **Linha `Fonte:` no meio do texto** (`Fonte: ...`, `**Fonte:** ...`) -- a fonte vira um número `[N]` no fim da frase e o item N da seção `## Referências` (s227).
 - Headers de metadata no topo (fonte, autor, ano, versão)
 - **Linguagem Informal ou Coloquial** -- PROIBIDO o uso de termos como "Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
 - **Termos Não-Clínicos** -- Evitar metáforas dramáticas ou gírias (ex: "letal", "bizarra", "engarrafa"). Use terminologia acadêmica (ex: "potencialmente fatal", "atípica", "congestão retrógrada").
 - **Referências a questões de prova dentro do texto** -- nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo.
+
+---
+
+## Referências (como num artigo, s227)
+
+Pedido dele em 13/10/2026: *"remover todos os 'Fonte:...' espalhados pelo texto, e concentrá-los ao final, tal como um
+artigo. Preferir referências de guidelines/pcdt/ms/sociedades"*.
+
+- **No texto:** só o número entre colchetes, `[1]`, no fim da frase ou do bullet que a fonte sustenta. Nunca "Fonte:"  <!-- CHECK: test_fonte_de_referencia_no_meio_do_texto_e_pega -->
+  no meio, nunca nome de diretriz por extenso repetido a cada bullet.
+- **No fim:** `## Referências`, a última seção do arquivo (depois das Armadilhas de Prova), lista numerada na ordem de
+  aparição, sem repetir fonte: `1. SBC. Diretriz Brasileira de Hipertensão Arterial, 2020.` (sociedade ou órgão, título
+  curto, ano; PMID/DOI quando houver, como no `evidence-governance` §7).
+- **Ordem de preferência** (a hierarquia do `evidence-governance` §2): diretrizes de sociedades brasileiras e Ministério
+  da Saúde (PCDT, Cadernos de Atenção Básica, manuais, PNI) > guidelines internacionais e revisões sistemáticas >
+  livro-texto. A apostila do curso (EMED) é a **base de autoria** (AGENTE §6, retenção do PDF), não referência: se ela é
+  o único apoio de um fato, o item diz isso (`Apostila EMED, Cirurgia 30, 2024 -- sem diretriz localizada`), sem vestir
+  o fato de diretriz. Nada de diretriz citada de memória.
+- **Sem Referências ainda:** resumo antigo sem a seção segue válido; a migração das linhas "Fonte:" antigas é
+  incremental, junto com a reforma de estética dos resumos com a /anima (decisão dele: "isso será evoluído depois").
+  O `/auditar-resumos` acusa a linha "Fonte:" fora das Referências como WARN (`FONTE_INLINE`).
 
 ---
 

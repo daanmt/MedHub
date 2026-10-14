@@ -1056,7 +1056,10 @@ def _visivel(trecho):
 def test_dashboard_questoes_usa_o_q_hoje_do_sprint(db_sintetico, tmp_path, monkeypatch):
     """DoD 2: com sprint, o tile Questoes = feitas de `q_hoje` (o MESMO `plano.agenda_sprint` do Plano de
     hoje e do boot) e o Ritmo compara o real de 7 dias com a `capacidade_q` do sprint; "por dia ate a
-    prova" e o `alvo_marco` nao aparecem; nenhuma legenda em prosa (`p.nota`) no dashboard."""
+    prova" e o `alvo_marco` nao aparecem; nenhuma legenda em prosa (`p.nota`) no dashboard.
+    s227 (tema v4 part-5): o anel do Ritmo herdou o `data-bloco="ritmo"`; ⚰️ *o grafico de previsao se
+    chamava "Revisões nos próximos 7 dias" e a meta aparecia como o alvo da barra de projecao* -- agora
+    "Flashcards da semana" e a meta, uma vez, no valor do anel Ate 01/11."""
     import plano
     monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
     monkeypatch.setattr(plano, "ler_sprint", lambda caminho=None: {"capacidade_q": 80, "fim": "2026-10-31"})
@@ -1077,13 +1080,13 @@ def test_dashboard_questoes_usa_o_q_hoje_do_sprint(db_sintetico, tmp_path, monke
     assert 'class="nota"' not in dash
     for chave in ("ritmo", "blocos"):
         assert 'data-bloco="%s"' % chave in dash, "Ritmo e Por bloco moram dentro do dashboard"
-    assert "Revisões nos próximos 7 dias" in dash and 'class="ag-barras"' in dash
-    assert _visivel(dash).count("10.000") == 1, "a meta aparece UMA vez, como alvo da projecao"
+    assert "Flashcards da semana" in dash and 'class="ag-barras"' in dash
+    assert _visivel(dash).count("10.000") == 1, "a meta aparece UMA vez, no valor do anel Ate 01/11"
 
 
 def test_dashboard_sem_sprint_volta_a_meta(db_sintetico):
     """DoD 2 (sem sprint): o comportamento de antes -- Questoes contra o ritmo da meta, o Ritmo com o
-    por-dia ate a prova; sem barra de projecao; e ainda sem `p.nota` dentro do dashboard."""
+    por-dia ate a prova; sem o 2o arco do sprint; e ainda sem `p.nota` dentro do dashboard."""
     import math
     d = painel.coletar()
     assert d["sprint"] is None and d["dia"]["questoes"]["q_hoje"] is None
@@ -1091,34 +1094,57 @@ def test_dashboard_sem_sprint_volta_a_meta(db_sintetico):
     alvo = d["dia"]["questoes"]["alvo_dia"]
     assert "de ~%s" % painel._n(math.ceil(alvo)) in dash
     assert "por dia até a prova de 01/11" in dash and painel._n(d["ritmo"]["alvo_marco"], 1) in dash
-    assert "proj-barra" not in dash and 'class="nota"' not in dash
+    assert "proj-barra" not in dash and "an-sp" not in dash and 'class="nota"' not in dash
 
 
-def _ritmo_proj(fechando=9306):
-    return {"acumulado": 7817, "meta": 10000,
-            "sprint": {"q": 1489, "simulados_q": 297, "fechando_q": fechando, "fim": "2026-10-31",
-                       "fora": 37, "q_fora": 997, "capacidade_q": 80}}
+def _r_aneis(real_7d=35.4, capacidade=80, sprint=True, acumulado=7817, fechando=9306):
+    """O `ritmo` do coletar (o que os aneis Ritmo e Ate 01/11 leem), com os numeros de 13/10."""
+    sp = ({"q": 1489, "simulados_q": 297, "fechando_q": fechando, "fim": "2026-10-31", "fora": 37, "q_fora": 997,
+           "capacidade_q": capacidade} if sprint else None)
+    return {"real_7d": real_7d, "real_14d": 23.5, "alvo_marco": 114.9, "faltam": 10000 - acumulado,
+            "dias_marco": 19, "meta": 10000, "acerto": 78.4, "acumulado": acumulado, "sprint": sp}
 
 
-def test_barra_de_projecao_feito_sprint_meta():
-    """DoD 3: UMA barra -- feito -> cumprindo o sprint -> meta, com o fora do sprint como o trecho que
-    falta (neutro, nao erro); os 3 numeros a vista e no texto alternativo."""
-    html = painel._html_projecao(_ritmo_proj(), "2026-11-01")
-    assert "<h3>Até 01/11</h3>" in html
-    assert re.findall(r'<i class="(p-[a-z]+)" style="width:([\d.]+)%"', html) == [
-        ("p-feito", "78.2"), ("p-sprint", "14.9"), ("p-fora", "6.9")]
-    alt = re.search(r'role="img" aria-label="([^"]+)"', html).group(1)
-    for n in ("7.817", "9.306", "10.000", "997", "694"):
+#: um arco do anel: classe, o % no `stroke-dasharray` (`pathLength="100"`)
+RE_ARCO = (r'<circle class="an-arco (an-[a-z]+)" cx="60" cy="60" r="%d" pathLength="100" '
+           r'stroke-dasharray="(\d+) 100" transform="rotate\(-90 60 60\)"><title>' % painel.ANEL_R)
+
+
+def _centro(html_):
+    return re.search(r'<text class="an-pct"[^>]*>(\d+|--)', html_).group(1)
+
+
+def test_ate_01_11_anel_com_projecao_do_sprint():
+    """DoD 2 (s227, tema v4 part-5): o Ate 01/11 e um anel em `--roxo` -- o feito contra a meta, com um 2o arco
+    MAIS CLARO no mesmo anel, por baixo, ate onde o acumulado chega cumprindo o sprint; o % do feito no
+    centro; a meta 10.000 UMA vez, no valor; a linha "cumprindo o sprint: 9.306 · fora: 997 q"; os numeros
+    no texto alternativo. ⚰️ *Era `test_barra_de_projecao_feito_sprint_meta`: a placa "Até 01/11" com a barra
+    `.proj-barra` (feito | cumprindo o sprint | fora do sprint) -- saiu no pedido dele de 13/10 ("Esses 4
+    blocos deveriam aparecer junto no topo, através desses anéis com percentual").*"""
+    html_ = painel._html_ate(_r_aneis(), "2026-11-01")
+    assert "<h3>Até 01/11</h3>" in html_
+    assert re.findall(RE_ARCO, html_) == [("an-sp", "93"), ("an-meta", "78")], "o 2o arco por BAIXO do feito"
+    assert _centro(html_) == "78"
+    vis = _visivel(html_)
+    assert "7.817 de 10.000" in vis and vis.count("10.000") == 1
+    assert "cumprindo o sprint: 9.306 · fora: 997 q" in vis
+    alt = re.search(r'role="img" aria-label="([^"]+)"', html_).group(1)
+    for n in ("7.817", "10.000", "9.306", "997"):
         assert n in alt, n
-    vis = _visivel(html)
-    assert "7.817 feito" in vis and "9.306 cumprindo o sprint" in vis and "10.000 meta" in vis
-    assert "fora do sprint: 997" in vis and "faltam 694 para a meta" in vis
+    assert '<i class="sw-sp" aria-hidden="true"></i>' in html_, "a legenda do 2o arco"
     css = painel.CSS
-    assert ".p-fora{background:var(--linha);border:1px dashed var(--tinta3)}" in css, "fora = neutro"
+    assert ".an-arco.an-meta{stroke:var(--roxo)}" in css
+    assert ".an-arco.an-sp{stroke:var(--roxo);stroke-opacity:.5}" in css, "o mesmo roxo, mais claro"
     assert "horizonte" not in css, "o --horizonte nao vira cor de dado"
-    passa = painel._html_projecao(_ritmo_proj(fechando=10200), "2026-11-01")
-    assert "p-fora" not in passa.split("proj-leg")[0] and "o sprint chega à meta" in passa
-    assert painel._html_projecao({"acumulado": 1, "meta": 10000, "sprint": None}, "2026-11-01") == ""
+    for morto in (".proj-barra", ".p-fora", ".p-sprint", ".rb{", ".rb-"):
+        assert morto not in css, morto
+    # o sprint passa da meta: o 2o arco fecha o anel; o centro segue o feito
+    passa = painel._html_ate(_r_aneis(fechando=10200), "2026-11-01")
+    assert re.findall(RE_ARCO, passa) == [("an-sp", "100"), ("an-meta", "78")]
+    # sem sprint: so o feito e o que falta (o por-dia mora no Ritmo)
+    sem = painel._html_ate(_r_aneis(sprint=False), "2026-11-01")
+    assert re.findall(RE_ARCO, sem) == [("an-meta", "78")] and "sw-sp" not in sem
+    assert "faltam 2.183 em 19 dias" in _visivel(sem)
 
 
 def test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado():
@@ -1138,95 +1164,122 @@ def test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado():
     assert '<span class="bl-pct">--</span><span class="bl-t">31/117</span>' in html, "sem questao: sem acerto"
 
 
-# ------------------------------- s227 (hub-tema-v4 part-2): o Painel em placas, dois aneis, a barra do ritmo
+# ------------------------------- s227 (hub-tema-v4 part-5): o Painel compacto, quatro aneis no topo
 
-def _dia_aneis(feitas=30, q_hoje=76, consumo=50, teto=150):
+def _dia_aneis(feitas=31, q_hoje=76, consumo=52, teto=150):
     return {"questoes": {"feitas_hoje": feitas, "alvo_dia": 114.9, "meta": 10000, "faltam": 2183, "dias": 19,
                          "data_meta": "2026-11-01", "q_hoje": q_hoje},
             "cards": {"vencidos": 176, "novos": 733, "teto": teto, "consumo_hoje": consumo,
                       "restantes": None if consumo is None else max(0, teto - consumo),
-                      "retencao_7d": {"retencao": None}}, "sessao_gravada": ""}
+                      "retencao_7d": {"retencao": 0.891}}, "sessao_gravada": ""}
 
 
-def test_hoje_dois_aneis_sem_soma():
-    """DoD 3 (decisao dele, 13/10): o Hoje e UMA placa com dois aneis concentricos em SVG inline -- externo
-    ciano = questoes feitas / `q_hoje`, interno rosa = cards consumidos / teto, trilho `--afundado`,
-    `pathLength="100"` com o % no `stroke-dasharray`; o centro e o dia; 0% = so o trilho (sem ponto solto).
-    Os numeros moram na LEGENDA, com as ancoras do "Hoje ao vivo"; o `aria-label` diz os dois. Nenhum
-    numero soma as duas unidades (o "226" dos mockups = 76 + 150)."""
-    html_ = painel._html_dia(_dia_aneis(), "2026-10-13")
-    assert html_.startswith('<div class="placa dash-hoje">') and "<h2>Hoje, terça 13/10</h2>" in html_
-    svg = re.search(r'<svg class="aneis" viewBox="0 0 120 120" role="img" aria-label="([^"]+)">(.*?)</svg>',
-                    html_, re.S)
-    assert svg, html_
-    assert svg.group(1) == "Questões: 30 de 76. Cards: 50 de 150."
-    arcos = re.findall(r'<circle class="an-arco (an-[qc])" cx="60" cy="60" r="(\d+)" pathLength="100" '
-                       r'stroke-dasharray="(\d+) 100" transform="rotate\(-90 60 60\)"/>', svg.group(2))
-    assert arcos == [("an-q", str(painel.ANEL_Q), "39"), ("an-c", str(painel.ANEL_C), "33")], arcos
-    assert painel.ANEL_Q > painel.ANEL_C, "questoes por fora, cards por dentro"
-    assert svg.group(2).count('class="an-trilho"') == 2
-    assert re.search(r'<text class="an-d"[^>]*>ter</text><text class="an-n"[^>]*>13</text>', svg.group(2))
-    # a legenda: os dois numeros, cada um contra a propria meta, com a ancora do ao vivo
-    assert '<b data-vivo="questoes" data-base="30">30</b> de 76</p>' in html_
-    assert '<b data-vivo="cards" data-base="50">50</b> de 150</p>' in html_
-    assert html_.count("data-vivo=") == 2 and "data-vivo" not in svg.group(0), "o anel fica no publicado"
-    assert "Ir para os cards" in html_ and "faltam 46 do plano de hoje" in html_ and "faltam 100 hoje" in html_
-    numeros = set(re.findall(r"\d+", _visivel(html_)))
-    assert "80" not in numeros and "226" not in numeros, "nenhum numero soma questoes com cards"
-    # 0% desenha so o trilho; 100% fecha o anel (feito acima do alvo nao passa de 100)
-    zero = painel._html_dia(_dia_aneis(feitas=0, consumo=0), "2026-10-13")
-    assert "an-arco" not in zero and zero.count('class="an-trilho"') == 2
-    cheio = painel._html_dia(_dia_aneis(feitas=120, consumo=150), "2026-10-13")
-    assert cheio.count('stroke-dasharray="100 100"') == 2
-    # sem contador de cards: o anel de cards fica no trilho e o nome diz a frase da legenda
-    sem = painel._html_dia(_dia_aneis(consumo=None), "2026-10-13")
-    assert "an-arco an-c" not in sem and "Cards: não consegui contar as revisões de hoje." in sem
+def _itens(html_):
+    """Os aneis do topo: (data-bloco, aria-label, miolo do SVG, rotulo, valor)."""
+    return re.findall(r'<div class="an4"( data-bloco="[a-z]+")?><svg class="anel" viewBox="0 0 120 120" role="img" '
+                      r'aria-label="([^"]+)">(.*?)</svg><h3>([^<]+)</h3><p class="an-val">(.*?)</p>', html_, re.S)
+
+
+def test_topo_quatro_aneis():
+    """DoD 2 (s227, tema v4 part-5, pedido dele: "o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam
+    aparecer junto no topo, através desses anéis com percentual"): UMA placa "Hoje, <dia>" com QUATRO aneis em
+    SVG inline -- Questoes (`--acento`), Cards (`--rosa`), Ritmo (cor de estado) e Ate 01/11 (`--roxo`) --, cada
+    um com trilho `--trilho`, `pathLength="100"`, o % no centro e, abaixo, o rotulo e o valor; `role="img"` com
+    os numeros no `aria-label`. Cada anel contra a PROPRIA meta: nenhum numero soma unidades. As ancoras do
+    "Hoje ao vivo" ficam nos valores de Questoes e Cards (o anel fica no publicado); o `data-bloco="ritmo"` vai
+    para o anel do Ritmo. 2 x 2 no celular, 4 em linha a partir de 760 px (ja de 600). Sem o ritmo, so os dois
+    do dia. ⚰️ *Era `test_hoje_dois_aneis_sem_soma` (part-2): dois aneis concentricos (questoes por fora, cards
+    por dentro, o dia no centro), com o Ritmo e o Ate 01/11 em placas proprias abaixo.*"""
+    html_ = painel._html_dia(_dia_aneis(), "2026-10-13", _r_aneis())
+    assert html_.startswith('<div class="placa dash-hoje">\n<h2>Hoje, terça 13/10</h2>\n<div class="aneis4" '
+                            'data-sessao-gravada="">')
+    itens = _itens(html_)
+    assert [i[3] for i in itens] == ["Questões", "Cards", "Ritmo em 7 dias", "Até 01/11"]
+    assert [i[0] for i in itens] == ["", "", ' data-bloco="ritmo"', ""], "o Ritmo herdou o data-bloco"
+    assert [re.findall(RE_ARCO, i[2]) for i in itens] == [
+        [("an-q", "40")], [("an-c", "34")], [("an-abaixo", "44")], [("an-sp", "93"), ("an-meta", "78")]]
+    assert [_centro(i[2]) for i in itens] == ["40", "34", "44", "78"]
+    assert all(i[2].count('<circle class="an-trilho" cx="60" cy="60" r="%d"/>' % painel.ANEL_R) == 1 for i in itens)
+    assert [i[1] for i in itens[:2]] == ["Questões: 31 de 76 (40%).", "Cards: 52 de 150 (34%)."]
+    # os valores: X de Y, com as ancoras do ao vivo (o hub poe o "+K" ao lado; o anel fica no publicado)
+    assert itens[0][4] == '<b data-vivo="questoes" data-base="31">31</b> de 76'
+    assert itens[1][4] == '<b data-vivo="cards" data-base="52">52</b> de 150'
+    assert html_.count("data-vivo=") == 2 and not any("data-vivo" in i[2] for i in itens)
+    vis = _visivel(html_)
+    for trecho in ("faltam 45", "faltam 98", "176 vencidos · 733 novos", "retenção 89,1%", "Ir para os cards",
+                   "35,4 por dia", "abaixo de 80/dia", "23,5 em 14 dias · 78,4% de acerto",
+                   "cumprindo o sprint: 9.306 · fora: 997 q"):
+        assert trecho in vis, trecho
+    assert vis.count("10.000") == 1, "a meta uma vez, no valor do anel Ate 01/11"
+    numeros = set(re.findall(r"\d+", vis.replace(".", "")))
+    for soma in ("226", "83", "10150"):         # 76+150, 31+52, 10.000+150: nada soma unidades
+        assert soma not in numeros, soma
+    # 0% = so o trilho e "0%" no centro; sem contador de cards, o trilho e "--"
+    zero = _itens(painel._html_dia(_dia_aneis(feitas=0, consumo=0), "2026-10-13", _r_aneis()))
+    assert "an-arco" not in zero[0][2] + zero[1][2] and [_centro(i[2]) for i in zero[:2]] == ["0", "0"]
+    sem = _itens(painel._html_dia(_dia_aneis(consumo=None), "2026-10-13", _r_aneis()))
+    assert "an-arco" not in sem[1][2] and _centro(sem[1][2]) == "--"
+    assert sem[1][1] == "Cards: não consegui contar as revisões de hoje."
+    # sem o ritmo (quem so tem o dia), os dois do dia
+    assert [i[3] for i in _itens(painel._html_dia(_dia_aneis(), "2026-10-13"))] == ["Questões", "Cards"]
     css = painel.CSS
-    for regra in (".an-trilho{stroke:var(--trilho)}", ".an-arco.an-q{stroke:var(--acento)}",
-                  ".an-arco.an-c{stroke:var(--rosa)}", ".an-arco{stroke-linecap:round}"):
+    for regra in (".aneis4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))",
+                  ".an-trilho{stroke:var(--trilho)}", ".an-arco{stroke-linecap:round}",
+                  ".an-arco.an-q{stroke:var(--acento)}", ".an-arco.an-c{stroke:var(--rosa)}"):
         assert regra in css, regra
+    quatro = re.search(r"@media \(min-width:(\d+)px\)\{\n  \.aneis4\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}",
+                       css)
+    assert quatro and int(quatro.group(1)) <= 760, "4 em linha a partir de 760 px"
+    for brilho in ("drop-shadow", "box-shadow", "filter:", "glow"):
+        assert brilho not in css, "sem brilho: %s" % brilho
 
 
-def test_ritmo_barra_com_marca_do_sprint():
-    """DoD 4 (decisao dele, 13/10: "barra com a marca dos 80/dia, sem gauge"): acima dos numeros, o real de
-    7 dias numa barra contra UMA marca vertical -- com sprint, a `capacidade_q`; sem sprint, o necessario
-    por dia da meta. Escala = 1,25x o maior dos dois. Abaixo = ambar com "abaixo de 80/dia"; em dia =
-    verde com "em dia"; os 3 numeros de hoje ficam."""
-    sp = {"q": 1500, "simulados_q": 300, "fechando_q": 9500, "fim": "2026-10-31", "fora": 37, "q_fora": 997,
-          "capacidade_q": 80}
-    abaixo = painel._html_ritmo(_ritmo(sp))                      # real 50 contra 80: escala 100
-    assert abaixo.startswith('<div class="placa dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>')
-    barra = re.search(r'<div class="rb([^"]*)" role="img" aria-label="([^"]+)" title="[^"]+">'
-                      r'<span class="rb-trilho"><i style="width:([\d.]+)%"></i></span>'
-                      r'<span class="rb-marca" style="left:([\d.]+)%"><span class="rb-alvo">([^<]+)</span>', abaixo)
-    assert barra, abaixo
-    assert barra.groups() == (" abaixo", "50,0 por dia nos últimos 7 dias, abaixo de 80/dia", "50.0", "80.0", "80/dia")
-    assert abaixo.index('class="rb') < abaixo.index('class="figs"'), "a barra fica acima dos numeros"
-    assert "abaixo de 80/dia" in _visivel(abaixo.split('class="figs"')[1])
-    assert len(re.findall(r'<div class="fig[^"]*"><p class="fig-n">', abaixo)) == 3, "os 3 numeros de hoje"
-    em_dia = painel._html_ritmo(dict(_ritmo(sp), real_7d=90.0))  # 90 contra 80: escala 112,5
-    assert re.search(r'<div class="rb em-dia"[^>]*><span class="rb-trilho"><i style="width:80.0%"></i></span>'
-                     r'<span class="rb-marca" style="left:71.1%">', em_dia)
-    assert "em dia" in em_dia
-    sem_sprint = painel._html_ritmo(_ritmo())                    # real 50 contra o necessario 100: escala 125
-    assert re.search(r'<div class="rb abaixo"[^>]*><span class="rb-trilho"><i style="width:40.0%"></i></span>'
-                     r'<span class="rb-marca" style="left:80.0%"><span class="rb-alvo">100,0/dia</span>', sem_sprint)
-    sem_config = painel._html_ritmo(_ritmo(dict(sp, capacidade_q=None)))
-    assert 'class="rb' not in sem_config, "sem marca, sem barra"
-    for html_ in (abaixo, em_dia, sem_sprint):
-        assert "<svg" not in html_ and "gauge" not in html_
+def test_ritmo_anel_contra_o_sprint_com_a_cor_e_o_texto():
+    """DoD 2: o anel do Ritmo = o real de 7 dias contra a capacidade do sprint (sem sprint, o necessario por dia
+    da meta); a cor de estado vem SEMPRE com o texto -- abaixo = `--aviso` + "abaixo de 80/dia", em dia =
+    `--ok` + "em dia"; embaixo, "23,5 em 14 dias · 78,4% de acerto". Sem referencia, so o trilho e "--".
+    ⚰️ *Era `test_ritmo_barra_com_marca_do_sprint` (part-2): a barra `.rb` contra a marca vertical dos 80/dia,
+    na placa "Ritmo de questões" -- o conteudo subiu para o anel no topo (pedido dele, 13/10).*"""
+    abaixo = painel._html_ritmo(_r_aneis())                                 # 35,4 contra 80
+    assert abaixo.startswith('<div class="an4" data-bloco="ritmo">')
+    assert re.findall(RE_ARCO, abaixo) == [("an-abaixo", "44")] and _centro(abaixo) == "44"
+    assert '<p class="kpi-r an-estado abaixo">abaixo de 80/dia</p>' in abaixo
+    assert "Ritmo: 35,4 por dia nos últimos 7 dias, abaixo de 80/dia." in abaixo
+    em_dia = painel._html_ritmo(_r_aneis(real_7d=90.0))                     # 90 contra 80: o anel fecha
+    assert re.findall(RE_ARCO, em_dia) == [("an-emdia", "100")] and _centro(em_dia) == "112"
+    assert '<p class="kpi-r an-estado em-dia">em dia ✓</p>' in em_dia
+    sem_sprint = painel._html_ritmo(_r_aneis(sprint=False))                 # 35,4 contra 114,9
+    assert re.findall(RE_ARCO, sem_sprint) == [("an-abaixo", "30")]
+    assert "abaixo do necessário" in sem_sprint and "114,9 por dia até a prova de 01/11" in sem_sprint
+    sem_config = painel._html_ritmo(_r_aneis(capacidade=None))
+    assert "an-arco" not in sem_config and _centro(sem_config) == "--", "sem referencia, sem %"
+    for html_ in (abaixo, em_dia, sem_sprint, sem_config):
+        assert "23,5 em 14 dias · 78,4% de acerto" in _visivel(html_)
+        assert html_.count("<svg") == 1 and "gauge" not in html_ and 'class="rb' not in html_
     css = painel.CSS
-    assert ".rb.abaixo .rb-trilho i{background:var(--aviso)}" in css
-    assert ".rb.em-dia .rb-trilho i{background:var(--ok)}" in css
-    assert ".rb-marca{position:absolute" in css
+    assert ".an-arco.an-abaixo{stroke:var(--aviso)}" in css and ".an-arco.an-emdia{stroke:var(--ok)}" in css
+    assert ".an4 .an-estado.abaixo{color:var(--aviso)}" in css and ".an4 .an-estado.em-dia{color:var(--ok)}" in css
+
+
+def test_flashcards_da_semana_renomeado(db_sintetico):
+    """DoD 4 (pedido dele, 13/10: "'Revisões nos próximos 7 dias', que deveria ser renomeado para 'Flashcards da
+    semana'"): o MESMO grafico de barras da `db.agenda_revisoes`, com o titulo novo e a dica por barra; o nome
+    antigo some da pagina."""
+    html_ = painel._html_agenda({"dias": [{"data": "2026-10-14", "n": 30}, {"data": "2026-10-15", "n": 1}]})
+    assert html_.startswith('<div class="placa dash-sec agenda"><h3>Flashcards da semana</h3>')
+    assert '<li title="qua 14/10: 30 cards"><span class="ag-n">30</span>' in html_
+    assert '<li title="qui 15/10: 1 card">' in html_
+    pagina = _pagina()
+    assert "Flashcards da semana" in _dash(pagina) and "Revisões nos próximos" not in pagina
 
 
 def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
-    """DoD 2 e 5: cada parte do dashboard e uma `.placa` (Hoje, Ritmo, Ate 01/11, Por bloco, Revisoes, nessa
-    ordem) dentro da secao `data-bloco="dia"`, que e a GRADE; o Plano de hoje e a Documentacao sao placas
-    tambem (Proximos dias e Fora do sprint recolhidos DENTRO da placa). O CSS: `.wrap` na `--largura`, uma
-    coluna e, de 760 px, duas, com o Ate 01/11 em largura total; o mesmo vao entre placas e entre secoes;
-    nenhum filete entre secoes; a `.placa` do tema e composta, nunca redefinida aqui."""
+    """DoD 3 e 4 (s227, part-5): o dashboard sao TRES `.placa` na secao `data-bloco="dia"`, que e a GRADE -- o
+    Hoje com os quatro aneis (inteiro), Por bloco e Flashcards da semana (lado a lado a partir de 760 px, a
+    mesma altura pela linha da grade; empilhados no celular); o Plano de hoje e a Documentacao sao placas
+    tambem. O CSS: `.wrap` na `--largura`; o mesmo vao entre placas e entre secoes; nenhum filete entre secoes;
+    a `.placa` do tema e composta, nunca redefinida aqui. ⚰️ *Ate 13/10 (part-2) eram cinco placas: Hoje |
+    Ritmo, Ate 01/11 inteira, Por bloco | Revisoes -- as placas Ritmo e Ate 01/11 viraram aneis no topo.*"""
     import plano
     monkeypatch.setattr(plano, "ler_sprint", lambda caminho=None: {"capacidade_q": 80, "fim": "2026-10-31"})
     _com_sprint(db_sintetico)
@@ -1239,8 +1292,10 @@ def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
     assert '<section class="bloco dia dash" data-bloco="dia">' in pagina
     dash = _dash(pagina)
     partes = re.findall(r'<div class="placa ([^"]+)"( data-bloco="[a-z]+")?>', dash)
-    assert partes == [("dash-hoje", ""), ("dash-sec", ' data-bloco="ritmo"'), ("dash-sec proj", ""),
-                      ("dash-sec", ' data-bloco="blocos"'), ("dash-sec agenda", "")], partes
+    assert partes == [("dash-hoje", ""), ("dash-sec", ' data-bloco="blocos"'), ("dash-sec agenda", "")], partes
+    assert len(_itens(dash)) == 4 and '<div class="an4" data-bloco="ritmo">' in dash
+    for morto in ("Ritmo de questões", "proj-barra", 'class="rb', "dash-sec proj"):
+        assert morto not in dash, morto
     assert "<section" not in dash[1:], "as placas sao filhas da grade, sem secao dentro"
     assert '<section class="bloco semana placa" data-bloco="semana">' in pagina
     assert '<section class="bloco docs placa" data-bloco="docs">' in pagina
@@ -1253,7 +1308,9 @@ def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
     assert ".bloco + .bloco{margin-top:var(--esp-4)}" in css, "entre secoes, o mesmo vao da grade"
     grade = css.split("@media (min-width:760px){", 1)[1].split("\n}", 1)[0]
     assert ".dash{grid-template-columns:repeat(2,minmax(0,1fr))}" in grade
-    assert ".dash > .proj{grid-column:1 / -1}" in grade
+    assert ".dash > .dash-hoje{grid-column:1 / -1}" in grade, "o Hoje inteiro; Por bloco | Flashcards"
+    assert ".agenda{display:flex;flex-direction:column}" in css and "flex:1 1 auto;min-height:112px" in css, \
+        "o grafico de barras ocupa a altura da linha (a do Por bloco ao lado)"
     assert not re.search(r"\.(bloco|dash-sec)\{[^}]*border-top", css), "filete entre secoes voltou"
     assert not re.search(r"(^|[}\s,])\.placa\s*\{", css), "a .placa e do tema: aqui so se compoe"
     assert pagina.count("max-width") <= 2

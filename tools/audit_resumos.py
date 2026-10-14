@@ -79,6 +79,31 @@ def _spec_proibicoes(content):
     return issues
 
 
+# s227 (pedido dele, 13/10/2026: "remover todos os 'Fonte:...' espalhados pelo texto, e concentra-los ao final, tal
+# como um artigo"): a linha "Fonte:" de REFERENCIA fora da secao final "## Referencias" e WARN (regra nova nasce WARN).
+# "Fonte:" tambem e conteudo clinico (TCE: "**Fonte:** arterial em 85% dos casos" = a fonte do sangramento): so conta a
+# linha cujo texto tem cara de referencia (ano, caminho, PMID/DOI, orgao, diretriz, apostila). Mesma regra do leitor
+# do hub (core/templates/hub.html, ehReferencia).
+RE_FONTE_LINHA = re.compile(r"^\s*(?:[-*>]\s*)*(?:\*\*)?Fontes?\s*:(?:\*\*)?\s*(.*)$", re.I)
+RE_CARA_DE_REFERENCIA = re.compile(
+    r"\b(?:19|20)\d{2}\b|resumos/|\.pdf\b|\.md\b|PMID|DOI|apostila|diretriz|guideline|protocolo|manual|caderno|"
+    r"PCDT|portaria|verso d[eo]s? cards?|\bcards? \d|EMED|Estrat[eé]gia|et al\.?|Fiocruz|Minist[eé]rio|FEBRASGO|"
+    r"\bSB[A-Z]{1,4}\b|\bAHA\b|\bACC\b|\bESC\b|\bADA\b|KDIGO|\bWHO\b|\bOMS\b", re.I)
+RE_SECAO_REFERENCIAS = re.compile(r"^#{1,3}\s*(?:\d+\.\s*)?Refer[eê]ncias\b", re.I | re.M)
+
+
+def _fonte_inline(content):
+    """Linhas (1-based) com "Fonte:" de REFERENCIA antes da secao final "## Referencias". WARN. [] = ok."""
+    m = RE_SECAO_REFERENCIAS.search(content)
+    corpo = content[:m.start()] if m else content
+    out = []
+    for i, linha in enumerate(corpo.split("\n"), 1):
+        f = RE_FONTE_LINHA.match(linha)
+        if f and RE_CARA_DE_REFERENCIA.search(f.group(1)):
+            out.append(i)
+    return out
+
+
 def audit_summaries(file_list=None):
     if file_list is None and len(sys.argv) > 1:
         # Se passados pela CLI
@@ -151,6 +176,11 @@ def audit_summaries(file_list=None):
         spec = _spec_proibicoes(content)
         if spec:
             issues.append((WARN, f"[SPEC] proibicao do estilo-resumo: {'; '.join(spec)}"))
+
+        # 7. "Fonte:" de referencia no meio do texto (WARN -- regra nova, s227): vai para "## Referencias"
+        inline = _fonte_inline(content)
+        if inline:
+            issues.append((WARN, f"[FONTE_INLINE] linha(s) {', '.join(map(str, inline))}: 'Fonte:' no meio do texto (vai para ## Referencias)"))
 
         # Reportar BLOCK por arquivo (linha-a-linha); agregar WARN por tipo.
         blocks = [m for sev, m in issues if sev == BLOCK]

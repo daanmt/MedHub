@@ -34,69 +34,34 @@ a{color:var(--acento);text-underline-offset:2px}
 .nota{color:var(--tinta3);font-size:var(--fs-meta);margin-top:var(--esp-1)}
 .tenue{color:var(--tinta3)}
 
-/* Dashboard do topo (s226; s227 em placas): Hoje · Ritmo · Ate 01/11 · Por bloco · Revisoes 7 dias, cada
-   parte uma placa. Uma coluna no celular; no desktop (o iframe a partir de 760 px), duas: Hoje | Ritmo,
-   Ate 01/11 inteira, Por bloco | Revisoes. Mesma grade e mesmo vao: as bordas alinham. A ousadia mora so
-   nos aneis do Hoje; o resto quieto. Sem caixa por numero e sem legenda em prosa. */
+/* Dashboard do topo (s226; s227 em placas; s227 part-5 compacto): o Hoje com os QUATRO aneis, depois Por
+   bloco e Flashcards da semana. Uma coluna no celular; com o iframe a partir de 760 px, o Hoje inteiro e as
+   duas placas de grafico lado a lado, da mesma altura (a linha da grade estica as duas). Mesma grade e
+   mesmo vao: as bordas alinham. A ousadia mora so nos aneis; o resto quieto. Sem caixa por numero e sem
+   legenda em prosa. */
 .dash{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--esp-4)}
-.kpi-r{color:var(--tinta3);font-size:var(--fs-meta);text-wrap:pretty}
-/* Hoje: dois aneis concentricos, cada um contra a propria meta (externo ciano = questoes, interno rosa =
-   cards), nenhum numero somando os dois; o centro e o dia. Pela largura da PLACA, nao da tela: a legenda
-   vai abaixo dos aneis (2 colunas); a partir de 26rem, ao lado (empilhada); de 38rem, ao lado em 2 colunas */
-.dash-hoje{container-type:inline-size}
-.hoje{display:grid;justify-items:center;gap:var(--esp-4)}
-.aneis{display:block;width:9.5rem;height:auto}
-.aneis circle{fill:none;stroke-width:10}
+/* Hoje: Questoes · Cards · Ritmo · Ate 01/11, cada anel contra a propria meta (nada soma unidades). 2 x 2
+   no celular, 4 em linha quando cabem. Todos do mesmo tamanho e no mesmo alinhamento: o anel, o rotulo e o
+   valor na mesma altura em toda a linha. O % grande no centro; sob o anel so o rotulo e o valor (s227:
+   sem legendas, pedido dele de 13/10) */
+.aneis4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-5) var(--esp-4)}
+.an4{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center}
+.anel{display:block;width:min(100%,7.5rem);height:auto;margin:0 0 var(--esp-2)}
+.anel circle{fill:none;stroke-width:10}
 .an-trilho{stroke:var(--trilho)}
 .an-arco{stroke-linecap:round}
 .an-arco.an-q{stroke:var(--acento)}
 .an-arco.an-c{stroke:var(--rosa)}
-.an-d{font-size:13px;font-weight:600;fill:var(--tinta2)}
-.an-n{font-size:28px;font-weight:700;fill:var(--tinta)}
-.hoje-leg{justify-self:stretch;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-4)}
-.sw-anel{display:inline-block;width:12px;height:12px;border-radius:50%;border:3px solid var(--acento);margin-right:var(--esp-2);vertical-align:-1px}
-.sw-anel.an-c{border-color:var(--rosa)}
-@container (min-width:26rem){
-  .hoje{grid-template-columns:auto minmax(0,1fr);justify-items:stretch;align-items:center;gap:var(--esp-4) var(--esp-6)}
-  .aneis{width:11.5rem}
-  .hoje-leg{grid-template-columns:minmax(0,1fr)}
-}
-@container (min-width:38rem){
-  .hoje-leg{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-4) var(--esp-6)}
-}
-.dose{min-width:0}
-.dose h3{margin-bottom:var(--esp-1)}
-.fracao{font-size:1rem;color:var(--tinta2)}
-.fracao b{font-size:var(--fs-numero);line-height:1.1;color:var(--tinta);font-weight:700;letter-spacing:-.02em;margin-right:var(--esp-1)}
-.fracao + .kpi-r{margin-top:var(--esp-1)}
-.ir{margin-top:var(--esp-1);font-weight:600}
-.ir a{display:inline-flex;align-items:center;min-height:44px}
-/* Ritmo: o real de 7 dias numa barra contra UMA marca vertical (com sprint, a capacidade dele; sem, o
-   necessario por dia da meta). Abaixo = ambar, em dia = verde, sempre com o rotulo nos numeros; sem
-   rotulo de estado, ciano. Sem gauge */
-.rb{position:relative;margin:var(--esp-2) 0 var(--esp-6)}
-.rb-trilho{display:block;height:10px;background:var(--trilho);border-radius:var(--raio-pilula);overflow:hidden}
-.rb-trilho i{display:block;height:100%;background:var(--acento);border-radius:inherit}
-.rb.abaixo .rb-trilho i{background:var(--aviso)}
-.rb.em-dia .rb-trilho i{background:var(--ok)}
-.rb-marca{position:absolute;top:-5px;width:2px;height:20px;margin-left:-1px;background:var(--tinta);border-radius:1px}
-.rb-alvo{position:absolute;top:calc(100% + var(--esp-1));left:50%;transform:translateX(-50%);width:max-content;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2)}
-/* Ate 01/11: uma barra empilhada -- feito (ciano) | cumprindo o sprint (lavagem ciano com contorno) | o
-   que falta para a meta = fora do sprint (filete tracejado neutro: nao e erro); 2 px de fundo entre trechos */
-.proj-barra{display:flex;gap:2px;height:12px;margin:var(--esp-1) 0 var(--esp-3)}
-.proj-barra i{display:block;height:100%;min-width:2px}
-.proj-barra i:first-child{border-radius:var(--raio-pilula) 0 0 var(--raio-pilula)}
-.proj-barra i:last-child{border-radius:0 var(--raio-pilula) var(--raio-pilula) 0}
-.p-feito{background:var(--acento)}
-.p-sprint{background:var(--acento-fraco);border:1px solid var(--acento)}
-.p-fora{background:var(--linha);border:1px dashed var(--tinta3)}
-.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:var(--esp-1);vertical-align:0}
-.proj-leg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2)}
-.proj-leg li{min-width:0;display:grid}
-.proj-n{font-size:var(--fs-secao);font-weight:700;color:var(--tinta)}
-.proj-r{font-size:var(--fs-meta);color:var(--tinta3)}
-.proj-leg li:last-child{text-align:right}
-.proj-fora{margin-top:var(--esp-2)}
+.an-arco.an-abaixo{stroke:var(--aviso)}
+.an-arco.an-emdia{stroke:var(--ok)}
+.an-arco.an-meta{stroke:var(--roxo)}
+/* o 2o arco do Ate 01/11 (cumprindo o sprint): o mesmo roxo, mais claro, POR BAIXO do feito */
+.an-arco.an-sp{stroke:var(--roxo);stroke-opacity:.5}
+.an-pct{font-size:30px;font-weight:700;fill:var(--tinta);letter-spacing:-.02em;font-variant-numeric:proportional-nums}
+.an-pc{font-size:15px;font-weight:600;fill:var(--tinta2)}
+.an4 h3{margin:0;font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2)}
+.an-val{margin-top:2px;font-size:var(--fs-legenda);color:var(--tinta2)}
+.an-val b{font-size:var(--fs-secao);font-weight:700;color:var(--tinta)}
 /* Por bloco: nome | barra de acerto (0-100%) | % | feitas/total; o mais fraco em ambar + o rotulo */
 .bls{list-style:none;margin:0;padding:0}
 .bl{display:grid;grid-template-columns:4.75rem minmax(0,1fr) 3.25rem 4rem;gap:var(--esp-2);align-items:center;
@@ -114,7 +79,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .bl.fraco .bl-pct{color:var(--aviso)}
 .bl.sim .bl-nome{color:var(--tinta2);font-weight:500}
 .bl.sim .bl-barra i{background:var(--linha-forte)}
-/* Revisoes 7 dias: as barras ocupam a placa (na grade, a altura da linha vem do Por bloco ao lado) */
+/* Flashcards da semana: as barras ocupam a placa (na grade, a altura da linha vem do Por bloco ao lado) */
 .agenda{display:flex;flex-direction:column}
 .ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
            gap:var(--esp-2);flex:1 1 auto;min-height:112px;align-items:stretch}
@@ -167,28 +132,16 @@ a{color:var(--acento);text-underline-offset:2px}
 .rota-sem.fora{margin-top:var(--esp-5)}
 .rota-sem.fora .t-grupo{margin-top:var(--esp-2)}
 
-/* Ritmo: numeros sem caixa; com sprint, o real contra a capacidade do sprint (abaixo = ambar + texto,
-   em dia = verde + texto); sem sprint, o necessario por dia da meta e a referencia (ciano) */
-.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6rem),1fr));gap:var(--esp-4) var(--esp-3)}
-.fig{min-width:0}
-.fig-n{font-size:1.5rem;font-weight:700;line-height:1.2;color:var(--tinta)}
-.fig-r{font-size:var(--fs-meta);color:var(--tinta3)}
-.fig.abaixo .fig-n,.fig.abaixo .fig-r b{color:var(--aviso)}
-.fig.em-dia .fig-r b{color:var(--ok)}
-.fig.alvo .fig-n{color:var(--acento)}
-
-/* a grade no desktop: o media mede o iframe (= a coluna larga do shell) */
+/* os media medem o iframe (= a coluna larga do shell). Os quatro aneis em linha assim que cabem (4 x 7,5rem
+   e os vaos); a partir de 760 px, a grade de duas colunas: o Hoje inteiro, Por bloco | Flashcards */
+@media (min-width:600px){
+  .aneis4{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 @media (min-width:760px){
   .dash{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dash > .proj{grid-column:1 / -1}
-  /* o Ritmo divide a linha com o Hoje: os numeros viram linhas (numero | rotulo) com filete entre elas,
-     de alturas iguais, ocupando a placa ate a borda de baixo (a linha da grade tem a altura do Hoje) */
-  .dash > [data-bloco="ritmo"]{display:flex;flex-direction:column}
-  .figs{flex:1 1 auto;grid-template-columns:minmax(0,1fr);grid-auto-rows:1fr;gap:0}
-  .fig{display:grid;grid-template-columns:5.5rem minmax(0,1fr);column-gap:var(--esp-3);align-items:baseline;align-content:center;padding:var(--esp-2) 0}
-  .fig + .fig{border-top:1px solid var(--linha)}
-  .fig-n{grid-row:1 / span 2}
-  .fig-r{grid-column:2}
+  .dash > .dash-hoje{grid-column:1 / -1}
+  .aneis4{gap:var(--esp-5) var(--esp-5)}
+  .anel{width:min(100%,8.5rem)}
 }
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr)}
@@ -243,7 +196,11 @@ a{color:var(--acento);text-underline-offset:2px}
   --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,123,255,.24),transparent 70%),
         radial-gradient(56rem 22rem at 96% -8rem,rgba(150,77,255,.2),transparent 70%);
   --horizonte:linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8);   /* a linha sob as abas (marca) */
-  --qz-grifo:#FFD447; --qz-grifo-tinta:#0C0C12;   /* literal: o hub le o valor computado para o leitor */
+  /* marca-texto (s227, pedido dele): pinta so o FUNDO, o texto fica com a cor dele; tres cores, UMA ativa (data-grifo
+     no :root, escolhida no topo do hub; rosa por padrao). O hub le o valor computado para o leitor */
+  --grifo-rosa:color-mix(in srgb,var(--rosa) 32%,transparent); --grifo-ciano:color-mix(in srgb,var(--acento) 32%,transparent);
+  --grifo-amarelo:color-mix(in srgb,var(--amarelo) 32%,transparent);
+  --qz-grifo:var(--grifo-rosa); --qz-grifo-tinta:inherit;
   --sombra:none; color-scheme:dark;
   /* apelidos legados (hub e player): mesmo significado, nome antigo */
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
@@ -271,7 +228,9 @@ a{color:var(--acento);text-underline-offset:2px}
   --luz:radial-gradient(60rem 24rem at 8% -7rem,rgba(47,107,224,.07),transparent 70%),
         radial-gradient(56rem 22rem at 96% -8rem,rgba(106,63,224,.06),transparent 70%);
   --horizonte:linear-gradient(90deg,#C2176F,#7443B8 55%,#00737D);
-  --qz-grifo:#FFE066; --qz-grifo-tinta:#1A1626;
+  --grifo-rosa:color-mix(in srgb,var(--rosa) 26%,transparent); --grifo-ciano:color-mix(in srgb,var(--acento) 26%,transparent);
+  --grifo-amarelo:color-mix(in srgb,var(--amarelo) 70%,transparent);
+  --qz-grifo:var(--grifo-rosa); --qz-grifo-tinta:inherit;
   --sombra:none; color-scheme:light;
   --alerta:var(--erro); --alerta-fraco:var(--erro-fraco); --suave:var(--roxo);
   --qz-ok:var(--ok); --qz-ok-fraco:var(--ok-fraco); --qz-duv:var(--aviso); --qz-duv-fraco:var(--aviso-fraco);
@@ -284,6 +243,9 @@ a{color:var(--acento);text-underline-offset:2px}
   --carmine:var(--erro); --carmine-ink:#962632; --carmine-wash:var(--erro-fraco);
   --on:var(--sobre);
 }
+/* a cor ativa do marca-texto: depois dos dois blocos de tema, mesma especificidade -- vence pela ordem */
+:root[data-grifo="ciano"]{--qz-grifo:var(--grifo-ciano)}
+:root[data-grifo="amarelo"]{--qz-grifo:var(--grifo-amarelo)}
 
 /* ======================================================== BASE (todas as telas, inclusive as aulas no leitor) */
 /* uma familia so (Atkinson: 0/O e 1/l distintos em dose e corte); !important porque as aulas declaram a fonte
@@ -309,22 +271,19 @@ strong{font-weight:650}
 </head>
 <body>
 <div class="wrap">
-<p class="atualizado"><!--gerado--><span data-gerado="2026-10-13T20:31:24" data-gerado-iso="2026-10-13T20:31:24" data-fallback="atualizado em 13/10, 20:31">atualizado em 13/10, 20:31</span><!--/gerado--></p>
+<p class="atualizado"><!--gerado--><span data-gerado="2026-10-13T23:10:20" data-gerado-iso="2026-10-13T23:10:20" data-fallback="atualizado em 13/10, 23:10">atualizado em 13/10, 23:10</span><!--/gerado--></p>
 <section class="bloco dia dash" data-bloco="dia">
 <div class="placa dash-hoje">
 <h2>Hoje, terça 13/10</h2>
-<div class="hoje" data-sessao-gravada="2026-10-10a"><svg class="aneis" viewBox="0 0 120 120" role="img" aria-label="Questões: 0 de 76. Cards: 0 de 150."><g><title>Questões: 0 de 76</title><circle class="an-trilho" cx="60" cy="60" r="53"/></g><g><title>Cards: 0 de 150</title><circle class="an-trilho" cx="60" cy="60" r="40"/></g><text class="an-d" x="60" y="55" text-anchor="middle">ter</text><text class="an-n" x="60" y="80" text-anchor="middle">13</text></svg>
-<div class="hoje-leg">
-  <div class="dose"><h3><i class="sw-anel an-q"></i>Questões</h3><p class="fracao"><b data-vivo="questoes" data-base="0">0</b> de 76</p><p class="kpi-r">faltam 76 do plano de hoje</p></div>
-  <div class="dose"><h3><i class="sw-anel an-c"></i>Cards</h3><p class="fracao"><b data-vivo="cards" data-base="0">0</b> de 150</p><p class="kpi-r">faltam 150 hoje</p><p class="kpi-r">176 vencidos · 734 novos · retenção 89,1% em 7 dias</p><p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>
-</div></div>
+<div class="aneis4" data-sessao-gravada="2026-10-10a">
+<div class="an4"><svg class="anel" viewBox="0 0 120 120" role="img" aria-label="Questões: 0 de 76 (0%)."><circle class="an-trilho" cx="60" cy="60" r="52"/><text class="an-pct" x="60" y="71" text-anchor="middle">0<tspan class="an-pc" dx="1">%</tspan></text></svg><h3>Questões</h3><p class="an-val"><b data-vivo="questoes" data-base="0">0</b> de 76</p></div>
+<div class="an4"><svg class="anel" viewBox="0 0 120 120" role="img" aria-label="Cards: 0 de 150 (0%)."><circle class="an-trilho" cx="60" cy="60" r="52"/><text class="an-pct" x="60" y="71" text-anchor="middle">0<tspan class="an-pc" dx="1">%</tspan></text></svg><h3>Cards</h3><p class="an-val"><b data-vivo="cards" data-base="0">0</b> de 150</p></div>
+<div class="an4" data-bloco="ritmo"><svg class="anel" viewBox="0 0 120 120" role="img" aria-label="Ritmo: 35,4 por dia nos últimos 7 dias, abaixo de 80/dia."><circle class="an-trilho" cx="60" cy="60" r="52"/><circle class="an-arco an-abaixo" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="44 100" transform="rotate(-90 60 60)"><title>35,4 por dia nos últimos 7 dias, abaixo de 80/dia</title></circle><text class="an-pct" x="60" y="71" text-anchor="middle">44<tspan class="an-pc" dx="1">%</tspan></text></svg><h3>Ritmo em 7 dias</h3><p class="an-val"><b>35,4</b> de 80 por dia</p></div>
+<div class="an4"><svg class="anel" viewBox="0 0 120 120" role="img" aria-label="Até 01/11: 7.817 de 10.000 (78%); cumprindo o sprint, 9.306; fora do sprint, 997 questões."><circle class="an-trilho" cx="60" cy="60" r="52"/><circle class="an-arco an-sp" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="93 100" transform="rotate(-90 60 60)"><title>cumprindo o sprint até 31/10: 9.306</title></circle><circle class="an-arco an-meta" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="78 100" transform="rotate(-90 60 60)"><title>feito: 7.817</title></circle><text class="an-pct" x="60" y="71" text-anchor="middle">78<tspan class="an-pc" dx="1">%</tspan></text></svg><h3>Até 01/11</h3><p class="an-val"><b>7.817</b> de 10.000</p></div>
 </div>
-<div class="placa dash-sec" data-bloco="ritmo"><h3>Ritmo de questões</h3>
-<div class="rb abaixo" role="img" aria-label="35,4 por dia nos últimos 7 dias, abaixo de 80/dia" title="35,4 por dia nos últimos 7 dias, abaixo de 80/dia"><span class="rb-trilho"><i style="width:35.4%"></i></span><span class="rb-marca" style="left:80.0%"><span class="rb-alvo">80/dia</span></span></div>
-<div class="figs"><div class="fig abaixo"><p class="fig-n">35,4</p><p class="fig-r">por dia nos últimos 7 dias</p><p class="fig-r"><b>abaixo de 80/dia</b></p></div><div class="fig"><p class="fig-n">23,5</p><p class="fig-r">por dia nos últimos 14 dias</p></div><div class="fig"><p class="fig-n">78,4%</p><p class="fig-r">de acerto em 7.817 questões</p></div></div></div>
-<div class="placa dash-sec proj"><h3>Até 01/11</h3><div class="proj-barra" role="img" aria-label="Até 01/11: feito 7.817; cumprindo o sprint até 31/10, 9.306; meta 10.000; 997 questões fora do sprint, faltam 694 para a meta."><i class="p-feito" style="width:78.2%" title="feito: 7.817"></i><i class="p-sprint" style="width:14.9%" title="cumprindo o sprint até 31/10: 9.306"></i><i class="p-fora" style="width:6.9%" title="fora do sprint: 997 q; faltam 694 para 10.000"></i></div><ol class="proj-leg" aria-hidden="true"><li><span class="proj-n"><i class="sw p-feito"></i>7.817</span><span class="proj-r">feito</span></li><li><span class="proj-n"><i class="sw p-sprint"></i>9.306</span><span class="proj-r">cumprindo o sprint</span></li><li><span class="proj-n"><i class="sw p-fora"></i>10.000</span><span class="proj-r">meta</span></li></ol><p class="kpi-r proj-fora" aria-hidden="true"><i class="sw p-fora"></i>fora do sprint: 997&nbsp;q · faltam 694 para a meta</p></div>
+</div>
 <div class="placa dash-sec" data-bloco="blocos"><h3>Por bloco</h3><p class="bl bl-cab" aria-hidden="true"><span></span><span></span><span>acerto</span><span>tarefas</span></p><ol class="bls" aria-label="Acerto e tarefas feitas por bloco"><li class="bl" title="CIR: 77,9% de acerto em 937 questões · 26 de 102 tarefas feitas"><span class="bl-nome">CIR</span><span class="bl-barra" aria-hidden="true"><i style="width:77.9%"></i></span><span class="bl-pct">77,9%</span><span class="bl-t">26/102</span></li><li class="bl fraco" title="CM: 77,2% de acerto em 2.585 questões · 67 de 351 tarefas feitas"><span class="bl-nome">CM<span class="bl-tag">mais fraco</span></span><span class="bl-barra" aria-hidden="true"><i style="width:77.2%"></i></span><span class="bl-pct">77,2%</span><span class="bl-t">67/351</span></li><li class="bl" title="GO: 80,2% de acerto em 1.166 questões · 34 de 152 tarefas feitas"><span class="bl-nome">GO</span><span class="bl-barra" aria-hidden="true"><i style="width:80.2%"></i></span><span class="bl-pct">80,2%</span><span class="bl-t">34/152</span></li><li class="bl" title="MFC: 85,4% de acerto em 968 questões · 28 de 104 tarefas feitas"><span class="bl-nome">MFC</span><span class="bl-barra" aria-hidden="true"><i style="width:85.4%"></i></span><span class="bl-pct">85,4%</span><span class="bl-t">28/104</span></li><li class="bl" title="PED: 84,3% de acerto em 926 questões · 31 de 117 tarefas feitas"><span class="bl-nome">PED</span><span class="bl-barra" aria-hidden="true"><i style="width:84.3%"></i></span><span class="bl-pct">84,3%</span><span class="bl-t">31/117</span></li><li class="bl sim" title="Simulados: 69,1% de acerto em 1.150 questões · 3 de 9 tarefas feitas"><span class="bl-nome">Simulados</span><span class="bl-barra" aria-hidden="true"><i style="width:69.1%"></i></span><span class="bl-pct">69,1%</span><span class="bl-t">3/9</span></li></ol></div>
-<div class="placa dash-sec agenda"><h3>Revisões nos próximos 7 dias</h3><ol class="ag-barras" aria-label="Revisões por dia"><li><span class="ag-n">30</span><span class="ag-trilho"><i style="height:100%"></i></span><span class="ag-d">qua</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">qui</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">sex</span></li><li><span class="ag-n">22</span><span class="ag-trilho"><i style="height:73%"></i></span><span class="ag-d">sáb</span></li><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">dom</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">seg</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">ter</span></li></ol></div>
+<div class="placa dash-sec agenda"><h3>Flashcards da semana</h3><ol class="ag-barras" aria-label="Flashcards previstos por dia"><li title="qua 14/10: 30 cards"><span class="ag-n">30</span><span class="ag-trilho"><i style="height:100%"></i></span><span class="ag-d">qua</span></li><li title="qui 15/10: 21 cards"><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">qui</span></li><li title="sex 16/10: 21 cards"><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">sex</span></li><li title="sáb 17/10: 22 cards"><span class="ag-n">22</span><span class="ag-trilho"><i style="height:73%"></i></span><span class="ag-d">sáb</span></li><li title="dom 18/10: 21 cards"><span class="ag-n">21</span><span class="ag-trilho"><i style="height:70%"></i></span><span class="ag-d">dom</span></li><li title="seg 19/10: 14 cards"><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">seg</span></li><li title="ter 20/10: 14 cards"><span class="ag-n">14</span><span class="ag-trilho"><i style="height:47%"></i></span><span class="ag-d">ter</span></li></ol></div>
 </section>
 <section class="bloco semana placa" data-bloco="semana">
 <h2>Plano de hoje</h2>

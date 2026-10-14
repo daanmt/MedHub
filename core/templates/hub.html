@@ -670,7 +670,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(quadro.id === "hub-leitor-quadro"){ try{ refsMontar(doc); }catch(e){} }
     // s218: a linha "Fonte: resumos/X.md" das RDs vira link para o resumo publicado (antes dos atalhos)
     if(quadro.id === "hub-leitor-quadro"){ try{ fonteLigar(doc); }catch(e){} }
-    // Atalhos do painel (s194): "Ir para os cards" troca de aba; "abrir aula" abre o leitor.
+    // Atalhos do painel (s194): data-hub-aba troca de aba (a tarefa com questoes no hub); "abrir aula" abre o leitor.
     Array.prototype.forEach.call(doc.querySelectorAll("a[data-hub-aba], a[data-hub-aula]"), function(a){
       a.addEventListener("click", function(ev){
         ev.preventDefault();
@@ -1872,17 +1872,21 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     s.textContent = "+" + k;
   }
   function loteNoAr(){ try{ return JSON.parse(($("lote") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
+  // s227: as tres leituras (notas do lote, listas, respostas de cada lista) passam pela `assinarResiliente`
+  // -- republicar o hub com a pagina aberta matava a conexao do `db` e o "+K" ficava em 0 em silencio (o
+  // mesmo A18 da v108). Da 2a tentativa em diante, conexao nova; esgotadas, fica o publicado (sem botao).
   function painelVivo(doc, db){
     if(!db){ return; }
     var lote = loteNoAr(), marca = doc.querySelector("[data-sessao-gravada]");
     var gravada = marca ? (marca.getAttribute("data-sessao-gravada") || "") : "";
+    // o db mais novo que uma leitura obteve: as respostas de lista nova nascem nele, nunca no que morreu
+    var atual = db;
+    function novo(d){ atual = d; }
     if(lote.sessao && lote.sessao !== gravada && doc.querySelector('b[data-vivo="cards"]')){
-      try{
-        db.collection("sessoes/" + lote.sessao + "/notas").onSnapshot(function(s){
-          var notas = ((s && s.docs) || []).map(function(d){ return d.data ? d.data() : null; });
-          vivoPintar(doc, "cards", vivoCards(notas, lote, gravada));
-        }, function(){});
-      }catch(e){}
+      assinarResiliente(function(db){ return db.collection("sessoes/" + lote.sessao + "/notas"); }, function(s){
+        var notas = ((s && s.docs) || []).map(function(d){ return d.data ? d.data() : null; });
+        vivoPintar(doc, "cards", vivoCards(notas, lote, gravada));
+      }, {nome: "notas do painel", db: db, aoReconectar: novo});
     }
     if(!doc.querySelector('b[data-vivo="questoes"]')){ return; }
     // A18: uma consulta por lista (where lista ==), so as das tarefas que o Painel mostra (pendentes no plano)
@@ -1893,22 +1897,21 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       Object.keys(resp).forEach(function(id){ todas = todas.concat(resp[id]); });
       vivoPintar(doc, "questoes", vivoQuestoes(todas, Object.keys(resp), vivoDia(Date.now())));
     }
-    try{
-      db.collection("listas").onSnapshot(function(s){
-        ((s && s.docs) || []).forEach(function(d){
-          var x = d.data ? d.data() : null, id = d.id;
-          if(!x || resp[id] || !tarefas[String(x.tarefa)] || x.status === "pendente" || x.status === "bloqueada"){ return; }
-          resp[id] = [];
-          try{
-            db.collection("respostas").where("lista", "==", id).onSnapshot(function(r){
-              resp[id] = ((r && r.docs) || []).map(function(dd){ return dd.data ? dd.data() : null; })
-                .filter(function(y){ return y && y.lista === id; });
-              recontar();
-            }, function(){});
-          }catch(e){}
-        });
-      }, function(){});
-    }catch(e){}
+    function respostasDe(id){
+      assinarResiliente(function(db){ return db.collection("respostas").where("lista", "==", id); }, function(r){
+        resp[id] = ((r && r.docs) || []).map(function(dd){ return dd.data ? dd.data() : null; })
+          .filter(function(y){ return y && y.lista === id; });
+        recontar();
+      }, {nome: "respostas do painel", db: atual, aoReconectar: novo});
+    }
+    assinarResiliente(function(db){ return db.collection("listas"); }, function(s){
+      ((s && s.docs) || []).forEach(function(d){
+        var x = d.data ? d.data() : null, id = d.id;
+        if(!x || resp[id] || !tarefas[String(x.tarefa)] || x.status === "pendente" || x.status === "bloqueada"){ return; }
+        resp[id] = [];
+        respostasDe(id);
+      });
+    }, {nome: "listas do painel", db: db, aoReconectar: novo});
   }
   // ------------------------------------------------ s226 (part-2): a aba Cards com o contador do Painel
   // "O Painel e o referencial": o build injeta o Hoje dele (`#hub-dia` = consumo_hoje, teto, sessao_gravada,

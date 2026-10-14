@@ -529,10 +529,15 @@ def _texto(trecho):
     return html.unescape(re.sub(r"<[^>]+>", "", trecho))
 
 
-def _item_anel(nome, cor, pct, valor, linhas, dica, alt=None, sp=None, attrs="", fim=""):
-    """Um anel do topo: o SVG (trilho, o 2o arco quando ha, o arco e o % no centro) e, ABAIXO, o rotulo,
-    o valor e as linhas curtas. `pct` None = sem referencia: so o trilho e "--" no centro. `sp` =
-    (pct, dica) do 2o arco, mais claro e POR BAIXO do arco do feito (o Ate 01/11)."""
+def _item_anel(nome, cor, pct, valor, dica, alt=None, sp=None, attrs=""):
+    """Um anel do topo: o SVG (trilho, o 2o arco quando ha, o arco e o % no centro) e, ABAIXO, o rotulo e
+    UMA linha de valor -- nada mais. `pct` None = sem referencia: so o trilho e "--" no centro. `sp` =
+    (pct, dica) do 2o arco, mais claro e POR BAIXO do arco do feito (o Ate 01/11). O que nao cabe no valor
+    (o estado, o 2o arco) vai no `aria-label` e na dica (`<title>`) do arco, nunca numa legenda.
+    ⚰️ *Ate 13/10 (part-5) havia, sob o valor, as linhas curtas `kpi-r` (faltam, vencidos/novos/retencao,
+    "abaixo de 80/dia", 14 dias e acerto, "cumprindo o sprint: N · fora: Q q") e o link "Ir para os cards".
+    Sairam a pedido dele (13/10: "gostaria de remover esse 'Ir para os cards', bem como as legendas do
+    dashboard").*"""
     p = _pct_anel(pct)
     centro = ('%d<tspan class="an-pc" dx="1">%%</tspan>' % p) if p is not None else "--"
     arcos = (_arco("an-sp", _pct_anel(sp[0]), sp[1]) if sp else "") + _arco(cor, p, dica)
@@ -541,113 +546,91 @@ def _item_anel(nome, cor, pct, valor, linhas, dica, alt=None, sp=None, attrs="",
            '<circle class="an-trilho" cx="60" cy="60" r="%d"/>%s'
            '<text class="an-pct" x="60" y="71" text-anchor="middle">%s</text></svg>'
            % (_e(alt), ANEL_R, arcos, centro))
-    return ('<div class="an4"%s>%s<h3>%s</h3><p class="an-val">%s</p>%s%s</div>\n'
-            % (attrs, svg, _e(nome), valor, "".join(linhas), fim))
-
-
-def _pares(*partes):
-    """Os trechos de uma linha curta, cada um inteiro (espaco duro por dentro) e o ponto preso ao trecho
-    anterior: a linha so quebra DEPOIS do ponto -- nunca "176 / vencidos" nem uma linha que comeca no ponto."""
-    return " ".join(p.replace(" ", "\u00a0") + ("\u00a0·" if i < len(partes) - 1 else "")
-                    for i, p in enumerate(partes))
-
-
-def _kpi(texto, classe="", dica=None):
-    """Uma linha curta sob o anel (`texto` ja em HTML); `dica` = o `title` ao passar o mouse."""
-    return '<p class="kpi-r%s"%s>%s</p>' % ((" " + classe) if classe else "",
-                                         ' title="%s"' % _e(dica) if dica else "", texto)
+    return ('<div class="an4"%s>%s<h3>%s</h3><p class="an-val">%s</p></div>\n'
+            % (attrs, svg, _e(nome), valor))
 
 
 def _anel_questoes(q):
-    """Questoes: feitas contra o alvo do dia. Com sprint (`q_hoje` nao-None), o `q_hoje` (o MESMO do "Plano
-    de hoje" e do boot); sem sprint, o ritmo da meta (s203). A meta 10.000 nao aparece aqui: ela e o valor
-    do anel Ate 01/11."""
+    """Questoes: feitas contra o alvo do dia ("X de 76"). Com sprint (`q_hoje` nao-None), o `q_hoje` (o MESMO
+    do "Plano de hoje" e do boot); sem sprint, o ritmo da meta (s203). A meta 10.000 nao aparece aqui: ela e
+    o valor do anel Ate 01/11. Sem alvo, "X feitas" e o motivo no `aria-label`.
+    ⚰️ *Ate 13/10 (part-5) levava a linha "faltam N" / "dose do dia cumprida" sob o valor (pedido dele de
+    13/10: sem legendas).*"""
     # s216 (part-6, P08 v0): o numero publicado leva a ancora do "Hoje ao vivo" -- a pagina soma "+K"
     # AO LADO (o que ela gravou depois do publish), nunca o substitui
     b_q = '<b data-vivo="questoes" data-base="%s">%s</b>' % (_e(q["feitas_hoje"]), _n(q["feitas_hoje"]))
     feitas = q["feitas_hoje"] or 0
     q_hoje = q.get("q_hoje")
+    motivo = None
     if q_hoje is not None:
         if q_hoje:
             valor, pct = '%s de %s' % (b_q, _n(q_hoje)), _razao(feitas, q_hoje)
-            falta = max(0, q_hoje - feitas)
-            nota = "faltam %s" % _n(falta) if falta else "dose do dia cumprida ✓"
         else:
-            valor, pct, nota = '%s feitas' % b_q, None, "nenhuma lista no plano de hoje"
+            valor, pct, motivo = '%s feitas' % b_q, None, "nenhuma lista no plano de hoje"
     elif q["alvo_dia"] is not None:
         alvo = math.ceil(q["alvo_dia"])
         valor, pct = '%s de ~%s' % (b_q, _n(alvo)), _razao(feitas, alvo)
-        falta = max(0, alvo - feitas)
-        nota = "faltam %s hoje" % _n(falta) if falta else "ritmo do dia cumprido ✓"
     elif q["faltam"] == 0:
-        valor, pct, nota = '%s feitas' % b_q, 100.0, "meta atingida ✓"
+        valor, pct, motivo = '%s feitas' % b_q, 100.0, "meta atingida"
     else:
-        valor, pct, nota = '%s feitas' % b_q, None, "a data da meta passou"
-    return _item_anel("Questões", "an-q", pct, valor, [_kpi(_e(nota))], "Questões: %s" % _texto(valor))
+        valor, pct, motivo = '%s feitas' % b_q, None, "a data da meta passou"
+    alt = "Questões: %s; %s." % (_texto(valor), motivo) if motivo else None
+    return _item_anel("Questões", "an-q", pct, valor, "Questões: %s" % _texto(valor), alt=alt)
 
 
 def _anel_cards(c):
-    """Cards: consumidos contra o teto do dia (P09), com vencidos, novos e a retencao; o atalho para a aba."""
+    """Cards: consumidos contra o teto do dia (P09), "X de 150". Sem contador, "-- de 150" e o motivo no
+    `aria-label`. ⚰️ *Ate 13/10 (part-5) levava vencidos, novos, a retencao de 7 dias e o atalho "Ir para os
+    cards" (pedido dele de 13/10: sem legendas e sem o atalho; a aba Cards segue no menu do hub).*"""
     if c["consumo_hoje"] is None:
         valor, pct = '<b>--</b> de %s' % _n(c["teto"]), None
-        nota = "não consegui contar as revisões de hoje"
+        alt = "Cards: não consegui contar as revisões de hoje."
     else:
         valor = '<b data-vivo="cards" data-base="%s">%s</b> de %s' % (
             _e(c["consumo_hoje"]), _n(c["consumo_hoje"]), _n(c["teto"]))
-        pct = _razao(c["consumo_hoje"], c["teto"])
-        nota = "dose do dia cumprida ✓" if c["restantes"] == 0 else "faltam %s" % _n(c["restantes"])
-    linhas = [_kpi(_e(nota)), _kpi(_e(_pares("%s vencidos" % _n(c["vencidos"]), "%s novos" % _n(c["novos"]))))]
-    ret = c["retencao_7d"]
-    if ret.get("retencao") is not None:
-        # a janela (7 dias) vai na dica: na tela, a linha cabe na coluna do celular
-        linhas.append(_kpi(_e(_pares("retenção %s%%" % _n(ret["retencao"] * 100, 1))),
-                           dica="retenção nas revisões dos últimos 7 dias"))
-    # sem contador, o nome do anel diz a frase da legenda
-    alt = None if c["consumo_hoje"] is not None else "Cards: %s." % nota
-    return _item_anel("Cards", "an-c", pct, valor, linhas,
-                      "Cards: %s" % _texto(valor), alt=alt,
-                      fim='<p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p>')
+        pct, alt = _razao(c["consumo_hoje"], c["teto"]), None
+    return _item_anel("Cards", "an-c", pct, valor, "Cards: %s" % _texto(valor), alt=alt)
 
 
 def _html_ritmo(r):
     """Ritmo: o real de 7 dias contra UMA referencia -- com sprint, a capacidade dele (`capacidade_q`, o UNICO
-    por-dia da tela: "abaixo de 80/dia" / "em dia"); sem sprint, o necessario por dia da meta (s203). A cor de
-    estado vem SEMPRE com o texto (abaixo = ambar, em dia = verde; sem estado, ciano); embaixo, o real de 14
-    dias e o acerto. Sem referencia (sprint sem config), o anel fica no trilho. O `data-bloco="ritmo"` mora
-    aqui: o anel herdou o conteudo da placa Ritmo.
+    por-dia da tela); sem sprint, o necessario por dia da meta (s203). O valor diz a comparacao ("35,4 de 80
+    por dia"): o estado nunca fica so na cor do arco (abaixo = ambar, em dia = verde; sem estado, ciano), e o
+    `aria-label` e a dica do arco dizem "abaixo de 80/dia" / "em dia". Sem referencia (sprint sem config), o
+    anel fica no trilho e o valor e "35,4 por dia". O `data-bloco="ritmo"` mora aqui: o anel herdou o conteudo
+    da placa Ritmo.
     s227 (tema v4 part-5, pedido dele: "Esses 4 blocos deveriam aparecer junto no topo, através desses anéis
     com percentual"). ⚰️ *Ate 13/10 era a placa "Ritmo de questões": a barra `.rb` contra a marca dos 80/dia
-    e os tres numeros.*"""
+    e os tres numeros.* ⚰️ *Ate 13/10 (part-5) o anel levava, sob o valor, as linhas "abaixo de 80/dia" / "em
+    dia" e "23,5 em 14 dias · 78,4% de acerto" -- sairam com as legendas (pedido dele, 13/10).*"""
     sp = r.get("sprint")
     real = float(r.get("real_7d") or 0)
     alvo = sp.get("capacidade_q") if sp else r.get("alvo_marco")
-    linhas, cor, dica = [], "an-q", "%s por dia nos últimos 7 dias" % _n(real, 1)
+    cor, dica = "an-q", "%s por dia nos últimos 7 dias" % _n(real, 1)
+    valor = "<b>%s</b> por dia" % _n(real, 1)
     if alvo:
         abaixo = real < alvo
         if sp:
             marca = "%s/dia" % _n(alvo)
             cor = "an-abaixo" if abaixo else "an-emdia"
-            estado = "abaixo de %s" % marca if abaixo else "em dia ✓"
-            linhas.append(_kpi(_e(estado), "an-estado " + ("abaixo" if abaixo else "em-dia")))
             dica += ", %s %s" % ("abaixo de" if abaixo else "em dia com", marca)
+            valor = "<b>%s</b> de %s por dia" % (_n(real, 1), _n(alvo))
         else:
-            if abaixo:
-                cor = "an-abaixo"
-                linhas.append(_kpi("abaixo do necessário", "an-estado abaixo"))
-            linhas.append(_kpi("%s por dia até a prova de 01/11" % _n(alvo, 1)))
-            dica += "; o necessário até a prova: %s/dia" % _n(alvo, 1)
-    linhas.append(_kpi(_e(_pares("%s em 14 dias" % _n(r.get("real_14d"), 1),
-                                 "%s%% de acerto" % _n(r.get("acerto"), 1)))))
-    return _item_anel("Ritmo em 7 dias", cor, _razao(real, alvo), "<b>%s</b> por dia" % _n(real, 1), linhas,
-                      dica, alt="Ritmo: %s." % dica, attrs=' data-bloco="ritmo"')
+            cor = "an-abaixo" if abaixo else cor
+            dica += ", %s necessário até a prova: %s/dia" % ("abaixo do" if abaixo else "em dia com o", _n(alvo, 1))
+            valor = "<b>%s</b> de %s por dia" % (_n(real, 1), _n(alvo, 1))
+    return _item_anel("Ritmo em 7 dias", cor, _razao(real, alvo), valor, dica, alt="Ritmo: %s." % dica,
+                      attrs=' data-bloco="ritmo"')
 
 
 def _html_ate(r, data_meta):
-    """Ate 01/11: o acumulado contra a meta (`--roxo`), com um 2o arco MAIS CLARO no mesmo anel ate onde o
-    acumulado chega cumprindo o sprint (`fechando_q`) e a linha "cumprindo o sprint: N · fora: Q q". A meta
-    10.000 aparece aqui, UMA vez, no valor. Sem sprint, so o feito e o que falta (o por-dia mora no Ritmo).
+    """Ate 01/11: o acumulado contra a meta (`--roxo`), "7.817 de 10.000", com um 2o arco MAIS CLARO no mesmo
+    anel ate onde o acumulado chega cumprindo o sprint (`fechando_q`): a dica dele e o `aria-label` dizem o N
+    e o fora do sprint. A meta 10.000 aparece aqui, UMA vez, no valor. Sem sprint, so o feito (o que falta vai
+    no `aria-label`; o por-dia mora no Ritmo).
     ⚰️ *Ate 13/10 era a placa "Até 01/11" com a barra de projecao (`.proj-barra`: feito | cumprindo o sprint
-    | fora do sprint).*"""
+    | fora do sprint).* ⚰️ *Ate 13/10 (part-5) o anel levava, sob o valor, a linha "cumprindo o sprint: N ·
+    fora: Q q" (sem sprint, "faltam N em D dias") -- saiu com as legendas (pedido dele, 13/10).*"""
     sp = r.get("sprint")
     feito, meta = int(r.get("acumulado") or 0), int(r.get("meta") or 0)
     quando = _dm(data_meta) if data_meta else "a prova"
@@ -657,27 +640,24 @@ def _html_ate(r, data_meta):
     alt = "Até %s: %s de %s%s" % (quando, _n(feito), _n(meta), "" if p is None else " (%d%%)" % p)
     if sp:
         fecha = int(sp.get("fechando_q") or 0)
-        # quebra so depois de "sprint:" e do ponto: "cumprindo o sprint:" / "9.306 · fora: 997 q"
-        resto = _pares(_n(fecha), "fora: %s q" % _n(sp.get("q_fora")))
-        linhas = [_kpi('<i class="sw-sp" aria-hidden="true"></i>%s %s' % (_e(_pares("cumprindo o sprint:")), _e(resto)))]
         segundo = (_razao(fecha, meta), "cumprindo o sprint até %s: %s" % (_dm(sp.get("fim")), _n(fecha)))
         alt += "; cumprindo o sprint, %s; fora do sprint, %s questões." % (_n(fecha), _n(sp.get("q_fora")))
     else:
         falta = max(0, meta - feito)
         nota = ("faltam %s em %s dias" % (_n(falta), _n(r.get("dias_marco"))) if falta and r.get("dias_marco")
-                else "faltam %s" % _n(falta) if falta else "meta atingida ✓")
-        linhas, segundo = [_kpi(_e(nota))], None
+                else "faltam %s" % _n(falta) if falta else "meta atingida")
+        segundo = None
         alt += "; %s." % nota
-    return _item_anel("Até %s" % quando, "an-meta", pct, valor, linhas, "feito: %s" % _n(feito), alt=alt,
-                      sp=segundo)
+    return _item_anel("Até %s" % quando, "an-meta", pct, valor, "feito: %s" % _n(feito), alt=alt, sp=segundo)
 
 
 def _html_dia(d, data_iso, r=None):
     """O topo do Painel, UMA placa: "Hoje, <dia>" e os QUATRO aneis lado a lado -- Questoes, Cards, Ritmo e
-    Ate 01/11 --, cada um com o % no centro e, abaixo, o rotulo, o valor e uma linha curta (s227, tema v4
-    part-5: pedido dele, "o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam aparecer junto no
-    topo, através desses anéis com percentual"). Cada anel contra a PROPRIA meta: nenhum numero soma
-    unidades (o "226" dos mockups). Sem `r` (o ritmo), so os dois do dia (Questoes e Cards).
+    Ate 01/11 --, cada um com o % no centro e, abaixo, o rotulo e UMA linha de valor (s227, tema v4 part-5:
+    pedido dele, "o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam aparecer junto no topo,
+    através desses anéis com percentual"; sem legendas desde o pedido de 13/10). Cada anel contra a PROPRIA
+    meta: nenhum numero soma unidades (o "226" dos mockups). Sem `r` (o ritmo), so os dois do dia (Questoes e
+    Cards).
 
     Hoje ao vivo: as ancoras `b[data-vivo]` ficam nos VALORES de Questoes e Cards (o hub poe o "+K" ao lado
     delas); o anel fica no valor PUBLICADO -- o hub so le a ancora, nao redesenha o SVG.
@@ -951,10 +931,10 @@ a{color:var(--acento);text-underline-offset:2px}
    mesmo vao: as bordas alinham. A ousadia mora so nos aneis; o resto quieto. Sem caixa por numero e sem
    legenda em prosa. */
 .dash{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--esp-4)}
-.kpi-r{color:var(--tinta3);font-size:var(--fs-meta);text-wrap:pretty}
 /* Hoje: Questoes · Cards · Ritmo · Ate 01/11, cada anel contra a propria meta (nada soma unidades). 2 x 2
    no celular, 4 em linha quando cabem. Todos do mesmo tamanho e no mesmo alinhamento: o anel, o rotulo e o
-   valor na mesma altura em toda a linha. O % grande no centro; o resto pequeno, centrado sob o anel */
+   valor na mesma altura em toda a linha. O % grande no centro; sob o anel so o rotulo e o valor (s227:
+   sem legendas, pedido dele de 13/10) */
 .aneis4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--esp-5) var(--esp-4)}
 .an4{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center}
 .anel{display:block;width:min(100%,7.5rem);height:auto;margin:0 0 var(--esp-2)}
@@ -973,14 +953,6 @@ a{color:var(--acento);text-underline-offset:2px}
 .an4 h3{margin:0;font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2)}
 .an-val{margin-top:2px;font-size:var(--fs-legenda);color:var(--tinta2)}
 .an-val b{font-size:var(--fs-secao);font-weight:700;color:var(--tinta)}
-.an4 .kpi-r{margin-top:2px;line-height:1.4;text-wrap:balance}
-/* estado do Ritmo: a cor vem sempre com o texto ("abaixo de 80/dia" / "em dia") */
-.an4 .an-estado{font-weight:650}
-.an4 .an-estado.abaixo{color:var(--aviso)}
-.an4 .an-estado.em-dia{color:var(--ok)}
-.sw-sp{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--roxo);opacity:.5;margin-right:var(--esp-1);vertical-align:-1px}
-.ir{font-weight:600}
-.ir a{display:inline-flex;align-items:center;min-height:44px}
 /* Por bloco: nome | barra de acerto (0-100%) | % | feitas/total; o mais fraco em ambar + o rotulo */
 .bls{list-style:none;margin:0;padding:0}
 .bl{display:grid;grid-template-columns:4.75rem minmax(0,1fr) 3.25rem 4rem;gap:var(--esp-2);align-items:center;

@@ -1907,7 +1907,7 @@ def test_lista_registrada_no_plano_nao_conta_as_respostas():
     assert out == {"k": 3, "nada": 0}
 
 
-ACAO_VIVO = r"""
+VIVO_PREPARO = r"""
 Object.keys(CFG.colecoes || {}).forEach(function(k){ BANCO[k] = CFG.colecoes[k]; });
 (BANCO.respostas ? Object.keys(BANCO.respostas) : []).forEach(function(k){ var r = BANCO.respostas[k];
   if(r.respondido_em === "HOJE"){ r.respondido_em = new Date().toISOString(); }
@@ -1915,9 +1915,21 @@ Object.keys(CFG.colecoes || {}).forEach(function(k){ BANCO[k] = CFG.colecoes[k];
 function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
 function fracao(chave){ var b = $("pa").querySelector('b[data-vivo="' + chave + '"]'), s = $("pa").querySelector('span.vivo[data-vivo-de="' + chave + '"]');
   return {b: b.textContent, base: b.getAttribute("data-base"), mais: s ? s.textContent : null, title: s ? s.getAttribute("title") : null}; }
+"""
+
+ACAO_VIVO = VIVO_PREPARO + r"""
 painelVivo($("pa"), CFG.semDb ? null : DB);
 espera().then(espera).then(espera).then(espera).then(function(){
   console.log(JSON.stringify({cards: fracao("cards"), questoes: fracao("questoes"), escritas: ESCRITAS})); });
+"""
+
+#: s227: o db como o `painelListas` o entrega (o `use("db")` no. 1) e a foto depois de `CFG.esperaMs` (o relogio
+#: do RELOGIO_JS encurta 10x as esperas >= 1 s da retentativa)
+ACAO_VIVO_CONEXAO = VIVO_PREPARO + r"""
+window.claude.use("db").then(function(db){ painelVivo($("pa"), db); });
+_st(function(){
+  console.log(JSON.stringify({cards: fracao("cards"), questoes: fracao("questoes"), escritas: ESCRITAS, usos: USOS_DB,
+                              esperas: ESPERAS_VISTAS, avisos: AVISOS_LEITURA, texto: $("pa").textContent})); }, CFG.esperaMs);
 """
 
 
@@ -1936,14 +1948,21 @@ def _painel_vivo_html(sessao_gravada):
             % (painel._html_dia(d, "2026-10-05"), "".join(painel._html_tarefa(t(i)) for i in (49, 68))))
 
 
-def _rodar_vivo(sessao_no_ar="2026-10-05b", sessao_gravada="2026-10-05a", **cfg):
+def _rodar_vivo(sessao_no_ar="2026-10-05b", sessao_gravada="2026-10-05a", acao=None, conexao="", **cfg):
+    """O `painelVivo` REAL sobre o banco falso do test_hub_quadro. `conexao` (JS) troca o `use("db")` depois do
+    banco (o CONEXAO_JS: a 1a conexao falha em toda leitura) e entra com o RELOGIO_JS antes dele."""
     from tools.test_hub_quadro import BANCO_QD, DOM_QD, _arvore
     lote = '<script id="lote" type="application/json">%s</script>' % json.dumps({"sessao": sessao_no_ar, "cards": []})
     arvore = _arvore(_painel_vivo_html(sessao_gravada) + lote)
-    funcs = "\n".join([VIVO_PURAS, _funcs("function vivoPintar(doc, chave, k){", "function loteNoAr(){",
-                                          "function painelVivo(doc, db){")])
-    prog = (DOM_QD.replace("__ARVORE__", json.dumps(arvore, ensure_ascii=False)) +
-            BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + funcs + "\n" + ACAO_VIVO)
+    # s227: o painelVivo le pela assinatura resiliente (retentativa com conexao nova)
+    funcs = "\n".join([VIVO_PURAS, _var("ESPERAS_LEITURA"),
+                       _funcs("function assinarResiliente(consulta, onDados, opts){",
+                              "function vivoPintar(doc, chave, k){", "function loteNoAr(){",
+                              "function painelVivo(doc, db){")])
+    relogio = RELOGIO_JS.replace("__FALHAS__", "{}") if conexao else ""
+    prog = (DOM_QD.replace("__ARVORE__", json.dumps(arvore, ensure_ascii=False)) + relogio +
+            BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + conexao + "\n" + funcs + "\n" +
+            (acao or ACAO_VIVO))
     return _node(prog)
 
 
@@ -2248,10 +2267,39 @@ def test_retentativa_pede_conexao_nova():
     assert qd["depois"]["oculto"] is True and qd["feito"] is True and qd["estado"] == "viva"
     assert qd["usos"] == 2 and qd["ativos"] == {"quadro": 1}
 
-    # a forma: os 4 chamadores montam a consulta sobre o db RECEBIDO, nunca o capturado
-    assert TEMPLATE.count("assinarResiliente(function(db){ return db.collection(") == 4
+    # a forma: os chamadores montam a consulta sobre o db RECEBIDO, nunca o capturado -- os 4 das abas e,
+    # desde a s227, os 3 do "+K" do Painel (notas do lote, listas, respostas de cada lista)
+    assert TEMPLATE.count("assinarResiliente(function(db){ return db.collection(") == 7
     assert "assinarResiliente(function(){" not in TEMPLATE and "QZ.db.collection(col)" not in TEMPLATE
     assert TEMPLATE.count("aoReconectar: function(novo){ QZ.db = novo; }") == 2
+
+
+def test_ao_vivo_do_painel_sobrevive_a_conexao_morta():
+    """s227 (relato dele, 13/10: "eu ja fiz questões. por que elas não estão aparecendo no painel?"): o hub
+    republicado com a pagina aberta mata a conexao do `db` -- as leituras do `painelVivo` engoliam o erro e o
+    "+11" das questoes de hoje ficava em 0, calado (o mesmo A18 da v108). Com `leitura=conexao` (a 1a conexao,
+    a que o `painelListas` entrega, falha em TODA leitura) o "+K" das questoes e dos cards aparece pela
+    retentativa com conexao nova; com o banco morto de vez, fica o publicado, sem botao e sem quebrar."""
+    out = _rodar_vivo(colecoes=COLECOES_VIVO, conexao=CONEXAO_JS, acao=ACAO_VIVO_CONEXAO, esperaMs=400)
+    assert out["cards"] == {"b": "62", "base": "62", "mais": "+2", "title": "desde o publish"}
+    assert out["questoes"] == {"b": "30", "base": "30", "mais": "+3", "title": "desde o publish"}
+    assert out["escritas"] == [], "o Painel nunca grava"
+    assert out["usos"] == 3, "o do painelListas + uma reconexao por leitura que caiu (notas, listas)"
+    assert out["esperas"] == [1000, 1000]
+    assert sorted(a[0] for a in out["avisos"]) == ["[hub] leitura listas do painel falhou",
+                                                   "[hub] leitura notas do painel falhou"]
+    assert all(a[1:] == ["unavailable", 1] for a in out["avisos"]), "o console.warn com o codigo e a tentativa"
+    # o banco morto de vez: 1 + 3 tentativas por leitura, o publicado fica, nenhum "Tentar de novo" no Painel
+    morta = CONEXAO_JS + 'window.claude.use = function(){ USOS_DB++; return Promise.resolve(DB_MORTO); };\n'
+    fim = _rodar_vivo(colecoes=COLECOES_VIVO, conexao=morta, acao=ACAO_VIVO_CONEXAO, esperaMs=1200)
+    assert fim["cards"]["mais"] is None and fim["questoes"]["mais"] is None and fim["cards"]["b"] == "62"
+    assert sorted(fim["esperas"]) == [1000, 1000, 2000, 2000, 4000, 4000]
+    assert sorted(a[2] for a in fim["avisos"]) == [1, 1, 2, 2, 3, 3, 4, 4]
+    assert "Tentar de novo" not in fim["texto"]
+    # a forma: nenhuma leitura direta sobrou no painelVivo
+    corpo = _funcs("function painelVivo(doc, db){")
+    assert ".onSnapshot(" not in corpo and corpo.count("assinarResiliente(") == 3
+    assert "aoMorrer" not in corpo, "sem botao no Painel: esgotadas, fica o publicado"
 
 
 def test_chip_da_lista_so_fora_do_normal():

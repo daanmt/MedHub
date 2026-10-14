@@ -1858,10 +1858,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   }
   // "+K" num span PROPRIO logo depois do numero publicado; K = 0 tira o span
   function vivoPintar(doc, chave, k){
+    // o anel acompanha o "+K": (publicado + K) / total, o total lido do "de N" sob o anel; sem arco (0%), nasce um
+    function anelVivo(b, chave, k){
+      var an = b.closest ? b.closest(".an4") : null;
+      var svg = an ? an.querySelector("svg.anel") : null;
+      var m = /de\s*([\d.]+)/.exec(b.parentNode.textContent || "");
+      if(!svg || !m){ return; }
+      var total = parseInt(m[1].replace(/\./g, ""), 10), base = parseInt(b.getAttribute("data-base") || "0", 10) || 0;
+      if(!total){ return; }
+      var pct = Math.max(0, Math.min(100, Math.round((base + (k || 0)) * 100 / total)));
+      var arco = svg.querySelector("circle.an-arco");
+      if(!arco){
+        arco = svg.ownerDocument.createElementNS("http://www.w3.org/2000/svg", "circle");
+        arco.setAttribute("class", "an-arco " + (chave === "cards" ? "an-c" : "an-q"));
+        ["cx", "cy"].forEach(function(a){ arco.setAttribute(a, "60"); });
+        arco.setAttribute("r", "52"); arco.setAttribute("pathLength", "100");
+        arco.setAttribute("transform", "rotate(-90 60 60)");
+        var trilho = svg.querySelector("circle.an-trilho");
+        svg.insertBefore(arco, trilho ? trilho.nextSibling : svg.firstChild);
+      }
+      arco.setAttribute("stroke-dasharray", pct + " 100");
+      var t = svg.querySelector("text.an-pct");
+      if(t && t.firstChild && t.firstChild.nodeType === 3){ t.firstChild.nodeValue = String(pct); }
+    }
     var b = doc.querySelector('b[data-vivo="' + chave + '"]');
     if(!b || !b.parentNode){ return; }
     var s = b.parentNode.querySelector('span.vivo[data-vivo-de="' + chave + '"]');
-    if(!k){ if(s){ s.parentNode.removeChild(s); } return; }
+    if(!k){ if(s){ s.parentNode.removeChild(s); anelVivo(b, chave, 0); } return; }
     if(!s){
       s = (doc.nodeType === 9 ? doc : document).createElement("span");
       s.className = "vivo";
@@ -1870,6 +1893,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       b.parentNode.insertBefore(s, b.nextSibling || null);
     }
     s.textContent = "+" + k;
+    anelVivo(b, chave, k);
   }
   function loteNoAr(){ try{ return JSON.parse(($("lote") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
   // s227: as tres leituras (notas do lote, listas, respostas de cada lista) passam pela `assinarResiliente`

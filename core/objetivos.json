@@ -432,6 +432,23 @@
         "Esclerose lateral amiotrófica",
         "Exames: ENMG, liquor, CK"
       ]
+    },
+    {
+      "tema": "Complicações pós-operatórias",
+      "listas": [
+        "t122"
+      ],
+      "objetivos": [
+        "Febre pós-operatória por tempo",
+        "Infecção de sítio cirúrgico",
+        "Deiscência de ferida e evisceração",
+        "Fístula e deiscência de anastomose",
+        "Íleo e obstrução pós-operatória",
+        "Tromboembolismo venoso",
+        "Complicações pulmonares",
+        "Distúrbios hidroeletrolíticos e oligúria",
+        "Profilaxia e risco cirúrgico"
+      ]
     }
   ]
 }

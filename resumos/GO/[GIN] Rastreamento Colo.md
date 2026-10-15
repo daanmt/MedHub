@@ -104,7 +104,7 @@ DNA-HPV
     - ≥ 25 anos: Repetir em **6 meses** (independente de ter 27 ou 32 anos).
 - **ASC-H**: Colposcopia imediata em qualquer idade.
 - **LIE-AG**: Colposcopia imediata em qualquer idade.
-- **AGC / AOI**: Colposcopia imediata (+ avaliar endométrio se ≥ 45 anos ou sangramento anormal).
+- **AGC / AOI**: Colposcopia imediata (+ avaliar endométrio se ≥ 35 anos, ou em qualquer idade com sangramento uterino anormal -- MS/INCA 2016).
 - **Carcinoma invasor**: Colposcopia imediata.
 
 > ⚠️ **Padrão de prova -- ASCUS vs LIE-BG na faixa 25-29 anos**: ASCUS nessa faixa = repetir em **12 meses**. LIE-BG nessa faixa = repetir em **6 meses**. Trocar os intervalos é a armadilha clássica.

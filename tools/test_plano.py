@@ -1463,7 +1463,7 @@ def test_sprint_json_e_a_unica_fonte_dos_numeros():
     cfg = plano.ler_sprint()
     assert cfg == {"inicio": "2026-10-13", "fim": "2026-10-31", "capacidade_q": 80,
                    "simulados": {"892": "2026-10-17", "891": "2026-10-21", "890": "2026-10-25"},
-                   "cortar": [1798, 1799]}
+                   "cortar": [1798, 1799], "nao_antes": {}}
     fonte = Path(plano.__file__).read_text(encoding="utf-8")
     trecho = fonte[fonte.index("# ------------------------------------------------- sprint final"):
                    fonte.index("def main(argv=None):")]
@@ -1503,6 +1503,15 @@ def test_sprint_ordem_por_faixa_e_peso_do_bloco():
     linhas = [_t(1, 80, faixa=None), _t(2, 80, area="Preventiva", faixa="baixa")]
     p3 = plano.montar_sprint(linhas, dict(_CFG, simulados={}), _HOJE, _PESO)
     assert p3["dias"]["2026-10-13"] == [2], "sem faixa (tarefa custom) vai por ultimo"
+
+
+def test_sprint_nao_antes_segura_a_tarefa_ate_a_data():
+    """s229: tarefa com `nao_antes` so entra em dia >= a data, mesmo com vaga antes."""
+    linhas = [_t(3, 10, area="Preventiva")]
+    p = plano.montar_sprint(linhas, dict(_CFG, simulados={}, nao_antes={"3": "2026-10-16"}),
+                            _HOJE, _PESO)
+    assert p["dias"]["2026-10-16"] == [3]
+    assert all(3 not in ids for d, ids in p["dias"].items() if d < "2026-10-16")
 
 
 def test_sprint_deterministico_e_feita_nao_entra():

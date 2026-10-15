@@ -247,9 +247,26 @@ def test_certo_errado_e_alternativa_so_imagem_saem_declaradas_e_a_contagem_fecha
 HUPE = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
 
 
-def test_spoiler_uerj_le_os_rotulos_reais_do_banco():
-    """As formas de rotulo da UERJ medidas no ipub.db (s219): o ano vem no fim, depois de virgula,
+ANOS_S219 = frozenset(range(2022, 2027))
+
+
+def test_spoiler_uerj_revogado_uerj_2022_2026_passa(ambiente, monkeypatch, capsys):
+    """s229 (15/10/2026): o operador revogou o filtro -- questao UERJ 2022-2026 entra na lista como
+    qualquer outra ("treino a prevalencia e garanto uns pontinhos nos simulados")."""
+    assert emed_api.ANOS_SPOILER_UERJ == frozenset()
+    assert not emed_api.spoiler_uerj(f"{HUPE}, 2022") and not emed_api.spoiler_uerj("UERJ")
+    uerj22 = _item("4000000002")
+    uerj22["exams"] = [_exame(HUPE, 2022)]
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), uerj22]))
+    assert _cli(ambiente, "--apply", "--expect", "2", "--json") == 0
+    r = json.loads(capsys.readouterr().out)
+    assert (r["achadas"], r["gravadas"], r["spoiler_uerj"]) == (2, 2, [])
+
+
+def test_spoiler_uerj_le_os_rotulos_reais_do_banco(monkeypatch):
+    """⚰️ s219 (revogada 15/10/2026, s229; mecanismo dormente). As formas de rotulo da UERJ medidas no ipub.db (s219): o ano vem no fim, depois de virgula,
     de hifen ou de espaco; caixa alta existe. So 2022-2026 e spoiler (os simulados do hub)."""
+    monkeypatch.setattr(emed_api, "ANOS_SPOILER_UERJ", ANOS_S219)
     assert emed_api.spoiler_uerj(f"{HUPE}, 2022") and emed_api.spoiler_uerj(f"{HUPE}, 2026")
     assert not emed_api.spoiler_uerj(f"{HUPE}, 2021") and not emed_api.spoiler_uerj(f"{HUPE}, 2017")
     assert emed_api.spoiler_uerj("UERJ (Hospital Universitário Pedro Ernesto - HUPE) - RJ 2022")
@@ -261,10 +278,11 @@ def test_spoiler_uerj_le_os_rotulos_reais_do_banco():
 
 
 def test_questao_uerj_2022_2026_sai_declarada_em_qualquer_exame(ambiente, monkeypatch, capsys):
-    """Regressao da s219 (07/10/2026): 36 questoes da UERJ 2022 -- o simulado da semana -- tinham
+    """⚰️ s219 (revogada 15/10/2026, s229; mecanismo dormente). Regressao da s219 (07/10/2026): 36 questoes da UERJ 2022 -- o simulado da semana -- tinham
     entrado em 22 listas da Fase 1 (o filtro do EMED nao exclui instituicao). Questao UERJ 2022-2026
     sai DECLARADA por numero, olhando TODOS os exames da questao (a banca do doc e so a do 1o), e
     antes das regras de forma: spoiler com 3 alternativas nao derruba a lista."""
+    monkeypatch.setattr(emed_api, "ANOS_SPOILER_UERJ", ANOS_S219)
     uerj22 = _item("4000000002")
     uerj22["exams"] = [_exame(HUPE, 2022)]
     no_2o = _item("4000000003")
@@ -283,6 +301,8 @@ def test_questao_uerj_2022_2026_sai_declarada_em_qualquer_exame(ambiente, monkey
 
 
 def test_expect_errado_conta_os_spoilers_declarados(ambiente, monkeypatch, capsys):
+    """⚰️ s219 (regra revogada em 15/10/2026, s229): o mecanismo dormente segue testado com os anos religados."""
+    monkeypatch.setattr(emed_api, "ANOS_SPOILER_UERJ", ANOS_S219)
     uerj = _item("4000000002")
     uerj["exams"] = [_exame(HUPE, 2026)]
     monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), uerj]))

@@ -28,12 +28,24 @@
    componente do hub mora AQUI e so aqui. Linhas com filete em vez de cartoes; moldura so para o que e
    objeto de toque (alternativa, card, campo); ciano = navegacao ativa, foco, progresso, acao primaria. */
 .hub-topo{margin-bottom:var(--esp-3);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-2) var(--esp-4)}
-/* s227 (part 6, pedido dele): a cor do marca-texto, a direita da marca. Tres amostras de 44 px (o texto sobre a
-   lavagem, como o grifo fica); a ativa ganha o contorno ciano e aria-pressed, nunca so a cor. Vale para todos os
-   grifos (questoes e leitor) e fica lembrada no aparelho */
-.hub-grifo-cor{display:flex;align-items:center;gap:var(--esp-1);min-width:0}
-.hub-grifo-rot{font-size:var(--fs-meta);color:var(--tinta3);margin-right:var(--esp-1)}
-.hub-grifo-cor button{min-width:44px;min-height:44px;padding:0;border:2px solid transparent;border-radius:var(--raio);display:inline-flex;align-items:center;justify-content:center;background:transparent}
+/* s228 (pedido dele): a cor do marca-texto e UM botao so, DENTRO do leitor da Teoria (fora do topo e das outras telas);
+   tocar abre em cascata as tres cores (rosa, ciano, amarelo), uma depois da outra. A cor escolhida vale para os
+   PROXIMOS grifos: cada grifo guarda a cor com que nasceu (sem cor gravada = rosa). O botao mostra a cor ativa
+   (--qz-grifo, trocado pelo data-grifo); a ativa da lista ganha contorno ciano e aria-pressed, nunca so a cor */
+.hub-grifo{position:relative;margin-left:auto;min-width:0}
+.hub-grifo-btn{display:inline-flex;align-items:center;gap:var(--esp-2);min-height:44px;padding:0 var(--esp-3);color:var(--tinta2)}
+.hub-grifo-btn[aria-expanded="true"]{border-color:var(--acento);color:var(--tinta)}
+.hub-grifo-btn .hub-grifo-am{background:var(--qz-grifo)}
+.hub-grifo-rot{font-size:var(--fs-meta)}
+.hub-grifo-cor{position:absolute;right:0;top:calc(100% + var(--esp-1));z-index:5;display:flex;flex-direction:column;gap:var(--esp-1);
+  padding:var(--esp-1);background:var(--card);border:1px solid var(--borda-placa);border-radius:var(--raio);
+  visibility:hidden;transition:visibility 0s linear 200ms}
+.hub-grifo[data-aberto="true"] .hub-grifo-cor{visibility:visible;transition:none}
+.hub-grifo-cor button{min-width:44px;min-height:44px;padding:0;border:2px solid transparent;border-radius:var(--raio);display:inline-flex;align-items:center;justify-content:center;background:transparent;
+  opacity:0;transform:translateY(-6px);transition:opacity var(--transicao),transform var(--transicao)}
+.hub-grifo[data-aberto="true"] .hub-grifo-cor button{opacity:1;transform:none}
+.hub-grifo[data-aberto="true"] .hub-grifo-cor button:nth-child(2){transition-delay:60ms}
+.hub-grifo[data-aberto="true"] .hub-grifo-cor button:nth-child(3){transition-delay:120ms}
 .hub-grifo-cor button:hover{background:transparent;border-color:var(--linha-forte)}
 .hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}
 .hub-grifo-am{padding:1px var(--esp-1);border-radius:var(--raio-p);font-size:var(--fs-legenda);font-weight:650;line-height:1.35;color:var(--tinta)}
@@ -290,8 +302,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 .qz-porque{grid-column:1 / -1;margin:0;padding:var(--esp-2) var(--esp-3) var(--esp-3) calc(2.25rem + var(--esp-2) + var(--esp-3));border-top:1px solid var(--linha);color:var(--tinta2);font-size:var(--fs-legenda);line-height:1.5;min-width:0}
 .qz-alt.tem-pq:not(.aberta) .qz-alt-txt::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
 /* s211 (part-4): marca-texto; tocar no grifo o remove. s227 (part 6, pedido dele): pinta so o FUNDO e o texto fica com
-   a cor dele; a cor e a ativa do seletor do topo (--qz-grifo, uma so para todos os grifos) */
-.qz-grifo{background:var(--qz-grifo);color:inherit;border-radius:3px;cursor:pointer}
+   a cor dele. s228: o seletor de cor mora so no leitor da Teoria e troca so os PROXIMOS grifos; nas questoes, onde
+   ele nao aparece, o grifo fica no rosa padrao (trocar a cor nunca repinta grifo que ja existe) */
+.qz-grifo{background:var(--grifo-rosa);color:inherit;border-radius:3px;cursor:pointer}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
 .qz-cad{display:grid;gap:var(--esp-3);min-width:0}
 .qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2);margin:0;font-weight:700;color:var(--tinta)}
@@ -429,12 +442,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 
   <header class="hub-topo">
     <p class="hub-marca">Med<span>Hub</span></p>
-    <div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do grifo">
-      <span class="hub-grifo-rot" aria-hidden="true">Grifo</span>
-      <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
-      <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
-      <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
-    </div>
   </header>
 
   <nav class="hub-abas" role="tablist" aria-label="Secoes do MedHub">
@@ -457,6 +464,14 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       <div class="hub-leitor-barra">
         <button type="button" id="hub-leitor-voltar">&lsaquo; Teoria</button>
         <p class="hub-leitor-titulo" id="hub-leitor-titulo"></p>
+        <div class="hub-grifo" id="hub-grifo" data-aberto="false">
+          <button type="button" class="hub-grifo-btn" id="hub-grifo-btn" aria-expanded="false" aria-controls="hub-grifo-cor" aria-label="Cor do próximo grifo" title="Cor do próximo grifo"><span class="hub-grifo-am" aria-hidden="true">Aa</span><span class="hub-grifo-rot">Grifo</span></button>
+          <div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do próximo grifo">
+            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+          </div>
+        </div>
       </div>
       <p class="hub-aviso" id="hub-leitor-aviso" hidden>Nao consegui abrir a aula aqui dentro. <a id="hub-leitor-link" href="#">Abrir em pagina inteira</a>.</p>
       <div class="placa hub-leitor-placa"><iframe class="hub-quadro" id="hub-leitor-quadro" title="Teoria"></iframe></div>
@@ -1424,7 +1439,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // (a ocorrencia mais perto do offset) > o trecho no bloco mais perto do documento; nao achou = null. PURA.
   function grifoResolver(textos, g){
     if(!grifoValido(g)){ return null; }
-    var t = textos[g.b];
+    var t = textos[g.b], cor = (g.cor === "ciano" || g.cor === "amarelo") ? g.cor : "", achou = grifoResolverPos(textos, g, t);
+    if(achou && cor){ achou.cor = cor; }   // s228: a cor com que o grifo nasceu (sem cor = rosa, o padrao de antes)
+    return achou;
+  }
+  function grifoResolverPos(textos, g, t){
     if(typeof t === "string" && t.slice(g.ini, g.fim) === g.txt){ return {b: g.b, ini: g.ini, fim: g.fim, txt: g.txt}; }
     if(typeof t === "string"){
       var melhor = -1, i = t.indexOf(g.txt);
@@ -1436,14 +1455,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       if(j >= 0 && (!achou || Math.abs(b - g.b) < Math.abs(achou.b - g.b))){ achou = {b: b, ini: j, fim: j + g.txt.length, txt: g.txt}; } });
     return achou;
   }
-  // a lista salva -> a lista de agora: re-ancorada, mesclada por bloco (o mesclar das questoes), `txt`
-  // refeito do texto e em ordem de documento. PURA.
+  // a lista salva -> a lista de agora: re-ancorada, mesclada por bloco E COR (o mesclar das questoes; s228: grifos de
+  // cores diferentes nao se fundem), `txt` refeito do texto e em ordem de documento. PURA.
   function grifoNormalizar(textos, lista){
-    var porBloco = {}, out = [];
-    (Array.isArray(lista) ? lista : []).forEach(function(g){ var r = grifoResolver(textos, g); if(r){ (porBloco[r.b] = porBloco[r.b] || []).push([r.ini, r.fim]); } });
-    Object.keys(porBloco).map(Number).sort(function(a, b){ return a - b; }).forEach(function(b){
-      qzGrifoMesclar(porBloco[b], null).forEach(function(v){ out.push({b: b, ini: v[0], fim: v[1], txt: textos[b].slice(v[0], v[1])}); }); });
-    return out;
+    var porChave = {}, out = [];
+    (Array.isArray(lista) ? lista : []).forEach(function(g){ var r = grifoResolver(textos, g);
+      if(r){ var k = r.b + "|" + (r.cor || ""); (porChave[k] = porChave[k] || []).push([r.ini, r.fim]); } });
+    Object.keys(porChave).forEach(function(k){
+      var b = parseInt(k, 10), cor = k.slice(k.indexOf("|") + 1);
+      qzGrifoMesclar(porChave[k], null).forEach(function(v){ var g = {b: b, ini: v[0], fim: v[1], txt: textos[b].slice(v[0], v[1])};
+        if(cor){ g.cor = cor; } out.push(g); }); });
+    return out.sort(function(x, y){ return (x.b - y.b) || (x.ini - y.ini) || (x.fim - y.fim); });
   }
   // tira o branco das pontas da selecao; [ini, fim] ou null se sobra menos de 2 caracteres. PURA.
   function grifoAparar(texto, ini, fim){
@@ -1504,7 +1526,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     return GRIFO.fila;
   }
   function grifoSalvar(slug, grifos){
-    var lista = grifos.map(function(g){ return {b: g.b, ini: g.ini, fim: g.fim, txt: g.txt}; });
+    var lista = grifos.map(function(g){ var x = {b: g.b, ini: g.ini, fim: g.fim, txt: g.txt}; if(g.cor){ x.cor = g.cor; } return x; });
     grifoLocal(slug, {grifos: lista, atualizado_em: new Date().toISOString(), pendente: true});   // o aparelho ANTES do banco
     return grifoEnviar(slug);
   }
@@ -1547,6 +1569,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         var alvo = f[1] > 0 ? t.splitText(f[1]) : t;
         if(f[2] - f[1] < alvo.data.length){ alvo.splitText(f[2] - f[1]); }
         var mk = doc.createElement("mark"); mk.className = "hub-grifo"; mk.setAttribute("data-g", String(k));
+        if(g.cor){ mk.setAttribute("data-cor", g.cor); }
         alvo.parentNode.insertBefore(mk, alvo); mk.appendChild(alvo);
       });
     });
@@ -1575,7 +1598,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     ctx.blocos.some(function(bl, b){
       if(!rg.intersectsNode(bl)){ return false; }
       var texto = bl.textContent, v = grifoAparar(texto, grifoPos(doc, bl, rg.startContainer, rg.startOffset), grifoPos(doc, bl, rg.endContainer, rg.endOffset));
-      if(v){ novo = {b: b, ini: v[0], fim: v[1], txt: texto.slice(v[0], v[1])}; }
+      if(v){ novo = {b: b, ini: v[0], fim: v[1], txt: texto.slice(v[0], v[1])}; var cor = grifoCorValida(raiz.getAttribute("data-grifo"));
+        if(cor !== "rosa"){ novo.cor = cor; } }   // s228: nasce com a cor ativa e a guarda
       return !!novo;
     });
     if(!novo){ return false; }
@@ -1588,16 +1612,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(GRIFO.ctx !== ctx || (ctx.grifouEm && Date.now() - ctx.grifouEm < 500) || !(k >= 0 && k < ctx.grifos.length)){ return; }
     grifoMudar(ctx, ctx.grifos.filter(function(g, i){ return i !== k; }));
   }
-  // s227 (part 6): o estilo do grifo no documento aberto e ATUALIZADO quando a cor muda no topo (antes, injetado uma
-  // vez so). O fundo e a cor ativa do shell (valor computado de --qz-grifo); o texto fica com a cor dele (inherit)
+  // s228: o estilo do grifo no documento aberto -- uma regra por cor (o grifo leva data-cor; sem = rosa), com os
+  // valores computados do shell (--grifo-*); o texto fica com a cor dele (inherit). Trocar a cor ativa NAO o reescreve
   function grifoEstilo(doc){
     if(!doc || !doc.head){ return; }
     var s = doc.getElementById("hub-grifo-estilo");
     if(!s){ s = doc.createElement("style"); s.id = "hub-grifo-estilo"; doc.head.appendChild(s); }
-    var cs = window.getComputedStyle(raiz), cor = raiz.getAttribute("data-grifo");
-    if(cor && doc.documentElement){ doc.documentElement.setAttribute("data-grifo", cor); }
-    s.textContent = "mark.hub-grifo{background:" + (cs.getPropertyValue("--qz-grifo").trim() || "Mark") + ";color:inherit;" +
+    var cs = window.getComputedStyle(raiz);
+    function v(c){ return cs.getPropertyValue("--grifo-" + c).trim() || "Mark"; }
+    s.textContent = "mark.hub-grifo{background:" + v("rosa") + ";color:inherit;" +
       "border-radius:3px;padding:0;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}" +
+      'mark.hub-grifo[data-cor="ciano"]{background:' + v("ciano") + "}" +
+      'mark.hub-grifo[data-cor="amarelo"]{background:' + v("amarelo") + "}" +
       "span.hub-grifo-caixa{display:inline}";
   }
   // o banco ao abrir: reconcilia com o aparelho e repinta so se mudou
@@ -1639,11 +1665,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     grifoLer(ctx);
   }
 
-  // ------------------------------------------------ cor do grifo (s227, hub-tema-v4 part 6)
-  // Pedido dele: "Seria ate interessante se desse para ter as 3 cores [...] troca-las". Decidido por ele: UMA cor
-  // ativa (rosa por padrao) para todos os grifos, trocada no topo do hub e lembrada no aparelho
-  // (localStorage["medhub.grifo"]); sem armazenamento, rosa. O dado de cada grifo nao muda: a cor e so a
-  // apresentacao (data-grifo no <html> do shell; o tema.css troca o --qz-grifo). O leitor aberto troca na hora.
+  // ------------------------------------------------ cor do grifo (s227, hub-tema-v4 part 6; s228)
+  // s227: UMA cor ativa (rosa por padrao), lembrada no aparelho (localStorage["medhub.grifo"]); sem armazenamento, rosa.
+  // s228 (pedido dele: "alterando apenas a cor dos proximos grifos, e nao todos [...] um botao que apareca so dentro
+  // do bloco de teoria [...] que expande em cascata com as 3 opcoes"): a cor ativa e a dos PROXIMOS grifos (o grifo
+  // guarda a sua, `cor` no registro; sem `cor` = rosa) e mora num botao unico dentro do leitor da Teoria.
+  // `data-grifo` no <html> do shell so pinta a amostra do botao (--qz-grifo); nada que ja existe e repintado.
   var GRIFO_CORES = ["rosa", "ciano", "amarelo"], GRIFO_COR_CHAVE = "medhub.grifo";
   function grifoCorValida(c){ return GRIFO_CORES.indexOf(c) >= 0 ? c : "rosa"; }   // PURA
   function grifoCorLer(){
@@ -1656,17 +1683,25 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(caixa){ Array.prototype.forEach.call(caixa.querySelectorAll("button[data-cor]"), function(b){
       b.setAttribute("aria-pressed", b.getAttribute("data-cor") === cor ? "true" : "false"); }); }
     if(gravar){ try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){} }
-    // o documento aberto no leitor: so se o marca-texto ja estiver ligado nele (falha aqui nunca derruba o leitor)
-    try{ var q = $("hub-leitor-quadro"), d = q ? q.contentDocument : null;
-      if(d && d.getElementById("hub-grifo-estilo")){ grifoEstilo(d); } }catch(e){}
     return cor;
   }
+  function grifoMenu(abrir){
+    var w = $("hub-grifo"), b = $("hub-grifo-btn");
+    if(!w || !b){ return; }
+    w.setAttribute("data-aberto", abrir ? "true" : "false"); b.setAttribute("aria-expanded", abrir ? "true" : "false");
+  }
   (function(){
-    var caixa = $("hub-grifo-cor");
+    var caixa = $("hub-grifo-cor"), btn = $("hub-grifo-btn");
     grifoCorAplicar(grifoCorLer(), false);
+    if(btn){ btn.addEventListener("click", function(){ grifoMenu(btn.getAttribute("aria-expanded") !== "true"); }); }
     if(caixa){ caixa.addEventListener("click", function(e){
       var b = (e.target && e.target.closest) ? e.target.closest("button[data-cor]") : null;
-      if(b){ grifoCorAplicar(b.getAttribute("data-cor"), true); } }); }
+      if(b){ grifoCorAplicar(b.getAttribute("data-cor"), true); grifoMenu(false); if(btn){ btn.focus(); } } }); }
+    document.addEventListener("click", function(e){ var w = $("hub-grifo");
+      if(w && w.getAttribute("data-aberto") === "true" && !w.contains(e.target)){ grifoMenu(false); } });
+    var w0 = $("hub-grifo");
+    if(w0){ w0.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && w0.getAttribute("data-aberto") === "true"){ grifoMenu(false); if(btn){ btn.focus(); } } }); }
   })();
 
   // ------------------------------------------------ secoes recolhiveis (s214, pedido do operador em 04/10/2026)

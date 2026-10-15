@@ -436,7 +436,8 @@
     {
       "tema": "Complicações pós-operatórias",
       "listas": [
-        "t122"
+        "t122",
+        "t144"
       ],
       "objetivos": [
         "Febre pós-operatória por tempo",
@@ -448,6 +449,35 @@
         "Complicações pulmonares",
         "Distúrbios hidroeletrolíticos e oligúria",
         "Profilaxia e risco cirúrgico"
+      ]
+    },
+    {
+      "tema": "Doença celíaca e febre reumática em pediatria",
+      "listas": [
+        "t483"
+      ],
+      "objetivos": [
+        "Celíaca: quadro clássico x atípico",
+        "Celíaca: sorologia e biópsia",
+        "Celíaca: dieta e seguimento",
+        "FR: critérios de Jones",
+        "FR: cardite e sequelas",
+        "FR: tratamento do surto",
+        "FR: profilaxia primária e secundária"
+      ]
+    },
+    {
+      "tema": "Polifarmácia, desprescrição e RAM no idoso",
+      "listas": [
+        "t879"
+      ],
+      "objetivos": [
+        "Conceito e epidemiologia da polifarmácia",
+        "Critérios de Beers e STOPP/START",
+        "Cascata de prescrição",
+        "Processo de desprescrição",
+        "Reação adversa e farmacocinética no idoso",
+        "Adesão e revisão de medicamentos"
       ]
     }
   ]

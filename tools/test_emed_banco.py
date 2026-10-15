@@ -229,9 +229,10 @@ def test_exportar_round_trip(tmp_path, monkeypatch, capsys):
 
 
 def test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed(tmp_path, monkeypatch, capsys):
-    """Regressao da s219 (07/10/2026): 37 questoes UERJ 2022-2026 sairam das listas do hub e ficaram
+    """⚰️ s219 (revogada 15/10/2026, s229; mecanismo dormente, religado aqui). Regressao da s219 (07/10/2026): 37 questoes UERJ 2022-2026 sairam das listas do hub e ficaram
     no ipub.db; o `--exportar` nao pode semea-las de volta. A prova da UERJ em si (`prova_pdf`) e o
     simulado e sai inteira."""
+    monkeypatch.setattr(emed_banco.emed_api, "ANOS_SPOILER_UERJ", frozenset(range(2022, 2027)))
     _usar_db(tmp_path, monkeypatch)
     base = tmp_path / "buf"
     hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
@@ -253,10 +254,28 @@ def test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed(tmp_path, monkeypatc
     assert (out / "questoes" / "t1794_1.json").is_file()
 
 
+def test_exportar_leva_uerj_2022_2026_ao_hub_regra_s229(tmp_path, monkeypatch, capsys):
+    """s229 (15/10/2026): filtro do spoiler UERJ revogado pelo operador -- a questao UERJ 2022-2026
+    de lista do EMED vai ao hub como qualquer outra."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "questoes", "t26_2", _questao(2, banca=f"{hupe}, 2022", executor="emed_api"))
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    capsys.readouterr()
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out), "--sem-cadeia", "teste s229"]) == 0
+    assert "spoiler UERJ fora" not in capsys.readouterr().out
+    assert sorted(p.name for p in (out / "questoes").glob("t26_*.json")) == ["t26_1.json", "t26_2.json"]
+    assert not emed_banco.fora_do_hub({"banca": f"{hupe}, 2022", "executor": "emed_api"})
+
+
 def test_contagem_no_hub_por_tarefa_e_a_do_exportar(tmp_path, monkeypatch, capsys):
-    """P20 (s219): a Teoria e o Painel contam as questoes da tarefa pelo MESMO criterio do `--exportar`
+    """⚰️ s219 (revogada 15/10/2026, s229; mecanismo dormente, religado aqui). P20 (s219): a Teoria e o Painel contam as questoes da tarefa pelo MESMO criterio do `--exportar`
     (o que a aba Listas recebe): o spoiler UERJ 2022-2026 de lista do EMED fica fora; a prova em PDF
     conta inteira. Uma regra so (`fora_do_hub`), usada pelos dois."""
+    monkeypatch.setattr(emed_banco.emed_api, "ANOS_SPOILER_UERJ", frozenset(range(2022, 2027)))
     _usar_db(tmp_path, monkeypatch)
     assert emed_banco.questoes_no_hub_por_tarefa() == {}, "banco sem a tabela = nada no hub"
     base = tmp_path / "buf"
@@ -1445,8 +1464,9 @@ def test_gate_exportar_so_figuras_nao_passa_pelo_gate(db_sintetico, tmp_path, ca
     assert "RECUSA" not in capsys.readouterr().out
 
 
-def test_gate_exportar_spoiler_nao_entra_na_conta(db_sintetico, tmp_path, capsys):
-    """DoD 3 (1.2): a questao spoiler (fora do hub) sem Solucao nao derruba a lista."""
+def test_gate_exportar_spoiler_nao_entra_na_conta(db_sintetico, tmp_path, capsys, monkeypatch):
+    """⚰️ s219 (revogada 15/10/2026, s229; mecanismo dormente, religado aqui). DoD 3 (1.2): a questao spoiler (fora do hub) sem Solucao nao derruba a lista."""
+    monkeypatch.setattr(emed_banco.emed_api, "ANOS_SPOILER_UERJ", frozenset(range(2022, 2027)))
     hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
     _semear_gate(db_sintetico, [_v3(1)], nums=(1,))
     assert db.emed_upsert_questoes([_questao(2, banca=f"{hupe}, 2022", executor="emed_api")])["novas"] == 1

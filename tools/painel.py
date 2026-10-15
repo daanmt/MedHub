@@ -675,16 +675,26 @@ def _html_dia(d, data_iso, r=None):
 
 def _html_agenda(ag):
     """Flashcards da semana: as revisoes previstas nos proximos 7 dias (`db.agenda_revisoes`), um dia por
-    barra, com a dica ao passar o mouse. s227 (part-5, pedido dele): ⚰️ *era "Revisões nos próximos 7 dias".*"""
-    maior = max([x["n"] for x in ag["dias"]] + [1])
-    barras = "".join(
-        '<li title="%s"><span class="ag-n">%d</span><span class="ag-trilho"><i style="height:%.0f%%"></i></span>'
-        '<span class="ag-d">%s</span></li>'
-        % (_e("%s: %s" % (_dia_curto(x["data"]), _plural(x["n"], "card", "cards").replace("&nbsp;", " "))),
-           x["n"], max(4.0, 100.0 * x["n"] / maior), DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()])
-        for x in ag["dias"])
-    return ('<div class="placa dash-sec agenda"><h3>Flashcards da semana</h3>'
-            '<ol class="ag-barras" aria-label="Flashcards previstos por dia">%s</ol></div>' % barras)
+    barra, com a dica ao passar o mouse. s227 (part-5, pedido dele): ⚰️ *era "Revisões nos próximos 7 dias".*
+    s228 (pedido dele: "melhorar a estetica do bloco [...] com liberdade para rever a paleta"): paleta propria
+    (`--fc*`, a familia rosa do anel de Cards), o total da semana no cabecalho e o PICO em barra cheia com o
+    numero em destaque (rotulo "pico" na dica: nunca so a cor); os outros dias em lavagem."""
+    maior = max([x["n"] for x in ag["dias"]] + [0])
+    total = sum(x["n"] for x in ag["dias"])
+    pico = next((x["data"] for x in ag["dias"] if maior and x["n"] == maior), None)
+
+    def barra(x):
+        e_pico = x["data"] == pico
+        dica = "%s: %s%s" % (_dia_curto(x["data"]), _plural(x["n"], "card", "cards").replace("&nbsp;", " "),
+                             " (pico da semana)" if e_pico else "")
+        return ('<li title="%s"%s><span class="ag-n">%d</span><span class="ag-trilho"><i style="height:%.0f%%"></i></span>'
+                '<span class="ag-d">%s</span></li>'
+                % (_e(dica), ' class="pico"' if e_pico else "", x["n"], max(4.0, 100.0 * x["n"] / max(maior, 1)),
+                   DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()]))
+    return ('<div class="placa dash-sec agenda"><div class="ag-cab"><h3>Flashcards da semana</h3>'
+            '<p class="ag-total"><b>%s</b> em 7 dias</p></div>'
+            '<ol class="ag-barras" aria-label="Flashcards previstos por dia">%s</ol></div>'
+            % (_n(total), "".join(barra(x) for x in ag["dias"])))
 
 
 def _html_tarefa(t, proxima=False):
@@ -969,7 +979,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .bl.fraco .bl-barra i{background:var(--aviso)}
 .bl.fraco .bl-pct{color:var(--aviso)}
 .bl.sim .bl-nome{color:var(--tinta2);font-weight:500}
-.bl.sim .bl-barra i{background:var(--linha-forte)}
+.bl.sim .bl-barra i{background:var(--roxo)}   /* s228 (pedido dele): o roxo do anel Ate 01/11 (questoes) */
 /* Flashcards da semana: as barras ocupam a placa (na grade, a altura da linha vem do Por bloco ao lado) */
 .agenda{display:flex;flex-direction:column}
 .ag-barras{list-style:none;margin:var(--esp-2) 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
@@ -977,8 +987,17 @@ a{color:var(--acento);text-underline-offset:2px}
 .ag-barras li{min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
 /* previsao (dado, nao acao): roxo, a cor de detalhe visual do tema */
-.ag-barras i{display:block;width:min(100%,28px);background:var(--roxo-fraco);border-top:2px solid var(--roxo);border-radius:var(--raio-p) var(--raio-p) 0 0}
-.ag-n{font-size:var(--fs-meta);color:var(--tinta2)}
+/* s228 (pedido dele): paleta propria do bloco (--fc*, a familia rosa do anel de Cards): o total no cabecalho, os dias
+   em lavagem, o PICO em barra cheia com o numero em destaque; uma linha de base sob as barras */
+.ag-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--esp-1) var(--esp-3)}
+.ag-cab h3{margin:0}
+.ag-total{margin:0;font-size:var(--fs-meta);color:var(--tinta3)}
+.ag-total b{font-size:var(--fs-secao);font-weight:700;color:var(--fc-tinta)}
+.ag-trilho{border-bottom:1px solid var(--linha-forte)}
+.ag-barras i{display:block;width:min(100%,32px);background:var(--fc-fraco);border-radius:var(--raio-p) var(--raio-p) 0 0}
+.ag-barras .pico i{background:var(--fc)}
+.ag-n{font-size:var(--fs-meta);font-weight:600;color:var(--tinta2)}
+.ag-barras .pico .ag-n{color:var(--fc-tinta);font-weight:700}
 .ag-d{font-size:var(--fs-meta);color:var(--tinta3)}
 
 /* Tarefas: o Hoje do sprint (ou, sem sprint, a semana do plano) */

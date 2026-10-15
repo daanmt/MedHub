@@ -202,7 +202,7 @@ aliases: [Meningoencefalites, Infecções do SNC]
 
 ## 14. Meningoencefalite Herpética
 ---
-- Causada majoritariamente por **HSV-1**; encefalite aguda; grupo etário mais afetado: **adultos > 50 anos**.
+- Causada majoritariamente por **HSV-1**; encefalite aguda; ocorre em **qualquer idade**, com picos < 20 e > 50 anos (IDSA 2008).
 - Mecanismo: HSV-1 latente em gânglios sensitivos reativa e atinge o encéfalo via nervos **olfatório (I)** e **trigêmeo (V)**.
 - ⭐ **Tropismo pelo córtex temporal mesial e frontal orbital** -- pode se espalhar contralateralmente pela comissura anterior.
 - **Quadro clínico -- regra dos 6 C:** Cefaleia, Calor (febre), Confusão mental, Comportamento alterado, Comunicação prejudicada (afasia), Convulsões. 🔴 Sinais meníngeos (rigidez de nuca) **nem sempre presentes**.
@@ -223,12 +223,12 @@ aliases: [Meningoencefalites, Infecções do SNC]
 - 🔴 Indicar dexametasona de rotina em toda meningite bacteriana -- só tem indicação formal em *S. pneumoniae* e *H. influenzae*.
 - 🔴 Usar corticosteroide na meningite criptocócica -- aumenta mortalidade/morbidade (reduz clareamento fúngico); é o oposto do manejo de Hib/pneumococo.
 - 🔴 Tratar antiparasitariamente a neurocisticercose com hidrocéfalo não tratado, carga cística elevada ou lesões só calcificadas.
-- 🔴 Esperar sinais meníngeos evidentes na meningoencefalite herpética -- frequentemente ausentes; o quadro é dominado por alteração aguda de comportamento/consciência em adulto > 50 anos.
+- 🔴 Esperar sinais meníngeos evidentes na meningoencefalite herpética -- frequentemente ausentes; o quadro é dominado por alteração aguda de comportamento/consciência, em qualquer idade.
 - 🔴 Descartar meningoencefalite herpética por PCR negativo em coleta muito precoce -- repetir em 3-5 dias se a suspeita clínica persistir, sem suspender o aciclovir empírico.
 - 🔴 Exigir TC de crânio antes da PL como conduta cautelosa padrão, mesmo sem nenhum critério de risco presente (imunossupressão, doença de SNC prévia, convulsão recente, papiledema, consciência alterada, déficit focal) -- inclusive em quadro grave (choque compensado por doença meningocócica).
 - 🔴 Achar que a investigação etiológica de N. meningitidis depende exclusivamente do líquor -- o PCR também roda em soro, sangue total e fragmentos de tecido.
 - 🔴 Ignorar o dado de foco contíguo recente (sinusite, otite, mastoidite) ao definir a etiologia bacteriana -- é a pista que aponta especificamente para pneumococo, mesmo com meningococo sendo estatisticamente mais citado em adultos.
-- 🔴 Associar automaticamente padrão de LCR linfomonocitário a herpes -- só considerar meningoencefalite herpética quando o SÍNDROME clínico for de encefalite (sinais focais/convulsão/consciência alterada, não meningite pura) E a idade for compatível (> 50 anos); em criança hígida com quadro puro de meningite, o linfomonocitário aponta para viral benigna (Enterovírus).
+- 🔴 Associar automaticamente padrão de LCR linfomonocitário a herpes -- só considerar meningoencefalite herpética quando o SÍNDROME clínico for de encefalite (sinais focais/convulsão/consciência alterada, não meningite pura), em qualquer idade; em criança hígida com quadro puro de meningite, o linfomonocitário aponta para viral benigna (Enterovírus).
 - 🔴 **Quimioprofilaxia pós-meningococo: RIFAMPICINA é o esquema preferencial, e a CEFTRIAXONA 250 mg IM em dose única é alternativa válida -- a preferida na gestante** (MS, Guia de Vigilância em Saúde 2023). Não marcar a ceftriaxona como errada por reflexo: quem decide é o perfil do contato (gestante -> ceftriaxona; criança -> rifampicina; adulto >= 18 anos não gestante -> ciprofloxacino como alternativa). O próprio paciente tratado com cefalosporina de 3ª geração já está coberto e dispensa a profilaxia.
 - 🔴 **Meningite tuberculosa: 12 meses, corticoide sempre, etambutol proibido abaixo de 10 anos.** Esquema = 2 meses de RHZ (RHZE só em >= 10 anos) + 10 meses de RH, com corticoide nas primeiras 4-8 semanas. Em criança < 10 anos NÃO se usa etambutol (neurite óptica não monitorável); a dose fixa combinada segue o peso (11 kg = 2 comprimidos da apresentação pediátrica). Marcar 6 meses (esquema pulmonar), incluir etambutol no pré-escolar ou usar a dose do adulto são os três distratores.
 - 🔴 **Dexametasona: o relógio é o antibiótico.** Quando indicada (pneumococo, Hib), entra **antes ou junto da 1ª dose do antibiótico** -- o benefício (sequela neurológica e auditiva) depende de frear a inflamação antes da lise bacteriana que o antibiótico provoca. Com o antibiótico já iniciado, a janela passou e o efeito se perde (IDSA).

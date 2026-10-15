@@ -1,0 +1,17 @@
+# Session 229
+
+**Data:** 2026-10-15
+**Ferramenta:** Claude Code (Opus 5.5)
+
+- banco-emed: t122 registrada 24 · acerto 66,7% (sessao 229, bulk #146, estudo 14/10; #122 concluida)
+- analise t122 (subagente): 13 docs, erros #1231-#1238, cards #2122-#2129 + #2131-#2133, desatencao #3944
+- t683 Q32 fechada por evidence-researcher (B coerente; ASGE pressupoe calculo): erro #1239, card #2130, pendencia absorvida; Q12 cadeia_defeito gravado
+- evidencia em lote (7 itens): 3 correcoes de resumo (colo AGC 35, herpetica qualquer idade, trauma sem rotulo E) esperando o ok dele
+- cadeia v3 antes de ele abrir: t144 (35), t483 (14), t879 (10); objetivos novos em core/objetivos.json
+- resumos corrigidos (ok dele): colo AGC >= 35/SUA; herpetica qualquer idade; trauma sem rotulo E
+- #5426 tem spoiler UERJ 2022-2026 -> nao_antes 26/10 (core/sprint.json, montar_sprint + teste); sprint reaplicado (31 linhas)
+- #5426 (26/10): escopo UERJ ÚNICO (decisão dele, 15/10) -- recortar o caderno pelo que a UERJ cobra; divergência entre bancas = seguir a UERJ
+- front (subagente): defeito sob a barra (estilo Pausar), card vira no toque + profundidade, Simulados em --roxo, Flashcards da semana em rosa (paleta --fc), grifo guarda a cor e botao unico em cascata so na Teoria
+- aula #5426 = aulas/uerj-de-bolso-mfc (escopo UERJ, figuras molde /anima); legendas encurtadas nas RDs 1310 e na imagem-obstetrica
+- spoiler UERJ REVOGADO (decisao dele): 39 questoes de volta em 24 listas (22 com v3; 17 em 11 listas sem cadeia); AGENTE 7.4 recontado
+- hub Version 120 (lote 2026-10-15a); suite 1799

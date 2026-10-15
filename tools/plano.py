@@ -1596,6 +1596,8 @@ def montar_sprint(linhas, config, hoje, peso):
     - entram as PENDENTES das semanas da Fase 1 (`SEMANAS_FASE1`); feita/cortada, sem semana
       e Fase 2 nao entram (anti-escopo);
     - `cortadas`: ids de `config["cortar"]` ainda pendentes -- saem do sprint (o CLI as corta);
+    - `config["nao_antes"]` ({id: AAAA-MM-DD}): a tarefa so entra em dia >= essa data (s229: o
+      caderno #5426 cita as provas UERJ 2022-2026 e so pode vir depois do ultimo simulado);
     - simulados de `config["simulados"]` no dia fixo e SOZINHOS; data ja passada ou fora da
       janela -> `fora`, com o motivo (o dia fixo nao rola sozinho: editar `core/sprint.json`);
     - as demais, ordenadas por (faixa UERJ alta > media > baixa > sem faixa, `peso` do bloco --
@@ -1606,6 +1608,7 @@ def montar_sprint(linhas, config, hoje, peso):
     cap = int(config["capacidade_q"])
     simulados = {int(k): v for k, v in (config.get("simulados") or {}).items()}
     cortar_ids = {int(x) for x in config.get("cortar") or []}
+    nao_antes = {int(k): v for k, v in (config.get("nao_antes") or {}).items()}
     dias = {d: [] for d in _dias_do_sprint(config, hoje)}
     carga = {d: 0 for d in dias}
     fixos = set()
@@ -1636,7 +1639,8 @@ def montar_sprint(linhas, config, hoje, peso):
 
     for l in sorted(livres, key=chave):
         q = q_da_tarefa(l)
-        vaga = next((d for d in dias if d not in fixos and (
+        piso = nao_antes.get(int(l["id"]), "")
+        vaga = next((d for d in dias if d not in fixos and d >= piso and (
             carga[d] + q <= cap if q <= cap else not dias[d])), None)
         if vaga is None:
             fora.append({"id": int(l["id"]), "motivo": (

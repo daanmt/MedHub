@@ -93,7 +93,11 @@ FORA_DO_FORMATO = {"certo_errado": "certo/errado (2 alternativas)",
 #: filtro do EMED nao exclui instituicao -- 36 questoes da UERJ 2022 (o simulado da semana) tinham
 #: entrado em 22 listas da Fase 1, medido pelo texto contra o caderno da prova. Questao UERJ destes
 #: anos, em QUALQUER exame dela, sai DECLARADA por numero, como a discursiva (decisao da s218).
-ANOS_SPOILER_UERJ = frozenset(range(2022, 2027))
+#: ⚰️ REVOGADO em 15/10/2026 (s229), decisao do operador, verbatim: "pode deixar questao da UERJ se
+#: repetir em lista e em simulado; e bom que 'treino', 'aprendo' a prevalencia e ainda garanto uns
+#: pontinhos nos simulados." O conjunto vazio desliga o filtro na ingestao e no `--exportar`
+#: (`emed_banco.fora_do_hub`); o mecanismo fica dormente (religar = repor os anos aqui).
+ANOS_SPOILER_UERJ = frozenset()
 RX_UERJ = re.compile(r"\bUERJ\b", re.I)
 RX_ANO = re.compile(r"(?<!\d)((?:19|20)\d\d)(?!\d)")
 
@@ -257,7 +261,7 @@ def spoiler_uerj(banca, ano=None):
     """True se a banca e a UERJ (qualquer programa: HUPE, Pro-MFC) e o ano cai em `ANOS_SPOILER_UERJ`.
     Sem `ano`, vale o ULTIMO ano de 4 digitos do rotulo ('..., 2022', '... - RJ 2022', 'UERJ 2022');
     UERJ sem ano nenhum e conservador: sai. PURA."""
-    if not RX_UERJ.search(str(banca or "")):
+    if not ANOS_SPOILER_UERJ or not RX_UERJ.search(str(banca or "")):
         return False
     ano = str(ano or "").strip()
     if not ano:

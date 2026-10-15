@@ -61,21 +61,36 @@ kbd{
 .barra{height:6px;background:var(--trilho);border-radius:var(--raio-pilula);margin:var(--esp-4) 0 var(--esp-2);overflow:hidden}
 .barra i{display:block;height:100%;width:0;background:var(--acento);border-radius:inherit;transition:width var(--transicao)}
 .tally{display:flex;flex-wrap:wrap;gap:var(--esp-2) var(--esp-4);color:var(--tinta3);font-size:var(--fs-meta);margin-bottom:var(--esp-4)}
+/* s228 (pedido dele): o defeito do card mora logo abaixo da barra, no estilo do Pausar/Retomar (.pausa), a direita
+   do tally; as opcoes abrem dentro da placa do topo. O dado gravado (defeito + motivo) nao mudou */
+.topo-pe{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-2) var(--esp-4)}
+.topo-pe .tally{margin:0;min-width:0}
+#btn-defeito[aria-expanded="true"]{background:var(--acento-fraco);border-color:var(--acento);color:var(--tinta)}
 .tally b{color:var(--tinta2)}
 /* s227 (tema v4 part 3): duas placas -- o topo (contadores, barra, tally) e, logo abaixo, o card ELEVADO (a
    superficie --afundado, um degrau acima da placa): pergunta > resposta > auxiliares (regra, armadilha, assunto).
    Os botoes ficam fora da placa do card. A .placa vem do tema.css; aqui so a composicao */
 .cards-topo{margin-bottom:var(--esp-4)}
 #drill{margin-top:var(--esp-4)}
-.card{min-height:190px}
-.card.placa{background:var(--afundado)}
+/* s228 (pedido dele: "ainda seguem muito chapados no fundo"): o card e a camada ELEVADA (--afundado) com a borda de
+   controle (e objeto de toque: tocar vira); a frente centra a pergunta; o verso abre como o degrau de baixo da mesma
+   placa (--card, de borda a borda, nunca caixa dentro do card) */
+.card{min-height:220px;display:flex;flex-direction:column}
+.card.placa{background:var(--afundado);border-color:var(--linha-forte)}
+.card.frente{cursor:pointer}
+.card.frente:hover{border-color:var(--acento)}
+.toque{margin-top:auto;padding-top:var(--esp-4);font-size:var(--fs-meta);color:var(--tinta3);text-align:center}
+.card:not(.frente) .toque{display:none}
 .card:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
-.reason{display:block;font-size:var(--fs-meta);font-weight:600;color:var(--tinta3);margin-bottom:var(--esp-3)}
-.contexto{color:var(--tinta2);font-size:.95em;margin-bottom:var(--esp-3)}
-.pergunta{font-size:clamp(1.1rem,1rem + .5vw,1.375rem);line-height:1.35;font-weight:650;color:var(--tinta);text-wrap:pretty}
-.verso{margin-top:var(--esp-5);border-top:1px solid var(--linha);padding-top:var(--esp-4);display:grid;gap:var(--esp-4)}
+.reason{align-self:flex-start;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--card);border-radius:var(--raio-pilula);padding:1px var(--esp-2);margin-bottom:var(--esp-3)}
+.contexto{color:var(--tinta2);font-size:.95em;margin-bottom:var(--esp-3);padding-left:var(--esp-3);border-left:2px solid var(--linha-forte)}
+.pergunta{font-size:clamp(1.2rem,1.05rem + .6vw,1.5rem);line-height:1.3;font-weight:700;letter-spacing:-.01em;color:var(--tinta);text-wrap:pretty}
+.card:not(.frente){padding-bottom:0}
+.verso{margin:var(--esp-5) calc(-1 * var(--esp-4)) 0;padding:var(--esp-4);background:var(--card);
+       border-top:1px solid var(--borda-placa);border-radius:0 0 calc(var(--raio-placa) - 1px) calc(var(--raio-placa) - 1px);display:grid;gap:var(--esp-4)}
+@media (min-width:521px){.verso{margin:var(--esp-5) calc(-1 * var(--esp-5)) 0;padding:var(--esp-5)}}
 .rot{font-size:var(--fs-meta);font-weight:650;color:var(--tinta3);margin-bottom:var(--esp-1)}
-.resposta{font-size:1.05em;color:var(--tinta)}
+.resposta{font-size:1.125rem;line-height:1.45;font-weight:600;color:var(--tinta)}
 /* regra-mestre e armadilha: secoes do mesmo card (filete a esquerda), nao caixas dentro da caixa */
 .bloco{padding:0 0 0 var(--esp-3);border-left:2px solid var(--linha-forte);color:var(--tinta2)}
 .bloco .rot{color:var(--tinta2)}
@@ -180,31 +195,10 @@ pre{
       </div>
     </header>
     <div class="barra"><i id="progresso"></i></div>
-    <p class="tally" id="tally"></p>
-  </div>
-
-  <div id="aviso" class="aviso" hidden></div>
-  <div id="aviso-momento" class="aviso" role="status" hidden></div>
-  <div id="aviso-fila" class="aviso" role="status" hidden></div>
-
-  <main id="drill">
-    <article class="card placa" id="card" tabindex="0" aria-live="polite">
-      <p class="reason" id="reason" hidden></p>
-      <p class="contexto" id="contexto" hidden></p>
-      <h2 class="pergunta" id="pergunta">Carregando os cards...</h2>
-      <div class="verso" id="verso" hidden>
-        <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
-        <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
-        <div class="bloco alerta" id="bloco-armadilha" hidden><p class="rot">Armadilha</p><p id="armadilha"></p></div>
-        <p class="taxonomia" id="taxonomia"></p>
-      </div>
-    </article>
-
-    <div class="acoes">
-      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
-      <button id="btn-defeito" class="fantasma">Marcar defeito do card <kbd>D</kbd></button>
+    <div class="topo-pe">
+      <p class="tally" id="tally"></p>
+      <button type="button" id="btn-defeito" class="pausa" aria-expanded="false" aria-controls="defeito-opcoes">Defeito do card <kbd>D</kbd></button>
     </div>
-
     <div class="defeito-opcoes" id="defeito-opcoes" hidden>
       <button type="button" class="fantasma" data-motivo="Card longo">Card longo</button>
       <button type="button" class="fantasma" data-motivo="Pergunta composta">Pergunta composta</button>
@@ -220,6 +214,29 @@ pre{
       <button type="submit">Marcar e pular</button>
       <button type="button" id="btn-cancelar-outro">Cancelar</button>
     </form>
+  </div>
+
+  <div id="aviso" class="aviso" hidden></div>
+  <div id="aviso-momento" class="aviso" role="status" hidden></div>
+  <div id="aviso-fila" class="aviso" role="status" hidden></div>
+
+  <main id="drill">
+    <article class="card placa" id="card" tabindex="0" aria-live="polite">
+      <p class="reason" id="reason" hidden></p>
+      <p class="contexto" id="contexto" hidden></p>
+      <h2 class="pergunta" id="pergunta">Carregando os cards...</h2>
+      <p class="toque" id="toque" aria-hidden="true">toque no card para virar</p>
+      <div class="verso" id="verso" hidden>
+        <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
+        <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
+        <div class="bloco alerta" id="bloco-armadilha" hidden><p class="rot">Armadilha</p><p id="armadilha"></p></div>
+        <p class="taxonomia" id="taxonomia"></p>
+      </div>
+    </article>
+
+    <div class="acoes">
+      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
+    </div>
 
     <div class="notas" id="notas-botoes" hidden>
       <button data-nota="1"><b>1</b><span>falhei</span></button>
@@ -524,10 +541,12 @@ pre{
     gesto();                                 // card novo na tela reabre a janela ativa
     virado = false;
     $("verso").hidden = true;
+    $("card").classList.add("frente");
     $("notas-botoes").hidden = true;
     $("btn-virar").hidden = false;
     $("form-defeito").hidden = true;
     $("defeito-opcoes").hidden = true;
+    $("btn-defeito").setAttribute("aria-expanded", "false");
     // Contrato de apresentacao: area/tema NUNCA aparecem antes da revelacao.
     texto("reason", ROTULO[c.selection_reason] || c.selection_reason || "");
     texto("contexto", c.frente_contexto);
@@ -546,6 +565,7 @@ pre{
     gesto();
     virado = true;
     $("verso").hidden = false;
+    $("card").classList.remove("frente");
     $("btn-virar").hidden = true;
     $("notas-botoes").hidden = false;
   }
@@ -778,8 +798,10 @@ pre{
 
   function abrirDefeito(){
     if(!fila.length){ return; }
+    if(!$("defeito-opcoes").hidden || !$("form-defeito").hidden){ return fecharDefeito(); }   // o mesmo toque fecha
     $("form-defeito").hidden = true;
     $("defeito-opcoes").hidden = false;
+    $("btn-defeito").setAttribute("aria-expanded", "true");
   }
 
   function abrirDefeitoOutro(){
@@ -792,6 +814,7 @@ pre{
   function fecharDefeito(){
     $("defeito-opcoes").hidden = true;
     $("form-defeito").hidden = true;
+    $("btn-defeito").setAttribute("aria-expanded", "false");
     $("card").focus();
   }
 
@@ -831,6 +854,12 @@ pre{
 
   $("btn-pausa").addEventListener("click", alternarPausa);
   $("btn-virar").addEventListener("click", virar);
+  // s228 (pedido dele): tocar no card vira (o mesmo virar() do botao e do Espaco); selecao de texto nao vira
+  $("card").addEventListener("click", function(){
+    var sel = window.getSelection ? window.getSelection() : null;
+    if(sel && !sel.isCollapsed && String(sel)){ return; }
+    virar();
+  });
   $("btn-defeito").addEventListener("click", abrirDefeito);
   $("btn-cancelar").addEventListener("click", fecharDefeito);
   $("btn-cancelar-outro").addEventListener("click", fecharDefeito);

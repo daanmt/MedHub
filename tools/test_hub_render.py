@@ -761,9 +761,40 @@ def test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa():
     assert corpo.index("cards-topo") < corpo.index('id="card"') < corpo.index('id="btn-virar"') < corpo.index('id="fim"')
     assert '<section class="painel-fim placa" id="fim" hidden>' in corpo
     css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
-    assert ".card.placa{background:var(--afundado)}" in css
+    assert ".card.placa{background:var(--afundado);border-color:var(--linha-forte)}" in css
     assert not re.search(r"(?:^|[}\n])\.placa(?:::before)?\{", css), "a placa e composta, nunca redefinida"
     assert re.search(r"\n\.placa\{", embutir_tema(txt)), "o standalone leva a primitiva do tema"
+
+
+def test_defeito_do_card_mora_sob_a_barra_no_estilo_do_pausar():
+    """s228 (pedido dele): o controle de defeito/reforja vai para LOGO ABAIXO da barra de progresso, no estilo do
+    "Pausar/Retomar P" (.pausa), com as opcoes dentro da placa do topo; fora da linha de acoes do card. O registro
+    gravado nao muda (`defeito:true, motivo` -- o que o --record-lote le como marca de reforja)."""
+    from tools.fsrs_queue import TEMPLATE_PLAYER
+    txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
+    corpo = txt[txt.index("@player:corpo:inicio"):txt.index("@player:corpo:fim")]
+    topo = corpo[corpo.index('<div class="placa cards-topo">'):corpo.index('<main id="drill">')]
+    assert topo.index('id="progresso"') < topo.index('id="btn-defeito"') < topo.index('id="defeito-opcoes"') < topo.index('id="form-defeito"')
+    assert '<button type="button" id="btn-defeito" class="pausa" aria-expanded="false" aria-controls="defeito-opcoes">' in topo
+    acoes = re.search(r'<div class="acoes">(.*?)</div>', corpo, re.S).group(1)
+    assert "btn-defeito" not in acoes and "btn-virar" in acoes
+    assert corpo.count('id="btn-defeito"') == 1
+    js = txt[txt.index("@player:js:inicio"):]
+    assert "var registro = {card_id:id, ts:anterior.ts, defeito:true, motivo:motivo};" in js, "o dado gravado nao muda"
+
+
+def test_tocar_no_card_vira_e_o_card_tem_camadas():
+    """s228 (pedido dele): tocar no card vira (o mesmo virar(), selecao de texto nao vira); a frente leva a dica e o
+    cursor; o verso e o degrau de baixo da mesma placa (--card de borda a borda), nao caixa dentro do card."""
+    from tools.fsrs_queue import TEMPLATE_PLAYER
+    txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
+    js = txt[txt.index("@player:js:inicio"):]
+    assert '$("card").addEventListener("click", function(){' in js and "virar();" in js.split('$("card").addEventListener("click"', 1)[1][:300]
+    assert '$("card").classList.add("frente");' in js and '$("card").classList.remove("frente");' in js
+    css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
+    assert ".card.frente{cursor:pointer}" in css and ".card:not(.frente) .toque{display:none}" in css
+    assert "border-top:1px solid var(--borda-placa);border-radius:0 0 calc(var(--raio-placa) - 1px)" in css
+    assert "box-shadow" not in css, "sem sombra"
 
 
 # ------------------------------------------------ s227 (hub-tema-v4 part-4): questao, fim e leitor em placas
@@ -896,6 +927,10 @@ INVENTARIO_QUESTAO = [
 ]
 INVENTARIO_LEITOR = [
     ["div", "hub-leitor", "", ""], ["button", "hub-leitor-voltar", "type=button", "‹ Teoria"], ["p", "hub-leitor-titulo", "", ""],
+    # s228: o botao unico da cor do grifo, so no leitor da Teoria, com as tres cores em cascata
+    ["div", "hub-grifo", "data-aberto=false", ""], ["button", "hub-grifo-btn", "type=button", "Aa"],
+    ["div", "hub-grifo-cor", "role=group", ""], ["button", "", "data-cor=rosa type=button", "Aa"],
+    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=amarelo type=button", "Aa"],
     ["p", "hub-leitor-aviso", "", ""], ["a", "hub-leitor-link", "", ""], ["iframe", "hub-leitor-quadro", "", ""],
     ["div", "hub-assina", "data-st=sem role=group", ""], ["p", "hub-assina-tit", "", ""],
     ["textarea", "hub-assina-coment", "", ""], ["p", "hub-assina-retorno", "", ""], ["p", "hub-assina-st", "role=status", ""],
@@ -1095,7 +1130,7 @@ def test_grifo_uma_cor_de_token_e_limite_declarado():
     nunca por grifo); pinta so o fundo, o texto fica com a cor dele (`color:inherit`); sem barra flutuante nem menu
     na questao; o limite (selecao por toque no celular nao testada) declarado no template e no brief."""
     (regra,) = [l for l in TEMPLATE.splitlines() if l.startswith(".qz-grifo{")]
-    assert "background:var(--qz-grifo)" in regra and "color:inherit" in regra and "#" not in regra
+    assert "background:var(--grifo-rosa)" in regra and "color:inherit" in regra and "#" not in regra
     assert "--qz-grifo-tinta" not in regra, "o grifo nao troca a cor do texto (pedido dele, s227)"
     assert TEMPLATE.count('class="qz-grifo"') == 1                        # um so tipo de grifo
     for proibido in ("qz-grifo-cor", "qz-grifo-menu", "qz-grifo-barra"):
@@ -1512,7 +1547,7 @@ def test_secao_recolhivel_no_celular():
 # ======================================================================== 3. grifo nas aulas: funcoes puras
 
 GRIFO_PURAS = _funcs("function qzGrifoMesclar(intervalos, novo){", "function grifoValido(g){",
-                     "function grifoResolver(textos, g){", "function grifoNormalizar(textos, lista){",
+                     "function grifoResolver(textos, g){", "function grifoResolverPos(textos, g, t){", "function grifoNormalizar(textos, lista){",
                      "function grifoAparar(texto, ini, fim){", "function grifoFatias(tamanhos, ini, fim){",
                      "function grifoReconciliar(local, banco){")
 
@@ -1673,7 +1708,7 @@ def test_grifo_mora_em_analises_e_nao_toca_a_alca_nem_os_controles():
     salvar = extrair_funcao(TEMPLATE, "function grifoSalvar(slug, grifos){")
     assert salvar.index("grifoLocal(slug,") < salvar.index("grifoEnviar(slug)"), "aparelho ANTES do banco"
     estilo = extrair_funcao(TEMPLATE, "function grifoEstilo(doc){")
-    assert '"--qz-grifo"' in estilo, "a cor e o token das questoes"
+    assert '"--grifo-" + c' in estilo and 'mark.hub-grifo[data-cor="ciano"]' in estilo, "s228: uma regra por cor do grifo"
     assert "color:inherit" in estilo and "--qz-grifo-tinta" not in estilo and "MarkText" not in estilo, \
         "s227 (part 6): no leitor o grifo tambem pinta so o fundo"
 
@@ -2416,29 +2451,35 @@ def _topo():
     return TEMPLATE[TEMPLATE.index('<header class="hub-topo">'):TEMPLATE.index("</header>")]
 
 
-def test_seletor_da_cor_do_grifo_no_topo_com_tres_amostras_de_44px():
-    """Part 6 DoD 2: no topo (a direita da marca, antes das abas e fora da questao), um grupo "Cor do grifo" com tres
-    botoes (rosa, ciano, amarelo) de nome acessivel; a ativa por aria-pressed + contorno (nunca so a cor); 44 px; cor
-    so por token; grava no aparelho com try/catch; nada sticky/fixed."""
-    topo = _topo()
-    assert topo.index('class="hub-marca"') < topo.index('id="hub-grifo-cor"')
-    assert TEMPLATE.index("</header>") < TEMPLATE.index('<nav class="hub-abas"') < TEMPLATE.index('id="qz-player"')
-    grupo = re.search(r'<div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do grifo">(.*?)</div>', topo, re.S)
+def test_seletor_da_cor_do_grifo_e_um_botao_unico_so_no_leitor_da_teoria():
+    """s228 (pedido dele: "sobretudo em um botao que apareca so dentro do bloco de teoria, e que seja um botao unico,
+    que quando clicamos ele expande em cascata com as 3 opcoes"): fora do topo; DENTRO da barra do leitor da Teoria um
+    botao (aria-expanded/aria-controls, 44 px) que abre o grupo das tres cores (rosa, ciano, amarelo, nome acessivel,
+    a ativa por aria-pressed + contorno); a cascata e um atraso por botao; cor so por token; nada sticky/fixed.
+    ⚰️ *s227 (part 6): tres amostras no topo do hub, a direita da marca.*"""
+    assert 'id="hub-grifo' not in _topo(), "saiu do topo"
+    i = TEMPLATE.index('<div id="hub-leitor" hidden>')
+    barra = TEMPLATE[i:TEMPLATE.index('id="hub-leitor-aviso"', i)]
+    assert barra.index('id="hub-leitor-titulo"') < barra.index('id="hub-grifo-btn"') < barra.index('id="hub-grifo-cor"')
+    assert TEMPLATE.count('id="hub-grifo-btn"') == 1 and TEMPLATE.count('data-cor="rosa" aria-pressed') == 1
+    assert 'aria-expanded="false" aria-controls="hub-grifo-cor"' in barra
+    grupo = re.search(r'<div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do próximo grifo">(.*?)</div>', barra, re.S)
     assert grupo, "o grupo com o nome acessivel"
     botoes = re.findall(r'<button type="button" data-cor="(\w+)" aria-pressed="(true|false)" aria-label="(\w+)"', grupo.group(1))
     assert botoes == [("rosa", "true", "Rosa"), ("ciano", "false", "Ciano"), ("amarelo", "false", "Amarelo")]
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
-    regras = [l for l in css.splitlines() if "hub-grifo" in l and "{" in l]
-    assert any(".hub-grifo-cor button{min-width:44px;min-height:44px;" in l for l in regras), "alvo de 44 px"
-    assert '.hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}' in css, "a ativa ganha o contorno"
+    assert ".hub-grifo-cor button{min-width:44px;min-height:44px;" in css and "min-height:44px" in css.split(".hub-grifo-btn{", 1)[1].split("}", 1)[0]
+    assert '.hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}' in css
+    assert '.hub-grifo[data-aberto="true"] .hub-grifo-cor button:nth-child(3){transition-delay:120ms}' in css, "a cascata"
     for cor in ("rosa", "ciano", "amarelo"):
         assert '.hub-grifo-cor button[data-cor="%s"] .hub-grifo-am{background:var(--grifo-%s)}' % (cor, cor) in css
-    for l in regras:
+    for l in [l for l in css.splitlines() if "hub-grifo" in l and "{" in l]:
         assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|sticky|fixed|nowrap", l), l
     js = TEMPLATE[TEMPLATE.index("// ------------------------------------------------ cor do grifo"):]
     js = js[:js.index("// ------------------------------------------------ secoes recolhiveis")]
     assert 'GRIFO_COR_CHAVE = "medhub.grifo"' in js and "grifoCorAplicar(grifoCorLer(), false);" in js
     assert "try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){}" in js
+    assert 'e.key === "Escape"' in js and "grifoMenu(false)" in js
 
 
 COR_GRIFO_JS = r"""
@@ -2451,7 +2492,7 @@ function botao(c){ var a = {"data-cor": c, "aria-pressed": "?"}; return {a: a, g
 var BOTOES = ["rosa", "ciano", "amarelo"].map(botao), caixa = {querySelectorAll: function(){ return BOTOES; }};
 var VALOR = {rosa: "color-mix(in srgb,#FF4FA3 32%,transparent)", ciano: "color-mix(in srgb,#00D9E8 32%,transparent)",
              amarelo: "color-mix(in srgb,#FFD447 32%,transparent)"};
-var window = {getComputedStyle: function(){ return {getPropertyValue: function(p){ return p === "--qz-grifo" ? " " + VALOR[attrs["data-grifo"] || "rosa"] : ""; }}; }};
+var window = {getComputedStyle: function(){ return {getPropertyValue: function(p){ var c = p.replace("--grifo-", ""); return VALOR[c] ? " " + VALOR[c] : ""; }}; }};
 var estilo = __COM_ESTILO__ ? {id: "hub-grifo-estilo", textContent: "mark.hub-grifo{background:velho}"} : null;
 var docLeitor = {head: {appendChild: function(s){ estilo = s; }}, documentElement: {setAttribute: function(k, v){ docAttrs[k] = v; }},
   getElementById: function(id){ return id === "hub-grifo-estilo" ? estilo : null; }, createElement: function(){ return {}; }};
@@ -2459,8 +2500,9 @@ function $(id){ return id === "hub-grifo-cor" ? caixa : (id === "hub-leitor-quad
 function foto(){ return {attr: attrs["data-grifo"], pressed: BOTOES.map(function(b){ return b.a["aria-pressed"]; }).join(","),
   ls: LANCA ? null : (LS["medhub.grifo"] || null), estilo: estilo ? estilo.textContent : null, doc: docAttrs["data-grifo"] || null}; }
 var lida = grifoCorLer(); grifoCorAplicar(lida, false); var antes = foto();
+if(__COM_ESTILO__){ grifoEstilo(docLeitor); } var pintado = estilo ? estilo.textContent : null;
 grifoCorAplicar("ciano", true); var depois = foto();
-console.log(JSON.stringify({lida: lida, antes: antes, depois: depois}));
+console.log(JSON.stringify({lida: lida, antes: antes, depois: depois, pintado: pintado}));
 """
 
 
@@ -2471,38 +2513,53 @@ def _cor_grifo(ls=None, lanca=False, com_estilo=True):
                  .replace("__COM_ESTILO__", json.dumps(com_estilo)))
 
 
-def test_cor_do_grifo_padrao_rosa_o_aparelho_lembra_e_o_leitor_troca_na_hora():
-    """Part 6 DoD 2, 3 e 5: sem nada no aparelho (ou valor invalido, ou storage bloqueado) = rosa; o aparelho lembra a
-    escolha; a troca grava `data-grifo` no <html> do shell, marca o botao (aria-pressed) e REESCREVE o estilo do grifo
-    no documento aberto no leitor (fundo = valor computado da cor nova, texto `inherit`), sem reabrir a aula."""
+def test_cor_do_grifo_padrao_rosa_o_aparelho_lembra_e_a_troca_nao_repinta():
+    """s227 part 6 + s228: sem nada no aparelho (ou valor invalido, ou storage bloqueado) = rosa; o aparelho lembra a
+    escolha; a troca grava `data-grifo` no <html> do shell e marca o botao (aria-pressed), mas NAO reescreve o estilo
+    do documento aberto (s228: so os proximos grifos mudam). O estilo do leitor tem uma regra por cor."""
     vazio = _cor_grifo()
     assert vazio["lida"] == "rosa" and vazio["antes"]["attr"] == "rosa" and vazio["antes"]["pressed"] == "true,false,false"
     assert vazio["antes"]["ls"] is None, "abrir nao grava: so o toque grava"
-    assert vazio["depois"] == {"attr": "ciano", "pressed": "false,true,false", "ls": "ciano", "doc": "ciano",
-                               "estilo": vazio["depois"]["estilo"]}
-    est = vazio["depois"]["estilo"]
-    assert "mark.hub-grifo{background:color-mix(in srgb,#00D9E8 32%,transparent);color:inherit;" in est and "velho" not in est
+    assert vazio["depois"]["attr"] == "ciano" and vazio["depois"]["pressed"] == "false,true,false" and vazio["depois"]["ls"] == "ciano"
+    assert vazio["depois"]["estilo"] == vazio["pintado"], "trocar a cor nao repinta o que ja existe"
+    est = vazio["pintado"]
+    assert "mark.hub-grifo{background:color-mix(in srgb,#FF4FA3 32%,transparent);color:inherit;" in est
+    assert 'mark.hub-grifo[data-cor="ciano"]{background:color-mix(in srgb,#00D9E8 32%,transparent)}' in est
+    assert 'mark.hub-grifo[data-cor="amarelo"]{background:color-mix(in srgb,#FFD447 32%,transparent)}' in est
     assert _cor_grifo({"medhub.grifo": "amarelo"})["antes"]["attr"] == "amarelo", "o aparelho lembra"
     assert _cor_grifo({"medhub.grifo": "verde"})["lida"] == "rosa", "valor fora das tres = rosa"
     bloqueado = _cor_grifo(lanca=True)
     assert bloqueado["lida"] == "rosa" and bloqueado["depois"]["attr"] == "ciano", "sem armazenamento: troca na tela, nao lembra"
-    sem = _cor_grifo(com_estilo=False)
-    assert sem["depois"]["estilo"] is None, "documento sem o grifo ligado nao ganha estilo pela troca"
 
 
-def test_cor_do_grifo_nao_entra_no_registro_dos_grifos():
-    """Part 6 DoD 4: a cor e so apresentacao -- nada de cor no que se grava (respostas `grifos`, analises/grifos)."""
-    for assinatura in ("function grifoSalvar(slug, grifos){", "function grifoEnviar(slug){", "function qzGrifosSalvar(q, g){",
-                       "function qzGrifoHtml(texto, intervalos){", "function grifoPintar(ctx){"):
-        corpo = extrair_funcao(TEMPLATE, assinatura)
-        assert not re.search(r"\bcor\b|data-grifo|GRIFO_COR|medhub\.grifo\b", corpo), assinatura
+def test_cada_grifo_guarda_a_cor_com_que_nasceu():
+    """s228 (pedido dele: "alterando apenas a cor dos proximos grifos, e nao todos"): o grifo nasce com a cor ativa e a
+    guarda no registro (`cor`, so quando nao e rosa: o formato salvo de antes segue valido e fica rosa); a pintura usa a
+    cor do grifo (data-cor), nunca a ativa; as questoes, sem o seletor, ficam no rosa padrao."""
+    cap = extrair_funcao(TEMPLATE, "function grifoCapturar(ctx){")
+    assert 'grifoCorValida(raiz.getAttribute("data-grifo"))' in cap and "novo.cor = cor" in cap
+    assert "if(g.cor){ x.cor = g.cor; }" in extrair_funcao(TEMPLATE, "function grifoSalvar(slug, grifos){")
+    assert 'if(g.cor){ mk.setAttribute("data-cor", g.cor); }' in extrair_funcao(TEMPLATE, "function grifoPintar(ctx){")
+    for assinatura in ("function grifoEnviar(slug){", "function qzGrifosSalvar(q, g){", "function qzGrifoHtml(texto, intervalos){"):
+        assert not re.search(r"data-grifo|GRIFO_COR|medhub\.grifo\b", extrair_funcao(TEMPLATE, assinatura)), assinatura
+    textos = ["PEEP alta e FiO2 baixa", "outro bloco"]
+    lista = [{"b": 0, "ini": 0, "fim": 4, "txt": "PEEP"},                       # antigo, sem cor = rosa
+             {"b": 0, "ini": 2, "fim": 9, "txt": "EP alta", "cor": "ciano"},    # sobrepoe, outra cor: nao funde
+             {"b": 0, "ini": 12, "fim": 16, "txt": "FiO2", "cor": "ciano"},
+             {"b": 0, "ini": 14, "fim": 22, "txt": "O2 baixa", "cor": "ciano"},  # mesma cor: funde
+             {"b": 1, "ini": 0, "fim": 5, "txt": "outro", "cor": "verde"}]       # cor invalida = rosa
+    out = _puras("grifoNormalizar(%s, %s)" % (json.dumps(textos), json.dumps(lista)))
+    assert out == [{"b": 0, "ini": 0, "fim": 4, "txt": "PEEP"},
+                   {"b": 0, "ini": 2, "fim": 9, "txt": "EP alta", "cor": "ciano"},
+                   {"b": 0, "ini": 12, "fim": 22, "txt": "FiO2 baixa", "cor": "ciano"},
+                   {"b": 1, "ini": 0, "fim": 5, "txt": "outro"}], out
 
 
 # ------------------------------------------------------------------ part 7: Referencias no fim (leitor)
 REF_VARS = ("REF_PREFIXO", "REF_FIM", "REF_SINAL", "REF_SIGLA", "REF_BASE", "REF_EXT_SIGLA", "REF_EXT_PALAVRA",
             "REF_CANDIDATO", "REF_FORA", "REF_BLOCO", "REF_NAO_DESCE", "GRIFO_BLOCO")
 REF_FUNCS = ("function grifoTextos(bloco){", "function grifoBlocos(doc){", "function grifoValido(g){",
-             "function grifoResolver(textos, g){", "function ehReferencia(texto){", "function ehBaseInterna(texto){",
+             "function grifoResolver(textos, g){", "function grifoResolverPos(textos, g, t){", "function ehReferencia(texto){", "function ehBaseInterna(texto){",
              "function refChave(texto){", "function refTirarPrefixo(no){", "function refPodarFim(no){",
              "function refFimDe(el){", "function refAnterior(el){", "function refsAchar(doc){",
              "function refSup(doc, n, id){", "function refsMontar(doc){")

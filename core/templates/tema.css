@@ -37,6 +37,9 @@
   --rosa:#FF4FA3; --rosa-fraco:#33172C;
   --roxo:#AA71E8; --roxo-tinta:#BE95F0; --roxo-fraco:#261C3E;
   --amarelo:#FFD447;
+  /* Flashcards da semana (s228, paleta propria do bloco, pedido dele): a familia rosa do anel de Cards -- barra
+     cheia (o pico), lavagem (os outros dias) e o texto do numero/destaque. Contraste no teste do tema */
+  --fc:#FF5FAE; --fc-fraco:#55204A; --fc-tinta:#FF9ACB;
   /* estado: sucesso, erro, aviso (+ lavagem para fundo) */
   --ok:#79D6A5; --ok-fraco:#172A26; --erro:#FF7C87; --erro-fraco:#331B24; --aviso:#FFBE72; --aviso-fraco:#33261C;
   --sobre:#0C0C12;   /* texto sobre preenchimento (botao primario, declaracao ligada) */
@@ -72,6 +75,7 @@
   --rosa:#C2176F; --rosa-fraco:#F8E1EE;
   --roxo:#7443B8; --roxo-tinta:#5E3596; --roxo-fraco:#ECE3F8;
   --amarelo:#FFE066;
+  --fc:#C2176F; --fc-fraco:#F2C2DC; --fc-tinta:#9E0F58;
   --ok:#1E7348; --ok-fraco:#E2F2E8; --erro:#B8303E; --erro-fraco:#FBE5E8; --aviso:#8F5200; --aviso-fraco:#FAEBD7;
   --sobre:#FFFFFF;
   --cromado:linear-gradient(90deg,transparent,#2F6BE0 18%,#6A3FE0 55%,#9A3FC8 82%,transparent);

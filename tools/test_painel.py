@@ -780,15 +780,18 @@ def _com_banco(caminho):
     con.close()
 
 
-def test_teoria_painel_e_boot_contam_o_banco_do_hub(db_sintetico, capsys):
+def test_teoria_painel_e_boot_contam_o_banco_do_hub(db_sintetico, capsys, monkeypatch):
     """P20 item 6 (s219): 26 tarefas ganharam caderno no hub com `q_previstas` 0 (ou 20/60), e o
     "Questoes da semana" da Teoria e o Painel contavam menos que a aba Listas. Uma funcao so
     (`plano.q_da_tarefa` sobre `plano.com_q_hub`): a contagem do banco -- pelo criterio do
     `--exportar`, sem o spoiler -- quando a tarefa tem questoes la; senao `q_previstas`. A Teoria, o
     Painel, o boot (`plano.py --panorama`) e a Fase 1 do `day_plan` dizem o MESMO numero."""
     import day_plan
+    import emed_api
     import plano
     from tools import hub
+    # ⚰️ o filtro spoiler UERJ foi revogado em 15/10/2026 (s229); religado aqui so para o cenario
+    monkeypatch.setattr(emed_api, "ANOS_SPOILER_UERJ", frozenset(range(2022, 2027)))
     _com_banco(db_sintetico)
     d = painel.coletar()
     s = d["semana"]
@@ -1307,8 +1310,8 @@ def test_flashcards_da_semana_renomeado(db_sintetico):
     semana'"): o MESMO grafico de barras da `db.agenda_revisoes`, com o titulo novo e a dica por barra; o nome
     antigo some da pagina."""
     html_ = painel._html_agenda({"dias": [{"data": "2026-10-14", "n": 30}, {"data": "2026-10-15", "n": 1}]})
-    assert html_.startswith('<div class="placa dash-sec agenda"><h3>Flashcards da semana</h3>')
-    assert '<li title="qua 14/10: 30 cards"><span class="ag-n">30</span>' in html_
+    assert html_.startswith('<div class="placa dash-sec agenda"><div class="ag-cab"><h3>Flashcards da semana</h3>')
+    assert '<li title="qua 14/10: 30 cards (pico da semana)" class="pico"><span class="ag-n">30</span>' in html_
     assert '<li title="qui 15/10: 1 card">' in html_
     pagina = _pagina()
     assert "Flashcards da semana" in _dash(pagina) and "Revisões nos próximos" not in pagina
@@ -1355,3 +1358,19 @@ def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
     assert not re.search(r"\.(bloco|dash-sec)\{[^}]*border-top", css), "filete entre secoes voltou"
     assert not re.search(r"(^|[}\s,])\.placa\s*\{", css), "a .placa e do tema: aqui so se compoe"
     assert pagina.count("max-width") <= 2
+
+
+def test_flashcards_da_semana_total_pico_e_paleta_propria():
+    """s228 (pedido dele: "melhorar a estetica do bloco de flashcards da semana, ate com liberdade para rever a
+    paleta"): o total no cabecalho, o pico em barra cheia (rotulo na dica, nunca so a cor), a paleta `--fc*` do
+    tema; semana vazia sem pico. E a barra de Simulados no roxo do anel Ate 01/11 (o mesmo token)."""
+    h = painel._html_agenda({"dias": [{"data": "2026-10-14", "n": 30}, {"data": "2026-10-15", "n": 70}]})
+    assert '<p class="ag-total"><b>100</b> em 7 dias</p>' in h
+    assert h.count('class="pico"') == 1 and 'title="qui 15/10: 70 cards (pico da semana)" class="pico"' in h
+    vazio = painel._html_agenda({"dias": [{"data": "2026-10-14", "n": 0}]})
+    assert "pico" not in vazio and "<b>0</b>" in vazio
+    css = painel.CSS
+    assert ".ag-barras .pico i{background:var(--fc)}" in css and "background:var(--fc-fraco)" in css
+    assert "--roxo-fraco" not in css.split("Flashcards da semana", 1)[1].split("Tarefas", 1)[0]
+    assert ".bl.sim .bl-barra i{background:var(--roxo)}" in css
+    assert ".an-arco.an-meta{stroke:var(--roxo)}" in css, "o mesmo token do anel"

@@ -13,7 +13,7 @@ import pytest
 TEMA = Path(__file__).resolve().parent.parent / "core" / "templates" / "tema.css"
 
 SUPERFICIES = ("papel", "card", "afundado")
-TEXTOS = ("tinta", "tinta2", "tinta3", "acento", "acento-tinta", "rosa", "roxo-tinta", "ok", "erro", "aviso")
+TEXTOS = ("tinta", "tinta2", "tinta3", "acento", "acento-tinta", "rosa", "roxo-tinta", "ok", "erro", "aviso", "fc-tinta")
 PREENCHIMENTOS = ("acento", "rosa", "roxo", "erro", "aviso", "ok")
 
 
@@ -122,3 +122,12 @@ def test_a_cor_ativa_do_grifo_troca_por_atributo():
     assert ':root[data-grifo="amarelo"]{--qz-grifo:var(--grifo-amarelo)}' in css
     # depois dos dois blocos de tema (mesma especificidade: vence pela ordem)
     assert css.index('data-grifo="ciano"') > css.index(':root[data-theme="light"]{')
+
+
+@pytest.mark.parametrize("tema", ["escuro", "claro"])
+def test_flashcards_da_semana_barras_visiveis(tema):
+    """s228: a paleta propria do bloco Flashcards da semana -- a barra cheia (o pico) >= 3:1 contra a placa (grafico,
+    WCAG 1.4.11) e a lavagem dos outros dias distinta da placa (>= 1,3:1, como o trilho)."""
+    bloco = _blocos()[tema]
+    assert contraste(_hex(bloco, "fc"), _hex(bloco, "card")) >= 3.0
+    assert contraste(_hex(bloco, "fc-fraco"), _hex(bloco, "card")) >= 1.3

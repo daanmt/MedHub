@@ -1,0 +1,352 @@
+<title>UERJ de Bolso: MFC e a banca</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.lede{margin:0 0 12px;color:var(--ink2)}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.banca{margin:16px 0;padding:12px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.banca p{margin:4px 0 0;color:var(--ink2)}
+.blbl{color:var(--plum-ink);font-weight:600;font-size:14px}
+.q{margin:14px 0 0;padding:12px 14px;background:var(--sunk);border-radius:var(--raio,10px)}
+.q p{margin:0 0 6px;color:var(--ink)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:32px;display:flex;align-items:center}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);color:var(--ink2)}
+.qc{color:var(--ink3);font-size:13px}
+/* Figura (molde /anima: Fig n + titulo, legenda, referencia; SVG inline so com tokens do tema) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-t{fill:var(--ink);font-size:13px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-ok{fill:var(--teal-ink);font-size:12px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-fase{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-q4{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.4}
+.fa-aviso{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.4}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-doente{fill:var(--plum)}
+.fa-falso{fill:var(--amber)}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px}
+p.base{color:var(--ink3);font-size:14px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MFC / Preventiva · leitura de reta final · tarefa #5426</p>
+  <h1>UERJ de Bolso: o bloco de MFC e o jeito da banca</h1>
+  <p class="sub">Recorte do caderno (cap. 1 a 10) pelo que a UERJ cobra. Corpo: o capítulo de MFC inteiro. Em volta: raio-X, armadilhas, atualizações e tática, só o que serve à Q81-Q100.</p>
+</header>
+
+<section class="sec" id="s0">
+  <span class="kick">00 · Raio-X</span>
+  <h2>Como a prova é montada</h2>
+  <ul class="tp">
+    <li>5 blocos fixos de 20, sempre na mesma ordem: CM (Q1-20), CIR, GO, PED, <strong>MFC (Q81-100)</strong>. Cada área = 20% em todas as provas.</li>
+    <li>4 alternativas, resposta única. Enunciado cresce a cada ano (mediana +21,6% de 2022 a 2026).</li>
+    <li>Priorize por <strong>subárea</strong>, não por área: 15 "obsessões" fazem 48,5% da prova; 3 delas são de MFC (APS 43 q, rastreamento 14, epidemiologia 11).</li>
+    <li>Comando mais comum em MFC: "é correto afirmar". O comando negativo é raro (7 em 460) e por isso pega.</li>
+    <li>Distrator da UERJ em MFC: <strong>conceito trocado</strong> (33% das erradas) e número/prazo/idade (12,8%). Vocabulário certo, definição invertida.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s1">
+  <span class="kick">01 · O bloco</span>
+  <h2>MFC: onde caem os 20 pontos</h2>
+  <p class="lede">APS + rastreamento + epidemiologia = 68 de 92 questões (74%). Concentrar funciona aqui como em nenhuma outra área.</p>
+  <ul class="tp">
+    <li>Caso clínico subiu de 33% (2022) para 65% (2026): é <strong>consultório</strong>, não só norma de SUS.</li>
+    <li>APS sobe, epidemiologia desce (3,7 para 1,5 q/prova).</li>
+    <li>Geografia: consultório na abertura do bloco; <strong>Q99 foi rastreamento</strong> em 2023, 2024 e 2026.</li>
+    <li>Bloco com mais anuladas (6): conduta ambulatorial com mais de uma escola.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s2">
+  <span class="kick">02 · Idoso e fim de vida</span>
+  <h2>Polifarmácia: o padrão mais nítido do bloco</h2>
+  <p class="lede">Cinco questões em quatro provas. A pergunta nunca é a dose: é o que retirar, o que não pedir, o que avaliar.</p>
+  <ul class="tp">
+    <li>Polifarmácia: corte clássico 5 ou mais fármacos; MS usa 4 ou mais. Multimorbidade: 2 ou mais crônicas (HAS + DM já conta).</li>
+    <li>Limiar para acrescentar: alto. Para suspender: baixo.</li>
+    <li>Sintoma novo em quem usa muito remédio = efeito adverso antes de doença nova (<strong>cascata de prescrição</strong>: tiazídico → hiperuricemia → alopurinol; AINE → PA sobe → anti-hipertensivo).</li>
+    <li>Desprescrever IBP, estatina e anti-hipertensivo com critério não aumenta mortalidade. Retirada gradual e acompanhada; após alta, reconciliação.</li>
+    <li>Senescência (TFG cai, lapsos leves, sarcopenia) ≠ senilidade (perde função). Conduta: exercício resistido, evitar nefrotóxico.</li>
+    <li>Queda: causa múltipla; as mais tratáveis são visão e fraqueza/equilíbrio. IVCF-20 avalia visão, nutrição, suporte social (não função cardíaca).</li>
+    <li>Insônia no luto: escuta, higiene do sono, rever prescrição. Benzodiazepínico piora queda e delirium.</li>
+    <li>Delirium (CAM): agudo, flutuante, desatento. Sempre há causa orgânica (no câncer: metástase cerebral, hipercalcemia).</li>
+    <li>Paliativo na APS: controle de sintoma e equipe; desejo de morrer na demência avançada = sofrimento a escutar, não emergência psiquiátrica.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"5 a 10 medicamentos é seguro na maioria" (2025/Q90). Nenhum número libera: julga-se risco e benefício, fármaco a fármaco.</p></div>
+  <div class="q"><p>68 a, IC, TFG 25, asmática; descompensa após cilostazol. O que explica?</p><details><summary>ver resposta</summary><div>Cilostazol (contraindicado na ICFEr), metformina com TFG &lt; 30, carvedilol iniciado congesta e asmática, espironolactona sem potássio. Enalapril e HCTZ crônicos não explicam. <span class="qc">2026/Q94</span></div></details></div>
+</section>
+
+<section class="sec" id="s3">
+  <span class="kick">03 · Consultório</span>
+  <h2>Queixas comuns: a regra que decide</h2>
+  <div class="tw"><table>
+    <tr><th>Queixa</th><th>O que a UERJ aceita</th></tr>
+    <tr><td>Lombalgia inespecífica</td><td>75-90% melhora em 3 meses; atividade mantida; imagem só com alarme</td></tr>
+    <tr><td>Hérnia de disco</td><td>Clínico + fisio precoce; repouso absoluto é erro. Cirurgia: cauda equina, déficit progressivo, dor refratária a 3 meses</td></tr>
+    <tr><td>Climatério</td><td>Menopausa é clínica (12 m amenorreia); FSH e DMO não são pré-requisito de TH. <strong>Tem útero? → estrogênio + progestagênio</strong></td></tr>
+    <tr><td>Densitometria</td><td>Rastreio: mulher &gt; 65, homem &gt; 70</td></tr>
+    <tr><td>Hipotireoidismo subclínico</td><td>TSH alto, T4L normal: confirmar persistência antes de tratar</td></tr>
+    <tr><td>Incontinência</td><td>Esforço = suporte uretral; urgência = detrusor. Treino do assoalho antes de fármaco</td></tr>
+    <tr><td>Hemorroida trombosada</td><td>Analgesia, banho de assento, fibras; cirurgia em desuso na crise</td></tr>
+    <tr><td>Rinossinusite</td><td>Viral até dupla piora ou &gt; 10 dias; secreção amarela não autoriza antibiótico</td></tr>
+    <tr><td>Tosse em tabagista idoso</td><td>Sintomático respiratório = tosse ≥ 3 semanas; com consumpção = TB até prova em contrário</td></tr>
+  </table></div>
+  <div class="banca"><span class="blbl">Como a banca cobra</span><p>Climatério voltou com uma variável trocada: 2024 com útero (E + P), 2025 histerectomizada (pergunta virou densitometria). Leia a variável antes da conduta.</p></div>
+</section>
+
+<section class="sec" id="s4">
+  <span class="kick">04 · Pessoa e família</span>
+  <h2>MCCP, SIFE e ferramentas</h2>
+  <ul class="tp">
+    <li>4 componentes: explorar saúde/doença/experiência (<strong>SIFE</strong>: sentimentos, ideias, funcionamento, expectativas) · entender a pessoa inteira · plano conjunto · intensificar a relação.</li>
+    <li>O método melhora adesão, não encarece, não alonga a consulta de forma importante. Subjetivo se integra ao biomédico, não passa à frente.</li>
+    <li>Doença = diagnóstico; adoecimento = experiência de quem vive.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Pergunta</th><th>Ferramenta</th></tr>
+    <tr><td>Crise acidental ou normativa</td><td>Ciclo de vida familiar</td></tr>
+    <tr><td>Gerações e padrão de doença</td><td>Genograma</td></tr>
+    <tr><td>Rede de apoio</td><td>Ecomapa</td></tr>
+    <tr><td>Satisfação com a família</td><td>APGAR familiar</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Sabe e não faz: decisão compartilhada, crenças, contexto. Receita nova e encaminhamento precoce são distratores.</li>
+    <li>"Estou morrendo?": explorar emoções antes de responder (SPIKES organiza a má notícia).</li>
+    <li>Grupo educativo: dialógico, qualquer profissional conduz; "palestra" e "produtividade" marcam a errada.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>SIFE com iniciais certas e palavras erradas (subjetividade, imagens, fantasias, sensações). Uma palavra certa não salva a alternativa.</p></div>
+</section>
+
+<section class="sec" id="s5">
+  <span class="kick">05 · Crônicas na UBS</span>
+  <h2>Uma medida não faz diagnóstico</h2>
+  <ul class="tp">
+    <li>HAS: 3 medidas no consultório, média das 2 últimas; confirmar em outra ocasião ou MAPA/MRPA.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>DBHA 2025: sai "PA ótima"; pré-hipertensão = 120-139/80-89; estágios 1-3 mantidos.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Glicemia isolada sob estresse não rotula DM; 1 semana de tristeza não é depressão (critério = 2 semanas).</li>
+    <li>Pseudocrise: trata o gatilho e libera. Captopril SL em assintomático é erro.</li>
+    <li>Metformina: mantém com TFG 58; reduz entre 30-45; suspende &lt; 30.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Um verbo por classe: metformina reduz produção hepática · sulfonilureia secreta · glitazona sensibiliza · incretina potencializa · iSGLT2 elimina na urina. iSGLT2 e aGLP-1 = benefício cardiorrenal.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>DMG na 1ª consulta: jejum &lt; 92 → TOTG 24-28 sem; 92-125 = DMG; ≥ 126 = DM prévio. TOTG: 1 valor alterado (92/180/153) basta.</li>
+    <li>Angina estável: a história define a pré-teste; ECG/eco de repouso normais não afastam; ergométrico submáximo é não diagnóstico.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s6">
+  <span class="kick">06 · Organização</span>
+  <h2>Atributo da APS × princípio do SUS</h2>
+  <div class="tw"><table>
+    <tr><th>Categoria</th><th>Itens</th></tr>
+    <tr><td>APS essenciais</td><td>Acesso de 1º contato, longitudinalidade, integralidade, coordenação</td></tr>
+    <tr><td>APS derivados</td><td>Orientação familiar, orientação comunitária, competência cultural</td></tr>
+    <tr><td>SUS (distrator)</td><td>Universalidade, descentralização, controle social</td></tr>
+    <tr><td>Nos dois</td><td>Integralidade</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Equipe que acompanha desde os 10 anos = longitudinalidade. População decidindo com a gestão = participação da comunidade (Lei 8.142/1990), não orientação comunitária.</li>
+    <li>Demora permitida: sem alarme e com retorno garantido; proibida na emergência e no crônico agudizado.</li>
+    <li>Problema mais frequente na APS: diagnóstico sintomático, sem doença definida (mais da metade).</li>
+    <li>Atenção domiciliar: AD1 = equipe da APS, paciente compensado. Agudizado, parenteral, paliativo com visita frequente = AD2. Equipamento e cuidado intenso = AD3.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s7">
+  <span class="kick">07 · Prevenção e rastreamento</span>
+  <h2>A subárea que pune o intervencionista</h2>
+  <p class="lede">O gabarito costuma ser: não pedir, não rastrear, não seguir a cascata.</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Classifique pelo momento, não pela ação</b></p>
+    <svg viewBox="0 0 360 190" role="img" aria-label="Linha da história natural da doença em três fases: antes da doença, prevenção primária; doença inicial assintomática, prevenção secundária; dano instalado, prevenção terciária. Uma faixa sob todas as fases marca a prevenção quaternária, evitar iatrogenia em qualquer momento.">
+      <rect class="fa-fase" x="8" y="40" width="108" height="64" rx="8"/>
+      <rect class="fa-alvo" x="126" y="40" width="108" height="64" rx="8"/>
+      <rect class="fa-fase" x="244" y="40" width="108" height="64" rx="8"/>
+      <text class="fa-s" x="62" y="28" text-anchor="middle">sem doença</text>
+      <text class="fa-s" x="180" y="28" text-anchor="middle">doença assintomática</text>
+      <text class="fa-s" x="298" y="28" text-anchor="middle">dano instalado</text>
+      <text class="fa-t" x="62" y="66" text-anchor="middle">Primária</text>
+      <text class="fa-m" x="62" y="84" text-anchor="middle">vacina, hábito</text>
+      <text class="fa-t" x="180" y="66" text-anchor="middle">Secundária</text>
+      <text class="fa-ok" x="180" y="84" text-anchor="middle">rastreio, teste</text>
+      <text class="fa-ok" x="180" y="98" text-anchor="middle">rápido de HIV</text>
+      <text class="fa-t" x="298" y="66" text-anchor="middle">Terciária</text>
+      <text class="fa-m" x="298" y="84" text-anchor="middle">reabilitação</text>
+      <line class="fa-eixo" x1="8" y1="118" x2="346" y2="118"/>
+      <path class="fa-seta" d="M352 118 l-8 -4 v8 z"/>
+      <text class="fa-s" x="12" y="134">história natural</text>
+      <rect class="fa-q4" x="8" y="144" width="344" height="36" rx="8"/>
+      <text class="fa-t" x="180" y="160" text-anchor="middle">Quaternária: qualquer momento</text>
+      <text class="fa-m" x="180" y="174" text-anchor="middle">evitar iatrogenia (PSA na população, cascata)</text>
+    </svg>
+    <figcaption>Esquemático. Tratar PA já elevada não é primária.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>Teste rápido de HIV na UBS oferecido como quaternária (2022/Q51). Ofertar diagnóstico é secundária; quaternária protege do excesso.</p></div>
+
+  <h3>Probabilidade pré-teste: o padrão mais original da UERJ</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Mesmo teste, população diferente</b></p>
+    <svg viewBox="0 0 360 170" role="img" aria-label="Duas populações de 20 pessoas testadas com o mesmo exame. À esquerda, pré-teste baixa: quase todos sadios, e a maioria dos positivos são falsos positivos. À direita, pré-teste alta: muitos doentes, e um negativo tende a ser falso negativo.">
+      <text class="fa-t" x="86" y="16" text-anchor="middle">Pré-teste baixa</text>
+      <text class="fa-t" x="274" y="16" text-anchor="middle">Pré-teste alta</text>
+      <g id="pb">
+        <circle class="fa-sadio" cx="30" cy="40" r="7"/><circle class="fa-sadio" cx="52" cy="40" r="7"/><circle class="fa-falso" cx="74" cy="40" r="7"/><circle class="fa-sadio" cx="96" cy="40" r="7"/><circle class="fa-sadio" cx="118" cy="40" r="7"/><circle class="fa-sadio" cx="140" cy="40" r="7"/>
+        <circle class="fa-sadio" cx="30" cy="62" r="7"/><circle class="fa-sadio" cx="52" cy="62" r="7"/><circle class="fa-sadio" cx="74" cy="62" r="7"/><circle class="fa-falso" cx="96" cy="62" r="7"/><circle class="fa-sadio" cx="118" cy="62" r="7"/><circle class="fa-sadio" cx="140" cy="62" r="7"/>
+        <circle class="fa-sadio" cx="30" cy="84" r="7"/><circle class="fa-doente" cx="52" cy="84" r="7"/><circle class="fa-sadio" cx="74" cy="84" r="7"/><circle class="fa-sadio" cx="96" cy="84" r="7"/><circle class="fa-falso" cx="118" cy="84" r="7"/><circle class="fa-sadio" cx="140" cy="84" r="7"/>
+      </g>
+      <circle class="fa-doente" cx="218" cy="40" r="7"/><circle class="fa-doente" cx="240" cy="40" r="7"/><circle class="fa-doente" cx="262" cy="40" r="7"/><circle class="fa-sadio" cx="284" cy="40" r="7"/><circle class="fa-doente" cx="306" cy="40" r="7"/><circle class="fa-doente" cx="328" cy="40" r="7"/>
+      <circle class="fa-doente" cx="218" cy="62" r="7"/><circle class="fa-sadio" cx="240" cy="62" r="7"/><circle class="fa-doente" cx="262" cy="62" r="7"/><circle class="fa-doente" cx="284" cy="62" r="7"/><circle class="fa-doente" cx="306" cy="62" r="7"/><circle class="fa-sadio" cx="328" cy="62" r="7"/>
+      <circle class="fa-doente" cx="218" cy="84" r="7"/><circle class="fa-doente" cx="240" cy="84" r="7"/><circle class="fa-sadio" cx="262" cy="84" r="7"/><circle class="fa-doente" cx="284" cy="84" r="7"/><circle class="fa-doente" cx="306" cy="84" r="7"/><circle class="fa-doente" cx="328" cy="84" r="7"/>
+      <line class="fa-eixo" x1="180" y1="28" x2="180" y2="100"/>
+      <text class="fa-av" x="86" y="120" text-anchor="middle">positivo ≈ falso positivo</text>
+      <text class="fa-m" x="86" y="136" text-anchor="middle">→ não pedir; liberar a atividade</text>
+      <text class="fa-av" x="274" y="120" text-anchor="middle">negativo ≈ falso negativo</text>
+      <text class="fa-m" x="274" y="136" text-anchor="middle">→ tratar (ex.: angina típica)</text>
+      <circle class="fa-doente" cx="100" cy="156" r="5"/><text class="fa-s" x="110" y="160">doente</text>
+      <circle class="fa-falso" cx="166" cy="156" r="5"/><text class="fa-s" x="176" y="160">falso positivo</text>
+      <circle class="fa-sadio" cx="262" cy="156" r="5"/><text class="fa-s" x="272" y="160">sadio</text>
+    </svg>
+    <figcaption>Esquemático: proporção ilustrativa; o VPP muda com a prevalência.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Jovem assintomática com ergométrico "isquêmico" → cintilografia → cateterismo com lesão de 10% = cascata. "Pré-doença coronariana" não existe; doença significativa = estenose ≥ 50% em epicárdica.</li>
+    <li>Pais com IAM aos 74 e 82 não é história precoce.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Rastreamento</th><th>Regra da UERJ</th></tr>
+    <tr><td>Colo do útero</td><td>DNA-HPV oncogênico 25-64 a, a cada 5 anos, organizado com convocação. Início aos 25 não muda; sexarca precoce não antecipa; MSM rastreia igual<sup class="ref"><a href="#ref-3">3</a></sup></td></tr>
+    <tr><td>Mama</td><td>Ativo bienal 50-74; 40-49 sob demanda, decisão compartilhada; &gt; 74 interromper<sup class="ref"><a href="#ref-4">4</a></sup></td></tr>
+    <tr><td>Quem se rastreia</td><td>Mama, colo, colorretal. Próstata, gástrico, tireoide, ovário (CA-125): não</td></tr>
+    <tr><td>Pulmão</td><td>Exige ≥ 20 maços-ano e cessação &lt; 15 anos</td></tr>
+    <tr><td>Homem de 55 a</td><td>PA, lipídios, glicemia. PSA, ergométrico, ácido úrico = distratores</td></tr>
+    <tr><td>Bacteriúria</td><td>Só gestante e antes de procedimento urológico invasivo</td></tr>
+    <tr><td>Prazos</td><td>Exame suspeito: 30 dias para confirmar; malignidade: 60 dias para tratar</td></tr>
+    <tr><td>Cobertura</td><td>Meta clássica 80% da população-alvo; eliminação OMS 90-70-90</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Critérios de programa: doença relevante, fase pré-clínica detectável, tratar cedo é melhor, exame aceitável, custo compatível, adesão à sequência inteira.</li>
+    <li>Dislipidemia 2025: escore PREVENT preferencial; terapia combinada de 1ª linha nos estratos altos.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+  </ul>
+</section>
+
+<section class="sec" id="s8">
+  <span class="kick">08 · Epidemiologia</span>
+  <h2>Conceito aplicado ao exame conhecido</h2>
+  <ul class="tp">
+    <li><strong>Sensível</strong>: negativo exclui, triagem, anda com VPN. <strong>Específico</strong>: positivo confirma, anda com VPP.</li>
+    <li>Prevalência alta derruba o VPN: sintomático no pico com RT-PCR negativo não está liberado.</li>
+    <li>Diabetes lado a lado: TOTG = mais sensível; HbA1c = mais específica. HOMA-IR e frutosamina não diagnosticam.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Conceito</th><th>Regra</th></tr>
+    <tr><td>Série</td><td>Ambulatório, todos positivos: ganha especificidade</td></tr>
+    <tr><td>Paralelo</td><td>Emergência, um positivo basta: ganha sensibilidade</td></tr>
+    <tr><td>Transversal × coorte</td><td>Foto = prevalência; filme a partir de sadios = incidência e RR</td></tr>
+    <tr><td>Eficácia / efetividade / eficiência</td><td>Ideal / mundo real / custo</td></tr>
+    <tr><td>Cegamento</td><td>Impossível se o participante percebe (dieta, cirurgia); randomizar e ITT seguem possíveis</td></tr>
+    <tr><td>NNT</td><td>1 / RAR: 4% − 2% = 0,02 → NNT 50. RRR 50% não é NNT</td></tr>
+    <tr><td>Condições sensíveis à APS</td><td>Imunizáveis, GECA, asma, HAS, DM, IC, ITU. Câncer não entra</td></tr>
+    <tr><td>Mortalidade masculina</td><td>Circulatório 1º, neoplasia 2º</td></tr>
+  </table></div>
+</section>
+
+<section class="sec" id="s9">
+  <span class="kick">09 · Vigilância e saúde mental</span>
+  <h2>Dengue, TB, violência</h2>
+  <div class="tw"><table>
+    <tr><th>Dengue</th><th>Regra</th></tr>
+    <tr><td>Queda da febre</td><td>Início da fase crítica (extravasamento)</td></tr>
+    <tr><td>Sinal de alarme</td><td>Grupo C: hidratação venosa; nunca volta para casa</td></tr>
+    <tr><td>Prova do laço</td><td>Manguito na PA média; 5 min adulto, 3 min criança; quadrado 2,5 cm. Positiva: ≥ 20 petéquias adulto, ≥ 10 criança; negativa não exclui</td></tr>
+    <tr><td>Não fazer o laço</td><td>Se já há sangramento ou alarme</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Contato de TB: sintomático → baciloscopia + RX; assintomático → PT ou IGRA + RX. Crianças e PVHIV primeiro.</li>
+    <li>Abstinência alcoólica: tiamina antes/com glicose + benzodiazepínico.</li>
+    <li>Depressão nova no idoso: TSH, cálcio, B12, sódio, revisar fármacos antes do rótulo.</li>
+    <li>Negligência ≠ pobreza. Risco social sozinho: criança indesejada, mãe dependente de álcool/drogas.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s10">
+  <span class="kick">10 · Armadilhas e tática</span>
+  <h2>As formas do distrator</h2>
+  <div class="tw"><table>
+    <tr><th>Família</th><th>Pergunta antes de marcar</th></tr>
+    <tr><td>1 Entidade vizinha</td><td>Qual achado separa as duas doenças?</td></tr>
+    <tr><td>2 Sequência</td><td>O comando pede o primeiro passo?</td></tr>
+    <tr><td>3 Exame que não decide</td><td>A pré-teste justifica o exame? Sensível ou específico?</td></tr>
+    <tr><td>4 Conceito trocado</td><td>O nome está certo e a definição, invertida? (1ª em MFC)</td></tr>
+    <tr><td>5 Par trocado</td><td>Cada item foi ligado ao seu par?</td></tr>
+    <tr><td>6 Absoluto</td><td>"Sempre" foi testado pelo conteúdo? (estava certo em 2023/Q81)</td></tr>
+    <tr><td>7 Comando negativo</td><td>Sublinhei NÃO/EXCETO?</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Erro duplo lidera em MFC: a metade certa compra a errada.</li>
+    <li>Tática: comando antes das alternativas; eliminar por conteúdo, não por forma; questão marcada só volta com motivo novo.</li>
+    <li>Tempo: MFC é o último bloco (mediana 55,5 palavras). Escreva no rascunho o horário-limite de cada bloco; CM abre e é o mais lento.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s11">
+  <span class="kick">Véspera</span>
+  <h2>Grade de gatilhos</h2>
+  <div class="tw"><table>
+    <tr><th>Se o enunciado traz</th><th>A resposta passa por</th></tr>
+    <tr><td>"Corte seguro" de nº de remédios</td><td>Número não libera; desprescrever com critério</td></tr>
+    <tr><td>Exame a assintomático de baixo risco</td><td>Positivo provável falso; o exame é prejuízo</td></tr>
+    <tr><td>Exames de DM lado a lado</td><td>TOTG sensível; HbA1c específica</td></tr>
+    <tr><td>Ação preventiva a classificar</td><td>Ofertar diagnóstico = secundária</td></tr>
+    <tr><td>Atributos + princípios misturados</td><td>Universalidade, descentralização, controle social = SUS</td></tr>
+    <tr><td>PA alta em 1 aferição</td><td>3 medidas, média das 2 últimas, MAPA/MRPA</td></tr>
+    <tr><td>Diabético com TFG 58</td><td>Metformina fica</td></tr>
+    <tr><td>Mulher de 76 a e mamografia</td><td>Interromper</td></tr>
+    <tr><td>Prova do laço</td><td>20 adulto / 10 criança; negativa não exclui</td></tr>
+    <tr><td>Fogacho + pedido de hormônio</td><td>Conferir o útero</td></tr>
+  </table></div>
+  <div class="banca"><span class="blbl">UERJ × outras bancas</span><p>Onde há escola divergente, vale o que a UERJ já aceitou: MS/INCA 2025 no rastreio (mama ativo bienal 50-74, 40-49 só sob demanda; colo por DNA-HPV a cada 5 anos no lugar do citopatológico oportunístico); PSA na população como exemplo de quaternária; polifarmácia com corte de 4 (MS) ou 5 (clássico), mas nunca um teto "seguro". Outra banca que cobre o citopatológico ou a mamografia anual a partir de 40 não muda a resposta aqui.</p></div>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">SBC, SBH, SBN. Diretriz Brasileira de Hipertensão Arterial, 2025 (citada pelo caderno; não conferida no original).</li>
+    <li id="ref-2">Sociedade Brasileira de Diabetes. Diretriz SBD, 2025 (citada pelo caderno; não conferida no original).</li>
+    <li id="ref-3">Ministério da Saúde / INCA. Diretrizes de rastreamento do câncer do colo do útero, 2025 (citada pelo caderno; não conferida no original).</li>
+    <li id="ref-4">Ministério da Saúde / INCA. Rastreamento do câncer de mama, 2025 (citada pelo caderno; não conferida no original).</li>
+    <li id="ref-5">SBC. Diretriz Brasileira de Dislipidemias, 2025 (citada pelo caderno; não conferida no original).</li>
+    <li id="ref-6">Material de curso: Sprint Ultradirecionado. UERJ de Bolso, ed. 2027, cap. 2 e 7 (apoio só de material de curso e da banca, sem diretriz).</li>
+  </ol>
+  <p class="base">Base deste documento: <code>Sprint Ultradirecionado UERJ - Caderno Completo.pdf</code> (local, gitignored), páginas 449-472 (cap. 1-2), 524-530 (cap. 7), 537-538 (cap. 9) e 547-548 (cap. 10). Capítulos de CM, CIR, GO e PED (3-6) e âncoras (8) ficaram fora do recorte de MFC. Cumpre a tarefa #5426.</p>
+</section>
+</div>

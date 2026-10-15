@@ -388,7 +388,7 @@ espera().then(espera).then(function(){ var o = {};
   $("pa").querySelectorAll("li.tarefa").forEach(function(li){ var a = li.querySelector("a[data-hub-aula]"), m = li.querySelector(".t-assinado");
     o[a.getAttribute("data-hub-aula")] = [li.classList.contains("qd-assinado"), m ? m.textContent : null]; });
   var rd = {}; $("pa").querySelectorAll("li.tarefa.rd").forEach(function(li){ var st = li.querySelector(".t-rd-st");
-    rd = {assinado: li.classList.contains("qd-assinado"), st: st ? st.textContent : null, extra: !!li.querySelector(".t-assinado")}; });
+    rd = {oculta: !!li.hidden, assinado: li.classList.contains("qd-assinado"), st: st ? st.textContent : null, extra: !!li.querySelector(".t-assinado")}; });
   console.log(JSON.stringify({li: o, rd: rd, mediu: MEDIU, escritas: ESCRITAS})); });
 """
 
@@ -448,8 +448,8 @@ def test_rd_assinada_no_painel_troca_o_estado_e_nunca_soma_um_segundo_rotulo():
     ainda nao assinada" na mesma linha): o cartao da RD tem o estado num span SO (`.t-rd-st`); a assinatura ao vivo
     (o MESMO `quadro/<slug>` ou `doc_<slug>`) o reescreve -- nunca o " · assinado" ao lado."""
     out = _rodar_assinados(quadro={"rd-cm-1310": {"feito": True}}, pend={})
-    assert out["rd"] == {"assinado": True, "st": "revisão direcionada assinada", "extra": False}
+    assert out["rd"] == {"oculta": True, "assinado": True, "st": "revisão direcionada assinada", "extra": False}
     pend = _rodar_assinados(quadro={}, pend={"doc_rd-cm-1310": {"tipo": "documento", "status": "absorvida"}})
-    assert pend["rd"] == {"assinado": True, "st": "revisão direcionada assinada", "extra": False}
+    assert pend["rd"] == {"oculta": True, "assinado": True, "st": "revisão direcionada assinada", "extra": False}
     nada = _rodar_assinados(quadro={}, pend={})
-    assert nada["rd"] == {"assinado": False, "st": "revisão direcionada ainda não assinada", "extra": False}
+    assert nada["rd"] == {"oculta": False, "assinado": False, "st": "revisão direcionada ainda não assinada", "extra": False}

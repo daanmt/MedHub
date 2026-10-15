@@ -198,6 +198,14 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   o chip segue com o nome), meta e tema à esquerda, botões à direita (no celular, embaixo). Na questão: título numa
   linha, Grifo e tempo lado a lado em bloquinhos; botões "‹ Anterior · Responder · Pular ›" centralizados. Nos Cards, os
   três botões compactos (36 px, o tamanho do Pausar da v120), mesma paleta.
+- **Rodada 4 (s229, 15/10, "UM design compartilhado entre Painel, Teoria e Listas")**: a BARRA do Cronograma é o
+  item de backlog das três abas -- faixa de 4 px + fundo tingido pela grande área (`--area` por `data-area`), área em
+  chip rosa, tema, botão de roteamento à direita. Roteamento: o Painel mostra Resolver + Abrir aula; a Teoria só
+  Abrir aula / Abrir resumo / Abrir documento (`.hub-btn`); as Listas só Resolver (a resolvida, "Rever"; visual,
+  o toque é da linha). "Revisões direcionadas" saiu do topo da Teoria e é o eixo `RD` da Biblioteca (o 1º; as
+  disciplinas por dentro). No Cronograma, o assinado/concluído SAI (RD lida, tarefa cuja aula que a cumpre foi lida
+  -- `data-cumpre` --, lista resolvida), no build e ao vivo; na Biblioteca o feito segue riscado e esmaecido. A
+  legenda de instrução das Listas saiu.
 - **Teoria** (s226, consulta): no topo, **Revisões direcionadas · N** (as RDs não assinadas, da mais antiga para a
   mais nova, a linha inteira abrindo o leitor; a assinada some ao vivo e fica só na Biblioteca); abaixo, a Biblioteca
   por área e disciplina com toda aula, resumo e RD. Sem semana, sem "Atrasadas" e sem contagem de questões.

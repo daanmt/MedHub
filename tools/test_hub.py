@@ -566,8 +566,9 @@ def _defeitos_do_hub(raiz, manifesto, problemas, avisos, pagina, quadro):
     sem_area = [s for s in hub.sem_area_na_pagina(pagina) if s not in sem_tipo]
     if sem_area:
         defeitos.append("item registrado no grupo 'Sem área': %s" % sem_area)
-    if not re.search(r'<section class="qd-sem qd-rds" data-secao="rd"', pagina):
-        defeitos.append("Teoria sem o backlog de revisões direcionadas")
+    # s229 (rodada 4): o contrato inverteu -- a RD mora no eixo RD da Biblioteca; o backlog proprio e defeito
+    if re.search(r'<section class="qd-sem qd-rds" data-secao="rd"', pagina):
+        defeitos.append("Teoria com o backlog de revisões direcionadas fora da Biblioteca")
     return defeitos
 
 
@@ -641,10 +642,11 @@ def test_gemeo_hermetico_do_repo_real_acusa_cada_forma_plantada(tmp_path):
     d = _defeitos_do_hub(raiz, m, p, calado, pagina, so_dmg)
     assert len(d) == 2 and "sem tipo" in d[0] and "Sem área" in d[1], d
     # 3. a Teoria sem o backlog de RDs (s226; era a semana corrente sem secao)
-    sem_rds = pagina.replace('<section class="qd-sem qd-rds" data-secao="rd"', '<section class="qd-sem" data-secao="x"')
-    assert sem_rds != pagina
-    d = _defeitos_do_hub(raiz, m, p, a, sem_rds, so_dmg)
-    assert d == ["Teoria sem o backlog de revisões direcionadas"], d
+    # s229 (rodada 4): agora o defeito e o backlog de volta fora da Biblioteca
+    com_rds = pagina.replace('<div class="qd-semanas placa">', '<div class="qd-semanas placa"><section class="qd-sem qd-rds" data-secao="rd"></section>', 1)
+    assert com_rds != pagina
+    d = _defeitos_do_hub(raiz, m, p, a, com_rds, so_dmg)
+    assert d == ["Teoria com o backlog de revisões direcionadas fora da Biblioteca"], d
     # 4. aula nova no disco depois do build: manifesto e disco discordam
     (raiz / "artifacts" / "aula-depois.html").write_text("<title>Depois</title>", encoding="utf-8")
     d = _defeitos_do_hub(raiz, m, p, a, pagina, so_dmg)

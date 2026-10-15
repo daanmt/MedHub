@@ -113,7 +113,7 @@ TIPO_PADRAO = "aula"
 #: GO)"): chave e rotulo de tela, NA ORDEM DOS GRUPOS. As cinco primeiras sao os blocos do plano
 #: (`db.bloco_de`); VARIAS = item de varias areas (as pilulas), grupo final so com item; SEM = defeito
 #: (item sem area resolvivel), acusado pelo build e pelo --check -- valor do build, nunca do registro.
-AREAS_BIBLIOTECA = (("CM", "Clínica Médica"), ("CIR", "Cirurgia"),
+AREAS_BIBLIOTECA = (("RD", "Revisões direcionadas"), ("CM", "Clínica Médica"), ("CIR", "Cirurgia"),
                     ("MFC", "Medicina de Família e Comunidade"), ("PED", "Pediatria"),
                     ("GO", "Ginecologia e Obstetrícia"), ("DOC", "Documentação"), ("VARIAS", "Várias áreas"),
                     ("SEM", "Sem área"))
@@ -124,7 +124,10 @@ AREA_SEM = "SEM"
 EIXO_DOC = ("DOC", "Análises")
 #: O vocabulario do campo `bloco` do registro (o SEM e do build). s218: o `bloco` vale so como leitura
 #: antiga (a RD declara `disciplinas`); VARIAS fica no vocabulario por isso, sem item no registro real.
-BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a not in (AREA_SEM, EIXO_DOC[0]))
+#: s229 (rodada 4, pedido dele: "Revisoes direcionadas sai do bloco proprio e vira um eixo DENTRO da Biblioteca"):
+#: toda RD mora no eixo RD, com as disciplinas dela por dentro. Valor do build, fora de `BLOCOS_REGISTRO`.
+EIXO_RD = "RD"
+BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a not in (AREA_SEM, EIXO_DOC[0], EIXO_RD))
 
 # s218 (pedido do operador em 07/10/2026): a Biblioteca por grande area -> DISCIPLINA, com os RESUMOS.
 #: Registro dos resumos que entram no hub (lote por semana do plano; mapa resumo -> tarefas a mao).
@@ -719,6 +722,8 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
         reg = (quadro or {}).get(a.slug) or {}
         # s229: a analise mora no eixo Documentacao da Biblioteca (⚰️ s216-s228: so no Painel, bloco Documentacao)
         lugares = [EIXO_DOC] if tipo == "analise" else lugares_do_registro(reg, blocos, discs)
+        if tipo == "revisao":   # s229 (rodada 4): o eixo RD, as disciplinas dela por dentro
+            lugares = list(dict.fromkeys((EIXO_RD, d) for _a, d in lugares)) or [(EIXO_RD, DISC_OUTROS)]
         fontes = [_caminho_resumo(f) for f in reg.get("resumos") or []]
         avulsas.append({"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
                         "data": a.data, "grupo": lugares[0][0] if lugares else None, "lugares": lugares,
@@ -838,7 +843,7 @@ def _html_resumo(item, lugar=None):
     area, disc = _lugar_do_item(item, lugar)
     return ('<li class="qd-item qd-resumo" data-resumo="%s" data-area="%s" data-disc="%s" data-bib="1">'
             '<div class="qd-bloco"><p class="qd-tema">%s</p><p class="qd-meta"><span class="qd-bl">Resumo'
-            '</span></p><p class="qd-acao"><a class="hub-aula" href="%s" data-titulo="%s">abrir resumo</a>'
+            '</span></p><p class="qd-acao"><a class="hub-aula hub-btn" href="%s" data-titulo="%s">Abrir resumo</a>'
             '</p>%s</div></li>'
             % (_e(r.slug), _e(area or AREA_SEM), _e(disc or DISC_OUTROS), _e(r.titulo), _e(r.publicado),
                _e(r.titulo), _html_ligacoes_item("Citado em", [(a.publicado, t) for a, t in item.get("citado") or []])))
@@ -1095,7 +1100,8 @@ def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calen
     secoes, biblioteca, avisos_secoes = secoes_do_quadro(classificadas, plano_linhas, calendario,
                                                          hoje, estado, quadro, resumos=resumos,
                                                          semanas=False)
-    return (html_quadro(secoes, biblioteca, rds_nao_assinadas(classificadas, estado)),
+    # s229 (rodada 4): o backlog "Revisoes direcionadas" do topo saiu -- a RD mora no eixo RD da Biblioteca
+    return (html_quadro(secoes, biblioteca, None),
             avisos + avisos_secoes)
 
 

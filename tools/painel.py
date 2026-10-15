@@ -227,6 +227,19 @@ def _lidos_por_pendencia(pasta=None):
     return lidos
 
 
+def _aulas_lidas():
+    """{slug} lidos: `feito` no estado do quadro OU a assinatura `doc_<slug>`; sem a pasta do estado, nada (o Painel
+    nunca esconde no escuro)."""
+    import hub
+    if not Path(QUADRO_ESTADO).exists():
+        return set()
+    try:
+        estado = hub.ler_estado_quadro(QUADRO_ESTADO)
+    except (OSError, ValueError):
+        return set()
+    return {s for s, v in estado.items() if v.get("feito")} | _lidos_por_pendencia()
+
+
 def _rd_nao_assinada():
     """A Revisao Direcionada NAO assinada mais antiga: item `revisao` do quadro (`core/hub_quadro.json`)
     com arquivo em `artifacts/` e sem `feito` no estado do quadro (`QUADRO_ESTADO`, lido por
@@ -266,6 +279,13 @@ def _bloco_sprint(linhas, hoje):
     aulas = _aulas_por_tarefa()
     no_hub = {int(l["id"]) for l in linhas if l.get("q_hub") and l.get("id") is not None}
     tarefa = lambda t: _tarefa(t, aulas, no_hub)
+    # s229 (rodada 4, pedido dele: "tarefa ASSINADA/concluida sai do Cronograma"): a tarefa cuja aula que a CUMPRE ja
+    # foi lida (quadro `feito` ou `doc_<slug>` assinado) sai do Hoje e dos dias; ao vivo, o hub a esconde tambem
+    lidas = _aulas_lidas()
+    feita = lambda t: any(a.get("cumpre") and a["slug"] in lidas for a in aulas.get(t["id"]) or [])
+    ag = dict(ag, hoje=[t for t in ag["hoje"] if not feita(t)],
+              proximos=[dict(p, tarefas=[t for t in p["tarefas"] if not feita(t)]) for p in ag["proximos"]])
+    ag["proximos"] = [p for p in ag["proximos"] if p["tarefas"]]
     return {
         "hoje": [tarefa(t) for t in ag["hoje"]], "q_hoje": ag["q_hoje"],
         "proximos": [{"data": p["data"], "q": p["q"], "tarefas": [tarefa(t) for t in p["tarefas"]]}
@@ -495,12 +515,12 @@ def _modo_hub(t):
     return "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
 
 
-def _botao_aula(slug, titulo, rotulo="Abrir aula"):
+def _botao_aula(slug, titulo, rotulo="Abrir aula", cumpre=False):
     """s229 (pedido dele, 15/10: "trocar o link 'abrir aula' por um BOTAO tematico que leva a aba Teoria ja naquela
     aula"): o MESMO botao no Painel e na Teoria (`.t-btn` aqui, `.hub-btn` no hub) -- o atalho `data-hub-aula` que o
     hub ja trata abre o leitor da Teoria direto. Secundario (contorno ciano); o primario da linha e o "Resolver"."""
-    return ('<a class="t-btn" href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
-            % (_e(slug), _e(slug), _e(titulo or slug), _e(rotulo)))
+    return ('<a class="t-btn" href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s"%s>%s</a>'
+            % (_e(slug), _e(slug), _e(titulo or slug), ' data-cumpre="1"' if cumpre else "", _e(rotulo)))
 
 
 def _botao_resolver(t):
@@ -531,7 +551,8 @@ def _acao(t):
     aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
     varias = len(aulas) > 1
     for a in aulas:
-        partes.append(_botao_aula(a["slug"], a.get("titulo"), (a.get("titulo") or a["slug"]) if varias else "Abrir aula"))
+        partes.append(_botao_aula(a["slug"], a.get("titulo"), (a.get("titulo") or a["slug"]) if varias else "Abrir aula",
+                                  bool(a.get("cumpre"))))
     return "".join(partes)
 
 
@@ -1062,6 +1083,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .tarefa:has(> .t-faixa[data-area="Simulado"]){--area:var(--aviso)}
 .tarefa:has(> .t-faixa[data-area="RD"]){--area:var(--roxo-tinta)}
 .t-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)}
+.tarefa[hidden]{display:none}   /* s229 (rodada 4): assinada/resolvida ao vivo sai do Cronograma */
 .tarefa > .t-meta{grid-area:meta;justify-content:flex-start}
 .tarefa > .t-tema{grid-area:tema}
 .tarefa > .t-acao{grid-area:acao;margin:0;padding:0;justify-content:flex-end}

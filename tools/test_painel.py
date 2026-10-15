@@ -1426,3 +1426,18 @@ def test_cronograma_em_barras_horizontais_com_a_cor_da_area():
     for area, tok in (("CM", "acento"), ("CIR", "rosa"), ("PED", "roxo"), ("GO", "amarelo")):
         assert '.tarefa:has(> .t-faixa[data-area="%s"]){--area:var(--%s)}' % (area, tok) in css
     assert '<i class="t-faixa" data-area="CIR" aria-hidden="true"></i>' in _li()
+
+
+def test_tarefa_com_aula_lida_sai_do_cronograma(tmp_path, monkeypatch):
+    """s229 (rodada 4): a tarefa cuja aula que a CUMPRE ja foi lida (quadro `feito` ou `doc_<slug>`) sai do
+    Cronograma; a aula que so PREPARA a lista nao a tira. O botao da aula que cumpre leva `data-cumpre` (o hub
+    esconde a barra ao vivo quando ele assina)."""
+    estado = tmp_path / "estado"
+    estado.mkdir()
+    (estado / "a1.json").write_text('{"feito": true}', encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
+    monkeypatch.setattr(painel, "PEND_ESTADO", tmp_path / "nada")
+    assert painel._aulas_lidas() == {"a1"}
+    li = _li(aulas=[{"slug": "a1", "titulo": "A", "cumpre": True}])
+    assert 'data-hub-aula="a1" data-titulo="A" data-cumpre="1">Abrir aula</a>' in li
+    assert ".tarefa[hidden]{display:none}" in painel.CSS

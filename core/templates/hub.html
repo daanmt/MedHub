@@ -117,6 +117,35 @@
          text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .hub-btn:hover{background:var(--acento-fraco)}
 .hub-btn[disabled]{border-color:var(--linha-forte);color:var(--tinta3);background:transparent}
+.hub-btn-prim{background:var(--acento);color:var(--sobre)}
+.hub-btn-prim:hover{background:var(--acento-tinta)}
+/* s229 (rodada 4, pedido dele: "UM design compartilhado entre Painel, Teoria e Listas"): o item da Biblioteca e a
+   lista da aba Listas na BARRA do Cronograma -- faixa de 4 px + fundo tingido pela grande area (`data-area`), a
+   area em chip rosa, o tema, e o botao de roteamento a direita (Teoria: Abrir aula/resumo; Listas: Resolver) */
+.qd-item,.qz-lista li{--area:var(--linha-forte)}
+.qd-item[data-area="CM"],.qz-lista li[data-area="CM"]{--area:var(--acento)}
+.qd-item[data-area="CIR"],.qz-lista li[data-area="CIR"]{--area:var(--rosa)}
+.qd-item[data-area="MFC"],.qz-lista li[data-area="MFC"]{--area:var(--ok)}
+.qd-item[data-area="PED"],.qz-lista li[data-area="PED"]{--area:var(--roxo)}
+.qd-item[data-area="GO"],.qz-lista li[data-area="GO"]{--area:var(--amarelo)}
+.qz-lista li[data-area="Simulado"]{--area:var(--aviso)}
+.qd-item[data-area="RD"]{--area:var(--roxo-tinta)}
+.qd-item[data-area="DOC"]{--area:var(--tinta3)}
+.qd-lista,.qz-lista{gap:var(--esp-2)!important}
+.qd-lista > .qd-item > .qd-bloco,.qz-lista > li > button{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--esp-4);row-gap:2px;align-items:center;
+  padding:var(--esp-2) var(--esp-4) var(--esp-2) var(--esp-4)!important;border:1px solid var(--linha)!important;border-left:4px solid var(--area)!important;
+  border-radius:var(--raio)!important;background:color-mix(in srgb,var(--area) 9%,var(--afundado))!important}
+.qd-lista > .qd-item > .qd-bloco > *{grid-column:1}
+.qd-lista > .qd-item > .qd-bloco > .qd-acao{grid-column:2;grid-row:1 / span 2;margin:0}
+.qd-lista > .qd-item > .qd-bloco.qd-alvo::after{content:none}
+.qd-bl{color:var(--rosa);background:var(--rosa-fraco)}
+.qz-lista > li > button > .qz-rota{grid-column:2;grid-row:1 / span 3;align-self:center;pointer-events:none}
+.qz-lista > li > button > .qz-chip{grid-column:1;grid-row:auto;justify-self:start}
+.qz-lista .qz-area{color:var(--rosa);font-weight:650;background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
+.qd-item[data-feito] > .qd-bloco{opacity:.7}
+@media (max-width:520px){
+  .qd-lista > .qd-item > .qd-bloco > .qd-acao{grid-column:1;grid-row:auto}
+}
 .qd-acao .tenue{color:var(--tinta3)}
 /* P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): a linha da
    tarefa com 1 aula E o link dela (a seta diz que abre); com 2+ aulas, cada uma e um alvo de 44 px; sem
@@ -214,7 +243,7 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 @media (prefers-reduced-motion: reduce){.qz-p-feitas > .qd-feitas > summary::before{transition:none}}
 @media (min-width:900px){
   .qd,.qz-grade{gap:var(--esp-5)}
-  .qd,.qz-duas,.qz-sim{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qz-duas,.qz-sim{grid-template-columns:repeat(2,minmax(0,1fr))}   /* s229 (rodada 4): a Teoria e so a Biblioteca, na largura toda */
   /* Proximos ocupa a coluna da direita nas duas linhas: Resolvidas sobe para logo abaixo de Hoje */
   .qz-duas{grid-template-rows:auto 1fr}
   .qz-duas > .qz-p-prox{grid-column:2;grid-row:1 / span 2}
@@ -515,7 +544,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       <h2 class="hub-titulo">Listas</h2>
       <div class="qz-cabeca">
         <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
-        <p class="hub-sub" id="qz-sub"></p>
+        <p class="hub-sub" id="qz-sub" hidden></p>
       </div>
       <p class="qd-aviso" id="qz-aviso" hidden></p>
       <div class="qz-semanas" id="qz-listas"><p class="qd-vazio">Carregando as listas…</p></div>
@@ -1882,7 +1911,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       var s = doc.createElement("style");
       s.id = "hub-listas-estilo";
       s.textContent = ".qd-registro,.t-assinado{color:var(--ok);font-weight:600}" +
-        "li.tarefa.t-resolvida .t-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}" +
+        "li.tarefa.t-resolvida{display:none}" +   // s229 (rodada 4): lista resolvida sai do Cronograma
         "li.tarefa.qd-recente .t-tema::before{content:'\\2713\\00A0';color:var(--ok)}";
       doc.head.appendChild(s);
     }
@@ -2056,6 +2085,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function painelMarcarAssinado(li, sim){
     var m = li.querySelector(".t-assinado"), a = li.querySelector("a[data-hub-aula]"), st = li.querySelector(".t-rd-st");
     if(sim){ li.classList.add("qd-assinado"); } else { li.classList.remove("qd-assinado"); }
+    // s229 (rodada 4): a RD e a tarefa cuja aula a CUMPRE (`data-cumpre`) saem do Cronograma ao serem assinadas
+    if(st || li.querySelector("a[data-cumpre]")){ li.hidden = !!sim; }
     if(st){ st.textContent = sim ? RD_ST.sim : RD_ST.nao; if(m){ m.parentNode.removeChild(m); } return; }
     if(sim && !m && a && a.parentNode){
       m = (li.ownerDocument || document).createElement("span");
@@ -2555,6 +2586,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // (resposta no espelho local do aparelho, ou o status do doc) mostra respondidas/total; resolvida, o check.
   // LIMITE DECLARADO: as respondidas vem do espelho `medhub.respostas.<lista>` -- lista comecada em outro
   // aparelho aparece "em curso" so pelo status do doc. PURA salvo o aparelho.
+  // s229 (rodada 4): o MESMO desenho do Cronograma -- a grande area da faixa (PURA) e o botao de roteamento da
+  // lista ("Resolver"; a resolvida, "Rever"), visual: o toque e o da linha inteira (botao dentro de botao e invalido)
   function qzChip(l){
     var s = l.status || "capturada", total = Math.round(l.q || l.q_previstas || 0);
     if(s === "resolvida"){ return '<span class="qz-chip resolvida">resolvida</span>'; }
@@ -2565,7 +2598,16 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     return '<span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span>';
   }
   function qzItemLista(l, atrasada, motivo){
-    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + (motivo ? '<span>' + qzEsc(motivo) + '</span>' : '') + '</p></button></li>'; }
+    function qzGrande(area){
+      var a = String(area || "");
+      if(a === "Simulado"){ return "Simulado"; }
+      if(/^(Obstetr|Ginecol)/.test(a)){ return "GO"; }
+      if(/^Pediatr/.test(a)){ return "PED"; }
+      if(/^(Cirurgia|Ortoped|Urolog)/.test(a)){ return "CIR"; }
+      if(/^(Preventiva|MFC|Medicina de Fam)/.test(a)){ return "MFC"; }
+      return "CM";
+    }
+    return '<li data-area="' + qzEsc(qzGrande(l.area)) + '"' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p>' + qzChip(l) + '<span class="hub-btn hub-btn-prim qz-rota" aria-hidden="true">' + (l.status === "resolvida" ? "Rever" : "Resolver") + '</span>' + '<p class="qz-meta"><span class="qz-area">' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + (motivo ? '<span>' + qzEsc(motivo) + '</span>' : '') + '</p></button></li>'; }
   // ⚰️ P21 (s220, pedido do operador em 07/10, resolvendo listas: "o bloco 'listas' esta bugado, alternando
   // entre tarefas com e sem hiperlinks abaixo ... se estou em listas e clico na tarefa, naturalmente devo ir
   // especificamente para as questoes"): os links de aula (s216 part-2) e de resumo (s218 P2) debaixo das
@@ -2596,7 +2638,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     return QZ_SPRINT ? "" : (l.semana ? "semana " + l.semana : "");
   }
   function qzItemSim(l, daVez){ var q = Math.round(l.q || l.q_previstas || 0), quando = qzQuandoSim(l);
-    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p>' + qzChip(l) + '<p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (quando ? '<span class="qz-quando">' + qzEsc(quando) + '</span>' : '') + '</p></button></li>'; }
+    return '<li data-area="Simulado"><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p>' + qzChip(l) + '<span class="hub-btn hub-btn-prim qz-rota" aria-hidden="true">' + (l.status === "resolvida" ? "Rever" : "Resolver") + '</span>' + '<p class="qz-meta"><span class="qz-area">Simulado</span><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (quando ? '<span class="qz-quando">' + qzEsc(quando) + '</span>' : '') + '</p></button></li>'; }
   function qzRenderSimulados(ls){
     var abertos = ls.filter(function(l){ return l.status !== "resolvida"; }), feitos = ls.filter(function(l){ return l.status === "resolvida"; });
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhum simulado carregado ainda.</p>'; return; }
@@ -2613,7 +2655,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     Array.prototype.forEach.call($("qz-modo").querySelectorAll("button"), function(b){ var m = b.getAttribute("data-m"), n = nAb(m === "simulados" ? sims : ls);
       b.classList.toggle("on", m === QZ.modo); b.setAttribute("aria-selected", m === QZ.modo ? "true" : "false");
       b.innerHTML = (m === "simulados" ? "Simulados" : "Questões") + (n ? "<small>" + n + "</small>" : ""); });
-    $("qz-sub").textContent = QZ_SUB[QZ.modo];
+    $("qz-sub").textContent = "";   // s229 (rodada 4): sem prosa de instrucao
     if(QZ.modo === "simulados"){ qzRenderSimulados(sims); return; }
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhuma lista capturada ainda.</p>'; return; }
     if(QZ_SPRINT){ qzRenderSprint(ls); return; }

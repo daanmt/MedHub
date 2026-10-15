@@ -267,15 +267,11 @@ def test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca(tmp_path):
     for fora in ("Atrasadas", "Semana ", "Questões da semana", "Questões atrasadas", "qd-qsem",
                  'data-hub-aba="questoes"', "data-tarefa="):
         assert fora not in teoria, fora
-    assert _secoes(pagina) == [("rd", "Revisões direcionadas", ["rd-renal"])]
-    rds = re.search(r'<section class="qd-sem qd-rds".*?</section>', pagina, re.S).group(0)
-    assert ('<h3 class="qd-titulo">Revisões direcionadas <span class="qd-n">· <span data-n>1</span></span></h3>'
-            in rds)
-    assert ('<li class="qd-item" data-secao="rd" data-ordem="0" data-slug="rd-renal" data-tipo="revisao"'
-            in rds) and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/rd-renal.html"' in rds
+    # s229 (rodada 4, pedido dele): o backlog "Revisoes direcionadas" do topo saiu -- a RD mora no eixo RD da Biblioteca
+    assert _secoes(pagina) == [] and "qd-rds" not in pagina.split("<script", 1)[0]
+    assert 'data-area="RD"' in _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="rd-renal"')
     assert sorted(_biblioteca(pagina)) == ["autopsia", "bayes", "hernias", "rd-renal"], \
         "a aula ligada a tarefa pendente vai para a Biblioteca; s229: a analise tambem (eixo Documentacao)"
-    assert pagina.index('data-secao="rd"') < pagina.index('id="hub-quadro-feitas"'), "o backlog vem no topo"
     for proibido in ("–", "—", "→", "$$", "\\rightarrow"):
         assert proibido not in teoria, "caractere proibido na Teoria: %r" % proibido
 
@@ -288,15 +284,15 @@ def test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca(tmp_path):
     _construir(raiz, data_fn, quadro=quadro, estado={"rd-c": {"feito": True, "ts": "x"}})
     pagina = _index(raiz)
     # datas do _repo_datas: pela ordem alfabetica dos arquivos (hernias 10, rd-a 11, rd-b 12, rd-c 13)
-    assert _secoes(pagina) == [("rd", "Revisões direcionadas", ["rd-a", "rd-b"])]
+    # s229 (rodada 4): sem backlog no topo; todas no eixo RD da Biblioteca, a assinada riscada
+    assert _secoes(pagina) == []
     assert "rd-c" in _biblioteca(pagina) and 'data-feito="1"' in _item(pagina.split('id="hub-quadro-feitas"')[1],
                                                                         'data-slug="rd-c"')
     tudo = hub.rds_nao_assinadas([(hub.Aula(s, s, d, ""), "revisao", s, None)
                                   for s, d in (("z", "2026-10-01"), ("y", "2026-09-01"), ("x", "2026-10-01"))])
     assert [r["slug"] for r in tudo] == ["y", "x", "z"]
     _construir(raiz, data_fn, quadro=quadro, estado={s: {"feito": True} for s in ("rd-a", "rd-b", "rd-c")})
-    vazio = re.search(r'<section class="qd-sem qd-rds".*?</section>', _index(raiz), re.S).group(0)
-    assert '<span data-n>0</span>' in vazio and '<p class="qd-vazio">Nenhuma revisão direcionada por assinar.</p>' in vazio
+    assert "Nenhuma revisão direcionada por assinar." not in _index(raiz).split("<script", 1)[0], "eixo vazio nao fala"
 
 
 def test_secoes_do_quadro_puro_segue_a_regua_da_semana():
@@ -364,7 +360,7 @@ def test_sem_plano_tudo_vai_para_a_biblioteca_e_sem_aula_nem_plano_diz(tmp_path)
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn, plano=[], cal={})
     secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == ["rd"], "sem plano nao ha semana; s226: so o backlog de RDs no topo"
+    assert secoes == [], "sem plano nao ha semana; s229 (rodada 4): nem o backlog de RDs"
     assert _biblioteca(_index(raiz)) == ["rd-renal", "autopsia", "hernias", "bayes"], \
         "CM (a RD), Documentacao (s229: a analise) e 'Sem área' (sem plano, a tarefa nao resolve)"
     assert hub.html_aulas([]) == '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
@@ -394,7 +390,7 @@ def test_plano_indisponivel_degrada_declarado(tmp_path, monkeypatch):
         calendario={})
     assert problemas == []
     assert any("plano indisponivel" in a and "banco trancado" in a for a in avisos), avisos
-    assert [s[0] for s in _secoes(_index(raiz))] == ["rd"] and _biblioteca(_index(raiz)) == ["hernias"]
+    assert _secoes(_index(raiz)) == [] and _biblioteca(_index(raiz)) == ["hernias"]
 
 
 def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
@@ -407,8 +403,8 @@ def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
     pagina = _index(raiz)
     assert "qd-feito" not in pagina and "Marcar como feita" not in pagina and "como feita\"" not in pagina
     assert '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>' in pagina
-    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 5, \
-        "s226: hernias e bayes na Biblioteca + a RD (backlog e Biblioteca) + s229: a analise"
+    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 4, \
+        "hernias e bayes, a RD (s229 rodada 4: so na Biblioteca) e a analise"
     js = pagina.split("function iniciarQuadro()", 1)[1].split("// ---", 1)[0]
     assert 'db.collection("quadro")' in js and "semArmazenamento" in js
     assert ".set({feito: novo, ts: new Date().toISOString()})" in js
@@ -440,13 +436,14 @@ def test_teoria_em_duas_placas_lado_a_lado_no_desktop(tmp_path):
     _construir(raiz, data_fn)
     pagina = _index(raiz)
     quadro = pagina.split('id="hub-quadro"', 1)[1].split('id="hub-resumos"', 1)[0]
-    assert '<div class="qd-semanas placa"><section class="qd-sem qd-rds" data-secao="rd"' in quadro
+    # s229 (rodada 4): sem o backlog, a placa das secoes nasce vazia (some pelo `:empty`); a Biblioteca segue
+    assert '<div class="qd-semanas placa"></div>' in quadro
     assert '<div class="placa qd-placa-bib"><section class="qd-bib" id="hub-quadro-feitas"' in quadro
-    assert quadro.index("qd-semanas placa") < quadro.index("qd-placa-bib"), "RDs primeiro (a esquerda no desktop)"
     css = pagina[pagina.index("<style>"):pagina.index("</style>")]
     assert re.search(r"(?:^|[}\n])\.qd\{[^}]*display:grid[^}]*align-items:start", css)
     desk = re.search(r"@media \(min-width:900px\)\{(.*?)\n\}", css, re.S).group(1)
-    assert re.search(r"(?:^|[\s,])\.qd[,{][^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)", desk)
+    # s229 (rodada 4): a Teoria e so a Biblioteca (o backlog virou eixo dela) -- uma coluna, na largura toda
+    assert not re.search(r"(?:^|[\s,])\.qd[,{][^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)", desk)
     assert ".qd-semanas > [data-recolhida] + [data-recolhida]{" in css
     assert "#aba-aulas,#aba-questoes,#aba-cards{max-width" not in css, "a regra provisoria da part 1 saiu"
     assert "#aba-cards,#hub-leitor,#qz-player{max-width:var(--wrap);margin-inline:auto}" in css
@@ -921,7 +918,7 @@ def test_o_quadro_de_partida_e_o_do_dia():
     out = _rodar_qd()
     assert {k: v["onde"] for k, v in out["itens"].items()} == {
         "rd-hemostasia": "feitas", "rd-hepato": "feitas", "rd-vias-biliares": "feitas", "prep": "feitas"}
-    assert out["secoes"] == {"rd": "3"}
+    assert out["secoes"] == {}, "s229 (rodada 4): sem o backlog do topo; as RDs no eixo RD da Biblioteca"
     assert out["escritas"] == [] and out["nfeitas"] == "4" and out["novas"] == "3 novas"
 
 
@@ -937,7 +934,6 @@ def test_assinar_a_leitura_conclui_o_item_do_quadro():
     assert out["itens"]["rd-hepato"] == {"onde": "feitas", "feito": True, "marca": None}
     assert out["itens"]["rd-vias-biliares"] == {"onde": "feitas", "feito": False, "marca": None}
     assert out["nfeitas"] == "4" and out["novas"] == "1 nova", "s218: lida, a RD deixa de ser nova"
-    assert out["secoes"]["rd"] == "1", "s226: a assinada (e a ja feita no db) some do backlog; fica so a 3a"
     assert out["st"] == "Assinado e concluído", out["st"]
 
 
@@ -977,8 +973,10 @@ def test_lista_resolvida_nao_mexe_na_teoria():
         out = _rodar_qd(**cfg)
         assert not [k for k in out["itens"] if k.startswith("t")], out["itens"]
         assert out["escritas"] == [] and out["nfeitas"] == "4"
-        assert out["grupos"] == [["CM", ["rd-hemostasia", "rd-hepato"]], ["CIR", ["rd-vias-biliares"]],
-                                 ["GO", ["prep"]]], out["grupos"]
+        # s229 (rodada 4): as RDs no eixo RD (o 1o da Biblioteca), com as disciplinas por dentro
+        assert [g[0] for g in out["grupos"]] == ["RD", "GO"], out["grupos"]
+        assert sorted(out["grupos"][0][1]) == ["rd-hemostasia", "rd-hepato", "rd-vias-biliares"]
+        assert out["grupos"][1][1] == ["prep"]
 
 
 
@@ -1176,14 +1174,15 @@ def test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador():
     pagina, avisos = hub.html_quadro_de(AULAS_BIB, REG_BIB, FEITOS_BIB, PLANO_BIB, CAL, HOJE)
     # s218: dentro da disciplina (aqui 'Outros': o plano sintetico nao tem `area`), as aulas antes das
     # revisoes ja lidas (a RD nova sobe ao topo; nenhuma aqui)
+    # s229 (rodada 4): toda RD no eixo RD (o 1o), com as disciplinas por dentro; "Varias areas" fica sem item
     assert _grupos(pagina) == [
-        ("CM", "Clínica Médica", 2, ["tireoide", "rd-hepato"]),
-        ("CIR", "Cirurgia", 2, ["remit", "rd-hernias"]),
+        ("RD", "Revisões direcionadas", 3, ["rd-pilulas", "rd-hernias", "rd-hepato"]),
+        ("CM", "Clínica Médica", 1, ["tireoide"]),
+        ("CIR", "Cirurgia", 1, ["remit"]),
         ("MFC", "Medicina de Família e Comunidade", 1, ["prevq"]),   # s226: a aula, sem a tarefa da semana
         ("PED", "Pediatria", 1, ["mista"]),
         ("GO", "Ginecologia e Obstetrícia", 1, ["dmg"]),
-        ("DOC", "Documentação", 1, ["dossie"]),   # s229: o eixo das analises (era o bloco do Painel)
-        ("VARIAS", "Várias áreas", 1, ["rd-pilulas"])]
+        ("DOC", "Documentação", 1, ["dossie"])]   # s229: o eixo das analises (era o bloco do Painel)
     assert 'Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">9</span>' in pagina
     dossie = _item(pagina, 'data-slug="dossie"')
     assert 'data-area="DOC" data-disc="Análises"' in dossie and 'data-tipo="analise"' in dossie
@@ -1195,7 +1194,7 @@ def test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador():
     # a ordem e os rotulos dos grupos vem do build, para a pagina criar o grupo que ainda nao existe
     areas = re.search(r'<div class="qd-areas" data-areas="([^"]+)" data-disc-fim="Outros">', pagina).group(1)
     assert json.loads(html.unescape(areas)) == [list(p) for p in hub.AREAS_BIBLIOTECA]
-    assert [p[0] for p in hub.AREAS_BIBLIOTECA] == ["CM", "CIR", "MFC", "PED", "GO", "DOC", "VARIAS", "SEM"]
+    assert [p[0] for p in hub.AREAS_BIBLIOTECA] == ["RD", "CM", "CIR", "MFC", "PED", "GO", "DOC", "VARIAS", "SEM"]
 
 
 def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
@@ -1205,10 +1204,10 @@ def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
     pagina, _ = hub.html_quadro_de(AULAS_BIB, REG_BIB, {}, PLANO_BIB, CAL, HOJE)
     # s218: a RD mora na Biblioteca desde o build (nova); s226 (part-4): sem semanas, a Prevencao
     # Quaternaria (pendente na semana 3) tambem -- a MFC aparece
-    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "MFC", "PED", "GO", "DOC", "VARIAS"]
-    assert [g[3] for g in _grupos(pagina)][:2] == [["rd-hepato", "tireoide"], ["rd-hernias", "remit"]], \
-        "a RD nova sobe ao topo da disciplina"
-    assert 'data-area="VARIAS"' in _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="rd-pilulas"')
+    # s229 (rodada 4): as RDs no eixo RD, as novas primeiro; as grandes areas so com aula
+    assert [g[0] for g in _grupos(pagina)] == ["RD", "CM", "CIR", "MFC", "PED", "GO", "DOC"]
+    assert sorted(_grupos(pagina)[0][3]) == ["rd-hepato", "rd-hernias", "rd-pilulas"]
+    assert 'data-area="RD"' in _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="rd-pilulas"')
     assert 'data-area="MFC"' in _item(pagina, 'data-slug="prevq"')
     # s226 (part-4): a copia do backlog de RDs (`data-secao="rd"`) nao muda de grupo -- so some ao assinar
     assert all("data-area=" in li for li in re.findall(r'<li class="qd-item[^"]*"[^>]*>', pagina)
@@ -1239,23 +1238,25 @@ def test_item_sem_area_cai_em_sem_area_e_o_build_e_o_check_acusam_o_slug(tmp_pat
                          (("rd-sem", "2026-10-06"), ("orfa", "2026-09-01"), ("orfa-com-bloco", "2026-09-02"))]
     pagina, avisos = hub.html_quadro_de(aulas, reg, dict(FEITOS_BIB, **{"rd-sem": FEITA}), PLANO_BIB, CAL, HOJE)
     grupos = _grupos(pagina)
-    assert grupos[-1] == ("SEM", "Sem área", 2, ["orfa", "rd-sem"]), "no fim; a aula antes da RD lida"
+    # s229 (rodada 4): a RD sem disciplina mora no eixo RD ('Outros'), nunca em 'Sem área'
+    assert grupos[-1] == ("SEM", "Sem área", 1, ["orfa"]), "no fim"
+    assert "rd-sem" in grupos[0][3] and grupos[0][0] == "RD"
     assert ("GO", "Ginecologia e Obstetrícia", 2, ["dmg", "orfa-com-bloco"]) in grupos
     sem = [a for a in avisos if "grande area" in a]
-    assert len(sem) == 2 and "rd-sem" in sem[0] and "orfa" in sem[1] and "#999" in sem[1], sem
+    assert len(sem) == 1 and "orfa" in sem[0] and "#999" in sem[0], sem
     assert all("bloco" in a and hub.QUADRO_REG in a for a in sem)
     # plano fora (o build ja avisa "plano indisponivel"): a aula com tarefa nao vira defeito de registro
     _p, degradado = hub.html_quadro_de([a for a in AULAS_BIB if a.slug == "dmg"], REG_BIB, {}, [], {}, HOJE)
     assert not [a for a in degradado if "grande area" in a], degradado
     # o --check le a pagina montada e acusa pelo slug, sem mudar o exit (warn-first)
-    assert hub.sem_area_na_pagina(pagina) == ["orfa", "rd-sem"]
+    assert hub.sem_area_na_pagina(pagina) == ["orfa"]
     (tmp_path / "index.html").write_text(pagina, encoding="utf-8")
     manifesto = {"file_path": "index.html", "files": {}, "mantidos": sorted(hub.hrefs_relativos(pagina))}
     (tmp_path / "manifesto.json").write_text(json.dumps(manifesto), encoding="utf-8")
     capsys.readouterr()
     assert hub.main(["--check", "--out", str(tmp_path)]) == 0
     saida = capsys.readouterr().out
-    assert "AVISO" in saida and "rd-sem" in saida and "orfa" in saida, saida
+    assert "AVISO" in saida and "orfa" in saida, saida
 
 
 def test_bloco_fora_do_vocabulario_falha_alto(tmp_path):

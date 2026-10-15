@@ -20,3 +20,4 @@
 - cadeia v3 onda 2: t891 (97), t890 (93; 7 anuladas), t119/t498/t74 (120)
 - hub Version 121
 - front rodada 3: Cronograma em barras horizontais por dia (faixa da area), questao com Grifo+tempo em chips e Anterior/Responder/Pular centralizados, botoes dos Cards compactos -- Version 122
+- front rodada 4: RDs como eixo da Biblioteca, botao de roteamento unico (Painel: Resolver+Abrir aula; Teoria: Abrir aula/resumo; Listas: Resolver), assinado/resolvido sai do Cronograma ao vivo, barra horizontal nas 3 abas, legendas de instrucao fora -- Version 123

@@ -608,7 +608,9 @@ def test_modo_questoes_mostra_so_as_listas_e_conta_as_abertas():
     assert "Diabetes na Gestação" in out["html"]                          # resolvida, recolhida no fim
     assert out["botoes"] == [["questoes", True, "Questões<small>1</small>"],
                              ["simulados", False, "Simulados<small>2</small>"]]
-    assert out["sub"].startswith("As listas na ordem do plano de hoje")
+    assert out["sub"] == "", "s229 (rodada 4): sem prosa de instrucao"
+    assert '<li data-area="CIR"' in out["html"] and 'class="hub-btn hub-btn-prim qz-rota" aria-hidden="true">Resolver</span>' in out["html"]
+    assert ">Rever</span>" in out["html"], "a resolvida: Rever"
 
 
 def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
@@ -618,7 +620,8 @@ def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
     assert html.index("UERJ 2021") < html.index("UERJ 2022")                 # ordem do plano (semana)
     assert "UERJ 2021 <span class=\"qd-n\">· a da vez</span>" in html and html.count("a da vez") == 1
     assert "60 questões" in html and "~3 h" in html and " -- prova INTEIRA" not in html
-    assert out["botoes"][1][1] is True and out["sub"].startswith("As provas da UERJ")
+    assert out["botoes"][1][1] is True and out["sub"] == ""
+    assert '<li data-area="Simulado"><button' in html and '<span class="qz-area">Simulado</span>' in html
 
 
 # ------------------------------------------------ s226 (sprint-final-uerj part-4): Listas pelo sprint
@@ -1321,15 +1324,12 @@ def _abertas(estado):
     return {k: v["aberta"] for k, v in estado.items() if not v["oculta"]}
 
 
-def test_padrao_abre_o_backlog_de_rds():
-    """s226 (sprint-final-uerj part-4): a Teoria nao tem semana; a unica secao e o backlog "Revisoes
-    direcionadas", aberto de partida e recolhivel como as outras (titulo = controle)."""
+def test_teoria_sem_secao_propria_a_rd_mora_no_eixo_da_biblioteca():
+    """s229 (rodada 4, pedido dele: "'Revisoes direcionadas' sai do bloco proprio e vira um eixo DENTRO da
+    Biblioteca"): a Teoria nao tem mais secao fora da Biblioteca. ⚰️ *s226 (part-4): o backlog "Revisoes
+    direcionadas" no topo, aberto e recolhivel.*"""
     out = _rodar_secoes()
-    assert _abertas(out["inicio"]) == {"rd": True}
-    for chave, s in out["inicio"].items():
-        assert (s["role"], s["tab"], s["seta"]) == ("button", "0", True), chave
-        assert s["expanded"] == ("true" if s["aberta"] else "false"), chave
-        assert s["controls"] == s["lista"] == "qd-lista-" + chave, "aria-controls aponta a lista da secao"
+    assert _abertas(out["inicio"]) == {}
     assert out["ls"] == {}, "sem toque, nada gravado no aparelho"
 
 
@@ -1341,19 +1341,11 @@ def test_semana_da_vez_e_padrao_puros_seguem_para_as_listas_sem_sprint():
     assert puras == {"a": 4, "b": 3, "c": 2, "d": [True, True, False, True, True, True, False, False, True]}
 
 
-def test_toque_e_teclado_alternam_e_o_aparelho_lembra():
-    out = _rodar_secoes('tocar("rd"); tecla("rd", "Enter"); tecla("rd", " "); tecla("rd", "a");')
-    assert _abertas(out["fim"]) == {"rd": False} and out["fim"]["rd"]["expanded"] == "false"
-    assert out["teclas"] == 2, "Enter e Espaco viram toque (preventDefault: a pagina nao rola); 'a' nao"
-    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:rd": False}
-    # recarregar: o mesmo aparelho, uma pagina nova -- vale o que ele escolheu
-    assert _abertas(_rodar_secoes(ls=out["ls"])["inicio"]) == {"rd": False}
+# ⚰️ s229 (rodada 4): `test_toque_e_teclado_alternam_e_o_aparelho_lembra` e `test_sem_storage_tudo_funciona_e_so_nao_lembra`
+# usavam o backlog de RDs da Teoria (a unica secao recolhivel dela); o recolher segue travado nas Listas
+# (`test_listas_recolhem_e_sobrevivem_ao_rerender`) e nos grupos da Biblioteca.
 
 
-def test_sem_storage_tudo_funciona_e_so_nao_lembra():
-    out = _rodar_secoes('tocar("rd");', quebrado=True)
-    assert _abertas(out["fim"]) == {"rd": False}
-    assert _abertas(_rodar_secoes(quebrado=True)["inicio"]) == {"rd": True}
 
 
 # ⚰️ s226 (sprint-final-uerj part-4): `test_recontar_e_biblioteca_nao_desfazem_a_secao_recolhida` -- a
@@ -1374,7 +1366,8 @@ def test_aula_avulsa_mora_na_biblioteca_recolhida():
     assert out["antes"] == {"onde": "feitas", "feito": False, "n": "4"}
     assert out["meio"] == {"onde": "feitas", "feito": True, "n": "4"}, "feita, fica na Biblioteca, riscada"
     assert "outras" not in out["inicio"] and "outras" not in out["fim"]
-    assert _rodar_secoes()["areas_abertas"] == [False, False], "s218: as grandes areas nascem recolhidas"
+    abertas = _rodar_secoes()["areas_abertas"]
+    assert abertas and not any(abertas), "s218: as grandes areas nascem recolhidas"
 
 
 def test_desmarcar_sem_secao_de_origem_fica_na_biblioteca():
@@ -1406,22 +1399,18 @@ function novas(){ var e = $("hub-quadro-novas"); return e.hidden ? "" : e.textCo
 """
 
 
-def test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca():
-    """s226 (sprint-final-uerj part-4): a Teoria nao tem semana -- nada viaja de uma secao para a
-    Biblioteca. A RD assinada (a assinatura grava `quadro/<slug>`) SOME do backlog do topo, que reconta e
-    diz "Nenhuma..."; a copia da Biblioteca fica no lugar e perde "nova". Desfeita no db, volta aos dois."""
+def test_rd_assinada_perde_a_etiqueta_no_eixo_rd():
+    """s229 (rodada 4): a RD mora no eixo RD da Biblioteca (o backlog do topo saiu). Assinada (`quadro/<slug>`),
+    fica no lugar, riscada, e perde "nova"; desfeita no db, volta "nova"."""
     acao = GRUPOS_JS + r"""
 SAIDA.g0 = grupos(); SAIDA.v0 = novas();
-feito("rd-hepato"); SAIDA.s1 = secoes()["rd"]; SAIDA.g1 = grupos(); SAIDA.v1 = novas();
-SAIDA.oculta1 = qd.querySelector('.qd-sem[data-secao="rd"] .qd-item').hidden;
-return espera().then(function(){ feito("rd-hepato"); SAIDA.s2 = secoes()["rd"]; SAIDA.v2 = novas();
-  SAIDA.oculta2 = qd.querySelector('.qd-sem[data-secao="rd"] .qd-item').hidden; });"""
+feito("rd-hepato"); SAIDA.g1 = grupos(); SAIDA.v1 = novas(); SAIDA.f1 = feitoEm("rd-hepato");
+return espera().then(function(){ feito("rd-hepato"); SAIDA.v2 = novas(); SAIDA.f2 = feitoEm("rd-hepato"); });"""
     out = _rodar_secoes(acao)
-    assert out["inicio"]["rd"]["n"] == "1" and out["inicio"]["rd"]["vazio_oculto"] is True
-    assert out["v0"] == "1 nova" and "*rd-hepato" in out["g0"][0]["discs"][-1][2]
-    assert out["s1"]["n"] == "0" and out["s1"]["vazio_oculto"] is False and out["oculta1"] is True
-    assert out["v1"] == "" and "rd-hepato" in out["g1"][0]["discs"][-1][2], "lida, fica na Biblioteca"
-    assert out["s2"]["n"] == "1" and out["oculta2"] is False and out["v2"] == "1 nova", "desfeita, volta"
+    assert out["g0"][0]["area"] == "RD" and "*rd-hepato" in out["g0"][0]["discs"][-1][2]
+    assert out["v0"] == "1 nova" and out["v1"] == "" and out["f1"] is True
+    assert "rd-hepato" in out["g1"][0]["discs"][-1][2], "lida, fica na Biblioteca"
+    assert out["v2"] == "1 nova" and out["f2"] is False, "desfeita, volta"
     assert out["avisos"] == []
 
 
@@ -1439,7 +1428,7 @@ tituloGrupo("GO").click(); SAIDA.ls1 = JSON.parse(LS["medhub.secoes"] || "{}");"
     out = _rodar_secoes(acao)
     assert out["ls1"] == {"aulas:biblioteca:GO": True}
     de_novo = _rodar_secoes(GRUPOS_JS + "SAIDA.g = grupos();", ls=out["ls"])
-    assert [(g["area"], g["aberta"]) for g in de_novo["g"]] == [("CM", False), ("GO", True)], \
+    assert [(g["area"], g["aberta"]) for g in de_novo["g"]] == [("RD", False), ("CM", False), ("GO", True)], \
         "recarregar: vale a escolha dele; a que ele nao tocou nasce recolhida"
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     assert "min-width:0" in re.search(r"\.qd-area\{([^}]*)\}", css).group(1)
@@ -1456,8 +1445,8 @@ SAIDA.recente = {slug: li.getAttribute("data-slug"), marca: li.classList.contain
     extra = _funcs("function qdGrupoDe(li){", "function marcarRecente(aba, slug){")
     out = _rodar_secoes(acao, extra=extra)
     assert out["recente"]["slug"] == "rd-hepato" and out["recente"]["marca"] is True
-    assert out["recente"]["grupo"]["area"] == "CM" and out["recente"]["grupo"]["aberta"] is True
-    assert "aulas:biblioteca:CM" not in json.loads(out["ls"].get("medhub.secoes", "{}")), "abrir por codigo nao grava"
+    assert out["recente"]["grupo"]["area"] == "RD" and out["recente"]["grupo"]["aberta"] is True   # s229: o eixo RD
+    assert "aulas:biblioteca:RD" not in json.loads(out["ls"].get("medhub.secoes", "{}")), "abrir por codigo nao grava"
 
 
 # ======================================================================== 2. secoes da aba Listas
@@ -1924,9 +1913,9 @@ setTimeout(function(){
   console.log(JSON.stringify(SAIDA)); }, 50);"""
     out = _rodar_listas(CONCLUIR_FALSO.replace("__FALHA__", "false") + extra + acao)
     assert out["upd"] == [["listas/t49", "resolvida"]] and out["fechou"] == 1
-    assert '<li class="qz-recente"><button type="button" data-qzl="t49">' in out["antes"]
+    assert '<li data-area="CIR" class="qz-recente"><button type="button" data-qzl="t49">' in out["antes"]
     assert '<details class="qd-feitas" open><summary>Resolvidas' in out["snap"]
-    assert '<li class="qz-recente"><button type="button" data-qzl="t49">' in out["snap"].split("Resolvidas", 1)[1]
+    assert '<li data-area="CIR" class="qz-recente"><button type="button" data-qzl="t49">' in out["snap"].split("Resolvidas", 1)[1]
     assert out["recente"] is None, "a marca vale por 1 rerender na lista ja resolvida"
     assert "qz-recente" not in out["depois"] and "<details class=\"qd-feitas\" open>" not in out["depois"]
     falhou = _rodar_listas(CONCLUIR_FALSO.replace("__FALHA__", "true") + extra + acao)
@@ -2894,3 +2883,15 @@ def test_rodada3_cabecalho_da_questao_e_botoes_compactos_do_card():
     from tools.fsrs_queue import TEMPLATE_PLAYER
     p = TEMPLATE_PLAYER.read_text(encoding="utf-8")
     assert ".topo-acoes button{min-height:36px;padding:var(--esp-1) var(--esp-3);font-size:var(--fs-meta)" in p
+
+
+def test_rodada4_backlog_na_barra_do_cronograma_e_sem_legenda():
+    """s229 (rodada 4): Biblioteca e Listas na barra do Cronograma (faixa + fundo pela area, chip rosa, botao de
+    roteamento a direita: Teoria = Abrir aula/resumo; Listas = Resolver); a lista resolvida some do Painel ao vivo;
+    sem a legenda de instrucao das Listas."""
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert ".qd-item[data-area=\"CIR\"],.qz-lista li[data-area=\"CIR\"]{--area:var(--rosa)}" in css
+    assert "border-left:4px solid var(--area)" in css and ".hub-btn-prim{background:var(--acento)" in css
+    assert '"li.tarefa.t-resolvida{display:none}"' in TEMPLATE
+    assert '<p class="hub-sub" id="qz-sub" hidden></p>' in TEMPLATE
+    assert 'if(st || li.querySelector("a[data-cumpre]")){ li.hidden = !!sim; }' in TEMPLATE

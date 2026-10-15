@@ -258,13 +258,17 @@ def _discs(bloco):
 def test_rd_de_varias_disciplinas_aparece_em_cada_uma_e_a_nova_no_topo():
     pagina, avisos = _quadro()
     assert not [a for a in avisos if "grande area" in a], avisos
+    # s229 (rodada 4): a RD mora no eixo RD, uma vez em CADA disciplina dela (a nova antes da lida); as grandes
+    # areas ficam com os resumos e as aulas
     cm = _area(pagina, "CM")
-    assert _discs(cm) == [("Cardiologia", ["rd-pilulas", "resumo-has"]),
-                          ("Infectologia", ["rd-pilulas", "resumo-tuberculose", "tb-360", "rd-velha"])], \
-        "A-Z; dentro: a RD nova, os resumos, as aulas, a RD lida"
-    assert _discs(_area(pagina, "GO")) == [("Obstetrícia", ["rd-pilulas", "resumo-pre-natal"])]
-    assert '<span class="qd-n" data-n>5</span><span class="qd-novas" data-novas>1 nova</span></summary>' in cm, \
-        "a area conta cada documento uma vez (a RD de 2 disciplinas da CM conta 1)"
+    assert _discs(cm) == [("Cardiologia", ["resumo-has"]), ("Infectologia", ["resumo-tuberculose", "tb-360"])], \
+        "A-Z; dentro: os resumos, as aulas"
+    assert _discs(_area(pagina, "GO")) == [("Obstetrícia", ["resumo-pre-natal"])]
+    rd = _area(pagina, "RD")
+    assert _discs(rd) == [("Cardiologia", ["rd-pilulas"]), ("Infectologia", ["rd-pilulas", "rd-velha"]),
+                          ("Obstetrícia", ["rd-pilulas"])]
+    assert '<span class="qd-n" data-n>2</span><span class="qd-novas" data-novas>1 nova</span></summary>' in rd, \
+        "o eixo conta cada documento uma vez (a RD de 3 disciplinas conta 1)"
     assert 'id="hub-quadro-nfeitas">6</span><span class="qd-novas" id="hub-quadro-novas" data-novas>1 nova</span>' in pagina
     assert 'data-area="VARIAS"' not in pagina, "a RD declara as disciplinas: nada em Varias areas"
 
@@ -275,7 +279,8 @@ def test_ligacoes_obsidian_resumo_citado_e_fontes_da_rd():
     assert ('<p class="qd-lig"><span class="tenue">Citado em:</span> '
             '<a class="hub-aula" href="aulas/tb-360.html" data-titulo="Tuberculose 360">Tuberculose 360</a> · '
             '<a class="hub-aula" href="aulas/rd-pilulas.html" data-titulo="Pílulas">Pílulas</a></p>') in tb
-    assert '<a class="hub-aula" href="resumos/resumo-tuberculose.html" data-titulo="Tuberculose">abrir resumo</a>' in tb
+    # s229 (rodada 4): o link sublinhado virou o botao de roteamento da Teoria
+    assert '<a class="hub-aula hub-btn" href="resumos/resumo-tuberculose.html" data-titulo="Tuberculose">Abrir resumo</a>' in tb
     bib = pagina.split('id="hub-quadro-feitas"', 1)[1]   # s226: a copia do backlog de RDs vem antes, sem fontes
     rd = re.search(r'<li class="qd-item"[^>]*data-slug="rd-pilulas".*?</li>', bib, re.S).group(0)
     assert ('<p class="qd-lig"><span class="tenue">Fontes:</span> <a class="hub-aula" href="resumos/resumo-tuberculose.html" '

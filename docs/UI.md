@@ -48,7 +48,7 @@ larga (`--largura`, 72rem) com placas em grade, e a leitura longa (aula, enuncia
 | Tokens + base | `core/templates/tema.css` | as duas paletas (escuro padrão, claro por `data-theme="light"`), escalas de espaço, raio e tipo, apelidos legados e das aulas, base comum (fonte, foco, seleção, movimento, o fundo com a luz) e a primitiva `.placa` (s227) | shell do hub, painel, player standalone, leitor de aulas e resumos |
 | Casca, Teoria, Listas, leitor | `core/templates/hub.html` (bloco `<style>`, depois de `/* @hub:player-css */`) | abas, Teoria (`qd-*`), Listas e questão (`qz-*`), barra do leitor, assinatura de leitura (`hub-assina*`) | o hub |
 | Cards | `core/templates/player.html` (região `@player:css`) | o player FSRS e a tela de fim | o hub (aba Cards) e o standalone do `fsrs_queue.py --build-player` |
-| Painel | `tools/painel.py` (constante `CSS`) | o dashboard (Hoje, Ritmo, Até 01/11, Por bloco, Revisões 7 dias), Plano de hoje / Semana, Documentação | `artifacts/painel.html` (iframe no hub) |
+| Painel | `tools/painel.py` (constante `CSS`) | o dashboard (Hoje, Ritmo, Até 01/11, Por bloco, Revisões 7 dias), Roadmap / Semana (s229: a Documentação foi para a Teoria) | `artifacts/painel.html` (iframe no hub) |
 | Leitor de aulas e resumos | `core/templates/tema-aula.css` | a camada de leitura sobre o CSS próprio de cada aula (43 em `artifacts/aula-*.html`) e da página de resumo | só o leitor (injetada depois do `tema.css`) |
 | Página de resumo | `tools/hub.py` (constante `CSS_RESUMO`) | paleta e estrutura próprias da página de resumo publicada | a página aberta fora do leitor; no leitor o tema vem por cima |
 | CSS injetado pelo JS do hub | `core/templates/hub.html`: `painelListas` (selos e "+N" no painel), `pendEstilo` (formulário de pergunta nos documentos), `grifoEstilo` (marca-texto no leitor) | estilos que o hub põe dentro dos iframes | painel e leitor |
@@ -181,14 +181,35 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   hub é UM alvo (`a.t-alvo` com `data-hub-aba`: a linha inteira abre a lista); a aula ligada fica fora dele, pequena
   ("aula"). Fora do hub (lista externa, PDF), a coluna de ação de antes. O Ritmo fica logo abaixo de Hoje (pedido
   dele, s221).
+- **Painel, Roadmap (s229, pedido dele em 15/10)**: o "Plano de hoje" + "Próximos dias" virou **Roadmap**: Hoje
+  (`section.rm-dia.hoje`, título "Hoje · qua 15/10" em ciano + a contagem) e cada dia seguinte, TODOS abertos (nenhum
+  `<details>`); Fora do sprint segue recolhido. Cada tarefa é um **cartão** (`li.tarefa`: degrau `--afundado`, borda
+  `--linha`, `--raio`; grade `auto-fill` de 17rem, 1 coluna no celular): no topo o chip da área (`.t-rot`, rosa) e a
+  contagem (`.t-n`), o tema, e no pé os BOTÕES (`.t-btn`, 44 px, `--raio`): **Resolver** (primário, ciano cheio:
+  `data-hub-tarefa` abre a aba Listas JÁ na lista da tarefa) e **Abrir aula** (contorno ciano: o leitor da Teoria já
+  na aula); fora do hub, "Abrir lista" (primário). ⚰️ a linha inteira como alvo com a seta "›" (P21). A Próxima = o
+  rótulo + borda ciano. A tarefa que uma aula CUMPRE (`tarefa_id` no quadro) mostra o título da aula. A RD não assinada
+  é um cartão com o estado num span só (`.t-rd-st`), que o hub reescreve ao vivo pela MESMA fonte do "assinado"
+  (`quadro/<slug>` ou `doc_<slug>`); o build também lê o `doc_<slug>` (`painel.PEND_ESTADO`). Anéis do Hoje: o número
+  do valor é UM só, branco, publicado + o que ele fez desde o publish (o "+K" ciano morreu; `title` diz o K).
 - **Teoria** (s226, consulta): no topo, **Revisões direcionadas · N** (as RDs não assinadas, da mais antiga para a
   mais nova, a linha inteira abrindo o leitor; a assinada some ao vivo e fica só na Biblioteca); abaixo, a Biblioteca
   por área e disciplina com toda aula, resumo e RD. Sem semana, sem "Atrasadas" e sem contagem de questões.
+  **s229:** as análises (Dossiê UERJ, Autópsia UERJ 2021...) moram no eixo **Documentação** da Biblioteca
+  (`hub.EIXO_DOC`, área `DOC`, disciplina "Análises"; era um bloco do Painel). A RD e a análise não feitas levam
+  "nova" até ele ABRIR o item no leitor (visto por aparelho, `localStorage["medhub.vistos"]`, try/catch). "abrir
+  aula" virou o botão `.hub-btn` ("Abrir aula" / "Abrir documento"), o mesmo desenho do Painel.
 - **Listas** (s226): na ordem do Plano de hoje, pelo `<script id="hub-sprint">` (`hub.dados_sprint` =
   `plano.agenda_sprint`): **Hoje** (aberto) + **Próximos dias** (um grupo por data, recolhido) + **Fora do sprint · N**
   (recolhido, com o motivo; a lista aberta de tarefa sem dia cai aqui como "sem dia no plano"); resolvidas recolhidas
   no fim. Sem sprint (`hub-sprint` = `null`), as semanas antigas. **Simulados** na sua sub-aba, com a data do sprint
   ("dom 25/10"; o do dia, "hoje").
+- **Questão (s229, pedido dele em 15/10)**: lista SEMPRE em modo estudo, simulado SEMPRE em prova -- o seletor saiu
+  (nem a pergunta antes da 1ª questão, nem o botão da barra); "Revisar depois" só no simulado (`#qz-marca`; na lista
+  a resposta grava `flag: false`); a legenda "Antes de ver o gabarito..." saiu; o botão único do grifo (3 cores em
+  cascata) também na barra da questão (`#qz-grifo`; o grifo guarda a cor: `[ini, fim, cor]`, sem cor = rosa; a cor
+  nova corta a antiga); banca em rosa (`#qz-banca`), tema em ciano (`#qz-tags`); "Todas as listas", o voltar do
+  leitor, "Anterior" e "Pular" no desenho do "Responder" em contorno ciano (`.hub-btn`).
 - **Listas e simulados** (s227, part 4: barra e trilho no fundo, com a largura do corpo, `--wrap`; só wrappers e classes, nenhum id nem gesto mudou, travado por `test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram`): o trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê,
   veredito, cadeia com a declaração); a tela de fim mostra a faixa de métricas, o por bloco, o bloco Elos e a revisão.
 - **Leitor de aulas**: uma coluna só (`.wrap` de 46rem; a aula antiga com trilho lateral usa o `main` de 38rem);
@@ -204,16 +225,24 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
   **s228 (pedido dele):** o "Defeito do card D" fica logo abaixo da barra, à direita do tally, no estilo do
   Pausar/Retomar (`.pausa`, `aria-expanded`), e as opções abrem dentro da placa do topo (o registro `defeito` + `motivo`
   não mudou). Tocar no card vira (o mesmo `virar()` do botão e do Espaço; seleção de texto não vira); a frente
-  (`.card.frente`) leva cursor de toque, a dica "toque no card para virar" e a borda de controle (`--linha-forte`,
+  (`.card.frente`) leva cursor de toque e a borda de controle (`--linha-forte`,
   ciano no hover). Contra o "chapado": pergunta em 700 e maior, o motivo como pílula, o contexto com filete, e o verso
   abre como o DEGRAU de baixo da mesma placa (`--card`, de borda a borda, filete `--borda-placa` em cima), nunca caixa
   dentro do card; resposta em 600.
+  **s229 (pedido dele, 15/10):** os TRÊS controles do card no bloco de cima, numa linha (`.topo-acoes`): **Virar** (ciano,
+  `.primario`), **Pausar** (âmbar) e **Defeito do card** (rosa); as opções do defeito abrem logo abaixo. A dica "toque
+  no card para virar" saiu (a mecânica fica).
 - **Teoria, Listas e Cards em placas (s227, tema v4 part 3):** uma placa por seção, título dentro, linhas com filete por
   dentro e sem filete na última. Teoria = RDs | Biblioteca (`.qd` em grade; lado a lado a partir de 900 px,
   `align-items:start`). Listas = seletor + legenda (`.qz-cabeca`) fora das placas; Hoje | Próximos dias + Fora do sprint +
   Outras listas (os dias são linhas de 44 px) | Resolvidas; no desktop (`qz-duas`) Próximos ocupa a coluna 2 nas duas
   linhas e Resolvidas sobe para baixo de Hoje; Simulados = provas | resolvidos (`qz-sim`, só com os dois). Na medida
   `--wrap` ficam só o card, o leitor e a questão aberta (`#aba-cards,#hub-leitor,#qz-player`).
+
+**Sem micro-dica de interação óbvia (regra dele, s229, 15/10: "pode remover o 'toque no card para virar' também.
+pode todos esses pequenos excessos. basta a mecânica e o botão que já existe"):** nenhuma tela explica o gesto que o
+controle já mostra ("toque no card para virar", "toque numa questão para ver...", "· toque para ampliar", a legenda da
+certeza). Fica a mecânica e o botão. Mensagem de erro com a ação de recuperar ("Toque para reenviar") não é dica: fica.
 
 ## 7. Contratos travados por teste
 
@@ -230,7 +259,8 @@ borda: as bordas direitas fazem zigue-zague. Exceção: manchete sem caixa (`.to
 | player e painel sem cor literal (a cor mora no `tema.css`); tema escuro/claro presente na página pronta | `test_fsrs_queue_player.py::test_template_real_e_injetavel_e_tem_wrap_unico`, `test_painel.py::test_html_obedece_o_contrato_de_render` |
 | standalone do player recebe o tema | `test_fsrs_queue_player.py::test_embutir_tema_entra_antes_do_head_e_e_idempotente` |
 | linha da Teoria acessível (foco de 3 px, sem-aula sem cara de botão) | `test_hub_quadro.py::test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao` |
-| Painel com sprint: Plano de hoje / Próximos dias / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga; sem estado do quadro, nenhuma RD | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga`, `test_sem_estado_do_quadro_o_painel_nao_afirma_rd_nao_assinada` |
+| Painel com sprint: Roadmap (Hoje + cada dia aberto) / Fora do sprint, sem semana nem atraso; sem sprint, a semana antiga; sem estado do quadro, nenhuma RD; RD lida pelo `doc_<slug>` sai; cartão com Resolver / Abrir aula | `test_painel.py::test_rd_lida_pela_assinatura_doc_sai_do_hoje`, `test_cartao_da_tarefa_tem_resolver_e_abrir_aula`, `test_hub_pendencias.py::test_rd_assinada_no_painel_troca_o_estado_e_nunca_soma_um_segundo_rotulo` |
+| Painel com sprint (s226, base) | `test_painel.py::test_painel_sprint_sem_semana`, `test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada`, `test_sem_sprint_o_painel_mostra_a_semana_antiga`, `test_sem_estado_do_quadro_o_painel_nao_afirma_rd_nao_assinada` |
 | Teoria sem semana: backlog de RDs no topo + Biblioteca; a assinada some do backlog ao vivo | `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`, `test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca`, `test_hub_render.py::test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca` |
 | Listas = o mesmo "hoje" do Painel (Hoje / Próximos dias / Fora do sprint); simulado com a data | `test_hub_render.py::test_listas_e_painel_mesmo_hoje`, `test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint`, `test_simulado_leva_a_data_do_sprint`, `test_sem_hub_sprint_as_listas_caem_nas_semanas` |
 | dashboard: com sprint o tile de Questões = `q_hoje` do sprint e o Ritmo contra a `capacidade_q`, sem "por dia até a prova", meta 1x; sem sprint, a meta; projeção com os 3 números; Por bloco em linhas com "mais fraco"; nenhum `p.nota` no dashboard; o `q_hoje` do tile = o do boot | `test_painel.py::test_dashboard_questoes_usa_o_q_hoje_do_sprint`, `test_dashboard_sem_sprint_volta_a_meta`, `test_barra_de_projecao_feito_sprint_meta`, `test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado`, `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje` |
@@ -312,6 +342,12 @@ declarado na própria figura. Conferida a 390/768 nos dois temas com o mesmo esq
 | A23 | Sem o espelho local `medhub.respostas.<lista>`, o 1º snapshot de `questoes` chega antes do de `respostas` e a Q1 aparece como nova mesmo respondida (lido no código pelo subagente, não medido) | `hub.html` | **pendente**: mesmo PRD (família do A18) |
 
 ## 11. Histórico de decisões
+
+- **Front s229 (15/10)**: pedido dele, item a item -- Roadmap no Painel (dias abertos, cartões, Resolver / Abrir aula);
+  a Documentação no eixo próprio da Biblioteca; "nova" some ao abrir; número único branco nos anéis; lista = estudo,
+  simulado = prova, sem seletor; "Revisar depois" só no simulado; grifo de 3 cores nas Listas; banca rosa, tema ciano;
+  botões secundários no desenho do "Responder"; Virar | Pausar (âmbar) | Defeito (rosa) no topo dos Cards; sem
+  micro-dica de interação. ⚰️ P21 (a linha inteira como alvo, com "›") e "a Próxima sem botão cheio" (s226).
 
 - **Tema v4 "fosco em camadas" (13/10, s227)**: pedido dele com 7 referências na raiz (controle DualSense GTA VI, pins
   Vice City, 5 mockups): *"manter a 'riqueza' do retrowave/95', mas deve ser sóbrio e minimalista como uma plataforma de

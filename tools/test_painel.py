@@ -311,8 +311,9 @@ def test_rota_usa_o_mesmo_li_da_semana(db_sintetico):
     sem4 = re.search(r'<details class="rota-sem"[^>]*><summary>[^<]*<span class="rota-tit">Semana 4'
                      r'.*?</details>', pagina, re.S).group(0)
     # s216 (part-2): o `li` carrega o id do plano (`data-tarefa`), o mesmo na semana e na rota
-    lis = re.findall(r'<li class="tarefa" data-tarefa="\d+"><p class="t-tema">([^<]+)</p><p class="t-meta">.*?'
-                     r'</p><p class="t-acao">.*?</p></li>', sem4, re.S)
+    # s229: o cartao -- meta (chip + contagem) em cima, o tema, os botoes no pe
+    lis = re.findall(r'<li class="tarefa" data-tarefa="\d+"><p class="t-meta">.*?</p><p class="t-tema">([^<]+)</p>'
+                     r'(?:<p class="t-acao">.*?</p>)?</li>', sem4, re.S)
     assert lis == ["Bronquiolite", "Puericultura"]
     assert 'href="https://exemplo/10"' in sem4
 
@@ -322,11 +323,10 @@ def test_tarefa_de_lista_com_aula_que_prepara_tem_os_dois_links(db_sintetico):
     aba Aulas: a lista E a aula. s216 (part-2): o link leva o titulo da aula (`data-titulo`), que o
     hub mostra no leitor sem procurar o link na Teoria."""
     pagina = _pagina()
-    li = re.search(r'<li class="tarefa" data-tarefa="10"><p class="t-tema">Bronquiolite</p>.*?</li>',
-                   pagina, re.S).group(0)
-    assert ">abrir lista</a>" in li
-    assert ('href="aulas/bronquiolite.html" data-hub-aula="bronquiolite" '
-            'data-titulo="A Escada da Bronquiolite">abrir aula</a>') in li
+    li = re.search(r'<li class="tarefa" data-tarefa="10">.*?</li>', pagina, re.S).group(0)
+    assert "<p class=\"t-tema\">Bronquiolite</p>" in li and ">Abrir lista</a>" in li
+    assert ('<a class="t-btn" href="aulas/bronquiolite.html" data-hub-aula="bronquiolite" '
+            'data-titulo="A Escada da Bronquiolite">Abrir aula</a>') in li
 
 
 def test_tarefa_do_painel_carrega_o_id_do_plano(db_sintetico):
@@ -357,10 +357,11 @@ def test_aulas_por_tarefa_le_quem_cumpre_e_quem_prepara(tmp_path, monkeypatch):
         "sumiu": {"tipo": "aula", "titulo": "Sumiu", "tarefas": [40]}}}), encoding="utf-8")
     monkeypatch.setattr(painel, "QUADRO", reg)
     monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    # s229: `cumpre` = a aula e o `tarefa_id` da tarefa (da o titulo dela no Painel)
     assert painel._aulas_por_tarefa() == {
-        26: [{"slug": "dmg", "titulo": "A Escada do DMG"}],
-        40: [{"slug": "dmg", "titulo": "A Escada do DMG"}],
-        875: [{"slug": "pq", "titulo": "PQ"}]}
+        26: [{"slug": "dmg", "titulo": "A Escada do DMG", "cumpre": False}],
+        40: [{"slug": "dmg", "titulo": "A Escada do DMG", "cumpre": False}],
+        875: [{"slug": "pq", "titulo": "PQ", "cumpre": True}]}
 
 
 def test_sem_rota_mantem_a_linha_depois():
@@ -379,11 +380,14 @@ def test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed():
     Fora do banco, "abrir lista" externo segue como era."""
     base = {"classe": "lista", "url_lista": "https://exemplo/40", "area": "Endocrinologia"}
     no_hub = _li(**dict(base, no_hub=True))
-    assert '<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">' in no_hub
-    assert "exemplo/40" not in no_hub and "abrir lista" not in no_hub
+    # s229: o botao "Resolver" abre a aba Listas JA na lista da tarefa (`data-hub-tarefa`)
+    assert ('<a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" '
+            'data-hub-tarefa="9">Resolver</a>') in no_hub
+    assert "exemplo/40" not in no_hub and "Abrir lista" not in no_hub and "t-alvo" not in no_hub
     sim = _li(**dict(base, area="Simulado", no_hub=True))
     assert 'data-hub-modo="simulados"' in sim
-    assert painel._acao(base) == '<a href="https://exemplo/40" rel="noopener noreferrer">abrir lista</a>'
+    assert painel._acao(base) == ('<a class="t-btn t-btn-prim" href="https://exemplo/40" rel="noopener noreferrer">'
+                                  'Abrir lista</a>')
 
 
 def test_questoes_do_dia_sao_o_ritmo_da_meta_e_nao_uma_cota_de_semana(db_sintetico):
@@ -697,14 +701,15 @@ def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
     modo Simulados); caminho local sem questoes segue texto, nunca link para o disco.
     s213: o modo sai da AREA (Simulado -> simulados; o resto -> questoes), por isso a `area`."""
     base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf", "area": "Simulado"}
-    assert 'data-hub-aba="questoes" data-hub-modo="simulados">' in _li(**dict(base, no_hub=True))
-    assert painel._acao(dict(base, no_hub=True)) == "", "no hub, a linha e o alvo: nada sobra na acao"
+    assert 'data-hub-aba="questoes" data-hub-modo="simulados" data-hub-tarefa="9">Resolver</a>' in _li(**dict(base, no_hub=True))
+    assert painel._acao(dict(base, no_hub=True)).count("<a ") == 1, "no hub, so o Resolver"
     assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'
 
 
-def test_documentacao_lista_as_analises_do_quadro_com_atalho(db_sintetico, tmp_path, monkeypatch):
-    """s212 (pedido do operador em 03/10/2026): o bloco Documentacao do painel sai do registro do
-    quadro -- item `tipo: analise` com arquivo no disco -- e cada linha abre o documento no hub."""
+def test_documentacao_sai_do_painel_e_fica_no_json(db_sintetico, tmp_path, monkeypatch):
+    """s229 (pedido dele, 15/10): o bloco Documentacao SAI do Painel -- as analises moram num eixo proprio da
+    Biblioteca da Teoria (`hub.EIXO_DOC`). O JSON segue listando-as (o contrato do --json nao perde dado).
+    ⚰️ *s212-s228: a secao "Documentação" do Painel, com "abrir documento".*"""
     import json as _json
     (tmp_path / "aula-dossie.html").write_text("<title>x</title>", encoding="utf-8")
     reg = tmp_path / "quadro.json"
@@ -716,12 +721,7 @@ def test_documentacao_lista_as_analises_do_quadro_com_atalho(db_sintetico, tmp_p
     monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
     assert painel.coletar()["docs"] == [{"slug": "dossie", "titulo": "Dossiê da banca"}]
     pagina = painel.render_html(painel.coletar())
-    assert 'data-bloco="docs"' in pagina and "<h2>Documentação</h2>" in pagina
-    assert 'href="aulas/dossie.html" data-hub-aula="dossie"' in pagina
-    assert "Fantasma" not in pagina and ">Aula<" not in pagina
-    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
-    assert 'data-bloco="docs"' not in painel.render_html(painel.coletar())    # sem registro, o bloco some
-
+    assert 'data-bloco="docs"' not in pagina and "Documentação" not in pagina and "dossie" not in pagina
 
 
 # ------------------------------------------ s216 (hub-integracao part-6, P08 v0): ancoras do "Hoje ao vivo"
@@ -816,13 +816,13 @@ def test_teoria_painel_e_boot_contam_o_banco_do_hub(db_sintetico, capsys, monkey
     assert teoria[7] == t[7]["q"] == 15 and teoria[11] == 12
     pagina = painel.render_html(d)
     li7 = re.search(r'<li class="tarefa" data-tarefa="7">.*?</li>', pagina, re.S).group(0)
-    assert "<span>15 questões</span>" in li7 and 'class="t-alvo"' in li7 and ">aula</a>" in li7
+    assert '<span class="t-n">15 questões</span>' in li7 and ">Resolver</a>" in li7 and ">Abrir aula</a>" in li7
 
 
 def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
     """P20 item 3/4: o Painel e a Teoria falam a MESMA lingua (`plano.meta_da_tarefa`): N questoes
     quando ha questoes; a classe so sem acao nenhuma, em texto apagado da meta -- nunca na coluna de
-    acao. Questoes no banco = "resolver no hub", com ou sem link (a REMIT nao tinha link)."""
+    acao. s229: o cartao -- a meta (chip + contagem) em cima, os botoes no pe; sem acao, sem pe."""
     def t(**kw):
         base = {"id": 9, "semana": 4, "atrasada": False, "tema": "Tema", "q": 0, "classe": "sem_lista",
                 "url_lista": None, "area": "Cirurgia", "rotulo": "CIR", "aula": None, "aulas": [],
@@ -830,19 +830,20 @@ def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
         base.update(kw)
         return painel._html_tarefa(base)
     sem_nada = t()
-    assert '<p class="t-meta"><span class="t-rot">CIR</span> <span>sem lista ainda</span></p>' in sem_nada
-    assert '<p class="t-acao"></p>' in sem_nada and "tenue" not in sem_nada
+    assert '<p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">sem lista ainda</span></p>' in sem_nada
+    assert "t-acao" not in sem_nada and "tenue" not in sem_nada
     aula = t(classe="aula")
-    assert "<span>aula a preparar</span>" in aula and '<p class="t-acao"></p>' in aula
+    assert '<span class="t-n">aula a preparar</span>' in aula and "t-acao" not in aula
     remit = t(q=20, no_hub=True, aula="remit", aulas=[{"slug": "remit", "titulo": "REMIT"}],
               tema="Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas")
-    assert "<span>20 questões</span>" in remit and "sem lista" not in remit
-    assert ('</p></a><p class="t-acao t-sec"><a href="aulas/remit.html" data-hub-aula="remit" '
-            'data-titulo="REMIT">aula</a></p></li>') in remit, "a aula, pequena, FORA do alvo"
+    assert '<span class="t-n">20 questões</span>' in remit and "sem lista" not in remit
+    assert ('<p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" '
+            'data-hub-modo="questoes" data-hub-tarefa="9">Resolver</a><a class="t-btn" href="aulas/remit.html" '
+            'data-hub-aula="remit" data-titulo="REMIT">Abrir aula</a></p></li>') in remit
     assert '<p class="t-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de Feridas</p>' in remit
     caderno = t(classe="caderno", q=43)
-    assert '<span>43 questões</span> <span>caderno a montar</span>' in caderno
-    assert '<p class="t-acao"></p>' in caderno, "a classe nunca mais na coluna de acao"
+    assert '<span class="t-n">43 questões</span><span class="t-n">caderno a montar</span>' in caderno
+    assert "t-acao" not in caderno, "a classe nunca mais na coluna de acao"
 
 
 # ------------------------------------------ s226 (part-3): a Semana no padrao da Teoria (P21)
@@ -868,27 +869,24 @@ def _t(i, **kw):
     return base
 
 
-def test_semana_linha_inteira_abre_a_lista():
-    """P21 (decisao dele, 13/10): tarefa com questoes no hub = UM alvo -- o `<a data-hub-aba>` envolve
-    tema e meta (o atalho que o hub ja trata, sem JS novo); "resolver no hub" sumiu. A aula ligada
-    fica FORA do alvo (link dentro de link e invalido), pequena, e so quando existe. O `<li>` segue
-    a raiz com `data-tarefa` (o `painelListas` risca a resolvida por ele)."""
+def test_cartao_da_tarefa_tem_resolver_e_abrir_aula():
+    """s229 (pedido dele, 15/10): a seta ">" (a linha inteira como alvo das Listas, P21) vira o BOTAO "Resolver"
+    (primario, ciano cheio) que abre a aba Listas JA na lista da tarefa; o link "abrir aula" vira o botao
+    "Abrir aula" (contorno ciano) que leva a Teoria ja naquela aula. O `<li>` segue a raiz com `data-tarefa`."""
     html_ = _semana([_t(1, aulas=[{"slug": "remit", "titulo": "REMIT"}]), _t(2),
                      _t(3, no_hub=False, url_lista="https://exemplo/3")])
-    assert "resolver no hub" not in html_
+    assert "t-alvo" not in html_ and "resolver no hub" not in html_
     li1 = re.search(r'<li class="tarefa[^"]*" data-tarefa="1">(.*?)</li>', html_, re.S).group(1)
-    alvo = re.match(r'<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">'
-                    r'(<p class="t-tema">Tema 1</p><p class="t-meta">.*?</p>)</a>(.*)$', li1, re.S)
-    assert alvo, li1
-    assert "<a " not in alvo.group(1), "nada clicavel dentro do alvo"
-    assert alvo.group(2) == ('<p class="t-acao t-sec"><a href="aulas/remit.html" data-hub-aula="remit" '
-                             'data-titulo="REMIT">aula</a></p>')
-    li2 = re.search(r'<li class="tarefa[^"]*" data-tarefa="2">(.*?)</li>', html_, re.S).group(1)
-    assert li2.endswith("</a>") and "t-acao" not in li2, "sem aula, nao ha acao secundaria"
-    # fora do banco do hub: o comportamento de antes (lista externa na coluna de acao, sem alvo)
+    assert li1 == ('<p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">20 questões</span></p>'
+                   '<p class="t-tema">Tema 1</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" '
+                   'data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="1">Resolver</a>'
+                   '<a class="t-btn" href="aulas/remit.html" data-hub-aula="remit" data-titulo="REMIT">Abrir aula</a></p>')
     li3 = re.search(r'<li class="tarefa[^"]*" data-tarefa="3">(.*?)</li>', html_, re.S).group(1)
-    assert "t-alvo" not in li3 and '<p class="t-acao"><a href="https://exemplo/3"' in li3
+    assert '<a class="t-btn t-btn-prim" href="https://exemplo/3" rel="noopener noreferrer">Abrir lista</a>' in li3
     assert ([int(i) for i in re.findall(r'<li class="tarefa[^"]*" data-tarefa="(\d+)">', html_)] == [1, 2, 3])
+    css = painel.CSS
+    assert "min-height:44px" in re.search(r"\n\.t-btn\{([^}]*)\}", css).group(1)
+    assert ".t-alvo" not in css and "content:\"›\"" not in css, "a seta saiu"
 
 
 def test_atrasadas_sob_subtitulo_unico():
@@ -910,14 +908,14 @@ def test_atrasadas_sob_subtitulo_unico():
 
 
 def test_proxima_so_pelo_rotulo_sem_botao_cheio(db_sintetico):
-    """P21: a Proxima e a 1a tarefa da semana e se distingue SO pelo rotulo "Proxima" -- o mesmo
-    controle das outras linhas. ⚰️ *Era a acao dela pintada como botao cheio (fundo ciano).*"""
+    """P21: a Proxima e a 1a tarefa da semana e se distingue pelo rotulo "Proxima" -- os botoes sao os mesmos
+    das outras (s229: o "Resolver" e cheio em TODA tarefa, nao so na Proxima)."""
     html_ = _semana([_t(1, semana=2, atrasada=True), _t(2), _t(3)])
     assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', html_) == [
         ("tarefa atrasada proxima", "1"), ("tarefa", "2"), ("tarefa", "3")]
     css = painel.CSS
     assert ".tarefa.proxima .t-tema::before{content:\"Próxima\"" in css
-    assert ":first-child .t-acao" not in css and "var(--sobre)" not in css, "botao cheio voltou"
+    assert ":first-child .t-acao" not in css and ".proxima .t-btn" not in css, "so a Proxima com botao cheio"
     pagina = _pagina()
     assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 1
 
@@ -938,9 +936,10 @@ def _com_sprint(caminho):
 
 
 def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
-    """DoD 2-4: com sprint, o bloco da semana vira Hoje (rolada + a de hoje, total de questoes, cards
-    do dia) + Proximos dias (um por linha, recolhido) + Fora do sprint (recolhido, com o motivo).
-    Some a semana, as atrasadas e a rota; o `li.tarefa[data-tarefa]` segue (o hub pinta por ele)."""
+    """DoD 2-4 + s229 (pedido dele, 15/10: "'Plano de hoje' + 'Proximos dias' vira 'Roadmap': todos os dias
+    expandidos"): com sprint, o bloco da semana vira o ROADMAP -- Hoje (rolada + a de hoje) e cada dia seguinte,
+    um bloco SEMPRE aberto com a contagem; Fora do sprint segue recolhido, com o motivo. Some a semana, as
+    atrasadas e a rota; o `li.tarefa[data-tarefa]` segue (o hub pinta por ele)."""
     monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
     _com_sprint(db_sintetico)
     d = painel.coletar()
@@ -950,22 +949,24 @@ def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
     assert [(t["id"], t["motivo"]) for t in s["fora"]] == [(8, "sem vaga ate 31/10 (80 q/dia)")]
     pagina = painel.render_html(d)
     for proibido in ("Atrasadas", "Desta semana", "Semana ", "Até a prova", 'class="tarefa atrasada',
-                     'class="t-grupo atrasadas"'):
+                     'class="t-grupo atrasadas"', "Plano de hoje", "Próximos dias"):
         assert proibido not in pagina, proibido
-    # s226 (painel-dashboard-sprint part-1): o Por bloco subiu para o dashboard; a secao vai ate o </section>
     i = pagina.index('data-bloco="semana"')
-    bloco = pagina[i:pagina.index("</section>", i)]
-    assert "<h2>Plano de hoje</h2>" in bloco
-    assert re.search(r'<p class="sub">2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
-    hoje_html = bloco.split('<div class="rota">')[0]
+    bloco = pagina[i:pagina.index("</section>\n", pagina.index("Fora do sprint", i))]
+    assert "<h2>Roadmap</h2>" in bloco
+    assert re.search(r'<p class="sub">Hoje: 2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
+    hoje_html = bloco[bloco.index('<section class="rm-dia hoje">'):]
+    hoje_html = hoje_html[:hoje_html.index("</section>")]
+    assert '<span class="rm-d">Hoje · qua 23/09</span> <span class="rm-n">2&nbsp;listas · 72&nbsp;q</span>' in hoje_html
     assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', hoje_html) == [
         ("tarefa proxima", "1"), ("tarefa", "3")], "a rolada sem rotulo de atraso"
-    assert '<h3>Próximos dias</h3>' in bloco
-    assert '<span class="rota-tit">qui 24/09</span> <span class="rota-n">1&nbsp;lista · 60&nbsp;q</span>' in bloco
-    assert '<span class="rota-tit">sex 25/09</span> <span class="rota-n">1&nbsp;simulado · 60&nbsp;q</span>' in bloco
+    assert '<span class="rm-d">qui 24/09</span> <span class="rm-n">1&nbsp;lista · 60&nbsp;q</span>' in bloco
+    assert '<span class="rm-d">sex 25/09</span> <span class="rm-n">1&nbsp;simulado · 60&nbsp;q</span>' in bloco
+    assert bloco.count('<section class="rm-dia') == 3, "Hoje e os dois dias, um bloco cada"
+    assert '<details class="rota-sem"' not in bloco, "nenhum dia recolhido"
     assert '<details class="rota-sem fora"><summary><span class="rota-tit">Fora do sprint · 1</span>' in bloco
     assert "sem vaga até 31/10 (80 q/dia) · 1" in bloco
-    assert 'data-tarefa="8"' in bloco and "<details open" not in bloco, "proximos e fora recolhidos"
+    assert 'data-tarefa="8"' in bloco and "<details open" not in bloco, "fora recolhido"
 
 
 def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, tmp_path, monkeypatch):
@@ -993,8 +994,10 @@ def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, t
     assert d["sprint"]["rd"] == {"slug": "rd-velha", "titulo": "RD velha", "data": "2026-09-01"}
     bloco = painel._html_sprint(d["sprint"], {"consumo_hoje": 10, "restantes": 40, "teto": 50})
     assert "72&nbsp;questões + 40&nbsp;cards." in bloco
-    assert ('<li class="tarefa rd"><a class="t-alvo" href="aulas/rd-velha.html" data-hub-aula="rd-velha" '
-            'data-titulo="RD velha">') in bloco
+    # s229: o cartao da RD -- o estado num span SO (`t-rd-st`, que o hub reescreve ao vivo) e o botao
+    assert ('<li class="tarefa rd"><p class="t-meta"><span class="t-rot">RD</span><span class="t-rd-st">revisão '
+            'direcionada ainda não assinada</span></p><p class="t-tema">RD velha</p><p class="t-acao"><a class="t-btn" '
+            'href="aulas/rd-velha.html" data-hub-aula="rd-velha" data-titulo="RD velha">Abrir aula</a></p></li>') in bloco
     sem_contador = painel._html_sprint(dict(d["sprint"], rd=None), {"consumo_hoje": None, "restantes": None,
                                                                    "teto": 100})
     assert "+ 100&nbsp;cards." in sem_contador and "tarefa rd" not in sem_contador
@@ -1342,10 +1345,10 @@ def test_dashboard_em_placas_e_a_grade(db_sintetico, tmp_path, monkeypatch):
         assert morto not in dash, morto
     assert "<section" not in dash[1:], "as placas sao filhas da grade, sem secao dentro"
     assert '<section class="bloco semana placa" data-bloco="semana">' in pagina
-    assert '<section class="bloco docs placa" data-bloco="docs">' in pagina
+    assert 'data-bloco="docs"' not in pagina, "s229: a Documentacao mora na Teoria"
     i = pagina.index('data-bloco="semana"')
-    plano_html = pagina[i:pagina.index("</section>", i)]
-    assert plano_html.count('<details class="rota-sem') >= 2 and "<details open" not in plano_html
+    plano_html = pagina[i:pagina.index("</section>\n", pagina.index("Fora do sprint", i))]
+    assert plano_html.count('<section class="rm-dia') >= 2 and "<details open" not in plano_html
     css = painel.CSS
     assert ".wrap{max-width:var(--largura)" in css
     assert ".dash{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--esp-4)}" in css
@@ -1374,3 +1377,41 @@ def test_flashcards_da_semana_total_pico_e_paleta_propria():
     assert "--roxo-fraco" not in css.split("Flashcards da semana", 1)[1].split("Tarefas", 1)[0]
     assert ".bl.sim .bl-barra i{background:var(--roxo)}" in css
     assert ".an-arco.an-meta{stroke:var(--roxo)}" in css, "o mesmo token do anel"
+
+
+# ------------------------------------------------ s229 (front, pedido dele em 15/10)
+
+def test_rd_lida_pela_assinatura_doc_sai_do_hoje(tmp_path, monkeypatch):
+    """Item 1: a RD assinada (ou absorvida) em `analises/pendencias/itens/doc_<slug>` sai do "Hoje" mesmo com o
+    snapshot do `quadro/` sem ela -- a MESMA fonte que o hub le ao vivo; nunca "nao assinada" para o que ele assinou."""
+    reg = tmp_path / "quadro.json"
+    reg.write_text(json.dumps({"itens": {"rd-a": {"tipo": "revisao", "titulo": "A"},
+                                         "rd-b": {"tipo": "revisao", "titulo": "B"}}}), encoding="utf-8")
+    for slug in ("rd-a", "rd-b"):
+        (tmp_path / ("aula-%s.html" % slug)).write_text("<title>x</title>", encoding="utf-8")
+    estado = tmp_path / "estado"
+    estado.mkdir()
+    pend = tmp_path / "pend"
+    pend.mkdir()
+    (pend / "doc_rd-a.json").write_text(json.dumps({"origem": "rd-a", "status": "absorvida"}), encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
+    monkeypatch.setattr(painel, "PEND_ESTADO", pend)
+    monkeypatch.setattr(painel, "_datas_das_aulas", lambda ps: {p: "2026-10-01" for p in ps})
+    assert painel._rd_nao_assinada()["slug"] == "rd-b"
+    (pend / "doc_rd-b.json").write_text(json.dumps({"origem": "rd-b", "status": "assinado"}), encoding="utf-8")
+    assert painel._rd_nao_assinada() is None
+    (pend / "doc_rd-b.json").write_text(json.dumps({"origem": "rd-b", "status": "pendente"}), encoding="utf-8")
+    assert painel._rd_nao_assinada()["slug"] == "rd-b", "so assinado/absorvida contam como lida"
+
+
+def test_tarefa_cumprida_por_aula_mostra_o_titulo_da_aula():
+    """Item 1: a #5426 seguia "Revisao final por banca (LEITURA)..." com a aula "UERJ de Bolso" no ar -- a aula que
+    CUMPRE a tarefa (`tarefa_id`) da o titulo; a que so PREPARA nao troca o tema."""
+    t = {"id": 5426, "semana": 7, "atrasada": False, "tema": "Revisão final por banca (LEITURA)", "q": 0,
+         "classe": "aula", "url_lista": None, "area": "Preventiva", "bloco": "MFC"}
+    cumpre = {5426: [{"slug": "uerj-de-bolso-mfc", "titulo": "UERJ de Bolso: MFC e a banca", "cumpre": True}]}
+    prepara = {5426: [{"slug": "x", "titulo": "Outra", "cumpre": False}]}
+    assert painel._tarefa(t, cumpre, set())["tema"] == "UERJ de Bolso: MFC e a banca"
+    assert painel._tarefa(t, prepara, set())["tema"] == "Revisão final por banca (LEITURA)"

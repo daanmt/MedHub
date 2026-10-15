@@ -2526,3 +2526,12 @@ def test_cli_referencias_apply_com_regua_segue_e_expect_certo_grava(db_sintetico
     assert (r["aplicado"], r["regua"]["veredito"], r["regua"]["p"], r["regua"]["a"]) == (True, "SEGUE", [0, 5], [0, 5])
     assert len(atos) == 1 and _tabelas_ref(db_sintetico) == {"referencia", "solucao_referencia"}
     assert len(db.referencias_por_solucao()) == 5
+
+
+def test_trechos_grifados_levam_a_cor_do_grifo_das_listas():
+    """s229 (item 6d): o grifo das Listas leva a cor no 3o campo; o agente recebe o trecho E a cor (sem = rosa)."""
+    from tools import emed_banco as eb
+    g = {"enun": [[0, 4], [5, 7, "ciano"], [0, 2, "lixo"]], "A": [[0, 1, "amarelo"]]}
+    assert eb.trechos_grifados(g, "abcd ef gh", "A) x\nB) y") == [
+        {"onde": "enunciado", "trecho": "abcd", "cor": "rosa"}, {"onde": "enunciado", "trecho": "ef", "cor": "ciano"},
+        {"onde": "enunciado", "trecho": "ab", "cor": "rosa"}, {"onde": "A", "trecho": "x", "cor": "amarelo"}]

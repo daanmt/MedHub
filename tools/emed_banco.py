@@ -1184,10 +1184,12 @@ def trechos_grifados(grifos, enunciado, alternativas):
     for chave in ["enun"] + sorted(k for k in g if k != "enun"):
         texto = textos.get(chave) or ""
         for v in g.get(chave) or []:
-            if (isinstance(v, list) and len(v) == 2 and all(isinstance(x, int) for x in v)
+            # s229: o grifo das Listas leva a cor no 3o campo ([ini, fim, "ciano"|"amarelo"]; sem = rosa)
+            if (isinstance(v, list) and len(v) in (2, 3) and all(isinstance(x, int) for x in v[:2])
                     and 0 <= v[0] < v[1] <= len(texto)):
                 saida.append({"onde": "enunciado" if chave == "enun" else chave,
-                              "trecho": texto[v[0]:v[1]]})
+                              "trecho": texto[v[0]:v[1]],
+                              "cor": v[2] if len(v) == 3 and v[2] in ("ciano", "amarelo") else "rosa"})
     return saida
 
 

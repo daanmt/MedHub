@@ -479,6 +479,72 @@
         "Reação adversa e farmacocinética no idoso",
         "Adesão e revisão de medicamentos"
       ]
+    },
+    {
+      "tema": "Cardiopatias congênitas, cuidados neonatais, asma e aleitamento materno",
+      "listas": [
+        "t354"
+      ],
+      "objetivos": [
+        "Cardiopatias congênitas: diagnóstico e fisiopatologia",
+        "Cardiopatias: triagem, IC e conduta",
+        "Sala de parto, alojamento conjunto e alta do RN",
+        "Intercorrências do RN (ECN, onfalite, trauma de parto)",
+        "Lactente sibilante e diagnóstico de asma",
+        "Crise de asma: classificação e tratamento",
+        "Asma: controle e manutenção",
+        "Aleitamento: contraindicações e situações maternas",
+        "Aleitamento: manejo, técnica e composição do leite"
+      ]
+    },
+    {
+      "tema": "Kawasaki, SIM-P, distúrbios metabólicos do neonato, síndromes genéticas, EIM e tuberculose na infância",
+      "listas": [
+        "t754"
+      ],
+      "objetivos": [
+        "Kawasaki: diagnóstico e critérios",
+        "Kawasaki: tratamento e complicações",
+        "SIM-P associada à COVID-19",
+        "Hipoglicemia e distúrbios metabólicos do RN",
+        "Erros inatos do metabolismo",
+        "Síndromes genéticas e cromossomopatias",
+        "Tuberculose na criança: diagnóstico e tratamento",
+        "Tuberculose: contatos, ILTB e BCG",
+        "Outros distúrbios neonatais (convulsão, trauma de parto)"
+      ]
+    },
+    {
+      "tema": "Reanimação neonatal, crescimento, tópicos em pediatria e desnutrição",
+      "listas": [
+        "t119",
+        "t498"
+      ],
+      "objetivos": [
+        "Reanimação neonatal: recepção, passos iniciais e clampeamento",
+        "Reanimação neonatal: VPP e via aérea",
+        "Reanimação neonatal: massagem cardíaca e adrenalina",
+        "Crescimento: curvas, avaliação e alvo genético",
+        "Baixa estatura e crescimento anormal",
+        "Desnutrição: diagnóstico e manejo",
+        "Puericultura: consultas, sinais de alerta e higiene oral",
+        "Alimentação complementar e profilaxias (ferro, vitaminas)",
+        "Hebiatria: sigilo e adolescência"
+      ]
+    },
+    {
+      "tema": "Câncer de colo uterino",
+      "listas": [
+        "t74"
+      ],
+      "objetivos": [
+        "Câncer de colo: epidemiologia, HPV e histologia",
+        "Câncer de colo: clínica e diagnóstico",
+        "Câncer de colo: estadiamento FIGO",
+        "Câncer de colo: tratamento por estádio",
+        "Câncer de colo: disseminação e prognóstico",
+        "Câncer de colo: gestação e situações especiais"
+      ]
     }
   ]
 }

@@ -15,3 +15,7 @@
 - aula #5426 = aulas/uerj-de-bolso-mfc (escopo UERJ, figuras molde /anima); legendas encurtadas nas RDs 1310 e na imagem-obstetrica
 - spoiler UERJ REVOGADO (decisao dele): 39 questoes de volta em 24 listas (22 com v3; 17 em 11 listas sem cadeia); AGENTE 7.4 recontado
 - hub Version 120 (lote 2026-10-15a); suite 1799
+- cadeia v3 em onda (pedido dele: toda lista e simulado com cadeia): t892 UERJ 2024 (98 no hub; Q46/Q84 anuladas), t354 (57), t754 (52); objetivos novos t354/t754
+- front parte 2: Roadmap, botoes Resolver/Abrir aula, aneis sem +K, Documentacao na Biblioteca, nova some ao abrir, lista=estudo/simulado=prova, Revisar depois so no simulado, grifo nas Listas, banca rosa/tema ciano, Virar/Pausar/Defeito no topo, sem micro-dicas
+- cadeia v3 onda 2: t891 (97), t890 (93; 7 anuladas), t119/t498/t74 (120)
+- hub Version 121

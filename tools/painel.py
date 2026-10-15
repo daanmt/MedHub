@@ -60,6 +60,11 @@ MARCADOR_GRAVACAO = ROOT / "tmp" / "hub" / "ultima_gravacao_hub.json"
 #: `--quadro-estado tmp/hub_db` do `hub.py`) -- a RD sem assinatura entra no "Hoje". s226 (part-4, audit
 #: da part-3): AUSENTE = estado desconhecido -- o Painel nao afirma "nao assinada" (nenhuma RD no Hoje).
 QUADRO_ESTADO = ROOT / "tmp" / "hub_db" / "quadro"
+#: s229 (pedido dele, 15/10: a RD aparecia "· assinado" E "ainda nao assinada" na mesma linha): a assinatura de
+#: leitura `analises/pendencias/itens/doc_<slug>` (a MESMA que o hub le ao vivo no `painelAssinados`) tambem tira a
+#: RD do "Hoje" -- o snapshot do `quadro/` pode estar velho; assinada OU absorvida = lida.
+PEND_ESTADO = ROOT / "tmp" / "hub_db" / "analises" / "pendencias" / "itens"
+STATUS_LIDO = ("assinado", "absorvida")
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
 #: pagina SEMPRE desenha.
@@ -122,8 +127,10 @@ def _aulas_por_tarefa():
         ids = {int(x) for x in (item.get("tarefas") or [])}
         if item.get("tarefa_id") is not None:
             ids.add(int(item["tarefa_id"]))
+        cumpre = int(item["tarefa_id"]) if item.get("tarefa_id") is not None else None
         for tid in sorted(ids):
-            saida.setdefault(tid, []).append({"slug": slug, "titulo": item.get("titulo") or slug})
+            saida.setdefault(tid, []).append({"slug": slug, "titulo": item.get("titulo") or slug,
+                                              "cumpre": tid == cumpre})
     return saida
 
 
@@ -133,9 +140,12 @@ def _tarefa(t, aulas, no_hub):
     from app.utils import areas
     agregada = t.get("area") in areas.AREAS_AGREGADAS
     ligadas = aulas.get(t["id"]) or []
+    # s229 (pedido dele, 15/10: a #5426 seguia "Revisao final por banca (LEITURA)..." com a aula "UERJ de Bolso"
+    # no ar): a aula que CUMPRE a tarefa (`tarefa_id` no quadro) da o titulo -- o mesmo da Teoria e do leitor
+    cumpre = next((a for a in ligadas if a.get("cumpre")), None)
     return {
         "id": t["id"], "semana": t["semana"], "atrasada": t["atrasada"],
-        "tema": t["tema"], "q": t["q"], "classe": t["classe"],
+        "tema": cumpre["titulo"] if cumpre else t["tema"], "q": t["q"], "classe": t["classe"],
         "url_lista": t["url_lista"], "area": t.get("area"),
         # simulado se apresenta como simulado, nunca pelo bloco de fallback (CM)
         "rotulo": t.get("area") if agregada else (t.get("bloco") or t.get("area")),
@@ -200,6 +210,23 @@ def _datas_das_aulas(caminhos):
     return {c: datas.get(rel) or date.fromtimestamp(c.stat().st_mtime).isoformat() for rel, c in rels.items()}
 
 
+def _lidos_por_pendencia(pasta=None):
+    """{slug} com a assinatura de leitura `doc_<slug>` assinada ou absorvida no snapshot das pendencias
+    (`PEND_ESTADO`). Pasta ausente ou arquivo ilegivel = nada (o quadro segue valendo)."""
+    pasta = Path(pasta or PEND_ESTADO)
+    lidos = set()
+    if not pasta.is_dir():
+        return lidos
+    for arq in pasta.glob("doc_*.json"):
+        try:
+            doc = json.loads(arq.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if isinstance(doc, dict) and doc.get("status") in STATUS_LIDO:
+            lidos.add(str(doc.get("origem") or arq.stem[4:]))
+    return lidos
+
+
 def _rd_nao_assinada():
     """A Revisao Direcionada NAO assinada mais antiga: item `revisao` do quadro (`core/hub_quadro.json`)
     com arquivo em `artifacts/` e sem `feito` no estado do quadro (`QUADRO_ESTADO`, lido por
@@ -214,11 +241,13 @@ def _rd_nao_assinada():
         estado = hub.ler_estado_quadro(QUADRO_ESTADO)
     except (OSError, ValueError):
         return None
+    lidos = _lidos_por_pendencia()
     arqs = {}
     for slug, item in reg.items():
         item = item or {}
         arq = ARTIFATOS / ("aula-%s.html" % slug)
-        if item.get("tipo") != "revisao" or not arq.is_file() or (estado.get(slug) or {}).get("feito"):
+        if (item.get("tipo") != "revisao" or not arq.is_file() or (estado.get(slug) or {}).get("feito")
+                or slug in lidos):
             continue
         arqs[slug] = (arq, item.get("titulo") or slug)
     datas = _datas_das_aulas([a for a, _t in arqs.values()]) if arqs else {}
@@ -466,33 +495,44 @@ def _modo_hub(t):
     return "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
 
 
-def _acao(t):
-    """O que fazer com a tarefa FORA do alvo da linha: a lista externa (ou a prova em PDF) e cada
-    aula ligada.
+def _botao_aula(slug, titulo, rotulo="Abrir aula"):
+    """s229 (pedido dele, 15/10: "trocar o link 'abrir aula' por um BOTAO tematico que leva a aba Teoria ja naquela
+    aula"): o MESMO botao no Painel e na Teoria (`.t-btn` aqui, `.hub-btn` no hub) -- o atalho `data-hub-aula` que o
+    hub ja trata abre o leitor da Teoria direto. Secundario (contorno ciano); o primario da linha e o "Resolver"."""
+    return ('<a class="t-btn" href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
+            % (_e(slug), _e(slug), _e(titulo or slug), _e(rotulo)))
 
-    s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): tarefa com questoes no banco do
-    hub (`no_hub`) abre a aba Listas e o link do EMED some; so fora do banco o "abrir lista" externo
-    aparece. s226 (part-3, padrao da Teoria): na `no_hub` a LINHA INTEIRA e o alvo (`_html_tarefa`);
-    aqui sobra so a aula, pequena e secundaria ("aula", ou o titulo quando ha varias). ⚰️ *Era o
-    "resolver no hub" em toda linha.* P20 (s219): a tarefa sem acao diz a classe na META, apagada
-    (`plano.meta_da_tarefa`, a regra da Teoria)."""
+
+def _botao_resolver(t):
+    """s229 (pedido dele, 15/10: a seta ">" que levava as Listas vira um botao): "Resolver" abre a aba Listas JA na
+    lista da tarefa (`data-hub-tarefa`; o hub procura a lista pelo `tarefa`), no modo da area (`_modo_hub`). Primario
+    (ciano cheio): a acao da linha."""
+    return ('<a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="%s" '
+            'data-hub-tarefa="%s">Resolver</a>' % (_modo_hub(t), _e(t.get("id"))))
+
+
+def _acao(t):
+    """Os BOTOES da tarefa (s229): "Resolver" (com questoes no banco do hub), a lista externa ou a prova em PDF e
+    cada aula ligada ("Abrir aula"; com 2+, o titulo de cada uma).
+
+    s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): tarefa com questoes no banco do hub (`no_hub`)
+    abre a aba Listas e o link do EMED some; so fora do banco o "Abrir lista" externo aparece. ⚰️ *s226 (part-3,
+    P21): a LINHA INTEIRA era o alvo das Listas, com a seta ">" no fim; s229 (pedido dele) virou o botao.* P20
+    (s219): a tarefa sem acao diz a classe na META, apagada (`plano.meta_da_tarefa`, a regra da Teoria)."""
     partes = []
-    no_hub = bool(t.get("no_hub"))
-    if no_hub:
-        pass
+    if t.get("no_hub"):
+        partes.append(_botao_resolver(t))
     elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
-        partes.append(_link(t["url_lista"], "abrir lista"))
+        partes.append('<a class="t-btn t-btn-prim" href="%s" rel="noopener noreferrer">Abrir lista</a>'
+                      % _e(t["url_lista"]))
     elif t["url_lista"]:
         partes.append('<span class="tenue">prova em PDF no computador</span>')
     # aula que CUMPRE (tarefa de aula) ou PREPARA (lista) -- o que a aba Aulas ja mostrava
     aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
     varias = len(aulas) > 1
     for a in aulas:
-        # s216 (part-2): o titulo vai no link -- o hub abre o leitor direto, sem achar o link na Teoria
-        partes.append('<a href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
-                      % (_e(a["slug"]), _e(a["slug"]), _e(a.get("titulo") or a["slug"]),
-                         _e(a.get("titulo") or a["slug"]) if varias else ("aula" if no_hub else "abrir aula")))
-    return "<br>".join(partes)
+        partes.append(_botao_aula(a["slug"], a.get("titulo"), (a.get("titulo") or a["slug"]) if varias else "Abrir aula"))
+    return "".join(partes)
 
 
 #: Os quatro aneis do topo (s227, tema v4 part-5): um anel por meta, num viewBox de 120 com traco de 10
@@ -698,29 +738,22 @@ def _html_agenda(ag):
 
 
 def _html_tarefa(t, proxima=False):
-    """Um `<li class="tarefa">`: tema, rotulo, questoes e acao -- o MESMO na semana corrente e na
-    rota. s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e por ele que o hub
-    pinta, sem publish, a lista resolvida na aba Listas. P20 (s219): a meta segue a regra da Teoria
-    (`plano.meta_da_tarefa`) e o titulo, a correcao de exibicao (`plano.tema_exibido`).
-    s226 (part-3, P21): com questoes no banco do hub, tema + meta viram UM alvo (`a.t-alvo` com
-    `data-hub-aba`, o atalho que o hub ja trata); a aula fica fora dele (link dentro de link e
-    invalido). O atraso sai da linha: o subtitulo "Atrasadas · N" diz uma vez (`_html_semana`).
-    `proxima` = a 1a tarefa da semana: so o rotulo "Proxima", o mesmo controle das outras."""
+    """Um `<li class="tarefa">` -- s229 (pedido dele, 15/10: "estetica dos bloquinhos das tarefas melhorada (cartoes
+    por tarefa, chip de area, contagem)"): um CARTAO por tarefa -- no topo o chip da area e a contagem (a meta de
+    `plano.meta_da_tarefa`), depois o tema e, no pe, os botoes (`_acao`). O MESMO no Roadmap e na semana antiga.
+    s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e por ele que o hub pinta, sem publish, a
+    lista resolvida na aba Listas. P20 (s219): o titulo pela correcao de exibicao (`plano.tema_exibido`). `proxima` =
+    a 1a tarefa do dia: so o rotulo "Proxima". ⚰️ *s226 (P21): a linha inteira era o alvo das Listas (`a.t-alvo`
+    com a seta ">")*."""
     import plano
     meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
-    meta += ["<span>%s</span>" % _e(x) for x in plano.meta_da_tarefa(t["q"], t["classe"], plano.tem_acao(t))]
+    meta += ['<span class="t-n">%s</span>' % _e(x)
+             for x in plano.meta_da_tarefa(t["q"], t["classe"], plano.tem_acao(t))]
     classes = "tarefa" + (" atrasada" if t["atrasada"] else "") + (" proxima" if proxima else "")
-    corpo = ('<p class="t-tema">%s</p><p class="t-meta">%s</p>'
-             % (_e(plano.tema_exibido(t["tema"]) or "(sem tema)"), " ".join(meta)))
     acao = _acao(t)
-    if t.get("no_hub"):
-        corpo = ('<a class="t-alvo" href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">%s</a>'
-                 % (_modo_hub(t), corpo))
-        if acao:
-            corpo += '<p class="t-acao t-sec">%s</p>' % acao
-    else:
-        corpo += '<p class="t-acao">%s</p>' % acao
-    return '<li class="%s" data-tarefa="%s">%s</li>' % (classes, _e(t["id"]), corpo)
+    return ('<li class="%s" data-tarefa="%s"><p class="t-meta">%s</p><p class="t-tema">%s</p>%s</li>'
+            % (classes, _e(t["id"]), "".join(meta), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
+               '<p class="t-acao">%s</p>' % acao if acao else ""))
 
 
 def _html_rota(rota):
@@ -814,24 +847,33 @@ def _motivo_exibido(motivo):
 
 
 def _html_rd(rd):
-    """A RD nao assinada mais antiga: a linha inteira abre o leitor (o atalho `data-hub-aula` do Painel;
-    o hub a marca "assinado" ao vivo, como as outras linhas com aula)."""
-    return ('<li class="tarefa rd"><a class="t-alvo" href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">'
-            '<p class="t-tema">%s</p><p class="t-meta"><span class="t-rot">RD</span>'
-            '<span>revisão direcionada ainda não assinada</span></p></a></li>'
-            % (_e(rd["slug"]), _e(rd["slug"]), _e(rd["titulo"]), _e(rd["titulo"])))
+    """A RD nao assinada mais antiga, no cartao das tarefas: o chip "RD", o estado e o botao "Abrir aula" (o atalho
+    `data-hub-aula`). s229 (pedido dele, 15/10: a linha dizia "· assinado" E "ainda nao assinada"): o estado mora
+    num span SO (`t-rd-st`) que o hub reescreve ao vivo pela MESMA fonte do "assinado" (`quadro/<slug>` e
+    `doc_<slug>`); nunca um segundo rotulo ao lado."""
+    return ('<li class="tarefa rd"><p class="t-meta"><span class="t-rot">RD</span>'
+            '<span class="t-rd-st">revisão direcionada ainda não assinada</span></p><p class="t-tema">%s</p>'
+            '<p class="t-acao">%s</p></li>' % (_e(rd["titulo"]), _botao_aula(rd["slug"], rd["titulo"])))
 
 
-def _html_sprint(s, cards):
-    """s226 (sprint-final-uerj part-3): Hoje (as tarefas do dia, o total de questoes, os cards do dia e
-    a RD nao assinada mais antiga) + Proximos dias (um dia por linha, recolhido) + Fora do sprint
-    (recolhido, pelo motivo). Sem semana e sem atraso: a tarefa de dia que passou ja vem no Hoje.
-    Cards = o que falta da dose do dia (`restantes`); sem contador, o teto."""
+def _html_dia_roadmap(titulo, conta, itens, classe=""):
+    """Um dia do Roadmap: o titulo (dia e data), a contagem e os cartoes; SEMPRE aberto (s229)."""
+    return ('<section class="rm-dia%s"><h3 class="rm-tit"><span class="rm-d">%s</span>%s</h3>%s</section>'
+            % ((" " + classe) if classe else "", titulo, ' <span class="rm-n">%s</span>' % conta if conta else "",
+               '<ol class="tarefas">%s</ol>' % itens if itens else '<p class="nota">Nenhuma tarefa do plano.</p>'))
+
+
+def _html_sprint(s, cards, hoje_iso=None):
+    """O ROADMAP (s229, pedido dele em 15/10: "'Plano de hoje' + 'Proximos dias' vira 'Roadmap': todos os dias
+    expandidos"): Hoje (as tarefas do dia e a RD nao assinada mais antiga) e cada dia seguinte, um por bloco, todos
+    abertos, com os cartoes das tarefas; Fora do sprint segue recolhido, pelo motivo. O subtitulo diz o dia de
+    hoje: tarefas, questoes e cards (o que falta da dose; sem contador, o teto).
+    ⚰️ *s226 (part-3): "Plano de hoje" e "Proximos dias" com cada dia recolhido num `<details>`.*"""
     hoje = s["hoje"]
     primeira = hoje[0]["id"] if hoje else None
     if hoje:
-        resumo = "%s · %s" % (_plural(len(hoje), "tarefa", "tarefas"),
-                              _plural(s["q_hoje"], "questão", "questões"))
+        resumo = "Hoje: %s · %s" % (_plural(len(hoje), "tarefa", "tarefas"),
+                                    _plural(s["q_hoje"], "questão", "questões"))
     else:
         resumo = "Nenhuma tarefa do plano para hoje"
     n_cards = cards.get("restantes") if cards.get("consumo_hoje") is not None else cards.get("teto")
@@ -840,19 +882,13 @@ def _html_sprint(s, cards):
     itens = "".join(_html_tarefa(t, proxima=t["id"] == primeira) for t in hoje)
     if s.get("rd"):
         itens += _html_rd(s["rd"])
-    corpo = '<h2>Plano de hoje</h2>\n<p class="sub">%s.</p>\n' % resumo
-    if itens:
-        corpo += '<ol class="tarefas">%s</ol>\n' % itens
-    if s["proximos"]:
-        dias = []
-        for p in s["proximos"]:
-            dia = date.fromisoformat(p["data"])
-            conta = _conta_do_dia(p["tarefas"]) + (" · %s&nbsp;q" % _n(p["q"]) if p["q"] else "")
-            dias.append('<details class="rota-sem"><summary><span class="rota-tit">%s %s</span> '
-                        '<span class="rota-n">%s</span></summary><ol class="tarefas">%s</ol></details>'
-                        % (DIAS_SEMANA[dia.weekday()], dia.strftime("%d/%m"), conta,
-                           "".join(_html_tarefa(t) for t in p["tarefas"])))
-        corpo += '<div class="rota"><h3>Próximos dias</h3>%s</div>\n' % "".join(dias)
+    tit_hoje = "Hoje" + (" · %s" % _dia_curto(hoje_iso) if hoje_iso else "")
+    conta_hoje = _conta_do_dia(hoje) + (" · %s&nbsp;q" % _n(s["q_hoje"]) if hoje and s["q_hoje"] else "")
+    corpo = '<h2>Roadmap</h2>\n<p class="sub">%s.</p>\n' % resumo
+    corpo += _html_dia_roadmap(tit_hoje, conta_hoje, itens, "hoje")
+    for p in s["proximos"]:
+        conta = _conta_do_dia(p["tarefas"]) + (" · %s&nbsp;q" % _n(p["q"]) if p["q"] else "")
+        corpo += _html_dia_roadmap(_dia_curto(p["data"]), conta, "".join(_html_tarefa(t) for t in p["tarefas"]))
     if s["fora"]:
         grupos = {}
         for t in s["fora"]:
@@ -924,7 +960,7 @@ h3{font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2);margin:0 0 va
 p{margin:0}
 a{color:var(--acento);text-underline-offset:2px}
 .atualizado{color:var(--tinta3);font-size:var(--fs-meta);margin:0 0 var(--esp-2);text-align:right}
-/* secoes: o dashboard (a grade das placas do topo), depois o Plano de hoje e a Documentacao, uma placa
+/* secoes: o dashboard (a grade das placas do topo), depois o Roadmap (s229), uma placa
    cada; entre elas o MESMO vao da grade (as bordas alinham), nunca filete */
 .bloco{margin:0}
 .bloco + .bloco{margin-top:var(--esp-4)}
@@ -1000,36 +1036,45 @@ a{color:var(--acento);text-underline-offset:2px}
 .ag-barras .pico .ag-n{color:var(--fc-tinta);font-weight:700}
 .ag-d{font-size:var(--fs-meta);color:var(--tinta3)}
 
-/* Tarefas: o Hoje do sprint (ou, sem sprint, a semana do plano) */
-.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-1) var(--esp-4);align-items:baseline;
-        padding:var(--esp-3) 0;border-bottom:1px solid var(--linha)}
-.t-tema{min-width:0;font-weight:600;line-height:1.35}
-.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-1) var(--esp-3)}
+/* Roadmap (s229, pedido dele em 15/10): Hoje e cada dia seguinte SEMPRE abertos, um bloco por dia (titulo com
+   filete e a contagem), as tarefas em CARTOES (o degrau --afundado dentro da placa, como o card do player): no
+   topo o chip da area e a contagem, o tema, e no pe os botoes. Grade: 1 coluna no celular, quantas couberem acima */
+.rm-dia{margin-top:var(--esp-5)}
+.rm-tit{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--esp-1) var(--esp-3);margin:0 0 var(--esp-3);
+        padding-bottom:var(--esp-2);border-bottom:1px solid var(--linha);font-size:var(--fs-legenda);font-weight:700;color:var(--tinta)}
+.rm-dia.hoje .rm-d{color:var(--acento-tinta)}
+.rm-n{color:var(--tinta3);font-size:var(--fs-meta);font-weight:500}
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:var(--esp-3);grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))}
+.tarefa{min-width:0;display:flex;flex-direction:column;gap:var(--esp-2);padding:var(--esp-3) var(--esp-4);
+        background:var(--afundado);border:1px solid var(--linha);border-radius:var(--raio)}
+.t-meta{min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-1) var(--esp-3)}
 .t-rot{color:var(--rosa);font-weight:650;background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
-.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 var(--esp-4)}
-.t-acao br{display:none}   /* as acoes ficam lado a lado (o <br> separa no texto puro) */
-.t-acao a{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
-/* s226 (P21): com questoes no hub, tema + meta sao UM alvo (a linha abre a lista); a aula fica ao lado, pequena */
-.t-alvo{grid-column:1 / -1;grid-row:1 / span 2;min-width:0;display:grid;gap:var(--esp-1);align-content:center;min-height:44px;
-        position:relative;padding-right:var(--esp-6);color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
-.t-alvo:not(:last-child){grid-column:1}
-.t-alvo::after{content:"›";position:absolute;right:var(--esp-1);top:50%;transform:translateY(-50%);font-size:1.5em;line-height:1;color:var(--tinta3)}
-.t-alvo:hover .t-tema{color:var(--acento-tinta)}
-.t-alvo:hover::after{color:var(--acento)}
-.t-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:var(--raio-p)}
-.t-sec{font-size:var(--fs-meta)}
-.t-sec a{font-weight:500}
+.t-n{font-variant-numeric:tabular-nums}
+.t-tema{min-width:0;font-weight:600;line-height:1.35;color:var(--tinta)}
+.t-acao{margin-top:auto;padding-top:var(--esp-1);display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2);font-size:var(--fs-legenda)}
+/* s229: os botoes do cartao -- o MESMO desenho do "Responder" das Listas (raio de controle, 44 px): o primario em
+   ciano cheio (Resolver, Abrir lista), o secundario em contorno ciano (Abrir aula) */
+.t-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 var(--esp-4);border-radius:var(--raio);
+       border:1px solid var(--acento);color:var(--acento-tinta);background:transparent;font-weight:650;text-decoration:none;
+       -webkit-tap-highlight-color:transparent;transition:filter var(--transicao),background var(--transicao)}
+.t-btn:hover{background:var(--acento-fraco)}
+.t-btn-prim{background:var(--acento);color:var(--sobre)}
+.t-btn-prim:hover{background:var(--acento-tinta);border-color:var(--acento-tinta)}
+.t-btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+/* a assinatura ao vivo (o hub poe a classe e o rotulo): o cartao assinado apaga, o estado em verde */
+.tarefa.qd-assinado{opacity:.72}
+.t-assinado,.tarefa.qd-assinado .t-rd-st{color:var(--ok);font-weight:600}
 /* sem sprint, o atraso aparece UMA vez: no subtitulo do grupo das atrasadas (ambar + a palavra, nunca so cor) */
-.t-grupo{margin:var(--esp-4) 0 0;font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
+.t-grupo{margin:var(--esp-4) 0 var(--esp-2);font-size:var(--fs-legenda);font-weight:700;color:var(--tinta2)}
 .t-grupo.atrasadas{color:var(--aviso)}
-/* o proximo passo: a 1a tarefa da semana (a ordem e a do plano) -- so o rotulo "Proxima", o mesmo controle das outras */
+/* o proximo passo: a 1a tarefa do dia (a ordem e a do plano) -- o rotulo "Proxima" e o contorno ciano */
+.tarefa.proxima{border-color:var(--acento)}
 .tarefa.proxima .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
 .prox{margin-top:var(--esp-3)}
 .mais{margin-top:var(--esp-2)}
 .mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:var(--esp-2) 0;min-height:44px}
 .mais .tarefas{margin-top:var(--esp-1)}
-/* A rota ate a prova (s213): cada semana futura recolhida; o resumo quebra linha, nunca alarga */
+/* sem sprint: a rota ate a prova (s213), cada semana futura recolhida; o resumo quebra linha, nunca alarga */
 .rota{margin-top:var(--esp-5)}
 .rota h3{margin-bottom:2px}
 .rota-sem{border-top:1px solid var(--linha)}
@@ -1038,7 +1083,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .rota-tit{font-weight:650}
 .rota-n{color:var(--tinta3);font-size:var(--fs-meta);margin-left:var(--esp-1)}
 .rota-sem .tarefas{margin:var(--esp-1) 0 var(--esp-3)}
-/* s226 (sprint final): o que nao coube no plano, recolhido abaixo dos proximos dias, agrupado pelo motivo */
+/* s226 (sprint final): o que nao coube no plano, recolhido abaixo dos dias, agrupado pelo motivo */
 .rota-sem.fora{margin-top:var(--esp-5)}
 .rota-sem.fora .t-grupo{margin-top:var(--esp-2)}
 
@@ -1052,10 +1097,6 @@ a{color:var(--acento);text-underline-offset:2px}
   .dash > .dash-hoje{grid-column:1 / -1}
   .aneis4{gap:var(--esp-5) var(--esp-5)}
   .anel{width:min(100%,8.5rem)}
-}
-@media (max-width:520px){
-  .tarefa{grid-template-columns:minmax(0,1fr)}
-  .t-acao{grid-column:1;grid-row:auto;justify-content:flex-start}
 }
 """
 
@@ -1105,9 +1146,11 @@ def render_html(d):
         # s226 (sprint-final-uerj part-3): com sprint, o bloco da semana vira Hoje / Proximos dias /
         # Fora do sprint (o `data-bloco` segue "semana": o hub e os testes o acham pelo nome antigo)
         # s227 (tema v4 part-2): o Plano de hoje (ou a semana) e a Documentacao, uma placa cada
-        _sec("semana", _html_sprint(d["sprint"], d["dia"]["cards"]) if d.get("sprint")
+        # s229 (pedido dele, 15/10): o Plano de hoje + Proximos dias viram o ROADMAP; a Documentacao saiu do
+        # Painel (mora num eixo proprio da Biblioteca da Teoria: `hub.EIXO_DOC`); o JSON segue com a lista
+        _sec("semana", _html_sprint(d["sprint"], d["dia"]["cards"], d.get("data")) if d.get("sprint")
              else _html_semana(d["semana"]), "semana placa"),
-    ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]), "docs placa")] if d.get(BLOCO_DOCS) else []))
+    ])
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             "<title>%s</title>\n%s<style>%s</style>\n<style id=\"medhub-tema\">%s</style>\n"

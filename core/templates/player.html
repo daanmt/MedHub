@@ -61,11 +61,14 @@ kbd{
 .barra{height:6px;background:var(--trilho);border-radius:var(--raio-pilula);margin:var(--esp-4) 0 var(--esp-2);overflow:hidden}
 .barra i{display:block;height:100%;width:0;background:var(--acento);border-radius:inherit;transition:width var(--transicao)}
 .tally{display:flex;flex-wrap:wrap;gap:var(--esp-2) var(--esp-4);color:var(--tinta3);font-size:var(--fs-meta);margin-bottom:var(--esp-4)}
-/* s228 (pedido dele): o defeito do card mora logo abaixo da barra, no estilo do Pausar/Retomar (.pausa), a direita
-   do tally; as opcoes abrem dentro da placa do topo. O dado gravado (defeito + motivo) nao mudou */
-.topo-pe{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-2) var(--esp-4)}
-.topo-pe .tally{margin:0;min-width:0}
-#btn-defeito[aria-expanded="true"]{background:var(--acento-fraco);border-color:var(--acento);color:var(--tinta)}
+/* s229 (pedido dele, 15/10): os tres controles do card no bloco de cima, numa linha (`.topo-acoes`): Virar em
+   ciano (o primario, .primario), Pausar em ambar, Defeito do card em rosa (a marca); as opcoes do defeito abrem
+   logo abaixo, dentro da placa do topo. O dado gravado (defeito + motivo) nao mudou.
+   ⚰️ *s228: o Pausar morava nos contadores e o Defeito a direita do tally; o Virar, sob o card.* */
+.topo-acoes{margin-top:0}
+.topo-acoes kbd{margin-left:var(--esp-1)}
+#btn-defeito{border-color:var(--rosa);color:var(--rosa)}
+#btn-defeito:hover,#btn-defeito[aria-expanded="true"]{background:var(--rosa-fraco);border-color:var(--rosa);color:var(--tinta)}
 .tally b{color:var(--tinta2)}
 /* s227 (tema v4 part 3): duas placas -- o topo (contadores, barra, tally) e, logo abaixo, o card ELEVADO (a
    superficie --afundado, um degrau acima da placa): pergunta > resposta > auxiliares (regra, armadilha, assunto).
@@ -79,8 +82,6 @@ kbd{
 .card.placa{background:var(--afundado);border-color:var(--linha-forte)}
 .card.frente{cursor:pointer}
 .card.frente:hover{border-color:var(--acento)}
-.toque{margin-top:auto;padding-top:var(--esp-4);font-size:var(--fs-meta);color:var(--tinta3);text-align:center}
-.card:not(.frente) .toque{display:none}
 .card:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
 .reason{align-self:flex-start;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--card);border-radius:var(--raio-pilula);padding:1px var(--esp-2);margin-bottom:var(--esp-3)}
 .contexto{color:var(--tinta2);font-size:.95em;margin-bottom:var(--esp-3);padding-left:var(--esp-3);border-left:2px solid var(--linha-forte)}
@@ -139,8 +140,8 @@ pre{
   background:var(--afundado);border:1px solid var(--linha);border-radius:var(--raio);
   padding:var(--esp-3);overflow:auto;font-size:.78em;line-height:1.45;margin:var(--esp-3) 0 0;
 }
-.pausa{min-height:36px;padding:var(--esp-1) var(--esp-3);font-size:var(--fs-meta);border-radius:var(--raio-p)}
-.pausa[aria-pressed="true"]{background:var(--acento-fraco);border-color:var(--acento);color:var(--tinta)}
+.pausa{border-color:var(--aviso);color:var(--aviso)}
+.pausa:hover,.pausa[aria-pressed="true"]{background:var(--aviso-fraco);border-color:var(--aviso);color:var(--tinta)}
 /* metricas do fim: UMA faixa entre dois filetes, nao tres caixas */
 .fim-grade{display:flex;flex-wrap:wrap;gap:var(--esp-3) var(--esp-6);margin-top:var(--esp-4);padding:var(--esp-3) 0;border-block:1px solid var(--linha)}
 .fim-grade > div{min-width:0}
@@ -191,13 +192,16 @@ pre{
         <span class="metro" id="metro-lote"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
         <span class="metro fila">fila <b id="pendentes">0</b></span>
         <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
-        <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
       </div>
     </header>
     <div class="barra"><i id="progresso"></i></div>
-    <div class="topo-pe">
-      <p class="tally" id="tally"></p>
-      <button type="button" id="btn-defeito" class="pausa" aria-expanded="false" aria-controls="defeito-opcoes">Defeito do card <kbd>D</kbd></button>
+    <p class="tally" id="tally"></p>
+    <!-- s229 (pedido dele, 15/10): os TRES controles do card no bloco de cima, numa linha -- Virar (ciano, o
+         primario), Pausar (ambar) e Defeito do card (rosa); as opcoes do defeito abrem logo abaixo -->
+    <div class="acoes topo-acoes">
+      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
+      <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
+      <button type="button" id="btn-defeito" class="defeito" aria-expanded="false" aria-controls="defeito-opcoes">Defeito do card <kbd>D</kbd></button>
     </div>
     <div class="defeito-opcoes" id="defeito-opcoes" hidden>
       <button type="button" class="fantasma" data-motivo="Card longo">Card longo</button>
@@ -225,7 +229,6 @@ pre{
       <p class="reason" id="reason" hidden></p>
       <p class="contexto" id="contexto" hidden></p>
       <h2 class="pergunta" id="pergunta">Carregando os cards...</h2>
-      <p class="toque" id="toque" aria-hidden="true">toque no card para virar</p>
       <div class="verso" id="verso" hidden>
         <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
         <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
@@ -233,10 +236,6 @@ pre{
         <p class="taxonomia" id="taxonomia"></p>
       </div>
     </article>
-
-    <div class="acoes">
-      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
-    </div>
 
     <div class="notas" id="notas-botoes" hidden>
       <button data-nota="1"><b>1</b><span>falhei</span></button>

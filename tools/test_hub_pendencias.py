@@ -374,6 +374,7 @@ def _painel_docs_html():
     return ('<ol class="tarefas">%s</ol>' % "".join(painel._html_tarefa(x) for x in (
         t(768, "Aorta", [{"slug": "aorta", "titulo": "A aorta"}]),
         t(367, "Tireoide", [{"slug": "tireoide", "titulo": "A tireoide"}]))) +
+        '<ol class="tarefas">%s</ol>' % painel._html_rd({"slug": "rd-cm-1310", "titulo": "Clínica Médica da UERJ 2022"}) +
         painel._html_docs([{"slug": "dossie-uerj", "titulo": "Dossiê UERJ"},
                            {"slug": "autopsia-uerj-2021", "titulo": "Autópsia UERJ 2021"},
                            {"slug": "outro-doc", "titulo": "Outro"}]))
@@ -386,7 +387,9 @@ painelAssinados($("pa"), DB, function(){ MEDIU++; });
 espera().then(espera).then(function(){ var o = {};
   $("pa").querySelectorAll("li.tarefa").forEach(function(li){ var a = li.querySelector("a[data-hub-aula]"), m = li.querySelector(".t-assinado");
     o[a.getAttribute("data-hub-aula")] = [li.classList.contains("qd-assinado"), m ? m.textContent : null]; });
-  console.log(JSON.stringify({li: o, mediu: MEDIU, escritas: ESCRITAS})); });
+  var rd = {}; $("pa").querySelectorAll("li.tarefa.rd").forEach(function(li){ var st = li.querySelector(".t-rd-st");
+    rd = {assinado: li.classList.contains("qd-assinado"), st: st ? st.textContent : null, extra: !!li.querySelector(".t-assinado")}; });
+  console.log(JSON.stringify({li: o, rd: rd, mediu: MEDIU, escritas: ESCRITAS})); });
 """
 
 
@@ -395,6 +398,7 @@ def _rodar_assinados(**cfg):
     if not NODE:
         pytest.skip("node ausente no PATH: assinatura no Painel nao verificada (skip declarado)")
     funcs = "\n".join([re.search(r"\n  (var PEND_COLECAO = [^\n]+;)", TEMPLATE).group(1),
+                       re.search(r"\n  (var RD_ST = [^\n]+;)", TEMPLATE).group(1),
                        extrair_funcao(TEMPLATE, "function painelMarcarAssinado(li, sim){"),
                        extrair_funcao(TEMPLATE, "function painelAssinados(doc, db, depois){")])
     corpo = (DOM_QD.replace("__ARVORE__", json.dumps(_arvore('<div id="pa">%s</div>' % _painel_docs_html()),
@@ -437,3 +441,15 @@ def test_sem_leitura_de_analises_o_painel_fica_como_o_build():
     assert out["li"]["dossie-uerj"] == [False, None] and out["li"]["aorta"][0] is True
     corpo = extrair_funcao(TEMPLATE, "function painelListas(doc, quadro){")
     assert "painelAssinados(doc, db" in corpo
+
+
+def test_rd_assinada_no_painel_troca_o_estado_e_nunca_soma_um_segundo_rotulo():
+    """s229 (bug relatado em 15/10: a RD "Clinica Medica da UERJ 2022" mostrava "· assinado" E "revisao direcionada
+    ainda nao assinada" na mesma linha): o cartao da RD tem o estado num span SO (`.t-rd-st`); a assinatura ao vivo
+    (o MESMO `quadro/<slug>` ou `doc_<slug>`) o reescreve -- nunca o " · assinado" ao lado."""
+    out = _rodar_assinados(quadro={"rd-cm-1310": {"feito": True}}, pend={})
+    assert out["rd"] == {"assinado": True, "st": "revisão direcionada assinada", "extra": False}
+    pend = _rodar_assinados(quadro={}, pend={"doc_rd-cm-1310": {"tipo": "documento", "status": "absorvida"}})
+    assert pend["rd"] == {"assinado": True, "st": "revisão direcionada assinada", "extra": False}
+    nada = _rodar_assinados(quadro={}, pend={})
+    assert nada["rd"] == {"assinado": False, "st": "revisão direcionada ainda não assinada", "extra": False}

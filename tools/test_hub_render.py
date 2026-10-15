@@ -103,8 +103,8 @@ FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLAT
                       "function qzCadeia(q){", "function qzPrecisaDeclarar(q, r){", "function qzDeclPendente(q, r){",
                       "function qzConflitos(q, r){", "function qzElosDe(q, r, a){", "function qzSolucao(q, r){",
                       "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
-                      "function qzDefeitoUi(r){", "function qzEhSimulado(l){", "function qzModoDaLista(l, espelho){",
-                      "function qzEscolheModo(l, espelho, temResposta){", "function qzModoUi(l){",
+                      "function qzDefeitoUi(r){", "function qzEhSimulado(l){", "function qzModoDaLista(l){",
+                      "function qzComFlag(l){", "function qzListaAtual(){", "function qzModoUi(l){",
                       "function qzResponder(){", "function qzRevelaAoAbrir(r){", "function qzTrava(q, r){",
                       "function qzResumoElos(qs, resp){", "function qzElosFimHtml(qs, resp){",
                       "function qzConcluirUi(pendentes){", "function qzGrifoMesclar(intervalos, novo){",
@@ -524,13 +524,15 @@ def test_forma_da_tela_revelada():
     assert css, "CSS da tela revelada nao encontrado"
     assert not [l for l in css if re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", l)]
     assert not re.search(r"position\s*:\s*(sticky|fixed)", TEMPLATE)
-    for sel in (".qz-decl button{", ".qz-link{", ".qz-defeito-form button{", ".qz-linha{", ".qz-modo-lista{"):
+    for sel in (".qz-decl button{", ".qz-link{", ".qz-defeito-form button{", ".qz-linha{"):
         (regra,) = [l for l in css if sel in l]
         assert "min-height:44px" in regra, sel
     assert "min-width:0" in [l for l in css if l.startswith(".qz-cadeia li{")][0]
     rotulos = list(re.findall(r':\s*"([^"]+)"', _declaracao(TEMPLATE, "var QZ_DECL = {")))
-    rotulos += ["Erro na cadeia", "Enviar", "Concordo", "Em parte", "Discordo", "Modo estudo", "Modo prova",
-                "Estudo", "Prova", "Concluir lista", "Rever uma a uma", "Mudar resposta"]
+    # s229: o seletor de modo saiu (lista = Estudo, simulado = Prova); "Modo estudo/prova" nao sao mais rotulos
+    rotulos += ["Erro na cadeia", "Enviar", "Concordo", "Em parte", "Discordo",
+                "Concluir lista", "Rever uma a uma", "Mudar resposta"]
+    assert "qz-modo-lista" not in TEMPLATE and "qz-modo-escolha" not in TEMPLATE.split("<script", 1)[0]
     assert all(r in TEMPLATE for r in rotulos) and max(len(r) for r in rotulos) <= 15
     for morto in ("Marcar lista como resolvida", "Rever em sequência", "Alterar resposta"):   # > 15 (celular)
         assert morto not in TEMPLATE, morto
@@ -758,7 +760,8 @@ def test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa():
         assert 'id="%s"' % id_ in topo, id_
     card = re.search(r'<article class="card placa" id="card"[^>]*>(.*?)</article>', corpo, re.S).group(1)
     assert "btn-virar" not in card and "notas-botoes" not in card, "os botoes ficam fora da placa do card"
-    assert corpo.index("cards-topo") < corpo.index('id="card"') < corpo.index('id="btn-virar"') < corpo.index('id="fim"')
+    # s229 (pedido dele, 15/10): o Virar subiu para o bloco de cima, com Pausar e Defeito
+    assert corpo.index("cards-topo") < corpo.index('id="btn-virar"') < corpo.index('id="card"') < corpo.index('id="fim"')
     assert '<section class="painel-fim placa" id="fim" hidden>' in corpo
     css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
     assert ".card.placa{background:var(--afundado);border-color:var(--linha-forte)}" in css
@@ -766,19 +769,28 @@ def test_cards_topo_e_card_em_placas_e_o_standalone_leva_a_placa():
     assert re.search(r"\n\.placa\{", embutir_tema(txt)), "o standalone leva a primitiva do tema"
 
 
-def test_defeito_do_card_mora_sob_a_barra_no_estilo_do_pausar():
-    """s228 (pedido dele): o controle de defeito/reforja vai para LOGO ABAIXO da barra de progresso, no estilo do
-    "Pausar/Retomar P" (.pausa), com as opcoes dentro da placa do topo; fora da linha de acoes do card. O registro
-    gravado nao muda (`defeito:true, motivo` -- o que o --record-lote le como marca de reforja)."""
+def test_virar_pausar_e_defeito_no_bloco_de_cima():
+    """s229 (pedido dele, 15/10: "'Virar o card' sobe para o bloco de cima junto com os outros dois, mantendo a
+    paleta dele (ciano); 'Pausar' em ambar/amarelo; 'Defeito do card' em rosa"): os TRES numa linha
+    (`.topo-acoes`) dentro da placa do topo, depois da barra; as opcoes do defeito logo abaixo. O registro gravado
+    nao muda (`defeito:true, motivo` -- o que o --record-lote le como marca de reforja)."""
     from tools.fsrs_queue import TEMPLATE_PLAYER
     txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
     corpo = txt[txt.index("@player:corpo:inicio"):txt.index("@player:corpo:fim")]
     topo = corpo[corpo.index('<div class="placa cards-topo">'):corpo.index('<main id="drill">')]
-    assert topo.index('id="progresso"') < topo.index('id="btn-defeito"') < topo.index('id="defeito-opcoes"') < topo.index('id="form-defeito"')
-    assert '<button type="button" id="btn-defeito" class="pausa" aria-expanded="false" aria-controls="defeito-opcoes">' in topo
-    acoes = re.search(r'<div class="acoes">(.*?)</div>', corpo, re.S).group(1)
-    assert "btn-defeito" not in acoes and "btn-virar" in acoes
-    assert corpo.count('id="btn-defeito"') == 1
+    linha = re.search(r'<div class="acoes topo-acoes">(.*?)</div>', topo, re.S).group(1)
+    assert [m for m in re.findall(r'id="(btn-[a-z]+)"', linha)] == ["btn-virar", "btn-pausa", "btn-defeito"]
+    assert '<button id="btn-virar" class="primario">' in linha
+    assert '<button type="button" id="btn-pausa" class="pausa" aria-pressed="false">' in linha
+    assert '<button type="button" id="btn-defeito" class="defeito" aria-expanded="false" aria-controls="defeito-opcoes">' in linha
+    assert topo.index('id="progresso"') < topo.index('topo-acoes') < topo.index('id="defeito-opcoes"') < topo.index('id="form-defeito"')
+    main = corpo[corpo.index('<main id="drill">'):corpo.index("</main>")]
+    assert "btn-virar" not in main and "btn-pausa" not in main and "btn-defeito" not in main
+    assert corpo.count('id="btn-defeito"') == corpo.count('id="btn-virar"') == corpo.count('id="btn-pausa"') == 1
+    css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
+    assert ".pausa{border-color:var(--aviso);color:var(--aviso)}" in css, "Pausar em ambar"
+    assert "#btn-defeito{border-color:var(--rosa);color:var(--rosa)}" in css, "Defeito em rosa"
+    assert ".primario{background:var(--acento)" in css, "Virar segue ciano"
     js = txt[txt.index("@player:js:inicio"):]
     assert "var registro = {card_id:id, ts:anterior.ts, defeito:true, motivo:motivo};" in js, "o dado gravado nao muda"
 
@@ -792,7 +804,9 @@ def test_tocar_no_card_vira_e_o_card_tem_camadas():
     assert '$("card").addEventListener("click", function(){' in js and "virar();" in js.split('$("card").addEventListener("click"', 1)[1][:300]
     assert '$("card").classList.add("frente");' in js and '$("card").classList.remove("frente");' in js
     css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
-    assert ".card.frente{cursor:pointer}" in css and ".card:not(.frente) .toque{display:none}" in css
+    assert ".card.frente{cursor:pointer}" in css
+    # s229 (adendo dele, 15/10: "pode remover o 'toque no card para virar'"): a mecanica fica, a micro-dica sai
+    assert "toque no card para virar" not in txt and 'id="toque"' not in txt and ".toque{" not in css
     assert "border-top:1px solid var(--borda-placa);border-radius:0 0 calc(var(--raio-placa) - 1px)" in css
     assert "box-shadow" not in css, "sem sombra"
 
@@ -868,7 +882,7 @@ def test_questao_fim_e_leitor_em_placas():
     for id_ in ("qz-veredito", "qz-medhub-box", "qz-medhub", "qz-analise", "qz-racional", "qz-defeito", "qz-sol-box",
                 "qz-forum-box"):
         assert placa_de(id_) == "placa qz-resultado", id_
-    for id_ in ("qz-voltar", "qz-tema", "qz-modo-lista", "qz-relogio", "qz-trilho", "qz-aviso-lista", "qz-modo-escolha",
+    for id_ in ("qz-voltar", "qz-tema", "qz-grifo", "qz-relogio", "qz-trilho", "qz-aviso-lista",
                 "qz-alts", "qz-antes", "qz-seg", "qz-flag", "qz-ant", "qz-pular", "qz-responder", "qz-status",
                 "qz-proxima", "qz-concluir", "qz-rever", "qz-fim-status", "hub-leitor-voltar", "hub-leitor-aviso"):
         assert placa_de(id_) is None, id_
@@ -904,14 +918,18 @@ def test_questao_fim_e_leitor_em_placas():
 # ordem do documento. A part 4 so pos classe e wrapper: nenhum id, botao, ordem ou rotulo pode mudar
 INVENTARIO_QUESTAO = [
     ["div", "qz-player", "", ""], ["button", "qz-voltar", "type=button", "‹ Todas as listas"], ["p", "qz-tema", "", ""],
-    ["button", "qz-modo-lista", "type=button", ""], ["span", "qz-relogio", "", ""], ["div", "qz-trilho", "", ""],
-    ["p", "qz-aviso-lista", "", ""], ["div", "qz-modo-escolha", "", ""],
-    ["button", "", "data-modo=estudo type=button", "Estudo"], ["button", "", "data-modo=prova type=button", "Prova"],
+    # s229 (pedido dele, 15/10): o botao unico do grifo (3 cores em cascata) tambem nas Listas; o seletor de modo
+    # (`qz-modo-lista`, `qz-modo-escolha`) saiu: lista = Estudo, simulado = Prova
+    ["div", "qz-grifo", "data-aberto=false", ""], ["button", "qz-grifo-btn", "type=button", "Aa"],
+    ["div", "qz-grifo-cor", "role=group", ""], ["button", "", "data-cor=rosa type=button", "Aa"],
+    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=amarelo type=button", "Aa"],
+    ["span", "qz-relogio", "", ""], ["div", "qz-trilho", "", ""],
+    ["p", "qz-aviso-lista", "", ""],
     ["div", "qz-questao", "", ""], ["span", "qz-pos", "", ""], ["span", "qz-banca", "", ""], ["span", "qz-tags", "", ""],
     ["p", "qz-enun", "", ""], ["div", "qz-figs", "", ""], ["p", "qz-figura", "", ""], ["div", "qz-alts", "role=radiogroup", ""],
     ["div", "qz-antes", "", ""], ["div", "qz-seg", "", ""], ["button", "", "data-c=solida type=button", "Sólida"],
     ["button", "", "data-c=duvida type=button", "Dúvida"], ["button", "", "data-c=chute type=button", "Chute"],
-    ["label", "", "", ""], ["input", "qz-flag", "type=checkbox", ""], ["button", "qz-ant", "type=button", "‹ Anterior"],
+    ["label", "qz-marca", "", ""], ["input", "qz-flag", "type=checkbox", ""], ["button", "qz-ant", "type=button", "‹ Anterior"],
     ["button", "qz-pular", "type=button", "Pular ›"], ["button", "qz-responder", "type=button", "Responder"],
     ["div", "qz-depois", "", ""], ["p", "qz-veredito", "", ""], ["section", "qz-medhub-box", "", ""],
     ["p", "qz-cad-tit", "", ""], ["span", "qz-obj", "", ""], ["span", "qz-conferir", "", ""], ["div", "qz-medhub", "", ""],
@@ -962,26 +980,33 @@ def test_hub_sprint_no_build_e_null_sem_sprint():
 
 # ------------------------------------------------ s211 part-3: modo Estudo/Prova + tela de fim com os elos
 
-def test_simulado_e_sempre_prova():
-    acao = """var sim = {area: "Simulado", modo: "estudo"}; QZ.modoLista = "prova"; qzModoUi(sim);
-var esc = $("qz-modo-lista").hidden; QZ.modoLista = "estudo"; qzModoUi({area: "Obstetrícia"});
-SAIDA = {modo: qzModoDaLista(sim, "estudo"), escolhe: qzEscolheModo(sim, null, false), controle_sim: esc,
-         controle_lista: $("qz-modo-lista").hidden, rotulo: $("qz-modo-lista").textContent};"""
+def test_simulado_e_sempre_prova_e_so_ele_tem_revisar_depois():
+    """s229 (pedido dele, 15/10): simulado SEMPRE Prova e lista SEMPRE Estudo -- o doc da lista e o aparelho nao
+    mudam isso; o "Revisar depois" (voltar antes de entregar) so aparece no simulado."""
+    acao = """var sim = {area: "Simulado", modo: "estudo"}; qzModoUi(sim); var flag_sim = $("qz-marca").hidden;
+qzModoUi({area: "Obstetrícia", modo: "prova"}); var flag_lista = $("qz-marca").hidden;
+SAIDA = {sim: qzModoDaLista(sim), lista: qzModoDaLista({area: "Obstetrícia", modo: "prova"}), vazio: qzModoDaLista(null),
+         flag_sim: flag_sim, flag_lista: flag_lista, com_flag: [qzComFlag(sim), qzComFlag({area: "Cirurgia"})]};"""
     out = _rodar(_q(), None, None, acao)
-    assert out == {"modo": "prova", "escolhe": False, "controle_sim": True, "controle_lista": False,
-                   "rotulo": "Modo estudo"}
+    assert out == {"sim": "prova", "lista": "estudo", "vazio": "estudo", "flag_sim": False, "flag_lista": True,
+                   "com_flag": [True, False]}
 
 
-def test_modo_da_lista_vem_do_doc_e_do_espelho():
-    """O doc da lista manda (vale entre aparelhos); o espelho local cobre o db fora do ar; lista
-    antiga sem modo e com respostas nao pergunta (segue Prova)."""
-    acao = """SAIDA = {doc: qzModoDaLista({modo: "estudo"}, "prova"), espelho: qzModoDaLista({}, "estudo"),
-  nada: qzModoDaLista({}, null), lixo: qzModoDaLista({modo: "x"}, "y"),
-  pergunta: qzEscolheModo({}, null, false), com_resp: qzEscolheModo({}, null, true),
-  com_modo: qzEscolheModo({modo: "prova"}, null, false), com_espelho: qzEscolheModo({}, "estudo", false)};"""
+def test_lista_nao_pergunta_o_modo_nem_grava_revisar_depois():
+    """s229: sem o seletor (`#qz-modo-escolha` e `#qz-modo-lista` sairam do HTML e do JS); na lista, a resposta
+    grava `flag: false` mesmo com o checkbox marcado (ninguem le no backend; so o simulado usa)."""
+    corpo = TEMPLATE.split("<script", 1)[0]
+    assert "qz-modo-escolha" not in corpo and "qz-modo-lista" not in TEMPLATE
+    assert "Antes de ver o gabarito" not in TEMPLATE, "s229: a legenda da certeza saiu"
+    assert "function qzEscolher(" not in TEMPLATE and "function qzEscolheModo(" not in TEMPLATE
+    assert '<label class="qz-marca" id="qz-marca" hidden>' in corpo
+    acao = """QZ.listas = [{_id: "t26", tarefa: 26, area: "Cirurgia"}, {_id: "s1", tarefa: 90, area: "Simulado"}];
+QZ.letra = "C"; QZ.conf = "duvida"; QZ.t0 = Date.now(); $("qz-flag").checked = true;
+QZ.lista = "t26"; QZ.modoLista = "estudo"; function qzRevelar(){} function qzDepoisDe(){} function qzParar(){}
+qzResponder(); QZ.lista = "s1"; QZ.modoLista = "prova"; qzResponder();
+SAIDA = {lista: GRAVADOS[0].flag, simulado: GRAVADOS[1].flag};"""
     out = _rodar(_q(), None, None, acao)
-    assert out == {"doc": "estudo", "espelho": "estudo", "nada": "", "lixo": "", "pergunta": True,
-                   "com_resp": False, "com_modo": False, "com_espelho": False}
+    assert out == {"lista": False, "simulado": True}
 
 
 def test_estudo_revela_apos_responder_e_prova_nao():
@@ -1058,8 +1083,9 @@ def test_textos_da_aba_curtos_e_sem_o_elo_que_quebrou():
     sub = _declaracao(TEMPLATE, "var QZ_SUB = {")
     textos = re.findall(r':\s*"([^"]+)"', sub)
     i = TEMPLATE.index('<div class="qz-elos-fim"')
-    textos.append(re.search(r'<p class="hub-sub" style="margin:0">([^<]+)</p>', TEMPLATE[i:]).group(1))
-    assert len(textos) == 3
+    # s229 (adendo dele, 15/10: "sem micro-dica de interacao obvia"): o "Toque numa questao para ver..." do fim saiu
+    assert '<p class="hub-sub" style="margin:0">' not in TEMPLATE[i:TEMPLATE.index('id="qz-revisao"', i)]
+    assert len(textos) == 2
     for t in textos:
         assert len(re.findall(r"[.!?](?:\s|$)", t)) <= 2, t
     assert "confirma o elo que quebrou" not in TEMPLATE
@@ -1133,8 +1159,10 @@ def test_grifo_uma_cor_de_token_e_limite_declarado():
     assert "background:var(--grifo-rosa)" in regra and "color:inherit" in regra and "#" not in regra
     assert "--qz-grifo-tinta" not in regra, "o grifo nao troca a cor do texto (pedido dele, s227)"
     assert TEMPLATE.count('class="qz-grifo"') == 1                        # um so tipo de grifo
-    for proibido in ("qz-grifo-cor", "qz-grifo-menu", "qz-grifo-barra"):
+    # s229: o seletor das Listas e o MESMO botao unico da Teoria (`.hub-grifo`, id `qz-grifo`); nada de menu proprio
+    for proibido in ("qz-grifo-menu", "qz-grifo-barra"):
         assert proibido not in TEMPLATE
+    assert '.qz-grifo[data-cor="ciano"]{background:var(--grifo-ciano)}' in TEMPLATE
     assert "NAO e verificado por teste" in TEMPLATE and "TOQUE no navegador do celular" in TEMPLATE
     assert "`grifos`" in BRIEF and "Não verificado por teste: a seleção por toque no navegador do celular" in BRIEF
 
@@ -1948,8 +1976,11 @@ Object.keys(CFG.colecoes || {}).forEach(function(k){ BANCO[k] = CFG.colecoes[k];
   if(r.respondido_em === "HOJE"){ r.respondido_em = new Date().toISOString(); }
   if(r.respondido_em === "ONTEM"){ r.respondido_em = new Date(Date.now() - 36 * 3600 * 1000).toISOString(); } });
 function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
-function fracao(chave){ var b = $("pa").querySelector('b[data-vivo="' + chave + '"]'), s = $("pa").querySelector('span.vivo[data-vivo-de="' + chave + '"]');
-  return {b: b.textContent, base: b.getAttribute("data-base"), mais: s ? s.textContent : null, title: s ? s.getAttribute("title") : null}; }
+// s229: um numero so (publicado + K) -- `mais` = o K que a pagina somou (data-vivo-k), `title` o do proprio numero;
+// o span "+K" ciano morreu (`span.vivo` nunca existe)
+function fracao(chave){ var b = $("pa").querySelector('b[data-vivo="' + chave + '"]');
+  if($("pa").querySelector('span.vivo')){ throw new Error("o +K voltou"); }
+  return {b: b.textContent, base: b.getAttribute("data-base"), mais: b.getAttribute("data-vivo-k"), title: b.getAttribute("title")}; }
 """
 
 ACAO_VIVO = VIVO_PREPARO + r"""
@@ -2017,8 +2048,9 @@ COLECOES_VIVO = {
 
 def test_ao_vivo_so_soma_e_nunca_altera_o_publicado():
     out = _rodar_vivo(colecoes=COLECOES_VIVO)
-    assert out["cards"] == {"b": "62", "base": "62", "mais": "+2", "title": "desde o publish"}
-    assert out["questoes"] == {"b": "30", "base": "30", "mais": "+3", "title": "desde o publish"}, \
+    # s229 (pedido dele, 15/10: "um unico numero branco que sobe em tempo real"): o numero vira publicado + K
+    assert out["cards"] == {"b": "64", "base": "62", "mais": "2", "title": "2 desde o publish"}
+    assert out["questoes"] == {"b": "33", "base": "30", "mais": "3", "title": "3 desde o publish"}, \
         "t49 (1 de hoje), t49_1 e t68 (resolvida, registro pendente); t26 ja registrada (fora do Painel) nao"
     assert out["escritas"] == [], "o Painel nunca grava"
     gravado = _rodar_vivo(sessao_no_ar="2026-10-05a", colecoes=COLECOES_VIVO)
@@ -2027,8 +2059,7 @@ def test_ao_vivo_so_soma_e_nunca_altera_o_publicado():
     assert sem_db["cards"] == {"b": "62", "base": "62", "mais": None, "title": None}
     assert sem_db["questoes"]["mais"] is None, "sem db (nao-dono, offline): o Painel fica como o publicado"
     assert "painelVivo(doc, db)" in _funcs("function painelListas(doc, quadro){")
-    estilo = re.search(r'"\.vivo\{([^}]*)\}', _funcs("function painelListas(doc, quadro){")).group(1)
-    assert "white-space:pre" in estilo, "o +K nao quebra a linha do numero (span curto)"
+    assert ".vivo{" not in _funcs("function painelListas(doc, quadro){"), "s229: o estilo do +K ciano saiu"
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -2316,8 +2347,8 @@ def test_ao_vivo_do_painel_sobrevive_a_conexao_morta():
     a que o `painelListas` entrega, falha em TODA leitura) o "+K" das questoes e dos cards aparece pela
     retentativa com conexao nova; com o banco morto de vez, fica o publicado, sem botao e sem quebrar."""
     out = _rodar_vivo(colecoes=COLECOES_VIVO, conexao=CONEXAO_JS, acao=ACAO_VIVO_CONEXAO, esperaMs=400)
-    assert out["cards"] == {"b": "62", "base": "62", "mais": "+2", "title": "desde o publish"}
-    assert out["questoes"] == {"b": "30", "base": "30", "mais": "+3", "title": "desde o publish"}
+    assert out["cards"] == {"b": "64", "base": "62", "mais": "2", "title": "2 desde o publish"}
+    assert out["questoes"] == {"b": "33", "base": "30", "mais": "3", "title": "3 desde o publish"}
     assert out["escritas"] == [], "o Painel nunca grava"
     assert out["usos"] == 3, "o do painelListas + uma reconexao por leitura que caiu (notas, listas)"
     assert out["esperas"] == [1000, 1000]
@@ -2406,7 +2437,7 @@ def test_cards_e_painel_mostram_o_mesmo_contador():
     lote = {"sessao": "2026-10-05b", "gerado_em": _hoje_iso() + "T06:00:00", "cards": [{"card_id": 1}]}
     out = _rodar_cards(lote, dia, notas)
     painel = _rodar_vivo(colecoes=COLECOES_VIVO)["cards"]                 # o Painel: 62 com "+2"
-    assert int(out["n"]) == int(painel["b"]) + int(painel["mais"].lstrip("+")) == 64
+    assert int(out["n"]) == int(painel["b"]) == int(painel["base"]) + int(painel["mais"]) == 64
     assert out["t"] == "100" and out["visivel"] and out["lote_oculto"] and out["menor"]
     gravado = _rodar_cards(dict(lote, sessao="2026-10-05a"), dia, notas)
     assert gravado["n"] == "62", "lote ja gravado: o consumo_hoje do build ja traz as notas dele"
@@ -2461,7 +2492,12 @@ def test_seletor_da_cor_do_grifo_e_um_botao_unico_so_no_leitor_da_teoria():
     i = TEMPLATE.index('<div id="hub-leitor" hidden>')
     barra = TEMPLATE[i:TEMPLATE.index('id="hub-leitor-aviso"', i)]
     assert barra.index('id="hub-leitor-titulo"') < barra.index('id="hub-grifo-btn"') < barra.index('id="hub-grifo-cor"')
-    assert TEMPLATE.count('id="hub-grifo-btn"') == 1 and TEMPLATE.count('data-cor="rosa" aria-pressed') == 1
+    # s229 (pedido dele, 15/10): o MESMO botao tambem na barra da questao (Listas) -- dois widgets, uma cor ativa
+    assert TEMPLATE.count('id="hub-grifo-btn"') == 1 and TEMPLATE.count('data-cor="rosa" aria-pressed') == 2
+    j = TEMPLATE.index('<div id="qz-player" hidden>')
+    barra_q = TEMPLATE[j:TEMPLATE.index('id="qz-relogio"', j)]
+    assert barra_q.index('id="qz-tema"') < barra_q.index('<div class="hub-grifo" id="qz-grifo" data-aberto="false">') \
+        < barra_q.index('aria-controls="qz-grifo-cor"')
     assert 'aria-expanded="false" aria-controls="hub-grifo-cor"' in barra
     grupo = re.search(r'<div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do próximo grifo">(.*?)</div>', barra, re.S)
     assert grupo, "o grupo com o nome acessivel"
@@ -2479,7 +2515,8 @@ def test_seletor_da_cor_do_grifo_e_um_botao_unico_so_no_leitor_da_teoria():
     js = js[:js.index("// ------------------------------------------------ secoes recolhiveis")]
     assert 'GRIFO_COR_CHAVE = "medhub.grifo"' in js and "grifoCorAplicar(grifoCorLer(), false);" in js
     assert "try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){}" in js
-    assert 'e.key === "Escape"' in js and "grifoMenu(false)" in js
+    assert 'e.key === "Escape"' in js and "grifoMenu(false, id)" in js
+    assert 'var GRIFO_WIDGETS = ["hub-grifo", "qz-grifo"];' in js
 
 
 COR_GRIFO_JS = r"""
@@ -2507,7 +2544,7 @@ console.log(JSON.stringify({lida: lida, antes: antes, depois: depois, pintado: p
 
 
 def _cor_grifo(ls=None, lanca=False, com_estilo=True):
-    prog = "\n".join([_var("GRIFO_CORES")] + [extrair_funcao(TEMPLATE, a) for a in (
+    prog = "\n".join([_var("GRIFO_CORES"), _var("GRIFO_WIDGETS")] + [extrair_funcao(TEMPLATE, a) for a in (
         "function grifoCorValida(c){", "function grifoCorLer(){", "function grifoCorAplicar(cor, gravar){", "function grifoEstilo(doc){")])
     return _node(prog + COR_GRIFO_JS.replace("__LS__", json.dumps(ls or {})).replace("__LANCA__", json.dumps(lanca))
                  .replace("__COM_ESTILO__", json.dumps(com_estilo)))
@@ -2778,3 +2815,70 @@ def test_referencias_idempotentes_sem_fonte_nada_e_aula_nova_usa_a_lista_dela(re
     assert n["hub"] == 0 and n["stats"] == {"referencias": 1, "base": 1, "movidas": 2}
     assert n["refs"] == [["ref-1", "AHA 2020"], ["hub-ref-2", "KDIGO 2021"]] and n["sup"] == [["#hub-ref-2", "2"]]
     assert n["base"] == "Base deste documento: resumos/X.md · verso do card 12" and n["fora"] == []
+
+
+# ======================================================================== s229 (front, pedido dele em 15/10)
+
+def test_grifo_das_listas_guarda_a_cor_e_a_nova_cor_corta_a_antiga():
+    """Item 6d: o grifo das Listas nasce com a cor ativa do botao ([ini, fim, cor]; rosa = sem o 3o campo, o de
+    antes); da mesma cor funde, de outra cor CORTA o trecho que cobre (vale o ultimo) -- intervalos disjuntos."""
+    acao = """SAIDA = {mesma: qzGrifoMesclar([[0, 5, "ciano"]], [3, 8, "ciano"]),
+  corta: qzGrifoMesclar([[0, 10]], [3, 6, "amarelo"]),
+  cobre: qzGrifoMesclar([[2, 4, "ciano"]], [0, 8]),
+  antigo: qzGrifoMesclar([[0, 5], [3, 8, "ciano"]], null),
+  html: qzGrifoHtml("abcdefghij", [[0, 2], [4, 6, "ciano"], [7, 9, "lixo"]])};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out["mesma"] == [[0, 8, "ciano"]]
+    assert out["corta"] == [[0, 3], [3, 6, "amarelo"], [6, 10]]
+    assert out["cobre"] == [[0, 8]]
+    assert out["antigo"] == [[0, 5], [5, 8, "ciano"]], "dado antigo sobreposto vira disjunto"
+    assert out["html"] == ('<mark class="qz-grifo" data-i="0">ab</mark>cd<mark class="qz-grifo" data-i="4" '
+                           'data-cor="ciano">ef</mark>ghij'), "cor desconhecida = intervalo invalido"
+    cap = extrair_funcao(TEMPLATE, "function qzGrifoCapturar(){")
+    assert 'grifoCorValida(raiz.getAttribute("data-grifo"))' in cap and '[ini, fim, cor]' in cap
+
+
+def test_resolver_do_painel_abre_a_lista_da_tarefa():
+    """Item 2: o botao "Resolver" leva `data-hub-tarefa`; a aba Listas abre JA na lista dela -- a 1a ainda por
+    resolver, senao a resolvida (revisao); pendente/bloqueada nao abre."""
+    prog = extrair_funcao(TEMPLATE, "function qzListaDaTarefa(listas, tarefa){") + """
+var L = [{_id: "t9", tarefa: 9, status: "resolvida"}, {_id: "t9_1", tarefa: 9, status: "capturada"},
+         {_id: "t5", tarefa: 5, status: "resolvida"}, {_id: "t7", tarefa: 7, status: "pendente"}];
+console.log(JSON.stringify([qzListaDaTarefa(L, "9")._id, qzListaDaTarefa(L, 5)._id, qzListaDaTarefa(L, "7"),
+                            qzListaDaTarefa(null, "9")]));"""
+    assert _node(prog) == ["t9_1", "t5", None, None]
+    atalho = extrair_funcao(TEMPLATE, "function painelAtalho(a){")
+    assert 'a.getAttribute("data-hub-tarefa")' in atalho and "qzAbrirPendente()" in atalho
+    assert "qzAbrirPendente(); }" in extrair_funcao(TEMPLATE, "function iniciarQuestoes(){")
+
+
+def test_nova_some_quando_ele_abre_e_o_aparelho_lembra():
+    """Item 5: a RD e a analise nao feitas levam "nova" ate ele ABRIR o item no leitor -- `vistoMarcar` grava em
+    localStorage["medhub.vistos"] (try/catch; sem storage, na memoria da pagina) e o quadro tira a etiqueta."""
+    prog = "\n".join([_var("VISTOS_CHAVE"), "var quadroVisto = function(s){ CHAMOU.push(s); }, CHAMOU = [];",
+                       "var localStorage = {d: {}, getItem: function(k){ if(QUEBRADO){ throw 1; } return this.d[k] || null; },"
+                       " setItem: function(k, v){ if(QUEBRADO){ throw 1; } this.d[k] = v; }}, QUEBRADO = false;",
+                       _funcs("function vistosLer(){", "function visto(slug){", "function vistoMarcar(slug){")]) + """
+var antes = visto("dossie-uerj"); vistoMarcar("dossie-uerj"); var depois = visto("dossie-uerj");
+var gravado = JSON.parse(localStorage.d["medhub.vistos"]);
+QUEBRADO = true; vistoMarcar("rd-x");
+console.log(JSON.stringify({antes: antes, depois: depois, gravado: gravado, sem_storage: visto("rd-x"), chamou: CHAMOU}));"""
+    out = _node(prog)
+    assert out == {"antes": False, "depois": True, "gravado": {"dossie-uerj": 1}, "sem_storage": True,
+                   "chamou": ["dossie-uerj", "rd-x"]}
+    assert 'vistoMarcar(pendSlug(href))' in extrair_funcao(TEMPLATE, "function abrirAula(link, titulo, origem){")
+    qd = extrair_funcao(TEMPLATE, "function iniciarQuadro(){")
+    assert '(t === "revisao" || t === "analise")' in qd and "quadroVisto = function(slug){" in qd
+
+
+def test_botoes_tematicos_da_teoria_e_das_listas():
+    """Itens 5 e 6f: o "abrir aula" da Teoria e o mesmo botao tematico do Painel (`.hub-btn`); "Todas as listas", o
+    voltar do leitor, "Anterior" e "Pular" no desenho do "Responder" (contorno ciano, 44 px); a banca em rosa, o
+    tema em ciano (item 6e)."""
+    corpo = TEMPLATE.split("<script", 1)[0]
+    for id_ in ("qz-voltar", "hub-leitor-voltar", "qz-ant", "qz-pular"):
+        assert re.search(r'<button type="button" class="hub-btn" id="%s">' % id_, corpo), id_
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    regra = re.search(r"\n\.hub-btn\{([^}]*)\}", css).group(1)
+    assert "min-height:44px" in regra and "border:1px solid var(--acento)" in regra and "var(--raio)" in regra
+    assert "#qz-banca{color:var(--rosa)" in css and "#qz-tags{color:var(--acento-tinta)" in css

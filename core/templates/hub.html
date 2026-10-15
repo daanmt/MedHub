@@ -108,7 +108,15 @@
 .qd-registro{color:var(--ok);font-weight:600}   /* s214: lista resolvida, plano ainda nao registrou */
 .qd-acao{margin:2px 0 0;font-size:var(--fs-legenda);display:flex;flex-wrap:wrap;gap:0 var(--esp-4)}
 .qd-acao a,.qd-acao .tenue{display:inline-flex;align-items:center;min-height:44px}
-.qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
+.qd-acao a:not(.hub-btn){color:var(--acento);font-weight:600;text-underline-offset:2px}
+/* s229 (pedido dele, 15/10): o BOTAO tematico secundario do hub -- o "Abrir aula" da Teoria (o mesmo .t-btn do
+   Painel), o "Todas as listas", o voltar do leitor, "Anterior" e "Pular": o desenho do "Responder" (raio de
+   controle, 44 px, 650), em contorno ciano; o primario (Responder, Proxima) segue ciano cheio */
+.hub-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--esp-1);min-height:44px;padding:0 var(--esp-4);
+         border:1px solid var(--acento);border-radius:var(--raio);background:transparent;color:var(--acento-tinta);font-weight:650;
+         text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hub-btn:hover{background:var(--acento-fraco)}
+.hub-btn[disabled]{border-color:var(--linha-forte);color:var(--tinta3);background:transparent}
 .qd-acao .tenue{color:var(--tinta3)}
 /* P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): a linha da
    tarefa com 1 aula E o link dela (a seta diz que abre); com 2+ aulas, cada uma e um alvo de 44 px; sem
@@ -215,7 +223,6 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 
 /* leitor (aula/resumo dentro da aba) e a barra das listas: voltar + titulo + controles */
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
-.hub-leitor-barra > button:first-child{padding:var(--esp-2) var(--esp-3);color:var(--tinta2)}
 .hub-leitor-titulo{margin:0;min-width:0;font-weight:650;color:var(--tinta)}
 .hub-quadro{display:block;width:100%;min-height:50vh;border:0;background:transparent}   /* s227: a luz do shell passa (o documento de dentro e transparente) */
 .hub-quadro-rolavel{height:80vh}
@@ -257,6 +264,9 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qz-trilho i.atual{background-color:var(--acento)}
 .qz-corpo{display:grid;gap:var(--esp-4);min-width:0}
 .qz-metaq{display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-3);font-size:var(--fs-meta);color:var(--tinta3);margin:0}
+/* s229 (pedido dele, 15/10): a banca da questao na cor da marca (rosa) e o tema em ciano */
+#qz-banca{color:var(--rosa);font-weight:650}
+#qz-tags{color:var(--acento-tinta);font-weight:600}
 .qz-enun{white-space:pre-wrap;margin:0;line-height:1.6;color:var(--tinta)}
 .qz-alts{display:grid;gap:var(--esp-2)}
 .qz-alt{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0;border:1px solid var(--linha);border-radius:var(--raio);background:var(--card);min-width:0}
@@ -288,6 +298,9 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qz-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
 .qz-marca{display:flex;gap:var(--esp-2);align-items:center;font-size:var(--fs-legenda);color:var(--tinta2);min-height:44px}
 .qz-marca input{width:18px;height:18px;margin:0;accent-color:var(--acento)}
+.qz-marca[hidden]{display:none}
+/* s229: "Revisar depois" so no simulado (modo prova); na lista sai, e a navegacao fica a direita */
+.qz-nav{display:flex;flex-wrap:wrap;gap:var(--esp-2);margin-left:auto}
 .qz-veredito{padding:var(--esp-3) var(--esp-4);border-radius:var(--raio);font-weight:650;display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);align-items:baseline;margin:0}
 .qz-veredito.certa{background:var(--ok-fraco);color:var(--ok)} .qz-veredito.errada{background:var(--erro-fraco);color:var(--erro)}
 .qz-veredito small{font-weight:400;color:var(--tinta2)}
@@ -305,6 +318,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
    a cor dele. s228: o seletor de cor mora so no leitor da Teoria e troca so os PROXIMOS grifos; nas questoes, onde
    ele nao aparece, o grifo fica no rosa padrao (trocar a cor nunca repinta grifo que ja existe) */
 .qz-grifo{background:var(--grifo-rosa);color:inherit;border-radius:3px;cursor:pointer}
+.qz-grifo[data-cor="ciano"]{background:var(--grifo-ciano)}
+.qz-grifo[data-cor="amarelo"]{background:var(--grifo-amarelo)}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
 .qz-cad{display:grid;gap:var(--esp-3);min-width:0}
 .qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2);margin:0;font-weight:700;color:var(--tinta)}
@@ -340,10 +355,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
 .qz-defeito-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--esp-2);min-width:0}
 .qz-defeito-form button{min-height:44px}
 /* s211 (part-3): modo Estudo/Prova por lista + o bloco Elos da tela de fim */
-.qz-modo-lista{min-height:44px;padding:var(--esp-1) var(--esp-3);border-radius:var(--raio);font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:transparent}
-.qz-modo-escolha{display:grid;gap:var(--esp-3);min-width:0}
-.qz-seg.qz-seg2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.qz-seg.qz-seg2 button{min-height:72px;font-size:1em}
 .qz-elos-fim{display:grid;gap:var(--esp-2);min-width:0}
 .qz-elos-cont{display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);margin:0;font-size:var(--fs-legenda);color:var(--tinta2)}
 .qz-elos-cont b{font-weight:700}
@@ -462,7 +473,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     </div>
     <div id="hub-leitor" hidden>
       <div class="hub-leitor-barra">
-        <button type="button" id="hub-leitor-voltar">&lsaquo; Teoria</button>
+        <button type="button" class="hub-btn" id="hub-leitor-voltar">&lsaquo; Teoria</button>
         <p class="hub-leitor-titulo" id="hub-leitor-titulo"></p>
         <div class="hub-grifo" id="hub-grifo" data-aberto="false">
           <button type="button" class="hub-grifo-btn" id="hub-grifo-btn" aria-expanded="false" aria-controls="hub-grifo-cor" aria-label="Cor do próximo grifo" title="Cor do próximo grifo"><span class="hub-grifo-am" aria-hidden="true">Aa</span><span class="hub-grifo-rot">Grifo</span></button>
@@ -502,17 +513,20 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     </div>
     <div id="qz-player" hidden>
       <div class="hub-leitor-barra">
-        <button type="button" id="qz-voltar">&lsaquo; Todas as listas</button>
+        <button type="button" class="hub-btn" id="qz-voltar">&lsaquo; Todas as listas</button>
         <p class="hub-leitor-titulo" id="qz-tema"></p>
-        <button type="button" class="qz-modo-lista" id="qz-modo-lista" hidden></button>
+        <div class="hub-grifo" id="qz-grifo" data-aberto="false">
+          <button type="button" class="hub-grifo-btn" id="qz-grifo-btn" aria-expanded="false" aria-controls="qz-grifo-cor" aria-label="Cor do próximo grifo" title="Cor do próximo grifo"><span class="hub-grifo-am" aria-hidden="true">Aa</span><span class="hub-grifo-rot">Grifo</span></button>
+          <div class="hub-grifo-cor" id="qz-grifo-cor" role="group" aria-label="Cor do próximo grifo">
+            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+          </div>
+        </div>
         <span class="qz-relogio" id="qz-relogio">00:00</span>
       </div>
       <div class="qz-trilho" id="qz-trilho" aria-label="Progresso"></div>
       <p class="qd-aviso" id="qz-aviso-lista" hidden></p>
-      <div class="qz-modo-escolha" id="qz-modo-escolha" hidden>
-        <p class="qz-rot">Como resolver esta lista?</p>
-        <div class="qz-seg qz-seg2"><button type="button" data-modo="estudo">Estudo<small>gabarito e cadeia a cada questão</small></button><button type="button" data-modo="prova">Prova<small>tudo no fim, como no dia</small></button></div>
-      </div>
       <div class="qz-corpo" id="qz-questao" hidden>
         <div class="placa qz-enun-placa">
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
@@ -522,15 +536,14 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         </div>
         <div class="qz-alts" id="qz-alts" role="radiogroup" aria-label="Alternativas"></div>
         <div id="qz-antes">
-          <p class="qz-rot">Antes de ver o gabarito: como está a sua certeza?</p>
           <div class="qz-seg" id="qz-seg">
             <button type="button" data-c="solida">Sólida<small>eu sei</small></button>
             <button type="button" data-c="duvida">Dúvida<small>entre duas</small></button>
             <button type="button" data-c="chute">Chute<small>não sei</small></button>
           </div>
           <div class="qz-pe" style="margin-top:10px">
-            <label class="qz-marca"><input type="checkbox" id="qz-flag"> Revisar depois</label>
-            <span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" id="qz-ant">&lsaquo; Anterior</button><button type="button" id="qz-pular">Pular &rsaquo;</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
+            <label class="qz-marca" id="qz-marca" hidden><input type="checkbox" id="qz-flag"> Revisar depois</label>
+            <span class="qz-nav"><button type="button" class="hub-btn" id="qz-ant">&lsaquo; Anterior</button><button type="button" class="hub-btn" id="qz-pular">Pular &rsaquo;</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
           </div>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:16px">
@@ -565,7 +578,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         <div class="qz-elos-fim" id="qz-elos-fim" hidden></div>
         </div>
         <div class="placa qz-p-revisao">
-        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito e a cadeia. Nas erradas, dúvidas e chutes, declare cada elo: é o que entra na revisão.</p>
         <ol class="qz-lista" id="qz-revisao"></ol>
         </div>
         <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Concluir lista</button><button type="button" id="qz-rever">Rever uma a uma</button><p class="qz-status" id="qz-fim-status"></p></div>
@@ -967,6 +979,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     pendSoltar($("hub-leitor-quadro"));
     assinaAbrir(pendSlug(href));
     GRIFO.slug = pendSlug(href); GRIFO.ctx = null;
+    if(typeof vistoMarcar === "function"){ vistoMarcar(pendSlug(href)); }
     carregar($("hub-leitor-quadro"), href, $("hub-leitor-aviso"));
   }
 
@@ -976,7 +989,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function painelAtalho(a){
     qzModoPedido(a.getAttribute("data-hub-modo"));
     var slug = a.getAttribute("data-hub-aula");
-    if(!slug){ ir(valida(a.getAttribute("data-hub-aba")) || "aulas", true); window.scrollTo(0, 0); return; }
+    // s229: o botao "Resolver" do Roadmap leva a tarefa (`data-hub-tarefa`): a aba Listas abre JA na lista dela
+    if(!slug){ var tid = a.getAttribute("data-hub-tarefa") || "";
+      if(tid && typeof QZ !== "undefined"){ QZ.abrirTarefa = tid; }
+      ir(valida(a.getAttribute("data-hub-aba")) || "aulas", true); window.scrollTo(0, 0);
+      if(tid && typeof qzAbrirPendente === "function"){ qzAbrirPendente(); } return; }
     var li = a.closest ? a.closest("li") : null, tema = li ? li.querySelector(".t-tema") : null;
     abrirNaTeoria(a.getAttribute("href") || "aulas/" + slug + ".html", a.getAttribute("data-titulo") || (tema ? tema.textContent : ""));
   }
@@ -1676,33 +1693,36 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function grifoCorLer(){
     try{ return grifoCorValida(localStorage.getItem(GRIFO_COR_CHAVE)); }catch(e){ return "rosa"; }
   }
+  // s229 (pedido dele, 15/10): o MESMO botao tambem na barra da questao (aba Listas) -- dois widgets `.hub-grifo`
+  // (`hub-grifo` no leitor, `qz-grifo` nas Listas) e UMA cor ativa: escolher num marca nos dois
+  var GRIFO_WIDGETS = ["hub-grifo", "qz-grifo"];
   function grifoCorAplicar(cor, gravar){
     cor = grifoCorValida(cor);
     raiz.setAttribute("data-grifo", cor);
-    var caixa = $("hub-grifo-cor");
-    if(caixa){ Array.prototype.forEach.call(caixa.querySelectorAll("button[data-cor]"), function(b){
-      b.setAttribute("aria-pressed", b.getAttribute("data-cor") === cor ? "true" : "false"); }); }
+    GRIFO_WIDGETS.forEach(function(id){ var caixa = $(id + "-cor");
+      if(caixa){ Array.prototype.forEach.call(caixa.querySelectorAll("button[data-cor]"), function(b){
+        b.setAttribute("aria-pressed", b.getAttribute("data-cor") === cor ? "true" : "false"); }); } });
     if(gravar){ try{ localStorage.setItem(GRIFO_COR_CHAVE, cor); }catch(e){} }
     return cor;
   }
-  function grifoMenu(abrir){
-    var w = $("hub-grifo"), b = $("hub-grifo-btn");
+  function grifoMenu(abrir, id){
+    var w = $(id || "hub-grifo"), b = $((id || "hub-grifo") + "-btn");
     if(!w || !b){ return; }
     w.setAttribute("data-aberto", abrir ? "true" : "false"); b.setAttribute("aria-expanded", abrir ? "true" : "false");
   }
-  (function(){
-    var caixa = $("hub-grifo-cor"), btn = $("hub-grifo-btn");
-    grifoCorAplicar(grifoCorLer(), false);
-    if(btn){ btn.addEventListener("click", function(){ grifoMenu(btn.getAttribute("aria-expanded") !== "true"); }); }
+  grifoCorAplicar(grifoCorLer(), false);
+  GRIFO_WIDGETS.forEach(function(id){
+    var w0 = $(id), caixa = $(id + "-cor"), btn = $(id + "-btn");
+    if(!w0){ return; }
+    if(btn){ btn.addEventListener("click", function(){ grifoMenu(btn.getAttribute("aria-expanded") !== "true", id); }); }
     if(caixa){ caixa.addEventListener("click", function(e){
       var b = (e.target && e.target.closest) ? e.target.closest("button[data-cor]") : null;
-      if(b){ grifoCorAplicar(b.getAttribute("data-cor"), true); grifoMenu(false); if(btn){ btn.focus(); } } }); }
-    document.addEventListener("click", function(e){ var w = $("hub-grifo");
-      if(w && w.getAttribute("data-aberto") === "true" && !w.contains(e.target)){ grifoMenu(false); } });
-    var w0 = $("hub-grifo");
-    if(w0){ w0.addEventListener("keydown", function(e){
-      if(e.key === "Escape" && w0.getAttribute("data-aberto") === "true"){ grifoMenu(false); if(btn){ btn.focus(); } } }); }
-  })();
+      if(b){ grifoCorAplicar(b.getAttribute("data-cor"), true); grifoMenu(false, id); if(btn){ btn.focus(); } } }); }
+    document.addEventListener("click", function(e){
+      if(w0.getAttribute("data-aberto") === "true" && !w0.contains(e.target)){ grifoMenu(false, id); } });
+    w0.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && w0.getAttribute("data-aberto") === "true"){ grifoMenu(false, id); if(btn){ btn.focus(); } } });
+  });
 
   // ------------------------------------------------ secoes recolhiveis (s214, pedido do operador em 04/10/2026)
   // "Seria bacana poder recolher as semanas, deixando apenas a que eu quisesse (ate os proprios blocos,
@@ -1853,7 +1873,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       var s = doc.createElement("style");
       s.id = "hub-listas-estilo";
       s.textContent = ".qd-registro,.t-assinado{color:var(--ok);font-weight:600}" +
-        ".vivo{margin-left:2px;font-size:1.02rem;font-weight:700;color:var(--acento);white-space:pre}" +
         "li.tarefa.t-resolvida .t-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}" +
         "li.tarefa.qd-recente .t-tema::before{content:'\\2713\\00A0';color:var(--ok)}";
       doc.head.appendChild(s);
@@ -1891,8 +1910,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     });
     return Object.keys(vistas).length;
   }
-  // "+K" num span PROPRIO logo depois do numero publicado; K = 0 tira o span
+  // s229 (pedido dele, 15/10: "tirar o '+1' ciano; um unico numero branco que sobe em tempo real"): o NUMERO do
+  // valor passa a ser publicado + K (o `data-base` guarda o publicado; o title diz quanto veio depois do publish).
+  // ⚰️ *s216-s228: o "+K" ciano num span proprio ao lado do numero publicado.*
   function vivoPintar(doc, chave, k){
+    function vivoNum(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }   // PURA: 1203 -> "1.203"
     // o anel acompanha o "+K": (publicado + K) / total, o total lido do "de N" sob o anel; sem arco (0%), nasce um
     function anelVivo(b, chave, k){
       var an = b.closest ? b.closest(".an4") : null;
@@ -1918,17 +1940,13 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }
     var b = doc.querySelector('b[data-vivo="' + chave + '"]');
     if(!b || !b.parentNode){ return; }
-    var s = b.parentNode.querySelector('span.vivo[data-vivo-de="' + chave + '"]');
-    if(!k){ if(s){ s.parentNode.removeChild(s); anelVivo(b, chave, 0); } return; }
-    if(!s){
-      s = (doc.nodeType === 9 ? doc : document).createElement("span");
-      s.className = "vivo";
-      s.setAttribute("data-vivo-de", chave);
-      s.setAttribute("title", "desde o publish");
-      b.parentNode.insertBefore(s, b.nextSibling || null);
-    }
-    s.textContent = "+" + k;
-    anelVivo(b, chave, k);
+    var base = parseInt(b.getAttribute("data-base") || "0", 10) || 0;
+    k = Math.max(0, k || 0);
+    var antes = b.hasAttribute("data-vivo-k");
+    b.textContent = vivoNum(base + k);
+    if(k){ b.setAttribute("title", k + " desde o publish"); b.setAttribute("data-vivo-k", String(k)); }
+    else { b.removeAttribute("title"); b.removeAttribute("data-vivo-k"); }
+    if(k || antes){ anelVivo(b, chave, k); }   // K = 0 desde sempre: o anel fica o publicado
   }
   function loteNoAr(){ try{ return JSON.parse(($("lote") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
   // s227: as tres leituras (notas do lote, listas, respostas de cada lista) passam pela `assinarResiliente`
@@ -2022,10 +2040,14 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }catch(e){}
   }
   iniciarCardsDia();
-  // s216 (part-4): marca "assinado" no li do Painel (a classe e o rotulo junto do link), idempotente
+  // s216 (part-4): marca "assinado" no li do Painel (a classe e o rotulo junto do link), idempotente.
+  // s229 (pedido dele, 15/10: a RD dizia "· assinado" E "ainda nao assinada"): o cartao da RD tem o estado num
+  // span SO (`.t-rd-st`) -- ele e reescrito; nunca um 2o rotulo ao lado
+  var RD_ST = {sim: "revisão direcionada assinada", nao: "revisão direcionada ainda não assinada"};
   function painelMarcarAssinado(li, sim){
-    var m = li.querySelector(".t-assinado"), a = li.querySelector("a[data-hub-aula]");
+    var m = li.querySelector(".t-assinado"), a = li.querySelector("a[data-hub-aula]"), st = li.querySelector(".t-rd-st");
     if(sim){ li.classList.add("qd-assinado"); } else { li.classList.remove("qd-assinado"); }
+    if(st){ st.textContent = sim ? RD_ST.sim : RD_ST.nao; if(m){ m.parentNode.removeChild(m); } return; }
     if(sim && !m && a && a.parentNode){
       m = (li.ownerDocument || document).createElement("span");
       m.className = "t-assinado";
@@ -2134,6 +2156,24 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   var qd = $("hub-quadro");
   // s214: a assinatura do leitor conclui o item do quadro; sem quadro (ou sem banco), nao faz nada
   var quadroMarcarFeito = function(){ return Promise.resolve(false); };
+  // s229 (pedido dele, 15/10: "a flag 'nova' some depois que a aula e aberta"): o que ele ABRIU fica visto POR
+  // APARELHO (localStorage["medhub.vistos"] = {slug: 1}; sem armazenamento, so na memoria da pagina). A RD e a
+  // analise nao vistas e nao feitas levam "nova"; abrir no leitor a tira (todas as copias) e reconta.
+  var VISTOS_CHAVE = "medhub.vistos", VISTOS_MEM = {};
+  function vistosLer(){
+    var v = {};
+    try{ var x = JSON.parse(localStorage.getItem(VISTOS_CHAVE) || "null"); if(x && typeof x === "object" && !Array.isArray(x)){ v = x; } }catch(e){}
+    Object.keys(VISTOS_MEM).forEach(function(k){ v[k] = 1; });
+    return v;
+  }
+  function visto(slug){ return !!(slug && vistosLer()[slug]); }
+  var quadroVisto = function(){};
+  function vistoMarcar(slug){
+    if(!slug){ return; }
+    VISTOS_MEM[slug] = 1;
+    try{ var v = vistosLer(); v[slug] = 1; localStorage.setItem(VISTOS_CHAVE, JSON.stringify(v)); }catch(e){}
+    try{ quadroVisto(slug); }catch(e){}
+  }
   // s226 (part-1): a assinatura resiliente do quadro; reabrir a Teoria com ela morta (ou o botao do aviso) reassina
   var quadroLeitura = null, quadroRetentar = function(){};
   if(qd){ iniciarQuadro(); try{ secoesQuadro(qd); }catch(e){} }
@@ -2209,7 +2249,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         var k = chaveItem(li); if(!vistos[k]){ vistos[k] = 1; n++; } });
       return n;
     }
-    function eNova(li){ return li.getAttribute("data-tipo") === "revisao" && !li.hasAttribute("data-feito"); }
+    function eNova(li){ var t = li.getAttribute("data-tipo");
+      return (t === "revisao" || t === "analise") && !li.hasAttribute("data-feito") && !(typeof visto === "function" && visto(li.getAttribute("data-slug"))); }
     function pintarNovas(el, n){ if(!el){ return; } el.textContent = n ? (n === 1 ? "1 nova" : n + " novas") : ""; el.hidden = !n; }
 
     // Cada secao (semana, atrasadas) reconta os seus itens; a nao fixa some quando esvazia (as fixas ficam,
@@ -2265,11 +2306,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     }
     // s218: a RD nao lida leva "nova" (classe 0, topo da disciplina); lida, perde a etiqueta (classe 3)
     function etiquetaNova(li, feito){
-      if(li.getAttribute("data-tipo") !== "revisao"){ return; }
+      var tipo = li.getAttribute("data-tipo");
+      if(tipo !== "revisao" && tipo !== "analise"){ return; }
       li.setAttribute("data-bib", feito ? "3" : "0");
-      var meta = li.querySelector(".qd-meta"), tag = li.querySelector(".qd-nova");
-      if(feito && tag){ tag.parentNode.removeChild(tag); }
-      if(!feito && !tag && meta){ tag = novoEl("span", "qd-nova", "nova"); meta.insertBefore(tag, meta.children[0] || null); }
+      var meta = li.querySelector(".qd-meta"), tag = li.querySelector(".qd-nova"), viu = typeof visto === "function" && visto(li.getAttribute("data-slug"));
+      if((feito || viu) && tag){ tag.parentNode.removeChild(tag); }
+      if(!feito && !viu && !tag && meta){ tag = novoEl("span", "qd-nova", "nova"); meta.insertBefore(tag, meta.children[0] || null); }
     }
 
     function aplicar(li, feito){
@@ -2297,6 +2339,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       }
       recontar();
     }
+
+    // s229: o visto (por aparelho) tira o "nova" de todas as copias; na abertura, aplica o que ja foi visto
+    quadroVisto = function(slug){
+      var mudou = false;
+      itens.forEach(function(li){ if(li.getAttribute("data-slug") !== slug){ return; }
+        var tag = li.querySelector(".qd-nova"); if(tag){ tag.parentNode.removeChild(tag); mudou = true; } });
+      if(mudou){ recontar(); }
+    };
+    (function(){ var v = typeof vistosLer === "function" ? vistosLer() : {}, mudou = false;
+      itens.forEach(function(li){ var tag = li.querySelector(".qd-nova");
+        if(tag && v[li.getAttribute("data-slug")]){ tag.parentNode.removeChild(tag); mudou = true; } });
+      if(mudou){ try{ recontar(); }catch(e){} } })();
 
     // P20: sem db nao ha o que marcar (a assinatura tambem nao grava) -- e nenhum controle a desabilitar
     function semArmazenamento(){ colecao = null; }
@@ -2427,13 +2481,25 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         // data() vem congelado: clonar antes de anexar o id (licao da s197)
         QZ.subListas = assinarResiliente(function(db){ return db.collection("listas").orderBy("seq"); }, function(s){
           QZ.listas = s.docs.map(function(d){ var x = Object.assign({}, d.data() || {}); x._id = d.id; return x; });
-          qzRenderListas();
+          qzRenderListas(); if(typeof qzAbrirPendente === "function"){ qzAbrirPendente(); }
         }, {nome: "listas", db: db, aoReconectar: function(novo){ QZ.db = novo; },
             aoEsperar: function(){ $("qz-listas").innerHTML = '<p class="qd-vazio">Carregando as listas…</p>'; },
             aoMorrer: function(){ QZ.iniciado = false;
               $("qz-listas").innerHTML = '<p class="qd-vazio">' + htmlRetentar("Não consegui ler as listas.", "listas") + '</p>'; }});
       }).catch(qzSemDb);
     }catch(e){ qzSemDb(); }
+  }
+  // s229: a lista da tarefa pedida pelo "Resolver" do Painel -- a 1a por `seq` ainda por resolver, senao a 1a
+  // capturada (a resolvida abre na revisao); pendente/bloqueada nao abre. PURA.
+  function qzListaDaTarefa(listas, tarefa){
+    var da = (listas || []).filter(function(l){ return l && String(l.tarefa) === String(tarefa) && l.status !== "pendente" && l.status !== "bloqueada"; });
+    return da.filter(function(l){ return l.status !== "resolvida"; })[0] || da[0] || null;
+  }
+  function qzAbrirPendente(){
+    if(!QZ.abrirTarefa || !QZ.listas || !QZ.listas.length){ return; }
+    var l = qzListaDaTarefa(QZ.listas, QZ.abrirTarefa);
+    QZ.abrirTarefa = "";
+    if(l){ qzAbrir(l._id); }
   }
   function qzSemDb(){
     $("qz-listas").innerHTML = '<p class="qd-vazio">As listas não estão disponíveis nesta visualização.</p>';
@@ -2497,9 +2563,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // listas que tinham aula ligada, e o JSON que os alimentava. O item e SO o botao da lista; a aula mora na Teoria.
   // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
-  // s211 (part-3): cada lista escolhe Estudo (gabarito e cadeia depois de cada questao) ou Prova (tudo
-  // no fim); simulado e sempre Prova. Textos de no maximo 2 frases.
-  var QZ_SUB = {questoes: "As listas na ordem do plano de hoje, do Painel: em Estudo o gabarito e a cadeia aparecem depois de cada questão, em Prova só no fim. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
+  // s229: lista SEMPRE Estudo (gabarito e cadeia depois de cada questao), simulado SEMPRE Prova (tudo no fim).
+  // Textos de no maximo 2 frases.
+  var QZ_SUB = {questoes: "As listas na ordem do plano de hoje, do Painel: o gabarito e a cadeia aparecem depois de cada questão. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
                 simulados: "As provas da UERJ inteiras, na ordem do plano e como no dia: gabarito só no fim, cerca de 3 minutos por questão. No fim, o resultado por bloco; cada resposta grava na hora."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
   // atalho "resolver no hub" do Painel (s201; P21: a Teoria nao o tem mais) e o "aba Listas" da linha
@@ -2620,7 +2686,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     $("qz-tema").textContent = (temaExibido(l.tema) || id) + (l.area ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
     $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
-    $("qz-modo-escolha").hidden = true; $("qz-modo-lista").hidden = true; $("qz-trilho").innerHTML = "";
+    $("qz-trilho").innerHTML = "";
     window.scrollTo(0, 0);
     if(!QZ.db){ return; }
     qzAssinarLista("questoes", id, function(s){
@@ -2662,41 +2728,24 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzPosicionar(){
     if(!QZ.qs.length){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Esta lista ainda não tem questões carregadas."; $("qz-questao").hidden = true; return; }
     $("qz-aviso-lista").hidden = true;
-    // s211 (part-3): lista sem modo e sem resposta pergunta Estudo ou Prova antes da 1a questao;
-    // lista antiga ja com respostas e simulado seguem Prova sem perguntar
-    var l = qzListaAtual(), esp = qzLs("medhub.listas.modo." + QZ.lista);
-    if(qzEscolheModo(l, esp, Object.keys(QZ.resp).length > 0)){
-      $("qz-modo-escolha").hidden = false; $("qz-questao").hidden = true; $("qz-fim").hidden = true; qzModoUi(l); return; }
-    $("qz-modo-escolha").hidden = true; QZ.modoLista = qzModoDaLista(l, esp) || "prova"; qzModoUi(l);
+    // s229 (pedido dele, 15/10): sem escolha -- lista SEMPRE Estudo, simulado SEMPRE Prova
+    var l = qzListaAtual();
+    QZ.modoLista = qzModoDaLista(l); qzModoUi(l);
     var i = 0; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
     if(i >= QZ.qs.length){ qzFim(); return; }
     qzMostrar(i);
   }
   function qzListaAtual(){ return QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {}; }
-  // modo da lista: o doc manda (vale entre aparelhos); o espelho local cobre o db fora do ar. PURA.
-  function qzModoDaLista(l, espelho){
-    if(qzEhSimulado(l || {})){ return "prova"; }
-    var m = (l || {}).modo; if(m === "estudo" || m === "prova"){ return m; }
-    return (espelho === "estudo" || espelho === "prova") ? espelho : "";
-  }
-  function qzEscolheModo(l, espelho, temResposta){ return !qzEhSimulado(l || {}) && !qzModoDaLista(l, espelho) && !temResposta; }
+  // s229 (pedido dele, 15/10: "listas SEMPRE modo estudo por default (sem escolha) e simulado SEMPRE prova"): o
+  // modo sai do TIPO da lista, nunca do doc nem do aparelho. PURA. ⚰️ *s211 (part-3): a lista sem modo perguntava
+  // Estudo ou Prova antes da 1a questao e a barra da lista trocava o modo (os dois controles sairam); o
+  // `modo` gravado no doc da lista e o espelho `medhub.listas.modo.<id>` deixaram de ser lidos.*
+  function qzModoDaLista(l){ return qzEhSimulado(l || {}) ? "prova" : "estudo"; }
+  // a flag "Revisar depois" (voltar antes de entregar): so no simulado. PURA.
+  function qzComFlag(l){ return qzEhSimulado(l || {}); }
   function qzModoUi(l){
-    var b = $("qz-modo-lista"), est = QZ.modoLista === "estudo";
-    b.hidden = qzEhSimulado(l || {}) || !QZ.modoLista;
-    b.textContent = est ? "Modo estudo" : "Modo prova"; b.setAttribute("aria-label", "Modo " + (est ? "estudo" : "prova") + ": trocar para " + (est ? "prova" : "estudo"));
+    var m = $("qz-marca"); if(m){ m.hidden = !qzComFlag(l); }
   }
-  function qzEscolher(m){
-    var l = qzListaAtual(); if(m !== "estudo" && m !== "prova"){ return; } if(qzEhSimulado(l)){ m = "prova"; }
-    QZ.modoLista = m; l.modo = m; qzLs("medhub.listas.modo." + QZ.lista, m);
-    if(QZ.db && QZ.lista){ QZ.db.doc("listas/" + QZ.lista).update({modo: m, atualizado_em: qzAgora()}).catch(function(){ /* o espelho local segura */ }); }
-    qzModoUi(l);
-  }
-  $("qz-modo-escolha").addEventListener("click", function(e){ var b = e.target.closest("button[data-modo]"); if(!b){ return; }
-    qzEscolher(b.getAttribute("data-modo")); QZ.pos = -1; qzPosicionar(); });
-  $("qz-modo-lista").addEventListener("click", function(){
-    if(!QZ.modoLista){ return; } if(!$("qz-depois").hidden){ qzSalvarMeta(); }
-    qzEscolher(QZ.modoLista === "estudo" ? "prova" : "estudo");
-    var q = QZ.qs[QZ.pos]; if(q && !$("qz-questao").hidden && QZ.resp[q.num]){ qzMostrar(QZ.pos); } });
   function qzTrilho(){
     // modo prova: o trilho mostra so feita/nao feita (sem cor de acerto) e serve de navegacao
     $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (r && r.flag ? " flag" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + (r && r.flag ? " (revisar depois)" : "") + '"></i>'; }).join("");
@@ -2749,7 +2798,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var qzImgs = (q.figuras_img || []).filter(function(u){ return typeof u === "string" && u.indexOf("data:image/") === 0; });
     $("qz-figs").innerHTML = qzImgs.map(function(u, k){
       return '<figure class="qz-fig"><img alt="Figura ' + (k + 1) + ' do enunciado" src="' + u + '">'
-        + '<figcaption>Figura ' + (k + 1) + ' · toque para ampliar</figcaption></figure>';
+        + '<figcaption>Figura ' + (k + 1) + '</figcaption></figure>';
     }).join("");
     $("qz-figs").hidden = !qzImgs.length;
     $("qz-figura").textContent = qzFiguraAviso(q, qzImgs.length);
@@ -2805,16 +2854,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // estabiliza (selectionchange com espera + pointerup).
   // LIMITE DECLARADO: o comportamento da selecao por TOQUE no navegador do celular (dentro do artifact)
   // NAO e verificado por teste -- so o operador valida no aparelho.
+  // s229 (pedido dele, 15/10: o botao de grifo com as 3 cores tambem nas Listas): o intervalo leva a COR com que
+  // nasceu no 3o campo ([ini, fim, "ciano"|"amarelo"]; sem ele = rosa, o de antes). O grifo novo de outra cor CORTA o
+  // trecho que cobre (vale o ultimo); da mesma cor, funde -- os intervalos saem sempre disjuntos. PURA.
   function qzGrifoMesclar(intervalos, novo){
-    var xs = (intervalos || []).concat(novo ? [novo] : []).map(function(v){ return [v[0], v[1]]; }).sort(function(a, b){ return a[0] - b[0] || a[1] - b[1]; }), out = [];
-    xs.forEach(function(v){ var u = out[out.length - 1]; if(u && v[0] <= u[1]){ u[1] = Math.max(u[1], v[1]); } else { out.push(v); } });
-    return out;
+    function cor(v){ return (v && (v[2] === "ciano" || v[2] === "amarelo")) ? v[2] : ""; }
+    var nc = novo ? cor(novo) : "", xs = [];
+    (intervalos || []).forEach(function(v){ var c = cor(v);
+      if(novo && c !== nc && v[0] < novo[1] && novo[0] < v[1]){
+        if(v[0] < novo[0]){ xs.push([v[0], novo[0], c]); }
+        if(novo[1] < v[1]){ xs.push([novo[1], v[1], c]); }
+        return; }
+      xs.push([v[0], v[1], c]); });
+    if(novo){ xs.push([novo[0], novo[1], nc]); }
+    xs.sort(function(a, b){ return a[0] - b[0] || a[1] - b[1]; });
+    var out = [];
+    xs.forEach(function(v){ var u = out[out.length - 1];
+      if(u && u[2] === v[2] && v[0] <= u[1]){ u[1] = Math.max(u[1], v[1]); return; }
+      if(u && v[0] < u[1]){ v = [u[1], v[1], v[2]]; if(v[0] >= v[1]){ return; } }   // dado antigo sobreposto: corta
+      out.push(v); });
+    return out.map(function(v){ return v[2] ? [v[0], v[1], v[2]] : [v[0], v[1]]; });
   }
-  function qzGrifoValido(v, n){ return Array.isArray(v) && v.length === 2 && v.every(function(x){ return typeof x === "number" && x === Math.floor(x); }) && v[0] >= 0 && v[0] < v[1] && v[1] <= n; }
+  function qzGrifoValido(v, n){ return Array.isArray(v) && (v.length === 2 || (v.length === 3 && (v[2] === "ciano" || v[2] === "amarelo" || v[2] === "rosa")))
+    && [v[0], v[1]].every(function(x){ return typeof x === "number" && x === Math.floor(x); }) && v[0] >= 0 && v[0] < v[1] && v[1] <= n; }
   function qzGrifoHtml(texto, intervalos){
     texto = String(texto == null ? "" : texto); var out = "", pos = 0;
     qzGrifoMesclar((Array.isArray(intervalos) ? intervalos : []).filter(function(v){ return qzGrifoValido(v, texto.length); }), null).forEach(function(v){
-      out += qzEsc(texto.slice(pos, v[0])) + '<mark class="qz-grifo" data-i="' + v[0] + '">' + qzEsc(texto.slice(v[0], v[1])) + '</mark>'; pos = v[1]; });
+      out += qzEsc(texto.slice(pos, v[0])) + '<mark class="qz-grifo" data-i="' + v[0] + '"' + (v[2] ? ' data-cor="' + v[2] + '"' : '') + '>' + qzEsc(texto.slice(v[0], v[1])) + '</mark>'; pos = v[1]; });
     return out + qzEsc(texto.slice(pos));
   }
   function qzGrifoRemover(intervalos, pos){ return (intervalos || []).filter(function(v){ return !(v[0] <= pos && pos < v[1]); }); }
@@ -2843,7 +2909,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var pre = document.createRange(); pre.selectNodeContents(cont); pre.setEnd(rg.startContainer, rg.startOffset);
     var ini = pre.toString().length, fim = ini + rg.toString().length;
     if(fim - ini < 2){ return false; }     // arrasto curto nao vira grifo
-    var g = qzGrifosDe(q), k = qzGrifoChave(cont); g[k] = qzGrifoMesclar(g[k], [ini, fim]);
+    var g = qzGrifosDe(q), k = qzGrifoChave(cont), cor = grifoCorValida(raiz.getAttribute("data-grifo"));
+    g[k] = qzGrifoMesclar(g[k], cor === "rosa" ? [ini, fim] : [ini, fim, cor]);   // s229: a cor ativa do botao
     sel.removeAllRanges(); QZ.grifouEm = Date.now(); qzGrifosSalvar(q, g); qzGrifosDesenhar(q); return true;
   }
   function qzGrifoTocar(mk){
@@ -2886,7 +2953,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var gab = String(q.gabarito || "").toUpperCase(), estudo = QZ.modoLista === "estudo";
     var riscadas = Array.prototype.map.call($("qz-alts").querySelectorAll(".qz-alt.riscada"), function(x){ return x.getAttribute("data-l"); });
     var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
-             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora(),
+             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: qzComFlag(qzListaAtual()) && !!$("qz-flag").checked, respondido_em: qzAgora(),
              modo: estudo ? "estudo" : "prova"};
     var g = QZ.grifos[q.num]; if(g && Object.keys(g).some(function(k){ return g[k] && g[k].length; })){ r.grifos = g; }
     qzGravar(r).then(function(ok){ var st = $("qz-status");
@@ -2928,7 +2995,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzSalvarMeta(){
     // racional e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
     var q = QZ.qs[QZ.pos]; var r = q && QZ.resp[q.num]; if(!r){ return null; }
-    var rac = $("qz-racional").value.trim(); var flag = !!$("qz-flag").checked;
+    var rac = $("qz-racional").value.trim(); var flag = qzComFlag(qzListaAtual()) ? !!$("qz-flag").checked : !!r.flag;
     if(rac !== (r.racional || "") || flag !== !!r.flag){ r.racional = rac; r.flag = flag; qzGravar(r); }
     return r;
   }

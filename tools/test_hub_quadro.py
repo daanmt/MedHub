@@ -273,8 +273,8 @@ def test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca(tmp_path):
             in rds)
     assert ('<li class="qd-item" data-secao="rd" data-ordem="0" data-slug="rd-renal" data-tipo="revisao"'
             in rds) and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/rd-renal.html"' in rds
-    assert sorted(_biblioteca(pagina)) == ["bayes", "hernias", "rd-renal"], \
-        "a aula ligada a tarefa pendente vai para a Biblioteca; a analise segue so no Painel"
+    assert sorted(_biblioteca(pagina)) == ["autopsia", "bayes", "hernias", "rd-renal"], \
+        "a aula ligada a tarefa pendente vai para a Biblioteca; s229: a analise tambem (eixo Documentacao)"
     assert pagina.index('data-secao="rd"') < pagina.index('id="hub-quadro-feitas"'), "o backlog vem no topo"
     for proibido in ("–", "—", "→", "$$", "\\rightarrow"):
         assert proibido not in teoria, "caractere proibido na Teoria: %r" % proibido
@@ -322,13 +322,14 @@ def test_revisao_direcionada_mora_na_biblioteca_nova_ate_ser_lida(tmp_path):
     item = _item(bib, 'data-slug="rd-renal"')
     assert "qd-feito" not in item and 'data-secao="biblioteca"' in item and 'data-bib="0"' in item
     assert '<span class="qd-nova">nova</span>' in item
-    assert '<span class="qd-novas" id="hub-quadro-novas" data-novas>1 nova</span>' in pagina
+    # s229: a analise nao lida tambem e "nova" (a RD + a autopsia)
+    assert '<span class="qd-novas" id="hub-quadro-novas" data-novas>2 novas</span>' in pagina
     _construir(raiz, data_fn, estado={"rd-renal": {"feito": True, "ts": "x"}})
     pagina = _index(raiz)
     item = _item(pagina, 'data-slug="rd-renal"')
     assert 'data-feito="1"' in item and 'data-bib="3"' in item and "qd-nova" not in item
     assert 'data-secao="rd" data-ordem' not in pagina, "assinada, sai do backlog"
-    assert '<span class="qd-novas" id="hub-quadro-novas" data-novas hidden></span>' in pagina
+    assert '<span class="qd-novas" id="hub-quadro-novas" data-novas>1 nova</span>' in pagina, "so a analise segue nova"
 
 
 # ⚰️ s226 (sprint-final-uerj part-4): `test_cabecalho_da_semana_conta_tarefas_e_questoes`,
@@ -364,8 +365,8 @@ def test_sem_plano_tudo_vai_para_a_biblioteca_e_sem_aula_nem_plano_diz(tmp_path)
     _construir(raiz, data_fn, plano=[], cal={})
     secoes = _secoes(_index(raiz))
     assert [s[0] for s in secoes] == ["rd"], "sem plano nao ha semana; s226: so o backlog de RDs no topo"
-    assert _biblioteca(_index(raiz)) == ["rd-renal", "hernias", "bayes"], \
-        "CM (a RD) e 'Sem área' (sem plano, a tarefa nao resolve), a mais nova primeiro; a analise nao entra"
+    assert _biblioteca(_index(raiz)) == ["rd-renal", "autopsia", "hernias", "bayes"], \
+        "CM (a RD), Documentacao (s229: a analise) e 'Sem área' (sem plano, a tarefa nao resolve)"
     assert hub.html_aulas([]) == '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
 
 
@@ -406,8 +407,8 @@ def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
     pagina = _index(raiz)
     assert "qd-feito" not in pagina and "Marcar como feita" not in pagina and "como feita\"" not in pagina
     assert '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>' in pagina
-    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 4, \
-        "s226: hernias e bayes na Biblioteca + a RD (backlog e Biblioteca) com a chave do quadro"
+    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 5, \
+        "s226: hernias e bayes na Biblioteca + a RD (backlog e Biblioteca) + s229: a analise"
     js = pagina.split("function iniciarQuadro()", 1)[1].split("// ---", 1)[0]
     assert 'db.collection("quadro")' in js and "semArmazenamento" in js
     assert ".set({feito: novo, ts: new Date().toISOString()})" in js
@@ -1181,16 +1182,20 @@ def test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador():
         ("MFC", "Medicina de Família e Comunidade", 1, ["prevq"]),   # s226: a aula, sem a tarefa da semana
         ("PED", "Pediatria", 1, ["mista"]),
         ("GO", "Ginecologia e Obstetrícia", 1, ["dmg"]),
+        ("DOC", "Documentação", 1, ["dossie"]),   # s229: o eixo das analises (era o bloco do Painel)
         ("VARIAS", "Várias áreas", 1, ["rd-pilulas"])]
-    assert 'Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">8</span>' in pagina
-    assert 'data-slug="dossie"' not in pagina, "a analise segue fora da Teoria"
+    assert 'Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">9</span>' in pagina
+    dossie = _item(pagina, 'data-slug="dossie"')
+    assert 'data-area="DOC" data-disc="Análises"' in dossie and 'data-tipo="analise"' in dossie
+    assert ('<a class="hub-aula hub-btn" href="aulas/dossie.html" data-titulo="Dossiê da banca">Abrir documento</a>'
+            in dossie) or ">Abrir documento</a>" in dossie
     assert not [a for a in avisos if "grande area" in a], avisos
     prevq = _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="prevq"')
     assert 'data-feito="1"' in prevq and 'data-secao="biblioteca"' in prevq, "riscado, mora na Biblioteca"
     # a ordem e os rotulos dos grupos vem do build, para a pagina criar o grupo que ainda nao existe
     areas = re.search(r'<div class="qd-areas" data-areas="([^"]+)" data-disc-fim="Outros">', pagina).group(1)
     assert json.loads(html.unescape(areas)) == [list(p) for p in hub.AREAS_BIBLIOTECA]
-    assert [p[0] for p in hub.AREAS_BIBLIOTECA] == ["CM", "CIR", "MFC", "PED", "GO", "VARIAS", "SEM"]
+    assert [p[0] for p in hub.AREAS_BIBLIOTECA] == ["CM", "CIR", "MFC", "PED", "GO", "DOC", "VARIAS", "SEM"]
 
 
 def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
@@ -1200,7 +1205,7 @@ def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
     pagina, _ = hub.html_quadro_de(AULAS_BIB, REG_BIB, {}, PLANO_BIB, CAL, HOJE)
     # s218: a RD mora na Biblioteca desde o build (nova); s226 (part-4): sem semanas, a Prevencao
     # Quaternaria (pendente na semana 3) tambem -- a MFC aparece
-    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "MFC", "PED", "GO", "VARIAS"]
+    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "MFC", "PED", "GO", "DOC", "VARIAS"]
     assert [g[3] for g in _grupos(pagina)][:2] == [["rd-hepato", "tireoide"], ["rd-hernias", "remit"]], \
         "a RD nova sobe ao topo da disciplina"
     assert 'data-area="VARIAS"' in _item(pagina.split('id="hub-quadro-feitas"', 1)[1], 'data-slug="rd-pilulas"')

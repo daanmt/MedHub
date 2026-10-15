@@ -115,11 +115,16 @@ TIPO_PADRAO = "aula"
 #: (item sem area resolvivel), acusado pelo build e pelo --check -- valor do build, nunca do registro.
 AREAS_BIBLIOTECA = (("CM", "Clínica Médica"), ("CIR", "Cirurgia"),
                     ("MFC", "Medicina de Família e Comunidade"), ("PED", "Pediatria"),
-                    ("GO", "Ginecologia e Obstetrícia"), ("VARIAS", "Várias áreas"), ("SEM", "Sem área"))
+                    ("GO", "Ginecologia e Obstetrícia"), ("DOC", "Documentação"), ("VARIAS", "Várias áreas"),
+                    ("SEM", "Sem área"))
 AREA_SEM = "SEM"
+#: s229 (pedido dele, 15/10: "o bloco 'Documentacao' do Painel (Dossie UERJ, Autopsia UERJ 2021) sai do Painel e
+#: vira um eixo dedicado dentro da Biblioteca da Teoria"): o lugar (grande area, disciplina) de TODA analise
+#: (`tipo: analise` no registro). Valor do build, nunca do registro -- fora de `BLOCOS_REGISTRO`.
+EIXO_DOC = ("DOC", "Análises")
 #: O vocabulario do campo `bloco` do registro (o SEM e do build). s218: o `bloco` vale so como leitura
 #: antiga (a RD declara `disciplinas`); VARIAS fica no vocabulario por isso, sem item no registro real.
-BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a != AREA_SEM)
+BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a not in (AREA_SEM, EIXO_DOC[0]))
 
 # s218 (pedido do operador em 07/10/2026): a Biblioteca por grande area -> DISCIPLINA, com os RESUMOS.
 #: Registro dos resumos que entram no hub (lote por semana do plano; mapa resumo -> tarefas a mao).
@@ -607,7 +612,7 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
     inteiro (92 tarefas) aparecia aqui e no Painel; so 12 eram de aula. Ficam a tarefa de aula
     (`classe_da_tarefa == "aula"`) e a tarefa de qualquer classe com aula ligada (prepara ou
     cumpre); a lista sem aula mora so no Painel. A analise (`tipo: analise`) sai de toda secao:
-    mora na Documentacao do Painel. O filtro e de EXIBICAO: `semana_atual` ve TODOS os pendentes
+    s229, mora no eixo Documentacao da Biblioteca (`EIXO_DOC`; era o bloco do Painel). O filtro e de EXIBICAO: `semana_atual` ve TODOS os pendentes
     (uma regua so de semana, armadilha A2); semana futura sem nada a mostrar nao vira secao.
 
     s216 (part-3, decisao do operador em 05/10: "so daqui em diante"): "Outras aulas" e
@@ -709,15 +714,16 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
     por_caminho = {r.caminho: r for r in resumos or ()}
     avulsas = []
     for a, tipo, titulo, tid in classificadas:
-        if a.slug in usadas or tipo == "analise":   # s216: a analise mora no Painel (Documentacao)
+        if a.slug in usadas:
             continue
         reg = (quadro or {}).get(a.slug) or {}
-        lugares = lugares_do_registro(reg, blocos, discs)
+        # s229: a analise mora no eixo Documentacao da Biblioteca (⚰️ s216-s228: so no Painel, bloco Documentacao)
+        lugares = [EIXO_DOC] if tipo == "analise" else lugares_do_registro(reg, blocos, discs)
         fontes = [_caminho_resumo(f) for f in reg.get("resumos") or []]
         avulsas.append({"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
                         "data": a.data, "grupo": lugares[0][0] if lugares else None, "lugares": lugares,
                         "secao": "biblioteca", "ordem": ordem(), "feito": a.slug in feitos,
-                        "nova": tipo == "revisao" and a.slug not in feitos, "fontes": fontes,
+                        "nova": tipo in ("revisao", "analise") and a.slug not in feitos, "fontes": fontes,
                         # s218: a fonte publicada vira link para o leitor; a que nao esta no lote, texto
                         "fontes_html": [(por_caminho[f].publicado, por_caminho[f].titulo) if f in por_caminho
                                         else (None, _titulo_de_caminho(f)) for f in fontes]})
@@ -771,7 +777,7 @@ def _ordem_na_disciplina(itens):
     def classe(i):
         if i["tipo"] == "resumo":
             return 1
-        if i.get("tipo_aula") == "revisao" and i["tipo"] == "aula":
+        if i.get("tipo_aula") in ("revisao", "analise") and i["tipo"] == "aula":
             return 0 if i.get("nova") else 3
         return 2
     grupos = {0: [], 1: [], 2: [], 3: []}
@@ -789,7 +795,7 @@ def _classe_bib(item):
     """`data-bib` do item (o mesmo criterio de `_ordem_na_disciplina`): a pagina reordena ao vivo."""
     if item["tipo"] == "resumo":
         return 1
-    if item["tipo"] == "aula" and item.get("tipo_aula") == "revisao":
+    if item["tipo"] == "aula" and item.get("tipo_aula") in ("revisao", "analise"):
         return 0 if item.get("nova") else 3
     return 2
 
@@ -905,12 +911,15 @@ def _html_item(item, feito=False, lugar=None):
     else:
         a = item["aula"]
         tema = item["titulo"]
-        # s218: a RD ainda nao lida leva "nova" (o feito a tira, tambem ao vivo)
+        # s218: a RD ainda nao lida leva "nova" (o feito a tira, tambem ao vivo); s229: a analise tambem, e a
+        # pagina a tira quando ele ABRE o item (visto por aparelho, `medhub.vistos`)
         meta = (['<span class="qd-nova">nova</span>'] if nova else []) + [
             '<span class="qd-bl">%s</span>' % _e(ROTULO_ITEM.get(item["tipo_aula"], "Aula")),
             '<span>%s</span>' % _e(_data_curta(item["data"]))]
-        acao = ('<p class="qd-acao"><a class="hub-aula" href="%s" data-titulo="%s">abrir aula</a></p>'
-                % (_e(a.publicado), _e(item["titulo"])))
+        # s229 (pedido dele, 15/10): o link "abrir aula" virou o BOTAO tematico, o mesmo do Painel (`.hub-btn`)
+        acao = ('<p class="qd-acao"><a class="hub-aula hub-btn" href="%s" data-titulo="%s">%s</a></p>'
+                % (_e(a.publicado), _e(item["titulo"]),
+                   "Abrir documento" if item.get("tipo_aula") == "analise" else "Abrir aula"))
         # s218: a RD mostra os resumos de onde saiu (link para o leitor quando o resumo esta publicado)
         fontes = item.get("fontes_html") or []
         extra = _html_ligacoes_item("Fonte" if len(fontes) == 1 else "Fontes", fontes)

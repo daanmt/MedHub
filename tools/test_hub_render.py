@@ -930,7 +930,8 @@ INVENTARIO_QUESTAO = [
     ["div", "qz-antes", "", ""], ["div", "qz-seg", "", ""], ["button", "", "data-c=solida type=button", "Sólida"],
     ["button", "", "data-c=duvida type=button", "Dúvida"], ["button", "", "data-c=chute type=button", "Chute"],
     ["label", "qz-marca", "", ""], ["input", "qz-flag", "type=checkbox", ""], ["button", "qz-ant", "type=button", "‹ Anterior"],
-    ["button", "qz-pular", "type=button", "Pular ›"], ["button", "qz-responder", "type=button", "Responder"],
+    # s229 (rodada 3): Anterior | Responder | Pular, centralizados
+    ["button", "qz-responder", "type=button", "Responder"], ["button", "qz-pular", "type=button", "Pular ›"],
     ["div", "qz-depois", "", ""], ["p", "qz-veredito", "", ""], ["section", "qz-medhub-box", "", ""],
     ["p", "qz-cad-tit", "", ""], ["span", "qz-obj", "", ""], ["span", "qz-conferir", "", ""], ["div", "qz-medhub", "", ""],
     ["div", "qz-analise", "", ""], ["input", "qz-racional", "type=text", ""], ["div", "qz-defeito", "", ""],
@@ -2882,3 +2883,14 @@ def test_botoes_tematicos_da_teoria_e_das_listas():
     regra = re.search(r"\n\.hub-btn\{([^}]*)\}", css).group(1)
     assert "min-height:44px" in regra and "border:1px solid var(--acento)" in regra and "var(--raio)" in regra
     assert "#qz-banca{color:var(--rosa)" in css and "#qz-tags{color:var(--acento-tinta)" in css
+
+
+def test_rodada3_cabecalho_da_questao_e_botoes_compactos_do_card():
+    """s229 (rodada 3): titulo numa linha, Grifo e tempo lado a lado em bloquinhos; Anterior | Responder | Pular
+    centralizados; os tres botoes do card compactos (o tamanho do Pausar da v120) com a mesma paleta."""
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert "#qz-player .hub-leitor-barra #qz-tema{flex:1 1 100%;order:1}" in css
+    assert "#qz-player .hub-leitor-barra .qz-relogio{order:3;" in css and "#qz-antes .qz-pe{justify-content:center}" in css
+    from tools.fsrs_queue import TEMPLATE_PLAYER
+    p = TEMPLATE_PLAYER.read_text(encoding="utf-8")
+    assert ".topo-acoes button{min-height:36px;padding:var(--esp-1) var(--esp-3);font-size:var(--fs-meta)" in p

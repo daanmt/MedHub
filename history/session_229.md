@@ -19,3 +19,4 @@
 - front parte 2: Roadmap, botoes Resolver/Abrir aula, aneis sem +K, Documentacao na Biblioteca, nova some ao abrir, lista=estudo/simulado=prova, Revisar depois so no simulado, grifo nas Listas, banca rosa/tema ciano, Virar/Pausar/Defeito no topo, sem micro-dicas
 - cadeia v3 onda 2: t891 (97), t890 (93; 7 anuladas), t119/t498/t74 (120)
 - hub Version 121
+- front rodada 3: Cronograma em barras horizontais por dia (faixa da area), questao com Grifo+tempo em chips e Anterior/Responder/Pular centralizados, botoes dos Cards compactos -- Version 122

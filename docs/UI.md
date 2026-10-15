@@ -192,6 +192,12 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   é um cartão com o estado num span só (`.t-rd-st`), que o hub reescreve ao vivo pela MESMA fonte do "assinado"
   (`quadro/<slug>` ou `doc_<slug>`); o build também lê o `doc_<slug>` (`painel.PEND_ESTADO`). Anéis do Hoje: o número
   do valor é UM só, branco, publicado + o que ele fez desde o publish (o "+K" ciano morreu; `title` diz o K).
+- **Rodada 3 (s229, 15/10)**: o Roadmap virou **Cronograma** e os cartões viraram BARRAS horizontais (estilo Google
+  Calendar sem horas): uma por linha na largura toda, empilhadas no dia, faixa de 4 px + fundo tingido pela área
+  (`.t-faixa[data-area]` -> `--area`: CM ciano, CIR rosa, MFC verde, PED roxo, GO amarelo, Simulado âmbar, RD lavanda;
+  o chip segue com o nome), meta e tema à esquerda, botões à direita (no celular, embaixo). Na questão: título numa
+  linha, Grifo e tempo lado a lado em bloquinhos; botões "‹ Anterior · Responder · Pular ›" centralizados. Nos Cards, os
+  três botões compactos (36 px, o tamanho do Pausar da v120), mesma paleta.
 - **Teoria** (s226, consulta): no topo, **Revisões direcionadas · N** (as RDs não assinadas, da mais antiga para a
   mais nova, a linha inteira abrindo o leitor; a assinada some ao vivo e fica só na Biblioteca); abaixo, a Biblioteca
   por área e disciplina com toda aula, resumo e RD. Sem semana, sem "Atrasadas" e sem contagem de questões.

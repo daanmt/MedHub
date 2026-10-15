@@ -751,8 +751,10 @@ def _html_tarefa(t, proxima=False):
              for x in plano.meta_da_tarefa(t["q"], t["classe"], plano.tem_acao(t))]
     classes = "tarefa" + (" atrasada" if t["atrasada"] else "") + (" proxima" if proxima else "")
     acao = _acao(t)
-    return ('<li class="%s" data-tarefa="%s"><p class="t-meta">%s</p><p class="t-tema">%s</p>%s</li>'
-            % (classes, _e(t["id"]), "".join(meta), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
+    # s229 (rodada 3): a faixa colorida da area a esquerda da barra (`data-area`; a cor e o fundo tingido no CSS)
+    return ('<li class="%s" data-tarefa="%s"><i class="t-faixa" data-area="%s" aria-hidden="true"></i>'
+            '<p class="t-meta">%s</p><p class="t-tema">%s</p>%s</li>'
+            % (classes, _e(t["id"]), _e(t["rotulo"] or ""), "".join(meta), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
                '<p class="t-acao">%s</p>' % acao if acao else ""))
 
 
@@ -851,7 +853,8 @@ def _html_rd(rd):
     `data-hub-aula`). s229 (pedido dele, 15/10: a linha dizia "· assinado" E "ainda nao assinada"): o estado mora
     num span SO (`t-rd-st`) que o hub reescreve ao vivo pela MESMA fonte do "assinado" (`quadro/<slug>` e
     `doc_<slug>`); nunca um segundo rotulo ao lado."""
-    return ('<li class="tarefa rd"><p class="t-meta"><span class="t-rot">RD</span>'
+    return ('<li class="tarefa rd"><i class="t-faixa" data-area="RD" aria-hidden="true"></i>'
+            '<p class="t-meta"><span class="t-rot">RD</span>'
             '<span class="t-rd-st">revisão direcionada ainda não assinada</span></p><p class="t-tema">%s</p>'
             '<p class="t-acao">%s</p></li>' % (_e(rd["titulo"]), _botao_aula(rd["slug"], rd["titulo"])))
 
@@ -884,7 +887,7 @@ def _html_sprint(s, cards, hoje_iso=None):
         itens += _html_rd(s["rd"])
     tit_hoje = "Hoje" + (" · %s" % _dia_curto(hoje_iso) if hoje_iso else "")
     conta_hoje = _conta_do_dia(hoje) + (" · %s&nbsp;q" % _n(s["q_hoje"]) if hoje and s["q_hoje"] else "")
-    corpo = '<h2>Roadmap</h2>\n<p class="sub">%s.</p>\n' % resumo
+    corpo = '<h2>Cronograma</h2>\n<p class="sub">%s.</p>\n' % resumo
     corpo += _html_dia_roadmap(tit_hoje, conta_hoje, itens, "hoje")
     for p in s["proximos"]:
         conta = _conta_do_dia(p["tarefas"]) + (" · %s&nbsp;q" % _n(p["q"]) if p["q"] else "")
@@ -1044,9 +1047,28 @@ a{color:var(--acento);text-underline-offset:2px}
         padding-bottom:var(--esp-2);border-bottom:1px solid var(--linha);font-size:var(--fs-legenda);font-weight:700;color:var(--tinta)}
 .rm-dia.hoje .rm-d{color:var(--acento-tinta)}
 .rm-n{color:var(--tinta3);font-size:var(--fs-meta);font-weight:500}
-.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:var(--esp-3);grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))}
-.tarefa{min-width:0;display:flex;flex-direction:column;gap:var(--esp-2);padding:var(--esp-3) var(--esp-4);
-        background:var(--afundado);border:1px solid var(--linha);border-radius:var(--raio)}
+/* s229 (rodada 3, pedido dele: "tipo Google Calendar sem horas"): cada tarefa e uma BARRA na largura toda, empilhada
+   no dia; a faixa a esquerda e o fundo tingido dizem a area (o chip segue com o nome: nunca so a cor); meta e tema a
+   esquerda, os botoes a direita na mesma linha (no celular, quebram para baixo) */
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:var(--esp-2);grid-template-columns:minmax(0,1fr)}
+.tarefa{--area:var(--linha-forte);position:relative;overflow:hidden;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;
+        grid-template-areas:"meta acao" "tema acao";align-items:center;gap:2px var(--esp-4);padding:var(--esp-2) var(--esp-4) var(--esp-2) calc(var(--esp-4) + 4px);
+        background:color-mix(in srgb,var(--area) 9%,var(--afundado));border:1px solid var(--linha);border-radius:var(--raio)}
+.tarefa:has(> .t-faixa[data-area="CM"]){--area:var(--acento)}
+.tarefa:has(> .t-faixa[data-area="CIR"]){--area:var(--rosa)}
+.tarefa:has(> .t-faixa[data-area="MFC"]){--area:var(--ok)}
+.tarefa:has(> .t-faixa[data-area="PED"]){--area:var(--roxo)}
+.tarefa:has(> .t-faixa[data-area="GO"]){--area:var(--amarelo)}
+.tarefa:has(> .t-faixa[data-area="Simulado"]){--area:var(--aviso)}
+.tarefa:has(> .t-faixa[data-area="RD"]){--area:var(--roxo-tinta)}
+.t-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)}
+.tarefa > .t-meta{grid-area:meta;justify-content:flex-start}
+.tarefa > .t-tema{grid-area:tema}
+.tarefa > .t-acao{grid-area:acao;margin:0;padding:0;justify-content:flex-end}
+@media (max-width:520px){
+  .tarefa{grid-template-columns:minmax(0,1fr);grid-template-areas:"meta" "tema" "acao"}
+  .tarefa > .t-acao{justify-content:flex-start;padding-top:var(--esp-1)}
+}
 .t-meta{min-width:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--esp-1) var(--esp-3)}
 .t-rot{color:var(--rosa);font-weight:650;background:var(--rosa-fraco);padding:1px var(--esp-2);border-radius:var(--raio-pilula)}
 .t-n{font-variant-numeric:tabular-nums}

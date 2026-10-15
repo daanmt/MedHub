@@ -300,7 +300,16 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qz-marca input{width:18px;height:18px;margin:0;accent-color:var(--acento)}
 .qz-marca[hidden]{display:none}
 /* s229: "Revisar depois" so no simulado (modo prova); na lista sai, e a navegacao fica a direita */
-.qz-nav{display:flex;flex-wrap:wrap;gap:var(--esp-2);margin-left:auto}
+/* s229 (rodada 3): Anterior | Responder | Pular, nessa ordem, centralizados */
+.qz-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--esp-2);margin-inline:auto}
+#qz-antes .qz-pe{justify-content:center}
+/* s229 (rodada 3): no cabecalho da questao, o titulo numa linha e, abaixo, o Grifo e o TEMPO lado a lado, cada um no
+   seu bloquinho (o tempo no mesmo desenho do botao do Grifo) */
+#qz-player .hub-leitor-barra #qz-tema{flex:1 1 100%;order:1}
+#qz-player .hub-leitor-barra #qz-voltar{order:0}
+#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:0}
+#qz-player .hub-leitor-barra .qz-relogio{order:3;margin-left:0;display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-3);
+  border:1px solid var(--linha-forte);border-radius:var(--raio);color:var(--tinta2);font-variant-numeric:tabular-nums}
 .qz-veredito{padding:var(--esp-3) var(--esp-4);border-radius:var(--raio);font-weight:650;display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);align-items:baseline;margin:0}
 .qz-veredito.certa{background:var(--ok-fraco);color:var(--ok)} .qz-veredito.errada{background:var(--erro-fraco);color:var(--erro)}
 .qz-veredito small{font-weight:400;color:var(--tinta2)}
@@ -543,7 +552,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
           </div>
           <div class="qz-pe" style="margin-top:10px">
             <label class="qz-marca" id="qz-marca" hidden><input type="checkbox" id="qz-flag"> Revisar depois</label>
-            <span class="qz-nav"><button type="button" class="hub-btn" id="qz-ant">&lsaquo; Anterior</button><button type="button" class="hub-btn" id="qz-pular">Pular &rsaquo;</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
+            <span class="qz-nav"><button type="button" class="hub-btn" id="qz-ant">&lsaquo; Anterior</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button><button type="button" class="hub-btn" id="qz-pular">Pular &rsaquo;</button></span>
           </div>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:16px">

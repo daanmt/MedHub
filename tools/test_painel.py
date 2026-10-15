@@ -312,7 +312,7 @@ def test_rota_usa_o_mesmo_li_da_semana(db_sintetico):
                      r'.*?</details>', pagina, re.S).group(0)
     # s216 (part-2): o `li` carrega o id do plano (`data-tarefa`), o mesmo na semana e na rota
     # s229: o cartao -- meta (chip + contagem) em cima, o tema, os botoes no pe
-    lis = re.findall(r'<li class="tarefa" data-tarefa="\d+"><p class="t-meta">.*?</p><p class="t-tema">([^<]+)</p>'
+    lis = re.findall(r'<li class="tarefa" data-tarefa="\d+"><i class="t-faixa"[^>]*></i><p class="t-meta">.*?</p><p class="t-tema">([^<]+)</p>'
                      r'(?:<p class="t-acao">.*?</p>)?</li>', sem4, re.S)
     assert lis == ["Bronquiolite", "Puericultura"]
     assert 'href="https://exemplo/10"' in sem4
@@ -877,7 +877,7 @@ def test_cartao_da_tarefa_tem_resolver_e_abrir_aula():
                      _t(3, no_hub=False, url_lista="https://exemplo/3")])
     assert "t-alvo" not in html_ and "resolver no hub" not in html_
     li1 = re.search(r'<li class="tarefa[^"]*" data-tarefa="1">(.*?)</li>', html_, re.S).group(1)
-    assert li1 == ('<p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">20 questões</span></p>'
+    assert li1 == ('<i class="t-faixa" data-area="CIR" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">20 questões</span></p>'
                    '<p class="t-tema">Tema 1</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" '
                    'data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="1">Resolver</a>'
                    '<a class="t-btn" href="aulas/remit.html" data-hub-aula="remit" data-titulo="REMIT">Abrir aula</a></p>')
@@ -953,7 +953,7 @@ def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
         assert proibido not in pagina, proibido
     i = pagina.index('data-bloco="semana"')
     bloco = pagina[i:pagina.index("</section>\n", pagina.index("Fora do sprint", i))]
-    assert "<h2>Roadmap</h2>" in bloco
+    assert "<h2>Cronograma</h2>" in bloco
     assert re.search(r'<p class="sub">Hoje: 2&nbsp;tarefas · 72&nbsp;questões( \+ \d+&nbsp;cards?)?\.</p>', bloco)
     hoje_html = bloco[bloco.index('<section class="rm-dia hoje">'):]
     hoje_html = hoje_html[:hoje_html.index("</section>")]
@@ -995,7 +995,7 @@ def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, t
     bloco = painel._html_sprint(d["sprint"], {"consumo_hoje": 10, "restantes": 40, "teto": 50})
     assert "72&nbsp;questões + 40&nbsp;cards." in bloco
     # s229: o cartao da RD -- o estado num span SO (`t-rd-st`, que o hub reescreve ao vivo) e o botao
-    assert ('<li class="tarefa rd"><p class="t-meta"><span class="t-rot">RD</span><span class="t-rd-st">revisão '
+    assert ('<li class="tarefa rd"><i class="t-faixa" data-area="RD" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">RD</span><span class="t-rd-st">revisão '
             'direcionada ainda não assinada</span></p><p class="t-tema">RD velha</p><p class="t-acao"><a class="t-btn" '
             'href="aulas/rd-velha.html" data-hub-aula="rd-velha" data-titulo="RD velha">Abrir aula</a></p></li>') in bloco
     sem_contador = painel._html_sprint(dict(d["sprint"], rd=None), {"consumo_hoje": None, "restantes": None,
@@ -1415,3 +1415,14 @@ def test_tarefa_cumprida_por_aula_mostra_o_titulo_da_aula():
     prepara = {5426: [{"slug": "x", "titulo": "Outra", "cumpre": False}]}
     assert painel._tarefa(t, cumpre, set())["tema"] == "UERJ de Bolso: MFC e a banca"
     assert painel._tarefa(t, prepara, set())["tema"] == "Revisão final por banca (LEITURA)"
+
+
+def test_cronograma_em_barras_horizontais_com_a_cor_da_area():
+    """s229 (rodada 3, pedido dele): "Roadmap" -> "Cronograma"; cada tarefa e uma barra na largura toda (1 coluna),
+    a faixa e o fundo tingido pela area (o chip segue com o nome), botoes a direita; no celular quebram."""
+    css = painel.CSS
+    assert ".tarefas{list-style:none;margin:0;padding:0;display:grid;gap:var(--esp-2);grid-template-columns:minmax(0,1fr)}" in css
+    assert 'grid-template-areas:"meta acao" "tema acao"' in css and "auto-fill" not in css
+    for area, tok in (("CM", "acento"), ("CIR", "rosa"), ("PED", "roxo"), ("GO", "amarelo")):
+        assert '.tarefa:has(> .t-faixa[data-area="%s"]){--area:var(--%s)}' % (area, tok) in css
+    assert '<i class="t-faixa" data-area="CIR" aria-hidden="true"></i>' in _li()

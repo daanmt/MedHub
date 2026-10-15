@@ -21,3 +21,7 @@
 - hub Version 121
 - front rodada 3: Cronograma em barras horizontais por dia (faixa da area), questao com Grifo+tempo em chips e Anterior/Responder/Pular centralizados, botoes dos Cards compactos -- Version 122
 - front rodada 4: RDs como eixo da Biblioteca, botao de roteamento unico (Painel: Resolver+Abrir aula; Teoria: Abrir aula/resumo; Listas: Resolver), assinado/resolvido sai do Cronograma ao vivo, barra horizontal nas 3 abas, legendas de instrucao fora -- Version 123
+- hub-backend: 2026-10-15a gravado (99 + defeito #681) -> 2026-10-16a no ar (100, vespera)
+- RDs 1510 por eixo (48 cards nota 1-2 de 10-15/10): cir, cm, go, ped, mfc
+- Flashcards da semana empilhado (agendado + ciano da ultima sessao) -- Version 124
+- evidencia lote cards 1933/771/714/844/1474/1588: aguardando ok dele (proposta: aplicar 4, 2a passada em 1474/1588)

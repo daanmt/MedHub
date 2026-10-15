@@ -1,0 +1,127 @@
+<title>Revisão direcionada · CIR · cards 10-15/10</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.note{margin:14px 0;padding:10px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
+
+sup.ref{font-size:11px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.fa-bar{fill:var(--plum)}
+.fa-bar2{fill:var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Cirurgia · cards de 10 a 15/10</p>
+  <h1>Cirurgia: onde o cálculo para e quanto a idade pesa</h1>
+  <p class="sub">11 cards com nota 1-2 na primeira resposta. Eixos: complicações da colelitíase, massa abdominal na criança, idade/janela na ortopedia.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Vias biliares · 5 cards</span>
+  <h2>Cálculo que sai do lugar: Mirizzi, Bouveret, drenos</h2>
+  <div class="blk"><h3>Mirizzi = o cálculo comprime ou fura o ducto hepático comum</h3><ul class="pt"><li>Cálculo impactado no infundíbulo/cístico comprime o hepático comum: icterícia obstrutiva + febre + dor em QSD<sup class="ref"><a href="#ref-1">1</a></sup>.</li><li>Csendes cresce com quanto da circunferência a fístula destruiu: I compressão, II &lt; 1/3, III até 2/3, IV inteira.</li></ul></div><figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Csendes: quanto da parede foi</b></p>
+  <svg viewBox="0 0 344 150" role="img" aria-label="Classificação de Csendes da síndrome de Mirizzi: tipo I compressão extrínseca sem fístula; tipo II fístula com menos de um terço da circunferência; tipo III até dois terços; tipo IV circunferência inteira destruída. Esquema, fora de escala."><g><circle class="fa-fundo" cx="44" cy="58" r="30"/><circle class="fa-sadio" cx="44" cy="58" r="16"/><circle class="fa-doente" cx="78" cy="40" r="11"/><text class="fa-t" x="44" y="112" text-anchor="middle">I</text><text class="fa-s" x="44" y="130" text-anchor="middle">só compressão</text></g><g><circle class="fa-fundo" cx="128" cy="58" r="30"/><circle class="fa-sadio" cx="128" cy="58" r="16"/><path class="fa-marca" fill="none" d="M128 42 A16 16 0 0 1 141.9 50"/><text class="fa-t" x="128" y="112" text-anchor="middle">II</text><text class="fa-s" x="128" y="130" text-anchor="middle">&lt; 1/3</text></g><g><circle class="fa-fundo" cx="212" cy="58" r="30"/><circle class="fa-sadio" cx="212" cy="58" r="16"/><path class="fa-marca" fill="none" d="M212 42 A16 16 0 1 1 198.1 66"/><text class="fa-t" x="212" y="112" text-anchor="middle">III</text><text class="fa-s" x="212" y="130" text-anchor="middle">até 2/3</text></g><g><circle class="fa-fundo" cx="296" cy="58" r="30"/><circle class="fa-sadio" cx="296" cy="58" r="16"/><circle cx="296" cy="58" r="16" fill="none" class="fa-marca"/><text class="fa-t" x="296" y="112" text-anchor="middle">IV</text><text class="fa-s" x="296" y="130" text-anchor="middle">circunferência toda</text></g><text class="fa-s" x="172" y="146" text-anchor="middle">círculo branco = via biliar; traço âmbar = parede destruída pela fístula</text></svg>
+  <figcaption>Mirizzi: o tipo cresce com a parede destruída.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
+</figure><div class="tw"><table><tr><th>Entidade</th><th>Onde o cálculo para</th><th>Via</th></tr><tr><td>Mirizzi</td><td>Infundíbulo/cístico, comprime o hepático comum</td><td>Compressão extrínseca ou fístula colecistobiliar</td></tr><tr><td>Íleo biliar</td><td>Íleo terminal (cálculo &gt; 2,5 cm)</td><td>Fístula colecistoentérica</td></tr><tr><td>Bouveret</td><td>Piloro/duodeno: obstrução da saída gástrica</td><td>Fístula colecistoentérica (íleo biliar alto)</td></tr></table></div><div class="blk"><h3>Drenos e história natural</h3><ul class="pt"><li><strong>Kehr</strong> (tubo T) descomprime a via biliar após coledocotomia; <strong>Penrose</strong> sub-hepático vigia fístula e sai depois do Kehr.</li><li>Colelitíase assintomática vira sintomática em 2-3% ao ano (~10% em 5 anos).</li></ul><div class="trap">Bouveret não é Mirizzi nem Boerhaave: é íleo biliar no duodeno. O Kehr não é dreno de vigilância.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Cirurgia infantil · 2 cards</span>
+  <h2>Massa abdominal no RN e na criança</h2>
+  <div class="tw"><table><tr><th></th><th>Neuroblastoma</th><th>Wilms</th></tr><tr><td>Idade</td><td>Mais nova: média ~22 meses</td><td>Mais velha: média ~5 anos</td></tr><tr><td>Massa</td><td>Endurecida, irregular, cruza a linha média</td><td>Renal, lisa, não cruza</td></tr><tr><td>Pista</td><td>Catecolaminas urinárias, guaxinim, desloca o rim sem destruir pielocalicial</td><td>WAGR, trombo em veia renal/cava</td></tr></table></div><div class="blk"><h3>Cloaca no RN</h3><ul class="pt"><li>Secreção vaginal acumula: <strong>hidrocolpos</strong> (massa em hipogástrio) comprime trígono/ureter: megaureter e <strong>hidronefrose unilateral</strong> (massa em flanco).</li></ul><div class="trap">Lactente &lt; 2 anos com massa: pese a idade antes do reflexo. Fecaloma em RN de 2 dias é impossível.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Ortopedia e trauma · 2 cards</span>
+  <h2>Idade e janela decidem</h2>
+  <div class="tw"><table><tr><th></th><th>Perthes</th><th>Epifisiólise (SCFE)</th></tr><tr><td>Idade</td><td>4-8 anos (pico 6)</td><td>Estirão: 10-16 anos</td></tr><tr><td>Imagem</td><td>Cabeça achatada/fragmentada</td><td>Klein não cruza a epífise (Trethowan); Lauenstein</td></tr><tr><td>Conduta</td><td>Ortopédica eletiva</td><td>Proibir carga já</td></tr></table></div><div class="blk"><h3>NASCIS III no trauma raquimedular (como a prova ainda cobra)</h3><ul class="pt"><li>Metilprednisolona 30 mg/kg em bolus + 5,4 mg/kg/h: bolus até 3 h = manutenção 24 h; entre 3 e 8 h = <strong>48 h</strong>; após 8 h, não usar<sup class="ref"><a href="#ref-2">2</a></sup>.</li><li>Os guidelines atuais não recomendam o corticoide de rotina; marque NASCIS só quando o enunciado pede o protocolo.</li></ul><div class="trap">Dor no joelho do adolescente puxa para Perthes: confira idade e linha de Klein.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Pílulas · 3 cards</span>
+  <h2>Uma linha para cada uma</h2>
+  <div class="blk"><h3>Esôfago, reto, cicatrização</h3><ul class="pt"><li>Perfuração esofágica &gt; 24 h com sepse e coleção mediastinal: mediastinite necrosante exige toracotomia com desbridamento; drenagem percutânea só tira líquido.</li><li>Ecoendoscopia e RM de pelve estadiam só o <strong>reto</strong> (T e N, mesorreto); cólon = TC de tórax/abdome/pelve + CEA.</li><li>Célula fundamental da cicatrização: <strong>macrófago</strong> (o neutrófilo só chega primeiro).</li></ul></div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs"><div class="q"><span class="tag">01</span><p>Fístula colecistobiliar que destruiu metade da circunferência do hepático comum: Csendes?</p><details><summary>ver resposta</summary><div>III (até 2/3).</div></details></div><div class="q"><span class="tag">01</span><p>Cálculo impactado no duodeno por fístula colecistoentérica: nome?</p><details><summary>ver resposta</summary><div>Síndrome de Bouveret.</div></details></div><div class="q"><span class="tag">02</span><p>Massa abdominal que cruza a linha média aos 18 meses: hipótese?</p><details><summary>ver resposta</summary><div>Neuroblastoma.</div></details></div><div class="q"><span class="tag">03</span><p>NASCIS III com bolus 5 h após o trauma: quanto dura a manutenção?</p><details><summary>ver resposta</summary><div>48 h.</div></details></div><div class="q"><span class="tag">04</span><p>Adenocarcinoma de sigmoide: ecoendoscopia entra no estadiamento?</p><details><summary>ver resposta</summary><div>Não: TC de tórax/abdome/pelve + CEA.</div></details></div></div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol><li id="ref-1">Tokyo Guidelines 2018 (TG18) -- colecistite e colangite aguda (como citado no resumo).</li><li id="ref-2">NASCIS III -- metilprednisolona no trauma raquimedular agudo (protocolo; não recomendado como rotina nos guidelines atuais, segundo o resumo).</li></ol>
+<p class="base">Base deste documento: resumos/Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md; resumos/Cirurgia/Cirurgia Infantil.md; resumos/Cirurgia/Quadril Pediátrico.md; resumos/Cirurgia/Politrauma Ortopédico.md; resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md; versos dos cards 1781, 2107, 2109, 329 (sem resumo .md próprio).</p></section>
+</div>

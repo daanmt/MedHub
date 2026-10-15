@@ -1,0 +1,121 @@
+<title>Revisão direcionada · CM · cards 10-15/10</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.note{margin:14px 0;padding:10px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
+
+sup.ref{font-size:11px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.fa-bar{fill:var(--plum)}
+.fa-bar2{fill:var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Clínica Médica · cards de 10 a 15/10</p>
+  <h1>Clínica Médica: o exame que separa os parecidos</h1>
+  <p class="sub">15 cards com nota 1-2 na primeira resposta. Eixos: imunofluorescência e Coombs, líquor e SvcO2, exame normal como dado.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Reumato + hemato · 7 cards</span>
+  <h2>Pulmão-rim, púrpura e hemólise: o laboratório escolhe</h2>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>O depósito diz a doença</b></p>
+  <svg viewBox="0 0 344 150" role="img" aria-label="Imunofluorescência glomerular: padrão linear contínuo ao longo da membrana basal no Goodpasture; padrão granular em grumos no LES; pauci-imune sem depósitos nas vasculites ANCA. Esquema."><g><rect class="fa-fundo" x="10" y="20" width="100" height="70" rx="8"/><line class="fa-marca" x1="20" y1="55" x2="100" y2="55" stroke-width="4"/><text class="fa-t" x="60" y="110" text-anchor="middle">Linear</text><text class="fa-s" x="60" y="128" text-anchor="middle">Goodpasture · anti-MBG</text></g><g><rect class="fa-fundo" x="122" y="20" width="100" height="70" rx="8"/><line class="fa-eixo" x1="132" y1="55" x2="212" y2="55"/><circle class="fa-ponto-av" cx="140" cy="53" r="4"/><circle class="fa-ponto-av" cx="156" cy="58" r="3.5"/><circle class="fa-ponto-av" cx="172" cy="52" r="4.5"/><circle class="fa-ponto-av" cx="189" cy="57" r="3.5"/><circle class="fa-ponto-av" cx="204" cy="53" r="4"/><text class="fa-t" x="172" y="110" text-anchor="middle">Granular</text><text class="fa-s" x="172" y="128" text-anchor="middle">LES · imunocomplexos</text></g><g><rect class="fa-fundo" x="234" y="20" width="100" height="70" rx="8"/><line class="fa-eixo" x1="244" y1="55" x2="324" y2="55"/><text class="fa-t" x="284" y="110" text-anchor="middle">Pauci-imune</text><text class="fa-s" x="284" y="128" text-anchor="middle">vasculite ANCA</text></g><text class="fa-s" x="172" y="146" text-anchor="middle">linha cinza = membrana basal glomerular; âmbar = depósito</text></svg>
+  <figcaption>Granular = imunocomplexo (LES); linear = anti-MBG.</figcaption>
+</figure><div class="tw"><table><tr><th>Quadro</th><th>Chave</th><th>Diagnóstico</th></tr><tr><td>GNRP com IF granular</td><td>Imunocomplexo; dosar complemento</td><td>LES</td></tr><tr><td>Púrpura palpável + artrite + dor abdominal + hematúria</td><td>Complemento NORMAL</td><td>Vasculite por IgA (Henoch)</td></tr><tr><td>SAF com HAS, proteinúria, hematúria, sem critério de LES</td><td>Biópsia: hiperplasia intimal</td><td>Nefropatia da SAF (MAT)</td></tr></table></div><div class="tw"><table><tr><th>Hemólise</th><th>Coombs</th><th>Conduta</th></tr><tr><td>Autoimune (AHAI, do LES)</td><td>Positivo</td><td>Corticoide + transfusão em alíquotas</td></tr><tr><td>Microangiopática (PTT/SHU)</td><td>Negativo + esquizócitos</td><td>ADAMTS13, plasmaférese</td></tr></table></div><div class="blk"><h3>Hemostasia e transfusão</h3><ul class="pt"><li>Plasmaférese exige MAT: esquizócitos + plaquetopenia; sem hemólise microangiopática, não há indicação.</li><li>Hemofilia adquirida (inibidor anti-FVIII) sangrando: agente de <strong>bypass</strong> (FVIIa recombinante ou CCP ativado); FVIII é neutralizado.</li><li>Anafilaxia transfusional prévia (ex.: deficiência de IgA): hemácias <strong>lavadas</strong>; irradiado previne DECH, não anafilaxia.</li></ul><div class="trap">Acertar AHAI e pedir plasmaférese é o erro clássico. Fumante com pulmão-rim não é Goodpasture se a IF é granular.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Infecto · 5 cards</span>
+  <h2>Líquor, sepse e o que confirma</h2>
+  <div class="blk"><h3>Neuro e líquor</h3><ul class="pt"><li>Glicorraquia normal ≈ 2/3 da glicemia (razão ≥ 0,6); viral = normal; bacteriana/TB/fúngica consomem.</li><li>1ª crise tônico-clônica sem febre nem meningismo, saneamento precário: <strong>neurocisticercose</strong> (doença parenquimatosa, não meningite).</li></ul></div><div class="blk"><h3>Sepse (meta legada EGDT, ainda cobrada)</h3><ul class="pt"><li>PAM e volume na meta, SvcO2 &lt; 70%: hematócrito baixo = transfundir; hematócrito ok = <strong>dobutamina</strong><sup class="ref"><a href="#ref-1">1</a></sup>.</li></ul></div><div class="blk"><h3>Confirmação e transmissão</h3><ul class="pt"><li>Esporotricose: <strong>cultura em Sabouraud</strong> confirma; exame direto costuma ser negativo.</li><li>Febre amarela: viremia começa 24-48 h antes dos sintomas e vai até o 4º-5º dia.</li></ul><div class="trap">Glicorraquia 40 com glicemia 60 é normal (0,66): leia a razão, não o número.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Fígado e endócrino · 4 cards</span>
+  <h2>O exame normal é o dado</h2>
+  <div class="blk"><h3>Bilirrubina indireta alta</h3><ul class="pt"><li>Hemólise: anemia + DHL alto + reticulocitose. Gilbert: hemograma, DHL e transaminases <strong>normais</strong>.</li><li>Via biliar intra-hepática dilatada com parênquima homogêneo: colestase obstrutiva (metástase daria nódulos).</li><li>HCV: não há medida para reduzir transmissão vertical; parto por indicação obstétrica, aleitamento liberado.</li></ul></div><div class="blk"><h3>DM2 descompensado no diagnóstico</h3><ul class="pt"><li>Sintomático com glicemia ≥ 300 ou HbA1c alta: <strong>insulina</strong> inicial, ambulatorial se não há CAD/EHH. Corte de HbA1c: ≥ 10% (ADA) / &gt; 9% (SBD)<sup class="ref"><a href="#ref-2">2</a></sup>.</li></ul><div class="trap">Metformina + sulfonilureia parece robusta, mas ignora o limiar de gravidade.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs"><div class="q"><span class="tag">01</span><p>Síndrome pulmão-rim com IF granular: diagnóstico?</p><details><summary>ver resposta</summary><div>LES (imunocomplexo).</div></details></div><div class="q"><span class="tag">01</span><p>LES com hemólise Coombs+: conduta?</p><details><summary>ver resposta</summary><div>Corticoide + transfusão em alíquotas.</div></details></div><div class="q"><span class="tag">01</span><p>Hemofilia adquirida sangrando: o que dar?</p><details><summary>ver resposta</summary><div>Bypass: FVIIa recombinante ou CCP ativado.</div></details></div><div class="q"><span class="tag">02</span><p>SvcO2 64% com Ht 32% e PAM 70 após volume?</p><details><summary>ver resposta</summary><div>Dobutamina.</div></details></div><div class="q"><span class="tag">03</span><p>BI alta, hemograma e DHL normais: hemólise ou Gilbert?</p><details><summary>ver resposta</summary><div>Gilbert.</div></details></div></div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol><li id="ref-1">Rivers 2001 / Surviving Sepsis Campaign 2008 -- terapia precoce guiada por metas (EGDT), metas legadas (como citado no resumo).</li><li id="ref-2">SBD e ADA -- critérios de insulinização inicial no DM2 (como citados no resumo; ano não informado).</li></ol>
+<p class="base">Base deste documento: resumos/Clínica Médica/Reumatologia/DITC II.md; resumos/Clínica Médica/Hematologia/Hemostasia.md; resumos/Clínica Médica/Hematologia/Medicina Transfusional.md; resumos/Clínica Médica/Infectologia/Meningites.md; resumos/Clínica Médica/Infectologia/Sepse.md; resumos/Clínica Médica/Infectologia/Arboviroses.md; resumos/Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md; resumos/Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md; resumos/Clínica Médica/Hepatologia/Hepatites Virais.md; resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md; versos dos 15 cards.</p></section>
+</div>

@@ -490,7 +490,8 @@ def test_agenda_de_sete_dias_e_a_mesma_da_tela_de_fim_dos_cards(db_sintetico):
     from app.utils import db as dbmod
     esperado = dbmod.agenda_revisoes(dias=7)
     ag = painel.coletar()["dia"]["agenda"]
-    assert ag == esperado
+    # s229 (rodada 5): a MESMA agenda + `sessao` por dia (o que entrou pela ultima sessao)
+    assert {**ag, "dias": [{k: v for k, v in x.items() if k != "sessao"} for x in ag["dias"]]} == esperado
     assert len(ag["dias"]) == 7
 
 
@@ -1441,3 +1442,20 @@ def test_tarefa_com_aula_lida_sai_do_cronograma(tmp_path, monkeypatch):
     li = _li(aulas=[{"slug": "a1", "titulo": "A", "cumpre": True}])
     assert 'data-hub-aula="a1" data-titulo="A" data-cumpre="1">Abrir aula</a>' in li
     assert ".tarefa[hidden]{display:none}" in painel.CSS
+
+
+def test_flashcards_da_semana_empilha_os_da_ultima_sessao():
+    """s229 (rodada 5): por dia, os que ja estavam agendados (rosa) e os que ENTRARAM pela ultima sessao (ciano, no
+    topo), o total em cima e o "+k" pequeno; a dica diz os dois."""
+    ag = {"dias": [{"data": "2026-10-16", "n": 10, "sessao": 4}, {"data": "2026-10-17", "n": 5, "sessao": 0}]}
+    html_ = painel._html_agenda(ag)
+    assert '<span class="ag-n">10<small class="ag-mais">+4</small></span>' in html_
+    assert '<b class="ag-sessao" style="height:40%"></b>' in html_ and html_.count("ag-sessao") == 1
+    assert "10 cards, 4 da última sessão (pico da semana)" in html_
+    assert ".ag-sessao{display:block;width:100%;background:var(--acento)}" in painel.CSS
+
+
+def test_agenda_com_sessao_conta_pela_ultima_revisao(db_sintetico):
+    """A contagem vem do banco (fsrs_revlog/fsrs_cards, sem tabela nova): nunca passa do total do dia."""
+    ag = painel._agenda_com_sessao({"dias": [{"data": "2026-09-24", "n": 1}]})
+    assert set(ag["dias"][0]) == {"data", "n", "sessao"} and 0 <= ag["dias"][0]["sessao"] <= 1

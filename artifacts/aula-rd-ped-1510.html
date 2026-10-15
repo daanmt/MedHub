@@ -1,0 +1,121 @@
+<title>Revisão direcionada · PED · cards 10-15/10</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.note{margin:14px 0;padding:10px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
+
+sup.ref{font-size:11px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.fa-bar{fill:var(--plum)}
+.fa-bar2{fill:var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Pediatria · cards de 10 a 15/10</p>
+  <h1>Pediatria: gravidade é clínica, intervalo é dose</h1>
+  <p class="sub">13 cards com nota 1-2 na primeira resposta. Eixos: neonatologia, interferência vacinal, droga certa pela idade e pela clínica.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Neonatologia · 3 cards</span>
+  <h2>Contar certo, tratar pela curva</h2>
+  <div class="blk"><h3>Apgar e icterícia</h3><ul class="pt"><li>Cor: acrocianose = 1; só cianose/palidez <strong>generalizada</strong> = 0. Careta ao estímulo = 1.</li><li>Foto/exsanguineo decide pelo <strong>nível de BT x horas de vida</strong> + fatores de risco; eluato+ ou incompatibilidade isolados não obrigam tratar.</li><li>Sepse tardia (≥ 72 h; GBS só após 7 dias) = agentes hospitalares (SCN, S. aureus, Gram-negativos, Candida): cefepime + vancomicina/oxacilina, não ampicilina.</li></ul><div class="trap">FC 110 + resp. irregular + hipotonia + acrocianose + careta = 2+1+0+1+1 = 5.</div></div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Imunização · 2 cards</span>
+  <h2>Anticorpo pronto atrapalha vacina viva</h2>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Mais imunoglobulina, mais espera</b></p>
+  <svg viewBox="0 0 344 200" role="img" aria-label="Intervalo em meses até a vacina viva após hemoderivado: de 3 meses (imunoglobulinas antitetânica e anti-hepatite B) a 11 meses (IGIV 1,6 a 2 g/kg, dose do Kawasaki)."><text class="fa-s" x="112" y="24" text-anchor="end">Ig antitetânica</text><rect class="fa-bar2" x="118" y="14" width="54" height="14" rx="2"/><text class="fa-m" x="176" y="25">3</text><text class="fa-s" x="112" y="46" text-anchor="end">Ig anti-HBV</text><rect class="fa-bar2" x="118" y="36" width="54" height="14" rx="2"/><text class="fa-m" x="176" y="47">3</text><text class="fa-s" x="112" y="68" text-anchor="end">Ig antirrábica</text><rect class="fa-bar2" x="118" y="58" width="72" height="14" rx="2"/><text class="fa-m" x="194" y="69">4</text><text class="fa-s" x="112" y="90" text-anchor="end">Ig antivaricela</text><rect class="fa-bar2" x="118" y="80" width="90" height="14" rx="2"/><text class="fa-m" x="212" y="91">5</text><text class="fa-s" x="112" y="112" text-anchor="end">Hemácias</text><rect class="fa-bar2" x="118" y="102" width="90" height="14" rx="2"/><text class="fa-m" x="212" y="113">5</text><text class="fa-s" x="112" y="134" text-anchor="end">Plasma/plaquetas</text><rect class="fa-bar2" x="118" y="124" width="126" height="14" rx="2"/><text class="fa-m" x="248" y="135">7</text><text class="fa-s" x="112" y="156" text-anchor="end">IGIV 1 g/kg</text><rect class="fa-bar2" x="118" y="146" width="180" height="14" rx="2"/><text class="fa-m" x="302" y="157">10</text><text class="fa-s" x="112" y="178" text-anchor="end">IGIV 1,6-2 g/kg</text><rect class="fa-bar" x="118" y="168" width="198" height="14" rx="2"/><text class="fa-m" x="320" y="179">11</text><text class="fa-s" x="340" y="196" text-anchor="end">meses até tríplice viral/varicela</text></svg>
+  <figcaption>Dose de Kawasaki adia vacina viva 11 meses.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
+</figure><div class="blk"><h3>Passiva heteróloga</h3><ul class="pt"><li>Soro equino (antiofídico): <strong>doença do soro</strong> 7-14 dias depois (tipo III); anafilaxia é a imediata.</li><li>Vacinas inativadas não sofrem interferência.</li></ul></div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Clínica pediátrica · 8 cards</span>
+  <h2>Gravidade é clínica, idade muda a droga</h2>
+  <div class="tw"><table><tr><th>Quadro</th><th>Conduta / chave</th></tr><tr><td>PTI: sangramento de mucosa (púrpura úmida)</td><td>Trata, mesmo com plaquetas mais altas; púrpura seca observa</td></tr><tr><td>ITU febril &gt; 3 meses, sem toxemia, aceitando VO</td><td>Antibiótico <strong>oral</strong> ambulatorial, reavaliar em 48-72 h</td></tr><tr><td>Crise grave de asma</td><td>SABA + ipratrópio + corticoide + O2; sem resposta: MgSO4 IV (card: só &gt; 2 anos)</td></tr><tr><td>Hemangioma de via aérea/periorbital</td><td>Propranolol oral 2-3 mg/kg/dia ≥ 6 meses</td></tr><tr><td>Coreia de Sydenham moderada-grave</td><td>Haloperidol (alternativas: valproato, carbamazepina)</td></tr><tr><td>Nefrótica + peritonite primária</td><td><em>S. pneumoniae</em> (perda de IgG e fator B)</td></tr><tr><td>Joelho do adolescente atleta</td><td>Proeminência dolorosa do tubérculo tibial = Osgood-Schlatter</td></tr><tr><td>Down assintomático</td><td>Instabilidade atlantoaxial (~13%): ver nota de divergência no relatório</td></tr></table></div><div class="trap">Na PTI, o número de plaquetas não define gravidade; o sangramento de mucosa define.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs"><div class="q"><span class="tag">01</span><p>Acrocianose no Apgar vale quanto?</p><details><summary>ver resposta</summary><div>1 ponto.</div></details></div><div class="q"><span class="tag">01</span><p>Sepse neonatal tardia: eixo do esquema?</p><details><summary>ver resposta</summary><div>Cefepime + vancomicina/oxacilina.</div></details></div><div class="q"><span class="tag">02</span><p>IGIV 2 g/kg para Kawasaki: adiar tríplice viral por quanto?</p><details><summary>ver resposta</summary><div>11 meses.</div></details></div><div class="q"><span class="tag">03</span><p>PTI 35 mil com gengivorragia x 18 mil com petéquias: quem trata?</p><details><summary>ver resposta</summary><div>A com sangramento de mucosa.</div></details></div><div class="q"><span class="tag">03</span><p>Lactente 8 meses, ITU febril, bem: via do antibiótico?</p><details><summary>ver resposta</summary><div>Oral, ambulatorial.</div></details></div></div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol><li id="ref-1">Ministério da Saúde / PNI -- intervalos entre hemoderivados e vacinas atenuadas (conforme tabela do resumo Imunizações; ano não informado).</li></ol>
+<p class="base">Base deste documento: resumos/Pediatria/Reanimação Neonatal.md; resumos/Pediatria/Icterícia e Sepse Neonatal.md; resumos/Pediatria/Imunizações.md; resumos/Pediatria/Asma.md; resumos/Pediatria/Febre Reumática.md; resumos/Pediatria/Síndrome de Down.md; resumos/Clínica Médica/Hematologia/Hemostasia.md; versos dos 13 cards (hemangioma, ITU, Osgood, PTI, nefrótica e MgSO4 sem trecho próprio no resumo).</p></section>
+</div>

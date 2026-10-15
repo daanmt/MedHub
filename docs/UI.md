@@ -206,6 +206,10 @@ algarismos tabulares e sem caixa-alta (`text-transform:none` global).
   disciplinas por dentro). No Cronograma, o assinado/concluído SAI (RD lida, tarefa cuja aula que a cumpre foi lida
   -- `data-cumpre` --, lista resolvida), no build e ao vivo; na Biblioteca o feito segue riscado e esmaecido. A
   legenda de instrução das Listas saiu.
+- **Flashcards da semana, rodada 5 (s229)**: barra EMPILHADA por dia -- embaixo, na paleta rosa (`--fc*`), os que já
+  estavam agendados; em cima, em ciano (`--acento`), os que ENTRARAM pela última sessão (cards com `last_review` no dia
+  do `review_time` mais recente do `fsrs_revlog`, `painel._agenda_com_sessao`); o total em cima e "+k" pequeno em ciano;
+  a dica diz os dois.
 - **Teoria** (s226, consulta): no topo, **Revisões direcionadas · N** (as RDs não assinadas, da mais antiga para a
   mais nova, a linha inteira abrindo o leitor; a assinada some ao vivo e fica só na Biblioteca); abaixo, a Biblioteca
   por área e disciplina com toda aula, resumo e RD. Sem semana, sem "Atrasadas" e sem contagem de questões.

@@ -1,0 +1,109 @@
+<title>Revisão direcionada · MFC · cards 10-15/10</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.note{margin:14px 0;padding:10px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (s226, painel-dashboard-sprint part-2; molde da skill anima: Fig n + titulo, legenda e
+   fonte; esquema estatico em SVG inline, so tokens do tema -- herda o claro e o escuro do leitor) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-ok{fill:var(--teal-ink);font-size:12.5px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-marca{stroke:var(--amber);stroke-width:2}
+.fa-ponto-av{fill:var(--amber)}
+.fa-doente{fill:var(--plum)}
+.fa-sadio{fill:var(--card);stroke:var(--ink2);stroke-width:1.3}
+.fa-osso{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-blast{fill:var(--ink3)}
+.fa-furo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-veia{fill:none;stroke:var(--plum);stroke-width:9;stroke-linecap:round}
+.fa-colat{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round}
+.fa-trombo{fill:var(--ink3);stroke:var(--ink);stroke-width:1}
+.fa-seta{fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-cat{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:4 3}
+.fa-var{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5}
+
+sup.ref{font-size:11px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.fa-bar{fill:var(--plum)}
+.fa-bar2{fill:var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · MFC/Preventiva · cards de 10 a 15/10</p>
+  <h1>MFC: janela de transmissão e regra de acesso</h1>
+  <p class="sub">3 cards com nota 1-2 na primeira resposta: viremia da febre amarela, uretrite não gonocócica, uso compassivo.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Vigilância e APS · 3 cards</span>
+  <h2>Quem transmite, quem trata, quem libera</h2>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>Transmite antes de adoecer</b></p>
+  <svg viewBox="0 0 344 120" role="img" aria-label="Linha do tempo da febre amarela: viremia começa 24 a 48 horas antes dos sintomas e vai até o quarto ou quinto dia de doença."><line class="fa-eixo" x1="20" y1="60" x2="330" y2="60"/><rect class="fa-alvo" x="60" y="44" width="200" height="32" rx="6"/><line class="fa-marca" x1="110" y1="30" x2="110" y2="90"/><text class="fa-av" x="110" y="24" text-anchor="middle">início dos sintomas</text><text class="fa-m" x="60" y="104" text-anchor="middle">-48 h</text><text class="fa-m" x="110" y="104" text-anchor="middle">dia 0</text><text class="fa-m" x="260" y="104" text-anchor="middle">dia 4-5</text><text class="fa-ok" x="185" y="65" text-anchor="middle">viremia</text><text class="fa-s" x="330" y="116" text-anchor="end">escala ilustrativa</text></svg>
+  <figcaption>Viremia abre 24-48 h antes da febre.</figcaption>
+</figure><div class="blk"><h3>Febre amarela</h3><ul class="pt"><li>Viremia &lt; 7 dias: isolar 14 dias é desnecessário; prevenção = vacina + controle vetorial.</li></ul></div><div class="blk"><h3>Uretrite não gonocócica (secreção mucoide, gonococo negativo)</h3><ul class="pt"><li>Card: doxiciclina 100 mg VO 12/12 h por 7 dias; azitromicina 1 g dose única se dúvida de adesão ou gestação.</li><li>Distrator: droga certa com duração inventada (doxi 30 dias, azitro 500 mg 10 dias).</li></ul></div><div class="tw"><table><tr><th>ANVISA</th><th>Para quem</th><th>Fase</th></tr><tr><td>Uso compassivo</td><td>Individual, sem registro no Brasil</td><td>Qualquer fase</td></tr><tr><td>Acesso expandido</td><td>Grupo de pacientes</td><td>A partir da fase III</td></tr><tr><td>Off-label</td><td>Fármaco já registrado fora da bula</td><td>Não é acesso a fármaco sem registro</td></tr></table></div><div class="trap">"Liberado para outras doenças graves" descreve off-label, não uso compassivo<sup class="ref"><a href="#ref-1">1</a></sup>.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs"><div class="q"><span class="tag">01</span><p>Quando começa a viremia da febre amarela?</p><details><summary>ver resposta</summary><div>24-48 h antes dos sintomas.</div></details></div><div class="q"><span class="tag">01</span><p>Uso compassivo: individual ou grupo?</p><details><summary>ver resposta</summary><div>Individual, em qualquer fase.</div></details></div><div class="q"><span class="tag">01</span><p>Esquema do card para uretrite não gonocócica?</p><details><summary>ver resposta</summary><div>Doxiciclina 100 mg 12/12 h por 7 dias.</div></details></div></div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol><li id="ref-1">ANVISA -- RDC 38/2013, alterada pela RDC 311/2019 (como citada no card).</li></ol>
+<p class="base">Base deste documento: resumos/Clínica Médica/Infectologia/Arboviroses.md; resumos/Preventiva/Vigilância em Saúde.md; versos dos cards 965, 1588, 770 (uretrite sem trecho no resumo).</p></section>
+</div>

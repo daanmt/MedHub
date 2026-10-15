@@ -295,6 +295,35 @@ def _bloco_sprint(linhas, hoje):
     }
 
 
+def _agenda_com_sessao(ag):
+    """s229 (rodada 5, pedido dele: quantos cards de cada dia ENTRARAM por causa da ultima sessao): cada dia da
+    agenda ganha `sessao` = os cards que vencem nele e cuja ultima revisao (`fsrs_cards.last_review`) e da ULTIMA
+    sessao gravada -- o dia do `review_time` mais recente do `fsrs_revlog` (o `--record-lote` grava la). Os demais
+    (`n - sessao`) ja estavam agendados antes dela. Mesmos filtros do `db.agenda_revisoes`; sem tabela nova.
+    Falha de leitura = 0 em todo dia (a barra fica so rosa)."""
+    datas = [x["data"] for x in ag.get("dias") or []]
+    conta = dict.fromkeys(datas, 0)
+    if datas:
+        conn = db.get_connection()
+        try:
+            ultima = conn.execute("SELECT max(substr(review_time, 1, 10)) FROM fsrs_revlog").fetchone()[0]
+            if ultima:
+                linhas = conn.execute(
+                    f"""SELECT substr(fc.due, 1, 10), count(*) FROM fsrs_cards fc JOIN flashcards f ON f.id = fc.card_id
+                        WHERE {db.ativo_where('f.')}{db.retido_reforja_where(conn)}
+                          AND fc.state > 0 AND substr(fc.last_review, 1, 10) = ?
+                          AND substr(fc.due, 1, 10) BETWEEN ? AND ? GROUP BY 1""",
+                    (ultima, datas[0], datas[-1])).fetchall()
+                for dia, n in linhas:
+                    if dia in conta:
+                        conta[dia] = int(n)
+        except Exception:  # noqa: BLE001 -- o bloco nunca derruba o Painel
+            conta = dict.fromkeys(datas, 0)
+        finally:
+            conn.close()
+    return dict(ag, dias=[dict(x, sessao=min(conta.get(x["data"], 0), x["n"])) for x in ag.get("dias") or []])
+
+
 def _sessao_gravada():
     """A `sessao` do ultimo lote gravado (marcador do tique); ilegivel ou ausente = "" (a pagina
     soma o lote no ar inteiro: no pior caso, a mais por um tique -- limite aceito na spec)."""
@@ -347,7 +376,7 @@ def _bloco_dia(linhas, hoje):
             "restantes": None if consumo is None else max(0, teto - consumo),
             "retencao_7d": db.get_retencao_revlog(dias=7),
         },
-        "agenda": db.agenda_revisoes(dias=7),
+        "agenda": _agenda_com_sessao(db.agenda_revisoes(dias=7)),
         "sessao_gravada": _sessao_gravada(),
     }
 
@@ -746,12 +775,17 @@ def _html_agenda(ag):
 
     def barra(x):
         e_pico = x["data"] == pico
-        dica = "%s: %s%s" % (_dia_curto(x["data"]), _plural(x["n"], "card", "cards").replace("&nbsp;", " "),
-                             " (pico da semana)" if e_pico else "")
-        return ('<li title="%s"%s><span class="ag-n">%d</span><span class="ag-trilho"><i style="height:%.0f%%"></i></span>'
+        k = int(x.get("sessao") or 0)
+        dica = "%s: %s%s%s" % (_dia_curto(x["data"]), _plural(x["n"], "card", "cards").replace("&nbsp;", " "),
+                               ", %d da última sessão" % k if k else "", " (pico da semana)" if e_pico else "")
+        # s229 (rodada 5): barra EMPILHADA -- em cima, em ciano, os que entraram pela ultima sessao; embaixo, na
+        # paleta rosa, os que ja estavam agendados; o total em cima e o "+k" pequeno em ciano
+        seg = ('<b class="ag-sessao" style="height:%.0f%%"></b>' % (100.0 * k / x["n"])) if k and x["n"] else ""
+        mais = '<small class="ag-mais">+%d</small>' % k if k else ""
+        return ('<li title="%s"%s><span class="ag-n">%d%s</span><span class="ag-trilho"><i style="height:%.0f%%">%s</i></span>'
                 '<span class="ag-d">%s</span></li>'
-                % (_e(dica), ' class="pico"' if e_pico else "", x["n"], max(4.0, 100.0 * x["n"] / max(maior, 1)),
-                   DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()]))
+                % (_e(dica), ' class="pico"' if e_pico else "", x["n"], mais, max(4.0, 100.0 * x["n"] / max(maior, 1)),
+                   seg, DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()]))
     return ('<div class="placa dash-sec agenda"><div class="ag-cab"><h3>Flashcards da semana</h3>'
             '<p class="ag-total"><b>%s</b> em 7 dias</p></div>'
             '<ol class="ag-barras" aria-label="Flashcards previstos por dia">%s</ol></div>'
@@ -1056,6 +1090,10 @@ a{color:var(--acento);text-underline-offset:2px}
 .ag-trilho{border-bottom:1px solid var(--linha-forte)}
 .ag-barras i{display:block;width:min(100%,32px);background:var(--fc-fraco);border-radius:var(--raio-p) var(--raio-p) 0 0}
 .ag-barras .pico i{background:var(--fc)}
+/* s229 (rodada 5): o segmento ciano (token de interacao) dos que entraram pela ultima sessao, no topo da barra */
+.ag-barras i{display:flex;flex-direction:column;overflow:hidden}
+.ag-sessao{display:block;width:100%;background:var(--acento)}
+.ag-mais{display:block;font-size:.7rem;font-weight:650;color:var(--acento-tinta);line-height:1.1;text-align:center}
 .ag-n{font-size:var(--fs-meta);font-weight:600;color:var(--tinta2)}
 .ag-barras .pico .ag-n{color:var(--fc-tinta);font-weight:700}
 .ag-d{font-size:var(--fs-meta);color:var(--tinta3)}

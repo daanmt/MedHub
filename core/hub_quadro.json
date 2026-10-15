@@ -462,6 +462,88 @@
         "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
         "Clínica Médica/Nefrologia/Distúrbios do Potássio.md"
       ]
+    },
+    "rd-cir-1510": {
+      "tipo": "revisao",
+      "titulo": "Cirurgia dos cards 10-15/10: complicações da colelitíase, massa na criança, idade e janela",
+      "disciplinas": [
+        "Cirurgia",
+        "Ortopedia",
+        "Gastroenterologia"
+      ],
+      "resumos": [
+        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md",
+        "Cirurgia/Cirurgia Infantil.md",
+        "Cirurgia/Quadril Pediátrico.md",
+        "Cirurgia/Politrauma Ortopédico.md",
+        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
+      ]
+    },
+    "rd-cm-1510": {
+      "tipo": "revisao",
+      "titulo": "Clínica Médica dos cards 10-15/10: imunofluorescência, Coombs, líquor e exame normal",
+      "disciplinas": [
+        "Reumatologia",
+        "Hematologia",
+        "Infectologia",
+        "Hepatologia",
+        "Endocrinologia",
+        "Dermatologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Reumatologia/DITC II.md",
+        "Clínica Médica/Hematologia/Hemostasia.md",
+        "Clínica Médica/Hematologia/Medicina Transfusional.md",
+        "Clínica Médica/Infectologia/Meningites.md",
+        "Clínica Médica/Infectologia/Sepse.md",
+        "Clínica Médica/Infectologia/Arboviroses.md",
+        "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
+        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
+        "Clínica Médica/Hepatologia/Hepatites Virais.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
+      ]
+    },
+    "rd-go-1510": {
+      "tipo": "revisao",
+      "titulo": "GO dos cards 10-15/10: contar do início, ler a direção",
+      "disciplinas": [
+        "Obstetrícia",
+        "Ginecologia"
+      ],
+      "resumos": [
+        "GO/[OBS] Sífilis na Gestação e Congênita.md",
+        "GO/Restrição de Crescimento Fetal.md",
+        "GO/Síndromes Hipertensivas da Gestação.md",
+        "GO/Vulvovaginites.md",
+        "GO/Úlceras Genitais.md"
+      ]
+    },
+    "rd-ped-1510": {
+      "tipo": "revisao",
+      "titulo": "Pediatria dos cards 10-15/10: gravidade é clínica, intervalo é dose",
+      "disciplinas": [
+        "Pediatria"
+      ],
+      "resumos": [
+        "Pediatria/Reanimação Neonatal.md",
+        "Pediatria/Icterícia e Sepse Neonatal.md",
+        "Pediatria/Imunizações.md",
+        "Pediatria/Asma.md",
+        "Pediatria/Febre Reumática.md",
+        "Pediatria/Síndrome de Down.md"
+      ]
+    },
+    "rd-mfc-1510": {
+      "tipo": "revisao",
+      "titulo": "MFC dos cards 10-15/10: janela de transmissão e regra de acesso",
+      "disciplinas": [
+        "Preventiva",
+        "Infectologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Infectologia/Arboviroses.md",
+        "Preventiva/Vigilância em Saúde.md"
+      ]
     }
   }
 }

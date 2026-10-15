@@ -4083,3 +4083,44 @@
 {"ts": "2026-10-13T10:35:26", "tipo": "generation", "questao_id": 1192, "n_cards": 2, "avisos": 0}
 {"ts": "2026-10-13T10:35:26", "tipo": "generation", "questao_id": 1193, "n_cards": 1, "avisos": 0}
 {"ts": "2026-10-13T20:11:53", "tipo": "generation", "questao_id": 1194, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1195, "n_cards": 1, "avisos": 2}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1196, "n_cards": 2, "avisos": 0}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1197, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1198, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1199, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1200, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1201, "n_cards": 1, "avisos": 2}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1202, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1203, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1204, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1205, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1206, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1207, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1208, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1209, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1210, "n_cards": 1, "avisos": 2}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1211, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1212, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "reincidencia", "questao_id": 1212, "hits": 1}
+{"ts": "2026-10-14T00:04:54", "tipo": "generation", "questao_id": 1213, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1214, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1215, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1216, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1217, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1218, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1219, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1220, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "reincidencia", "questao_id": 1220, "hits": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1221, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "reincidencia", "questao_id": 1221, "hits": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1222, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1223, "n_cards": 1, "avisos": 0}
+{"ts": "2026-10-14T17:42:36", "tipo": "reincidencia", "questao_id": 1223, "hits": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1225, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1226, "n_cards": 2, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1227, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1228, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:42:36", "tipo": "reincidencia", "questao_id": 1228, "hits": 4}
+{"ts": "2026-10-14T17:42:36", "tipo": "generation", "questao_id": 1229, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-14T17:43:13", "tipo": "reforja", "card_id": 1931, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 5, "len_verso_antes": 49, "len_verso_depois": 48, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-14T17:43:13", "tipo": "reforja", "card_id": 1932, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 5, "len_verso_antes": 15, "len_verso_depois": 44, "n_frases_antes": 1, "n_frases_depois": 1}

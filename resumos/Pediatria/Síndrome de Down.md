@@ -49,7 +49,7 @@ Trissomia do cromossomo 21, a alteração cromossômica mais frequente em nascid
   - Função tireoidiana seriada -- o hipotireoidismo costuma ser subclínico antes de dar sintoma.
   - Hemograma seriado -- rastreio de citopenias e de sinais hematológicos precoces.
   - ⭐ **Sorologia para doença celíaca (IgA total + antiendomisio, ou antitransglutaminase) a partir dos 2 anos de idade, independentemente de sintomas gastrointestinais.** A criança pode não ter diarreia nem déficit de crescimento aparente e ainda assim ter doença celíaca subclínica; os 2 anos marcam o início do calendário de rastreio programado, não um gatilho de sintoma.
-  - Radiografia lateral de coluna cervical (e ressonância magnética em casos selecionados) para rastreio de instabilidade atlantoaxial, sobretudo antes de atividades de risco (esportes de contato, procedimentos com manipulação cervical sob anestesia).
+  - Instabilidade atlantoaxial: rastreio **clínico** (história + exame neurológico) em toda consulta; RX/imagem de coluna cervical **só se sintomático** (AAP 2011/2022) -- não há RX lateral de rastreio de rotina.
 - ⚠️ **Padrão de prova:** vinhetas que descrevem uma criança com síndrome de Down "bem em tudo" (ecocardiograma neonatal normal, boas curvas de crescimento, bom desenvolvimento neuropsicomotor, exame físico sem alterações além do fenótipo) tentam induzir a resposta "manter seguimento de rotina e investigar apenas se surgir sintoma". Essa é a armadilha -- ausência de sintomas não dispensa o calendário de rastreio proativo da síndrome.
 
 ## 4. Armadilhas de Prova

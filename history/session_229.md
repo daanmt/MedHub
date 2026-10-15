@@ -25,3 +25,11 @@
 - RDs 1510 por eixo (48 cards nota 1-2 de 10-15/10): cir, cm, go, ped, mfc
 - Flashcards da semana empilhado (agendado + ciano da ultima sessao) -- Version 124
 - evidencia lote cards 1933/771/714/844/1474/1588: aguardando ok dele (proposta: aplicar 4, 2a passada em 1474/1588)
+- correções clínicas aprovadas (evidence-researcher em lote): cards 771, 714, 844, 1588 reforjados in-place; resumos Down l.52, Politrauma Ortopédico (NASCIS), Sepse l.117; RDs 1510 alinhadas. 1474 NÃO mexido (GINA não verificado). Frente do 714 a reescrever com ele.
+- hub Version 125
+
+## Encerramento (15/10, tarde)
+- Pedido: processar o estudo, front, cadeia em toda lista e simulado, RDs dos cards, correções. Ele volta à noite com t393/t651 feitas.
+- Decisões dele hoje: escopo UERJ único; /anima em aula/RD nova; legenda curta; sem micro-dica; spoiler UERJ revogado; lista=estudo, simulado=prova; #5426 preparada já.
+- Atrito: commit barrado uma vez pela suíte enquanto o front estava em obra (dados entraram no commit seguinte); 1 teste flaky (test_boot_verdadeiro) com subagentes em paralelo.
+- Próxima: s230 = tique da noite (registrar + analisar t393/t651; cards 16a).

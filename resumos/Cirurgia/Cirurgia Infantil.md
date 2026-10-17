@@ -233,7 +233,8 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
     - ⭐ **Hemorragia digestiva baixa indolor e maciça (enterorragia)** -- causa mais frequente de HDB em **menores de 5 anos**. O sangramento decorre da **ulceração péptica da mucosa ileal normal adjacente**, provocada pela secreção ácida de mucosa gástrica ectópica presente no divertículo (e não por invaginação intestinal ou diverticulite).
     - **Obstrução** (complicação mais comum no conjunto -- por invaginação ou volvo), diverticulite (simula apendicite), perfuração.
 - **Diagnóstico:** ⭐ **cintilografia com ⁹⁹ᵐTc-pertecnetato** ("cintilografia de Meckel") -- detecta a **mucosa gástrica ectópica** nos casos de sangramento.
-- **Tratamento:** ressecção cirúrgica -- diverticulectomia em "V" com fechamento transversal; ressecção segmentar do íleo + anastomose primária se houver inflamação/ulceração da base.
+- **Tratamento do sintomático:** ressecção cirúrgica -- diverticulectomia em "V" com fechamento transversal; ressecção segmentar do íleo + anastomose primária se houver inflamação/ulceração da base.
+- 🔴 **Armadilha -- Meckel INCIDENTAL no adulto** (achado durante apendicectomia, sobretudo em campo contaminado): **não ressecar de rotina** -- a ressecção do assintomático tem mais complicação pós-operatória que deixá-lo (5,3% x 1,3%; Zani, Ann Surg 2008). Considerar só com campo limpo e fator de risco (Park, Ann Surg 2005): < 50 anos, sexo masculino, > 2 cm, tecido ectópico/anormal palpável. Na **criança**, a ressecção do incidental é mais defendida. (EMED t393 Q20, s230)
 
 ---
 

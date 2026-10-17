@@ -410,7 +410,10 @@ def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
     assert ".set({feito: novo, ts: new Date().toISOString()})" in js
     assert 'querySelectorAll(".qd-item[data-slug]")' in js, "so item com slug entra no estado"
     assert '.qd-sem[data-secao="' in js, "o item que volta a pendente vai para a SUA secao"
-    assert 'addEventListener("click"' not in js and ".disabled" not in js, "nada a clicar no quadro"
+    # s230: o unico clique do quadro e o "Ver lidas (N)" do grupo das RDs (mostra/esconde as assinadas, nao
+    # grava nada); o feito continua sem controle na pagina
+    sem_lidas = js.replace(js[js.index("function botaoLidas("):js.index("function inserirEmOrdem(")], "")
+    assert 'addEventListener("click"' not in sem_lidas and ".disabled" not in js, "nada a clicar no quadro"
 
 
 def test_quadro_celular_alvo_de_toque_e_grid_item_encolhe(tmp_path):
@@ -1487,3 +1490,16 @@ def test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao(tmp_path):
     assert not re.search(r"\.qd-sem-aula[^{]*\{[^}]*cursor:pointer", css)
     liga = re.search(r'querySelectorAll\("a\.hub-aula"\), function\(a\)\{(.*?)\}\);\n  \}\);', TEMPLATE_HUB_REAL, re.S)
     assert liga and "abrirAula(a)" in liga.group(1), "o cartao e um a.hub-aula: o toque abre o leitor"
+
+
+def test_rds_lidas_saem_da_frente_das_abertas(tmp_path):
+    """s230 (pedido dele, 17/10): no grupo Revisoes direcionadas a RD assinada fica recolhida atras de
+    "Ver lidas (N)" e a RD aberta de varias disciplinas aparece uma vez so; o recontar da abertura poe o botao."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn)
+    pagina = _index(raiz)
+    assert 'details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-item[data-feito]' in pagina
+    assert 'details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-item.qd-dup' in pagina
+    js = pagina.split("function iniciarQuadro()", 1)[1].split("// ---", 1)[0]
+    assert 'if(g.getAttribute("data-area") === "RD"){ botaoLidas(g); }' in js
+    assert '"Ver lidas (" + n + ")"' in js and "b.hidden = !n;" in js

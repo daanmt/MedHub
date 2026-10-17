@@ -186,6 +186,15 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 .qd-disc{min-width:0}
 .qd-disc-tit{margin:0 0 var(--esp-1);font-size:var(--fs-meta);font-weight:650;color:var(--tinta3)}
 .qd-area-corpo > .qd-disc:only-child > .qd-disc-tit{display:none}
+/* s230 (pedido dele, 17/10: "as RDs que ja foram vistas saiam da frente das que ainda estao abertas"): no grupo
+   Revisoes direcionadas a RD assinada fica recolhida atras de "Ver lidas (N)", no fim do grupo; a disciplina sem
+   RD aberta some junto. O botao (o hub poe) devolve todas, riscadas, no lugar de sempre */
+details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-item[data-feito],
+details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-item.qd-dup{display:none}
+details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item:not([data-feito]):not(.qd-dup))){display:none}
+.qd-ver-lidas{justify-self:start;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--linha-forte);border-radius:var(--raio);
+              background:transparent;color:var(--tinta2);font:inherit;font-size:var(--fs-legenda);font-weight:600;cursor:pointer}
+.qd-ver-lidas:hover{color:var(--acento-tinta);border-color:var(--acento)}
 .qd-nova{color:var(--rosa);font-weight:700}
 .qd-lig{margin:2px 0 0;font-size:var(--fs-meta);line-height:2.1;color:var(--tinta3);min-width:0}
 .qd-lig a{padding:var(--esp-3) 0;color:var(--tinta2);font-weight:600;text-underline-offset:2px}   /* inline: quebra com o texto; o padding da a area de toque sem mexer na linha */
@@ -2315,9 +2324,34 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         if(!n){ g.parentNode.removeChild(g); return; }
         g.querySelector("[data-n]").textContent = String(n);
         pintarNovas(g.querySelector("[data-novas]"), contar(g, eNova));
+        if(g.getAttribute("data-area") === "RD"){ botaoLidas(g); }
       });
       $("hub-quadro-nfeitas").textContent = String(contar(areas));
       pintarNovas($("hub-quadro-novas"), contar(areas, eNova));
+    }
+
+    // s230: o "Ver lidas (N)" do grupo das RDs -- no fim do corpo, recontado a cada assinatura; sem lida, some
+    function botaoLidas(g){
+      var corpo = g.querySelector(".qd-area-corpo"), b = corpo && corpo.querySelector(".qd-ver-lidas");
+      if(!corpo){ return; }
+      var n = contar(g, function(li){ return li.hasAttribute("data-feito"); }), vistas = {};
+      // a RD aberta de varias disciplinas aparece UMA vez (a 1a copia na ordem A-Z); com "Ver lidas", todas
+      Array.prototype.forEach.call(g.querySelectorAll(".qd-item"), function(li){
+        var k = chaveItem(li), dup = !li.hasAttribute("data-feito") && !!vistas[k];
+        if(!li.hasAttribute("data-feito")){ vistas[k] = 1; }
+        if(dup){ li.classList.add("qd-dup"); } else { li.classList.remove("qd-dup"); }
+      });
+      if(!b){
+        b = novoEl("button", "qd-ver-lidas"); b.type = "button";
+        b.addEventListener("click", function(){
+          if(g.hasAttribute("data-ver-lidas")){ g.removeAttribute("data-ver-lidas"); } else { g.setAttribute("data-ver-lidas", ""); }
+          botaoLidas(g);
+        });
+      }
+      corpo.appendChild(b);   // sempre o ultimo: a disciplina criada ao vivo entra antes dele
+      b.hidden = !n;
+      b.textContent = g.hasAttribute("data-ver-lidas") ? "Esconder lidas" : "Ver lidas (" + n + ")";
+      b.setAttribute("aria-expanded", g.hasAttribute("data-ver-lidas") ? "true" : "false");
     }
 
     function inserirEmOrdem(lista, li){
@@ -2390,7 +2424,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     (function(){ var v = typeof vistosLer === "function" ? vistosLer() : {}, mudou = false;
       itens.forEach(function(li){ var tag = li.querySelector(".qd-nova");
         if(tag && v[li.getAttribute("data-slug")]){ tag.parentNode.removeChild(tag); mudou = true; } });
-      if(mudou){ try{ recontar(); }catch(e){} } })();
+      // s230: sempre -- e o recontar que poe o "Ver lidas (N)" das RDs ja assinadas no build
+      try{ recontar(); }catch(e){} })();
 
     // P20: sem db nao ha o que marcar (a assinatura tambem nao grava) -- e nenhum controle a desabilitar
     function semArmazenamento(){ colecao = null; }

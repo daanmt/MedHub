@@ -108,7 +108,7 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
   - Colecistite complicada: antibioticoterapia terapêutica por 4-7 dias.
 
 ### 5.2 Colecistectomia Precoce -- Timing
-- ⭐ A base do tratamento é a **colecistectomia (preferencialmente videolaparoscópica) PRECOCE**, idealmente nas **primeiras 72 h / mesma internação**.
+- ⭐ A base do tratamento é a **colecistectomia (preferencialmente videolaparoscópica) PRECOCE**, **o mais cedo possível após a admissão, na mesma internação**, se o paciente é apto (TG13: até 72 h do início dos sintomas; TG18: sem teto fixo -- 'independentemente do tempo desde o início'; WSES 2020: até 7 dias). 🔴 Prazo arbitrário ('antibiótico e operar em 48 h') não é diretriz: a indicação é operar precoce, não esperar um relógio. (EMED t393 Q40, s230)
 - ⚠️ Padrão de prova: está **superada** a conduta antiga de "esfriar e operar em 6-8 semanas". A colecistectomia precoce reduz complicações e reinternações; postergar só quando o risco cirúrgico é proibitivo.
 
 ### 5.3 Colecistostomia Percutânea
@@ -117,9 +117,9 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 
 ### 5.4 Conduta Segundo Tokyo e Risco Cirúrgico (ASA + Charlson)
 - ⭐ As Diretrizes de Tokyo estimam o risco cirúrgico por **dois índices em conjunto**: a classificação **ASA** (estado físico) e o **Índice de Comorbidade de Charlson** (ICC, soma ponderada de comorbidades -- idade, DM, neoplasia, DPOC, IC, etc.). **Charlson <= 5 = baixo risco**; acima disso, o risco cirúrgico sobe. Uma questão pode citar "Tokyo II, Charlson 5" para justificar baixo risco e colecistectomia precoce sem citar o ASA explicitamente -- os dois índices são usados de forma intercambiável/conjunta na literatura de Tokyo, não é preciso ter ambos calculados para responder.
-- **Baixo risco (ASA <= 2 e/ou Charlson <= 5):**
+- **Baixo risco (ASA <= 2 E Charlson <= 5 -- o TG18 exige os dois; na prova, um índice citado basta para inferir):**
   - Tokyo I e II -> colecistectomia laparoscópica precoce.
-  - Tokyo III sem disfunção neurológica/respiratória e sem hiperbilirrubinemia (BT < 2 mg/dL) -> colecistectomia precoce após reanimação, em centro avançado.
+  - Tokyo III sem disfunção neurológica/respiratória e sem hiperbilirrubinemia (BT < 2 mg/dL), com **Charlson <= 3** e ASA <= 2 -> colecistectomia precoce após reanimação, em centro avançado.
 - **Alto risco (ASA >= 3):**
   - Tokyo I -> antibiótico e programar colecistectomia laparoscópica eletiva.
   - Tokyo II -> antibiótico com ou sem colecistostomia e programar colecistectomia laparoscópica eletiva.
@@ -127,7 +127,7 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 - ⚠️ Padrão de prova: cirurgias em colecistite Tokyo II e III devem ser conduzidas por cirurgiões experientes em centros avançados.
 
 ### 5.5 Técnica Cirúrgica
-- **Laparoscópica x aberta:** a videolaparoscopia é a via preferencial (menos infecção de ferida, menor dor pós-operatória, menor tempo de internação, retorno precoce às atividades). A aberta emprega incisão subcostal direita (Kocher) e associa-se a mais infecção de ferida operatória, hérnia incisional e obstrução tardia por aderências.
+- **Laparoscópica x aberta:** a videolaparoscopia é a via preferencial (menos infecção de ferida, menor dor pós-operatória, menor tempo de internação, retorno precoce às atividades). A aberta emprega incisão subcostal direita (Kocher) e associa-se a mais infecção de ferida operatória, hérnia incisional e obstrução tardia por aderências. ⭐ Sem laparoscopia disponível (hospital secundário), opera-se por via aberta: **a indicação não muda, só a via**.
 - ⭐ **Visão Crítica da Segurança (Critical View of Safety):** dissecção do trígono de Calot deixando apenas duas estruturas -- **ducto cístico e artéria cística** -- identificadas antes da secção, para evitar lesão iatrogênica da via biliar.
   - Limites do trígono de Calot: superior = borda hepática; inferior = ducto cístico; medial = ducto hepático comum; contém a artéria cística.
 - **Colecistectomia subtotal (técnica de Torek):** quando a inflamação intensa impede a identificação segura da via biliar -- secção transversal da vesícula, com a parede posterior mantida no leito hepático e a mucosa cauterizada.
@@ -261,7 +261,7 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 ## 13. Armadilhas de Prova
 
 - 🔴 Confundir a **tríade de Charcot** (febre + icterícia + dor em QSD = colangite aguda) com a **pêntade de Reynolds** (Charcot + hipotensão + alteração do sensório = colangite grave/supurativa, mortalidade 20-30%).
-- 🔴 Postergar a colecistectomia na colecistite litiásica não complicada ("esfriar e operar em 6-8 semanas"): a conduta atual é **colecistectomia precoce** (idealmente < 72 h / mesma internação).
+- 🔴 Postergar a colecistectomia na colecistite litiásica não complicada ("esfriar e operar em 6-8 semanas"): a conduta atual é **colecistectomia precoce** (o mais cedo possível, na mesma internação -- TG18 sem teto; as 72 h eram do TG13).
 - 🔴 Tratar colangite **Grau II/III** só com antibiótico, sem drenagem: a descompressão biliar (CPRE de escolha) é pilar do tratamento; sem desobstruir a via biliar, a sepse não cede. ⭐ **Mas a armadilha tem dois lados, e o outro é mais cobrado:** no **Grau I** o TG18 manda antibiótico + suporte com **reavaliação em 24 h**, e drenar SÓ na não-resposta — a série que validou o TG13/18 mostrou ganho de mortalidade da drenagem precoce **apenas no Grau II** (zero no Grau I). O grau comanda o **TIMING**, nunca o **SE**. Ver §12.3. 🔴 E cuidado com o vocabulário: "urgente" no TG18 é reservado ao **Grau III** — alternativa de prova que ofereça "papilotomia de urgência" num Grau I está errada sob qualquer leitura. *(ENARE 2025 q36: 3 quase-cifras — 38 °C não ≥39, BT 4,6 não ≥5, 45 anos não ≥75 — construídas para excluir o Grau II; gabarito = conduta clínica. Ancoragem: TG18/Miura 2018, PMID 28941329.)*
 - 🔴 Esquecer a **colecistite alitiásica** no paciente crítico/UTI (jejum, NPT, grande queimado, ventilação mecânica): evolução mais grave (gangrena/perfuração), diagnóstico tardio e predomínio em homens.
 - 🔴 Escolher **TC ou cintilografia como exame inicial** da colecistite: a **USG** é a 1a escolha (Murphy ultrassonográfico, parede >= 4 mm, líquido perivesicular). A cintilografia (HIDA) é padrão-ouro reservado à USG duvidosa; a TC serve para avaliar complicações.

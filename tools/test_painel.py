@@ -919,9 +919,11 @@ def test_proxima_so_pelo_rotulo_sem_botao_cheio(db_sintetico):
     css = painel.CSS
     assert ".tarefa.proxima .t-tema::before{content:\"Próxima\"" in css
     assert ":first-child .t-acao" not in css and ".proxima .t-btn" not in css, "so a Proxima com botao cheio"
-    # s231: decisao dele (19/10) -- a Proxima aparece 2x: no topo do dashboard (so celular) e no lugar dela na lista
+    # s231: decisao dele (19/10) -- o topo do dashboard leva as tarefas de hoje (o CSS mostra so a 1a pendente);
+    # fora dele, a Proxima aparece 1x, no lugar dela na lista
     pagina = _pagina()
-    assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 2
+    fora_do_topo = re.sub(r'<div class="dash-prox">.*?</div>', "", pagina, flags=re.S)
+    assert fora_do_topo.count('class="tarefa proxima"') + fora_do_topo.count('class="tarefa atrasada proxima"') == 1
     semana = pagina[pagina.index('data-bloco="semana"'):]
     assert semana.count('class="tarefa proxima"') + semana.count('class="tarefa atrasada proxima"') == 1
 
@@ -1514,7 +1516,7 @@ def test_anel_de_questoes_no_dia_so_de_simulado():
     assert painel._conta_do_dia([_t(1), _t(2, classe="aula", q=0)], 20, 0) == "1&nbsp;lista · 1&nbsp;aula · 20&nbsp;q"
 
 
-def test_proxima_no_topo_do_painel_so_no_celular(db_sintetico, tmp_path, monkeypatch):
+def test_proxima_no_topo_do_painel(db_sintetico, tmp_path, monkeypatch):
     """s231 (decisao dele, 19/10, P0 do critique: "a proxima acao esta enterrada no Painel a 390 px"): a 1a tarefa do
     dia, o MESMO cartao do Cronograma (`li.tarefa.proxima`, mesmo `data-tarefa`, mesmos botoes), e o 1o filho do
     dashboard, antes dos aneis; a partir de 760 px some (o pedido era o celular; no desktop, a ordem da s227); feita ao vivo
@@ -1528,9 +1530,11 @@ def test_proxima_no_topo_do_painel_so_no_celular(db_sintetico, tmp_path, monkeyp
     topo = dash[:dash.index('<div class="placa dash-hoje">')]
     no_crono = painel._html_tarefa(d["sprint"]["hoje"][0], proxima=True)
     assert no_crono in topo, "o mesmo cartao, com os mesmos botoes"
-    assert topo.count('<li class="tarefa') == 1 and "Questões" not in topo
+    # s231 (2o pedido dele): TODAS as tarefas de hoje vao, na ordem; o CSS mostra so a 1a pendente (avanca ao vivo)
+    assert topo.count('<li class="tarefa') == len(d["sprint"]["hoje"]) and "Questões" not in topo
+    assert ".dash-prox li.tarefa:not([hidden]):not(.t-resolvida) ~ li.tarefa{display:none}" in painel.CSS
     grade = painel.CSS.split("@media (min-width:760px){", 1)[1].split("\n}", 1)[0]
-    assert ".dash > .dash-prox{display:none}" in grade
+    assert ".dash > .dash-prox{grid-column:1 / -1}" in grade and "dash-prox{display:none}" not in grade
     assert ".dash-prox:not(:has(li.tarefa:not([hidden]):not(.t-resolvida))){display:none}" in painel.CSS
     sem = dict(d, sprint=dict(d["sprint"], hoje=[]))
     assert painel._html_proxima(sem) == "", "sem tarefa no dia, nada no topo"

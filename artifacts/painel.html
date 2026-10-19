@@ -158,8 +158,10 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-grupo.atrasadas{color:var(--aviso)}
 /* o proximo passo: a 1a tarefa do dia (a ordem e a do plano) -- o rotulo "Proxima" e o contorno ciano */
 .tarefa.proxima{border-color:var(--acento)}
-/* s231 (decisao dele, 19/10): a proxima tarefa no TOPO do Painel no celular, antes dos aneis; feita, some */
+/* s231 (decisao dele, 19/10): a proxima tarefa no TOPO do Painel, antes dos aneis (celular e desktop); todas feitas, some */
 .dash-prox:not(:has(li.tarefa:not([hidden]):not(.t-resolvida))){display:none}
+/* so a 1a pendente aparece: qualquer cartao depois de um visivel sai (os feitos ja sairam por [hidden]/.t-resolvida) */
+.dash-prox li.tarefa:not([hidden]):not(.t-resolvida) ~ li.tarefa{display:none}
 .tarefa.proxima .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
 .prox{margin-top:var(--esp-3)}
 .mais{margin-top:var(--esp-2)}
@@ -186,7 +188,7 @@ a{color:var(--acento);text-underline-offset:2px}
 @media (min-width:760px){
   .dash{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dash > .dash-hoje{grid-column:1 / -1}
-  .dash > .dash-prox{display:none}
+  .dash > .dash-prox{grid-column:1 / -1}   /* s231: no topo tambem no desktop, na largura toda */
   .aneis4{gap:var(--esp-5) var(--esp-5)}
   .anel{width:min(100%,8.5rem)}
 }
@@ -318,9 +320,9 @@ strong{font-weight:650}
 </head>
 <body>
 <div class="wrap">
-<p class="atualizado"><!--gerado--><span data-gerado="2026-10-19T11:59:59" data-gerado-iso="2026-10-19T11:59:59" data-fallback="atualizado em 19/10, 11:59">atualizado em 19/10, 11:59</span><!--/gerado--></p>
+<p class="atualizado"><!--gerado--><span data-gerado="2026-10-19T12:21:08" data-gerado-iso="2026-10-19T12:21:08" data-fallback="atualizado em 19/10, 12:21">atualizado em 19/10, 12:21</span><!--/gerado--></p>
 <section class="bloco dia dash" data-bloco="dia">
-<div class="dash-prox"><ol class="tarefas"><li class="tarefa proxima" data-tarefa="892"><i class="t-faixa" data-area="Simulado" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">Simulado</span><span class="t-n">100 questões</span></p><p class="t-tema">UERJ 2024 -- prova INTEIRA (100q), cronometrada, 5 blocos</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados" data-hub-tarefa="892">Resolver</a></p></li></ol></div>
+<div class="dash-prox"><ol class="tarefas"><li class="tarefa proxima" data-tarefa="892"><i class="t-faixa" data-area="Simulado" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">Simulado</span><span class="t-n">100 questões</span></p><p class="t-tema">UERJ 2024 -- prova INTEIRA (100q), cronometrada, 5 blocos</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados" data-hub-tarefa="892">Resolver</a></p></li><li class="tarefa proxima" data-tarefa="651"><i class="t-faixa" data-area="PED" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">PED</span><span class="t-n">30 questões</span></p><p class="t-tema">Doença de Kawasaki</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="651">Resolver</a><a class="t-btn" href="aulas/kawasaki.html" data-hub-aula="kawasaki" data-titulo="Doença de Kawasaki">Abrir aula</a></p></li><li class="tarefa proxima" data-tarefa="879"><i class="t-faixa" data-area="MFC" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">MFC</span><span class="t-n">12 questões</span></p><p class="t-tema">Polifarmácia, desprescrição e RAM no idoso</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="879">Resolver</a><a class="t-btn" href="aulas/idoso-amg-polifarmacia.html" data-hub-aula="idoso-amg-polifarmacia" data-titulo="Idoso: avaliação e polifarmácia">Abrir aula</a></p></li><li class="tarefa proxima" data-tarefa="144"><i class="t-faixa" data-area="CIR" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">38 questões</span></p><p class="t-tema">Complicações Pós-Operatórias</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="144">Resolver</a></p></li><li class="tarefa proxima" data-tarefa="5426"><i class="t-faixa" data-area="MFC" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">MFC</span></p><p class="t-tema">UERJ de Bolso: MFC e a banca</p><p class="t-acao"><a class="t-btn" href="aulas/uerj-de-bolso-mfc.html" data-hub-aula="uerj-de-bolso-mfc" data-titulo="UERJ de Bolso: MFC e a banca" data-cumpre="1">Abrir aula</a></p></li><li class="tarefa proxima" data-tarefa="819"><i class="t-faixa" data-area="PED" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">PED</span><span class="t-n">30 questões</span></p><p class="t-tema">Infecções Congênitas</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="819">Resolver</a></p></li><li class="tarefa proxima" data-tarefa="577"><i class="t-faixa" data-area="PED" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">PED</span><span class="t-n">42 questões</span></p><p class="t-tema">Infecção de Trato Urinário em Pediatria</p><p class="t-acao"><a class="t-btn t-btn-prim" href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes" data-hub-tarefa="577">Resolver</a></p></li></ol></div>
 <div class="placa dash-hoje">
 <h2>Hoje, segunda 19/10</h2>
 <div class="aneis4" data-sessao-gravada="2026-10-17a">

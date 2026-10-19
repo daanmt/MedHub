@@ -1031,15 +1031,18 @@ def _html_blocos(b):
 
 
 def _html_proxima(d):
-    """s231 (decisao dele, 19/10, do critique: "a proxima acao esta enterrada no Painel a 390 px"): a 1a tarefa do
-    dia (a MESMA `li.tarefa.proxima` do Cronograma, com os mesmos botoes e o mesmo `data-tarefa`) ACIMA dos aneis,
-    so no celular (abaixo de 760 px de iframe; no desktop fica a ordem da s227, aneis no topo: o pedido era o celular). O hub pinta as duas
-    copias juntas (`querySelectorAll`); feita ao vivo, a faixa some (CSS `:has`). Sem tarefa, nada."""
+    """s231 (decisao dele, 19/10, do critique: "a proxima acao esta enterrada no Painel a 390 px"): a proxima tarefa
+    do dia (o MESMO cartao `li.tarefa.proxima` do Cronograma, com os mesmos botoes e o mesmo `data-tarefa`) ACIMA dos
+    aneis, no celular e no desktop (s231, 2o pedido dele: "pode ser no topo do computador tambem"). Vao TODAS as
+    tarefas de hoje, na ordem do plano; o CSS mostra so a 1a ainda pendente -- feita ao vivo (o hub poe `hidden` ou
+    `.t-resolvida` nas duas copias, `querySelectorAll`), a faixa avanca para a seguinte sem republicar; todas feitas,
+    a faixa some. Sem tarefa, nada."""
     sp = d.get("sprint")
     tarefas = sp["hoje"] if sp else (d.get("semana") or {}).get("tarefas") or []
     if not tarefas:
         return ""
-    return '<div class="dash-prox"><ol class="tarefas">%s</ol></div>\n' % _html_tarefa(tarefas[0], proxima=True)
+    return '<div class="dash-prox"><ol class="tarefas">%s</ol></div>\n' % "".join(
+        _html_tarefa(t, proxima=True) for t in tarefas)
 
 
 def _html_dash(d):
@@ -1210,8 +1213,10 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-grupo.atrasadas{color:var(--aviso)}
 /* o proximo passo: a 1a tarefa do dia (a ordem e a do plano) -- o rotulo "Proxima" e o contorno ciano */
 .tarefa.proxima{border-color:var(--acento)}
-/* s231 (decisao dele, 19/10): a proxima tarefa no TOPO do Painel no celular, antes dos aneis; feita, some */
+/* s231 (decisao dele, 19/10): a proxima tarefa no TOPO do Painel, antes dos aneis (celular e desktop); todas feitas, some */
 .dash-prox:not(:has(li.tarefa:not([hidden]):not(.t-resolvida))){display:none}
+/* so a 1a pendente aparece: qualquer cartao depois de um visivel sai (os feitos ja sairam por [hidden]/.t-resolvida) */
+.dash-prox li.tarefa:not([hidden]):not(.t-resolvida) ~ li.tarefa{display:none}
 .tarefa.proxima .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
 .prox{margin-top:var(--esp-3)}
 .mais{margin-top:var(--esp-2)}
@@ -1238,7 +1243,7 @@ a{color:var(--acento);text-underline-offset:2px}
 @media (min-width:760px){
   .dash{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dash > .dash-hoje{grid-column:1 / -1}
-  .dash > .dash-prox{display:none}
+  .dash > .dash-prox{grid-column:1 / -1}   /* s231: no topo tambem no desktop, na largura toda */
   .aneis4{gap:var(--esp-5) var(--esp-5)}
   .anel{width:min(100%,8.5rem)}
 }

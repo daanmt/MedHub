@@ -579,10 +579,11 @@ publicar.
 
 ### Telas: o que cada uma prioriza
 
-- **Painel**: responde, nesta ordem, o que fazer hoje, quanto avancei e o que vem depois. No celular (abaixo de 760 px de
-  iframe), o 1º filho da grade é a Próxima (`.dash-prox`: o MESMO cartão `li.tarefa.proxima` do Cronograma, mesmos botões e
-  `data-tarefa`; feita ao vivo, some) — s231, 19/10, decisão dele, do P0 do critique ("a próxima ação enterrada a 390 px");
-  no desktop ela não aparece (o pedido era o celular; lá fica a ordem da s227, anéis no topo). Depois, a placa dos 4 anéis
+- **Painel**: responde, nesta ordem, o que fazer hoje, quanto avancei e o que vem depois. O 1º filho da grade é a Próxima
+  (`.dash-prox`, celular e desktop, na largura toda): leva as tarefas de hoje como os MESMOS cartões `li.tarefa.proxima` do
+  Cronograma (mesmos botões e `data-tarefa`) e o CSS mostra só a 1ª pendente — feita ao vivo, a faixa avança para a
+  seguinte sem republicar; todas feitas, some. s231, 19/10, decisão dele, do P0 do critique ("a próxima ação enterrada a
+  390 px"), primeiro no celular e, no mesmo dia, também no desktop (*"pode ser no topo do computador também"*). Depois, a placa dos 4 anéis
   (s227 part-5, pedido dele: *"o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam aparecer junto no topo,
   através desses anéis com percentual"*); abaixo, Por bloco | Flashcards da semana. A `section.dash` é a grade das
   placas, uma coluna e, a partir de 760 px de iframe, duas; vão `--esp-4`, o mesmo até as placas de baixo; sem filete
@@ -680,7 +681,7 @@ ajusta, nunca reescreve aula. Achados L1–L15 (§14 de lá) e o estado:
 | Teoria sem semana; a RD assinada some do backlog ao vivo | `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`, `test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca`, `test_hub_render.py::test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca` |
 | Listas = o mesmo "hoje" do Painel; simulado com a data | `test_hub_render.py::test_listas_e_painel_mesmo_hoje`, `test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint`, `test_simulado_leva_a_data_do_sprint`, `test_sem_hub_sprint_as_listas_caem_nas_semanas` |
 | dashboard: `q_hoje` do sprint, meta 1x, Por bloco com "mais fraco", nenhum `p.nota`, o `q_hoje` = o do boot | `test_painel.py::test_dashboard_questoes_usa_o_q_hoje_do_sprint`, `test_dashboard_sem_sprint_volta_a_meta`, `test_barra_de_projecao_feito_sprint_meta`, `test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado`, `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje` |
-| s231: Próxima no topo no celular; carga do dia = listas, simulado à parte (anel, Cronograma, Listas › Hoje, "+K") | `test_painel.py::test_proxima_no_topo_do_painel_so_no_celular`, `test_carga_do_dia_listas_num_denominador_e_o_simulado_a_parte`, `test_anel_de_questoes_no_dia_so_de_simulado`, `test_hub_render.py::test_listas_hoje_soma_as_listas_e_o_simulado_a_parte`, `test_ao_vivo_o_anel_de_questoes_conta_listas_e_simulado_a_parte` |
+| s231: Próxima no topo (celular e desktop; avança ao vivo); carga do dia = listas, simulado à parte (anel, Cronograma, Listas › Hoje, "+K") | `test_painel.py::test_proxima_no_topo_do_painel`, `test_carga_do_dia_listas_num_denominador_e_o_simulado_a_parte`, `test_anel_de_questoes_no_dia_so_de_simulado`, `test_hub_render.py::test_listas_hoje_soma_as_listas_e_o_simulado_a_parte`, `test_ao_vivo_o_anel_de_questoes_conta_listas_e_simulado_a_parte` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`) | `test_painel.py::test_html_sem_jargao` |
 | leituras pela assinatura resiliente; chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | a retentativa pede conexão nova ao banco | `test_hub_render.py::test_retentativa_pede_conexao_nova` |

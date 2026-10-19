@@ -287,8 +287,9 @@ def _bloco_sprint(linhas, hoje):
               proximos=[dict(p, tarefas=[t for t in p["tarefas"] if not feita(t)]) for p in ag["proximos"]])
     ag["proximos"] = [p for p in ag["proximos"] if p["tarefas"]]
     return {
-        "hoje": [tarefa(t) for t in ag["hoje"]], "q_hoje": ag["q_hoje"],
-        "proximos": [{"data": p["data"], "q": p["q"], "tarefas": [tarefa(t) for t in p["tarefas"]]}
+        "hoje": [tarefa(t) for t in ag["hoje"]], "q_hoje": ag["q_hoje"], "q_simulado": ag["q_simulado"],
+        "proximos": [{"data": p["data"], "q": p["q"], "q_simulado": p["q_simulado"],
+                      "tarefas": [tarefa(t) for t in p["tarefas"]]}
                      for p in ag["proximos"]],
         "fora": [dict(tarefa(t), motivo=t["motivo"]) for t in ag["fora"]],
         "rd": _rd_nao_assinada(),
@@ -343,8 +344,11 @@ def _bloco_dia(linhas, hoje):
     inteira: "0 de ~474, cota de ~474 por dia ate dom 27/09".*"""
     import day_plan
     import performance
-    feitas_hoje = sum(int(s.get("questoes_feitas") or 0) for s in db.sessoes_bulk_listar()
-                      if str(s.get("data_sessao") or "")[:10] == hoje.isoformat())
+    from app.utils import areas
+    do_dia = [s for s in db.sessoes_bulk_listar() if str(s.get("data_sessao") or "")[:10] == hoje.isoformat()]
+    feitas_hoje = sum(int(s.get("questoes_feitas") or 0) for s in do_dia)
+    # s231 (decisao dele, 19/10): a parte do dia que foi simulado, para o anel contar listas e simulado a parte
+    feitas_sim = sum(int(s.get("questoes_feitas") or 0) for s in do_dia if s.get("area") in areas.AREAS_AGREGADAS)
     con = db.get_connection()
     try:
         vm = performance.volume_vs_marco(con, hoje)
@@ -362,6 +366,7 @@ def _bloco_dia(linhas, hoje):
     return {
         "questoes": {
             "feitas_hoje": feitas_hoje,
+            "feitas_simulado_hoje": feitas_sim,
             "alvo_dia": vm["ritmo_alvo"],
             "meta": vm["meta"],
             "faltam": vm["faltam"],
@@ -466,7 +471,10 @@ def coletar(hoje=None):
     dia = _bloco_dia(linhas, hoje)
     # s226 (painel-dashboard-sprint part-1): com sprint, o tile de Questoes conta contra o `q_hoje` do
     # sprint -- o MESMO do "Plano de hoje" e do boot (`plano.agenda_sprint`); None = o ritmo da meta
-    dia["questoes"]["q_hoje"] = sprint["q_hoje"] if sprint else None
+    # s231 (decisao dele, 19/10: "um denominador para a carga do dia"): o anel conta SO as listas (o mesmo
+    # numero da aba Listas > Hoje e do Cronograma); o simulado do dia e uma unidade a parte (`q_simulado`)
+    dia["questoes"]["q_hoje"] = (sprint["q_hoje"] - sprint["q_simulado"]) if sprint else None
+    dia["questoes"]["q_simulado"] = sprint["q_simulado"] if sprint else 0
     return {
         "gerado_em": db.agora().isoformat(timespec="seconds"),
         "data": hoje.isoformat(),
@@ -644,17 +652,32 @@ def _anel_questoes(q):
     """Questoes: feitas contra o alvo do dia ("X de 76"). Com sprint (`q_hoje` nao-None), o `q_hoje` (o MESMO
     do "Plano de hoje" e do boot); sem sprint, o ritmo da meta (s203). A meta 10.000 nao aparece aqui: ela e
     o valor do anel Ate 01/11. Sem alvo, "X feitas" e o motivo no `aria-label`.
+    s231 (decisao dele, 19/10: "um denominador para a carga do dia, o simulado a parte"): com sprint, o anel
+    conta SO as listas -- feitas sem o simulado contra o `q_hoje` das listas (o MESMO da aba Listas > Hoje e do
+    Cronograma) -- e o simulado do dia aparece como unidade propria sob o valor ("+ simulado (100 q)"). Dia so
+    de simulado: o anel conta o simulado ("X de 97 no simulado"). O `data-conta` da ancora diz ao hub o que o
+    "+K" ao vivo soma (listas | simulado; sem ele, tudo). ⚰️ *s226-s230: "0 de 252", o simulado dentro.*
     ⚰️ *Ate 13/10 (part-5) levava a linha "faltam N" / "dose do dia cumprida" sob o valor (pedido dele de
     13/10: sem legendas).*"""
+    total = q["feitas_hoje"] or 0
+    q_hoje, q_sim = q.get("q_hoje"), int(q.get("q_simulado") or 0)
+    f_sim = int(q.get("feitas_simulado_hoje") or 0)
+    conta, feitas, sufixo = None, total, ""
+    if q_hoje is not None and q_hoje:
+        conta, feitas = "listas", max(0, total - f_sim)
+        if q_sim:
+            sufixo = ' <span class="an-sim">+ simulado (%s&nbsp;q)</span>' % _n(q_sim)
+    elif q_hoje is not None and q_sim:
+        conta, feitas, q_hoje = "simulado", f_sim, q_sim
+        sufixo = ' <span class="an-sim">no simulado</span>'
     # s216 (part-6, P08 v0): o numero publicado leva a ancora do "Hoje ao vivo" -- a pagina soma "+K"
     # AO LADO (o que ela gravou depois do publish), nunca o substitui
-    b_q = '<b data-vivo="questoes" data-base="%s">%s</b>' % (_e(q["feitas_hoje"]), _n(q["feitas_hoje"]))
-    feitas = q["feitas_hoje"] or 0
-    q_hoje = q.get("q_hoje")
+    b_q = '<b data-vivo="questoes"%s data-base="%s">%s</b>' % (
+        ' data-conta="%s"' % conta if conta else "", _e(feitas), _n(feitas))
     motivo = None
     if q_hoje is not None:
         if q_hoje:
-            valor, pct = '%s de %s' % (b_q, _n(q_hoje)), _razao(feitas, q_hoje)
+            valor, pct = '%s de %s%s' % (b_q, _n(q_hoje), sufixo), _razao(feitas, q_hoje)
         else:
             valor, pct, motivo = '%s feitas' % b_q, None, "nenhuma lista no plano de hoje"
     elif q["alvo_dia"] is not None:
@@ -885,17 +908,33 @@ def _plural(n, um, varios):
     return "%s&nbsp;%s" % (_n(n), um if n == 1 else varios)
 
 
-def _conta_do_dia(tarefas):
-    """"2 listas · 1 aula": o que o dia tem, pelo que se faz com cada tarefa (simulado pela area)."""
+def _simulado_do_dia(n, q):
+    """"simulado (100 q)": o simulado do dia como unidade a parte (s231); 2+ (o rolado), "2 simulados (197 q)"."""
+    return "%s (%s&nbsp;q)" % ("simulado" if n == 1 else _plural(n, "simulado", "simulados"), _n(q))
+
+
+def _conta_do_dia(tarefas, q=0, q_sim=0):
+    """"2 listas · 1 aula · 72 q": o que o dia tem, pelo que se faz com cada tarefa (simulado pela area), e as
+    questoes das LISTAS (`q` = o total do dia; `q_sim` = a parte dele que e simulado).
+    s231 (decisao dele, 19/10: "um denominador para a carga do dia, o simulado a parte"): o simulado sai da
+    contagem e entra no fim como unidade propria -- "4 listas · 2 aulas · 152 q + simulado (100 q)"; o dia so de
+    simulado, "simulado (97 q)". ⚰️ *s229-s230: "1 simulado · 4 listas · 2 aulas · 252 q", o simulado no total.*"""
     from app.utils import areas
-    nomes = (("simulado", "simulados"), ("lista", "listas"), ("aula", "aulas"), ("tarefa", "tarefas"))
+    nomes = (("lista", "listas"), ("aula", "aulas"), ("tarefa", "tarefas"))
     conta = {u: 0 for u, _v in nomes}
+    n_sim = 0
     for t in tarefas:
         if t.get("area") in areas.AREAS_AGREGADAS:
-            conta["simulado"] += 1
+            n_sim += 1
         else:
             conta[{"lista": "lista", "caderno": "lista", "aula": "aula"}.get(t["classe"], "tarefa")] += 1
-    return " · ".join(_plural(conta[u], u, v) for u, v in nomes if conta[u])
+    partes = [_plural(conta[u], u, v) for u, v in nomes if conta[u]]
+    if q - q_sim > 0:
+        partes.append("%s&nbsp;q" % _n(q - q_sim))
+    txt = " · ".join(partes)
+    if n_sim:
+        txt += (" + " if txt else "") + _simulado_do_dia(n_sim, q_sim)
+    return txt
 
 
 def _motivo_exibido(motivo):
@@ -929,9 +968,15 @@ def _html_sprint(s, cards, hoje_iso=None):
     ⚰️ *s226 (part-3): "Plano de hoje" e "Proximos dias" com cada dia recolhido num `<details>`.*"""
     hoje = s["hoje"]
     primeira = hoje[0]["id"] if hoje else None
+    q_sim = s.get("q_simulado") or 0
     if hoje:
-        resumo = "Hoje: %s · %s" % (_plural(len(hoje), "tarefa", "tarefas"),
-                                    _plural(s["q_hoje"], "questão", "questões"))
+        # s231 (decisao dele, 19/10): as questoes das listas e o simulado como unidade a parte
+        resumo = "Hoje: %s" % _plural(len(hoje), "tarefa", "tarefas")
+        if s["q_hoje"] - q_sim > 0:
+            resumo += " · %s" % _plural(s["q_hoje"] - q_sim, "questão", "questões")
+        n_sim = sum(1 for t in hoje if t.get("area") == "Simulado")
+        if n_sim:
+            resumo += (" + " if s["q_hoje"] - q_sim > 0 else " · ") + _simulado_do_dia(n_sim, q_sim)
     else:
         resumo = "Nenhuma tarefa do plano para hoje"
     n_cards = cards.get("restantes") if cards.get("consumo_hoje") is not None else cards.get("teto")
@@ -941,11 +986,11 @@ def _html_sprint(s, cards, hoje_iso=None):
     if s.get("rd"):
         itens += _html_rd(s["rd"])
     tit_hoje = "Hoje" + (" · %s" % _dia_curto(hoje_iso) if hoje_iso else "")
-    conta_hoje = _conta_do_dia(hoje) + (" · %s&nbsp;q" % _n(s["q_hoje"]) if hoje and s["q_hoje"] else "")
+    conta_hoje = _conta_do_dia(hoje, s["q_hoje"], q_sim)
     corpo = '<h2>Cronograma</h2>\n<p class="sub">%s.</p>\n' % resumo
     corpo += _html_dia_roadmap(tit_hoje, conta_hoje, itens, "hoje")
     for p in s["proximos"]:
-        conta = _conta_do_dia(p["tarefas"]) + (" · %s&nbsp;q" % _n(p["q"]) if p["q"] else "")
+        conta = _conta_do_dia(p["tarefas"], p["q"], p.get("q_simulado") or 0)
         corpo += _html_dia_roadmap(_dia_curto(p["data"]), conta, "".join(_html_tarefa(t) for t in p["tarefas"]))
     if s["fora"]:
         grupos = {}
@@ -985,13 +1030,25 @@ def _html_blocos(b):
             '<ol class="bls" aria-label="Acerto e tarefas feitas por bloco">%s</ol></div>\n' % "".join(linhas))
 
 
+def _html_proxima(d):
+    """s231 (decisao dele, 19/10, do critique: "a proxima acao esta enterrada no Painel a 390 px"): a 1a tarefa do
+    dia (a MESMA `li.tarefa.proxima` do Cronograma, com os mesmos botoes e o mesmo `data-tarefa`) ACIMA dos aneis,
+    so no celular (abaixo de 760 px de iframe; no desktop fica a ordem da s227, aneis no topo: o pedido era o celular). O hub pinta as duas
+    copias juntas (`querySelectorAll`); feita ao vivo, a faixa some (CSS `:has`). Sem tarefa, nada."""
+    sp = d.get("sprint")
+    tarefas = sp["hoje"] if sp else (d.get("semana") or {}).get("tarefas") or []
+    if not tarefas:
+        return ""
+    return '<div class="dash-prox"><ol class="tarefas">%s</ol></div>\n' % _html_tarefa(tarefas[0], proxima=True)
+
+
 def _html_dash(d):
     """O dashboard do topo (s226, painel-dashboard-sprint part-1), numa secao so (`data-bloco="dia"`; o anel
     do Ritmo e o Por bloco mantem o `data-bloco` deles por dentro). Nenhuma legenda em prosa (`p.nota`).
     s227 (tema v4 part-5): TRES placas na grade -- o Hoje com os quatro aneis (inteiro), depois Por bloco |
     Flashcards da semana (lado a lado a partir de 760 px, mesma altura; empilhados no celular).
     ⚰️ *Ate 13/10 (part-2) eram cinco placas: Hoje | Ritmo, Ate 01/11 inteira, Por bloco | Revisoes.*"""
-    return "".join([_html_dia(d["dia"], d["data"], d["ritmo"]), _html_blocos(d["blocos"]),
+    return "".join([_html_proxima(d), _html_dia(d["dia"], d["data"], d["ritmo"]), _html_blocos(d["blocos"]),
                     _html_agenda(d["dia"]["agenda"])])
 
 
@@ -1057,6 +1114,8 @@ a{color:var(--acento);text-underline-offset:2px}
 .an4 h3{margin:0;font-size:var(--fs-legenda);font-weight:650;color:var(--tinta2)}
 .an-val{margin-top:2px;font-size:var(--fs-legenda);color:var(--tinta2)}
 .an-val b{font-size:var(--fs-secao);font-weight:700;color:var(--tinta)}
+/* s231: o simulado do dia, unidade a parte do "X de N" das listas (nunca somado a ele) */
+.an-sim{display:block;font-size:var(--fs-meta);color:var(--tinta3)}
 /* Por bloco: nome | barra de acerto (0-100%) | % | feitas/total; o mais fraco em ambar + o rotulo */
 .bls{list-style:none;margin:0;padding:0}
 .bl{display:grid;grid-template-columns:4.75rem minmax(0,1fr) 3.25rem 4rem;gap:var(--esp-2);align-items:center;
@@ -1151,6 +1210,8 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-grupo.atrasadas{color:var(--aviso)}
 /* o proximo passo: a 1a tarefa do dia (a ordem e a do plano) -- o rotulo "Proxima" e o contorno ciano */
 .tarefa.proxima{border-color:var(--acento)}
+/* s231 (decisao dele, 19/10): a proxima tarefa no TOPO do Painel no celular, antes dos aneis; feita, some */
+.dash-prox:not(:has(li.tarefa:not([hidden]):not(.t-resolvida))){display:none}
 .tarefa.proxima .t-tema::before{content:"Próxima";display:inline-block;margin-right:var(--esp-2);padding:0 var(--esp-2);border-radius:var(--raio-pilula);background:var(--acento-fraco);color:var(--acento-tinta);font-size:var(--fs-meta);font-weight:650;vertical-align:1px}
 .prox{margin-top:var(--esp-3)}
 .mais{margin-top:var(--esp-2)}
@@ -1177,6 +1238,7 @@ a{color:var(--acento);text-underline-offset:2px}
 @media (min-width:760px){
   .dash{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dash > .dash-hoje{grid-column:1 / -1}
+  .dash > .dash-prox{display:none}
   .aneis4{gap:var(--esp-5) var(--esp-5)}
   .anel{width:min(100%,8.5rem)}
 }

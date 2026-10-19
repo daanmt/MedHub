@@ -1136,7 +1136,7 @@ def dados_sprint(plano_linhas, hoje):
     """A agenda do sprint para a aba Listas (s226, sprint-final-uerj part-4): `plano.agenda_sprint` --
     a MESMA funcao do "Plano de hoje" do Painel e do boot -- reduzida aos ids das tarefas, que a pagina
     casa com o campo `tarefa` dos docs `listas/*`. PURA. None = banco sem sprint (a aba cai nas semanas).
-    `{hoje: [id], q_hoje, proximos: [{data, tarefas: [id], q}], fora: [{id, motivo}], dias: {id: data}}`;
+    `{hoje: [id], q_hoje, q_simulado, proximos: [{data, tarefas: [id], q}], fora: [{id, motivo}], dias: {id: data}}`;
     `dias` = o `dia_plano` de cada tarefa com dia (o simulado mostra a data dele)."""
     ag = agenda_sprint(plano_linhas or [], hoje)
     if ag is None:
@@ -1145,7 +1145,9 @@ def dados_sprint(plano_linhas, hoje):
     dias = {str(int(t["id"])): str(t["dia_plano"]) for t in ag["hoje"] + [x for p in ag["proximos"]
                                                                          for x in p["tarefas"]]
             if t.get("id") is not None and t.get("dia_plano")}
-    return {"hoje": ids(ag["hoje"]), "q_hoje": ag["q_hoje"],
+    # s231 (decisao dele, 19/10): `q_simulado` = a parte do `q_hoje` que e simulado -- o "+ simulado (N q)" do Hoje
+    # das Listas usa o MESMO N do anel de Questoes e do Cronograma do Painel
+    return {"hoje": ids(ag["hoje"]), "q_hoje": ag["q_hoje"], "q_simulado": ag["q_simulado"],
             "proximos": [{"data": p["data"], "tarefas": ids(p["tarefas"]), "q": p["q"]} for p in ag["proximos"]],
             "fora": [{"id": int(t["id"]), "motivo": " ".join(_GRAFIA_MOTIVO.get(w, w)
                                                              for w in str(t["motivo"]).split(" "))}

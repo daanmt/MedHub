@@ -336,7 +336,9 @@ def test_tarefa_do_painel_carrega_o_id_do_plano(db_sintetico):
     pagina = _pagina()
     s = painel.coletar()["semana"]
     esperado = [t["id"] for t in s["tarefas"]] + [t["id"] for r in s["rota"] for t in r["tarefas"]]
+    # s231: decisao dele (19/10) -- a copia da Proxima no topo do dashboard (so celular) fica fora desta conta
     plano = pagina.split('data-bloco="docs"')[0]
+    plano = plano[plano.index('data-bloco="semana"'):]
     ids = [int(i) for i in re.findall(r'<li class="tarefa[^"]*" data-tarefa="(\d+)">', plano)]
     assert ids == esperado and len(ids) == plano.count('<li class="tarefa')
     docs = painel._html_docs([{"slug": "dossie", "titulo": "Dossiê da banca"}])
@@ -917,8 +919,11 @@ def test_proxima_so_pelo_rotulo_sem_botao_cheio(db_sintetico):
     css = painel.CSS
     assert ".tarefa.proxima .t-tema::before{content:\"Próxima\"" in css
     assert ":first-child .t-acao" not in css and ".proxima .t-btn" not in css, "so a Proxima com botao cheio"
+    # s231: decisao dele (19/10) -- a Proxima aparece 2x: no topo do dashboard (so celular) e no lugar dela na lista
     pagina = _pagina()
-    assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 1
+    assert pagina.count('class="tarefa proxima"') + pagina.count('class="tarefa atrasada proxima"') == 2
+    semana = pagina[pagina.index('data-bloco="semana"'):]
+    assert semana.count('class="tarefa proxima"') + semana.count('class="tarefa atrasada proxima"') == 1
 
 
 # ------------------------------- s226 (sprint-final-uerj part-3): Hoje · Proximos dias · Fora do sprint
@@ -962,7 +967,8 @@ def test_painel_sprint_sem_semana(db_sintetico, tmp_path, monkeypatch):
     assert re.findall(r'<li class="([^"]*)" data-tarefa="(\d+)">', hoje_html) == [
         ("tarefa proxima", "1"), ("tarefa", "3")], "a rolada sem rotulo de atraso"
     assert '<span class="rm-d">qui 24/09</span> <span class="rm-n">1&nbsp;lista · 60&nbsp;q</span>' in bloco
-    assert '<span class="rm-d">sex 25/09</span> <span class="rm-n">1&nbsp;simulado · 60&nbsp;q</span>' in bloco
+    # s231: decisao dele (19/10) -- o simulado e unidade a parte, com as questoes dele: "simulado (60 q)"
+    assert '<span class="rm-d">sex 25/09</span> <span class="rm-n">simulado (60&nbsp;q)</span>' in bloco
     assert bloco.count('<section class="rm-dia') == 3, "Hoje e os dois dias, um bloco cada"
     assert '<details class="rota-sem"' not in bloco, "nenhum dia recolhido"
     assert '<details class="rota-sem fora"><summary><span class="rota-tit">Fora do sprint · 1</span>' in bloco
@@ -1083,8 +1089,9 @@ def test_dashboard_questoes_usa_o_q_hoje_do_sprint(db_sintetico, tmp_path, monke
     assert d["ritmo"]["sprint"]["capacidade_q"] == 80
     pagina = painel.render_html(d)
     dash = _dash(pagina)
-    feitas = d["dia"]["questoes"]["feitas_hoje"]
-    assert '<b data-vivo="questoes" data-base="%d">%s</b> de 72</p>' % (feitas, painel._n(feitas)) in dash
+    feitas = d["dia"]["questoes"]["feitas_hoje"] - d["dia"]["questoes"]["feitas_simulado_hoje"]
+    # s231: decisao dele (19/10) -- com sprint o anel conta so as listas; a ancora diz ao hub o que somar ao vivo
+    assert '<b data-vivo="questoes" data-conta="listas" data-base="%d">%s</b> de 72</p>' % (feitas, painel._n(feitas)) in dash
     assert "por dia até a" not in pagina and "~" not in _visivel(dash)
     assert painel._n(d["ritmo"]["alvo_marco"], 1) not in _visivel(dash), "o por-dia da meta sumiu da tela"
     rotulo = "abaixo de 80/dia" if d["ritmo"]["real_7d"] < 80 else "em dia"
@@ -1230,7 +1237,8 @@ def test_topo_quatro_aneis():
     assert all(i[2].count('<circle class="an-trilho" cx="60" cy="60" r="%d"/>' % painel.ANEL_R) == 1 for i in itens)
     assert [i[1] for i in itens[:2]] == ["Questões: 31 de 76 (40%).", "Cards: 52 de 150 (34%)."]
     # os valores: X de Y, com as ancoras do ao vivo (o hub poe o "+K" ao lado; o anel fica no publicado)
-    assert itens[0][4] == '<b data-vivo="questoes" data-base="31">31</b> de 76'
+    # s231: decisao dele (19/10) -- `data-conta="listas"`: o "+K" ao vivo soma so as listas (o simulado a parte)
+    assert itens[0][4] == '<b data-vivo="questoes" data-conta="listas" data-base="31">31</b> de 76'
     assert itens[1][4] == '<b data-vivo="cards" data-base="52">52</b> de 150'
     assert html_.count("data-vivo=") == 2 and not any("data-vivo" in i[2] for i in itens)
     assert [i[4] for i in itens[2:]] == ["<b>35,4</b> de 80 por dia", "<b>7.817</b> de 10.000"]
@@ -1459,3 +1467,70 @@ def test_agenda_com_sessao_conta_pela_ultima_revisao(db_sintetico):
     """A contagem vem do banco (fsrs_revlog/fsrs_cards, sem tabela nova): nunca passa do total do dia."""
     ag = painel._agenda_com_sessao({"dias": [{"data": "2026-09-24", "n": 1}]})
     assert set(ag["dias"][0]) == {"data", "n", "sessao"} and 0 <= ag["dias"][0]["sessao"] <= 1
+
+
+# ------------------------------- s231 (decisao dele, 19/10, do critique Impeccable): carga do dia e Proxima no topo
+
+def test_carga_do_dia_listas_num_denominador_e_o_simulado_a_parte(db_sintetico, tmp_path, monkeypatch):
+    """s231 (decisao dele, 19/10: "um denominador para a carga do dia, o simulado a parte"): com o simulado no dia,
+    o anel de Questoes conta SO as listas ("X de 72", o mesmo da aba Listas > Hoje) e diz "+ simulado (60 q)" sob o
+    valor; o Cronograma diz o mesmo ("2 listas · 72 q + simulado (60 q)"). As feitas do anel tiram o simulado do dia."""
+    import plano
+    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
+    monkeypatch.setattr(plano, "ler_sprint", lambda caminho=None: {"capacidade_q": 80, "fim": "2026-10-31"})
+    _com_sprint(db_sintetico)
+    con = sqlite3.connect(db_sintetico)
+    con.execute("UPDATE plano_tarefas SET dia_plano = '2026-09-23' WHERE id = 6")
+    con.commit()
+    con.close()
+    d = painel.coletar()
+    q = d["dia"]["questoes"]
+    assert (d["sprint"]["q_hoje"], d["sprint"]["q_simulado"]) == (132, 60)
+    assert (q["q_hoje"], q["q_simulado"]) == (72, 60), "o anel: so as listas; o simulado a parte"
+    pagina = painel.render_html(d)
+    dash = _dash(pagina)
+    feitas = q["feitas_hoje"] - q["feitas_simulado_hoje"]
+    assert ('<b data-vivo="questoes" data-conta="listas" data-base="%d">%s</b> de 72 '
+            '<span class="an-sim">+ simulado (60&nbsp;q)</span></p>' % (feitas, painel._n(feitas))) in dash
+    assert "132" not in _visivel(dash), "nenhum numero soma listas e simulado"
+    i = pagina.index('data-bloco="semana"')
+    bloco = pagina[i:]
+    assert '<p class="sub">Hoje: 3&nbsp;tarefas · 72&nbsp;questões + simulado (60&nbsp;q)' in bloco
+    assert ('<span class="rm-n">2&nbsp;listas · 72&nbsp;q + simulado (60&nbsp;q)</span>') in bloco
+
+
+def test_anel_de_questoes_no_dia_so_de_simulado():
+    """s231: dia so de simulado (21/10, 25/10) -- o anel conta o simulado ("5 de 97 no simulado"), nunca "0 de 0";
+    a ancora diz ao hub que o "+K" soma so o simulado. Sem lista nem simulado, "X feitas" (o de antes)."""
+    dia = _dia_aneis(feitas=5, q_hoje=0)
+    dia["questoes"].update(q_simulado=97, feitas_simulado_hoje=5)
+    item = _itens(painel._html_dia(dia, "2026-10-21"))[0]
+    assert item[4] == ('<b data-vivo="questoes" data-conta="simulado" data-base="5">5</b> de 97 '
+                       '<span class="an-sim">no simulado</span>')
+    assert re.findall(RE_ARCO, item[2]) == [("an-q", "5")]
+    vazio = _itens(painel._html_dia(_dia_aneis(feitas=12, q_hoje=0), "2026-10-21"))[0]
+    assert vazio[4] == '<b data-vivo="questoes" data-base="12">12</b> feitas'
+    assert painel._conta_do_dia([_t(6, area="Simulado", q=97)], 97, 97) == "simulado (97&nbsp;q)"
+    assert painel._conta_do_dia([_t(1), _t(2, classe="aula", q=0)], 20, 0) == "1&nbsp;lista · 1&nbsp;aula · 20&nbsp;q"
+
+
+def test_proxima_no_topo_do_painel_so_no_celular(db_sintetico, tmp_path, monkeypatch):
+    """s231 (decisao dele, 19/10, P0 do critique: "a proxima acao esta enterrada no Painel a 390 px"): a 1a tarefa do
+    dia, o MESMO cartao do Cronograma (`li.tarefa.proxima`, mesmo `data-tarefa`, mesmos botoes), e o 1o filho do
+    dashboard, antes dos aneis; a partir de 760 px some (o pedido era o celular; no desktop, a ordem da s227); feita ao vivo
+    (`hidden` ou `.t-resolvida`, que o hub poe nas DUAS copias por `querySelectorAll`), a faixa some."""
+    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
+    _com_sprint(db_sintetico)
+    d = painel.coletar()
+    dash = _dash(painel.render_html(d))
+    assert dash.startswith('data-bloco="dia">\n<div class="dash-prox"><ol class="tarefas"><li class="tarefa proxima" '
+                           'data-tarefa="1">')
+    topo = dash[:dash.index('<div class="placa dash-hoje">')]
+    no_crono = painel._html_tarefa(d["sprint"]["hoje"][0], proxima=True)
+    assert no_crono in topo, "o mesmo cartao, com os mesmos botoes"
+    assert topo.count('<li class="tarefa') == 1 and "Questões" not in topo
+    grade = painel.CSS.split("@media (min-width:760px){", 1)[1].split("\n}", 1)[0]
+    assert ".dash > .dash-prox{display:none}" in grade
+    assert ".dash-prox:not(:has(li.tarefa:not([hidden]):not(.t-resolvida))){display:none}" in painel.CSS
+    sem = dict(d, sprint=dict(d["sprint"], hoje=[]))
+    assert painel._html_proxima(sem) == "", "sem tarefa no dia, nada no topo"

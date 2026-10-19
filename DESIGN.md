@@ -500,8 +500,9 @@ largura (`.hub-assina.placa{margin-inline:0}` vence o alinhamento R9).
 
 ### Anéis do Hoje (signature, Painel v4.1)
 Uma placa "Hoje, terça 13/10" com 4 anéis (`.an4`; SVG inline, viewBox 120, traço 10, `pathLength=100`, % no centro,
-rótulo + valor + uma linha abaixo; trilho `--trilho`, 0% = só o trilho): **Questões** (`acento`, contra o `q_hoje`; sem
-sprint, o alvo da meta), **Cards** (`rosa`, contra o teto, com "Ir para os cards"), **Ritmo em 7 dias** (`aviso` abaixo
+rótulo + valor + uma linha abaixo; trilho `--trilho`, 0% = só o trilho): **Questões** (`acento`, contra o `q_hoje` das
+LISTAS — s231, 19/10, decisão dele: o simulado é unidade à parte, "+ simulado (100 q)" em `.an-sim` sob o valor; dia só de
+simulado, "X de 97 no simulado"; o `data-conta` da âncora diz ao hub o que o "+K" soma; sem sprint, o alvo da meta), **Cards** (`rosa`, contra o teto, com "Ir para os cards"), **Ritmo em 7 dias** (`aviso` abaixo
 / `ok` em dia, sempre com o texto; `data-bloco="ritmo"`; "23,5 em 14 dias · 78,4% de acerto"), **Até 01/11** (`roxo`:
 feito contra a meta + um 2º arco, roxo a 50%, por baixo, até o que o sprint entrega; a meta 10.000 só aqui). O número do
 valor é UM só, branco, publicado + o que ele fez desde o publish (o "+K" ciano morreu; `title` diz o K); o
@@ -578,11 +579,15 @@ publicar.
 
 ### Telas: o que cada uma prioriza
 
-- **Painel**: responde, nesta ordem, o que fazer hoje, quanto avancei e o que vem depois. Topo = a placa dos 4 anéis
+- **Painel**: responde, nesta ordem, o que fazer hoje, quanto avancei e o que vem depois. No celular (abaixo de 760 px de
+  iframe), o 1º filho da grade é a Próxima (`.dash-prox`: o MESMO cartão `li.tarefa.proxima` do Cronograma, mesmos botões e
+  `data-tarefa`; feita ao vivo, some) — s231, 19/10, decisão dele, do P0 do critique ("a próxima ação enterrada a 390 px");
+  no desktop ela não aparece (o pedido era o celular; lá fica a ordem da s227, anéis no topo). Depois, a placa dos 4 anéis
   (s227 part-5, pedido dele: *"o 'Painel' ainda está muito disperso. Esses 4 blocos deveriam aparecer junto no topo,
   através desses anéis com percentual"*); abaixo, Por bloco | Flashcards da semana. A `section.dash` é a grade das
   placas, uma coluna e, a partir de 760 px de iframe, duas; vão `--esp-4`, o mesmo até as placas de baixo; sem filete
-  entre seções. Com sprint, o único por-dia da tela é o do sprint (`q_hoje`; o `q_hoje` do anel = o do boot) e a meta
+  entre seções. Com sprint, o único por-dia da tela é o do sprint (`q_hoje`; s231: no anel, no Cronograma e no Hoje das
+  Listas o número é o das LISTAS — o mesmo nos três — e o simulado vem a parte, "+ simulado (100 q)") e a meta
   10.000 aparece uma vez (no anel Até 01/11); sem sprint, a meta. A barra de projeção e a barra do Ritmo saíram
   (`cronograma-contract` v1.8). ⚰️ *s226: dashboard Hoje · Ritmo · Até 01/11 · Por bloco · Revisões 7 dias em tiles, com
   barra de projeção (feito ciano · cumprindo o sprint lavagem ciano · fora do sprint `linha` tracejado); s227 part-2: dois
@@ -675,6 +680,7 @@ ajusta, nunca reescreve aula. Achados L1–L15 (§14 de lá) e o estado:
 | Teoria sem semana; a RD assinada some do backlog ao vivo | `test_hub_quadro.py::test_teoria_sem_semanas_com_o_backlog_de_rds_e_a_biblioteca`, `test_backlog_de_rds_da_mais_antiga_e_a_assinada_so_na_biblioteca`, `test_hub_render.py::test_rd_assinada_some_do_backlog_e_perde_a_etiqueta_na_biblioteca` |
 | Listas = o mesmo "hoje" do Painel; simulado com a data | `test_hub_render.py::test_listas_e_painel_mesmo_hoje`, `test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint`, `test_simulado_leva_a_data_do_sprint`, `test_sem_hub_sprint_as_listas_caem_nas_semanas` |
 | dashboard: `q_hoje` do sprint, meta 1x, Por bloco com "mais fraco", nenhum `p.nota`, o `q_hoje` = o do boot | `test_painel.py::test_dashboard_questoes_usa_o_q_hoje_do_sprint`, `test_dashboard_sem_sprint_volta_a_meta`, `test_barra_de_projecao_feito_sprint_meta`, `test_por_bloco_em_linhas_com_barra_e_o_mais_fraco_rotulado`, `test_plano_dia.py::test_boot_painel_listas_mesmo_hoje` |
+| s231: Próxima no topo no celular; carga do dia = listas, simulado à parte (anel, Cronograma, Listas › Hoje, "+K") | `test_painel.py::test_proxima_no_topo_do_painel_so_no_celular`, `test_carga_do_dia_listas_num_denominador_e_o_simulado_a_parte`, `test_anel_de_questoes_no_dia_so_de_simulado`, `test_hub_render.py::test_listas_hoje_soma_as_listas_e_o_simulado_a_parte`, `test_ao_vivo_o_anel_de_questoes_conta_listas_e_simulado_a_parte` |
 | painel sem jargão de bastidor (inclusive nos comentários do `tema.css`) | `test_painel.py::test_html_sem_jargao` |
 | leituras pela assinatura resiliente; chip só fora do normal; marca 1,375rem | `test_hub_render.py::test_listas_se_recuperam_da_falha_de_leitura`, `test_botao_tentar_de_novo_reassina`, `test_leituras_das_abas_passam_pela_assinatura_resiliente`, `test_chip_da_lista_so_fora_do_normal` |
 | a retentativa pede conexão nova ao banco | `test_hub_render.py::test_retentativa_pede_conexao_nova` |

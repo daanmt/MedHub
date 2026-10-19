@@ -1957,6 +1957,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     });
     return Object.keys(vistas).length;
   }
+  // s231 (decisao dele, 19/10): a lista entra no "+K" do anel de Questoes? "listas" = nao-simulado, "simulado" = so
+  // o simulado, "" = todas. PURA.
+  function vivoContaLista(conta, lista){
+    var sim = !!lista && lista.area === "Simulado";
+    return conta === "listas" ? !sim : (conta === "simulado" ? sim : true);
+  }
   // s229 (pedido dele, 15/10: "tirar o '+1' ciano; um unico numero branco que sobe em tempo real"): o NUMERO do
   // valor passa a ser publicado + K (o `data-base` guarda o publicado; o title diz quanto veio depois do publish).
   // ⚰️ *s216-s228: o "+K" ciano num span proprio ao lado do numero publicado.*
@@ -2016,6 +2022,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // A18: uma consulta por lista (where lista ==), so as das tarefas que o Painel mostra (pendentes no plano)
     var tarefas = {}, resp = {};
     Array.prototype.forEach.call(doc.querySelectorAll("li.tarefa[data-tarefa]"), function(li){ tarefas[li.getAttribute("data-tarefa")] = 1; });
+    // s231 (decisao dele, 19/10: o simulado a parte da carga do dia): o anel diz o que conta (`data-conta`):
+    // "listas" = sem o simulado; "simulado" = so ele; sem o atributo, tudo (o de antes)
+    var conta = doc.querySelector('b[data-vivo="questoes"]').getAttribute("data-conta") || "";
     function recontar(){
       var todas = [];
       Object.keys(resp).forEach(function(id){ todas = todas.concat(resp[id]); });
@@ -2032,6 +2041,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       ((s && s.docs) || []).forEach(function(d){
         var x = d.data ? d.data() : null, id = d.id;
         if(!x || resp[id] || !tarefas[String(x.tarefa)] || x.status === "pendente" || x.status === "bloqueada"){ return; }
+        if(!vivoContaLista(conta, x)){ return; }
         resp[id] = [];
         respostasDe(id);
       });
@@ -2716,6 +2726,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // s226 (sprint-final-uerj part-4): a aba Listas reflete o "Plano de hoje" do Painel -- Hoje (aberto), os
   // Proximos dias (um por data, recolhidos) e Fora do sprint (recolhido, com o motivo); sem semana nem
   // atraso. Resolvidas recolhidas no fim, como antes. A escolha de abrir/recolher fica no aparelho.
+  // s231: os simulados abertos do Hoje do sprint ({n, q}), a unidade a parte do Hoje das Listas; o `q` e o do plano
+  // (`q_simulado` do hub-sprint, o MESMO do Painel) quando vem, senao a soma dos docs. PURA.
+  function qzSimuladoHoje(sp, todas){
+    var hoje = {}, sim = {n: 0, q: 0};
+    ((sp && sp.hoje) || []).forEach(function(id){ hoje[String(id)] = 1; });
+    (todas || []).forEach(function(l){ var s = (l && l.status) || "pendente";
+      if(l && l.area === "Simulado" && s !== "resolvida" && s !== "pendente" && s !== "bloqueada" && hoje[String(l.tarefa)]){
+      sim.n += 1; sim.q += Math.round(l.q || l.q_previstas || 0); } });
+    if(sim.n && sp && sp.q_simulado){ sim.q = sp.q_simulado; }
+    return sim;
+  }
   function qzRenderSprint(ls){
     var abertas = ls.filter(function(l){ return l.status !== "resolvida"; }), feitas = ls.filter(function(l){ return l.status === "resolvida"; });
     var gs = qzGruposSprint(QZ_SPRINT, abertas);
@@ -2730,7 +2751,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     if(gs.proximos.length){ prox += '<h3 class="qz-grupo">Próximos dias</h3>' + gs.proximos.map(function(g){ return secao(g, qzEsc(g.titulo) + conta(g), ""); }).join(""); }
     if(gs.fora.itens.length){ prox += secao(gs.fora, "Fora do sprint · " + gs.fora.itens.length, ""); }
     if(gs.outras.itens.length){ prox += secao(gs.outras, "Outras listas · " + gs.outras.itens.length, ""); }
-    var html = '<div class="placa qz-p-hoje">' + secao(gs.hoje, "Hoje" + conta(gs.hoje), "Nenhuma lista do plano para hoje.") + '</div>' +
+    // s231 (decisao dele, 19/10: um denominador para a carga do dia): o Hoje soma SO as listas (o mesmo numero do
+    // anel de Questoes e do Cronograma) e o simulado do dia vem a parte, "+ simulado (100 q)"
+    var simHoje = qzSimuladoHoje(QZ_SPRINT, QZ.listas || []);
+    var maisSim = simHoje.n ? ' <span class="qd-n">+ ' + (simHoje.n === 1 ? "simulado" : simHoje.n + " simulados") + ' (' + simHoje.q + ' q)</span>' : "";
+    var html = '<div class="placa qz-p-hoje">' + secao(gs.hoje, "Hoje" + conta(gs.hoje) + maisSim, "Nenhuma lista do plano para hoje.") + '</div>' +
       (prox ? '<div class="placa qz-p-prox">' + prox + '</div>' : "");
     html += feitas.length ? '<div class="placa qz-p-feitas"><details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details></div>' : "";
     $("qz-listas").innerHTML = '<div class="qz-grade' + (prox ? ' qz-duas' : '') + '">' + html + '</div>';

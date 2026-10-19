@@ -446,7 +446,8 @@ def test_boot_painel_listas_mesmo_hoje(tmp_db, monkeypatch):
            "cards": {"vencidos": 0, "novos": 0, "teto": 150, "consumo_hoje": 0, "restantes": 150,
                      "retencao_7d": {"retencao": None}}, "sessao_gravada": ""}
     tile = painel._html_dia(dia, HOJE_SPRINT.isoformat())
-    assert '<b data-vivo="questoes" data-base="0">0</b> de 50</p>' in tile and "114,9" not in tile
+    # s231: decisao dele (19/10) -- o anel conta so as listas (`data-conta`); sem simulado no dia, o mesmo 50
+    assert '<b data-vivo="questoes" data-conta="listas" data-base="0">0</b> de 50</p>' in tile and "114,9" not in tile
     # o TEXTO do boot e do panorama mostra as mesmas tarefas, na mesma ordem
     render = day_plan.render(_p_render(c))
     pos = [render.index("#%d " % i) for i in do_boot]

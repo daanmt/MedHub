@@ -550,6 +550,7 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                           "function qzEhSimulado(l){",
                           # s226 (sprint part-4): os grupos do sprint e a data do simulado
                           "function qzDia(iso){", "function qzGruposSprint(sp, ls){", "function qzRenderSprint(ls){",
+                          "function qzSimuladoHoje(sp, todas){",   # s231: o simulado a parte do Hoje
                           "function qzQuandoSim(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
                           "function secoesLer(){", "function secAberta(id, padrao){", "function secSemanaAtual(atual, comItens){",
@@ -696,6 +697,22 @@ def test_listas_agrupam_por_hoje_proximos_dias_e_fora_do_sprint():
     assert "sem vaga até 31/10" in html and "fora do plano até 01/11" in html and "Outras listas · 1" in html
     assert re.search(r'<section data-grupo="hoje">', html) and re.search(r'<section data-recolhida data-grupo="fora">', html)
     assert "UERJ" not in html, "o simulado segue na sua sub-aba"
+
+
+def test_listas_hoje_soma_as_listas_e_o_simulado_a_parte():
+    """s231 (decisao dele, 19/10: um denominador para a carga do dia): o Hoje das Listas soma SO as listas (o mesmo
+    numero do anel de Questoes e do Cronograma) e, com simulado no dia, diz "+ simulado (100 q)" ao lado; o
+    simulado segue na sub-aba dele. Sem simulado no dia (o de 25/10), nada a mais."""
+    sprint = hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)
+    sem = _listas("questoes", sprint, LISTAS_SPRINT)["html"]
+    assert "+ simulado" not in sem
+    com = _listas("questoes", dict(sprint, hoje=sprint["hoje"] + [1793]), LISTAS_SPRINT)["html"]
+    assert ('Hoje <span class="qd-n">3 listas · 40 questões</span> <span class="qd-n">+ simulado (100 q)</span>'
+            in com)
+    assert "UERJ" not in com, "o simulado segue na sua sub-aba"
+    plano_ = _listas("questoes", dict(sprint, hoje=sprint["hoje"] + [1793], q_simulado=97), LISTAS_SPRINT)["html"]
+    assert '<span class="qd-n">+ simulado (97 q)</span>' in plano_, "o N do plano (o do Painel) vence a soma dos docs"
+    assert hub.dados_sprint(PLANO_SPRINT, HOJE_SPRINT)["q_simulado"] == 0
 
 
 def test_sem_hub_sprint_as_listas_caem_nas_semanas():
@@ -1934,7 +1951,8 @@ setTimeout(function(){
 # questao de lista ja registrada no plano (a tarefa saiu do Painel) nao soma. Dia por `Date.parse` (A17).
 
 VIVO_PURAS = _funcs("function vivoDia(t){", "function vivoCards(notas, lote, sessaoGravada){",
-                    "function vivoQuestoes(respostas, listasPendentesDeRegistro, hojeLogico){")
+                    "function vivoQuestoes(respostas, listasPendentesDeRegistro, hojeLogico){",
+                    "function vivoContaLista(conta, lista){")   # s231: o que o anel de Questoes soma
 
 
 def test_lote_ja_gravado_nao_conta_duas_vezes():
@@ -1989,10 +2007,10 @@ _st(function(){
 """
 
 
-def _painel_vivo_html(sessao_gravada):
+def _painel_vivo_html(sessao_gravada, questoes=None):
     from tools import painel
-    d = {"questoes": {"feitas_hoje": 30, "alvo_dia": 120.0, "meta": 10000, "faltam": 1000, "dias": 27,
-                      "data_meta": "2026-11-01"},
+    d = {"questoes": dict({"feitas_hoje": 30, "alvo_dia": 120.0, "meta": 10000, "faltam": 1000, "dias": 27,
+                           "data_meta": "2026-11-01"}, **(questoes or {})),
          "cards": {"vencidos": 10, "novos": 50, "teto": 100, "consumo_hoje": 62, "restantes": 38,
                    "retencao_7d": {"retencao": None}},
          "agenda": {"dias": [{"data": "2026-10-06", "n": 3}]}, "sessao_gravada": sessao_gravada}
@@ -2004,12 +2022,12 @@ def _painel_vivo_html(sessao_gravada):
             % (painel._html_dia(d, "2026-10-05"), "".join(painel._html_tarefa(t(i)) for i in (49, 68))))
 
 
-def _rodar_vivo(sessao_no_ar="2026-10-05b", sessao_gravada="2026-10-05a", acao=None, conexao="", **cfg):
+def _rodar_vivo(sessao_no_ar="2026-10-05b", sessao_gravada="2026-10-05a", acao=None, conexao="", questoes=None, **cfg):
     """O `painelVivo` REAL sobre o banco falso do test_hub_quadro. `conexao` (JS) troca o `use("db")` depois do
     banco (o CONEXAO_JS: a 1a conexao falha em toda leitura) e entra com o RELOGIO_JS antes dele."""
     from tools.test_hub_quadro import BANCO_QD, DOM_QD, _arvore
     lote = '<script id="lote" type="application/json">%s</script>' % json.dumps({"sessao": sessao_no_ar, "cards": []})
-    arvore = _arvore(_painel_vivo_html(sessao_gravada) + lote)
+    arvore = _arvore(_painel_vivo_html(sessao_gravada, questoes) + lote)
     # s227: o painelVivo le pela assinatura resiliente (retentativa com conexao nova)
     funcs = "\n".join([VIVO_PURAS, _var("ESPERAS_LEITURA"),
                        _funcs("function assinarResiliente(consulta, onDados, opts){",
@@ -2050,6 +2068,23 @@ def test_ao_vivo_so_soma_e_nunca_altera_o_publicado():
     assert sem_db["questoes"]["mais"] is None, "sem db (nao-dono, offline): o Painel fica como o publicado"
     assert "painelVivo(doc, db)" in _funcs("function painelListas(doc, quadro){")
     assert ".vivo{" not in _funcs("function painelListas(doc, quadro){"), "s229: o estilo do +K ciano saiu"
+
+
+def test_ao_vivo_o_anel_de_questoes_conta_listas_e_simulado_a_parte():
+    """s231 (decisao dele, 19/10: um denominador para a carga do dia, o simulado a parte): o `data-conta` da ancora
+    diz o que o "+K" soma -- "listas" deixa de fora a lista do simulado; "simulado" (dia so de simulado) soma so ela."""
+    cols = json.loads(json.dumps(COLECOES_VIVO))
+    cols["listas"]["t68"]["area"] = "Simulado"
+    listas = _rodar_vivo(colecoes=cols, questoes={"q_hoje": 42, "q_simulado": 21, "feitas_simulado_hoje": 0})
+    assert listas["questoes"] == {"b": "32", "base": "30", "mais": "2", "title": "2 desde o publish"}, \
+        "t49 e t49_1; a t68 (simulado) fica fora do anel das listas"
+    sim = _rodar_vivo(colecoes=cols, questoes={"q_hoje": 0, "q_simulado": 21, "feitas_simulado_hoje": 5})
+    assert sim["questoes"] == {"b": "6", "base": "5", "mais": "1", "title": "1 desde o publish"}, \
+        "dia so de simulado: o anel conta o simulado (a t68), nada das listas"
+    out = _node(VIVO_PURAS + "\nconsole.log(JSON.stringify([vivoContaLista('', {area: 'Simulado'}),"
+                " vivoContaLista('listas', {area: 'Cirurgia'}), vivoContaLista('listas', {area: 'Simulado'}),"
+                " vivoContaLista('simulado', {area: 'Cirurgia'})]));")
+    assert out == [True, True, False, False], "sem data-conta: tudo (o de antes)"
 
 
 # ---------------------------------------------------------------------------------------------------

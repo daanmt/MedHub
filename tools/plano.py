@@ -1710,7 +1710,7 @@ def agenda_sprint(linhas, hoje):
     """A agenda do sprint como as telas a leem -- a fonte UNICA do "hoje" do Painel, da aba Listas
     e do boot (sprint-final-uerj parts 3-5). PURA; le so `dia_plano` (quem decide o dia e o
     `--sprint`, nunca a tela). Devolve `{hoje: [tarefas], proximos: [{data, tarefas, q}],
-    fora: [tarefas + motivo], q_hoje}`, ou None quando nenhuma linha tem `dia_plano` (banco sem
+    fora: [tarefas + motivo], q_hoje, q_simulado}`, ou None quando nenhuma linha tem `dia_plano` (banco sem
     sprint: a tela mostra o bloco antigo -- degradacao declarada).
 
     - `hoje`: pendentes com `dia_plano` <= hoje -- a de dia que passou ROLA para hoje, sem rotulo
@@ -1740,8 +1740,11 @@ def agenda_sprint(linhas, hoje):
         motivo = None if l.get("dia_plano") else motivo_fora_do_sprint(l.get("nota"))
         if motivo:
             fora.append(dict(_item_sprint(l), motivo=motivo))
-    return {"hoje": de_hoje, "q_hoje": sum(t["q"] for t in de_hoje),
-            "proximos": [{"data": d, "tarefas": ts, "q": sum(t["q"] for t in ts)}
+    # s231 (decisao dele, 19/10: "um denominador para a carga do dia"): o simulado e uma unidade a parte --
+    # `q_simulado` = a parte do `q_hoje` (e do `q` de cada dia) que e simulado; o `q_hoje` segue o total
+    q_sim = lambda ts: sum(t["q"] for t in ts if t.get("area") == AREA_SIMULADO)
+    return {"hoje": de_hoje, "q_hoje": sum(t["q"] for t in de_hoje), "q_simulado": q_sim(de_hoje),
+            "proximos": [{"data": d, "tarefas": ts, "q": sum(t["q"] for t in ts), "q_simulado": q_sim(ts)}
                          for d, ts in sorted(por_dia.items())],
             "fora": fora}
 

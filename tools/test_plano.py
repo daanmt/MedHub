@@ -1662,6 +1662,16 @@ def test_agenda_sprint_hoje_rola_proximos_e_fora():
     assert [(t["id"], t["motivo"]) for t in ag["fora"]] == [(7, "sem vaga ate 31/10 (80 q/dia)")]
 
 
+def test_agenda_sprint_separa_o_simulado():
+    """s231 (decisao dele, 19/10: um denominador para a carga do dia, o simulado a parte): `q_simulado` = a parte
+    do `q_hoje` (e do `q` de cada dia) que e simulado; o `q_hoje` segue o total (o boot o le)."""
+    linhas = [_ag(1, "2026-10-13", q=40), _ag(2, "2026-10-13", q=100, area="Simulado"),
+              _ag(3, "2026-10-14", q=97, area="Simulado"), _ag(4, "2026-10-15", q=30)]
+    ag = plano.agenda_sprint(linhas, _HOJE)
+    assert (ag["q_hoje"], ag["q_simulado"]) == (140, 100)
+    assert [(p["q"], p["q_simulado"]) for p in ag["proximos"]] == [(97, 97), (30, 0)]
+
+
 def test_agenda_sprint_sem_dia_plano_e_none():
     """Banco sem sprint (`dia_plano` todo NULL): None -- a tela cai no bloco antigo."""
     assert plano.agenda_sprint([_ag(1, None), _ag(2, None, nota="x")], _HOJE) is None

@@ -154,7 +154,7 @@ CAMPOS_PLAYER = ("card_id", "frente_contexto", "frente_pergunta", "verso_respost
                  "selection_reason", "bucket")
 
 TEMPLATE_PLAYER = Path(__file__).resolve().parents[1] / "core" / "templates" / "player.html"
-#: s225: o tema (cor, tipo, espaco, raio) e o MESMO do hub -- o player.html so traz estrutura (docs/UI.md).
+#: s225: o tema (cor, tipo, espaco, raio) e o MESMO do hub -- o player.html so traz estrutura (DESIGN.md).
 TEMA_CSS = Path(__file__).resolve().parents[1] / "core" / "templates" / "tema.css"
 MARCA_ABRE = '<script id="lote" type="application/json">'
 MARCA_FECHA = "</script>"

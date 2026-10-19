@@ -1,5 +1,5 @@
 /* MedHub tema v4 -- camada de LEITURA (aulas e resumos no leitor do hub). Vai DEPOIS do tema.css; o shell, o painel e
-   o player NAO a recebem. Mapa e regras: docs/UI.md (§6 e §9). As 43 aulas trazem CSS proprio (duas familias de classes:
+   o player NAO a recebem. Mapa e regras: DESIGN.md (Telas e processo). As 43 aulas trazem CSS proprio (duas familias de classes:
    as antigas com .spec/.rail/.aside e as novas com .stats/.nav/.trilho/.ato); esta camada so ajusta, nunca reescreve aula.
    - UMA coluna (o .wrap) constrange tudo: nada de max-width por elemento ao lado de quadro com borda (zigue-zague
      de bordas que ele ja reprovou duas vezes; memoria feedback-artifact-width-alignment); titulos em branco, rotulos e fontes em lavanda; sem brilho e sem caixa-alta;

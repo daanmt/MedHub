@@ -1002,7 +1002,7 @@ def _sec(chave, corpo, extra=""):
 
 CSS = """
 /* Cor, tipo, espaco e raio: core/templates/tema.css (fonte unica, embutido logo depois deste bloco).
-   Aqui so a estrutura do Painel (docs/UI.md): uma placa por secao (a .placa do tema, composta, nunca
+   Aqui so a estrutura do Painel (DESIGN.md): uma placa por secao (a .placa do tema, composta, nunca
    redefinida), as do topo em grade; dentro da placa, linhas com filete e numeros sem caixa; a proxima
    tarefa em destaque, atraso em ambar com texto (nunca so a cor). */
 *{box-sizing:border-box}

@@ -1,6 +1,6 @@
 """Contraste do tema (hub-tema-v4 part-1, s227): le os hex do core/templates/tema.css e mede pela WCAG 2.x.
 
-A tabela de contraste do docs/UI.md §3 era digitada a mao e envelhecia em silencio a cada troca de paleta (ele muda de
+A tabela de contraste do antigo docs/UI.md §3 (hoje DESIGN.md, Colors) era digitada a mao e envelhecia em silencio a cada troca de paleta (ele muda de
 ideia rapido: trocar a paleta = trocar os dois blocos de cor do tema.css). Aqui o numero sai do arquivo, nos DOIS temas,
 para os pares que a UI usa: texto sobre as tres superficies, borda de controle, borda da placa contra o fundo e o texto
 sobre preenchimento. Sem banco, sem rede.

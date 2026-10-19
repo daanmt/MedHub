@@ -236,7 +236,7 @@ def test_template_real_e_injetavel_e_tem_wrap_unico():
     from tools.fsrs_queue import TEMPLATE_PLAYER, embutir_tema
     txt = TEMPLATE_PLAYER.read_text(encoding="utf-8")
     assert txt.count("max-width") <= 2, "um .wrap unico constrange a pagina (memoria s151)"
-    # s225: a cor sai do core/templates/tema.css (fonte unica, docs/UI.md) -- escuro por padrao, claro so por
+    # s225: a cor sai do core/templates/tema.css (fonte unica, DESIGN.md) -- escuro por padrao, claro so por
     # escolha explicita (data-theme). O template so traz estrutura; o standalone embute o tema no --build-player.
     css = txt[txt.index("@player:css:inicio"):txt.index("@player:css:fim")]
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", css), "cor literal no player: ela mora no tema.css"

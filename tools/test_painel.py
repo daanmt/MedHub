@@ -592,7 +592,7 @@ def test_html_obedece_o_contrato_de_render(db_sintetico):
     assert pagina.count('class="wrap"') == 1
     assert pagina.count("max-width") <= 2
     assert "<title>Painel MedHub</title>" in pagina
-    # s225: a cor vem do core/templates/tema.css embutido (fonte unica, docs/UI.md): escuro por padrao,
+    # s225: a cor vem do core/templates/tema.css embutido (fonte unica, DESIGN.md): escuro por padrao,
     # claro so por escolha explicita (data-theme) -- o painel nao repete paleta propria
     assert '<style id="medhub-tema">' in pagina
     assert ':root:not([data-theme="light"])' in pagina

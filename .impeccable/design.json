@@ -1,0 +1,821 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T14:37:41+00:00",
+  "title": "Design System: MedHub",
+  "extensions": {
+    "tokenSource": "core/templates/tema.css",
+    "colorMeta": {
+      "papel": {
+        "role": "neutral",
+        "displayName": "Corpo do Controle",
+        "canonical": "#0C0C12",
+        "light": "#F4F3F8",
+        "tonalRamp": [
+          "oklch(15% 0.008 285)",
+          "oklch(26% 0.009 285)",
+          "oklch(37% 0.010 285)",
+          "oklch(48% 0.011 285)",
+          "oklch(60% 0.013 285)",
+          "oklch(72% 0.011 285)",
+          "oklch(84% 0.010 285)",
+          "oklch(95% 0.009 285)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Placa Fosca",
+        "canonical": "#15151E",
+        "light": "#FFFFFF",
+        "tonalRamp": [
+          "oklch(15% 0.011 285)",
+          "oklch(26% 0.013 285)",
+          "oklch(37% 0.015 285)",
+          "oklch(48% 0.016 285)",
+          "oklch(60% 0.018 285)",
+          "oklch(72% 0.016 285)",
+          "oklch(84% 0.014 285)",
+          "oklch(95% 0.013 285)"
+        ]
+      },
+      "afundado": {
+        "role": "neutral",
+        "displayName": "Degrau Elevado",
+        "canonical": "#1E1D2A",
+        "light": "#ECEAF3",
+        "tonalRamp": [
+          "oklch(15% 0.016 288)",
+          "oklch(26% 0.018 288)",
+          "oklch(37% 0.020 288)",
+          "oklch(48% 0.022 288)",
+          "oklch(60% 0.025 288)",
+          "oklch(72% 0.022 288)",
+          "oklch(84% 0.020 288)",
+          "oklch(95% 0.018 288)"
+        ]
+      },
+      "linha": {
+        "role": "neutral",
+        "displayName": "Filete",
+        "canonical": "#2B2A3A",
+        "light": "#DFDCE8",
+        "tonalRamp": [
+          "oklch(15% 0.019 287)",
+          "oklch(26% 0.021 287)",
+          "oklch(37% 0.024 287)",
+          "oklch(48% 0.026 287)",
+          "oklch(60% 0.029 287)",
+          "oklch(72% 0.026 287)",
+          "oklch(84% 0.023 287)",
+          "oklch(95% 0.021 287)"
+        ]
+      },
+      "borda-placa": {
+        "role": "neutral",
+        "displayName": "Borda da Placa",
+        "canonical": "#3A3852",
+        "light": "#C2BCD4",
+        "tonalRamp": [
+          "oklch(15% 0.029 287)",
+          "oklch(26% 0.033 287)",
+          "oklch(37% 0.037 287)",
+          "oklch(48% 0.040 287)",
+          "oklch(60% 0.045 287)",
+          "oklch(72% 0.040 287)",
+          "oklch(84% 0.036 287)",
+          "oklch(95% 0.032 287)"
+        ]
+      },
+      "trilho": {
+        "role": "neutral",
+        "displayName": "Trilho",
+        "canonical": "#312F49",
+        "light": "#D3CFE1",
+        "tonalRamp": [
+          "oklch(15% 0.029 287)",
+          "oklch(26% 0.033 287)",
+          "oklch(37% 0.037 287)",
+          "oklch(48% 0.041 287)",
+          "oklch(60% 0.046 287)",
+          "oklch(72% 0.041 287)",
+          "oklch(84% 0.037 287)",
+          "oklch(95% 0.033 287)"
+        ]
+      },
+      "linha-forte": {
+        "role": "neutral",
+        "displayName": "Borda de Controle",
+        "canonical": "#6E6A8A",
+        "light": "#7F7A9C",
+        "tonalRamp": [
+          "oklch(15% 0.032 290)",
+          "oklch(26% 0.036 290)",
+          "oklch(37% 0.041 290)",
+          "oklch(48% 0.045 290)",
+          "oklch(60% 0.050 290)",
+          "oklch(72% 0.045 290)",
+          "oklch(84% 0.040 290)",
+          "oklch(95% 0.036 290)"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Branco Quente",
+        "canonical": "#F6EFEA",
+        "light": "#1A1626",
+        "tonalRamp": [
+          "oklch(15% 0.006 58)",
+          "oklch(26% 0.007 58)",
+          "oklch(37% 0.008 58)",
+          "oklch(48% 0.009 58)",
+          "oklch(60% 0.010 58)",
+          "oklch(72% 0.009 58)",
+          "oklch(84% 0.008 58)",
+          "oklch(95% 0.007 58)"
+        ]
+      },
+      "tinta2": {
+        "role": "neutral",
+        "displayName": "Lavanda",
+        "canonical": "#BDB7CC",
+        "light": "#4A4560",
+        "tonalRamp": [
+          "oklch(15% 0.019 299)",
+          "oklch(26% 0.022 299)",
+          "oklch(37% 0.025 299)",
+          "oklch(48% 0.027 299)",
+          "oklch(60% 0.030 299)",
+          "oklch(72% 0.027 299)",
+          "oklch(84% 0.024 299)",
+          "oklch(95% 0.022 299)"
+        ]
+      },
+      "tinta3": {
+        "role": "neutral",
+        "displayName": "Lavanda Apagada",
+        "canonical": "#948FAA",
+        "light": "#5F5A78",
+        "tonalRamp": [
+          "oklch(15% 0.026 294)",
+          "oklch(26% 0.029 294)",
+          "oklch(37% 0.033 294)",
+          "oklch(48% 0.036 294)",
+          "oklch(60% 0.040 294)",
+          "oklch(72% 0.036 294)",
+          "oklch(84% 0.032 294)",
+          "oklch(95% 0.029 294)"
+        ]
+      },
+      "acento": {
+        "role": "primary",
+        "displayName": "Ciano Gatilho",
+        "canonical": "#00D9E8",
+        "light": "#00737D",
+        "tonalRamp": [
+          "oklch(15% 0.088 204)",
+          "oklch(26% 0.100 204)",
+          "oklch(37% 0.112 204)",
+          "oklch(48% 0.124 204)",
+          "oklch(60% 0.138 204)",
+          "oklch(72% 0.124 204)",
+          "oklch(84% 0.111 204)",
+          "oklch(95% 0.099 204)"
+        ]
+      },
+      "acento-tinta": {
+        "role": "primary",
+        "displayName": "Ciano Gatilho (texto)",
+        "canonical": "#7DE8F0",
+        "light": "#005A62",
+        "tonalRamp": [
+          "oklch(15% 0.064 202)",
+          "oklch(26% 0.073 202)",
+          "oklch(37% 0.081 202)",
+          "oklch(48% 0.090 202)",
+          "oklch(60% 0.100 202)",
+          "oklch(72% 0.090 202)",
+          "oklch(84% 0.080 202)",
+          "oklch(95% 0.072 202)"
+        ]
+      },
+      "acento-fraco": {
+        "role": "primary",
+        "displayName": "Ciano Gatilho (lavagem)",
+        "canonical": "#0E2B36",
+        "light": "#DDF1F4",
+        "tonalRamp": [
+          "oklch(15% 0.026 226)",
+          "oklch(26% 0.029 226)",
+          "oklch(37% 0.033 226)",
+          "oklch(48% 0.036 226)",
+          "oklch(60% 0.040 226)",
+          "oklch(72% 0.036 226)",
+          "oklch(84% 0.032 226)",
+          "oklch(95% 0.029 226)"
+        ]
+      },
+      "rosa": {
+        "role": "secondary",
+        "displayName": "Rosa Símbolo",
+        "canonical": "#FF4FA3",
+        "light": "#C2176F",
+        "tonalRamp": [
+          "oklch(15% 0.102 355)",
+          "oklch(26% 0.116 355)",
+          "oklch(37% 0.131 355)",
+          "oklch(48% 0.145 355)",
+          "oklch(60% 0.160 355)",
+          "oklch(72% 0.145 355)",
+          "oklch(84% 0.129 355)",
+          "oklch(95% 0.115 355)"
+        ]
+      },
+      "rosa-fraco": {
+        "role": "secondary",
+        "displayName": "Rosa Símbolo (lavagem)",
+        "canonical": "#33172C",
+        "light": "#F8E1EE",
+        "tonalRamp": [
+          "oklch(15% 0.036 337)",
+          "oklch(26% 0.040 337)",
+          "oklch(37% 0.045 337)",
+          "oklch(48% 0.050 337)",
+          "oklch(60% 0.056 337)",
+          "oklch(72% 0.050 337)",
+          "oklch(84% 0.045 337)",
+          "oklch(95% 0.040 337)"
+        ]
+      },
+      "fc": {
+        "role": "secondary",
+        "displayName": "Rosa Flashcard",
+        "canonical": "#FF5FAE",
+        "light": "#C2176F",
+        "tonalRamp": [
+          "oklch(15% 0.102 353)",
+          "oklch(26% 0.116 353)",
+          "oklch(37% 0.131 353)",
+          "oklch(48% 0.145 353)",
+          "oklch(60% 0.160 353)",
+          "oklch(72% 0.145 353)",
+          "oklch(84% 0.129 353)",
+          "oklch(95% 0.115 353)"
+        ]
+      },
+      "fc-fraco": {
+        "role": "secondary",
+        "displayName": "Rosa Flashcard (lavagem)",
+        "canonical": "#55204A",
+        "light": "#F2C2DC",
+        "tonalRamp": [
+          "oklch(15% 0.062 336)",
+          "oklch(26% 0.071 336)",
+          "oklch(37% 0.079 336)",
+          "oklch(48% 0.088 336)",
+          "oklch(60% 0.097 336)",
+          "oklch(72% 0.088 336)",
+          "oklch(84% 0.078 336)",
+          "oklch(95% 0.070 336)"
+        ]
+      },
+      "fc-tinta": {
+        "role": "secondary",
+        "displayName": "Rosa Flashcard (texto)",
+        "canonical": "#FF9ACB",
+        "light": "#9E0F58",
+        "tonalRamp": [
+          "oklch(15% 0.085 350)",
+          "oklch(26% 0.097 350)",
+          "oklch(37% 0.109 350)",
+          "oklch(48% 0.120 350)",
+          "oklch(60% 0.133 350)",
+          "oklch(72% 0.120 350)",
+          "oklch(84% 0.108 350)",
+          "oklch(95% 0.096 350)"
+        ]
+      },
+      "roxo": {
+        "role": "tertiary",
+        "displayName": "Roxo Cromado",
+        "canonical": "#AA71E8",
+        "light": "#7443B8",
+        "tonalRamp": [
+          "oklch(15% 0.102 304)",
+          "oklch(26% 0.116 304)",
+          "oklch(37% 0.131 304)",
+          "oklch(48% 0.145 304)",
+          "oklch(60% 0.160 304)",
+          "oklch(72% 0.145 304)",
+          "oklch(84% 0.129 304)",
+          "oklch(95% 0.115 304)"
+        ]
+      },
+      "roxo-tinta": {
+        "role": "tertiary",
+        "displayName": "Roxo Cromado (texto)",
+        "canonical": "#BE95F0",
+        "light": "#5E3596",
+        "tonalRamp": [
+          "oklch(15% 0.086 304)",
+          "oklch(26% 0.098 304)",
+          "oklch(37% 0.110 304)",
+          "oklch(48% 0.121 304)",
+          "oklch(60% 0.134 304)",
+          "oklch(72% 0.121 304)",
+          "oklch(84% 0.108 304)",
+          "oklch(95% 0.097 304)"
+        ]
+      },
+      "roxo-fraco": {
+        "role": "tertiary",
+        "displayName": "Roxo Cromado (lavagem)",
+        "canonical": "#261C3E",
+        "light": "#ECE3F8",
+        "tonalRamp": [
+          "oklch(15% 0.040 295)",
+          "oklch(26% 0.046 295)",
+          "oklch(37% 0.051 295)",
+          "oklch(48% 0.057 295)",
+          "oklch(60% 0.063 295)",
+          "oklch(72% 0.057 295)",
+          "oklch(84% 0.051 295)",
+          "oklch(95% 0.045 295)"
+        ]
+      },
+      "amarelo": {
+        "role": "tertiary",
+        "displayName": "Amarelo Marca-texto",
+        "canonical": "#FFD447",
+        "light": "#FFE066",
+        "tonalRamp": [
+          "oklch(15% 0.101 91)",
+          "oklch(26% 0.115 91)",
+          "oklch(37% 0.129 91)",
+          "oklch(48% 0.143 91)",
+          "oklch(60% 0.158 91)",
+          "oklch(72% 0.143 91)",
+          "oklch(84% 0.128 91)",
+          "oklch(95% 0.114 91)"
+        ]
+      },
+      "ok": {
+        "role": "state",
+        "displayName": "Verde Sucesso",
+        "canonical": "#79D6A5",
+        "light": "#1E7348",
+        "tonalRamp": [
+          "oklch(15% 0.073 159)",
+          "oklch(26% 0.083 159)",
+          "oklch(37% 0.093 159)",
+          "oklch(48% 0.103 159)",
+          "oklch(60% 0.114 159)",
+          "oklch(72% 0.103 159)",
+          "oklch(84% 0.092 159)",
+          "oklch(95% 0.082 159)"
+        ]
+      },
+      "ok-fraco": {
+        "role": "state",
+        "displayName": "Verde Sucesso (lavagem)",
+        "canonical": "#172A26",
+        "light": "#E2F2E8",
+        "tonalRamp": [
+          "oklch(15% 0.017 179)",
+          "oklch(26% 0.019 179)",
+          "oklch(37% 0.021 179)",
+          "oklch(48% 0.024 179)",
+          "oklch(60% 0.026 179)",
+          "oklch(72% 0.024 179)",
+          "oklch(84% 0.021 179)",
+          "oklch(95% 0.019 179)"
+        ]
+      },
+      "erro": {
+        "role": "state",
+        "displayName": "Coral Erro",
+        "canonical": "#FF7C87",
+        "light": "#B8303E",
+        "tonalRamp": [
+          "oklch(15% 0.102 17)",
+          "oklch(26% 0.116 17)",
+          "oklch(37% 0.130 17)",
+          "oklch(48% 0.144 17)",
+          "oklch(60% 0.160 17)",
+          "oklch(72% 0.144 17)",
+          "oklch(84% 0.129 17)",
+          "oklch(95% 0.115 17)"
+        ]
+      },
+      "erro-fraco": {
+        "role": "state",
+        "displayName": "Coral Erro (lavagem)",
+        "canonical": "#331B24",
+        "light": "#FBE5E8",
+        "tonalRamp": [
+          "oklch(15% 0.026 356)",
+          "oklch(26% 0.029 356)",
+          "oklch(37% 0.033 356)",
+          "oklch(48% 0.036 356)",
+          "oklch(60% 0.040 356)",
+          "oklch(72% 0.036 356)",
+          "oklch(84% 0.033 356)",
+          "oklch(95% 0.029 356)"
+        ]
+      },
+      "aviso": {
+        "role": "state",
+        "displayName": "Âmbar Aviso",
+        "canonical": "#FFBE72",
+        "light": "#8F5200",
+        "tonalRamp": [
+          "oklch(15% 0.077 69)",
+          "oklch(26% 0.087 69)",
+          "oklch(37% 0.098 69)",
+          "oklch(48% 0.108 69)",
+          "oklch(60% 0.120 69)",
+          "oklch(72% 0.108 69)",
+          "oklch(84% 0.097 69)",
+          "oklch(95% 0.086 69)"
+        ]
+      },
+      "aviso-fraco": {
+        "role": "state",
+        "displayName": "Âmbar Aviso (lavagem)",
+        "canonical": "#33261C",
+        "light": "#FAEBD7",
+        "tonalRamp": [
+          "oklch(15% 0.017 59)",
+          "oklch(26% 0.019 59)",
+          "oklch(37% 0.021 59)",
+          "oklch(48% 0.024 59)",
+          "oklch(60% 0.026 59)",
+          "oklch(72% 0.024 59)",
+          "oklch(84% 0.021 59)",
+          "oklch(95% 0.019 59)"
+        ]
+      },
+      "sobre": {
+        "role": "neutral",
+        "displayName": "Sobre (texto em preenchimento)",
+        "canonical": "#0C0C12",
+        "light": "#FFFFFF",
+        "tonalRamp": [
+          "oklch(15% 0.008 285)",
+          "oklch(26% 0.009 285)",
+          "oklch(37% 0.010 285)",
+          "oklch(48% 0.011 285)",
+          "oklch(60% 0.013 285)",
+          "oklch(72% 0.011 285)",
+          "oklch(84% 0.010 285)",
+          "oklch(95% 0.009 285)"
+        ]
+      },
+      "amber-ink": {
+        "role": "state",
+        "displayName": "Âmbar das aulas (texto)",
+        "canonical": "#FFD3A0",
+        "light": "#7A4500",
+        "tonalRamp": [
+          "oklch(15% 0.053 71)",
+          "oklch(26% 0.060 71)",
+          "oklch(37% 0.067 71)",
+          "oklch(48% 0.074 71)",
+          "oklch(60% 0.082 71)",
+          "oklch(72% 0.074 71)",
+          "oklch(84% 0.066 71)",
+          "oklch(95% 0.059 71)"
+        ]
+      },
+      "carmine-ink": {
+        "role": "state",
+        "displayName": "Coral das aulas (texto)",
+        "canonical": "#FFB3BA",
+        "light": "#962632",
+        "tonalRamp": [
+          "oklch(15% 0.057 13)",
+          "oklch(26% 0.065 13)",
+          "oklch(37% 0.073 13)",
+          "oklch(48% 0.081 13)",
+          "oklch(60% 0.089 13)",
+          "oklch(72% 0.081 13)",
+          "oklch(84% 0.072 13)",
+          "oklch(95% 0.064 13)"
+        ]
+      },
+      "cromado-azul": {
+        "role": "tertiary",
+        "displayName": "Cromado Azul",
+        "canonical": "#2F7BFF",
+        "light": "#2F6BE0",
+        "tonalRamp": [
+          "oklch(15% 0.102 261)",
+          "oklch(26% 0.116 261)",
+          "oklch(37% 0.131 261)",
+          "oklch(48% 0.145 261)",
+          "oklch(60% 0.160 261)",
+          "oklch(72% 0.145 261)",
+          "oklch(84% 0.129 261)",
+          "oklch(95% 0.115 261)"
+        ]
+      },
+      "cromado-violeta": {
+        "role": "tertiary",
+        "displayName": "Cromado Violeta",
+        "canonical": "#7A4DFF",
+        "light": "#6A3FE0",
+        "tonalRamp": [
+          "oklch(15% 0.102 288)",
+          "oklch(26% 0.116 288)",
+          "oklch(37% 0.131 288)",
+          "oklch(48% 0.145 288)",
+          "oklch(60% 0.160 288)",
+          "oklch(72% 0.145 288)",
+          "oklch(84% 0.129 288)",
+          "oklch(95% 0.115 288)"
+        ]
+      },
+      "cromado-magenta": {
+        "role": "tertiary",
+        "displayName": "Cromado Magenta",
+        "canonical": "#B04FE0",
+        "light": "#9A3FC8",
+        "tonalRamp": [
+          "oklch(15% 0.102 313)",
+          "oklch(26% 0.116 313)",
+          "oklch(37% 0.131 313)",
+          "oklch(48% 0.145 313)",
+          "oklch(60% 0.160 313)",
+          "oklch(72% 0.145 313)",
+          "oklch(84% 0.129 313)",
+          "oklch(95% 0.115 313)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "numero": {
+        "displayName": "Número",
+        "purpose": "Métrica de destaque; % no centro do anel."
+      },
+      "pagina": {
+        "displayName": "Página",
+        "purpose": "Título da tela e do topo do player."
+      },
+      "secao": {
+        "displayName": "Seção",
+        "purpose": "Título de seção e número destacado do anel."
+      },
+      "item": {
+        "displayName": "Item",
+        "purpose": "Título de linha de lista e de cartão."
+      },
+      "corpo": {
+        "displayName": "Corpo",
+        "purpose": "Texto do hub e do player."
+      },
+      "leitura": {
+        "displayName": "Leitura",
+        "purpose": "Aulas e resumos no leitor, na medida --wrap (46rem)."
+      },
+      "legenda": {
+        "displayName": "Legenda",
+        "purpose": "Rótulos, botões compactos, valores sob o anel."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Metadado em tinta3, chips, rótulo Próxima."
+      }
+    },
+    "gradients": [
+      {
+        "name": "cromado",
+        "value": "linear-gradient(90deg,transparent,#2F7BFF 18%,#7A4DFF 55%,#B04FE0 82%,transparent)",
+        "light": "linear-gradient(90deg,transparent,#2F6BE0 18%,#6A3FE0 55%,#9A3FC8 82%,transparent)",
+        "purpose": "O fio de 1 px no topo de cada placa (reflexo, não faixa)."
+      },
+      {
+        "name": "luz",
+        "value": "radial-gradient(60rem 24rem at 8% -7rem,rgba(47,123,255,.24),transparent 70%),radial-gradient(56rem 22rem at 96% -8rem,rgba(150,77,255,.2),transparent 70%)",
+        "light": "radial-gradient(60rem 24rem at 8% -7rem,rgba(47,107,224,.07),transparent 70%),radial-gradient(56rem 22rem at 96% -8rem,rgba(106,63,224,.06),transparent 70%)",
+        "purpose": "A luz atrás do topo (marca e abas), no body; rola com a página."
+      },
+      {
+        "name": "horizonte",
+        "value": "linear-gradient(90deg,#FF4FA3,#AA71E8 55%,#00D9E8)",
+        "light": "linear-gradient(90deg,#C2176F,#7443B8 55%,#00737D)",
+        "purpose": "A linha sob as abas e o trecho da aba ativa."
+      }
+    ],
+    "shadows": [
+      {
+        "name": "sombra",
+        "value": "none",
+        "purpose": "Sem sombra, sem glow, sem halo: profundidade = degrau + borda + fio cromado."
+      },
+      {
+        "name": "trilho-flag",
+        "value": "inset 0 -3px 0 var(--aviso)",
+        "purpose": "Estrutural: questão marcada para revisar no trilho."
+      },
+      {
+        "name": "segmento-ligado",
+        "value": "inset 0 0 0 1px currentColor",
+        "purpose": "Estrutural: contorno do segmento ligado."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transicao",
+        "value": "140ms ease",
+        "purpose": "Hover, barra e botão; desligada com prefers-reduced-motion."
+      },
+      {
+        "name": "cascata-grifo",
+        "value": "60ms por opção",
+        "purpose": "As 3 cores do grifo abrindo em cascata."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "celular",
+        "value": "390px"
+      },
+      {
+        "name": "placa-24",
+        "value": "521px"
+      },
+      {
+        "name": "aneis-4",
+        "value": "600px (iframe)"
+      },
+      {
+        "name": "painel-2col",
+        "value": "760px (iframe)"
+      },
+      {
+        "name": "teoria-2col",
+        "value": "900px"
+      },
+      {
+        "name": "desktop",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Placa",
+      "kind": "card",
+      "refersTo": "placa",
+      "description": "A superfície de UMA seção: card + borda da placa + fio cromado de 1 px no topo; sem sombra. As telas compõem, nunca redefinem.",
+      "html": "<section class=\"ds-placa\"><h2 class=\"ds-placa-tit\">Por bloco</h2><ul class=\"ds-linhas\"><li><b>CIR</b><span>62% · 40/64</span></li><li><b>MFC</b><span>81% · 52/64</span></li><li><b>PED</b><span>55% · 33/60</span></li></ul></section>",
+      "css": ".ds-placa{position:relative;min-width:0;background:var(--card);border:1px solid var(--borda-placa);border-radius:var(--raio-placa);padding:var(--esp-4);color:var(--tinta);font-family:var(--fonte)} .ds-placa::before{content:\"\";position:absolute;left:var(--raio-placa);right:var(--raio-placa);top:-1px;height:1px;background:var(--cromado)} @media (min-width:521px){.ds-placa{padding:var(--esp-5)}} .ds-placa-tit{margin:0 0 var(--esp-3);font-size:var(--fs-item);font-weight:650} .ds-linhas{list-style:none;margin:0;padding:0} .ds-linhas li{display:flex;justify-content:space-between;gap:var(--esp-3);padding:var(--esp-2) 0;border-bottom:1px solid var(--linha);font-size:var(--fs-legenda)} .ds-linhas li:last-child{border-bottom:0} .ds-linhas span{color:var(--tinta3)}"
+    },
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "botao-primario",
+      "description": "Ação primária (Resolver, Responder, Virar): ciano cheio, texto 'sobre', 44 px.",
+      "html": "<button class=\"ds-btn-prim\">Resolver</button>",
+      "css": ".ds-btn-prim{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);background:var(--acento);color:var(--sobre);font-family:var(--fonte);font-weight:650;cursor:pointer;transition:background var(--transicao)} .ds-btn-prim:hover{background:var(--acento-tinta);border-color:var(--acento-tinta)} .ds-btn-prim:focus-visible{outline:2px solid var(--acento);outline-offset:2px}"
+    },
+    {
+      "name": "Botão secundário (contorno ciano)",
+      "kind": "button",
+      "refersTo": "botao-ciano",
+      "description": "Abrir aula, Todas as listas, Anterior, Pular: o desenho do Responder em contorno ciano (.hub-btn / .t-btn).",
+      "html": "<button class=\"ds-btn-sec\">Abrir aula</button>",
+      "css": ".ds-btn-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);background:transparent;color:var(--acento-tinta);font-family:var(--fonte);font-weight:650;cursor:pointer;transition:background var(--transicao)} .ds-btn-sec:hover{background:var(--acento-fraco)} .ds-btn-sec:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-btn-sec[disabled]{border-color:var(--linha-forte);color:var(--tinta3);background:transparent}"
+    },
+    {
+      "name": "Botão neutro do player",
+      "kind": "button",
+      "refersTo": "botao-neutro",
+      "description": "Botão base dos Cards: contorno de controle, fundo transparente; desce 1 px ao pressionar.",
+      "html": "<button class=\"ds-btn-neutro\">2 · com esforço</button>",
+      "css": ".ds-btn-neutro{min-height:44px;padding:10px 16px;border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta);font-family:var(--fonte);cursor:pointer;transition:transform var(--transicao),background var(--transicao)} .ds-btn-neutro:hover{background:var(--afundado)} .ds-btn-neutro:active{transform:translateY(1px)} .ds-btn-neutro:focus-visible{outline:2px solid var(--acento);outline-offset:3px}"
+    },
+    {
+      "name": "Chips de área e estado",
+      "kind": "chip",
+      "refersTo": "chip-area",
+      "description": "Chip de área em rosa (a marca), badge neutro, e chips de estado só fora do normal (em curso âmbar, resolvida verde com ✓).",
+      "html": "<span class=\"ds-chip ds-chip-area\">CIR</span> <span class=\"ds-chip ds-chip-badge\">Endocrinologia</span> <span class=\"ds-chip ds-chip-curso\">12/30</span> <span class=\"ds-chip ds-chip-ok\">✓ resolvida</span>",
+      "css": ".ds-chip{display:inline-block;padding:1px var(--esp-2);border-radius:var(--raio-pilula);font-family:var(--fonte);font-size:var(--fs-meta);font-weight:650} .ds-chip-area{background:var(--rosa-fraco);color:var(--rosa)} .ds-chip-badge{background:var(--afundado);color:var(--tinta2);font-weight:600} .ds-chip-curso{background:var(--aviso-fraco);color:var(--aviso)} .ds-chip-ok{background:var(--ok-fraco);color:var(--ok)}"
+    },
+    {
+      "name": "Barra do Cronograma",
+      "kind": "custom",
+      "refersTo": "tarefa",
+      "description": "O item de backlog de Painel, Teoria e Listas: faixa de 4 px + fundo tingido pela área, chip, tema e botões à direita (embaixo no celular).",
+      "html": "<div class=\"ds-tarefa\" style=\"--area:var(--rosa)\"><i class=\"ds-faixa\"></i><div class=\"ds-t-meta\"><span class=\"ds-chip ds-chip-area\">CIR</span><span>30 q</span></div><div class=\"ds-t-tema\">Abdome agudo inflamatório</div><div class=\"ds-t-acao\"><a class=\"ds-t-btn ds-t-prim\" href=\"#\">Resolver</a><a class=\"ds-t-btn\" href=\"#\">Abrir aula</a></div></div>",
+      "css": ".ds-tarefa{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:\"meta acao\" \"tema acao\";align-items:center;gap:2px var(--esp-4);padding:var(--esp-2) var(--esp-4) var(--esp-2) calc(var(--esp-4) + 4px);background:color-mix(in srgb,var(--area) 9%,var(--afundado));border:1px solid var(--linha);border-radius:var(--raio);font-family:var(--fonte);color:var(--tinta)} .ds-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)} .ds-t-meta{grid-area:meta;display:flex;gap:var(--esp-3);align-items:center;color:var(--tinta3);font-size:var(--fs-meta)} .ds-t-tema{grid-area:tema;font-weight:600;line-height:1.35} .ds-t-acao{grid-area:acao;display:flex;flex-wrap:wrap;gap:var(--esp-2);font-size:var(--fs-legenda)} .ds-t-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);color:var(--acento-tinta);font-weight:650;text-decoration:none} .ds-t-btn:hover{background:var(--acento-fraco)} .ds-t-btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-t-prim{background:var(--acento);color:var(--sobre)} .ds-t-prim:hover{background:var(--acento-tinta)} .ds-chip{display:inline-block;padding:1px var(--esp-2);border-radius:var(--raio-pilula);font-family:var(--fonte);font-size:var(--fs-meta);font-weight:650} .ds-chip-area{background:var(--rosa-fraco);color:var(--rosa)} @media (max-width:520px){.ds-tarefa{grid-template-columns:minmax(0,1fr);grid-template-areas:\"meta\" \"tema\" \"acao\"}}"
+    },
+    {
+      "name": "Abas do hub",
+      "kind": "nav",
+      "refersTo": "hub-aba",
+      "description": "Quatro abas iguais; a ativa leva o trecho do horizonte (rosa → roxo → ciano) que passa sob ela.",
+      "html": "<nav class=\"ds-abas\"><button class=\"ds-aba\" aria-selected=\"true\">Painel</button><button class=\"ds-aba\">Teoria</button><button class=\"ds-aba\">Listas</button><button class=\"ds-aba\">Cards</button></nav>",
+      "css": ".ds-abas{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))} .ds-abas::after{content:\"\";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--horizonte);opacity:.75} .ds-aba{min-height:44px;padding:var(--esp-2) var(--esp-1);border:0;background:transparent;color:var(--tinta3);font-family:var(--fonte);font-weight:600;font-size:.9375rem;cursor:pointer} .ds-aba:hover{color:var(--tinta)} .ds-aba:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-aba[aria-selected=\"true\"]{color:var(--tinta);background-image:var(--horizonte);background-repeat:no-repeat;background-size:400% 2px;background-position:0% 100%} .ds-aba:nth-child(2)[aria-selected=\"true\"]{background-position-x:33.333%} .ds-aba:nth-child(3)[aria-selected=\"true\"]{background-position-x:66.667%} .ds-aba:nth-child(4)[aria-selected=\"true\"]{background-position-x:100%}"
+    },
+    {
+      "name": "Card do player",
+      "kind": "card",
+      "refersTo": "card-player",
+      "description": "O flashcard: placa elevada (afundado) com borda de controle; o verso abre como o degrau de baixo da mesma placa; armadilha com filete âmbar.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-reason\">discriminador</span><p class=\"ds-pergunta\">Qual dado EXCLUI apendicite no quadro?</p><div class=\"ds-verso\"><p class=\"ds-resposta\">Dor que precede a febre.</p><div class=\"ds-bloco ds-alerta\"><div class=\"ds-rot\">Armadilha</div>Febre alta no início sugere outra causa.</div></div></article>",
+      "css": ".ds-card{position:relative;min-height:220px;display:flex;flex-direction:column;background:var(--afundado);border:1px solid var(--linha-forte);border-radius:var(--raio-placa);padding:var(--esp-4) var(--esp-4) 0;color:var(--tinta);font-family:var(--fonte);cursor:pointer} .ds-card::before{content:\"\";position:absolute;left:var(--raio-placa);right:var(--raio-placa);top:-1px;height:1px;background:var(--cromado)} .ds-card:hover{border-color:var(--acento)} .ds-reason{align-self:flex-start;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--card);border-radius:var(--raio-pilula);padding:1px var(--esp-2);margin-bottom:var(--esp-3)} .ds-pergunta{margin:0;font-size:clamp(1.2rem,1.05rem + .6vw,1.5rem);line-height:1.3;font-weight:700} .ds-verso{margin:var(--esp-5) calc(-1 * var(--esp-4)) 0;padding:var(--esp-4);background:var(--card);border-top:1px solid var(--borda-placa);border-radius:0 0 13px 13px;display:grid;gap:var(--esp-4)} .ds-resposta{margin:0;font-size:1.125rem;line-height:1.45;font-weight:600} .ds-bloco{padding-left:var(--esp-3);border-left:2px solid var(--linha-forte);color:var(--tinta2)} .ds-alerta{border-left-color:var(--aviso)} .ds-rot{font-size:var(--fs-meta);font-weight:650;color:var(--aviso);margin-bottom:var(--esp-1)}"
+    },
+    {
+      "name": "Aviso",
+      "kind": "custom",
+      "refersTo": "aviso",
+      "description": "Filete âmbar de 3 px + lavagem âmbar; atraso é aviso, nunca erro.",
+      "html": "<div class=\"ds-aviso\">Atrasadas · 3 — <a href=\"#\">ver no Cronograma</a></div>",
+      "css": ".ds-aviso{border-left:3px solid var(--aviso);background:var(--aviso-fraco);color:var(--tinta);padding:var(--esp-3) var(--esp-4);border-radius:var(--raio-p);font-family:var(--fonte);font-size:var(--fs-legenda)} .ds-aviso a{color:var(--acento)} .ds-aviso a:focus-visible{outline:2px solid var(--acento);outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Controle Fosco",
+    "overview": "O tema v4, **fosco em camadas** (s227, 13/10/2026), é o retrowave do v3 lido do controle DualSense GTA VI que ele trouxe como referência (\"o exemplo que mais se aproxima\"): o corpo preto fosco é o fundo; o cromado azul → violeta é a luz (atrás do topo) e o fio de 1 px que acende o topo de cada placa, nunca uma superfície; os símbolos rosa são o detalhe (marca, etiquetas, o anel de cards); o texto é branco quente. Queixa que o v4 resolve, nas palavras dele: *\"ainda muito 'chapado' no fundo, sem blocos e divisões, fluidez e coesão, otimização do espaço\"*. PRD: `.vibeflow/prds/hub-tema-v4-fosco-em-camadas.md` (specs `hub-tema-v4-part-1..4`).\n\nPrincípio que segue do v3 (brief dele, 13/10/2026): *\"a interface deve lembrar Vice City à primeira vista, mas desaparecer em segundo plano quando o estudante estiver concentrado no conteúdo.\"* É uma superfície de **operar e ler** (Painel, Listas, Cards = tarefa; Teoria = leitura): a ambição aparece como precisão e contenção, não como espetáculo. Prioridade, nesta ordem: (1) clareza e baixa carga cognitiva; (2) legibilidade e acessibilidade; (3) hierarquia e consistência entre telas; (4) minimalismo funcional; (5) identidade retrowave deliberada e contida; (6) código simples.\n\nEle lê **no celular (390 px), à noite, entre plantões**. Toda decisão é conferida primeiro a 390 px. A identidade mora em poucos lugares: a marca (`Med` + `Hub` em ciano, s226), a **linha do horizonte** sob as abas (rosa → roxo → ciano), a **luz** atrás do topo e o **fio cromado** das placas (azul → violeta), e o roxo do gráfico de previsão do Painel. O resto é tipografia, superfície, filete e espaço. Rejeições confirmadas por ele: glow, sombra, halo, borda neon (os mockups com borda neon ficaram de fora em 13/10), caixa-alta, micro-dicas de interação óbvia. Ele muda de ideia rápido: trocar a paleta é trocar os dois blocos de cor do `tema.css`; nada além disso deve ser preciso.",
+    "keyCharacteristics": [
+      "Preto fosco frio com uma luz azul/violeta fraca no topo; nada brilha.",
+      "Uma placa por SEÇÃO, nunca uma caixa por número; dentro dela, linhas com filete.",
+      "Profundidade = degrau de superfície + borda + fio cromado de 1 px.",
+      "Cor com papel fixo: ciano = interação, rosa = marca, âmbar = aviso, roxo = dado/decoração.",
+      "Uma família tipográfica (Atkinson Hyperlegible Next), algarismos tabulares, sem caixa-alta.",
+      "Escuro por padrão; claro só por escolha explícita (`data-theme=\"light\"`).",
+      "Celular primeiro: a 390 px tudo é uma coluna de placas empilhadas."
+    ],
+    "rules": [
+      {
+        "name": "The Cor Literal Rule",
+        "body": "Cor literal só no `tema.css`. Player, painel, hub e leitor usam `var(--token)`; o teste trava cor literal no player, no painel e na tela revelada.",
+        "section": "colors"
+      },
+      {
+        "name": "The Um Papel por Cor Rule",
+        "body": "Ciano interage, rosa assina, âmbar avisa, roxo decora e mede. Rosa nunca é estado; ciano nunca é título nem rótulo; roxo puro nunca é texto.",
+        "section": "colors"
+      },
+      {
+        "name": "The Nunca Só Cor Rule",
+        "body": "Estado nunca só por cor: gabarito `✓`, errada `✗`, chute `?`, resolvida `✓`, \"abaixo do necessário\" por extenso, declaração com o nome do estado no botão, chip de área com o nome.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sem Caixa-Alta Rule",
+        "body": "`text-transform:none` em tudo, inclusive no CSS das aulas. Ênfase por peso e tamanho.",
+        "section": "typography"
+      },
+      {
+        "name": "The Número Único Rule",
+        "body": "Nenhum número soma unidades diferentes (o \"226\" dos mockups somava questões com cards e ficou de fora); uma métrica = um número.",
+        "section": "typography"
+      },
+      {
+        "name": "The Um Wrap Rule",
+        "body": "Um contêiner com `max-width`; os filhos herdam. Bordas direitas alinhadas sempre.",
+        "section": "layout"
+      },
+      {
+        "name": "The 390 Primeiro Rule",
+        "body": "Toda decisão é conferida primeiro a 390 px, à noite, no tema escuro.",
+        "section": "layout"
+      },
+      {
+        "name": "The Fosco Rule",
+        "body": "Profundidade = degrau + borda + fio cromado. Nada brilha; neon nunca no corpo do texto.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Cromado É Luz Rule",
+        "body": "O azul → violeta é reflexo (1 px) ou luz de fundo, nunca uma superfície, faixa ou preenchimento.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** usar uma `.placa` por SEÇÃO e linhas com filete (`linha`) dentro dela; compor (`class=\"placa x\"`), nunca redefinir.",
+      "**Do** pôr cor literal só no `core/templates/tema.css`; trocar a paleta trocando os dois blocos de cor (escuro e claro).",
+      "**Do** usar ciano (`acento`) só para interação: navegação ativa, foco, progresso, ação primária, link.",
+      "**Do** dizer o estado em texto ou símbolo além da cor (`✓ ✗ ?`, \"abaixo do necessário\", \"mais fraco\").",
+      "**Do** dar 44 px de alvo de toque a todo controle (36 px só nos três compactos do topo do card).",
+      "**Do** usar `roxo-tinta` quando o roxo for texto.",
+      "**Do** conferir a tela a 390 px primeiro e no tema escuro, com `python tools/ui_capturas.py`, antes de publicar.",
+      "**Do** manter um só `.wrap` (`max-width`) por página e todos os filhos a 100% dele.",
+      "**Do** deixar só a mecânica e o botão: mensagem de erro com a ação de recuperar (\"Toque para reenviar\") fica."
+    ],
+    "donts": [
+      "**Don't** usar sombra, glow, halo, `text-shadow` ou borda neon; a profundidade é degrau + borda + fio cromado.",
+      "**Don't** fazer uma caixa por número (tiles, métricas, cadeia em caixas, regra-mestre como caixa dentro do card).",
+      "**Don't** usar o cromado ou a luz como superfície, faixa, cor de dado ou fundo de texto.",
+      "**Don't** usar rosa como estado, ciano como título/rótulo, nem roxo puro como texto.",
+      "**Don't** usar caixa-alta, outra família tipográfica ou algarismos não tabulares em métricas.",
+      "**Don't** usar `sticky`, `fixed` ou `nowrap`; nem `max-width` por elemento ao lado de quadro com borda.",
+      "**Don't** pôr controle em pílula (pílula é só badge e chip).",
+      "**Don't** explicar o gesto que o controle já mostra (\"toque no card para virar\", \"toque numa questão para ver...\", \"· toque para ampliar\", a legenda da certeza) — regra dele, s229, 15/10: *\"pode todos esses pequenos excessos. basta a mecânica e o botão que já existe\"*.",
+      "**Don't** pôr legenda em prosa que repete o dado (Teoria, frase do Ritmo, \"Fora da tabela\", `p.nota` no dashboard, legenda de instrução das Listas).",
+      "**Don't** somar unidades diferentes num número só.",
+      "**Don't** usar jargão de bastidor no painel, inclusive nos comentários do `tema.css` (viaja embutido)."
+    ]
+  }
+}

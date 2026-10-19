@@ -278,7 +278,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/setup_hooks.py` | — | `tools/cli_signature_check.py`, `tools/test_autonomia_hooks.py` |
 | `tools/sync_skills.py` | gerador determinístico das skills agent-agnostic | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-auditar-resumos/SKILL.md` (+17) |
 | `tools/trilha.py` | o GERADOR da trilha da Fase 1 (`core/cronograma/plano_trilha.json`), no repo | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+13) |
-| `tools/ui_capturas.py` | confere a UI do hub em navegador real: Edge headless + db falso, cena x largura (s225) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+3) |
+| `tools/ui_capturas.py` | confere a UI do hub em navegador real: Edge headless + db falso, cena x largura (s225) | `.agents/skills/source-command-aula-base/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+5) |
 | `tools/variancia.py` | — | `.agents/skills/source-command-performance/SKILL.md`, `.claude/commands/performance.md` (+7) |
 
 Migração one-shot aplicada é apagada no commit seguinte ao apply; o git guarda o script. Vale o §3 item 4: sem `archive/`.

@@ -1,6 +1,6 @@
 /* MedHub tema v4 -- FOSCO EM CAMADAS (13/10/2026, s227). Fonte UNICA de cor, tipo, espaco e raio de todo o MedHub:
    o hub (shell, Teoria, Listas), o player de cards, o painel e o leitor de aulas e resumos.
-   Mapa das telas, semantica das cores, escalas e regras de uso: docs/UI.md (ler antes de mexer).
+   Mapa das telas, semantica das cores, escalas e regras de uso: DESIGN.md na raiz (ler antes de mexer).
    Referencia dele: o controle DualSense GTA VI -- corpo preto fosco (o fundo), cromado azul -> violeta (a luz e o
    fio no topo de cada placa, nunca uma superficie), simbolos rosa (detalhe), texto em branco quente.
    - Trocar a paleta = trocar os DOIS blocos de cor abaixo (escuro e claro). Nada de cor literal fora daqui.

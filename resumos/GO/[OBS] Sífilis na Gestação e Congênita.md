@@ -69,7 +69,7 @@ Se faltar QUALQUER UM dos fatores, o RN será classificado como sífilis congên
 
 ### Quem é considerado Sífilis Congênita?
 - Todo filho de mãe **não tratada ou inadequadamente tratada** (diagnóstico automático, antes de qualquer exame do neonato).
-- VDRL do RN (veia periférica, never cordão) **> 2 diluições acima** do materno no momento do parto (ex: mãe 1:4, filho 1:16 ou mais).
+- VDRL do RN (veia periférica, never cordão) **>= 2 diluições acima** do materno no momento do parto (ex: mãe 1:4, filho 1:16 ou mais).
 - Alterações compatíveis em exame físico, líquor ou RX associadas a VDRL **em qualquer titulação**, independente do tratamento da mãe.
 
 ### Manifestações Clínicas
@@ -132,9 +132,9 @@ O LCR é coletado em **todos** os RNs com suspeita de sífilis congênita (mãe 
 **PASSO 2 -- MÃE ADEQUADAMENTE TRATADA:**
 -> RN = "Exposto à Sífilis". Avaliar VDRL e exame físico.
 - VDRL negativo (mesmo sintomático) -> Não é sífilis congênita. Investigar outro diagnóstico ou seguimento ambulatorial.
-- VDRL positivo **> 2 diluições acima da mãe** -> Sífilis congênita -> NTT.
-- VDRL positivo **≤ 2 diluições da mãe** com sintomas -> Sífilis congênita -> NTT.
-- VDRL positivo **≤ 2 diluições da mãe** assintomático -> Seguimento ambulatorial.
+- VDRL positivo **>= 2 diluições acima da mãe** -> Sífilis congênita -> NTT.
+- VDRL positivo **< 2 diluições acima da mãe** com sintomas -> Sífilis congênita -> NTT.
+- VDRL positivo **< 2 diluições acima da mãe** assintomático (e mãe adequadamente tratada = criança exposta) -> Seguimento ambulatorial.
 
 > ⚠️ **Cicatriz Sorológica no RN:** Se tratamento OK, documentado, VDRL/EF normais e persiste reagente com baixa titulação -> Cicatriz sorológica. Alta com seguimento ambulatorial leve.
 

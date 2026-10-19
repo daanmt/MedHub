@@ -124,7 +124,7 @@ aliases: [Cardiopatias Congênitas, CIA, CIV, PCA, Tetralogia de Fallot, TGA, Co
 - **Correção cirúrgica deve ser feita ANTES de estabelecer HP irreversível** -- após Eisenmenger, cirurgia é contraindicada
 
 ### Miocardite Viral
-- Agente: **Coxsackie B** (vírus da síndrome mão-pé-boca)
+- Agente: **Coxsackie B** (a síndrome mão-pé-boca é do **Coxsackie A16**, não do B)
 - Perfil: criança com infecção viral prévia (≥ 1-2 semanas) -> taquicardia desproporcional + palidez + hepatomegalia + recusa alimentar -> IC aguda. Sem febre ou febre baixa no momento
 - Diagnóstico: ECG (taquicardia, baixa voltagem, inversão de T) + ecocardiograma (disfunção VE) + RX (cardiomegalia)
 - Tratamento: furosemida + dobutamina/milrinona (fase aguda); IECA + BB (fase crônica)

@@ -232,8 +232,8 @@ aliases: [HIV, AIDS]
 - AZT por 28 dias
 
 **Alto risco** (mãe sem pré-natal, sem TARV, com TARV tardia [>2ª metade], CV detectável no 3º trimestre, TR+ no parto ou infecção aguda durante gestação/aleitamento):
-- > 37 semanas: AZT + 3TC + RAL × 28 dias
-- 34-37 semanas: AZT + 3TC + NVP × 28 dias (NVP apenas por 14 dias)
+- >= 37 semanas: AZT + 3TC + RAL × 28 dias
+- 34 a < 37 semanas: AZT + 3TC + NVP × 28 dias (NVP apenas por 14 dias)
 - < 34 semanas: AZT
 
 ⚠️ RN **não deve ser amamentado** (leite materno transmite HIV)

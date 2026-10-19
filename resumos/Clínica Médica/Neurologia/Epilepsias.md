@@ -218,7 +218,7 @@ Cruza o tipo de crise (focal x generalizada) com a neuroimagem/exame neurológic
 - **Lamotrigina:** amplo espectro; **baixa teratogenicidade** (ótima na gestante). Titulação **lenta** pelo risco de **Stevens-Johnson** (~1%). Cuidado ao associar ao valproato (o valproato **eleva** o nível da lamotrigina).
 - **Topiramato:** amplo espectro; profilaxia de migrânea; causa **emagrecimento**. Efeitos: **nefrolitíase**, comprometimento cognitivo/afasia, **glaucoma agudo de ângulo fechado**. Indutor **acima de 200 mg/dia**.
 - **Levetiracetam:** amplo espectro; **baixa teratogenicidade** (ótimo na gestante e na EMJ). Efeito adverso marcante: **sintomas psiquiátricos** (irritabilidade, depressão, psicose). Não indutor.
-- **Vigabatrina:** droga de escolha na **síndrome de West** (sobretudo se **esclerose tuberosa**); risco de **constrição do campo visual**.
+- **Vigabatrina:** 1ª linha na **síndrome de West** junto com ACTH/corticoide; é a **de escolha se esclerose tuberosa** (fora dela, a UERJ 2024 deu ACTH como resposta); risco de **constrição do campo visual**.
 - **Etossuximida:** indicação **única** = ausência da infância.
 - **Gabapentina/pregabalina** (ligantes alfa-2-delta do canal de cálcio): mais para **dor neuropática**; gabapentina útil no idoso (pouca interação cognitiva).
 - **Lacosamida:** focal; bloqueio de sódio; risco de **arritmia**.

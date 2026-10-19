@@ -1,0 +1,221 @@
+<title>Revisão direcionada · CM · UERJ 2024</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura de mecanismo (molde da skill anima: Fig n + titulo, legenda curta + referencia; SVG estatico so com tokens do tema) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-t{fill:var(--ink);font-size:13.5px;font-weight:650}
+.fa-s{fill:var(--ink3);font-size:12px}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-som{stroke:var(--ink);stroke-width:3.2;stroke-linecap:round}
+.fa-som-f{stroke:var(--ink2);stroke-width:2.2;stroke-linecap:round}
+.fa-som-av{stroke:var(--amber);stroke-width:2.6;stroke-linecap:round}
+.fa-sopro{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.3;stroke-linejoin:round}
+
+sup.ref{font-size:12px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Clínica Médica · UERJ 2024</p>
+  <h1>Clínica Médica: o dado que localiza</h1>
+  <p class="sub">UERJ 2024, Q1-Q20: 10 de 20. Os erros se repetem num ponto: o dado que decidia estava no enunciado (fase do ciclo, difusão na RM, reticulócito, Horner) e não foi usado.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Cardiologia · Q1, Q7, Q12, Q20</span>
+  <h2>O ciclo cardíaco escolhe o diagnóstico</h2>
+  <p class="pede"><b>A banca pediu:</b> a etiologia de um ruflar diastólico com estalido (Q1); o agente e o rim de uma endocardite de 2 meses (Q7); o falso sobre amiloidose (Q12); a angina típica e seu teste (Q20).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Antes do nome do sopro, a <strong>fase</strong>: entre B1 e B2 é sistólico; depois de B2, diastólico. No foco mitral, sopro diastólico só pode ser estenose.</div></li>
+    <li><span class="n">2</span><div>Estenose mitral = <strong>B1 hiperfonética + estalido de abertura logo após B2 + ruflar com reforço pré-sistólico</strong>. No Brasil, cerca de 95% são reumáticas: a etiologia vem junto com o sopro<sup class="ref"><a href="#ref-1">1</a></sup><sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">3</span><div>O prolapso vive inteiro na sístole: <strong>clique mesossistólico</strong> seguido de sopro telessistólico. Se há ruflar, o prolapso já saiu.</div></li>
+    <li><span class="n">4</span><div>Endocardite também se lê pelo tempo: dias = aguda (<i>S. aureus</i>); semanas a meses = subaguda (<strong>viridans</strong>). Hematúria dismórfica é glomerular: GN por imunocomplexos, não infarto renal<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+  </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Onde cai cada som</b></p>
+    <svg viewBox="0 0 344 214" role="img" aria-label="Fonocardiograma esquemático. Estenose mitral: B1 alta, B2, estalido de abertura logo após B2, ruflar diastólico decrescente e reforço pré-sistólico antes da B1 seguinte. Prolapso mitral: B1 normal, clique no meio da sístole, sopro telessistólico até B2 e diástole silenciosa.">
+      <rect class="fa-fundo" x="40" y="10" width="110" height="18" rx="4"/><text class="fa-s" x="95" y="23" text-anchor="middle">sístole</text>
+      <rect class="fa-fundo" x="150" y="10" width="170" height="18" rx="4"/><text class="fa-s" x="235" y="23" text-anchor="middle">diástole</text>
+      <text class="fa-t" x="10" y="50">Estenose mitral</text>
+      <line class="fa-eixo" x1="28" y1="90" x2="332" y2="90"/>
+      <line class="fa-som" x1="40" y1="90" x2="40" y2="56"/>
+      <line class="fa-som-f" x1="150" y1="90" x2="150" y2="68"/>
+      <line class="fa-som-av" x1="168" y1="90" x2="168" y2="70"/>
+      <polygon class="fa-sopro" points="176,90 176,72 250,86 250,90"/>
+      <polygon class="fa-sopro" points="280,90 280,87 314,66 314,90"/>
+      <line class="fa-som" x1="320" y1="90" x2="320" y2="56"/>
+      <text class="fa-s" x="40" y="105" text-anchor="middle">B1 alta</text>
+      <text class="fa-s" x="146" y="105" text-anchor="end">B2</text>
+      <text class="fa-av" x="155" y="105">estalido</text>
+      <text class="fa-s" x="232" y="105" text-anchor="middle">ruflar</text>
+      <text class="fa-s" x="300" y="105" text-anchor="middle">pré-sist.</text>
+      <text class="fa-t" x="10" y="136">Prolapso mitral</text>
+      <line class="fa-eixo" x1="28" y1="176" x2="332" y2="176"/>
+      <line class="fa-som-f" x1="40" y1="176" x2="40" y2="152"/>
+      <line class="fa-som-av" x1="92" y1="176" x2="92" y2="156"/>
+      <polygon class="fa-sopro" points="98,176 98,172 146,156 146,176"/>
+      <line class="fa-som-f" x1="150" y1="176" x2="150" y2="154"/>
+      <line class="fa-som-f" x1="320" y1="176" x2="320" y2="152"/>
+      <text class="fa-s" x="40" y="191" text-anchor="middle">B1</text>
+      <text class="fa-av" x="92" y="191" text-anchor="middle">clique</text>
+      <text class="fa-s" x="152" y="191">B2</text>
+      <text class="fa-s" x="235" y="170" text-anchor="middle">diástole silenciosa</text>
+      <text class="fa-s" x="172" y="209" text-anchor="middle">barra = som; área = sopro; sem escala de tempo</text>
+    </svg>
+    <figcaption>Ruflar e estalido depois de B2 = estenose; clique e sopro antes de B2 = prolapso.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
+  </figure>
+  <div class="blk"><h3>Miocárdio e coronária</h3><ul class="pt">
+    <li>Hipertrofia no eco com <strong>baixa voltagem</strong> no ECG = amiloidose; aos 80 anos, ATTR selvagem (imunofixação normal).</li>
+    <li>Strain da amiloidose: <strong>preservação apical</strong> (apical sparing); discinesia apical é Takotsubo<sup class="ref"><a href="#ref-4">4</a></sup>. Tafamidis estabiliza a transtirretina<sup class="ref"><a href="#ref-5">5</a></sup>.</li>
+    <li>Angina típica: constritiva, ao esforço ou estresse, alivia em poucos minutos (&lt; 10). ECG basal interpretável e paciente que caminha: <strong>teste ergométrico</strong><sup class="ref"><a href="#ref-6">6</a></sup>.</li>
+  </ul></div>
+  <div class="trap">"Foco mitral" não é diagnóstico: a Q1 pôs prolapso ao lado de febre reumática para quem não olhasse a fase. Na Q12 o comando é INCORRETO: o falso é a discinesia apical.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Hematologia · Q10, Q11</span>
+  <h2>Reticulócito e gap proteico</h2>
+  <p class="pede"><b>A banca pediu:</b> o perfil de uma anemia macrocítica hiperproliferativa (Q10) e o que é verdade no mieloma de uma idosa com hipercalcemia (Q11).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div><strong>Hiperproliferativa = reticulocitose</strong> (IPR &gt; 2%). Reticulócitos são grandes: VCM de 106 pode vir deles, sem B12 baixa.</div></li>
+    <li><span class="n">2</span><div>Hemólise soma <strong>LDH alto e haptoglobina consumida</strong>. Haptoglobina que sobe tira a hemólise.</div></li>
+    <li><span class="n">3</span><div>Megaloblástica (neutrófilos hipersegmentados, B12 baixa) é <strong>hipoproliferativa</strong>: a medula não entrega reticulócitos.</div></li>
+    <li><span class="n">4</span><div>Hipercalcemia com PTH suprimido + anemia + proteína total menos albumina = 5 g/dL: <strong>mieloma</strong>. A lesão é lítica pura, então a cintilografia é falso-negativa; RM, TC de baixa dose ou PET-CT a mostram<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
+  </ol>
+  <div class="tw"><table><tr><th>Quadro</th><th>Reticulócito</th><th>Chave</th></tr><tr><td>Hemólise</td><td>Alto</td><td>LDH alto, haptoglobina baixa</td></tr><tr><td>Megaloblástica</td><td>Baixo</td><td>Hipersegmentação, B12/folato baixos</td></tr><tr><td>Mieloma</td><td>Baixo</td><td>CRAB, gap proteico, pico monoclonal</td></tr></table></div>
+  <div class="trap">Cadeia leve no túbulo proximal dá Fanconi (glicosúria e aminoacidúria): foi o "verdadeiro" da Q11, ao lado da RM.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Neurologia · Q4, Q9</span>
+  <h2>A imagem e o alarme mandam no rótulo</h2>
+  <p class="pede"><b>A banca pediu:</b> o sinal de alarme numa cefaleia de jovem (Q4) e o diagnóstico com antitrombótico de um déficit que regrediu, com difusão positiva (Q9).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Alarme da cefaleia (INSIPIDA): <strong>D = dor que desperta</strong>; idade de alarme é início após os 50<sup class="ref"><a href="#ref-8">8</a></sup>. Hemicrania e náusea são o padrão da enxaqueca.</div></li>
+    <li><span class="n">2</span><div>AIT tem definição <strong>tecidual</strong>: déficit transitório sem infarto na imagem. Restrição à difusão = AVC, mesmo com melhora em 3 h<sup class="ref"><a href="#ref-9">9</a></sup>.</div></li>
+    <li><span class="n">3</span><div>AVC menor (NIHSS &le; 3) ou AIT de alto risco, em até 24 h: <strong>AAS + clopidogrel por 21 dias</strong>, depois antiagregação simples<sup class="ref"><a href="#ref-10">10</a></sup>.</div></li>
+  </ol>
+  <div class="trap">Na Q9, C tinha a droga certa com o rótulo errado: a banca separa AIT de AVC pela RM, não pelo relógio.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Pneumologia · Q3, Q5, Q6</span>
+  <h2>Pulmão: o contexto veta ou localiza</h2>
+  <p class="pede"><b>A banca pediu:</b> reperfusão do TEP com choque 7 dias após gastrectomia (Q3); o exame do derrame linfocítico de um jovem (Q5); a imagem para Horner com dor no ombro (Q6).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>TEP com hipotensão = alto risco: reperfusão. Cirurgia de grande porte nas últimas <strong>3 semanas</strong> contraindica a trombólise; resta a <strong>embolectomia</strong> (cateter ou cirúrgica)<sup class="ref"><a href="#ref-11">11</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Light: <strong>um critério basta</strong> (proteína &gt; 0,5; LDH &gt; 0,6; LDH &gt; 2/3 do limite sérico). LDH 0,69 já faz exsudato, mesmo com proteína 0,44<sup class="ref"><a href="#ref-12">12</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Exsudato linfocítico em jovem no Brasil = TB até prova em contrário: <strong>ADA &gt; 40 U/L</strong> no líquido pleural.</div></li>
+    <li><span class="n">4</span><div>Dor no ombro e braço (C8-T2) + <strong>Horner</strong> ipsilateral = tumor do sulco superior (Pancoast): a lesão está no ápice do pulmão, e o exame é a <strong>TC de tórax</strong>.</div></li>
+  </ol>
+  <div class="trap">Filtro de cava não reperfunde: serve a quem não pode anticoagular. Miose e ptose puxam para o crânio; com plexopatia, olhe o ápice.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">05 · Infectologia e dermatologia · Q2, Q17</span>
+  <h2>Quando a questão nomeia a fonte</h2>
+  <p class="pede"><b>A banca pediu:</b> classificação e esquema da hanseníase "segundo Harrison (2022)" (Q2) e o momento da TARV na meningite tuberculosa "segundo o MS (2019)" (Q17).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Lesão única com 1 nervo espessado = <strong>paucibacilar</strong>. Pelo Harrison, rifampicina + dapsona por 6 meses; o MS (PQT-U) dá também clofazimina ao PB, por 6 doses<sup class="ref"><a href="#ref-1">1</a></sup><sup class="ref"><a href="#ref-13">13</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Na coinfecção TB-HIV o RIPE vem primeiro. Na <strong>forma meníngea</strong> a TARV é adiada, pelo risco de reconstituição inflamatória no SNC: o MS 2019 mandava após 8 semanas (gabarito, 60 dias)<sup class="ref"><a href="#ref-14">14</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Nas demais formas a TARV entra cedo. O PCDT HIV de 2023 pode ter encurtado o prazo da meníngea<sup class="ref"><a href="#ref-15">15</a></sup>: <strong>ainda em conferência</strong>. Na prova da UERJ, vale a resposta do gabarito: <strong>após 8 semanas</strong>.</div></li>
+  </ol>
+  <div class="trap">Fonte nomeada no enunciado manda na resposta. Na Q17, "2 semanas" era a regra de outra forma de TB, não da meníngea.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">06 · Pílulas · Q13, Q14, Q15, Q18</span>
+  <h2>Um dado, uma resposta</h2>
+  <ul class="pt">
+    <li><strong>FAN nucleolar</strong> = esclerose sistêmica (Raynaud, pele espessa, esôfago, pulmão intersticial). Fotossensibilidade, úlcera oral e GN são LES (Q13)<sup class="ref"><a href="#ref-16">16</a></sup>.</li>
+    <li>Diurético + perda de peso + <strong>independente de insulina</strong> = iSGLT2 (empagliflozina): glicosúria no túbulo proximal. Semaglutida emagrece, mas age pela insulina (Q14)<sup class="ref"><a href="#ref-17">17</a></sup>.</li>
+    <li>Pirose típica sem alarme: <strong>IBP empírico</strong> + perda de peso, mesmo aos 45 anos (Q15). EDA de entrada fica para disfagia, sangramento, emagrecimento ou anemia<sup class="ref"><a href="#ref-18">18</a></sup>.</li>
+    <li>Ascite com PMN &ge; 250/mm3: antibiótico + <strong>albumina</strong> já, sem esperar cultura (Q18). Glicose &lt; 50 e proteína &gt; 1 g/dL sugerem peritonite secundária: a TC entra, mas não atrasa o antibiótico<sup class="ref"><a href="#ref-19">19</a></sup>.</li>
+  </ul>
+  <div class="trap">Q15: o resumo do MedHub manda EDA acima de 40 anos; a UERJ 2024 tratou empírico aos 45. Na prova, siga a UERJ: sem alarme, IBP.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Estalido após B2 + ruflar com reforço pré-sistólico: valvopatia e causa?</p><details><summary>ver resposta</summary><div>Estenose mitral reumática.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Strain da amiloidose: o que fica preservado?</p><details><summary>ver resposta</summary><div>O ápice (apical sparing).</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Anemia megaloblástica: hipo ou hiperproliferativa?</p><details><summary>ver resposta</summary><div>Hipoproliferativa (reticulócitos baixos).</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Por que a cintilografia falha no mieloma?</p><details><summary>ver resposta</summary><div>Lesão lítica pura, sem atividade osteoblástica.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Déficit que regrediu em 3 h, difusão positiva, visto em 12 h: diagnóstico e conduta?</p><details><summary>ver resposta</summary><div>AVC menor; AAS + clopidogrel por 21 dias.</div></details></div>
+    <div class="q"><span class="tag">04</span><p>TEP com choque no 7o dia de gastrectomia: reperfusão?</p><details><summary>ver resposta</summary><div>Embolectomia (cateter ou cirúrgica).</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Horner + dor no ombro e braço: exame?</p><details><summary>ver resposta</summary><div>TC de tórax (tumor de Pancoast).</div></details></div>
+    <div class="q"><span class="tag">05</span><p>Meningite tuberculosa em HIV virgem: TARV quando (gabarito UERJ 2024)?</p><details><summary>ver resposta</summary><div>Após 8 semanas do RIPE (MS 2019).</div></details></div>
+  </div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol>
+<li id="ref-1">Loscalzo J, Fauci A, Kasper D, et al., eds. Harrison's Principles of Internal Medicine. 21st ed. McGraw Hill; 2022 -- bibliografia do edital UERJ (Clínica Médica): valvopatia mitral, endocardite, hanseníase.</li>
+<li id="ref-2">Sociedade Brasileira de Cardiologia. Tarasoutchi F, et al. Atualização das Diretrizes Brasileiras de Valvopatias -- 2020. Arq Bras Cardiol. 2020;115(4):720-775.</li>
+<li id="ref-3">Delgado V, et al. 2023 ESC Guidelines for the management of endocarditis. Eur Heart J. 2023;44(39):3948-4042. https://doi.org/10.1093/eurheartj/ehad193</li>
+<li id="ref-4">Garcia-Pavia P, et al. Diagnosis and treatment of cardiac amyloidosis: a position statement of the ESC Working Group on Myocardial and Pericardial Diseases. Eur Heart J. 2021;42(16):1554-1568. https://doi.org/10.1093/eurheartj/ehab072</li>
+<li id="ref-5">Maurer MS, et al. Tafamidis treatment for patients with transthyretin amyloid cardiomyopathy (ATTR-ACT). N Engl J Med. 2018;379(11):1007-1016. https://doi.org/10.1056/NEJMoa1805689</li>
+<li id="ref-6">Sociedade Brasileira de Cardiologia. Diretriz de Doença Coronária Estável. Arq Bras Cardiol. 2014;103(2 Supl 2):1-59 (escolha do teste funcional pela capacidade de exercício, como na apostila do curso).</li>
+<li id="ref-7">Rajkumar SV, et al. International Myeloma Working Group updated criteria for the diagnosis of multiple myeloma. Lancet Oncol. 2014;15(12):e538-e548. https://doi.org/10.1016/S1470-2045(14)70442-5</li>
+<li id="ref-8">Do TP, et al. Red and orange flags for secondary headaches in clinical practice: SNNOOP10 list. Neurology. 2019;92(3):134-144. https://doi.org/10.1212/WNL.0000000000006697</li>
+<li id="ref-9">Easton JD, et al. Definition and evaluation of transient ischemic attack (AHA/ASA). Stroke. 2009;40(6):2276-2293. https://doi.org/10.1161/STROKEAHA.108.192218</li>
+<li id="ref-10">Kleindorfer DO, et al. 2021 Guideline for the prevention of stroke in patients with stroke and transient ischemic attack (AHA/ASA). Stroke. 2021;52(7):e364-e467. https://doi.org/10.1161/STR.0000000000000375</li>
+<li id="ref-11">Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543-603. https://doi.org/10.1093/eurheartj/ehz405</li>
+<li id="ref-12">Light RW. Pleural Diseases. 5th ed. Lippincott Williams &amp; Wilkins; 2007 (critérios de Light e ADA, como citados na apostila do curso).</li>
+<li id="ref-13">Brasil. Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas da Hanseníase. Brasília: MS; 2022 (PQT-U para PB e MB).</li>
+<li id="ref-14">Brasil. Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 2a ed. Brasília: MS; 2019 (a fonte que a Q17 cita).</li>
+<li id="ref-15">Brasil. Ministério da Saúde. PCDT para Manejo da Infecção pelo HIV em Adultos -- Módulo 2: Coinfecções e Infecções Oportunistas. Brasília: MS; 2023.</li>
+<li id="ref-16">Cruvinel WM, et al. V Consenso Brasileiro para pesquisa de autoanticorpos em células HEp-2. Adv Rheumatol. 2019;59(1):28.</li>
+<li id="ref-17">Sociedade Brasileira de Diabetes. Diretriz da SBD 2024 -- tratamento farmacológico da hiperglicemia no DM2. https://diretriz.diabetes.org.br/</li>
+<li id="ref-18">Katz PO, et al. ACG Clinical Guideline for the Diagnosis and Management of Gastroesophageal Reflux Disease. Am J Gastroenterol. 2022;117(1):27-56. https://doi.org/10.14309/ajg.0000000000001538</li>
+<li id="ref-19">Biggins SW, et al. Diagnosis, evaluation, and management of ascites, spontaneous bacterial peritonitis and hepatorenal syndrome: 2021 Practice Guidance by AASLD. Hepatology. 2021;74(2):1014-1048. https://doi.org/10.1002/hep.31884</li>
+</ol>
+<p class="base">Base deste documento: resumos/Clínica Médica/Cardiologia/14. Valvopatias .pdf; resumos/Clínica Médica/Infectologia/15. Endocardite Bacteriana - Endocardite Infecciosa.pdf; resumos/Clínica Médica/Cardiologia/20. Cardiomiopatias.pdf; resumos/Clínica Médica/Cardiologia/23. Síndrome Coronariana Crônica.pdf; resumos/Clínica Médica/Hematologia/Anemias Hemolíticas.md; resumos/Clínica Médica/Hematologia/Anemia Megaloblástica e Perniciosa.md; resumos/Clínica Médica/Hematologia/8. Mieloma Múltiplo (Gamopatias Monoclonais).pdf; resumos/Clínica Médica/Neurologia/Cefaleias.md; resumos/Clínica Médica/Neurologia/Flashcards - Acidentes Vasculares Cerebrais.pdf; resumos/Clínica Médica/Pneumologia/3. Tromboembolismo Pulmonar (TEP).pdf; resumos/Clínica Médica/Pneumologia/1. Derrame Pleural.pdf; resumos/Clínica Médica/Pneumologia/8. Neoplasias Pulmonares.pdf; resumos/Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md; resumos/Clínica Médica/Infectologia/Tuberculose.md; resumos/Clínica Médica/Reumatologia/DITC II.md; resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md; resumos/Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md; resumos/Clínica Médica/Hepatologia/6. Complicações da Cirrose Hepática.pdf; Solução MedHub da t892 (Q1-Q20).</p></section>
+</div>

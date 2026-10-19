@@ -1,0 +1,223 @@
+<title>Revisão direcionada · Cirurgia · UERJ 2024</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+.blk{padding:16px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:2px}
+.blk h3{margin:0 0 8px;font-size:clamp(17px,2.6vw,19px);line-height:1.3}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.sim{color:var(--teal-ink);font-weight:600}
+td.nao{color:var(--carmine-ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+
+/* Figura (molde da skill anima: Fig n + título, legenda e fonte; corte esquemático estático em SVG inline, só tokens do tema) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-t{fill:var(--ink);font-size:12.5px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:12px}
+.fa-ok{fill:var(--teal-ink);font-size:12px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-luz{fill:var(--paper);stroke:var(--line2);stroke-width:1}
+.fa-c1{fill:var(--plum-wash);stroke:var(--line2);stroke-width:1}
+.fa-c2{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-c3{fill:var(--card);stroke:var(--line2);stroke-width:1}
+.fa-c4{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.fa-c5{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.2}
+.fa-viz{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-fibra{stroke:var(--ink3);stroke-width:.8;opacity:.6}
+.fa-tumor{fill:var(--plum);stroke:var(--ink);stroke-width:1}
+
+sup.ref{font-size:12px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Cirurgia · UERJ 2024 (14/20)</p>
+  <h1>Revisão direcionada · Cirurgia · UERJ 2024</h1>
+  <p class="sub">14 questões com elo não sólido, 6 erradas. Eixos: ler o laudo e o rótulo com cuidado, cortes que dependem do padrão, e quando abrir.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Estômago e esôfago · Q27, Q31, Q22 · 7 elos</span>
+  <h2>O laudo diz N, não M</h2>
+  <p class="pede"><b>Q27</b> pedia o pTNM de um adenocarcinoma gástrico até a subserosa com 4 de 24 linfonodos positivos.</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · corte esquemático</span><b>A camada atingida dá o T</b></p>
+    <svg viewBox="0 0 344 236" role="img" aria-label="Corte esquemático da parede gástrica, da luz para fora: mucosa (T1a), submucosa (T1b), muscular própria (T2), subserosa (T3), serosa (T4a) e órgão vizinho (T4b). Um tumor parte da mucosa e para na subserosa: T3, o caso da Q27. Esquema, espessuras fora de escala.">
+      <rect class="fa-luz" x="10" y="8" width="196" height="22" rx="4"/>
+      <text class="fa-s" x="108" y="23" text-anchor="middle">luz gástrica</text>
+      <rect class="fa-c1" x="10" y="30" width="196" height="30"/>
+      <rect class="fa-c2" x="10" y="60" width="196" height="30"/>
+      <rect class="fa-c3" x="10" y="90" width="196" height="40"/>
+      <line class="fa-fibra" x1="20" y1="100" x2="196" y2="100"/><line class="fa-fibra" x1="20" y1="110" x2="196" y2="110"/><line class="fa-fibra" x1="20" y1="120" x2="196" y2="120"/>
+      <rect class="fa-c4" x="10" y="130" width="196" height="28"/>
+      <rect class="fa-c5" x="10" y="158" width="196" height="12"/>
+      <rect class="fa-viz" x="10" y="182" width="196" height="30" rx="4"/>
+      <text class="fa-s" x="108" y="201" text-anchor="middle">órgão vizinho</text>
+      <path class="fa-tumor" d="M66 30 L150 30 L136 62 L124 96 L114 128 L104 152 L96 152 L88 128 L80 96 L72 62 Z"/>
+      <text class="fa-t" x="216" y="49">Mucosa</text><text class="fa-m" x="296" y="49">T1a</text>
+      <text class="fa-t" x="216" y="79">Submucosa</text><text class="fa-m" x="296" y="79">T1b</text>
+      <text class="fa-t" x="216" y="114">Muscular própria</text><text class="fa-m" x="216" y="127">T2</text>
+      <text class="fa-ok" x="216" y="148">Subserosa · T3</text>
+      <text class="fa-av" x="216" y="168">Serosa · T4a</text>
+      <text class="fa-t" x="216" y="201">Vizinho · T4b</text>
+      <text class="fa-s" x="10" y="230">roxo = tumor da Q27, para na subserosa</text>
+    </svg>
+    <figcaption>Parede gástrica em camadas: subserosa é T3; só perfurar a serosa vira T4a.<span class="fa-src">Fonte: AJCC 8a ed.<sup class="ref"><a href="#ref-1">1</a></sup>; esquema, espessuras fora de escala.</span></figcaption>
+  </figure>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Separe as três letras antes de olhar as opções. O laudo de peça descreve <strong>linfonodos regionais</strong> com metástase: isso é N. M1 só existe com metástase à distância citada.</span></li>
+    <li><span class="n">2</span><span>T vem da camada mais profunda. Subserosa = <strong>T3</strong>; perfurar a serosa = T4a; órgão vizinho = T4b.</span></li>
+    <li><span class="n">3</span><span>N do estômago conta linfonodos: <strong>1-2 = N1, 3-6 = N2</strong>, 7-15 = N3a, mais de 15 = N3b. Quatro positivos = N2, logo pT3N2M0.</span></li>
+  </ol>
+  <div class="blk"><h3>HDA e DRGE no mesmo bloco</h3><ul class="pt">
+    <li>Principal causa de HDA: <strong>úlcera péptica</strong>, também no internado (úlcera de estresse). Varizes lideram só com hipertensão portal citada<sup class="ref"><a href="#ref-2">2</a></sup>.</li>
+    <li>Melhor preditor de sucesso da fundoplicatura: <strong>sintoma típico</strong> (pirose, regurgitação) que respondia ao IBP; tosse, asma e rouquidão respondem pior<sup class="ref"><a href="#ref-3">3</a></sup>.</li>
+  </ul></div>
+  <div class="trap">"Quatro apresentando metástases" parece M1, mas fala de linfonodo regional. "Hospitalizado" evoca o cirrótico, mas o enunciado não dá hepatopatia.</div>
+  <p class="src">Fonte: resumos/Clínica Médica/Gastroenterologia/8. Neoplasias de Estômago e Esôfago.pdf · resumos/Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md · resumos/Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md</p>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Tireoide · Q25, Q35 · 5 elos</span>
+  <h2>O padrão do US escolhe o corte; o hematoma se abre na beira do leito</h2>
+  <p class="pede"><b>Q25</b> pedia a conduta num nódulo isoecoico, parcialmente cístico, sem microcalcificação, de 12 mm. <b>Q35</b>, dispneia com sangramento logo após tireoidectomia.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Primeiro classifique o nódulo pelo US, depois olhe o tamanho. O corte de PAAF não é 1 cm para todos<sup class="ref"><a href="#ref-4">4</a></sup>.</span></li>
+    <li><span class="n">2</span><span>Isoecoico ou parcialmente cístico sem achado suspeito é baixa ou muito baixa suspeição. Com 12 mm fica abaixo dos dois cortes: <strong>acompanhamento com US</strong>.</span></li>
+    <li><span class="n">3</span><span>No pós-operatório imediato, dispneia + aumento de volume ou sangramento cervical = <strong>hematoma compressivo</strong> sob o platisma.</span></li>
+    <li><span class="n">4</span><span>A conduta é <strong>abrir pele e platisma à beira do leito</strong>, sem esperar imagem, IOT ou centro cirúrgico. A descompressão é que libera a via aérea.</span></li>
+  </ol>
+  <div class="tw"><table><tr><th>Padrão ao US (ATA 2015)</th><th>PAAF a partir de</th></tr>
+    <tr><td>Alta ou intermediária suspeição</td><td>1 cm</td></tr>
+    <tr><td>Baixa: isoecoico/hiperecoico sólido, parcialmente cístico com área sólida excêntrica</td><td>1,5 cm</td></tr>
+    <tr><td>Muito baixa: espongiforme, parcialmente cístico sem achado suspeito</td><td>2 cm ou observar</td></tr>
+    <tr><td>Cisto puro</td><td class="nao">Não punciona</td></tr></table></div>
+  <div class="trap">"Maior que 1 cm" parece pedir PAAF; esse é o corte só da alta suspeição. No hematoma, a dispneia puxa para a IOT, que é difícil sob compressão e não drena nada.</div>
+  <p class="src">Fonte: resumos/Cirurgia/6. Manejo do Nódulos Tireoidianos, Câncer de Tireoide e Tireoidectomia.pdf</p>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Quando abrir · Q29, Q28 · 4 elos</span>
+  <h2>Hérnia estrangulada opera; necrose infectada estável drena</h2>
+  <p class="pede"><b>Q29</b>: hérnia umbilical "encarcerada" com febre, taquicardia e dor que virou contínua. <b>Q28</b>: coleção peripancreática com gás na 3a semana, paciente estável.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>O rótulo do enunciado não decide; a clínica decide. Dor contínua + febre + taquicardia = <strong>sofrimento de alça</strong>, ou seja, estrangulamento.</span></li>
+    <li><span class="n">2</span><span>Estrangulada não se reduz: devolveria alça isquêmica à cavidade. Conduta: <strong>exploração cirúrgica de urgência</strong>.</span></li>
+    <li><span class="n">3</span><span>Na pancreatite, a lógica é a oposta. Necrose infectada em paciente estável segue o <strong>step-up</strong>: drenagem percutânea ou endoscópica primeiro<sup class="ref"><a href="#ref-5">5</a></sup>.</span></li>
+  </ol>
+  <div class="tw"><table><tr><th>Quadro</th><th>Reduzir / drenar</th><th>Abrir de urgência</th></tr>
+    <tr><td>Hérnia encarcerada, sem sinal sistêmico nem local de sofrimento</td><td class="sim">Pode tentar reduzir</td><td>Não</td></tr>
+    <tr><td>Hérnia com febre, taquicardia, dor contínua</td><td class="nao">Contraindicado</td><td class="sim">Sim</td></tr>
+    <tr><td>Necrose pancreática infectada, estável</td><td class="sim">Drenagem percutânea</td><td>Não; aberta é a última opção</td></tr></table></div>
+  <div class="trap">"Encarcerada" no enunciado puxa para a redução. Gás na coleção puxa para a laparotomia. Nos dois casos, a banca quer o sinal clínico, não a palavra.</div>
+  <p class="src">Fonte: resumos/Cirurgia/Hérnia Femoral Encarcerada.md · resumos/Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md</p>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Antibioticoprofilaxia · Q30, Q36 · 2 elos</span>
+  <h2>Cobrir a pele, prevenir só o sítio</h2>
+  <p class="pede"><b>Q30</b> pedia a profilaxia da herniorrafia no alérgico a betalactâmico; <b>Q36</b>, o que a profilaxia da enterectomia previne.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>O padrão é cefazolina, que cobre os gram-positivos da pele. Alergia a betalactâmico: <strong>clindamicina ou vancomicina</strong><sup class="ref"><a href="#ref-6">6</a></sup>.</span></li>
+    <li><span class="n">2</span><span>Gentamicina e ciprofloxacino entram só quando é preciso cobrir gram-negativos (cólon).</span></li>
+    <li><span class="n">3</span><span>A profilaxia previne <strong>só infecção do sítio cirúrgico</strong>. Enfisema ou diabetes não ampliam o alvo para pneumonia ou ITU.</span></li>
+  </ol>
+  <div class="trap">A comorbidade grifada no enunciado (enfisematoso) é distrator: muda o risco, não o alvo da profilaxia.</div>
+  <p class="src">Fonte: resumos/Cirurgia/33. Medicina Perioperatória.pdf</p>
+</section>
+
+<section class="sec">
+  <span class="kick">05 · Nutrição · Q38 · 2 elos</span>
+  <h2>A mucosa vive do que passa pela luz</h2>
+  <p class="pede"><b>Q38</b> pedia como evitar atrofia de vilosidades, de tecido linfoide e queda de IgA no politraumatizado grave.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Esse conjunto é a atrofia por desuso: é o que a <strong>nutrição parenteral</strong> exclusiva provoca, com mais translocação bacteriana.</span></li>
+    <li><span class="n">2</span><span>A prevenção é pôr nutriente no lúmen: <strong>alimentação enteral</strong>, precoce, sempre que o TGI funcionar<sup class="ref"><a href="#ref-7">7</a></sup>.</span></li>
+    <li><span class="n">3</span><span>Glutamina é combustível do enterócito e imunonutriente, mas não é dieta. Isolada, não substitui a enteral.</span></li>
+  </ol>
+  <div class="trap">A glutamina parece a resposta "específica" para o enterócito; a banca quer a via, não o nutriente.</div>
+  <p class="src">Fonte: resumos/Cirurgia/27. Nutrição em Cirurgia.pdf</p>
+</section>
+
+<section class="sec">
+  <span class="kick">06 · Pílulas · Q23, Q24, Q32, Q33</span>
+  <h2>Um fato por questão</h2>
+  <div class="blk"><ul class="pt">
+    <li><strong>Q23</strong>: obesidade se associa a câncer de endométrio, mama pós-menopausa, cólon, rim, pâncreas, adenocarcinoma de esôfago e fígado. <strong>Pulmão não</strong><sup class="ref"><a href="#ref-8">8</a></sup>.</li>
+    <li><strong>Q24</strong>: síndrome de Conn = <strong>hiperaldosteronismo primário</strong>. HAS + hipocalemia; o eletrólito é o potássio, não o cálcio<sup class="ref"><a href="#ref-9">9</a></sup>.</li>
+    <li><strong>Q32</strong>: metástase é a neoplasia omental mais comum; o primário que mais acomete o omento é o <strong>ovário</strong>, que semeia a cavidade<sup class="ref"><a href="#ref-10">10</a></sup>.</li>
+    <li><strong>Q33</strong>: o queloide <strong>cresce além dos limites da ferida</strong> e raramente regride; a hipertrófica respeita a borda. Cor e endurecimento ocorrem nas duas.</li>
+  </ul></div>
+  <div class="trap">Q32: endométrio também é ginecológico, mas dissemina por linfa e contiguidade, não pelo peritônio.</div>
+  <p class="src">Fonte: resumos/Clínica Médica/Endocrinologia/8. Obesidade - Obesidade e Síndrome Metabólica.pdf · resumos/Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md · resumos/Cirurgia/31. Cicatrização de Feridas.pdf</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Gástrico até a subserosa, 5 de 30 linfonodos positivos, sem metástase à distância: pTNM?</p><details><summary>ver resposta</summary><div>pT3N2M0.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>HDA em internado sem hepatopatia: causa mais provável?</p><details><summary>ver resposta</summary><div>Úlcera péptica.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Nódulo isoecoico sólido de 13 mm, sem achado suspeito: PAAF?</p><details><summary>ver resposta</summary><div>Não; baixa suspeição punciona a partir de 1,5 cm.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Pós-tireoidectomia com estridor e pescoço abaulado: primeiro gesto?</p><details><summary>ver resposta</summary><div>Abrir pele e platisma à beira do leito.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Hérnia irredutível com febre e taquicardia: reduzir?</p><details><summary>ver resposta</summary><div>Não; exploração cirúrgica de urgência.</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Herniorrafia em alérgico a penicilina: profilaxia?</p><details><summary>ver resposta</summary><div>Clindamicina (ou vancomicina).</div></details></div>
+    <div class="q"><span class="tag">05</span><p>O que evita atrofia de vilosidades no paciente grave?</p><details><summary>ver resposta</summary><div>Alimentação enteral.</div></details></div>
+  </div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol>
+  <li id="ref-1">Amin MB, et al. (eds.). AJCC Cancer Staging Manual. 8th ed. Springer; 2017 -- capítulo Estômago (T e N do adenocarcinoma gástrico), como no resumo do EMED (Neoplasias de Estômago e Esôfago).</li>
+  <li id="ref-2">Townsend CM Jr, et al. Sabiston Textbook of Surgery. 21st ed. Elsevier; 2021 -- hemorragia digestiva alta (bibliografia do edital UERJ, Cirurgia). Resumo EMED Hemorragia Digestiva Alta Não Varicosa (DUP = principal causa).</li>
+  <li id="ref-3">Campos GM, et al. Multivariate analysis of factors predicting outcome after laparoscopic Nissen fundoplication. J Gastrointest Surg. 1999;3(3):292-300. PMID 10481122.</li>
+  <li id="ref-4">Haugen BR, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133. PMID 26462967. https://doi.org/10.1089/thy.2015.0020</li>
+  <li id="ref-5">van Santvoort HC, et al. A step-up approach or open necrosectomy for necrotizing pancreatitis (PANTER). N Engl J Med. 2010;362(16):1491-502. PMID 20410514. https://doi.org/10.1056/NEJMoa0908821</li>
+  <li id="ref-6">Bratzler DW, et al. Clinical practice guidelines for antimicrobial prophylaxis in surgery. Am J Health Syst Pharm. 2013;70(3):195-283. PMID 23327981. https://doi.org/10.2146/ajhp120568</li>
+  <li id="ref-7">McClave SA, et al. Guidelines for the Provision and Assessment of Nutrition Support Therapy in the Adult Critically Ill Patient (SCCM/ASPEN). JPEN J Parenter Enteral Nutr. 2016;40(2):159-211. PMID 26773077. https://doi.org/10.1177/0148607115621863</li>
+  <li id="ref-8">Lauby-Secretan B, et al. Body Fatness and Cancer -- Viewpoint of the IARC Working Group. N Engl J Med. 2016;375(8):794-8. PMID 27557308. https://doi.org/10.1056/NEJMsr1606602</li>
+  <li id="ref-9">Funder JW, et al. The Management of Primary Aldosteronism: Case Detection, Diagnosis, and Treatment. An Endocrine Society Clinical Practice Guideline. J Clin Endocrinol Metab. 2016;101(5):1889-916. PMID 26934393. https://doi.org/10.1210/jc.2015-4061</li>
+  <li id="ref-10">Townsend CM Jr, et al. Sabiston Textbook of Surgery. 21st ed. Elsevier; 2021 -- capítulo Parede abdominal, umbigo, peritônio, mesentérios, omento e retroperitônio (neoplasias do omento).</li>
+</ol>
+<p class="base">Base deste documento: resumos/Clínica Médica/Gastroenterologia/8. Neoplasias de Estômago e Esôfago.pdf; resumos/Clínica Médica/Gastroenterologia/1. Hemorragia Digestiva Alta Não Varicosa.pdf; resumos/Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md; resumos/Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md; resumos/Cirurgia/6. Manejo do Nódulos Tireoidianos, Câncer de Tireoide e Tireoidectomia.pdf; resumos/Cirurgia/Hérnia Femoral Encarcerada.md; resumos/Cirurgia/29. Hérnia da Parede Abdominal.pdf; resumos/Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md; resumos/Cirurgia/33. Medicina Perioperatória.pdf; resumos/Cirurgia/27. Nutrição em Cirurgia.pdf; resumos/Clínica Médica/Endocrinologia/8. Obesidade - Obesidade e Síndrome Metabólica.pdf; resumos/Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md; resumos/Cirurgia/31. Cicatrização de Feridas.pdf; Solução MedHub e elos declarados da t892.</p></section>
+</div>

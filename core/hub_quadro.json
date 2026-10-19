@@ -544,6 +544,106 @@
         "Clínica Médica/Infectologia/Arboviroses.md",
         "Preventiva/Vigilância em Saúde.md"
       ]
+    },
+    "rd-cm-1910": {
+      "tipo": "revisao",
+      "titulo": "Clínica Médica da UERJ 2024: sopro, sangue, AVC e o dado que localiza",
+      "disciplinas": [
+        "Cardiologia",
+        "Hematologia",
+        "Neurologia",
+        "Pneumologia",
+        "Infectologia",
+        "Dermatologia",
+        "Reumatologia",
+        "Endocrinologia",
+        "Gastroenterologia",
+        "Hepatologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
+        "Clínica Médica/Hematologia/Anemia Megaloblástica e Perniciosa.md",
+        "Clínica Médica/Neurologia/Cefaleias.md",
+        "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
+        "Clínica Médica/Infectologia/Tuberculose.md",
+        "Clínica Médica/Reumatologia/DITC II.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+        "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md"
+      ]
+    },
+    "rd-cir-1910": {
+      "tipo": "revisao",
+      "titulo": "Cirurgia da UERJ 2024: TNM gástrico, nódulo de tireoide, quando abrir e profilaxia",
+      "disciplinas": [
+        "Cirurgia",
+        "Gastroenterologia",
+        "Endocrinologia",
+        "Ginecologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
+        "Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md",
+        "Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md",
+        "Cirurgia/Hérnia Femoral Encarcerada.md",
+        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md"
+      ]
+    },
+    "rd-go-1910": {
+      "tipo": "revisao",
+      "titulo": "GO da UERJ 2024: o tipo decide o tratamento, o marcador decide o risco",
+      "disciplinas": [
+        "Ginecologia",
+        "Obstetrícia",
+        "Hepatologia"
+      ],
+      "resumos": [
+        "GO/Endometriose.md",
+        "GO/[GIN] CA de Mama.md",
+        "GO/[GIN] Doenças Benignas da Mama.md",
+        "GO/[GIN] Rastreamento Colo.md",
+        "GO/Pré-Natal.md",
+        "GO/Diabetes Mellitus na Gestação.md",
+        "GO/Descolamento Prematuro de Placenta.md",
+        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
+        "Pediatria/Aleitamento Materno e Mastite Lactacional.md"
+      ]
+    },
+    "rd-ped-1910": {
+      "tipo": "revisao",
+      "titulo": "Pediatria da UERJ 2024: transmissão vertical, seio materno, meningite e anafilaxia",
+      "disciplinas": [
+        "Pediatria",
+        "Infectologia",
+        "Obstetrícia",
+        "Otorrinolaringologia",
+        "Neurologia"
+      ],
+      "resumos": [
+        "Pediatria/Aleitamento Materno e Mastite Lactacional.md",
+        "Pediatria/Diarreia.md",
+        "Pediatria/Icterícia e Sepse Neonatal.md",
+        "Pediatria/Doenças Exantemáticas.md",
+        "Pediatria/Cardiopatias Congênitas.md",
+        "Clínica Médica/Infectologia/HIV.md",
+        "Clínica Médica/Infectologia/Meningites.md",
+        "GO/[OBS] Sífilis na Gestação e Congênita.md",
+        "Clínica Médica/Neurologia/Epilepsias.md"
+      ]
+    },
+    "rd-mfc-1910": {
+      "tipo": "revisao",
+      "titulo": "MFC da UERJ 2024: o teste que pega mais doentes e o critério do programa",
+      "disciplinas": [
+        "Preventiva",
+        "Endocrinologia",
+        "Infectologia",
+        "Ginecologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+        "Clínica Médica/Infectologia/Tuberculose.md",
+        "GO/[GIN] Climatério e TH.md"
+      ]
     }
   }
 }

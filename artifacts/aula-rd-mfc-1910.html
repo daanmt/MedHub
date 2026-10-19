@@ -1,0 +1,162 @@
+<title>Revisão direcionada · MFC · UERJ 2024</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 10px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.pede{margin:0 0 10px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.src{margin:10px 0 0;font-size:13px;color:var(--ink3);overflow-wrap:anywhere}
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+/* Figura (molde da skill anima: Fig n + titulo, legenda e fonte; SVG inline estatico, so tokens do tema) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fig-an figcaption .fa-src{display:block;margin-top:4px;color:var(--ink3);overflow-wrap:anywhere}
+.fa-m{fill:var(--ink2);font-size:12px}
+.fa-s{fill:var(--ink3);font-size:12px}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-eixo{stroke:var(--ink3);stroke-width:1}
+.fa-corte{stroke:var(--amber);stroke-width:1.5}
+.fa-curva{fill:none;stroke:var(--plum);stroke-width:2.5;stroke-linecap:round}
+.fa-ponto{fill:var(--plum)}
+sup.ref{font-size:12px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere}
+.base{color:var(--ink3);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Medicina de Família e Comunidade · simulado de 19/10</p>
+  <h1>Revisão direcionada · MFC · UERJ 2024</h1>
+  <p class="sub">16 de 19 no bloco. 3 erradas e 3 certas com dúvida; 7 elos declarados Não. Eixos: o teste que pega mais doentes, o critério do programa, o tempo que exclui o diagnóstico.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Testes de diabetes · Q91 · 2 elos Não</span>
+  <h2>Sensível é o que pega quem o jejum deixa passar</h2>
+  <p class="pede"><b>Pedia:</b> entre os exames para diagnóstico de DM, o de maior sensibilidade.</p>
+  <figure class="fig-an">
+  <p class="fa-cab"><span>Fig 1 · esquema</span><b>A carga revela o que o jejum esconde</b></p>
+  <svg viewBox="0 0 344 206" role="img" aria-label="Curva de glicemia de um paciente ilustrativo no TOTG 75 g: jejum em 110 mg/dL, abaixo do corte de 126, e glicemia de 2 horas em 230 mg/dL, acima do corte de 200. A glicemia de jejum sozinha deixaria passar o diagnóstico. Esquema.">
+    <line class="fa-eixo" x1="40" y1="180" x2="330" y2="180"/>
+    <line class="fa-eixo" x1="40" y1="30" x2="40" y2="180"/>
+    <text class="fa-s" x="80" y="197" text-anchor="middle">jejum</text>
+    <text class="fa-s" x="280" y="197" text-anchor="middle">2 h após 75 g</text>
+    <text class="fa-s" x="35" y="138" text-anchor="end">126</text>
+    <text class="fa-s" x="35" y="86" text-anchor="end">200</text>
+    <line class="fa-corte" x1="40" y1="134" x2="140" y2="134"/>
+    <line class="fa-corte" x1="220" y1="82" x2="330" y2="82"/>
+    <text class="fa-av" x="96" y="126" text-anchor="middle">corte do jejum</text>
+    <text class="fa-av" x="275" y="99" text-anchor="middle">corte de 2 h</text>
+    <path class="fa-curva" d="M80 145 C 130 70, 200 48, 280 61"/>
+    <circle class="fa-ponto" cx="80" cy="145" r="5"/>
+    <circle class="fa-ponto" cx="280" cy="61" r="5"/>
+    <text class="fa-m" x="92" y="164">110: normal</text>
+    <text class="fa-m" x="280" y="46" text-anchor="middle">230: DM</text>
+  </svg>
+  <figcaption>Jejum normal, 2 h diagnóstica: só a carga revela.<span class="fa-src">Cortes de 126 e 200 mg/dL: SBD 2024 e ADA 2024<sup class="ref"><a href="#ref-5">5</a></sup><sup class="ref"><a href="#ref-6">6</a></sup>; paciente ilustrativo, valores hipotéticos.</span></figcaption>
+  </figure>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Sensível = poucos falsos negativos: o teste que detecta mais doentes. O enunciado define a propriedade antes de listar os exames.</span></li>
+    <li><span class="n">2</span><span>O <strong>TOTG 75 g</strong> capta a hiperglicemia pós-carga que a glicemia de jejum e a HbA1c deixam passar: é o mais sensível<sup class="ref"><a href="#ref-5">5</a></sup>.</span></li>
+    <li><span class="n">3</span><span>A HbA1c é prática e específica, mas <strong>menos sensível</strong>: HbA1c normal não exclui DM. Glicemia pós-prandial não é critério padronizado, e o HOMA não diagnostica<sup class="ref"><a href="#ref-6">6</a></sup>.</span></li>
+  </ol>
+  <div class="tw"><table><tr><th>Critério de DM</th><th>Corte</th></tr><tr><td>Glicemia de jejum</td><td>&gt;= 126 mg/dL</td></tr><tr><td>TOTG, 2 h</td><td>&gt;= 200 mg/dL</td></tr><tr><td>HbA1c</td><td>&gt;= 6,5%</td></tr><tr><td>Ao acaso, com sintomas</td><td>&gt;= 200 mg/dL</td></tr></table></div>
+  <div class="trap">"Pós-prandial" soa como a carga, mas a carga padronizada é o TOTG.</div>
+  <p class="src">Fonte: resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md</p>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Rastreamento · Q99 · 2 elos Não</span>
+  <h2>Critério de programa: doença, teste, tratamento e gente</h2>
+  <p class="pede"><b>Pedia:</b> qual afirmação é critério para introduzir um programa de rastreamento.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>"Critérios para introduzir rastreamento" = a lista de <strong>Wilson e Jungner</strong> (OMS, 1968)<sup class="ref"><a href="#ref-3">3</a></sup>. Ela cobre a doença, o teste, o tratamento e o programa.</span></li>
+    <li><span class="n">2</span><span>Teste e seguimento têm de ser <strong>aceitáveis para a população</strong>: gente disposta a aderir à investigação e ao tratamento. Sem adesão, o programa não entrega benefício<sup class="ref"><a href="#ref-3">3</a></sup><sup class="ref"><a href="#ref-4">4</a></sup>.</span></li>
+    <li><span class="n">3</span><span>O tratamento precisa funcionar na fase <strong>pré-sintomática</strong> (D falsa), e prevalência e acesso ao cuidado importam (A falsa)<sup class="ref"><a href="#ref-1">1</a></sup>.</span></li>
+  </ol>
+  <div class="trap">"Especificidade alta no período assintomático" soa técnico; o critério de teste é ser válido e aceitável, e rastreio privilegia sensibilidade.</div>
+  <p class="src">Fonte: resumos/Preventiva/19. Medicina de Família e Comunidade.pdf</p>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Tosse no idoso tabagista · Q88 · 2 elos Não</span>
+  <h2>O tempo exclui a bronquite crônica</h2>
+  <p class="pede"><b>Pedia:</b> o diagnóstico mais provável com tosse há 3 meses, sudorese noturna e emagrecimento.</p>
+  <ol class="esc">
+    <li><span class="n">1</span><span>Tosse por mais de 3 semanas com sudorese noturna e emagrecimento = <strong>tuberculose</strong> até prova em contrário: pedir escarro<sup class="ref"><a href="#ref-7">7</a></sup>.</span></li>
+    <li><span class="n">2</span><span>Bronquite crônica exige tosse produtiva por <strong>3 meses ao ano em 2 anos consecutivos</strong><sup class="ref"><a href="#ref-8">8</a></sup>. Sem episódios nos 3 anos anteriores o critério não fecha, e ela não explica sudorese nem emagrecimento.</span></li>
+  </ol>
+  <p class="src">Fonte: resumos/Clínica Médica/Infectologia/Tuberculose.md</p>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Pílulas</span>
+  <h2>Um elo por questão</h2>
+  <ul class="pt">
+    <li><strong>Q100 · Polifarmácia</strong>: fármacos <strong>cardiovasculares</strong> (anti-hipertensivos, diuréticos, digoxina, anticoagulantes) estão entre os que mais causam reação adversa no idoso, com psicotrópicos e AINE<sup class="ref"><a href="#ref-9">9</a></sup><sup class="ref"><a href="#ref-10">10</a></sup>. Cascata = tratar efeito adverso como doença nova.</li>
+    <li><strong>Q81 · Idosa frágil com câncer avançado</strong>: dependente para AVD e caquética = plano paliativo, controle de sintomas e funcionalidade pela equipe<sup class="ref"><a href="#ref-1">1</a></sup>.</li>
+    <li><strong>Q98 · Climatério</strong> aos 50 anos: diagnóstico clínico, sem FSH; densitometria não precede a TH. Com útero, estrogênio + progestogênio<sup class="ref"><a href="#ref-2">2</a></sup>.</li>
+  </ul>
+  <p class="src">Fonte: resumos/Preventiva/20. Saúde do Idoso.pdf; resumos/GO/[GIN] Climatério e TH.md</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Exame mais sensível para diagnosticar DM?</p><details><summary>ver resposta</summary><div>TOTG 75 g (2 h &gt;= 200 mg/dL).</div></details></div>
+    <div class="q"><span class="tag">01</span><p>A HbA1c perde em sensibilidade ou em especificidade?</p><details><summary>ver resposta</summary><div>Em sensibilidade.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Quem formulou os critérios clássicos de programa de rastreamento?</p><details><summary>ver resposta</summary><div>Wilson e Jungner (OMS, 1968).</div></details></div>
+    <div class="q"><span class="tag">02</span><p>O que se exige da população rastreada?</p><details><summary>ver resposta</summary><div>Aceitar a sequência de investigação e o tratamento.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Critério de bronquite crônica?</p><details><summary>ver resposta</summary><div>Tosse produtiva 3 meses ao ano por 2 anos consecutivos.</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Classe que mais causa reação adversa no idoso, segundo a UERJ?</p><details><summary>ver resposta</summary><div>Cardiovasculares.</div></details></div>
+  </div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol>
+<li id="ref-1">Gusso G, Lopes JMC, Dias LC (orgs). Tratado de Medicina de Família e Comunidade: princípios, formação e prática. 2ª ed. Porto Alegre: Artmed; 2019.</li>
+<li id="ref-2">Duncan BB, Schmidt MI, Giugliani ERJ, et al. Medicina ambulatorial: condutas de atenção primária baseadas em evidências. 5ª ed. Porto Alegre: Artmed; 2022.</li>
+<li id="ref-3">Wilson JMG, Jungner G. Principles and practice of screening for disease. Geneva: World Health Organization; 1968 (Public Health Papers, 34).</li>
+<li id="ref-4">Brasil. Ministério da Saúde. Rastreamento. Cadernos de Atenção Primária, nº 29. Brasília: MS; 2010.</li>
+<li id="ref-5">Sociedade Brasileira de Diabetes. Diretriz da SBD 2024 -- diagnóstico do diabetes mellitus. https://diretriz.diabetes.org.br/</li>
+<li id="ref-6">American Diabetes Association. 2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes-2024. Diabetes Care. 2024;47(Suppl 1):S20-S42.</li>
+<li id="ref-7">Brasil. Ministério da Saúde. Manual de recomendações para o controle da tuberculose no Brasil. 2ª ed. Brasília: MS; 2019.</li>
+<li id="ref-8">Global Initiative for Chronic Obstructive Lung Disease (GOLD). Global Strategy for the Prevention, Diagnosis and Management of COPD: 2024 Report.</li>
+<li id="ref-9">American Geriatrics Society Beers Criteria Update Expert Panel. American Geriatrics Society 2023 updated AGS Beers Criteria for potentially inappropriate medication use in older adults. J Am Geriatr Soc. 2023;71(7):2052-81.</li>
+<li id="ref-10">Estratégia MED. Saúde do Idoso. 2024 (reações adversas e polifarmácia). resumos/Preventiva/20. Saúde do Idoso.pdf</li>
+</ol>
+<p class="base">Base deste documento: resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md; resumos/Clínica Médica/Infectologia/Tuberculose.md; resumos/GO/[GIN] Climatério e TH.md; resumos/Preventiva/19. Medicina de Família e Comunidade.pdf; resumos/Preventiva/20. Saúde do Idoso.pdf; Solução MedHub e elos declarados da t892 (Q81-Q100).</p></section>
+</div>

@@ -1505,6 +1505,25 @@ def test_sprint_ordem_por_faixa_e_peso_do_bloco():
     assert p3["dias"]["2026-10-13"] == [2], "sem faixa (tarefa custom) vai por ultimo"
 
 
+def test_sprint_dentro_da_faixa_o_peso_uerj_vence_o_bloco():
+    """s232 (pedido dele, 21/10): TB 360 (CM, n13) antes de Kawasaki (PED, n4) mesmo com PED mais fraco;
+    a faixa continua mandando (media nunca passa alta pelo peso); multi-tema = o maior, nao a soma."""
+    linhas = [_t(1, 30, area="Pediatria", peso_uerj=3.7), _t(2, 20, area="Infecto", peso_uerj=12.4),
+              _t(3, 20, area="Infecto", faixa="media", peso_uerj=20.0), _t(4, 20, area="Cirurgia")]
+    p = plano.montar_sprint(linhas, dict(_CFG, simulados={}), _HOJE, _PESO)
+    ordem = [i for d in p["dias"] for i in p["dias"][d]]
+    assert ordem.index(2) < ordem.index(1), "dentro da faixa alta, o peso UERJ vence o posto do bloco"
+    assert ordem.index(1) < ordem.index(3), "a faixa continua mandando: media nunca passa alta pelo peso"
+    assert ordem.index(1) < ordem.index(4), "sem peso_uerj (0) fica atras de quem tem, na mesma faixa"
+    prev = {"temas": [{"area": "Infecto", "tema": "Tuberculose", "peso": 12.4, "prevalencia": "alta"},
+                      {"area": "Infecto", "tema": "HIV", "peso": 3.0, "prevalencia": "media"}]}
+    assert plano.peso_uerj("Infecto", "Tuberculose + HIV", prev) == 12.4, "multi-tema = o maior, nao a soma"
+    assert plano.peso_uerj("Pediatria", "Tuberculose", prev) == 0.0, "area diferente nao casa"
+    assert plano.peso_uerj("Infecto", "Dengue", prev) == 0.0
+    linha = plano.com_faixa([{"area": "Infecto", "tema": "HIV"}], prev)[0]
+    assert (linha["faixa"], linha["peso_uerj"]) == ("media", 3.0)
+
+
 def test_sprint_nao_antes_segura_a_tarefa_ate_a_data():
     """s229: tarefa com `nao_antes` so entra em dia >= a data, mesmo com vaga antes."""
     linhas = [_t(3, 10, area="Preventiva")]

@@ -1572,9 +1572,30 @@ def peso_dos_blocos(sessoes, padrao=None):
             + " < ".join(f"{b} {taxa[b]:.0%}" for b in ordem if b in taxa))
 
 
+def peso_uerj(area, tema, prevalencia):
+    """Peso UERJ de uma tarefa = o MAIOR `peso` entre os temas do mapa que casam (0.0 se nenhum). PURA.
+
+    s232 (21/10/2026, pedido do operador: *"precisamos priorizar no cronograma os temas que mais
+    caem na UERJ"*): dentro da MESMA faixa, 13 questoes (Tuberculose) e 4 (Kawasaki) nao sao a
+    mesma coisa; a faixa sozinha deixava o bloco mais fraco decidir e punha Kawasaki (PED) antes
+    de TB 360 (CM). Mesmo casamento do `faixa_uerj`; MAX, nao soma, para a tarefa multi-tema nao
+    inflar por juntar varios temas pequenos. Limite declarado (schema do `prevalencia_uerj.json`):
+    classificacao ~80-90% e n <= 2 e ruido -- o peso so desempata DENTRO da faixa, nunca a
+    substitui."""
+    import trilha
+    partes = ([trilha.toks(x) for x in trilha.partes_da_tarefa(tema)]
+              or [trilha.toks(tema)])
+    pesos = [float(t.get("peso") or 0) for t in (prevalencia or {}).get("temas") or []
+             if t.get("area") == area
+             and any(trilha.casa(trilha.toks(t["tema"]), p) for p in partes)]
+    return max(pesos, default=0.0)
+
+
 def com_faixa(linhas, prevalencia):
-    """Copia das linhas com `faixa` (`faixa_uerj`), o insumo de ordem do `montar_sprint`. PURA."""
-    return [dict(l, faixa=faixa_uerj(l.get("area"), l.get("tema"), prevalencia))
+    """Copia das linhas com `faixa` (`faixa_uerj`) e `peso_uerj` (s232), os insumos de ordem do
+    `montar_sprint`. PURA."""
+    return [dict(l, faixa=faixa_uerj(l.get("area"), l.get("tema"), prevalencia),
+                 peso_uerj=peso_uerj(l.get("area"), l.get("tema"), prevalencia))
             for l in linhas or []]
 
 
@@ -1600,11 +1621,13 @@ def montar_sprint(linhas, config, hoje, peso):
       caderno #5426 cita as provas UERJ 2022-2026 e so pode vir depois do ultimo simulado);
     - simulados de `config["simulados"]` no dia fixo e SOZINHOS; data ja passada ou fora da
       janela -> `fora`, com o motivo (o dia fixo nao rola sozinho: editar `core/sprint.json`);
-    - as demais, ordenadas por (faixa UERJ alta > media > baixa > sem faixa, `peso` do bloco --
-      0 = o mais fraco --, semana e ordem do plano, id), vao para o 1o dia >= hoje com vaga:
+    - as demais, ordenadas por (faixa UERJ alta > media > baixa > sem faixa, `peso_uerj` da
+      tarefa DESC -- dentro da faixa, quem mais cai na UERJ vai primeiro (s232) --, `peso` do
+      bloco -- 0 = o mais fraco --, semana e ordem do plano, id), vao para o 1o dia >= hoje com vaga:
       soma de `q_da_tarefa` <= `capacidade_q`; tarefa maior que a capacidade ocupa um dia
       VAZIO sozinha. Dia passado nunca recebe tarefa (os dias comecam em max(inicio, hoje)).
-    A `faixa` vem na linha (`com_faixa`); linha sem a chave = sem faixa (ultima)."""
+    A `faixa` e o `peso_uerj` vem na linha (`com_faixa`); linha sem `faixa` = sem faixa (ultima),
+    sem `peso_uerj` = 0 (so o bloco desempata)."""
     cap = int(config["capacidade_q"])
     simulados = {int(k): v for k, v in (config.get("simulados") or {}).items()}
     cortar_ids = {int(x) for x in config.get("cortar") or []}
@@ -1634,6 +1657,7 @@ def montar_sprint(linhas, config, hoje, peso):
 
     def chave(l):
         return (ORDEM_FAIXA.get(l.get("faixa"), len(ORDEM_FAIXA)),
+                -float(l.get("peso_uerj") or 0),
                 peso.get(l.get("bloco") or db.bloco_de(l.get("area")), len(peso)),
                 l.get("semana_plano") or 0, l.get("ordem") or 0, int(l["id"]))
 
@@ -1870,6 +1894,7 @@ def sprint(apply=False, expect=None, hoje=None, config=None, out=print):
         for t in ids:
             l = por_id[t]
             out(f"      #{t:<5} {l.get('bloco') or '--':<4} {l.get('faixa') or '-':<6} "
+                f"{float(l.get('peso_uerj') or 0):>4.1f} "
                 f"{q_da_tarefa(l):>4} q  {tema_exibido(l.get('tema'))[:70]}")
     no_sprint = sum(len(v) for v in plano_dia["dias"].values())
     out(f"  no sprint: {no_sprint} tarefa(s), {total_q} q")

@@ -86,9 +86,12 @@ python tools/plano.py --sprint --apply --expect N      # grava dia_plano + nota 
   com o motivo `sprint final: fora dos simulados`). Mudar data de simulado = editar o arquivo e rodar de novo.
 - **Quem entra:** as pendentes das semanas 1-7 do plano. Feita, cortada, sem semana e Fase 2 ficam de fora e
   **intocadas**; `semana_plano` não muda (o dia é a agenda, a semana é a origem).
-- **Ordem:** faixa UERJ (`alta > media > baixa > sem faixa`, `prevalencia_uerj.json`), depois o bloco mais
-  fraco no **acerto acumulado das provas UERJ** de `sessoes_bulk` (sem prova legível: `PESO_BLOCO`; a linha
-  `desempate por bloco` diz qual valeu), depois a ordem do plano. Cada tarefa vai para o 1º dia ≥ hoje com
+- **Ordem:** faixa UERJ (`alta > media > baixa > sem faixa`, `prevalencia_uerj.json`), depois, **dentro da
+  faixa, o `peso_uerj` da tarefa** (s232, 21/10/2026, pedido do operador: *"priorizar no cronograma os temas
+  que mais caem na UERJ"* -- o maior `peso` entre os temas do mapa que casam, nunca a soma; Tuberculose n13  <!-- CHECK: test_sprint_dentro_da_faixa_o_peso_uerj_vence_o_bloco -->
+  antes de Kawasaki n4, que a faixa sozinha empatava e deixava o bloco decidir; a coluna de peso aparece no
+  dry-run), depois o bloco mais fraco no **acerto acumulado das provas UERJ** de `sessoes_bulk` (sem prova
+  legível: `PESO_BLOCO`; a linha `desempate por bloco` diz qual valeu), depois a ordem do plano. Cada tarefa vai para o 1º dia ≥ hoje com
   vaga (soma de `q_da_tarefa`, a régua do Painel, ≤ capacidade); tarefa maior que a capacidade ocupa um dia
   vazio sozinha. Dia passado nunca recebe tarefa.  <!-- CHECK: test_sprint_capacidade_nunca_excedida_e_dia_passado_vazio -->
 - **Fora do sprint** = `dia_plano` NULL + `sprint: fora (<motivo>)` anexado à `nota` (a tarefa que volta a

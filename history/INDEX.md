@@ -4,6 +4,8 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
+**session_232.md (2026-10-21, quarta):** 🔁🧭 **Tique da manhã: lote 2026-10-19a gravado (145 válidas, 5 defeitos), fila 2026-10-21a no ar (hub Version 134); sprint recalculado a pedido dele ("estamos atrasados"): hoje = UERJ 2025, listas de 19-20/10 roladas p/ 22-24/10, 51 tarefas fora do sprint, 8.946 em 01/11 cumprindo o sprint.**
+
 **session_231.md (2026-10-19, segunda):** 🩻🎨 **UERJ 2024 = 63/98 (CM 10/20 · CIR 14/20 · GO 11/19 · PED 12/20 · MFC 16/19) registrada e analisada pelos elos declarados dele (35 erros #1254-#1288, 55 + 22 cards, 19 habilidades, 66 análises e 4 conflitos no hub; 5 RDs 1910 com anima + Referências; hub Version 133); impeccable: DESIGN.md na raiz vira fonte única da UI; hub v131-v132 (Próxima no topo); 6 correções de resumo aprovadas por ele.**
 
 **session_230.md (2026-10-17, sábado):** 🩻📚 **t393 = 50q/72% (contada em 16/10) analisada pelos elos e grifos (14 erros, 23 cards; 5 erradas eram reincidentes); sprint recalculado (hoje = UERJ 2024); evidence-researcher: Meckel incidental e TG18 nos resumos; RDs lidas recolhidas ("Ver lidas"); referências das RDs 1510; P29-P31 (resumo = fonte canônica, RD descartável).** Hub Version 127-129; suíte 1812.

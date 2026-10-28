@@ -4,6 +4,8 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
+**session_233.md (2026-10-27, terça, noite):** 🧭🃏 **Volta depois de 6 dias sem estudo: rota até 31/10 recalculada -- UERJ 2025 em 28/10, TB 360 + Arbo/HIV/TB em 29/10, UERJ 2026 (ensaio geral) em 30/10, véspera leve em 31/10 com Meningites, MFC e UERJ de Bolso; 348 q no sprint, 66 fora, 8.413 em 01/11 cumprindo o sprint. Fila de cards 2026-10-27a (149) no ar.** Hub Version 136; suíte 1819; sem subagentes.
+
 **session_232.md (2026-10-21, quarta, manhã):** 🔁🎯 **Tique: lote 2026-10-19a gravado (145 válidas, 5 defeitos), fila 2026-10-21a no ar; sprint recalculado e, a pedido dele ("priorizar os temas que mais caem na UERJ"), REORDENADO por peso UERJ dentro da faixa -- Tuberculose n13 vinha depois de Kawasaki n4 só pelo posto do bloco (P33, `plano.peso_uerj`); TB 360 em 22/10, Kawasaki 30/10, 50 fora do sprint, 8.946 em 01/11 cumprindo o sprint.** Hub Version 134-135; suíte 1819; sem subagentes.
 
 **session_231.md (2026-10-19, segunda):** 🩻🎨 **UERJ 2024 = 63/98 (CM 10/20 · CIR 14/20 · GO 11/19 · PED 12/20 · MFC 16/19) registrada e analisada pelos elos declarados dele (35 erros #1254-#1288, 55 + 22 cards, 19 habilidades, 66 análises e 4 conflitos no hub; 5 RDs 1910 com anima + Referências; hub Version 133); impeccable: DESIGN.md na raiz vira fonte única da UI; hub v131-v132 (Próxima no topo); 6 correções de resumo aprovadas por ele.**

@@ -1461,9 +1461,11 @@ def _sprint_linhas():
 def test_sprint_json_e_a_unica_fonte_dos_numeros():
     """DoD 1: o arquivo versionado tem a forma decidida; o codigo le so dele."""
     cfg = plano.ler_sprint()
-    assert cfg == {"inicio": "2026-10-13", "fim": "2026-10-31", "capacidade_q": 80,
-                   "simulados": {"892": "2026-10-17", "891": "2026-10-21", "890": "2026-10-25"},
-                   "cortar": [1798, 1799], "nao_antes": {}}
+    # s233 (27/10, 22h): rota recalculada apos 6 dias sem estudo -- os dias abertos comecam em 28/10,
+    # UERJ 2025 em 28/10, UERJ 2026 em 30/10, o UERJ de Bolso (#5426) so depois dele (31/10)
+    assert cfg == {"inicio": "2026-10-28", "fim": "2026-10-31", "capacidade_q": 80,
+                   "simulados": {"892": "2026-10-17", "891": "2026-10-28", "890": "2026-10-30"},
+                   "cortar": [1798, 1799], "nao_antes": {"5426": "2026-10-31"}}
     fonte = Path(plano.__file__).read_text(encoding="utf-8")
     trecho = fonte[fonte.index("# ------------------------------------------------- sprint final"):
                    fonte.index("def main(argv=None):")]

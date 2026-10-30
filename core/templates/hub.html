@@ -261,6 +261,11 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 
 /* leitor (aula/resumo dentro da aba) e a barra das listas: voltar + titulo + controles */
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:var(--esp-2) var(--esp-3);margin-bottom:var(--esp-4)}
+/* s236 (pedido dele, 30/10: "o layout do bloco teoria esta quebrado"): voltar e Grifo numa linha, o titulo abaixo --
+   a mesma barra das Listas */
+#hub-leitor .hub-leitor-barra #hub-leitor-voltar{order:0}
+#hub-leitor .hub-leitor-barra #hub-grifo{order:1;margin-left:auto}
+#hub-leitor .hub-leitor-barra .hub-leitor-titulo{order:-1;flex:1 1 100%}   /* s236: o titulo acima, como nas Listas */
 .hub-leitor-titulo{margin:0;min-width:0;font-weight:650;color:var(--tinta)}
 .hub-quadro{display:block;width:100%;min-height:50vh;border:0;background:transparent}   /* s227: a luz do shell passa (o documento de dentro e transparente) */
 .hub-quadro-rolavel{height:80vh}
@@ -283,7 +288,8 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 .qz-lista li.qz-recente > button{box-shadow:inset 3px 0 0 var(--ok);padding-left:var(--esp-3)}
 .qz-lista li.qz-recente > button .qz-tema::before{content:"\2713\00A0";color:var(--ok)}
 .qz-lista .qz-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;grid-column:1}
-.qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta3);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;gap:2px var(--esp-3)}
+/* s236 (U3): meta em tinta2 -- a linha e tingida pela area (color-mix 9%) e o tinta3 ficava em 4,4:1, abaixo de AA */
+.qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta2);font-size:var(--fs-meta);display:flex;flex-wrap:wrap;gap:2px var(--esp-3)}
 /* estado da lista (s226, A21): "pronta" e o normal e nao tem chip; em curso = aviso com respondidas/total;
    resolvida = ok com o check */
 .qz-chip{grid-column:2;grid-row:1 / span 2;font-size:var(--fs-meta);font-weight:600;padding:1px var(--esp-2);border-radius:var(--raio-pilula);color:var(--tinta3)}
@@ -294,9 +300,9 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 /* s235 (pedido dele, 29/10: "esses diversos quadradinhos poderiam ser resumidos tal como o EMED faz, '37/97'"):
    o trilho de segmentos saiu (s212/s225). A navegacao e o PAGINADOR no pe da questao, nos dois estados:
    anterior | numero editavel "de" total | proxima -- os mesmos 44 px e o contorno ciano dos botoes de rota */
-.qz-pag{display:flex;align-items:center;justify-content:center;gap:var(--esp-2);margin-top:var(--esp-2)}
+.qz-pag{display:flex;align-items:center;justify-content:center;gap:var(--esp-2)}
 .qz-pag .hub-btn{min-width:44px;padding:0 var(--esp-3);font-size:var(--fs-secao);line-height:1}
-.qz-pag label{display:inline-flex;align-items:center;gap:var(--esp-2);color:var(--tinta2);font-size:var(--fs-legenda)}
+.qz-pag label{display:inline-flex;align-items:center;gap:var(--esp-1);color:var(--tinta2);font-size:var(--fs-meta)}
 .qz-pag input{width:3.75rem;min-height:44px;margin:0;padding:0 var(--esp-2);text-align:center;border:1px solid var(--linha-forte);border-radius:var(--raio);
   background:transparent;color:var(--tinta);font-size:var(--fs-item);font-weight:650;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
 .qz-pag input::-webkit-outer-spin-button,.qz-pag input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
@@ -327,9 +333,14 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 .qz-alt.errada .qz-alt-btn b::after{content:"\00A0\2717";color:var(--erro)}
 .qz-alt button[disabled]{opacity:1;cursor:default}
 .qz-rot{margin:0 0 var(--esp-2);color:var(--tinta2);font-weight:600;font-size:var(--fs-legenda)}
-.qz-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2)}
-.qz-seg button{display:grid;gap:2px;text-align:center;font-weight:650;font-size:var(--fs-legenda);padding:var(--esp-2) var(--esp-1);border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta2);min-height:48px}
-.qz-seg button small{font-weight:400;font-size:var(--fs-meta);color:var(--tinta3)}
+/* s236 (pedido dele, 30/10): certeza e Responder numa linha -- os tres segmentos sem legenda (a mecanica basta) e o
+   Responder a direita, que so acende (primario) com letra + certeza (`qzPode`). ⚰️ s229-s235: legendas "eu sei /
+   entre duas / nao sei" e o Responder centralizado numa linha propria */
+#qz-antes{display:flex;align-items:stretch;gap:var(--esp-2)}
+.qz-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2);flex:1 1 auto;min-width:0}
+.qz-seg button{text-align:center;font-weight:650;font-size:var(--fs-legenda);padding:var(--esp-2) var(--esp-1);border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta2);min-height:44px}
+#qz-antes .primario{flex:0 0 auto;min-width:0;padding-inline:var(--esp-3)}
+#qz-antes .primario[disabled]{background:transparent;border:1px solid var(--linha-forte);color:var(--tinta3);opacity:1;cursor:default}
 .qz-seg button.on{box-shadow:inset 0 0 0 1px currentColor}
 .qz-seg button[data-c="solida"].on{border-color:var(--acento);color:var(--acento-tinta);background:var(--acento-fraco)}
 .qz-seg button[data-c="duvida"].on{border-color:var(--aviso);color:var(--aviso);background:var(--aviso-fraco)}
@@ -337,20 +348,29 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 .qz-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
 /* s235 (pedido dele, 29/10: nunca entendeu a funcao do checkbox de marcar a questao para rever antes de entregar):
    o checkbox saiu do player; o trilho continua sendo a navegacao para voltar a qualquer questao */
-/* s229 (rodada 3): Responder centralizado. s235: Anterior e Pular viraram as setas do paginador (abaixo) */
-.qz-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--esp-2);margin-inline:auto}
-#qz-antes .qz-pe{justify-content:center}
-#qz-antes .primario{min-width:12rem}
 /* s235 (pedido dele, 29/10: "o grifo, o tempo, o botao de voltar poderiam estar na mesma linha"): UMA linha -- voltar a
    esquerda, Grifo e tempo a direita (bloquinhos iguais); o titulo fica entre eles em tela larga e desce para a 2a
    linha no celular. ⚰️ s229: titulo numa linha propria, Grifo e tempo abaixo */
+/* s236 (pedido dele, 30/10): o paginador (anterior | n de N | proxima) sobe para a barra, entre o voltar e o Grifo;
+   no celular o Grifo mostra so o "Aa" para a linha caber em 390 px. ⚰️ s235: paginador no pe da questao */
+#qz-player .hub-leitor-barra{gap:var(--esp-2)}
 #qz-player .hub-leitor-barra #qz-voltar{order:0}
-#qz-player .hub-leitor-barra #qz-tema{order:4;flex:1 1 100%;min-width:0}
-#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:auto}
-#qz-player .hub-leitor-barra .qz-relogio{order:3;margin-left:0;display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-3);
+#qz-player .hub-leitor-barra .qz-pag{order:1;margin:0;gap:var(--esp-1)}
+#qz-player .hub-leitor-barra #qz-grifo{order:3;margin-left:auto}
+#qz-player .hub-leitor-barra .qz-relogio{order:4;margin-left:0;display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-2);
   border:1px solid var(--linha-forte);border-radius:var(--raio);color:var(--tinta2);font-variant-numeric:tabular-nums}
-@media (min-width:700px){
-  #qz-player .hub-leitor-barra #qz-tema{order:1;flex:1 1 8rem}   /* quebra se precisar (regra do celular) */
+/* s236 (pedido dele, 30/10: "o titulo da lista esta no meio dos botoes, quando deveria estar acima"): o titulo e a 1a
+   linha; a barra (voltar | paginador | Grifo | tempo) vem abaixo. No celular o tempo sobe para a linha do titulo.
+   s236 (U2, regra dele de 30/10: posicao fixa > elemento condicional): a base do titulo e FIXA (100% menos o lugar do
+   tempo), entao a 1a linha e sempre titulo + tempo, qualquer que seja o comprimento do titulo -- o voltar, o paginador
+   e o Grifo nunca sobem. ⚠️ s236: base de 60%, e o voltar subia quando o titulo era curto */
+#qz-player .hub-leitor-barra #qz-tema{order:-2;flex:1 1 100%;min-width:0}
+@media (max-width:699px){
+  #qz-player .hub-grifo-rot{display:none}
+  #qz-player .hub-leitor-barra #qz-tema{flex:1 1 calc(100% - 6rem)}
+  #qz-player .hub-leitor-barra .qz-relogio{order:-1;flex:0 0 auto}
+  #qz-player .hub-leitor-barra .qz-pag .hub-btn{min-width:36px;padding:0 var(--esp-1)}
+  #qz-player .hub-leitor-barra .qz-pag input{width:2.5rem}
 }
 .qz-veredito{padding:var(--esp-3) var(--esp-4);border-radius:var(--raio);font-weight:650;display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);align-items:baseline;margin:0}
 .qz-veredito.certa{background:var(--ok-fraco);color:var(--ok)} .qz-veredito.errada{background:var(--erro-fraco);color:var(--erro)}
@@ -529,9 +549,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         <div class="hub-grifo" id="hub-grifo" data-aberto="false">
           <button type="button" class="hub-grifo-btn" id="hub-grifo-btn" aria-expanded="false" aria-controls="hub-grifo-cor" aria-label="Cor do próximo grifo" title="Cor do próximo grifo"><span class="hub-grifo-am" aria-hidden="true">Aa</span><span class="hub-grifo-rot">Grifo</span></button>
           <div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do próximo grifo">
-            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
-            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
             <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
           </div>
         </div>
       </div>
@@ -564,14 +584,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     </div>
     <div id="qz-player" hidden>
       <div class="hub-leitor-barra">
-        <button type="button" class="hub-btn" id="qz-voltar">&lsaquo; Todas as listas</button>
+        <button type="button" class="hub-btn" id="qz-voltar">&lsaquo; Listas</button>
+        <div class="qz-pag" id="qz-pag" hidden><button type="button" class="hub-btn" id="qz-ant" aria-label="Anterior" title="Anterior">&lsaquo;</button><label><input type="number" id="qz-pag-n" min="1" step="1" inputmode="numeric" aria-label="Ir para a questão"> de <span id="qz-pag-t">0</span></label><button type="button" class="hub-btn" id="qz-pular" aria-label="Próxima" title="Próxima">&rsaquo;</button></div>
         <p class="hub-leitor-titulo" id="qz-tema"></p>
         <div class="hub-grifo" id="qz-grifo" data-aberto="false">
           <button type="button" class="hub-grifo-btn" id="qz-grifo-btn" aria-expanded="false" aria-controls="qz-grifo-cor" aria-label="Cor do próximo grifo" title="Cor do próximo grifo"><span class="hub-grifo-am" aria-hidden="true">Aa</span><span class="hub-grifo-rot">Grifo</span></button>
           <div class="hub-grifo-cor" id="qz-grifo-cor" role="group" aria-label="Cor do próximo grifo">
-            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
-            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
             <button type="button" data-cor="amarelo" aria-pressed="false" aria-label="Amarelo" title="Grifo amarelo"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="ciano" aria-pressed="false" aria-label="Ciano" title="Grifo ciano"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
+            <button type="button" data-cor="rosa" aria-pressed="true" aria-label="Rosa" title="Grifo rosa"><span class="hub-grifo-am" aria-hidden="true">Aa</span></button>
           </div>
         </div>
         <span class="qz-relogio" id="qz-relogio">00:00</span>
@@ -587,13 +608,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         <div class="qz-alts" id="qz-alts" role="radiogroup" aria-label="Alternativas"></div>
         <div id="qz-antes">
           <div class="qz-seg" id="qz-seg">
-            <button type="button" data-c="solida">Sólida<small>eu sei</small></button>
-            <button type="button" data-c="duvida">Dúvida<small>entre duas</small></button>
-            <button type="button" data-c="chute">Chute<small>não sei</small></button>
+            <button type="button" data-c="solida" aria-pressed="false">Sólida</button>
+            <button type="button" data-c="duvida" aria-pressed="false">Dúvida</button>
+            <button type="button" data-c="chute" aria-pressed="false">Chute</button>
           </div>
-          <div class="qz-pe" style="margin-top:10px">
-            <span class="qz-nav"><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
-          </div>
+          <button type="button" class="primario" id="qz-responder" disabled>Responder</button>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:16px">
           <div class="placa qz-resultado">
@@ -615,7 +634,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
           </div>
           <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
         </div>
-        <div class="qz-pag" id="qz-pag"><button type="button" class="hub-btn" id="qz-ant" aria-label="Anterior" title="Anterior">&lsaquo;</button><label><input type="number" id="qz-pag-n" min="1" step="1" inputmode="numeric" aria-label="Ir para a questão"> de <span id="qz-pag-t">0</span></label><button type="button" class="hub-btn" id="qz-pular" aria-label="Próxima" title="Próxima">&rsaquo;</button></div>
       </div>
       <div id="qz-fim" hidden style="display:grid;gap:16px">
         <h2 class="hub-titulo">Lista concluída</h2>
@@ -912,6 +930,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       sec = doc.createElement("section"); sec.className = "hub-refs"; sec.id = "hub-refs";
       var h = doc.createElement("h2"); h.textContent = "Referências"; sec.appendChild(h);
     } else { base = sec.querySelector("p.base") || doc.querySelector("p.base"); }
+    if(base){ base.hidden = true; base.style.display = "none"; }   // s236: o p.base da aula nova tambem some
     achados.forEach(function(a){
       var frag = doc.createDocumentFragment(), el = a.el, lugar = null;
       var parte = a.fim || a.ate !== undefined;
@@ -936,12 +955,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       if(ehBaseInterna(chave)){
         if(!vistas[chave]){
           vistas[chave] = 1; stats.base++;
-          if(base){ base.appendChild(doc.createTextNode(" · ")); while(caixa.firstChild){ base.appendChild(caixa.firstChild); } }
-          else {
-            if(!lista){ var div = doc.createElement("div"), p = doc.createElement("p"); div.className = "hub-base"; p.textContent = "Base deste documento:";
-              lista = doc.createElement("ul"); div.appendChild(p); div.appendChild(lista); sec.appendChild(div); }
-            var lb = doc.createElement("li"); while(caixa.firstChild){ lb.appendChild(caixa.firstChild); } lista.appendChild(lb);
-          }
+          // s236 (pedido dele, 30/10: "não podemos referenciar resumos"): a base interna sai do texto e NAO entra em
+          // lugar nenhum. ⚰️ s214-s235: a lista "Base deste documento:" (ou o p.base da aula nova)
         }
       } else {
         var r = nums[chave];
@@ -2067,15 +2082,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var s = String(iso), d = new Date(s.length > 10 ? s.replace(" ", "T") : s + "T00:00:00");
     return isNaN(d.getTime()) ? s.slice(0, 10) : vivoDia(d);
   }
-  // o texto do aviso: lote com cards de dia ANTERIOR ao do aparelho; o de hoje e o de vespera, "". PURA.
-  function cardsAvisoFila(lote, hojeLocal){
-    var d = cardsDiaDoLote(lote && lote.gerado_em);
-    if(!d || !((lote && lote.cards) || []).length || d >= hojeLocal){ return ""; }
-    return "Fila de " + d.slice(8, 10) + "/" + d.slice(5, 7) + " -- a de hoje ainda não saiu.";
-  }
   function cardsPintar(notas){
     var lote = loteNoAr(), c = cardsContador(cardsDia(), notas, lote);
-    var el = $("dia-contador"), aviso = $("aviso-fila"), txt = cardsAvisoFila(lote, vivoDia(Date.now()));
+    var el = $("dia-contador");
     if(el && c){
       $("dia-n").textContent = String(c.n);
       $("dia-t").textContent = String(c.t);
@@ -2083,7 +2092,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       if($("metro-lote")){ $("metro-lote").hidden = true; }
       if(el.parentNode && el.parentNode.classList){ el.parentNode.classList.add("com-dia"); }
     }
-    if(aviso){ aviso.textContent = txt; aviso.hidden = !txt; }
   }
   // as notas do lote no ar pela assinatura resiliente; lote ja gravado (ou sem db) = o numero publicado
   function iniciarCardsDia(){
@@ -2629,7 +2637,19 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // `plano.tema_exibido` presa por teste; o doc no banco nao muda. PURA.
   function temaExibido(t){
     // s235: o simulado se apresenta pelo nome da prova ("UERJ 2025"); o sufixo tecnico do plano nao e titulo (espelho de `plano.tema_exibido`)
-    return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/\s*--\s*prova INTEIRA\b.*$/, "").replace(/^[ ·]+|[ ·]+$/g, "");
+    var s = String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/\s*--\s*prova INTEIRA\b.*$/, "").replace(/^[ ·]+|[ ·]+$/g, "");
+    return tituloCurto(s);
+  }
+  function tituloCurto(t){
+    // s236 (pedido dele): titulo de tela curto -- espelho de `plano.titulo_curto` (> 70: antes de ": " ou " (", pacote de 3+ -> 2 partes +N, antes de ", ")
+    t = String(t == null ? "" : t).trim();
+    if(t.length <= 70){ return t; }
+    var seps = [": ", " ("], k, p;
+    for(k = 0; k < seps.length; k++){ p = t.indexOf(seps[k]); if(p >= 0 && t.slice(0, p).trim().length >= 8){ return t.slice(0, p).trim(); } }
+    var partes = t.split(" · ").map(function(x){ return x.trim(); }).filter(Boolean);
+    if(partes.length >= 3){ return partes.slice(0, 2).join(" · ") + " +" + (partes.length - 2); }
+    p = t.indexOf(", "); if(p >= 0 && t.slice(0, p).trim().length >= 8){ return t.slice(0, p).trim(); }
+    return t;
   }
   // s226 (part-1, A21): chip so quando a lista foge do normal -- "pronta" (capturada) nao tem chip; em curso
   // (resposta no espelho local do aparelho, ou o status do doc) mostra respondidas/total; resolvida, o check.
@@ -2675,7 +2695,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   document.addEventListener("click", function(e){ var a = e.target.closest && e.target.closest("a[data-hub-aba]"); if(!a){ return; }
     var aba = valida(a.getAttribute("data-hub-aba")); if(!aba){ return; }
     e.preventDefault(); qzModoPedido(a.getAttribute("data-hub-modo")); ir(aba, true); window.scrollTo(0, 0); });
-  function qzNomeSim(l){ return String(l.tema || l._id).split(" -- ")[0]; }
+  // s236 (U5, o P44 nos Simulados): o titulo curto da tela (`temaExibido`, que ja passa pelo `tituloCurto`) sem o
+  // sufixo tecnico depois de " -- "; o "parte N" desse sufixo fica, para os cadernos irmaos nao sairem com o MESMO nome
+  function qzNomeSim(l){
+    var t = String(l.tema || l._id), i = t.indexOf(" -- "), parte = i >= 0 ? /^parte \d+(\/\d+)?/i.exec(t.slice(i + 4)) : null;
+    return temaExibido(i >= 0 ? t.slice(0, i) : t) + (parte ? " · " + parte[0] : "");
+  }
   QZ.modo = qzLs("medhub.listas.modo") === "simulados" ? "simulados" : "questoes";
   $("qz-modo").addEventListener("click", function(e){ var b = e.target.closest("button[data-m]"); if(!b){ return; }
     QZ.modo = b.getAttribute("data-m"); qzLs("medhub.listas.modo", QZ.modo); qzRenderListas(); });
@@ -2779,11 +2804,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   }
   $("qz-listas").addEventListener("click", qzListasClique);
   $("qz-listas").addEventListener("keydown", qzListasTecla);
-  function qzCompleta(){ return QZ.qs.length > 0 && QZ.qs.every(function(q){ return !!QZ.resp[q.num]; }); }
-  function qzBarra(){ $("qz-voltar").innerHTML = (!$("qz-questao").hidden && qzCompleta()) ? "&lsaquo; Lista" : "&lsaquo; Todas as listas"; }
+  // s236 (U2, D2-a): o voltar tem UM rotulo ("‹ Listas") e UM destino (a lista de listas); a tela de fim abre pelo
+  // paginador (o "›" da ultima questao) ou reabrindo a lista completa. ⚰️ s236: "‹ Lista" (o fim) com a lista completa
   $("qz-voltar").addEventListener("click", function(){
     if(!$("qz-depois").hidden){ qzSalvarMeta(); }
-    if(!$("qz-questao").hidden && qzCompleta()){ qzFim(); } else { qzFecharLista(); }
+    qzFecharLista();
   });
 
   function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; QZ.subsLista = {};
@@ -2801,7 +2826,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // s235: o simulado nao repete a area no cabecalho ("UERJ 2025", nao "UERJ 2025 · Simulado")
     $("qz-tema").textContent = (temaExibido(l.tema) || id) + (l.area && !qzEhSimulado(l) ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
-    $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
+    $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true; $("qz-pag").hidden = true;
     window.scrollTo(0, 0);
     if(!QZ.db){ return; }
     qzAssinarLista("questoes", id, function(s){
@@ -2864,6 +2889,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // s235: o paginador no lugar do trilho -- a posicao (editavel) de total; a seta de voltar desliga na 1a. PURA no DOM.
     var n = $("qz-pag-n"); n.value = QZ.pos + 1; n.max = QZ.qs.length; $("qz-pag-t").textContent = QZ.qs.length;
     $("qz-ant").disabled = QZ.pos <= 0;
+    $("qz-pag").hidden = !QZ.qs.length || QZ.pos >= QZ.qs.length;   // s236: na barra; some na tela de fim
   }
   function qzIrPara(v){
     var i = parseInt(v, 10) - 1;
@@ -2925,7 +2951,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     $("qz-figura").textContent = qzFiguraAviso(q, qzImgs.length);
     $("qz-figura").hidden = !$("qz-figura").textContent;
     $("qz-alts").innerHTML = qzAltsHtml(q, null, false, qzGrifosDe(q));
-    Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
+    qzCertezaUi(null);
     $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
     // questao ja respondida (voltou pelo trilho ou pelo Anterior): mostra o que marcou e deixa alterar
     var r0 = QZ.resp[q.num];
@@ -2933,11 +2959,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       QZ.letra = r0.letra || null; QZ.conf = r0.confianca || null;
       Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"); x.classList.toggle("marcada", l === r0.letra); x.classList.toggle("riscada", !!(r0.riscadas && r0.riscadas.indexOf(l) >= 0)); });
       qzMarcarAria();
-      Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-c") === r0.confianca); });
+      qzCertezaUi(r0.confianca);
       $("qz-responder").textContent = "Mudar resposta"; qzPode();
     }
     $("qz-ant").disabled = i === 0;
-    qzTrilho(); qzIniciar(); qzBarra();
+    qzTrilho(); qzIniciar();
     // s211 (part-3): respondida em Estudo (ou lista em Estudo) reabre revelada e nao editavel --
     // trocar a letra depois de ver o gabarito falsificaria o acerto registrado
     if(r0 && qzRevelaAoAbrir(r0)){ qzParar(); $("qz-relogio").textContent = "--:--"; qzRevelar(q, r0); }
@@ -3046,8 +3072,13 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   document.addEventListener("pointerup", function(e){ QZ.apertado = false; if($("qz-player").hidden){ return; }
     if(e.pointerType === "mouse"){ qzGrifoCapturar(); } else { qzGrifoAgendar(400); } }, true);
   document.addEventListener("selectionchange", function(){ if(!$("qz-player").hidden && !$("qz-questao").hidden && !QZ.apertado){ qzGrifoAgendar(700); } });
+  // s236 (U12, WCAG 4.1.2): a certeza marcada pela classe `.on` E por `aria-pressed` -- um lugar so poe e limpa os dois
+  function qzCertezaUi(c){
+    Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(x){
+      var on = !!c && x.getAttribute("data-c") === c; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on ? "true" : "false"); });
+  }
   $("qz-seg").addEventListener("click", function(e){ var b = e.target.closest("button[data-c]"); if(!b){ return; } QZ.conf = b.getAttribute("data-c");
-    Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(x){ x.classList.toggle("on", x === b); }); qzPode(); });
+    qzCertezaUi(QZ.conf); qzPode(); });
   function qzPode(){ $("qz-responder").disabled = !(QZ.letra && QZ.conf); }
   function qzIniciar(){ qzParar(); QZ.t0 = Date.now(); qzTique(); QZ.timer = setInterval(qzTique, 1000); }
   function qzParar(){ if(QZ.timer){ clearInterval(QZ.timer); QZ.timer = null; } }
@@ -3154,7 +3185,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-relogio").textContent = "--:--"; } }
   $("qz-rever").addEventListener("click", function(){ QZ.revendo = true; qzRever(0); });
   function qzFim(){
-    qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false; qzBarra();
+    qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false;
     var rs = QZ.qs.map(function(q){ return QZ.resp[q.num]; }).filter(Boolean);
     var ac = rs.filter(function(r){ return r.correta; }).length, sol = rs.filter(function(r){ return r.confianca === "solida"; }).length,
         duv = rs.filter(function(r){ return r.confianca === "duvida"; }).length, chu = rs.filter(function(r){ return r.confianca === "chute"; }).length,

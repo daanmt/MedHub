@@ -45,11 +45,35 @@ td:first-child{color:var(--ink);font-weight:600}
 .fa-s{fill:var(--ink3);font-size:12px}
 .fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
 .fa-dac{fill:var(--plum);stroke:var(--plum);stroke-width:1}
-.fa-fn{fill:var(--plum);stroke:var(--amber);stroke-width:2.4}
-.fa-vn{fill:var(--card);stroke:var(--amber);stroke-width:2.4}
+.fa-fn{fill:var(--rosa);stroke:var(--rosa);stroke-width:1}
+.fa-vn{fill:var(--card);stroke:var(--ink2);stroke-width:2}
 .fa-fp{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
 .fa-fundo{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
 
+/* realce rosa = o que decide (s236): no texto .chave; na figura .fa-ro* */
+@media(max-width:520px){.fig-an{padding:10px 6px 8px}}
+.chave{color:var(--rosa);font-weight:650}
+.fa-ro{fill:var(--rosa);font-size:12.5px;font-weight:700}
+.fa-rof{fill:var(--rosa)}
+.fa-rol{fill:none;stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-row{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-pt{fill:var(--plum-ink);font-size:12px;font-weight:650}
+.fa-o2{fill:var(--ink2);font-size:12px}
+.fa-reg{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-tk{stroke:var(--ink3);stroke-width:1}
+.fa-tkf{stroke:var(--line2);stroke-width:1}
+.fa-pl{fill:var(--plum)}
+.fa-plw{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-plf{fill:var(--plum-wash)}
+.fa-pll{fill:none;stroke:var(--plum);stroke-width:2;stroke-linecap:round}
+.fa-ln{fill:none;stroke:var(--ink3);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-ln2{fill:none;stroke:var(--ink2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.fa-cd{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-cd2{fill:var(--card);stroke:var(--ink2);stroke-width:1.3;stroke-linejoin:round}
+.fa-sk{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-sk2{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.4;stroke-linejoin:round}
+.fa-i2{fill:var(--ink2)}
+.fa-i3{fill:var(--ink3)}
 sup.ref{font-size:12px;margin-left:1px}
 sup.ref a{text-decoration:none;color:var(--teal-ink)}
 .refs{padding:24px 0 0}
@@ -72,13 +96,13 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <p class="pede"><b>A banca pediu:</b> como ler um teste ergométrico negativo num idoso com angina típica (Q88) e os diagnósticos de uma mulher de 60 anos com TSH 11, T4 livre normal e glicemia de jejum 102 (Q84).</p>
   <ol class="esc">
     <li><span class="n">1</span><div>Antes do resultado, a <strong>probabilidade pré-teste</strong>. Angina típica em homem acima de 60 anos passa de 90% na tabela clássica; diabetes, HAS e dislipidemia só somam<sup class="ref"><a href="#ref-1">1</a></sup><sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
-    <li><span class="n">2</span><div>O valor preditivo negativo <strong>cai</strong> quando o pré-teste sobe. Sensibilidade de 70% deixa 30% dos doentes com teste negativo: com pré-teste de 90%, <strong>3 em cada 4 negativos têm DAC</strong> (Fig 1)<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+    <li><span class="n">2</span><div>O valor preditivo negativo <strong>cai</strong> quando o pré-teste sobe. Sensibilidade de 70% deixa 30% dos doentes com teste negativo: com pré-teste de 90%, <strong class="chave">3 em cada 4 negativos têm DAC</strong> (Fig 1)<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
     <li><span class="n">3</span><div>Conduta: tratar como síndrome coronariana crônica (AAS, betabloqueador, antianginoso, estatina). "Má adaptação à esteira" não torna o teste inconclusivo nem adia o remédio<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
-    <li><span class="n">4</span><div>O corte também depende de quem fala. Pela <strong>OMS e pelo MS</strong>, glicemia de jejum alterada é 110-125; ADA e SBD usam 100-125. A UERJ MFC seguiu a OMS: 102 <strong>não é pré-diabetes</strong><sup class="ref"><a href="#ref-5">5</a></sup><sup class="ref"><a href="#ref-6">6</a></sup><sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
+    <li><span class="n">4</span><div>O corte também depende de quem fala. Pela <strong>OMS e pelo MS</strong>, glicemia de jejum alterada é 110-125; ADA e SBD usam 100-125. A UERJ MFC seguiu a OMS: 102 <strong class="chave">não é pré-diabetes</strong><sup class="ref"><a href="#ref-5">5</a></sup><sup class="ref"><a href="#ref-6">6</a></sup><sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
   </ol>
   <figure class="fig-an">
     <p class="fa-cab"><span>Fig 1 · esquema</span><b>O que sobra entre os negativos</b></p>
-    <svg viewBox="0 0 344 240" role="img" aria-label="Cem pacientes com probabilidade pré-teste de 90%. Noventa têm DAC: 63 com teste positivo e 27 com teste negativo. Dez não têm DAC: 9 com teste negativo e 1 positivo. Dos 36 negativos, 27 têm DAC, 75%.">
+    <svg viewBox="0 0 344 206" role="img" aria-label="Cem pacientes com probabilidade pré-teste de 90%. Noventa têm DAC: 63 com teste positivo e 27 com teste negativo. Dez não têm DAC: 9 com teste negativo e 1 positivo. Dos 36 negativos, 27 têm DAC, 75%.">
       <text class="fa-t" x="94" y="22" text-anchor="middle">100 pacientes como ele</text>
       <text class="fa-s" x="94" y="38" text-anchor="middle">pré-teste de 90%</text>
       <circle class="fa-dac" cx="22" cy="58" r="5.4"/><circle class="fa-dac" cx="38" cy="58" r="5.4"/><circle class="fa-dac" cx="54" cy="58" r="5.4"/><circle class="fa-dac" cx="70" cy="58" r="5.4"/><circle class="fa-dac" cx="86" cy="58" r="5.4"/><circle class="fa-dac" cx="102" cy="58" r="5.4"/><circle class="fa-dac" cx="118" cy="58" r="5.4"/><circle class="fa-dac" cx="134" cy="58" r="5.4"/><circle class="fa-dac" cx="150" cy="58" r="5.4"/><circle class="fa-dac" cx="166" cy="58" r="5.4"/>
@@ -93,16 +117,41 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
       <circle class="fa-vn" cx="22" cy="193" r="5.4"/><circle class="fa-vn" cx="38" cy="193" r="5.4"/><circle class="fa-vn" cx="54" cy="193" r="5.4"/><circle class="fa-vn" cx="70" cy="193" r="5.4"/><circle class="fa-vn" cx="86" cy="193" r="5.4"/><circle class="fa-vn" cx="102" cy="193" r="5.4"/><circle class="fa-vn" cx="118" cy="193" r="5.4"/><circle class="fa-vn" cx="134" cy="193" r="5.4"/><circle class="fa-vn" cx="150" cy="193" r="5.4"/><circle class="fa-fp" cx="166" cy="193" r="5.4"/>
 
       <circle class="fa-dac" cx="192" cy="62" r="5.4"/><text class="fa-s" x="204" y="66">DAC, positivo 63</text>
-      <circle class="fa-fn" cx="192" cy="84" r="5.4"/><text class="fa-av" x="204" y="88">DAC, negativo 27</text>
+      <circle class="fa-fn" cx="192" cy="84" r="5.4"/><text class="fa-ro" x="204" y="88">DAC, negativo 27</text>
       <circle class="fa-vn" cx="192" cy="106" r="5.4"/><text class="fa-s" x="204" y="110">sem DAC, negativo 9</text>
       <circle class="fa-fp" cx="192" cy="128" r="5.4"/><text class="fa-s" x="204" y="132">sem DAC, positivo 1</text>
       <rect class="fa-fundo" x="184" y="146" width="152" height="52" rx="6"/>
       <text class="fa-s" x="260" y="166" text-anchor="middle">dos 36 negativos,</text>
-      <text class="fa-t" x="260" y="186" text-anchor="middle">27 têm DAC (75%)</text>
-      <text class="fa-s" x="172" y="218" text-anchor="middle">sensibilidade 70% e especificidade 90% (Q88)</text>
-      <text class="fa-s" x="172" y="233" text-anchor="middle">anel âmbar = teste negativo; esquema</text>
+      <text class="fa-ro" x="260" y="186" text-anchor="middle" style="font-size:13.5px">27 têm DAC (75%)</text>
     </svg>
-    <figcaption>Com pré-teste alta, 3 em cada 4 negativos têm DAC: o negativo não tranquiliza.<sup class="ref"><a href="#ref-1">1</a></sup><sup class="ref"><a href="#ref-3">3</a></sup></figcaption>
+    <figcaption>Pré-teste alta: 3 em cada 4 negativos têm DAC.<sup class="ref"><a href="#ref-1">1</a></sup><sup class="ref"><a href="#ref-3">3</a></sup></figcaption>
+  </figure>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>O mesmo 102, duas réguas</b></p>
+    <svg viewBox="0 0 344 134" role="img" aria-label="Duas réguas de glicemia de jejum de 90 a 130. Pela OMS e pelo MS, a alterada começa em 110 e o 102 cai no normal; pela ADA e pela SBD, começa em 100 e o 102 seria pré-diabetes.">
+      <text class="fa-t" x="40" y="20">OMS e MS</text>
+      <rect class="fa-reg" x="40" y="32" width="280" height="16" rx="5"/>
+      <rect class="fa-plf" x="180" y="33" width="112" height="14"/>
+      <rect class="fa-pl" x="292" y="33" width="27" height="14" rx="4"/>
+      <line class="fa-rol" x1="180" y1="26" x2="180" y2="54"/>
+      <text class="fa-ro" x="185" y="20">110</text>
+      <text class="fa-s" x="96" y="44" text-anchor="middle">normal</text>
+      <text class="fa-s" x="236" y="44" text-anchor="middle">alterada</text>
+      <text class="fa-o2" x="40" y="76">ADA e SBD</text>
+      <rect class="fa-reg" x="40" y="88" width="280" height="16" rx="5"/>
+      <rect class="fa-plf" x="110" y="89" width="182" height="14"/>
+      <rect class="fa-pl" x="292" y="89" width="27" height="14" rx="4"/>
+      <line class="fa-ln2" x1="110" y1="82" x2="110" y2="110"/>
+      <text class="fa-s" x="106" y="128" text-anchor="end">100</text>
+      <text class="fa-s" x="75" y="100" text-anchor="middle">normal</text>
+      <text class="fa-s" x="201" y="100" text-anchor="middle">alterada</text>
+      <text class="fa-s" x="292" y="128" text-anchor="middle">126</text>
+      <line class="fa-pll" x1="124" y1="26" x2="124" y2="112"/>
+      <circle class="fa-pl" cx="124" cy="40" r="4.6"/><circle class="fa-cd2" cx="124" cy="40" r="1.8" stroke="none"/>
+      <circle class="fa-pl" cx="124" cy="96" r="4.6"/><circle class="fa-cd2" cx="124" cy="96" r="1.8" stroke="none"/>
+      <text class="fa-pt" x="124" y="128" text-anchor="middle">102</text>
+    </svg>
+    <figcaption>Pela OMS, jejum de 102 é normal; pela ADA, pré-diabetes.<sup class="ref"><a href="#ref-5">5</a></sup><sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
   </figure>
   <div class="tw"><table><tr><th>Glicemia de jejum</th><th>OMS e MS</th><th>ADA e SBD</th></tr><tr><td>Normal</td><td>Menor que 110</td><td>Menor que 100</td></tr><tr><td>Alterada (pré-diabetes)</td><td>110 a 125</td><td>100 a 125</td></tr><tr><td>Diabetes</td><td>126 ou mais</td><td>126 ou mais</td></tr></table></div>
   <div class="trap">Q84: TSH 11 com T4 livre normal é subclínico. A endocrinologia trata TSH de 10 ou mais; a lente da MFC não trata o adulto sem sintomas com TSH abaixo de 20, e a UERJ deu hábitos de vida<sup class="ref"><a href="#ref-8">8</a></sup><sup class="ref"><a href="#ref-9">9</a></sup>. Q88: a "má adaptação à esteira" empurrava para inconclusivo.</div>
@@ -114,9 +163,9 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <h2>APS: muita consulta sem doença e remédio que se pode tirar</h2>
   <p class="pede"><b>A banca pediu:</b> os problemas mais frequentes da APS (Q97), por que pesar a polifarmácia acima dos 74 anos (Q90) e o que é verdade na lombalgia (Q85).</p>
   <ol class="esc">
-    <li><span class="n">1</span><div>A demanda da APS não é a do hospital: a pessoa traz várias queixas e muitas consultas são <strong>sem doença</strong> (check-up, preventivo, renovação, orientação). Para a UERJ 2025, ausência de doença, depressão e hipotireoidismo estão entre os mais frequentes; angina não<sup class="ref"><a href="#ref-10">10</a></sup><sup class="ref"><a href="#ref-11">11</a></sup>.</div></li>
-    <li><span class="n">2</span><div>Polifarmácia aumenta quedas, interações, eventos adversos e internações; <strong>não existe número seguro</strong> de medicamentos. Cada um se pesa pelo benefício no horizonte de vida da pessoa<sup class="ref"><a href="#ref-12">12</a></sup><sup class="ref"><a href="#ref-13">13</a></sup>.</div></li>
-    <li><span class="n">3</span><div>Desprescrever é <strong>prevenção quaternária</strong>. Em parte relevante dos idosos, retirar anti-hipertensivo, estatina ou IBP <strong>não aumenta a morbimortalidade</strong> (OPTIMISE, estatina em doença avançada, diretriz de IBP)<sup class="ref"><a href="#ref-14">14</a></sup><sup class="ref"><a href="#ref-15">15</a></sup><sup class="ref"><a href="#ref-16">16</a></sup>.</div></li>
+    <li><span class="n">1</span><div>A demanda da APS não é a do hospital: a pessoa traz várias queixas e muitas consultas são <strong class="chave">sem doença</strong> (check-up, preventivo, renovação, orientação). Para a UERJ 2025, ausência de doença, depressão e hipotireoidismo estão entre os mais frequentes; angina não<sup class="ref"><a href="#ref-10">10</a></sup><sup class="ref"><a href="#ref-11">11</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Polifarmácia aumenta quedas, interações, eventos adversos e internações; <strong class="chave">não existe número seguro</strong> de medicamentos. Cada um se pesa pelo benefício no horizonte de vida da pessoa<sup class="ref"><a href="#ref-12">12</a></sup><sup class="ref"><a href="#ref-13">13</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Desprescrever é <strong>prevenção quaternária</strong>. Em parte relevante dos idosos, retirar anti-hipertensivo, estatina ou IBP <strong class="chave">não aumenta a morbimortalidade</strong> (OPTIMISE, estatina em doença avançada, diretriz de IBP)<sup class="ref"><a href="#ref-14">14</a></sup><sup class="ref"><a href="#ref-15">15</a></sup><sup class="ref"><a href="#ref-16">16</a></sup>.</div></li>
     <li><span class="n">4</span><div>Lombalgia aguda sem sinal de alarme: <strong>75-90% melhoram em até 3 meses</strong> e imagem não entra. Hérnia e degeneração discal aparecem muito em assintomáticos<sup class="ref"><a href="#ref-17">17</a></sup><sup class="ref"><a href="#ref-18">18</a></sup><sup class="ref"><a href="#ref-19">19</a></sup>.</div></li>
   </ol>
   <div class="trap">Q97: HAS, angina e DM2 é a lista do hospital. Q90: C inventa um teto seguro de 10 medicamentos. Q85: D soa prudente, mas achado de imagem em assintomático é a regra.</div>
@@ -128,8 +177,39 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <h2>Um dado, uma resposta</h2>
   <div class="blk"><h3>Crise hemorroidária com trombo: tratamento clínico na emergência (Q86)</h3><ul class="pt">
     <li>Trombose sem necrose, sem infecção e sem sinal sistêmico: analgésico, <strong>banho de assento</strong>, tópico e flavonoide (diosmina e hesperidina); resolve em 7 a 10 dias<sup class="ref"><a href="#ref-20">20</a></sup><sup class="ref"><a href="#ref-21">21</a></sup>.</li>
-    <li>Excisão do trombo só nas <strong>primeiras 48-72 h</strong>, com anestesia local e sem internação. Heparina, internação e colonoscopia de emergência não entram.</li>
+    <li>Excisão do trombo só nas <strong class="chave">primeiras 48-72 h</strong>, com anestesia local e sem internação. Heparina, internação e colonoscopia de emergência não entram.</li>
   </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>A janela do trombo</b></p>
+    <svg viewBox="0 0 344 76" role="img" aria-label="Régua de dias da trombose hemorroidária: a excisão só cabe até 72 horas; no 4º dia o tratamento é clínico, e o quadro resolve entre 7 e 10 dias.">
+      <g transform="translate(0,-22)">
+      <rect class="fa-reg" x="30" y="56" width="290" height="10" rx="5"/>
+      <rect class="fa-plf" x="233" y="57" width="86" height="8" rx="4"/>
+      <line class="fa-tk" x1="30" y1="66" x2="30" y2="72"/>
+      <line class="fa-tk" x1="59" y1="66" x2="59" y2="69"/>
+      <line class="fa-tk" x1="88" y1="66" x2="88" y2="69"/>
+      <line class="fa-tk" x1="117" y1="66" x2="117" y2="69"/>
+      <line class="fa-tk" x1="146" y1="66" x2="146" y2="72"/>
+      <line class="fa-tk" x1="175" y1="66" x2="175" y2="69"/>
+      <line class="fa-tk" x1="204" y1="66" x2="204" y2="69"/>
+      <line class="fa-tk" x1="233" y1="66" x2="233" y2="72"/>
+      <line class="fa-tk" x1="262" y1="66" x2="262" y2="69"/>
+      <line class="fa-tk" x1="291" y1="66" x2="291" y2="69"/>
+      <line class="fa-tk" x1="320" y1="66" x2="320" y2="72"/>
+      <rect class="fa-plw" x="30" y="50" width="87" height="22" rx="6"/>
+      <text class="fa-pt" x="73.5" y="65.5" text-anchor="middle">excisão</text>
+      <line class="fa-rol" x1="117" y1="40" x2="117" y2="80"/>
+      <text class="fa-ro" x="122" y="40">72 h</text>
+      <text class="fa-o2" x="200" y="42" text-anchor="middle">clínico</text>
+      <text class="fa-s" x="276.5" y="42" text-anchor="middle">resolve</text>
+      <circle class="fa-pl" cx="146" cy="61" r="4.6"/><circle class="fa-cd2" cx="146" cy="61" r="1.8" stroke="none"/>
+      <text class="fa-s" x="30" y="90" text-anchor="middle">0</text>
+      <text class="fa-pt" x="146" y="90" text-anchor="middle">4º dia</text>
+      <text class="fa-s" x="320" y="90" text-anchor="end">10 d</text>
+      </g>
+    </svg>
+    <figcaption>Passadas 72 h, o trombo fica: tratamento clínico.<sup class="ref"><a href="#ref-20">20</a></sup><sup class="ref"><a href="#ref-21">21</a></sup></figcaption>
+  </figure>
   <div class="trap">"Trombo" puxa trombectomia e internação (A, D).</div>
   <div class="q"><span class="tag">Teste agora</span><p>Trombose hemorroidária externa sem necrose no 4º dia: conduta?</p><details><summary>ver resposta</summary><div>Clínica: analgesia, banho de assento, tópico e flavonoide.</div></details></div></div>
 </section>

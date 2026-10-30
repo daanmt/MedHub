@@ -153,10 +153,18 @@ aula-base, Revisão Direcionada, dossiê e autópsia.
   internacionais e revisões sistemáticas; (3) livro-texto. A aula cita a diretriz que sustenta o fato, não o caminho por
   onde o agente chegou a ele. Fato que só tem apoio de material de curso (a apostila do EMED) ou da banca é declarado
   assim, nunca vestido de diretriz; nada de diretriz citada de memória (§7 "nada de memória").  <!-- NAO-VERIFICAVEL: escolha da fonte que sustenta o fato e julgamento de autoria; nenhum gate le a hierarquia das referencias da aula (revisar: 2027-03-31) -->
-- **A base interna NÃO é referência:** o resumo do MedHub (`resumos/X.md`), o verso de um card e o PDF do curso vão
-  numa linha final separada, `<p class="base">Base deste documento: ...</p>`, depois da lista (o hub liga
-  `resumos/X.md` ao resumo publicado). O registro da RD (`"resumos"`, `/revisar` 8a) é essa linha.
-- **Figura (`figure.fig-an`, /anima):** legenda curta + o número da referência; sem "Fonte:" na legenda.
+- **A base interna NÃO é referência e NÃO aparece na aula (s236, 30/10, decisão dele: *"Não podemos referenciar
+  resumos, apenas artigos, guidelines, consensos, etc."*):** o resumo do MedHub, o verso de um card e o PDF/apostila do
+  curso são ponto de partida para achar a fonte, nunca entrada em Referências nem linha final. O registro da RD
+  (`"resumos"` no `quadro_entry`/`hub_quadro.json`, `/revisar` 8a) é o único lugar onde os resumos consultados ficam.
+  ⚰️ *s227-s235: `<p class="base">Base deste documento: ...</p>` depois da lista; o leitor do hub hoje esconde esse `p.base`
+  e descarta a base interna que acha no texto.*  <!-- CHECK: test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim -->
+- **Figura (`figure.fig-an`, /anima) -- s236, pedido dele:** uma figura em TODA seção que tenha mecanismo, fluxo de
+  decisão ou diferencial espacial (metade ou mais das seções; nunca só a 1ª). A imagem domina: rótulos de 1-3 palavras
+  dentro do SVG; sem legenda de cores em frase; sem repetir o parágrafo; `figcaption` de uma linha curta + o número da
+  referência, ou nenhuma; sem "Fonte:" na legenda. O rosa (`--rosa`) realça o elemento que decide (corte, achado que
+  exclui, seta decisória) e, no texto, `strong.chave`/`span.chave` com `color:var(--rosa)` no dado que decide (1-3 por
+  seção). Âmbar = armadilha; roxo = dado; ciano = interação. Regras no `DESIGN.md` (Named Rules e Leitor de aulas).  <!-- NAO-VERIFICAVEL: dose e forma das figuras sao autoria da aula; nenhum gate conta figuras por secao (revisar: 2027-03-31) -->
 - **Desde 13/10/2026 o leitor do hub já faz isso nas aulas antigas** (`hub-tema-v4-part-7`): tira toda "Fonte:" do
   meio e monta as Referências no fim. Isso é a camada de apresentação; a aula NOVA nasce no formato desta seção, e as
   antigas migram na fonte junto com a reforma de estética com a /anima (decisão dele: "isso será evoluído depois").  <!-- NAO-VERIFICAVEL: autoria do HTML da aula nova; o leitor normaliza a apresentacao das antigas e nenhum gate le a ordem de preferencia das fontes (revisar: 2027-03-31) -->

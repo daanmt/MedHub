@@ -1432,7 +1432,12 @@ def test_aba_listas_mostra_o_titulo_pela_mesma_regra_da_teoria():
     casos = ["Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas",
              "Arboviroses | HIV | Tuberculose | Meningites e Meningoencefalites", "A |B", "| A |", "",
              "Endocardite Bacteriana - Endocardite Infecciosa", "Pré-Natal; Assistência ao Parto"]
-    fn = extrair_funcao(TEMPLATE_HUB_REAL, "function temaExibido(t){")
+    fn = extrair_funcao(TEMPLATE_HUB_REAL, "function temaExibido(t){") + "\n" + extrair_funcao(TEMPLATE_HUB_REAL, "function tituloCurto(t){")
+    casos = list(casos) + ["Tuberculose 360: adulto, criança (RIP sem etambutol < 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV",
+                           "Oncologia pediátrica pelos sinais de alarme (leucemia, linfoma, neuroblastoma, tumor ósseo, tiflite) + Wilms x neuroblastoma",
+                           "Pré-Natal | Distúrbios Hipertensivos da Gestação | Sífilis na Gestação e Sífilis Congênita | Sangramento da Primeira Metade",
+                           "Neoplasias benignas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+                           "Rodapés de retorno alto: lombalgia na APS, violência e negligência (notificação), dengue e prova do laço"]
     prog = fn + "\nconsole.log(JSON.stringify(%s.map(temaExibido)));" % json.dumps(casos, ensure_ascii=False)
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
         f.write(prog)

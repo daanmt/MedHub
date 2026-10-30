@@ -81,7 +81,9 @@ function mk(id, tag){
     querySelectorAll:function(){ return []; },
     disparar:function(t, ev){ (this.ouv[t]||[]).forEach(function(f){ f(ev || {preventDefault:function(){}}); }); }
   };
-  Object.defineProperty(el, "innerHTML", {get:function(){ return this._html; }, set:function(v){ this._html=String(v); this.filhos=[]; }});
+  // s236: o card passou a ir por innerHTML (o realce rosa); como no DOM real, o textContent e o texto sem as tags
+  Object.defineProperty(el, "innerHTML", {get:function(){ return this._html; }, set:function(v){ this._html=String(v); this.filhos=[];
+    this.textContent = this._html.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&"); }});
   return el;
 }
 var ELS = {};
@@ -353,7 +355,8 @@ def test_notas_sobrevivem_ao_reload_sem_db():
       SAIDA.aviso = el("aviso").textContent;
     """)
     assert primeiro["saida"]["feitos"] == "2"
-    assert "SEM CONEXAO" in primeiro["saida"]["aviso"]
+    # s236 (U11): caixa normal com acento -- a forca do aviso e do `.aviso.forte`, nao da caixa-alta
+    assert "Sem conexão com o banco." in primeiro["saida"]["aviso"] and "SEM CONEXAO" not in primeiro["saida"]["aviso"]
     guardadas = json.loads(primeiro["armazem"]["medhub.notas.t-js"])
     assert sorted(n["card_id"] for n in guardadas) == [100, 101]
     segundo = _rodar(LOTE3, """
@@ -385,7 +388,7 @@ def test_falha_de_gravacao_no_meio_do_lote_avisa_forte_e_guarda_local():
       SAIDA.aviso = el("aviso").textContent;
       SAIDA.visivel = !el("aviso").hidden;
     """, {"db": {"docs": {}}, "dbFalha": True})
-    assert out["saida"]["visivel"] and "SEM CONEXAO" in out["saida"]["aviso"]
+    assert out["saida"]["visivel"] and "Sem conexão com o banco." in out["saida"]["aviso"]
     assert "falha ao salvar: falhou" in out["saida"]["aviso"]
     assert [n["card_id"] for n in json.loads(out["armazem"]["medhub.notas.t-js"])] == [100]
 
@@ -480,7 +483,7 @@ def test_fim_com_banco_fora_diz_que_as_notas_estao_no_aparelho():
       SAIDA.origem = el("fim-origem").textContent;
       SAIDA.titulo = el("fim-titulo").textContent;
     """, {"db": {"docs": {}}, "dbFalha": True})
-    assert out["saida"]["titulo"] == "Lote concluido"
+    assert out["saida"]["titulo"] == "Lote concluído"
     assert "guardadas neste aparelho" in out["saida"]["origem"]
     assert "Nada foi salvo" not in out["saida"]["origem"]
 
@@ -504,6 +507,64 @@ def test_agenda_desloca_a_previsao_para_o_dia_da_nota():
 
 
 # --------------------------------------------------------------------------
+# s236: o realce rosa (`realcar`, funcao PURA) -- recortada do player e rodada sozinha em node
+# --------------------------------------------------------------------------
+
+def test_realcar_pinta_chave_e_numero_com_unidade_e_escapa_o_html():
+    """s236 (pedido dele, 30/10: cards "chumbados e sem vida"): `**x**` vira .chave em qualquer campo; no verso
+    (numeros=true) o numero com unidade ou sinal vira UM .num (a faixa junto); a frente (numeros=false) nao pinta numero; o
+    texto e escapado ANTES (nunca vira markup); numero grudado em palavra (COVID19, IL-6, H2O) fica cru; `**` sem
+    par volta literal."""
+    if not NODE:
+        pytest.skip("node ausente no PATH: comportamento do JS nao verificado (skip declarado)")
+    from tools.test_hub_render import extrair_funcao  # tardio: test_hub_render importa o hub inteiro
+    js = _js_do_player()
+    re_num = next(l.strip() for l in js.splitlines() if l.strip().startswith("var RE_NUM = "))
+    fontes = [re_num] + [extrair_funcao(js, "function %s(" % f)
+                         for f in ("esc", "colado", "pintarNumeros", "realcar")]
+    casos = {
+        "chave": ["a **x** b", False],
+        "plaq": ["plaquetas ≥ 250/mm³", True],
+        "dose": ["1,5 g/kg", True],
+        "prazo": ["por 7-14 dias", True],
+        "faixa": ["por 1 a 2 semanas", True],
+        "maior": ["PCR > 10 mg/L", True],
+        "pa": ["PA 140/90 mmHg", True],
+        "script": ["<script>alert(1)</script> **<i>x</i>**", True],
+        "frente": ["PA ≥ 140 mmHg aos 40 anos, 1,5 g/kg", False],
+        "colado": ["COVID19, IL-6, B12 e H2O", True],
+        "cru": ["tipo 2 desde 2020, pH 7,35-7,45", True],
+        "aberto": ["um ** sem par 5 mg", True],
+    }
+    prog = "\n".join(fontes) + "\nvar CASOS = %s, OUT = {};\n" % json.dumps(casos, ensure_ascii=False) + \
+        "Object.keys(CASOS).forEach(function(k){ OUT[k] = realcar(CASOS[k][0], CASOS[k][1]); });\n" + \
+        "console.log(JSON.stringify(OUT));\n"
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        r = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert r.returncode == 0, r.stderr
+    out = json.loads(r.stdout.strip().splitlines()[-1])
+    num = '<b class="num">%s</b>'
+    assert out["chave"] == 'a <b class="chave">x</b> b'
+    assert out["plaq"] == "plaquetas " + num % "≥ 250/mm³"
+    assert out["dose"] == num % "1,5 g/kg"
+    assert out["prazo"] == "por " + num % "7-14 dias"
+    assert out["faixa"] == "por " + num % "1 a 2 semanas"
+    assert out["maior"] == "PCR " + num % "&gt; 10 mg/L"
+    assert out["pa"] == "PA " + num % "140/90 mmHg"
+    assert "<script>" not in out["script"] and "<i>" not in out["script"]
+    assert out["script"] == '&lt;script&gt;alert(1)&lt;/script&gt; <b class="chave">&lt;i&gt;x&lt;/i&gt;</b>'
+    assert out["frente"] == "PA ≥ 140 mmHg aos 40 anos, 1,5 g/kg", "a frente nao pinta numero"
+    assert out["colado"] == "COVID19, IL-6, B12 e H2O", "numero dentro de palavra fica cru"
+    assert out["cru"] == "tipo 2 desde 2020, pH 7,35-7,45", "numero sem unidade nem sinal fica cru"
+    assert out["aberto"] == "um ** sem par " + num % "5 mg", "`**` sem par volta literal"
+
+
+# --------------------------------------------------------------------------
 # Estatico (roda sempre, com ou sem node)
 # --------------------------------------------------------------------------
 
@@ -521,6 +582,19 @@ def test_estatico_timer_sem_relogio_de_parede():
     js = _js_do_player()
     assert "Math.min.apply(null, ts)" not in js, "o inicio pelo menor ts era relogio de parede"
     assert "visibilitychange" in js and "TETO_OCIOSO_MS" in js
+
+
+def test_textos_da_tela_com_acento_e_o_motivo_gravado_intacto():
+    """s236 (U11 da auditoria de UI): o texto que ele LE no player sai com acento; o VALOR gravado no db
+    (`data-motivo` do defeito) segue o de antes -- so o rotulo visivel muda."""
+    for visivel in ("<span>com esforço</span>", "<span>sem esforço</span>", ">Lote concluído</h2>",
+                    'vencido:"revisão vencida"', 'agendado:"agendado para hoje"', '2:"com esforço"', '4:"sem esforço"',
+                    "(Espaço)", ">média por card<", "próximos 7 dias", "Notas desta sessão"):
+        assert visivel in TEMPLATE, visivel
+    assert 'data-motivo="Erro de portugues">Erro de português</button>' in TEMPLATE, "valor gravado intacto"
+    for morto in ('2:"com esforco"', '4:"sem esforco"', ">com esforco<", ">sem esforco<", '"Lote concluido"',
+                  ">Lote concluido<", '"revisao vencida"', "SEM CONEXAO", "(Espaco)", "agendado p/"):
+        assert morto not in TEMPLATE, morto
 
 
 if __name__ == "__main__":

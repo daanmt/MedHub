@@ -315,6 +315,13 @@ cor literal no player, no painel e na tela revelada.
 **The Um Papel por Cor Rule.** Ciano interage, rosa assina, âmbar avisa, roxo decora e mede. Rosa nunca é estado; ciano
 nunca é título nem rótulo; roxo puro nunca é texto.
 
+**The Rosa Realça Rule (s236, 30/10, pedido dele: *"sinto falta do rosa nas imagens e/ou nos textos, como elementos
+naturais de realce de informações importantes"*).** Além de assinar, o rosa é o realce da **informação decisória**: nas
+aulas e RDs, o elemento do SVG que decide (o corte, o achado que exclui, a seta do fluxo) e, no texto, o dado que decide
+a questão (`strong.chave` / `span.chave`, `color:var(--rosa)`); nos cards do player, `**assim**` em qualquer campo e,
+no verso, número com unidade ou sinal (`.chave`, `.num`). Dose: 1-3 realces por seção ou por card, nunca um parágrafo
+rosa. Âmbar segue sendo aviso/armadilha; ciano, interação.
+
 **The Nunca Só Cor Rule.** Estado nunca só por cor: gabarito `✓`, errada `✗`, chute `?`, resolvida `✓`, "abaixo do
 necessário" por extenso, declaração com o nome do estado no botão, chip de área com o nome.
 
@@ -473,6 +480,14 @@ largura (`.hub-assina.placa{margin-inline:0}` vence o alinhamento R9).
   regra/armadilha > assunto.
 - **Secções do card** (`.bloco` regra-mestre, `.bloco.alerta` armadilha): filete à esquerda (neutro / âmbar), nunca
   caixa dentro do card.
+- **Realce no card** (s236, pedido dele: *"tanto o conteúdo da frente quanto do verso dos cards são 'chumbados' e sem
+  vida"*): o player escapa o texto e pinta de rosa (`.chave`, `.num`) o `**trecho**` de qualquer campo e, no verso, o
+  número com unidade ou sinal (corte, dose, prazo). A autoria marca com `**` o dado que decide (`estilo-flashcard` §Realce);
+  frente sem número automático (o número da frente é contexto, não resposta).
+- **Botões de tarefa** (s236): sempre DOIS lugares, na mesma ordem -- Resolver/Abrir lista | Abrir aula -- com largura
+  mínima igual; o que não existe fica apagado (`.t-btn-off`, `aria-disabled`, contorno e texto em `tinta3`), nunca some.
+  Regra geral: **posição fixa > elemento condicional** (um controle que ora aparece, ora não, incomoda mais do que um
+  controle apagado).
 - **Métricas** (`.qz-tiles`, `.fim-grade`, `.fig`): uma faixa entre dois filetes, número 700 + rótulo `tinta3`; sem uma
   caixa por número (A5).
 - **Aviso** (`.hub-aviso`, `.aviso` no player): filete âmbar de 3 px + lavagem âmbar, raio pequeno; `.aviso.forte`
@@ -540,6 +555,10 @@ estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela.
 - **Do** conferir a tela a 390 px primeiro e no tema escuro, com `python tools/ui_capturas.py`, antes de publicar.
 - **Do** manter um só `.wrap` (`max-width`) por página e todos os filhos a 100% dele.
 - **Do** deixar só a mecânica e o botão: mensagem de erro com a ação de recuperar ("Toque para reenviar") fica.
+- **Do** manter cada controle no mesmo lugar em todas as linhas; o que não existe fica apagado (`aria-disabled`), nunca some.
+- **Do** usar o rosa como realce do dado que decide (1-3 por seção/card) -- no SVG, no texto da aula e no card.
+- **Do** pôr figura (`/anima`) em toda seção com mecanismo, fluxo ou diferencial espacial, não só na primeira; a imagem
+  domina: rótulos de 1-3 palavras dentro do SVG, `figcaption` de uma linha ou nenhuma.
 
 ### Don't:
 - **Don't** usar sombra, glow, halo, `text-shadow` ou borda neon; a profundidade é degrau + borda + fio cromado.
@@ -555,6 +574,10 @@ estado por assinatura, nunca 2 ouvintes. Aba nova lê por ela.
 - **Don't** pôr legenda em prosa que repete o dado (Teoria, frase do Ritmo, "Fora da tabela", `p.nota` no dashboard,
   legenda de instrução das Listas).
 - **Don't** somar unidades diferentes num número só.
+- **Don't** escrever legenda de cores em frase dentro ou abaixo da figura ("âmbar = pressão alta · roxo = derrame"): o
+  rótulo colorido ao lado do elemento já diz; nem repetir dentro do SVG o que o parágrafo explica (s236).
+- **Don't** mostrar o título técnico do plano na tela (`tema_exibido` + `titulo_curto`: simulado = "UERJ 2025"; título
+  > 70 caracteres encurta) nem um controle que precise de legenda para ser entendido ("Revisar depois", `<kbd>`).
 - **Don't** usar jargão de bastidor no painel, inclusive nos comentários do `tema.css` (viaja embutido).
 
 ## Telas e processo
@@ -602,7 +625,8 @@ publicar.
   afirma "não assinada" no escuro. Sem "Semana", "Atrasadas", "Desta semana" nem "Até a prova". Sem sprint (`dia_plano`
   todo NULL), a semana antiga: o subtítulo "Atrasadas · N" em âmbar, uma vez, nunca por linha. A 1ª tarefa leva só o
   rótulo "Próxima" (`li.tarefa.proxima`), o mesmo controle das outras. No Cronograma o assinado/concluído SAI (RD lida,
-  tarefa cuja aula que a cumpre foi lida — `data-cumpre` —, lista resolvida), no build e ao vivo.
+  tarefa cuja aula que a cumpre foi lida — `data-cumpre` —, lista resolvida), no build e ao vivo. s236 (U1): a tarefa
+  com lista pendente NÃO sai pela aula lida (a regra do `plano.py --concluir --leitura`) — fica, e conta no "Hoje".
 - **Teoria** (s226; s229): a Biblioteca por área e disciplina com toda aula, resumo e RD; "Revisões direcionadas" é o
   eixo `RD` da Biblioteca (o 1º; as disciplinas por dentro; a RD não assinada da mais antiga para a mais nova; a assinada
   some ao vivo do backlog e fica só na Biblioteca); as análises (Dossiê UERJ, Autópsia UERJ 2021...) moram no eixo
@@ -617,16 +641,22 @@ publicar.
   25/10"; o do dia, "hoje"). Placas: seletor (`.qz-cabeca`) fora das placas; Hoje | Próximos dias + Fora do sprint +
   Outras listas | Resolvidas; no desktop (`qz-duas`) Próximos ocupa a coluna 2 nas duas linhas e Resolvidas sobe para
   baixo de Hoje; Simulados = provas | resolvidos (`qz-sim`, só com os dois).
-- **Questão** (s229, pedido dele em 15/10): lista SEMPRE em modo estudo, simulado SEMPRE em prova — sem seletor;
-  "Revisar depois" só no simulado (`#qz-marca`; na lista a resposta grava `flag: false`); o grifo guarda a cor (`[ini,
-  fim, cor]`, sem cor = rosa; a cor nova corta a antiga); título numa linha, Grifo e tempo lado a lado em bloquinhos;
-  botões "‹ Anterior · Responder · Pular ›" centralizados. Barra e trilho no fundo, com a largura do corpo (`--wrap`). O
-  trilho é navegação; a questão revelada tem no máximo 3 blocos (alternativas com o porquê, veredito, cadeia com a
-  declaração); a tela de fim mostra a faixa de métricas, o por bloco, o bloco Elos e a revisão. Riscos declarados da
-  part 4: duas placas somem por `:has()` (Elos sem cadeia; o leitor sem aula carregada) — sem `:has`, uma placa vazia.
+- **Questão** (s229; s235-s236, pedidos dele em 29-30/10 -- o EMED como referência de MECÂNICA, não de visual):
+  lista SEMPRE em modo estudo, simulado SEMPRE em prova — sem seletor e sem "Revisar depois" (⚰️ s235: ele nunca
+  entendeu o controle); o grifo guarda a cor (`[ini, fim, cor]`, sem cor = rosa; a cor nova corta a antiga; o seletor
+  lista amarelo, ciano, rosa, nessa ordem). Cabeçalho: o **título** (curto, `temaExibido` + `tituloCurto`) é a 1ª linha;
+  abaixo, numa linha só, "‹ Listas" | paginador `‹ [n] de N ›` (número editável) | Grifo | tempo; no celular o Grifo vira
+  só "Aa" e o tempo sobe para a linha do título. ⚰️ trilho de quadradinhos, "‹ Todas as listas", título entre os botões.
+  Pé da questão: Sólida | Dúvida | Chute | **Responder** numa linha, sem legenda nos segmentos; o Responder fica apagado
+  (`[disabled]`: contorno `linha-forte`, texto `tinta3`) até letra + certeza. A questão revelada tem no máximo 3 blocos
+  (alternativas com o porquê, veredito, cadeia com a declaração); a tela de fim mostra a faixa de métricas, o por bloco,
+  o bloco Elos e a revisão. Riscos declarados da part 4: duas placas somem por `:has()` (Elos sem cadeia; o leitor sem
+  aula carregada) — sem `:has`, uma placa vazia.
 - **Cards**: o topo (título, "N de 150 hoje", fila, relógio, os três controles, barra, tally) é uma placa; as opções do
   Defeito abrem logo abaixo, dentro dela (o registro `defeito` + `motivo` não mudou); o card é a placa elevada logo
-  abaixo; a tela de fim do lote numa placa (s227, part 3).
+  abaixo; a tela de fim do lote numa placa (s227, part 3). s236: os três controles numa linha só (grid de 3 colunas),
+  sem `<kbd>` (os atalhos Espaço/P/D seguem); sem o aviso "Fila de DD/MM -- a de hoje ainda não saiu" (⚰️ s226); o
+  texto do card com o realce rosa (`.chave`, `.num`).
 - **Leitor de aulas**: uma coluna só (`.wrap` de 46rem; a aula antiga com trilho lateral usa o `main` de 38rem); títulos
   brancos, rótulos e fontes lavanda; termo-chave em negrito ciano claro (o único texto ciano da leitura); callouts por
   significado, sempre filete + lavagem: armadilha = âmbar (como no card), banca = roxo, nota neutra (`.key`, `div.note`,
@@ -649,9 +679,10 @@ ajusta, nunca reescreve aula. Achados L1–L15 (§14 de lá) e o estado:
   ao final, tal como um artigo"): no leitor, a "Fonte:" com cara de referência sai do texto (`ehReferencia`; a "Fonte:"
   clínica, como a do sangramento no TCE, fica). Referência externa vira lista numerada no fim (`section.hub-refs`,
   "Referências") com um sobrescrito ciano no lugar; base interna (`ehBaseInterna`: resumo do MedHub, verso de card,
-  PDF/apostila do curso) vai para "Base deste documento", sem número. O bloco que sai deixa um marcador vazio (os grifos
-  não mudam de índice). A aula nova traz `sup.ref`, `section.refs` e `p.base` (`aula-base` §6). Alcance medido em 13/10:
-  116 "Fonte:" em 36 aulas e 8 resumos.
+  PDF/apostila do curso) **sai e não aparece em lugar nenhum** (s236, decisão dele: *"Não podemos referenciar resumos,
+  apenas artigos, guidelines, consensos"*; ⚰️ s227-s235: ia para "Base deste documento", sem número; o `p.base` da aula
+  nova agora fica escondido). O bloco que sai deixa um marcador vazio (os grifos não mudam de índice). A aula nova traz
+  `sup.ref` e `section.refs` (`aula-base` §6), sem `p.base`. Alcance medido em 13/10: 116 "Fonte:" em 36 aulas e 8 resumos.
 - **v4 (s227, part 4):** `figure.fig-an` com fundo da placa e `borda-placa`; `.trilho-box` sem moldura; `ol.esc` das RDs
   como lista. Conferido a 390 nos dois temas. O `ui_harness.html` tem `?tema=light|dark` e `?doc=aulas/x.html` (o
   `ui_capturas.py` ainda não tem flag para eles).
@@ -660,6 +691,14 @@ ajusta, nunca reescreve aula. Achados L1–L15 (§14 de lá) e o estado:
   `role="img"` + `aria-label` com o que a figura diz, legenda curta + o número da referência (sem "Fonte:"). Cor só pelos
   apelidos das aulas (`--teal*`, `--amber*`, `--plum*`, `--ink*`, `--line2`, `--sunk`, `--card`). Nenhum fato que a
   seção não diga; dado ilustrativo declarado na própria figura. Conferida a 390/768 nos dois temas.
+- **Figuras em toda seção que tenha mecanismo (s236, pedido dele em 30/10: *"o /anima só é utilizado uma vez [...]
+  merecia ser utilizada mais vezes [...] deve ser mais minimalista no sentido de texto e legenda, deixando a imagem
+  dominar"*):** alvo = uma figura por seção com mecanismo, fluxo de decisão ou diferencial espacial (metade ou mais das
+  seções; nunca só a 1ª). A imagem domina: rótulos de 1-3 palavras dentro do SVG, sem legenda de cores em frase, sem
+  repetir o parágrafo; `figcaption` de uma linha curta com o número da referência, ou nenhuma. O rosa (`--rosa`) marca
+  o elemento que decide (corte, achado que exclui, seta decisória); âmbar = armadilha; roxo = dado. As 5 RDs da UERJ
+  2025 (`rd-*-2910`) foram refeitas por esta regra em 30/10.
+- **Barra do leitor** (s236): "‹ Teoria" e Grifo numa linha, título abaixo -- a mesma barra das Listas.
 
 ### Contratos travados por teste
 

@@ -999,7 +999,31 @@ def tema_exibido(tema):
     # prova -- "UERJ 2025" --; o sufixo tecnico do banco ("-- prova INTEIRA (100q), cronometrada, 5 blocos")
     # e dado do plano, nunca titulo de tela. O mesmo corte vive no JS do hub (`temaExibido`).
     t = re.sub(r"\s*--\s*prova INTEIRA\b.*$", "", t)
-    return t.strip(" ·")
+    return titulo_curto(t.strip(" ·"))
+
+
+#: s236: acima disso o titulo e cortado para a tela (o dado do plano nao muda)
+TITULO_MAX = 70
+
+
+def titulo_curto(t):
+    """s236 (pedido dele, 30/10: "o titulo da lista esta muito grande e ha varios assim; reduza-os"): o titulo de
+    tela, PURO. Ate TITULO_MAX (70) fica inteiro; acima, a 1a regra que encurta vence, nesta ordem: o que vem antes de
+    ': ' (Tuberculose 360: adulto, ... -> Tuberculose 360); antes de ' (' (Oncologia pediatrica pelos sinais de
+    alarme (leucemia, ...) + ... -> Oncologia pediatrica pelos sinais de alarme); pacote ' · ' com 3+ partes ->
+    as 2 primeiras + ' +N'; antes da 1a ', '. O espelho em JS e `temaExibido` (paridade testada)."""
+    t = str(t or "").strip()
+    if len(t) <= TITULO_MAX:
+        return t
+    for sep in (": ", " ("):
+        if sep in t and len(t.split(sep, 1)[0].strip()) >= 8:
+            return t.split(sep, 1)[0].strip()
+    partes = [p.strip() for p in t.split(" · ") if p.strip()]
+    if len(partes) >= 3:
+        return " · ".join(partes[:2]) + " +%d" % (len(partes) - 2)
+    if ", " in t and len(t.split(", ", 1)[0].strip()) >= 8:
+        return t.split(", ", 1)[0].strip()
+    return t
 
 
 def _por_classe(linhas):

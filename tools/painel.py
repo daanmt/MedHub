@@ -134,6 +134,13 @@ def _aulas_por_tarefa():
     return saida
 
 
+def _lista_pendente(t):
+    """s236 (U1): a tarefa tem lista de questoes a resolver -- no banco do hub (`no_hub`), por link/prova
+    (`url_lista`) ou prevista (`q`). A MESMA regra do `plano.concluir_leitura` (s194/s219): ler a aula que a
+    cumpre NAO a conclui; so a lista resolvida tira a tarefa do Cronograma."""
+    return bool(t.get("no_hub") or t.get("url_lista") or t.get("q"))
+
+
 def _tarefa(t, aulas, no_hub):
     """Uma tarefa do panorama como o painel a desenha -- o MESMO construtor para a semana
     corrente e para a rota."""
@@ -280,9 +287,12 @@ def _bloco_sprint(linhas, hoje):
     no_hub = {int(l["id"]) for l in linhas if l.get("q_hub") and l.get("id") is not None}
     tarefa = lambda t: _tarefa(t, aulas, no_hub)
     # s229 (rodada 4, pedido dele: "tarefa ASSINADA/concluida sai do Cronograma"): a tarefa cuja aula que a CUMPRE ja
-    # foi lida (quadro `feito` ou `doc_<slug>` assinado) sai do Hoje e dos dias; ao vivo, o hub a esconde tambem
+    # foi lida (quadro `feito` ou `doc_<slug>` assinado) sai do Hoje e dos dias; ao vivo, o hub a esconde tambem.
+    # s236 (U1; s194/s219: `plano.py --concluir --leitura` RECUSA tarefa com lista): a leitura NAO cumpre a tarefa
+    # com lista pendente (`_lista_pendente`) -- ela fica no Hoje e as questoes dela seguem no `q_hoje`
     lidas = _aulas_lidas()
-    feita = lambda t: any(a.get("cumpre") and a["slug"] in lidas for a in aulas.get(t["id"]) or [])
+    feita = lambda t: not _lista_pendente(t) and any(a.get("cumpre") and a["slug"] in lidas
+                                                     for a in aulas.get(t["id"]) or [])
     ag = dict(ag, hoje=[t for t in ag["hoje"] if not feita(t)],
               proximos=[dict(p, tarefas=[t for t in p["tarefas"] if not feita(t)]) for p in ag["proximos"]])
     ag["proximos"] = [p for p in ag["proximos"] if p["tarefas"]]
@@ -568,9 +578,16 @@ def _botao_resolver(t):
             'data-hub-tarefa="%s">Resolver</a>' % (_modo_hub(t), _e(t.get("id"))))
 
 
+def _botao_apagado(rotulo, primario=False):
+    """s236 (pedido dele, 30/10: "todos devem ter os dois botoes, sempre no mesmo local e, caso nao exista aula ou
+    lista, o botao fica nao clicavel, com uma cor relacionada a isso"): o lugar do botao que nao existe, apagado."""
+    return '<span class="t-btn%s t-btn-off" aria-disabled="true">%s</span>' % (" t-btn-prim" if primario else "", _e(rotulo))
+
+
 def _acao(t):
     """Os BOTOES da tarefa (s229): "Resolver" (com questoes no banco do hub), a lista externa ou a prova em PDF e
-    cada aula ligada ("Abrir aula"; com 2+, o titulo de cada uma).
+    cada aula ligada ("Abrir aula"; com 2+, o titulo de cada uma). s236: SEMPRE dois lugares, na mesma ordem --
+    Resolver/Abrir lista e Abrir aula; o que nao existe fica apagado (`_botao_apagado`), nunca some.
 
     s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): tarefa com questoes no banco do hub (`no_hub`)
     abre a aba Listas e o link do EMED some; so fora do banco o "Abrir lista" externo aparece. ⚰️ *s226 (part-3,
@@ -582,14 +599,19 @@ def _acao(t):
     elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
         partes.append('<a class="t-btn t-btn-prim" href="%s" rel="noopener noreferrer">Abrir lista</a>'
                       % _e(t["url_lista"]))
-    elif t["url_lista"]:
-        partes.append('<span class="tenue">prova em PDF no computador</span>')
+    else:
+        # s236: prova em PDF no computador, ou tarefa sem lista -- o lugar do Resolver fica, apagado
+        partes.append(_botao_apagado("Resolver", primario=True))
     # aula que CUMPRE (tarefa de aula) ou PREPARA (lista) -- o que a aba Aulas ja mostrava
     aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
     varias = len(aulas) > 1
+    # `data-cumpre` (o hub esconde a barra ao vivo quando a aula e assinada) so na tarefa SEM lista pendente (U1)
+    pendente = _lista_pendente(t)
     for a in aulas:
         partes.append(_botao_aula(a["slug"], a.get("titulo"), (a.get("titulo") or a["slug"]) if varias else "Abrir aula",
-                                  bool(a.get("cumpre"))))
+                                  bool(a.get("cumpre")) and not pendente))
+    if not aulas:
+        partes.append(_botao_apagado("Abrir aula"))
     return "".join(partes)
 
 
@@ -946,11 +968,13 @@ def _html_rd(rd):
     """A RD nao assinada mais antiga, no cartao das tarefas: o chip "RD", o estado e o botao "Abrir aula" (o atalho
     `data-hub-aula`). s229 (pedido dele, 15/10: a linha dizia "· assinado" E "ainda nao assinada"): o estado mora
     num span SO (`t-rd-st`) que o hub reescreve ao vivo pela MESMA fonte do "assinado" (`quadro/<slug>` e
-    `doc_<slug>`); nunca um segundo rotulo ao lado."""
+    `doc_<slug>`); nunca um segundo rotulo ao lado. s236 (U6, P39: "todos devem ter os dois botoes, sempre no
+    mesmo local"): a RD nao tem lista -- o lugar do Resolver fica, apagado, antes do "Abrir aula"."""
     return ('<li class="tarefa rd"><i class="t-faixa" data-area="RD" aria-hidden="true"></i>'
             '<p class="t-meta"><span class="t-rot">RD</span>'
             '<span class="t-rd-st">revisão direcionada ainda não assinada</span></p><p class="t-tema">%s</p>'
-            '<p class="t-acao">%s</p></li>' % (_e(rd["titulo"]), _botao_aula(rd["slug"], rd["titulo"])))
+            '<p class="t-acao">%s%s</p></li>' % (_e(rd["titulo"]), _botao_apagado("Resolver", primario=True),
+                                                  _botao_aula(rd["slug"], rd["titulo"])))
 
 
 def _html_dia_roadmap(titulo, conta, itens, classe=""):
@@ -1184,7 +1208,7 @@ a{color:var(--acento);text-underline-offset:2px}
 .tarefa:has(> .t-faixa[data-area="RD"]){--area:var(--roxo-tinta)}
 .t-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)}
 .tarefa[hidden]{display:none}   /* s229 (rodada 4): assinada/resolvida ao vivo sai do Cronograma */
-.tarefa > .t-meta{grid-area:meta;justify-content:flex-start}
+.tarefa > .t-meta{grid-area:meta;justify-content:flex-start;color:var(--tinta2)}   /* s236 (U3): tinta3 sobre o fundo tingido = 4,4:1 */
 .tarefa > .t-tema{grid-area:tema}
 .tarefa > .t-acao{grid-area:acao;margin:0;padding:0;justify-content:flex-end}
 @media (max-width:520px){
@@ -1204,6 +1228,10 @@ a{color:var(--acento);text-underline-offset:2px}
 .t-btn:hover{background:var(--acento-fraco)}
 .t-btn-prim{background:var(--acento);color:var(--sobre)}
 .t-btn-prim:hover{background:var(--acento-tinta);border-color:var(--acento-tinta)}
+/* s236 (pedido dele, 30/10): os dois lugares fixos (Resolver | Abrir aula) com a mesma largura; o que nao existe fica
+   apagado -- contorno e texto na tinta fraca, sem toque */
+.t-acao .t-btn{flex:0 0 auto;min-width:6.75rem}
+.t-btn-off,.t-btn-off.t-btn-prim{background:transparent;border-color:var(--linha);color:var(--tinta3);cursor:default;pointer-events:none}
 .t-btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
 /* a assinatura ao vivo (o hub poe a classe e o rotulo): o cartao assinado apaga, o estado em verde */
 .tarefa.qd-assinado{opacity:.72}

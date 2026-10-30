@@ -51,9 +51,39 @@ td{color:var(--ink2);border-top:1px solid var(--line)}
 .fa-meta{fill:var(--plum-wash);stroke:var(--plum);stroke-width:.9}
 .fa-nucm{fill:var(--plum)}
 .fa-esc{fill:var(--card);stroke:var(--ink2);stroke-width:.8}
-.fa-jec{stroke:var(--amber);stroke-width:2}
-.fa-jecp{fill:var(--amber)}
+.fa-jec{stroke:var(--ink2);stroke-width:2}
+.fa-jecp{fill:var(--ink2)}
 
+/* realce rosa = o que decide (s236): no texto .chave; na figura .fa-ro* */
+@media(max-width:520px){.fig-an{padding:10px 6px 8px}}
+.chave{color:var(--rosa);font-weight:650}
+.fa-ro{fill:var(--rosa);font-size:12.5px;font-weight:700}
+.fa-rof{fill:var(--rosa)}
+.fa-rol{fill:none;stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-row{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-pt{fill:var(--plum-ink);font-size:12px;font-weight:650}
+.fa-o2{fill:var(--ink2);font-size:12px}
+.fa-reg{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-tk{stroke:var(--ink3);stroke-width:1}
+.fa-tkf{stroke:var(--line2);stroke-width:1}
+.fa-pl{fill:var(--plum)}
+.fa-plw{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-plf{fill:var(--plum-wash)}
+.fa-pll{fill:none;stroke:var(--plum);stroke-width:2;stroke-linecap:round}
+.fa-ln{fill:none;stroke:var(--ink3);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-ln2{fill:none;stroke:var(--ink2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.fa-cd{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-cd2{fill:var(--card);stroke:var(--ink2);stroke-width:1.3;stroke-linejoin:round}
+.fa-sk{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-sk2{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.4;stroke-linejoin:round}
+.fa-i2{fill:var(--ink2)}
+.fa-i3{fill:var(--ink3)}
+.fa-ut{fill:var(--card);stroke:var(--ink3);stroke-width:2.4}
+.fa-saco{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-fpol{fill:var(--plum);stroke:var(--ink2);stroke-width:1}
+.fa-anast{fill:none;stroke:var(--ink2);stroke-width:3;stroke-linecap:round}
+.fa-tuba{fill:none;stroke:var(--ink3);stroke-width:7;stroke-linecap:round}
+.fa-tubal{fill:none;stroke:var(--card);stroke-width:3.2;stroke-linecap:round}
 sup.ref{font-size:12px;margin-left:1px}
 sup.ref a{text-decoration:none;color:var(--teal-ink)}
 .refs{padding:24px 0 0}
@@ -76,13 +106,13 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <p class="pede"><b>A banca pediu:</b> o que significa "zona de transformação" num laudo de colposcopia (Q43); o corrimento amarelo com colpite e pH alto (Q44); o fator de risco da HSIL vulvar (Q48).</p>
   <ol class="esc">
     <li><span class="n">1</span><div>O canal (endocérvice) é forrado por epitélio <strong>colunar</strong>, de uma camada; a ectocérvice, por <strong>escamoso</strong> estratificado. O encontro dos dois é a JEC<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
-    <li><span class="n">2</span><div>Com estrogênio alto (menacme, gestação, ACO), o colunar se expõe na ectocérvice: a ectopia. Sob o pH vaginal ácido, ele sofre <strong>metaplasia escamosa</strong>: colunar vira escamoso, e isso é <strong>fisiológico</strong><sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Com estrogênio alto (menacme, gestação, ACO), o colunar se expõe na ectocérvice: a ectopia. Sob o pH vaginal ácido, ele sofre <strong class="chave">metaplasia escamosa</strong>: colunar vira escamoso, e isso é <strong>fisiológico</strong><sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
     <li><span class="n">3</span><div>A <strong>zona de transformação</strong> é a faixa entre a JEC original e a JEC nova. É onde o HPV age, por isso a colposcopia precisa ver a JEC para ser satisfatória<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
-    <li><span class="n">4</span><div>Corrimento <strong>amarelo-esverdeado, profuso, com colpite</strong> (colo em framboesa) e pH &gt; 4,5 = tricomoníase, que piora após a menstruação. A vaginose também tem pH alto, mas não inflama<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+    <li><span class="n">4</span><div>Corrimento <strong class="chave">amarelo-esverdeado, profuso, com colpite</strong> (colo em framboesa) e pH &gt; 4,5 = tricomoníase, que piora após a menstruação. A vaginose também tem pH alto, mas não inflama<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
   </ol>
   <figure class="fig-an">
     <p class="fa-cab"><span>Fig 1 · esquema</span><b>O epitélio do canal à ectocérvice</b></p>
-    <svg viewBox="0 0 344 188" role="img" aria-label="Corte esquemático do epitélio do colo, do canal à esquerda até a ectocérvice à direita, sobre o estroma. À esquerda, epitélio colunar de uma camada de células altas até a JEC nova. No meio, a zona de transformação, com epitélio escamoso metaplásico de três a cinco camadas. À direita da JEC original, epitélio escamoso estratificado original, com camadas superficiais achatadas. Sob a zona de transformação, a direção da metaplasia: colunar para escamoso.">
+    <svg viewBox="0 0 344 188" role="img" aria-label="Corte do epitélio do colo, do canal à ectocérvice: colunar de uma camada até a JEC nova, escamoso metaplásico na zona de transformação e escamoso original depois da JEC original. A metaplasia vai do colunar para o escamoso.">
       <rect class="fa-pn" x="1" y="1" width="342" height="186" rx="8"/>
       <text class="fa-s" x="10" y="18">canal (endocérvice)</text>
       <text class="fa-s" x="334" y="18" text-anchor="end">ectocérvice</text>
@@ -292,19 +322,19 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
       <ellipse class="fa-esc" cx="327.2" cy="62.5" rx="4.8" ry="1.5"/>
       <line class="fa-jec" x1="119.5" y1="44" x2="119.5" y2="104"/>
       <circle class="fa-jecp" cx="119.5" cy="44" r="2.6"/>
-      <text class="fa-av" x="119.5" y="36" text-anchor="middle">JEC nova</text>
+      <text class="fa-o2" x="119.5" y="36" text-anchor="middle">JEC nova</text>
       <line class="fa-jec" x1="233.5" y1="44" x2="233.5" y2="104"/>
       <circle class="fa-jecp" cx="233.5" cy="44" r="2.6"/>
-      <text class="fa-av" x="233.5" y="36" text-anchor="middle">JEC original</text>
+      <text class="fa-o2" x="233.5" y="36" text-anchor="middle">JEC original</text>
       <text class="fa-t" x="63" y="144" text-anchor="middle">colunar</text>
       <text class="fa-s" x="63" y="160" text-anchor="middle">glandular</text>
       <text class="fa-t" x="176.5" y="144" text-anchor="middle">ZT</text>
       <text class="fa-s" x="176.5" y="160" text-anchor="middle">metaplasia escamosa</text>
       <text class="fa-t" x="285" y="144" text-anchor="middle">escamoso</text>
       <text class="fa-s" x="285" y="160" text-anchor="middle">original</text>
-      <text class="fa-av" x="176.5" y="178" text-anchor="middle">colunar -&gt; escamoso</text>
+      <text class="fa-ro" x="176.5" y="178" text-anchor="middle">colunar -&gt; escamoso</text>
     </svg>
-    <figcaption>Na ZT, o colunar exposto vira escamoso, entre a JEC original e a nova.<sup class="ref"><a href="#ref-1">1</a></sup> Corte esquemático, sem escala.</figcaption>
+    <figcaption>Na ZT, o colunar exposto vira escamoso.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
   </figure>
   <div class="tw"><table><tr><th>Quadro</th><th>pH</th><th>O que separa</th></tr><tr><td>Candidíase</td><td>&lt; 4,5</td><td>Prurido, corrimento branco grumoso</td></tr><tr><td>Vaginose bacteriana</td><td>&gt; 4,5</td><td>Acinzentado, odor de peixe, sem inflamação</td></tr><tr><td>Tricomoníase</td><td>&gt; 4,5</td><td>Amarelo-esverdeado, bolhoso, colpite</td></tr></table></div>
   <div class="blk"><h3>Vulva</h3><ul class="pt">
@@ -322,9 +352,45 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <ol class="esc">
     <li><span class="n">1</span><div>STFF, TAPS e TRAP são <strong>exclusivas da monocoriônica</strong>: os gêmeos dividem a placenta e se ligam por anastomoses vasculares<sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
     <li><span class="n">2</span><div><strong>STFF</strong>: anastomoses arteriovenosas profundas desviam sangue do doador para o receptor. O doador fica com <strong>oligoâmnio</strong>; o receptor, com <strong>polidrâmnio</strong><sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
-    <li><span class="n">3</span><div><strong>TAPS</strong>: o desvio é pequeno e o líquido não muda. Só a hemoglobina diverge: <strong>anemia num feto, policitemia no outro</strong>, vistas pelo pico sistólico da artéria cerebral média (alto no anêmico, baixo no policitêmico)<sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
+    <li><span class="n">3</span><div><strong>TAPS</strong>: o desvio é pequeno e o líquido não muda. Só a hemoglobina diverge: <strong class="chave">anemia num feto, policitemia no outro</strong>, vistas pelo pico sistólico da artéria cerebral média (alto no anêmico, baixo no policitêmico)<sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
     <li><span class="n">4</span><div><strong>TRAP</strong>: anastomoses arterioarteriais; o feto bomba perfunde um <strong>feto acárdico</strong>.</div></li>
   </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Placenta única, dois fetos</b></p>
+    <svg viewBox="0 0 344 206" role="img" aria-label="Uma placenta só para os dois gêmeos. Na STFF, a anastomose grossa leva sangue do doador, no saco pequeno com oligoâmnio, ao receptor, no saco grande com polidrâmnio; na TAPS, a anastomose é fina, os sacos são iguais e só a hemoglobina diverge, com um feto anêmico e o outro policitêmico.">
+      <g transform="translate(2,4)">
+      <rect class="fa-pn" x="0" y="0" width="168" height="198" rx="8"/>
+      <text class="fa-t" x="8" y="17">STFF</text>
+      <ellipse class="fa-ut" cx="84" cy="112" rx="72" ry="66"/>
+      <path class="fa-plw" d="M28 72 Q84 22 140 72 Q84 54 28 72 Z"/>
+      <ellipse class="fa-saco" cx="46" cy="132" rx="22" ry="20"/>
+      <ellipse class="fa-saco" cx="110" cy="118" rx="38" ry="46"/>
+      <line class="fa-ln" x1="48" y1="134" x2="56" y2="64.5"/><circle class="fa-i3" cx="56" cy="64.5" r="1.8"/>
+      <line class="fa-ln" x1="113" y1="117" x2="118" y2="65"/><circle class="fa-i3" cx="118" cy="65" r="1.8"/>
+      <g transform="translate(44,129) scale(0.6)"><path class="fa-cd2" d="M-3 -9 C-10 -5 -11 7 -4 12 C2 16 10 13 10 5 C10 -3 5 -9 -3 -9 Z"/><ellipse class="fa-cd2" cx="5" cy="8" rx="6.5" ry="4" transform="rotate(-35 5 8)"/><circle class="fa-cd2" cx="1" cy="-14" r="6.6"/></g>
+      <g transform="translate(108,110) scale(1)"><path class="fa-cd2" d="M-3 -9 C-10 -5 -11 7 -4 12 C2 16 10 13 10 5 C10 -3 5 -9 -3 -9 Z"/><ellipse class="fa-cd2" cx="5" cy="8" rx="6.5" ry="4" transform="rotate(-35 5 8)"/><circle class="fa-cd2" cx="1" cy="-14" r="6.6"/></g>
+      <path class="fa-anast" d="M58 59 Q84 49 105 55"/><polygon class="fa-i2" points="112,57.5 103.8,58.8 106.4,52.2"/>
+      <text class="fa-o2" x="46" y="192" text-anchor="middle">oligo</text>
+      <text class="fa-o2" x="110" y="192" text-anchor="middle">poli</text>
+      </g>
+      <g transform="translate(174,4)">
+      <rect class="fa-pn" x="0" y="0" width="168" height="198" rx="8"/>
+      <text class="fa-t" x="8" y="17">TAPS</text>
+      <ellipse class="fa-ut" cx="84" cy="112" rx="72" ry="66"/>
+      <path class="fa-plw" d="M28 72 Q84 22 140 72 Q84 54 28 72 Z"/>
+      <ellipse class="fa-saco" cx="50" cy="120" rx="30" ry="36"/>
+      <ellipse class="fa-saco" cx="118" cy="120" rx="30" ry="36"/>
+      <line class="fa-ln" x1="52" y1="119" x2="60" y2="64.5"/><circle class="fa-i3" cx="60" cy="64.5" r="1.8"/>
+      <line class="fa-ln" x1="120" y1="119" x2="108" y2="64.5"/><circle class="fa-i3" cx="108" cy="64.5" r="1.8"/>
+      <g transform="translate(48,114) scale(0.8)"><path class="fa-cd" d="M-3 -9 C-10 -5 -11 7 -4 12 C2 16 10 13 10 5 C10 -3 5 -9 -3 -9 Z"/><ellipse class="fa-cd" cx="5" cy="8" rx="6.5" ry="4" transform="rotate(-35 5 8)"/><circle class="fa-cd" cx="1" cy="-14" r="6.6"/></g>
+      <g transform="translate(116,114) scale(0.8)"><path class="fa-fpol" d="M-3 -9 C-10 -5 -11 7 -4 12 C2 16 10 13 10 5 C10 -3 5 -9 -3 -9 Z"/><ellipse class="fa-fpol" cx="5" cy="8" rx="6.5" ry="4" transform="rotate(-35 5 8)"/><circle class="fa-fpol" cx="1" cy="-14" r="6.6"/></g>
+      <path class="fa-ln" d="M62 59 Q84 52 101 56"/><polygon class="fa-i3" points="107,57.5 100.2,59 101.6,53.6"/>
+      <text class="fa-ro" x="50" y="192" text-anchor="middle">anemia</text>
+      <text class="fa-ro" x="118" y="192" text-anchor="middle">policitemia</text>
+      </g>
+    </svg>
+    <figcaption>STFF: o líquido diverge. TAPS: só a hemoglobina diverge.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
   <div class="tw"><table><tr><th>Quadro</th><th>Líquido amniótico</th><th>Marca</th></tr><tr><td>STFF</td><td>Oligo no doador, poli no receptor</td><td>Bexiga pequena no doador</td></tr><tr><td>TAPS</td><td>Sem alteração</td><td>Anemia x policitemia (ACM)</td></tr><tr><td>TRAP</td><td>Não é o que define</td><td>Feto acárdico + feto bomba</td></tr></table></div>
   <div class="trap">D (oligo/poli) é a STFF e A (acárdico e bomba) é a TRAP. C, uma diferença de peso pequena entre os fetos, não define complicação.</div>
   <p class="base">Fonte: resumos/GO/4. Gestação Múltipla.pdf</p>
@@ -336,10 +402,53 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <p class="pede"><b>A banca pediu:</b> a vacina indicada em qualquer IG (Q55) e o exame de 24 semanas numa gestante 0+, de glicemia normal, imune a toxo e hepatite B (Q54).</p>
   <ol class="esc">
     <li><span class="n">1</span><div>Regra-mãe: vacina <strong>inativada</strong> pode na gestação; <strong>vírus vivo</strong> (tríplice viral, varicela) não. Febre amarela, só se o risco real de exposição superar o da vacina<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
-    <li><span class="n">2</span><div><strong>Influenza</strong>: dose anual para toda gestante, em <strong>qualquer idade gestacional</strong>. Completar hepatite B também não espera<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
-    <li><span class="n">3</span><div><strong>dTpa</strong>: 1 dose a cada gestação, <strong>a partir de 20 semanas</strong>, mesmo com esquema prévio completo; perdida a janela, até 45 dias pós-parto<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
-    <li><span class="n">4</span><div>Glicemia de jejum &lt; 92 no início = <strong>TOTG 75 g entre 24 e 28 semanas</strong><sup class="ref"><a href="#ref-8">8</a></sup>. Coombs indireto só na Rh negativo; toxo IgG+/IgM- e anti-HBs+ = imune, não repete<sup class="ref"><a href="#ref-9">9</a></sup>.</div></li>
+    <li><span class="n">2</span><div><strong>Influenza</strong>: dose anual para toda gestante, em <strong class="chave">qualquer idade gestacional</strong>. Completar hepatite B também não espera<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
+    <li><span class="n">3</span><div><strong>dTpa</strong>: 1 dose a cada gestação, <strong class="chave">a partir de 20 semanas</strong>, mesmo com esquema prévio completo; perdida a janela, até 45 dias pós-parto<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
+    <li><span class="n">4</span><div>Glicemia de jejum &lt; 92 no início = <strong class="chave">TOTG 75 g entre 24 e 28 semanas</strong><sup class="ref"><a href="#ref-8">8</a></sup>. Coombs indireto só na Rh negativo; toxo IgG+/IgM- e anti-HBs+ = imune, não repete<sup class="ref"><a href="#ref-9">9</a></sup>.</div></li>
   </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>A janela de cada uma</b></p>
+    <svg viewBox="0 0 344 128" role="img" aria-label="Régua da gestação de 0 a 40 semanas: influenza cobre a gestação inteira; a dTpa começa em 20 semanas e vai até 45 dias após o parto; o TOTG fica entre 24 e 28 semanas.">
+      <line class="fa-tkf" x1="188" y1="10" x2="188" y2="100"/>
+      <line class="fa-tkf" x1="292" y1="10" x2="292" y2="100"/>
+      <text class="fa-ro" x="8" y="27">influenza</text>
+      <rect class="fa-row" x="84" y="17" width="208" height="13" rx="6.5"/>
+      <text class="fa-o2" x="8" y="55">dTpa</text>
+      <rect class="fa-plf" x="271.2" y="45" width="54.1" height="13" rx="6.5"/>
+      <rect class="fa-plw" x="188" y="45" width="104" height="13" rx="6.5"/>
+      <text class="fa-s" x="308.6" y="76" text-anchor="middle">45 d</text>
+      <text class="fa-o2" x="8" y="83">TOTG</text>
+      <rect class="fa-plw" x="208.8" y="73" width="20.8" height="13" rx="6.5"/>
+      <line class="fa-ln" x1="84" y1="100" x2="325.3" y2="100"/>
+      <line class="fa-tk" x1="84" y1="100" x2="84" y2="106"/>
+      <line class="fa-tkf" x1="94.4" y1="100" x2="94.4" y2="103"/>
+      <line class="fa-tkf" x1="104.8" y1="100" x2="104.8" y2="103"/>
+      <line class="fa-tkf" x1="115.2" y1="100" x2="115.2" y2="103"/>
+      <line class="fa-tkf" x1="125.6" y1="100" x2="125.6" y2="103"/>
+      <line class="fa-tk" x1="136" y1="100" x2="136" y2="106"/>
+      <line class="fa-tkf" x1="146.4" y1="100" x2="146.4" y2="103"/>
+      <line class="fa-tkf" x1="156.8" y1="100" x2="156.8" y2="103"/>
+      <line class="fa-tkf" x1="167.2" y1="100" x2="167.2" y2="103"/>
+      <line class="fa-tkf" x1="177.6" y1="100" x2="177.6" y2="103"/>
+      <line class="fa-tk" x1="188" y1="100" x2="188" y2="106"/>
+      <line class="fa-tkf" x1="198.4" y1="100" x2="198.4" y2="103"/>
+      <line class="fa-tk" x1="208.8" y1="100" x2="208.8" y2="106"/>
+      <line class="fa-tkf" x1="219.2" y1="100" x2="219.2" y2="103"/>
+      <line class="fa-tk" x1="229.6" y1="100" x2="229.6" y2="106"/>
+      <line class="fa-tk" x1="240" y1="100" x2="240" y2="106"/>
+      <line class="fa-tkf" x1="250.4" y1="100" x2="250.4" y2="103"/>
+      <line class="fa-tkf" x1="260.8" y1="100" x2="260.8" y2="103"/>
+      <line class="fa-tkf" x1="271.2" y1="100" x2="271.2" y2="103"/>
+      <line class="fa-tkf" x1="281.6" y1="100" x2="281.6" y2="103"/>
+      <line class="fa-tk" x1="292" y1="100" x2="292" y2="106"/>
+      <text class="fa-s" x="84" y="120" text-anchor="middle">0</text>
+      <text class="fa-av" x="188" y="120" text-anchor="middle">20</text>
+      <text class="fa-s" x="208.8" y="120" text-anchor="middle">24</text>
+      <text class="fa-s" x="229.6" y="120" text-anchor="middle">28</text>
+      <text class="fa-s" x="292" y="120" text-anchor="middle">40 sem</text>
+    </svg>
+    <figcaption>Influenza em qualquer IG; dTpa só a partir de 20 semanas.<sup class="ref"><a href="#ref-7">7</a></sup><sup class="ref"><a href="#ref-8">8</a></sup></figcaption>
+  </figure>
   <div class="trap">Q55: a dTpa é a vacina mais lembrada da gestante e saiu com certeza sólida, mas a janela de 20 semanas a tira de "qualquer IG". Q54: de 08/04 a 25/09 são 24 semanas, hora do TOTG.</div>
   <p class="base">Fonte: resumos/GO/Pré-Natal.md; resumos/GO/Diabetes Mellitus na Gestação.md</p>
 </section>
@@ -350,10 +459,43 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <p class="pede"><b>A banca pediu:</b> o dado que reforça a hipótese de uma primigesta de 7 semanas, por indução de ovulação, com sangramento, útero doloroso à mobilização e USG transvaginal sem saco intrauterino (Q56).</p>
   <ol class="esc">
     <li><span class="n">1</span><div>Reprodução assistida e indução de ovulação são fatores de risco; atraso + dor + sangramento é a tríade. Sem saco intrauterino, a hipótese é <strong>ectópica</strong><sup class="ref"><a href="#ref-10">10</a></sup>.</div></li>
-    <li><span class="n">2</span><div>Quem sustenta a ectópica é o <strong>beta-hCG positivo com útero vazio</strong>: acima da zona discriminatória (1.500-2.000 mUI/mL), uma gestação tópica já apareceria na USG transvaginal<sup class="ref"><a href="#ref-11">11</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Quem sustenta a ectópica é o <strong class="chave">beta-hCG positivo com útero vazio</strong>: acima da zona discriminatória (1.500-2.000 mUI/mL), uma gestação tópica já apareceria na USG transvaginal<sup class="ref"><a href="#ref-11">11</a></sup>.</div></li>
     <li><span class="n">3</span><div><strong>Culdocentese negativa</strong> só diz que não há hemoperitônio: não confirma nem exclui. Hemograma normal também não reforça nada<sup class="ref"><a href="#ref-10">10</a></sup>.</div></li>
     <li><span class="n">4</span><div><strong>Dilatação cervical</strong> aponta abortamento em curso, não ectópica<sup class="ref"><a href="#ref-10">10</a></sup>.</div></li>
   </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Útero vazio com beta-hCG alto</b></p>
+    <svg viewBox="0 0 344 210" role="img" aria-label="Útero vazio, de frente, com as tubas e os ovários, e um saco gestacional na tuba direita. Abaixo, a régua do beta-hCG: acima da zona discriminatória de 1.500 a 2.000, útero vazio sustenta a ectópica.">
+      <path class="fa-tuba" d="M138 42 C118 34 96 30 76 40 C70 44 68 50 68 56"/><path class="fa-tubal" d="M138 42 C118 34 96 30 76 40 C70 44 68 50 68 56"/>
+      <ellipse class="fa-cd" cx="62" cy="59.5" rx="3.2" ry="4.2"/>
+      <ellipse class="fa-cd" cx="68" cy="61" rx="3.2" ry="4.2"/>
+      <ellipse class="fa-cd" cx="74" cy="59.5" rx="3.2" ry="4.2"/>
+      <line class="fa-ln" x1="98" y1="71" x2="135" y2="64"/>
+      <ellipse class="fa-cd" cx="84" cy="74" rx="15" ry="9.5"/>
+      <path class="fa-tuba" d="M206 42 C226 34 248 30 268 40 C274 44 276 50 276 56"/><path class="fa-tubal" d="M206 42 C226 34 248 30 268 40 C274 44 276 50 276 56"/>
+      <ellipse class="fa-cd" cx="270" cy="59.5" rx="3.2" ry="4.2"/>
+      <ellipse class="fa-cd" cx="276" cy="61" rx="3.2" ry="4.2"/>
+      <ellipse class="fa-cd" cx="282" cy="59.5" rx="3.2" ry="4.2"/>
+      <line class="fa-ln" x1="246" y1="71" x2="209" y2="64"/>
+      <ellipse class="fa-cd" cx="260" cy="74" rx="15" ry="9.5"/>
+      <path class="fa-cd2" d="M136 44 C136 22 208 22 208 44 C210 70 196 92 186 106 L184 124 L160 124 L158 106 C148 92 134 70 136 44 Z"/>
+      <path class="fa-sk" d="M150 44 C160 39 184 39 194 44 L176 94 L168 94 Z"/>
+      <rect class="fa-sk" x="169.5" y="94" width="5" height="30" stroke="none"/>
+      <ellipse class="fa-cd" cx="250" cy="33" rx="12.5" ry="10.5"/><circle class="fa-row" cx="250" cy="33" r="7.6"/><circle class="fa-rof" cx="251.5" cy="34.5" r="2.6"/>
+      <text class="fa-ro" x="250" y="15" text-anchor="middle">ectópica</text>
+      <text class="fa-o2" x="172" y="142" text-anchor="middle">útero vazio</text>
+      <text class="fa-t" x="24" y="166">beta-hCG</text>
+      <rect class="fa-reg" x="24" y="176" width="296" height="10" rx="5"/>
+      <rect class="fa-row" x="221.3" y="177" width="97.7" height="8" rx="4" stroke="none"/>
+      <rect class="fa-plw" x="172" y="172" width="49.3" height="18" rx="3"/>
+      <text class="fa-ro" x="320" y="166" text-anchor="end">vazio aqui: ectópica</text>
+      <text class="fa-s" x="169" y="204" text-anchor="end">1.500</text>
+      <text class="fa-s" x="196.7" y="204" text-anchor="middle">zona</text>
+      <text class="fa-s" x="224.3" y="204">2.000</text>
+      <text class="fa-s" x="320" y="204" text-anchor="end">mUI/mL</text>
+    </svg>
+    <figcaption>Acima da zona discriminatória, útero vazio sustenta a ectópica.<sup class="ref"><a href="#ref-11">11</a></sup></figcaption>
+  </figure>
   <div class="trap">Numa gestante de 7 semanas, "beta-hCG positivo" parece óbvio demais para ser a resposta; com útero vazio, é exatamente o dado. Q56 saiu com certeza sólida em D.</div>
   <p class="base">Fonte: resumos/GO/Gravidez ectópica.md; resumos/GO/23. Sangramento da Primeira Metade.pdf</p>
 </section>
@@ -362,9 +504,9 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <span class="kick">05 · Pílulas · Q47, Q41, Q42, Q46, Q50, Q58</span>
   <h2>Um eixo por questão</h2>
   <ul class="pt">
-    <li>Bexiga hiperativa: comportamental e fisioterapia, depois antimuscarínico ou <strong>agonista</strong> beta-3 (mirabegrona); refratária: <strong>toxina botulínica no detrusor</strong>. Colinérgico contrai o detrusor; antiadrenérgico é da obstrução prostática (Q47)<sup class="ref"><a href="#ref-12">12</a></sup>.</li>
-    <li>Amenorreia primária sem útero: Rokitansky (46,XX) ou insensibilidade androgênica (46,XY, testículo com AMH). <strong>Disgenesia gonadal tem útero</strong>, inclusive a Swyer (46,XY): sem AMH, os ductos de Müller se formam (Q41)<sup class="ref"><a href="#ref-13">13</a></sup>.</li>
-    <li>Câncer de mama prévio, sem doença há 5 anos: todo hormonal, inclusive progestágeno isolado, é categoria 3 (o atual é 4); o <strong>DIU de cobre</strong> é categoria 1 (Q42)<sup class="ref"><a href="#ref-14">14</a></sup>.</li>
+    <li>Bexiga hiperativa: comportamental e fisioterapia, depois antimuscarínico ou <strong class="chave">agonista</strong> beta-3 (mirabegrona); refratária: <strong>toxina botulínica no detrusor</strong>. Colinérgico contrai o detrusor; antiadrenérgico é da obstrução prostática (Q47)<sup class="ref"><a href="#ref-12">12</a></sup>.</li>
+    <li>Amenorreia primária sem útero: Rokitansky (46,XX) ou insensibilidade androgênica (46,XY, testículo com AMH). <strong class="chave">Disgenesia gonadal tem útero</strong>, inclusive a Swyer (46,XY): sem AMH, os ductos de Müller se formam (Q41)<sup class="ref"><a href="#ref-13">13</a></sup>.</li>
+    <li>Câncer de mama prévio, sem doença há 5 anos: todo hormonal, inclusive progestágeno isolado, é categoria 3 (o atual é 4); o <strong class="chave">DIU de cobre</strong> é categoria 1 (Q42)<sup class="ref"><a href="#ref-14">14</a></sup>.</li>
     <li>Virilização + massa ovariana sólida: tumor do <strong>estroma do cordão sexual</strong> (Sertoli-Leydig), marcado pela testosterona (Q46)<sup class="ref"><a href="#ref-13">13</a></sup>.</li>
     <li>Endometriose: o tratamento clínico <strong>controla a dor</strong>; não regride endometrioma nem trata infertilidade, porque é anovulatório (Q50)<sup class="ref"><a href="#ref-15">15</a></sup>.</li>
     <li>DPP: dor súbita + <strong>hipertonia</strong> + sangue escuro, em hipertensa. Placenta prévia é indolor, com sangue vivo e útero relaxado (Q58)<sup class="ref"><a href="#ref-10">10</a></sup>.</li>

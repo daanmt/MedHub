@@ -1,0 +1,831 @@
+<title>Líquidos cavitários e seus diferenciais</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:22px 0 8px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:24px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+ol.toc .qc{display:block}
+.qc a{color:var(--teal-ink)}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+.tw.w5 table{min-width:600px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2);font-variant-numeric:tabular-nums}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.trap ul{margin:6px 0 0;padding-left:18px}
+.trap li{margin-bottom:8px;color:var(--ink2);min-width:0}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.banca{margin:16px 0;padding:12px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.banca p{margin:4px 0 0;color:var(--ink2)}
+.banca ul{margin:6px 0 0;padding-left:18px}
+.banca li{margin-bottom:8px;color:var(--ink2);min-width:0}
+.blbl{color:var(--plum-ink);font-weight:600;font-size:14px}
+.q{margin:14px 0 0;padding:12px 14px;background:var(--sunk);border-radius:var(--raio,10px)}
+.q p{margin:0 0 6px;color:var(--ink)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:32px;display:flex;align-items:center}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);color:var(--ink2)}
+.qc{color:var(--ink3);font-size:13px}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-t{fill:var(--ink);font-size:13px;font-weight:650}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-tag{fill:var(--ink2);font-size:10px}
+.fa-tag-al{fill:var(--amber-ink);font-size:10px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-pl{fill:var(--plum-ink);font-size:11px;font-weight:650}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-eixo{stroke:var(--ink2);stroke-width:1.2;fill:none}
+.fa-div{stroke:var(--ink2);stroke-width:1.6;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-fase{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-quad{fill:var(--card);stroke:var(--line2);stroke-width:1}
+.fa-espaco{fill:var(--sunk)}
+.fa-cap{fill:var(--line)}
+.fa-parede{stroke:var(--ink2);stroke-width:1.6;fill:none}
+.fa-pleura{stroke:var(--ink3);stroke-width:1.4;fill:none}
+.fa-prot{fill:var(--plum)}
+.fa-cel{fill:var(--card);stroke:var(--ink2);stroke-width:1}
+.fa-alv{fill:none;stroke:var(--line2);stroke-width:1}
+.fa-ponto{fill:var(--plum);stroke:var(--card);stroke-width:1.5}
+.fa-curva{stroke:var(--ink);stroke-width:2;fill:none}
+.fa-curva2{stroke:var(--ink2);stroke-width:2;fill:none}
+.fa-limiar{stroke:var(--amber);stroke-width:1.4;fill:none}
+.fa-saco{fill:var(--amber-wash);stroke:var(--ink3);stroke-width:1.2}
+.fa-cor{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-septo{stroke:var(--ink);stroke-width:2.2;fill:none}
+.fa-arc{stroke:var(--line);stroke-width:5;fill:none}
+.fa-arcn{stroke:var(--ink3);stroke-width:5;fill:none}
+.fa-ag{stroke:var(--ink2);stroke-width:2;stroke-linecap:round}
+.fa-ag-al{stroke:var(--amber);stroke-width:2.2;stroke-linecap:round}
+.fa-hub{fill:var(--ink2)}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Teoria · 5 líquidos, 1 capítulo cada · 24 questões da UERJ 2021-2025 dentro</p>
+  <h1>Líquidos cavitários e seus diferenciais</h1>
+  <p class="sub">Pleura, peritônio, pericárdio, líquor e articulação. Em cada um: quando puncionar, como ler, o mecanismo que amarra a leitura, o diferencial em tabela e como a UERJ já cobrou.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho</h2>
+  <ol class="toc">
+    <li><a href="#cap-1">Derrame pleural: Light, infecção, TB e sangue</a><span class="qc">Pneumologia e Cirurgia · 4 questões</span></li>
+    <li><a href="#cap-2">Ascite: GASA, proteína e o líquido infectado</a><span class="qc">Hepatologia, Nefrologia e Pediatria · 5 questões</span></li>
+    <li><a href="#cap-3">Pericárdio: hemodinâmica antes de bioquímica</a><span class="qc">Cardiologia, Pneumologia e Cirurgia · 6 questões</span></li>
+    <li><a href="#cap-4">Líquor: quatro números contam a etiologia</a><span class="qc">Infectologia, Neurologia e Pediatria · 7 questões</span></li>
+    <li><a href="#cap-5">Líquido sinovial: infecção ou cristal</a><span class="qc">Reumatologia · 2 questões</span></li>
+  </ol>
+  <p class="qc">Antes: <a href="#abertura">o que todo líquido pergunta</a>. Depois: <a href="#fechamento">a tabela-síntese</a>.</p>
+</nav>
+
+<section class="sec" id="abertura">
+  <span class="kick">00 · Abertura</span>
+  <h2>O que todo líquido pergunta</h2>
+  <p class="lede">Todo líquido de cavidade responde às mesmas cinco perguntas. O que muda de cavidade para cavidade é o exame que responde a cada uma.</p>
+  <ul class="tp">
+    <li><strong>A parede está lesada?</strong> Na pleura, transudato x exsudato (Light). No peritônio, a pergunta virou "há hipertensão portal?" (GASA). No pericárdio quase não decide nada.</li>
+    <li><strong>Está infectado?</strong> Neutrófilos, glicose e pH caindo, Gram e cultura. Quem consome glicose é neutrófilo, bactéria e célula tumoral.</li>
+    <li><strong>É sangue?</strong> Hematócrito do líquido (pleura), hemácias que não clareiam entre os tubos (líquor), hemartrose (articulação).</li>
+    <li><strong>É neoplasia?</strong> Citologia oncótica; se negativa e a suspeita persiste, biópsia.</li>
+    <li><strong>É tuberculose?</strong> Exsudato linfocítico com adenosina deaminase (ADA) alta. O bacilo quase nunca aparece no líquido: quem fecha é a biópsia com granuloma ou a cultura do fragmento.</li>
+  </ul>
+  <p class="lede">A UERJ cobra quase sempre do mesmo jeito: dá os números do líquido e do soro e pede a conta (Light, GASA, neutrófilos absolutos) ou o próximo exame. Faça a conta antes de ler as alternativas. Onde livro e diretriz divergem, vale a bibliografia do edital (Harrison, Sabiston, Nelson), e cada capítulo marca o que a UERJ já aceitou.<sup class="ref"><a href="#ref-1">1</a></sup></p>
+</section>
+
+<section class="sec" id="cap-1">
+  <span class="kick">01 · Pneumologia e Cirurgia · 4 questões em 2021-2025 (2024 e 2025 em CM; 2023 duas em CIR)</span>
+  <h2>Derrame pleural: Light, infecção, TB e sangue</h2>
+  <p class="lede">O derrame é uma síndrome; a toracocentese dá o nome. A ordem de leitura é fixa: Light, depois glicose, pH e LDH, depois células, ADA e o resto.</p>
+
+  <h3>Quando puncionar e o que pedir</h3>
+  <ul class="tp">
+    <li>Duas perguntas: o derrame não tem causa clara (ou evolui de forma atípica)? Então toracocentese <strong>diagnóstica</strong>. Está dando sintoma? Então <strong>de alívio</strong>.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>IC com derrame bilateral típico que responde ao diurético não precisa de punção. Unilateral, febre, dor pleurítica ou sem resposta: puncionar.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Na radiografia em decúbito lateral (Laurell), coluna de líquido acima de 10 mm já permite puncionar.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Sem contraindicação absoluta (relativas: coagulopatia, lesão de pele). Agulha na borda superior da costela de baixo. No alívio, até cerca de 1.500 mL por vez: acima disso, <strong>edema de reexpansão</strong>.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>No tubo: proteína e LDH do líquido <strong>e do soro, colhidos juntos</strong>; glicose; pH; citologia diferencial e oncótica; Gram e cultura; ADA. Leitoso: triglicerídeos e colesterol. Hemorrágico: hematócrito. Suspeita de pâncreas ou esôfago: amilase.</li>
+  </ul>
+
+  <h3>A chave de leitura</h3>
+  <div class="tw"><table>
+    <tr><th>Critério de Light</th><th>Exsudato se</th></tr>
+    <tr><td>Proteína do líquido / proteína do soro</td><td>&gt; 0,5</td></tr>
+    <tr><td>LDH do líquido / LDH do soro</td><td>&gt; 0,6</td></tr>
+    <tr><td>LDH do líquido</td><td>&gt; 2/3 do limite superior da LDH sérica</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li><strong>Basta um critério</strong> para exsudato; transudato exige os três negativos. Sensibilidade de 98%, especificidade de 83%.<sup class="ref"><a href="#ref-3">3</a>,<a href="#ref-2">2</a></sup></li>
+    <li>O preço da sensibilidade: o transudato em uso de diurético vira "falso exsudato". Nele, gradiente de proteína soro-líquido acima de 3,1 g/dL (ou de albumina acima de 1,2 g/dL) reclassifica como transudato.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Depois do Light, os auxiliares: glicose abaixo de 40 mg/dL (algumas bancas usam 60), pH abaixo de 7,2, LDH acima de 1.000 UI/L, ADA acima de 40 UI/L (algumas usam 30), amilase acima de 1.000 UI/L.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+
+  <h3>O mecanismo: por que vira exsudato</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Transudato ou exsudato: a parede decide</b></p>
+    <svg viewBox="0 0 360 262" role="img" aria-label="Corte esquemático do espaço pleural em dois painéis. À esquerda, transudato: o capilar da pleura parietal está íntegro; a pressão hidrostática alta ou a oncótica baixa empurram água para o espaço pleural e a proteína fica no vaso; nenhum critério de Light; causas IC, cirrose e síndrome nefrótica. À direita, exsudato: a parede do capilar tem falhas; passam proteína, LDH e células; basta um critério de Light; causas infecção, tuberculose, câncer e TEP.">
+      <text class="fa-t" x="92" y="16" text-anchor="middle">Transudato</text>
+      <text class="fa-s" x="92" y="31" text-anchor="middle">parede íntegra, força alterada</text>
+      <rect class="fa-cap" x="16" y="42" width="108" height="30" rx="15"/>
+      <path class="fa-parede" d="M31 42 H109 A15 15 0 0 1 109 72"/>
+      <path class="fa-parede" d="M109 72 H31 A15 15 0 0 1 31 42"/>
+      <circle class="fa-prot" cx="30" cy="52" r="2.4"/>
+      <circle class="fa-prot" cx="44" cy="61" r="2.4"/>
+      <circle class="fa-prot" cx="72" cy="51" r="2.4"/>
+      <circle class="fa-prot" cx="100" cy="60" r="2.4"/>
+      <circle class="fa-prot" cx="112" cy="51" r="2.4"/>
+      <circle class="fa-cel" cx="58" cy="57" r="4"/>
+      <circle class="fa-cel" cx="86" cy="57" r="4"/>
+      <text class="fa-s" x="130" y="54">capilar</text>
+      <text class="fa-s" x="130" y="67">parietal</text>
+      <rect class="fa-espaco" x="14" y="96" width="156" height="70"/>
+      <line class="fa-pleura" x1="14" y1="96" x2="170" y2="96"/>
+      <line class="fa-pleura" x1="14" y1="166" x2="170" y2="166"/>
+      <line class="fa-li" x1="42" y1="74" x2="42" y2="104"/>
+      <path class="fa-seta" d="M42 111 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="70" y1="74" x2="70" y2="104"/>
+      <path class="fa-seta" d="M70 111 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="96" y1="74" x2="96" y2="104"/>
+      <path class="fa-seta" d="M96 111 l-4 -7 h8 z"/>
+      <text class="fa-m" x="92" y="131" text-anchor="middle">sai água;</text>
+      <text class="fa-m" x="92" y="145" text-anchor="middle">a proteína fica no vaso</text>
+      <text class="fa-s" x="92" y="180" text-anchor="middle">pleura visceral e pulmão</text>
+      <circle class="fa-alv" cx="34" cy="196" r="9"/>
+      <circle class="fa-alv" cx="62" cy="196" r="9"/>
+      <circle class="fa-alv" cx="90" cy="196" r="9"/>
+      <circle class="fa-alv" cx="118" cy="196" r="9"/>
+      <circle class="fa-alv" cx="146" cy="196" r="9"/>
+      <rect class="fa-fase" x="14" y="214" width="156" height="42" rx="8"/>
+      <text class="fa-tc" x="92" y="231" text-anchor="middle">Light: nenhum critério</text>
+      <text class="fa-s" x="92" y="247" text-anchor="middle">IC, cirrose, nefrótica</text>
+      <text class="fa-t" x="268" y="16" text-anchor="middle">Exsudato</text>
+      <text class="fa-s" x="268" y="31" text-anchor="middle">parede lesada</text>
+      <rect class="fa-cap" x="192" y="42" width="108" height="30" rx="15"/>
+      <path class="fa-parede" d="M207 42 H285 A15 15 0 0 1 285 72"/>
+      <path class="fa-parede" d="M285 72 H260 M252 72 H234 M226 72 H207 A15 15 0 0 1 207 42"/>
+      <circle class="fa-prot" cx="206" cy="52" r="2.4"/>
+      <circle class="fa-prot" cx="220" cy="61" r="2.4"/>
+      <circle class="fa-prot" cx="248" cy="51" r="2.4"/>
+      <circle class="fa-prot" cx="276" cy="60" r="2.4"/>
+      <circle class="fa-prot" cx="288" cy="51" r="2.4"/>
+      <circle class="fa-cel" cx="234" cy="57" r="4"/>
+      <circle class="fa-cel" cx="262" cy="57" r="4"/>
+      <text class="fa-s" x="306" y="54">capilar</text>
+      <text class="fa-s" x="306" y="67">parietal</text>
+      <rect class="fa-espaco" x="190" y="96" width="156" height="70"/>
+      <line class="fa-pleura" x1="190" y1="96" x2="346" y2="96"/>
+      <line class="fa-pleura" x1="190" y1="166" x2="346" y2="166"/>
+      <line class="fa-li" x1="218" y1="74" x2="218" y2="104"/>
+      <path class="fa-seta" d="M218 111 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="246" y1="74" x2="246" y2="104"/>
+      <path class="fa-seta" d="M246 111 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="272" y1="74" x2="272" y2="104"/>
+      <path class="fa-seta" d="M272 111 l-4 -7 h8 z"/>
+      <circle class="fa-prot" cx="214" cy="128" r="2.4"/>
+      <circle class="fa-prot" cx="242" cy="140" r="2.4"/>
+      <circle class="fa-prot" cx="292" cy="126" r="2.4"/>
+      <circle class="fa-prot" cx="322" cy="142" r="2.4"/>
+      <circle class="fa-prot" cx="268" cy="150" r="2.4"/>
+      <circle class="fa-cel" cx="232" cy="152" r="4"/>
+      <circle class="fa-cel" cx="306" cy="152" r="4"/>
+      <text class="fa-m" x="268" y="125" text-anchor="middle">passam proteína,</text>
+      <text class="fa-m" x="268" y="139" text-anchor="middle">LDH e células</text>
+      <text class="fa-s" x="268" y="180" text-anchor="middle">pleura visceral e pulmão</text>
+      <circle class="fa-alv" cx="210" cy="196" r="9"/>
+      <circle class="fa-alv" cx="238" cy="196" r="9"/>
+      <circle class="fa-alv" cx="266" cy="196" r="9"/>
+      <circle class="fa-alv" cx="294" cy="196" r="9"/>
+      <circle class="fa-alv" cx="322" cy="196" r="9"/>
+      <rect class="fa-fase" x="190" y="214" width="156" height="42" rx="8"/>
+      <text class="fa-tc" x="268" y="231" text-anchor="middle">Light: 1 critério basta</text>
+      <text class="fa-s" x="268" y="247" text-anchor="middle">infecção, TB, câncer, TEP</text>
+    </svg>
+    <figcaption>Esquema sem escala: pontos roxos = proteína; círculos = leucócitos.<sup class="ref"><a href="#ref-2">2</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Quase todo o líquido pleural sai dos capilares da pleura <strong>parietal</strong> e volta pelos estomas linfáticos dela.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li><strong>Transudato:</strong> a parede está íntegra; mudou a força. Pressão hidrostática alta (IC) ou oncótica baixa (cirrose, nefrótica) empurra água, e a proteína fica no vaso. As razões do Light ficam baixas.</li>
+    <li><strong>Exsudato:</strong> a parede (ou o linfático) está doente. Passa proteína, a LDH sobe porque vem de células lisadas, e entram leucócitos.</li>
+    <li><strong>Glicose e pH baixos:</strong> neutrófilo, bactéria e célula tumoral consomem glicose e soltam ácido lático e CO2. Por isso glicose e pH caem juntos no parapneumônico complicado, no empiema, na neoplasia avançada e na artrite reumatoide.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+
+  <h3>O diferencial: infecção e tuberculose</h3>
+  <div class="tw w5"><table>
+    <tr><th>Quadro</th><th>Líquido</th><th>O que decide</th><th>Conduta</th></tr>
+    <tr><td>Parapneumônico simples (fase exsudativa)</td><td>Exsudato neutrofílico; glicose, pH e LDH normais</td><td>pH ≥ 7,2, glicose ≥ 40, Gram negativo</td><td>Só antibiótico</td></tr>
+    <tr><td>Parapneumônico complicado (fibrinopurulento)</td><td>pH &lt; 7,2, glicose &lt; 40 ou LDH &gt; 1.000; ou Gram/cultura positivos</td><td>Um desses já indica drenar; septações no ultrassom</td><td>Dreno + antibiótico; fibrinolítico intrapleural é opção</td></tr>
+    <tr><td>Empiema</td><td>Pus</td><td>O aspecto basta, sem esperar bioquímica</td><td>Dreno + antibiótico 3-4 semanas; fase organizada (encarceramento) = decorticação</td></tr>
+    <tr><td>TB pleural</td><td>Exsudato linfocítico, proteína &gt; 4 g/dL, ADA &gt; 40, células mesoteliais &lt; 5%</td><td>BAAR no líquido &lt; 10%; biópsia com granuloma caseoso é o padrão-ouro (cultura do fragmento ~60%)</td><td>RIPE por 6 meses</td></tr>
+    <tr><td>Artrite reumatoide</td><td>Glicose &lt; 40 em 80%, pH &lt; 7,2, LDH &gt; 700; ADA pode passar de 40</td><td>Imita o complicado e a TB: homem com AR e nódulos</td><td>Tratar a doença de base</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Antibiótico do parapneumônico comunitário: cefalosporina de 3ª geração + metronidazol ou clindamicina (ou ampicilina-sulbactam). Sem aminoglicosídeo, sem antibiótico intrapleural.<sup class="ref"><a href="#ref-4">4</a>,<a href="#ref-5">5</a></sup></li>
+    <li>Nos primeiros 15 dias, a TB pleural pode vir neutrofílica. Em 1/3 há lesão pulmonar junto.<sup class="ref"><a href="#ref-2">2</a>,<a href="#ref-6">6</a></sup></li>
+  </ul>
+
+  <h3>O diferencial: o resto</h3>
+  <div class="tw w5"><table>
+    <tr><th>Quadro</th><th>Líquido</th><th>Quando suspeitar</th><th>Conduta</th></tr>
+    <tr><td>IC</td><td>Transudato, em geral bilateral</td><td>A principal causa de derrame no mundo</td><td>Tratar a IC; punciona só se atípico</td></tr>
+    <tr><td>Neoplásico</td><td>Exsudato linfocítico, muitas vezes hemorrágico, volumoso, recidivante</td><td>Pulmão, mama, linfoma. pH &lt; 7,2 = pior prognóstico</td><td>Citologia oncótica (sensibilidade 42-96%); se negativa, biópsia</td></tr>
+    <tr><td>TEP</td><td>Exsudato em ~80%, hemorrágico em 50-75%; transudato em até 20%</td><td>Derrame pequeno + dor pleurítica ou dispneia súbita, em quem tem fator de risco</td><td>AngioTC e anticoagulação</td></tr>
+    <tr><td>Quilotórax</td><td>Leitoso; triglicerídeos &gt; 110 mg/dL, colesterol &lt; 200, quilomícrons</td><td>Lesão do ducto torácico: trauma e cirurgia primeiro, linfoma depois</td><td>Dieta com triglicerídeo de cadeia média + drenagem; cirurgia se persistir após 7-14 dias</td></tr>
+    <tr><td>Pseudoquilotórax</td><td>Leitoso; colesterol &gt; 200, triglicerídeos &lt; 50, sem quilomícrons</td><td>Exsudato crônico antigo: TB, AR</td><td>Tratar a causa</td></tr>
+    <tr><td>Hemotórax</td><td>Hematócrito do líquido ≥ 50% do sanguíneo<sup class="ref"><a href="#ref-7">7</a></sup></td><td>Trauma. Abaixo disso é derrame hemorrágico (câncer, TEP, TB)</td><td>Dreno; maciço = toracotomia</td></tr>
+    <tr><td>Pancreatite</td><td>Exsudato, mais à esquerda; amilase &gt; 1.000</td><td>Amilase também sobe na ruptura de esôfago e em neoplasia</td><td>Tratar a pancreatite</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>O TEP só entra no diferencial se for lembrado: derrame pequeno com dor pleurítica ou dispneia súbita pede angioTC, seja exsudato ou transudato.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li><strong>Hemotórax maciço:</strong> mais de 1.500 mL na drenagem inicial, ou 200 mL/h ou mais por 2-4 horas. O primeiro gesto é o dreno; a toracotomia vem pelo débito.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+  </ul>
+
+  <div class="trap"><span class="albl">Armadilhas da UERJ</span>
+    <ul>
+      <li><strong>2025 Q9.</strong> IC prévia e derrame à direita puxam o diurético. A conta muda tudo: proteína 4/7 = 0,57 e LDH 350/350 = 1,0. É exsudato, com metade de mononucleares: ADA, interferon-gama e biópsia (B).</li>
+      <li><strong>2024 Q5.</strong> Jovem, 3 meses de dispneia, 90% de mononucleares. Proteína 3,2/7,2 = 0,44 falha; LDH 400/580 = 0,69 basta. Exsudato linfocítico: ADA (B).</li>
+      <li><strong>2023 Q21.</strong> Hemotórax maciço pós-trauma penetrante: o tratamento inicial é a toracostomia com tubo (B), não a toracotomia de cara.</li>
+      <li><strong>2023 Q37.</strong> Saíram 1.000 mL no dreno (ainda não maciço) e depois 800 mL em 3 horas, com hipotensão. Cerca de 270 mL/h: toracotomia de emergência (A).</li>
+    </ul>
+  </div>
+
+  <div class="q"><p>Derrame à direita: proteína 3,0 g/dL (soro 7,0), LDH 150 UI/L (soro 400; limite superior 250), glicose 90. Transudato ou exsudato?</p><details><summary>ver resposta</summary><div>Transudato: 0,43; 0,38; e 150 é menos que 2/3 de 250 (167). Nenhum critério.</div></details></div>
+  <div class="q"><p>Pneumonia há 5 dias; derrame com pH 7,05, glicose 30 e Gram negativo. Conduta?</p><details><summary>ver resposta</summary><div>Parapneumônico complicado: drenar + antibiótico. pH abaixo de 7,2 sozinho já indica o dreno; o Gram negativo não muda isso.</div></details></div>
+  <div class="q"><p>Líquido leitoso após esofagectomia: triglicerídeos 400 mg/dL, colesterol 90.</p><details><summary>ver resposta</summary><div>Quilotórax por lesão do ducto torácico: dieta com triglicerídeo de cadeia média (ou jejum + nutrição parenteral) e drenagem; ligadura ou pleurodese se não fechar em 7-14 dias.</div></details></div>
+</section>
+
+<section class="sec" id="cap-2">
+  <span class="kick">02 · Hepatologia, Nefrologia e Pediatria · 5 questões em 2021-2025 (2021, 2023, 2024 e duas em 2025)</span>
+  <h2>Ascite: GASA, proteína e o líquido infectado</h2>
+  <p class="lede">No peritônio, "transudato ou exsudato" foi aposentado. O GASA pergunta se há hipertensão portal; a proteína do líquido diz de onde ele vem; os neutrófilos dizem se está infectado.</p>
+
+  <h3>Quando puncionar e o que pedir</h3>
+  <ul class="tp">
+    <li>Paracentese diagnóstica: <strong>primeiro episódio</strong> de ascite; <strong>toda internação</strong> do cirrótico com ascite; e qualquer piora: febre, dor abdominal, confusão, hipotensão, leucocitose, acidose, piora renal, hemorragia digestiva.<sup class="ref"><a href="#ref-9">9</a>,<a href="#ref-10">10</a></sup></li>
+    <li>Local: junção do terço médio com o terço inferior da linha entre a espinha ilíaca anterossuperior e o umbigo.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>A coagulopatia do cirrótico <strong>não contraindica</strong> e não pede plasma nem plaquetas. Exceções: coagulação intravascular disseminada e fibrinólise primária.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>No tubo, sempre: celularidade com diferencial, albumina e proteína total (com a albumina sérica do mesmo dia) e cultura em frasco de hemocultura à beira do leito (a positividade sobe de cerca de 50% para 80%). Conforme a suspeita: glicose, LDH, amilase, ADA, citologia, triglicerídeos, bilirrubina. CA-125 não: sobe em qualquer ascite.<sup class="ref"><a href="#ref-9">9</a>,<a href="#ref-11">11</a></sup></li>
+  </ul>
+
+  <h3>A chave de leitura</h3>
+  <ul class="tp">
+    <li><strong>GASA</strong> = albumina do soro menos albumina do líquido, no mesmo dia. ≥ 1,1 g/dL = hipertensão portal, com cerca de 97% de acurácia.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+    <li><strong>Proteína total do líquido</strong>, com o corte de 2,5 g/dL, separa as causas dentro de cada metade do GASA.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li><strong>Neutrófilos absolutos</strong> = leucócitos x % de polimorfonucleares. O corte de 250/mm³ vale para os neutrófilos, não para os leucócitos.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · gráfico</span><b>GASA x proteína</b></p>
+    <svg viewBox="0 0 360 276" role="img" aria-label="Gráfico de GASA no eixo vertical, de 0 a 2,5, contra proteína total do líquido no eixo horizontal, de 0 a 5 g/dL, dividido em quadrantes pelas linhas de GASA 1,1 e proteína 2,5. GASA alto e proteína baixa: cirrose e metástase hepática. GASA alto e proteína alta: insuficiência cardíaca, pericardite constritiva e Budd-Chiari. GASA baixo e proteína baixa: síndrome nefrótica. GASA baixo e proteína alta: carcinomatose, tuberculose peritoneal e ascite pancreática. Três pontos marcam as ascites das questões: UERJ 2024, PBE em cirrótico, GASA 2,0 e proteína 2,0; UERJ 2023, nefrótica, GASA 0,7 e proteína 2,3; UERJ 2025, pancreática, GASA 0,5 e proteína 4,2.">
+      <rect class="fa-fase" x="52" y="30" width="280" height="112"/>
+      <rect class="fa-quad" x="52" y="142" width="280" height="88"/>
+      <line class="fa-div" x1="192" y1="30" x2="192" y2="230"/>
+      <line class="fa-div" x1="52" y1="142" x2="332" y2="142"/>
+      <line class="fa-eixo" x1="52" y1="230" x2="332" y2="230"/>
+      <line class="fa-eixo" x1="52" y1="30" x2="52" y2="230"/>
+      <line class="fa-eixo" x1="52" y1="230" x2="52" y2="234"/>
+      <text class="fa-s" x="52" y="246" text-anchor="middle">0</text>
+      <line class="fa-eixo" x1="108" y1="230" x2="108" y2="234"/>
+      <text class="fa-s" x="108" y="246" text-anchor="middle">1</text>
+      <line class="fa-eixo" x1="164" y1="230" x2="164" y2="234"/>
+      <text class="fa-s" x="164" y="246" text-anchor="middle">2</text>
+      <line class="fa-eixo" x1="220" y1="230" x2="220" y2="234"/>
+      <text class="fa-s" x="220" y="246" text-anchor="middle">3</text>
+      <line class="fa-eixo" x1="276" y1="230" x2="276" y2="234"/>
+      <text class="fa-s" x="276" y="246" text-anchor="middle">4</text>
+      <line class="fa-eixo" x1="332" y1="230" x2="332" y2="234"/>
+      <text class="fa-s" x="332" y="246" text-anchor="middle">5</text>
+      <text class="fa-tc" x="192" y="246" text-anchor="middle">2,5</text>
+      <line class="fa-eixo" x1="48" y1="230" x2="52" y2="230"/>
+      <text class="fa-s" x="45" y="234" text-anchor="end">0</text>
+      <line class="fa-eixo" x1="48" y1="190" x2="52" y2="190"/>
+      <text class="fa-s" x="45" y="194" text-anchor="end">0,5</text>
+      <line class="fa-eixo" x1="48" y1="142" x2="52" y2="142"/>
+      <text class="fa-tc" x="45" y="146" text-anchor="end">1,1</text>
+      <line class="fa-eixo" x1="48" y1="110" x2="52" y2="110"/>
+      <text class="fa-s" x="45" y="114" text-anchor="end">1,5</text>
+      <line class="fa-eixo" x1="48" y1="70" x2="52" y2="70"/>
+      <text class="fa-s" x="45" y="74" text-anchor="end">2,0</text>
+      <line class="fa-eixo" x1="48" y1="30" x2="52" y2="30"/>
+      <text class="fa-s" x="45" y="34" text-anchor="end">2,5</text>
+      <text class="fa-m" x="192" y="264" text-anchor="middle">proteína total do líquido (g/dL)</text>
+      <text class="fa-m" x="12" y="130" text-anchor="middle" transform="rotate(-90 12 130)">GASA (g/dL)</text>
+      <text class="fa-tc" x="60" y="48">Cirrose</text>
+      <text class="fa-s" x="60" y="62">metástase hepática</text>
+      <text class="fa-tc" x="200" y="48">IC, constrição</text>
+      <text class="fa-tc" x="200" y="62">Budd-Chiari</text>
+      <text class="fa-s" x="200" y="76">sinusoide congesto</text>
+      <text class="fa-tc" x="60" y="222">Síndrome nefrótica</text>
+      <text class="fa-tc" x="200" y="160">Carcinomatose, TB</text>
+      <text class="fa-tc" x="200" y="174">pancreática</text>
+      <circle class="fa-ponto" cx="164" cy="70" r="5"/>
+      <text class="fa-pl" x="164" y="88" text-anchor="middle">UERJ 2024</text>
+      <circle class="fa-ponto" cx="180.8" cy="174" r="5"/>
+      <text class="fa-pl" x="172.8" y="178" text-anchor="end">UERJ 2023</text>
+      <circle class="fa-ponto" cx="287.2" cy="190" r="5"/>
+      <text class="fa-pl" x="287.2" y="210" text-anchor="middle">UERJ 2025</text>
+    </svg>
+    <figcaption>Pontos = as ascites das questões da UERJ, com os números do enunciado.<sup class="ref"><a href="#ref-12">12</a></sup></figcaption>
+  </figure>
+
+  <h3>O mecanismo: por que o GASA funciona</h3>
+  <ul class="tp">
+    <li>Com hipertensão portal, quem empurra o líquido é a <strong>pressão</strong>: sai água e a albumina fica no vaso. Soro e líquido ficam muito diferentes, e o GASA sobe.</li>
+    <li>Sem hipertensão portal, quem faz o líquido é o <strong>peritônio doente</strong> (inflamado, infiltrado) ou a albumina baixa demais. A diferença entre soro e líquido fica pequena.</li>
+    <li>A proteína separa onde está o bloqueio. Na cirrose, o sinusoide fibrosado retém proteína: líquido pobre (&lt; 2,5). Na IC, na constrição e no Budd-Chiari, o sinusoide é normal e congesto e vaza linfa hepática rica em proteína: líquido rico (≥ 2,5).<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Proteína do líquido baixa também é pouca opsonina: por isso, abaixo de 1,5 g/dL, ela entra na indicação de profilaxia.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+  </ul>
+
+  <h3>O diferencial pelo eixo GASA x proteína</h3>
+  <div class="tw w5"><table>
+    <tr><th>Causa<sup class="ref"><a href="#ref-12">12</a>,<a href="#ref-13">13</a>,<a href="#ref-11">11</a></sup></th><th>GASA</th><th>Proteína do líquido</th><th>O que fecha</th></tr>
+    <tr><td>Cirrose (80-90% das ascites)</td><td>≥ 1,1</td><td>&lt; 2,5</td><td>Citrino; LDH do líquido bem abaixo da sérica</td></tr>
+    <tr><td>Metástase hepática maciça</td><td>≥ 1,1</td><td>&lt; 2,5</td><td>Comprime o fígado sem tocar o peritônio: citologia negativa</td></tr>
+    <tr><td>IC e pericardite constritiva</td><td>≥ 1,1</td><td>≥ 2,5</td><td>Turgência jugular; na constrição, BNP normal</td></tr>
+    <tr><td>Budd-Chiari</td><td>≥ 1,1</td><td>≥ 2,5</td><td>Trombose das veias hepáticas: bloqueio pós-sinusoidal</td></tr>
+    <tr><td>Síndrome nefrótica</td><td>&lt; 1,1</td><td>&lt; 2,5</td><td>Anasarca, albumina sérica muito baixa, proteinúria nefrótica</td></tr>
+    <tr><td>Carcinomatose peritoneal</td><td>&lt; 1,1</td><td>≥ 2,5</td><td>Citologia oncótica positiva (cerca de 96% com 3 amostras); LDH do líquido maior que a do soro</td></tr>
+    <tr><td>TB peritoneal</td><td>&lt; 1,1</td><td>≥ 2,5 (em geral &gt; 3)</td><td>Linfócitos; ADA &gt; 33 UI/L (cai no cirrótico); biópsia por laparoscopia</td></tr>
+    <tr><td>Ascite pancreática</td><td>&lt; 1,1</td><td>≥ 2,5</td><td>Amilase &gt; 1.000 UI/L, cerca de 6 vezes a sérica</td></tr>
+    <tr><td>Quilosa ou biliar</td><td>&lt; 1,1</td><td>Variável</td><td>Leitosa com triglicerídeos &gt; 200 mg/dL (linfoma); esverdeada com bilirrubina &gt; 6 mg/dL</td></tr>
+  </table></div>
+
+  <h3>O líquido infectado</h3>
+  <div class="tw w5"><table>
+    <tr><th>Entidade<sup class="ref"><a href="#ref-9">9</a>,<a href="#ref-10">10</a></sup></th><th>Neutrófilos</th><th>Cultura</th><th>Conduta</th></tr>
+    <tr><td>PBE</td><td>≥ 250/mm³</td><td>Um germe (<em>E. coli</em>, <em>Klebsiella</em>); na criança, pneumococo</td><td>Cefotaxima 2 g 8/8 h (ou ceftriaxona) por 5 dias ou mais + albumina; suspender betabloqueador</td></tr>
+    <tr><td>Ascite neutrocítica com cultura negativa</td><td>≥ 250</td><td>Negativa</td><td>Igual à PBE</td></tr>
+    <tr><td>Bacterascite</td><td>&lt; 250</td><td>Positiva</td><td>Com sintomas, tratar; sem sintomas, nova paracentese em 48 h</td></tr>
+    <tr><td>Peritonite secundária</td><td>≥ 250, muitas vezes milhares</td><td>Vários germes (Gram com flora mista, anaeróbios)</td><td>TC de abdome e cirurgia; antibiótico com anaeróbio</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li><strong>Critérios de Runyon</strong> para a secundária, no líquido com neutrófilos ≥ 250: 2 de 3 entre proteína &gt; 1 g/dL, glicose &lt; 50 mg/dL e LDH acima do limite superior sérico.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>A PBE nasce de <strong>translocação bacteriana</strong>: intestino, linfonodo mesentérico, sangue, líquido.<sup class="ref"><a href="#ref-16">16</a></sup> A bacterascite pode ser o primeiro passo.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+    <li><strong>Albumina na PBE:</strong> 1,5 g/kg no diagnóstico e 1 g/kg no 3º dia; reduz insuficiência renal e mortalidade.<sup class="ref"><a href="#ref-18">18</a>,<a href="#ref-10">10</a></sup> A AASLD a reserva para creatinina &gt; 1 mg/dL, BUN &gt; 30 mg/dL (ureia &gt; 64) ou bilirrubina &gt; 4 mg/dL, onde o benefício se concentrou.<sup class="ref"><a href="#ref-19">19</a></sup></li>
+  </ul>
+  <div class="tw w5"><table>
+    <tr><th>Profilaxia da PBE<sup class="ref"><a href="#ref-10">10</a>,<a href="#ref-14">14</a></sup></th><th>Quem</th><th>Esquema</th></tr>
+    <tr><td>Primária, aguda</td><td>Cirrótico com hemorragia digestiva alta</td><td>Ceftriaxona 1 g/dia ou norfloxacino 400 mg 12/12 h, por 7 dias</td></tr>
+    <tr><td>Primária, contínua</td><td>Proteína do líquido &lt; 1,5 g/dL + creatinina ≥ 1,2, BUN ≥ 25, sódio ≤ 130 ou Child-Pugh ≥ 9 com bilirrubina ≥ 3</td><td>Norfloxacino 400 mg/dia</td></tr>
+    <tr><td>Secundária</td><td>Todo paciente após o 1º episódio (recorre em até 70% em 1 ano)</td><td>Norfloxacino 400 mg/dia, ciprofloxacino ou sulfametoxazol-trimetoprim, enquanto houver ascite</td></tr>
+  </table></div>
+
+  <h3>A consequência: síndrome hepatorrenal</h3>
+  <ul class="tp">
+    <li>A infecção piora a vasodilatação esplâncnica; o volume arterial efetivo cai e o rim se contrai: lesão funcional, sem dano estrutural. É por isso que a albumina entra junto com o antibiótico.</li>
+    <li>Critérios (ICA-ADQI 2024): cirrose com ascite; creatinina sobe ≥ 0,3 mg/dL em 48 h ou ≥ 50% em 7 dias; sem melhora após 24 h de expansão; sem choque, nefrotóxico ou lesão estrutural. Tratamento: terlipressina + albumina.<sup class="ref"><a href="#ref-20">20</a></sup></li>
+  </ul>
+
+  <div class="trap"><span class="albl">Armadilhas da UERJ</span>
+    <ul>
+      <li><strong>2023 Q8.</strong> Anasarca, albumina sérica 2, GASA 2,0 - 1,3 = 0,7, proteína do líquido 2,3. GASA baixo com proteína baixa = nefrótica: proteinúria e biópsia renal (C). Tabagismo e etilismo eram isca para carcinomatose e cirrose. <strong>Você caiu nisso na UERJ 2023</strong>: marcou citologia oncótica e TC, sem calcular o GASA.</li>
+      <li><strong>2025 Q12.</strong> GASA 2,8 - 2,3 = 0,5; proteína 4,2; neutrófilos 300 x 80% = 240, abaixo de 250. Não é PBE: etilista com dor pós-prandial = pancreatite crônica. Pedir amilase (D); a cultura é isca.</li>
+      <li><strong>2024 Q18.</strong> Neutrófilos 600 x 60% = 360: PBE. Antibiótico e albumina imediatamente (A), sem esperar cultura nem TC; betabloqueador é o contrário. Glicose 45 e proteína 2 somam 2 critérios de Runyon: a TC pedida faz sentido, mas o antibiótico não espera.</li>
+      <li><strong>2025 Q33.</strong> Trombose das veias supra-hepáticas (Budd-Chiari): bloqueio pós-sinusoidal (B).</li>
+      <li><strong>2021 Q43.</strong> Criança com síndrome nefrótica e peritonite primária: pneumococo (A).</li>
+    </ul>
+  </div>
+
+  <div class="q"><p>Cirrótico internado por hemorragia varicosa, sem febre; paracentese com 180 leucócitos, 50% de neutrófilos. Precisa de antibiótico?</p><details><summary>ver resposta</summary><div>Não é PBE (90 neutrófilos), mas a hemorragia digestiva indica profilaxia primária aguda: ceftriaxona 1 g/dia (ou norfloxacino) por 7 dias.</div></details></div>
+  <div class="q"><p>Albumina sérica 3,0; albumina do líquido 1,0; proteína do líquido 3,4; turgência jugular.</p><details><summary>ver resposta</summary><div>GASA 2,0 com proteína alta: hipertensão portal pós-sinusoidal. Pensar IC ou constrição (e Budd-Chiari se não houver turgência).</div></details></div>
+  <div class="q"><p>Alta após o primeiro episódio de PBE. O que muda para sempre?</p><details><summary>ver resposta</summary><div>Profilaxia secundária (norfloxacino 400 mg/dia) enquanto houver ascite: sem ela, a PBE volta em até 70% em 1 ano.</div></details></div>
+</section>
+
+<section class="sec" id="cap-3">
+  <span class="kick">03 · Cardiologia, Pneumologia e Cirurgia · 6 questões em 2021-2025 (2022, 2024 e 2025)</span>
+  <h2>Pericárdio: hemodinâmica antes de bioquímica</h2>
+  <p class="lede">No pericárdio, transudato x exsudato quase não decide nada. Decidem quanto líquido, com que velocidade, o que ele faz com o enchimento e qual é a causa.</p>
+
+  <h3>Quando puncionar e o que pedir</h3>
+  <ul class="tp">
+    <li><strong>Pericardiocentese</strong> no tamponamento e no derrame grande sintomático que não responde ao tratamento clínico; diagnóstica na suspeita de purulenta, tuberculosa ou neoplásica.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+    <li>Guiada por eco quando possível; às cegas, punção subxifoide (de Marfan) apontando para o ombro esquerdo.<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup></li>
+    <li><strong>Drenagem cirúrgica</strong> (janela pericárdica): purulenta, hemopericárdio por trauma ou por dissecção de aorta, derrame loculado ou recidivante.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+    <li>No trauma, o tamponamento vai à toracotomia ou esternotomia; a punção é só resgate.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+    <li>No tubo: citologia oncótica, ADA (&gt; 40 U/L sugere TB), Gram, cultura, pesquisa de BAAR e teste molecular.<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-6">6</a></sup></li>
+  </ul>
+
+  <h3>Pericardite aguda</h3>
+  <ul class="tp">
+    <li><strong>Diagnóstico: 2 de 4.</strong> Dor torácica pleurítica que melhora sentado e inclinado para a frente; atrito pericárdico; supra de ST difuso com infra de PR; derrame novo ou que piorou. Troponina alta = miopericardite.<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup></li>
+    <li><strong>Internar</strong> se houver um preditor de mau prognóstico. Maiores: febre &gt; 38 °C, início subagudo, derrame grande (&gt; 20 mm) ou tamponamento, falta de resposta ao AINE após 1 semana. Menores: miopericardite, imunossupressão, trauma, anticoagulação oral. Sem nenhum, ambulatório.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+    <li><strong>Tratamento:</strong> AINE ou AAS (o AAS é o preferido no pós-IAM) por 1-2 semanas + colchicina por meses, que corta a recorrência. Corticoide não é 1ª linha: aumenta recidiva na viral; fica para contraindicação ao AINE, doença autoimune e casos refratários.<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup></li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Estágio do ECG (Spodick)<sup class="ref"><a href="#ref-23">23</a>,<a href="#ref-13">13</a></sup></th><th>Achado</th></tr>
+    <tr><td>I (horas a dias)</td><td>Supra de ST difuso, côncavo, sem imagem em espelho (exceto aVR e V1); infra de PR</td></tr>
+    <tr><td>II</td><td>ST e PR voltam à linha de base</td></tr>
+    <tr><td>III</td><td>Inversão difusa de T</td></tr>
+    <tr><td>IV</td><td>Normalização. Menos da metade dos pacientes percorre os 4 estágios</td></tr>
+  </table></div>
+
+  <h3>O mecanismo: por que o tamponamento dá pulso paradoxal</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>O pulso paradoxal</b></p>
+    <svg viewBox="0 0 360 348" role="img" aria-label="Em cima, curvas de pressão no saco pericárdico contra volume de líquido: ambas planas no início e depois verticais. No acúmulo rápido, como no trauma, a curva sobe cedo e cruza a linha de tamponamento com pouco volume; no acúmulo lento, como na TB e no câncer, o saco distende e a curva só sobe com muito mais volume. Embaixo, dois corações dentro de um saco cheio de líquido. Na expiração o septo entre VD e VE é reto. Na inspiração o VD enche mais e o septo se curva para dentro do VE, que enche menos: a pressão arterial sistólica cai mais de 10 mmHg, o pulso paradoxal.">
+      <line class="fa-eixo" x1="44" y1="150" x2="340" y2="150"/>
+      <line class="fa-eixo" x1="44" y1="26" x2="44" y2="150"/>
+      <text class="fa-s" x="340" y="164" text-anchor="end">volume de líquido no saco</text>
+      <text class="fa-s" x="30" y="88" text-anchor="middle" transform="rotate(-90 30 88)">pressão no saco</text>
+      <line class="fa-limiar" x1="44" y1="72" x2="340" y2="72"/>
+      <text class="fa-av" x="338" y="66" text-anchor="end">tamponamento</text>
+      <path class="fa-curva" d="M44 146 C 92 145, 112 136, 124 98 S 136 40 142 30"/>
+      <path class="fa-curva2" d="M44 146 C 170 145, 222 138, 238 98 S 252 40 258 30"/>
+      <text class="fa-tc" x="142" y="22" text-anchor="middle">rápido</text>
+      <text class="fa-tc" x="258" y="22" text-anchor="middle">lento</text>
+      <text class="fa-m" x="180" y="182" text-anchor="middle">rápido (trauma, ruptura): pouco volume já tampona</text>
+      <text class="fa-m" x="180" y="197" text-anchor="middle">lento (TB, câncer): o saco distende e tolera mais</text>
+      <text class="fa-t" x="94" y="226" text-anchor="middle">expiração</text>
+      <rect class="fa-saco" x="18" y="234" width="152" height="68" rx="26"/>
+      <rect class="fa-cor" x="36" y="246" width="116" height="44" rx="14"/>
+      <line class="fa-septo" x1="92" y1="247" x2="92" y2="289"/>
+      <text class="fa-tc" x="64" y="272" text-anchor="middle">VD</text>
+      <text class="fa-tc" x="122" y="272" text-anchor="middle">VE</text>
+      <text class="fa-t" x="266" y="226" text-anchor="middle">inspiração</text>
+      <rect class="fa-saco" x="190" y="234" width="152" height="68" rx="26"/>
+      <rect class="fa-cor" x="208" y="246" width="116" height="44" rx="14"/>
+      <path class="fa-septo" d="M282 247 Q 298 268 282 289"/>
+      <text class="fa-tc" x="245" y="272" text-anchor="middle">VD</text>
+      <text class="fa-tc" x="308" y="272" text-anchor="middle">VE</text>
+      <text class="fa-s" x="94" y="318" text-anchor="middle">o saco cheio fixa o volume total</text>
+      <text class="fa-s" x="266" y="318" text-anchor="middle">VD enche; o septo empurra o VE</text>
+      <text class="fa-m" x="180" y="338" text-anchor="middle">VE enche menos: a PA sistólica cai mais de 10 mmHg</text>
+    </svg>
+    <figcaption>Esquema sem escala; as curvas mostram forma, não valores medidos.<sup class="ref"><a href="#ref-13">13</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>O pericárdio estica pouco: a curva pressão-volume é plana e depois vertical. Acúmulo rápido (trauma, ruptura) tampona com pouco volume; acúmulo lento (TB, câncer) distende o saco e tolera muito mais.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Com o saco cheio, o volume total do coração fica fixo. Na inspiração o VD recebe mais sangue, o septo vai para a esquerda e o VE enche menos: a pressão sistólica cai mais de 10 mmHg. É a <strong>interdependência ventricular</strong>.<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-22">22</a></sup></li>
+    <li>A pressão no saco se impõe às quatro câmaras: as pressões diastólicas se igualam (PVC = pressão capilar pulmonar, ambas altas).<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Na constrição, a carapaça rígida deixa o enchimento começar rápido e o para de repente (knock pericárdico, descenso y profundo) e não deixa a inspiração chegar ao coração: a jugular sobe na inspiração (Kussmaul).<sup class="ref"><a href="#ref-13">13</a></sup></li>
+  </ul>
+
+  <h3>Derrame, tamponamento, constrição e restrição</h3>
+  <div class="tw w5"><table>
+    <tr><th>Achado<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a>,<a href="#ref-13">13</a></sup></th><th>Tamponamento</th><th>Constrição</th><th>Restrição (ex.: amiloidose)</th></tr>
+    <tr><td>Tempo</td><td>Agudo ou subagudo</td><td>Crônico (meses a anos)</td><td>Crônico</td></tr>
+    <tr><td>Pulso paradoxal</td><td>Em cerca de 80%</td><td>Em cerca de 1/3</td><td>Raro</td></tr>
+    <tr><td>Sinal de Kussmaul</td><td>Ausente</td><td>Típico (a principal causa)</td><td>Pode ocorrer</td></tr>
+    <tr><td>Exame</td><td>Bulhas abafadas, turgência, hipotensão (Beck)</td><td>Knock protodiastólico, descenso y profundo, ascite e edema</td><td>Sinais de IC direita</td></tr>
+    <tr><td>ECG</td><td>Baixa voltagem e alternância elétrica</td><td>Baixa voltagem</td><td>Baixa voltagem com parede grossa no eco</td></tr>
+    <tr><td>Imagem</td><td>Derrame; colapso sistólico de AD e diastólico de VD; fluxos variam com a respiração; VCI dilatada</td><td>Pericárdio espesso ou calcificado (TC, RM, radiografia)</td><td>Miocárdio espesso, pericárdio normal</td></tr>
+    <tr><td>BNP</td><td>Variável</td><td>Normal ou pouco alto (as fibras não esticam)</td><td>Alto</td></tr>
+    <tr><td>Conduta</td><td>Pericardiocentese</td><td>Pericardiectomia</td><td>Tratar a causa (tafamidis na amiloidose por transtirretina)</td></tr>
+  </table></div>
+
+  <h3>As etiologias que circundam o pericárdio</h3>
+  <div class="tw w5"><table>
+    <tr><th>Etiologia<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup></th><th>Pista</th><th>Conduta</th></tr>
+    <tr><td>Viral ou idiopática</td><td>Pródromo viral, adulto jovem</td><td>AINE + colchicina</td></tr>
+    <tr><td>Tuberculosa</td><td>Principal causa de derrame crônico e de constrição no Brasil; HIV</td><td>ADA no líquido; RIPE</td></tr>
+    <tr><td>Neoplásica</td><td>Pulmão, mama, linfoma; derrame hemorrágico, recidivante</td><td>Citologia; pericardiocentese se tamponar</td></tr>
+    <tr><td>Urêmica</td><td>Ureia muito alta; ECG típico é raro</td><td>Diálise de urgência</td></tr>
+    <tr><td>Purulenta</td><td>Febre alta, toxemia, após cirurgia torácica ou pneumonia</td><td>Drenagem aberta + antibiótico</td></tr>
+    <tr><td>Epistenocárdica</td><td>Dias após IAM extenso (transmural)</td><td>AAS</td></tr>
+    <tr><td>Dressler</td><td>Semanas a meses após IAM ou cirurgia cardíaca; autoimune; derrame pleural junto</td><td>AAS ou AINE + colchicina</td></tr>
+  </table></div>
+
+  <h3>Choque obstrutivo: o que diferencia na beira do leito</h3>
+  <div class="tw w5"><table>
+    <tr><th>Achado<sup class="ref"><a href="#ref-8">8</a>,<a href="#ref-24">24</a>,<a href="#ref-13">13</a></sup></th><th>Tamponamento</th><th>TEP maciço</th><th>Pneumotórax hipertensivo</th></tr>
+    <tr><td>Jugular</td><td>Túrgida</td><td>Túrgida</td><td>Túrgida</td></tr>
+    <tr><td>Pulmão</td><td>Murmúrio presente dos dois lados</td><td>Murmúrio presente; hipoxemia grave e precoce</td><td>Murmúrio abolido de um lado, hipertimpanismo, traqueia desviada</td></tr>
+    <tr><td>Coração</td><td>Bulhas abafadas, pulso paradoxal</td><td>VD dilatado no eco; pulso paradoxal não é a regra</td><td>Sem achado próprio</td></tr>
+    <tr><td>Swan-Ganz</td><td>PVC = capilar pulmonar, ambas altas</td><td>PVC alta, capilar pulmonar normal ou baixa</td><td>Não se espera exame</td></tr>
+    <tr><td>Conduta</td><td>Pericardiocentese (clínico); toracotomia (trauma)</td><td>Trombólise; se contraindicada, embolectomia</td><td>Punção com agulha já, depois dreno</td></tr>
+  </table></div>
+
+  <div class="trap"><span class="albl">Armadilhas da UERJ</span>
+    <ul>
+      <li><strong>2025 Q4.</strong> Adenocarcinoma de pulmão, dispneia, bulhas abafadas, turgência e PA 100x60 na inspiração contra 120x80 na expiração (cai 20). Tamponamento neoplásico: pericardiocentese (A). <strong>Você caiu nisso na UERJ 2025</strong>: marcou constrição, que é crônica e dá Kussmaul e knock.</li>
+      <li><strong>2025 Q8.</strong> Choque com turgência, mas PA sem variação respiratória; Swan-Ganz com capilar pulmonar normal, débito baixo e resistência alta. É TEP (D): o tamponamento teria pulso paradoxal e capilar alto e igual à PVC. <strong>Você caiu nisso na UERJ 2025</strong>: marcou tamponamento.</li>
+      <li><strong>2024 Q3.</strong> TEP de alto risco 7 dias após gastrectomia: cirurgia de grande porte nas últimas 3 semanas contraindica trombólise; a reperfusão é a embolectomia por cateter (B). <strong>Você caiu nisso na UERJ 2024</strong>: marcou trombólise.<sup class="ref"><a href="#ref-24">24</a></sup></li>
+      <li><strong>2022 Q13 e 2025 Q25.</strong> Tríade de Beck: hipotensão, turgência jugular e bulhas abafadas. Em 2022, facada no mamilo esquerdo com murmúrio normal dos dois lados: o murmúrio exclui o pneumotórax (C). Em 2025, só a definição (D).</li>
+      <li><strong>2024 Q12.</strong> Idosa com IC, ECG de baixa voltagem e septo espesso no eco: amiloidose senil (restrição). A afirmação incorreta era "discinesia apical é achado precoce" (D); tafamidis trata.</li>
+    </ul>
+  </div>
+
+  <div class="q"><p>Homem de 30 anos, dor torácica que melhora sentado, temperatura 37,8 °C, supra de ST difuso com infra de PR, eco sem derrame, troponina normal. Interna?</p><details><summary>ver resposta</summary><div>Não: nenhum preditor maior ou menor. Ambulatório com AINE + colchicina e reavaliação em 1 semana.</div></details></div>
+  <div class="q"><p>Taquicardia, hipotensão e QRS que alterna de amplitude batimento a batimento.</p><details><summary>ver resposta</summary><div>Alternância elétrica: o coração oscila num derrame grande. Tamponamento até prova em contrário: eco e pericardiocentese.</div></details></div>
+  <div class="q"><p>TB tratada há 2 anos; ascite, edema, jugular que sobe na inspiração, BNP normal.</p><details><summary>ver resposta</summary><div>Pericardite constritiva (Kussmaul + BNP normal): TC ou RM do pericárdio e pericardiectomia.</div></details></div>
+</section>
+
+<section class="sec" id="cap-4">
+  <span class="kick">04 · Infectologia, Neurologia e Pediatria · 7 questões em 2021-2025 (2022, 2023 e 2024)</span>
+  <h2>Líquor: quatro números contam a etiologia</h2>
+  <p class="lede">Pressão, células, glicose e proteína. Antes deles, uma pergunta de segurança: posso puncionar sem tomografia?</p>
+
+  <h3>Quando puncionar e o que pedir</h3>
+  <ul class="tp">
+    <li>Toda suspeita de meningite, de preferência antes do antibiótico. Hemoculturas antes de tudo.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+    <li><strong>TC antes da punção só com critério:</strong> imunossupressão, doença prévia do SNC, convulsão na última semana, papiledema, consciência alterada, déficit focal. Com critério, a sequência é hemocultura, antibiótico (e dexametasona quando indicada), TC e só então a punção; edema ou massa na TC adia a punção. O antibiótico nunca espera a TC.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+    <li>No tubo: pressão de abertura (em decúbito lateral); celularidade com diferencial; glicose com glicemia colhida junto; proteína; lactato; Gram, cultura, látex ou PCR. Conforme o caso: tinta da China e antígeno criptocócico, teste molecular para TB, PCR para herpes, VDRL, citologia oncótica. Colher em tubos numerados e contar hemácias no primeiro e no último.</li>
+    <li><strong>Normal:</strong> pressão até 20 cmH2O; até 5 células/mm³ (no recém-nascido, até 20); glicose em torno de 2/3 da glicemia; proteína até cerca de 40 mg/dL.<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-26">26</a></sup></li>
+  </ul>
+
+  <h3>A chave de leitura</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Líquor: quatro mostradores por etiologia</b></p>
+    <svg viewBox="0 0 360 340" role="img" aria-label="Painel de mostradores do líquor: colunas pressão, células, glicose e proteína; linhas por etiologia. Bacteriana: pressão alta, mais de 500 células polimorfonucleares, glicose muito baixa, proteína muito alta. Viral: pressão normal, 5 a 100 linfócitos, glicose e proteína normais. Tuberculosa: pressão alta, 5 a 500 linfócitos, glicose muito baixa, proteína alta. Criptocócica: pressão muito alta, linfócitos, glicose normal ou baixa, proteína alta. Guillain-Barré: pressão normal, menos de 50 células, glicose normal, proteína alta, a dissociação albuminocitológica.">
+      <text class="fa-tc" x="128" y="20" text-anchor="middle">pressão</text>
+      <text class="fa-tc" x="188" y="20" text-anchor="middle">células</text>
+      <text class="fa-tc" x="248" y="20" text-anchor="middle">glicose</text>
+      <text class="fa-tc" x="308" y="20" text-anchor="middle">proteína</text>
+      <line class="fa-li" x1="8" y1="86" x2="352" y2="86"/>
+      <text class="fa-tc" x="8" y="58">Bacteriana</text>
+      <text class="fa-s" x="8" y="72">turvo</text>
+      <path class="fa-arc" d="M108 64 A20 20 0 0 1 148 64"/>
+      <path class="fa-arcn" d="M118.4 46.5 A20 20 0 0 1 137.6 46.5"/>
+      <line class="fa-ag-al" x1="128" y1="64" x2="141.8" y2="54"/>
+      <circle class="fa-hub" cx="128" cy="64" r="2.6"/>
+      <text class="fa-tag-al" x="128" y="78" text-anchor="middle">alta</text>
+      <path class="fa-arc" d="M168 64 A20 20 0 0 1 208 64"/>
+      <path class="fa-arcn" d="M178.4 46.5 A20 20 0 0 1 197.6 46.5"/>
+      <line class="fa-ag-al" x1="188" y1="64" x2="204.8" y2="61.3"/>
+      <circle class="fa-hub" cx="188" cy="64" r="2.6"/>
+      <text class="fa-tag-al" x="188" y="78" text-anchor="middle">&gt; 500 PMN</text>
+      <path class="fa-arc" d="M228 64 A20 20 0 0 1 268 64"/>
+      <path class="fa-arcn" d="M238.4 46.5 A20 20 0 0 1 257.6 46.5"/>
+      <line class="fa-ag-al" x1="248" y1="64" x2="231.5" y2="59.8"/>
+      <circle class="fa-hub" cx="248" cy="64" r="2.6"/>
+      <text class="fa-tag-al" x="248" y="78" text-anchor="middle">muito baixa</text>
+      <path class="fa-arc" d="M288 64 A20 20 0 0 1 328 64"/>
+      <path class="fa-arcn" d="M298.4 46.5 A20 20 0 0 1 317.6 46.5"/>
+      <line class="fa-ag-al" x1="308" y1="64" x2="324.5" y2="59.8"/>
+      <circle class="fa-hub" cx="308" cy="64" r="2.6"/>
+      <text class="fa-tag-al" x="308" y="78" text-anchor="middle">muito alta</text>
+      <line class="fa-li" x1="8" y1="142" x2="352" y2="142"/>
+      <text class="fa-tc" x="8" y="114">Viral</text>
+      <text class="fa-s" x="8" y="128">límpido</text>
+      <path class="fa-arc" d="M108 120 A20 20 0 0 1 148 120"/>
+      <path class="fa-arcn" d="M118.4 102.5 A20 20 0 0 1 137.6 102.5"/>
+      <line class="fa-ag" x1="128" y1="120" x2="128" y2="103"/>
+      <circle class="fa-hub" cx="128" cy="120" r="2.6"/>
+      <text class="fa-tag" x="128" y="134" text-anchor="middle">normal</text>
+      <path class="fa-arc" d="M168 120 A20 20 0 0 1 208 120"/>
+      <path class="fa-arcn" d="M178.4 102.5 A20 20 0 0 1 197.6 102.5"/>
+      <line class="fa-ag-al" x1="188" y1="120" x2="198" y2="106.2"/>
+      <circle class="fa-hub" cx="188" cy="120" r="2.6"/>
+      <text class="fa-tag-al" x="188" y="134" text-anchor="middle">5-100 linfo</text>
+      <path class="fa-arc" d="M228 120 A20 20 0 0 1 268 120"/>
+      <path class="fa-arcn" d="M238.4 102.5 A20 20 0 0 1 257.6 102.5"/>
+      <line class="fa-ag" x1="248" y1="120" x2="248" y2="103"/>
+      <circle class="fa-hub" cx="248" cy="120" r="2.6"/>
+      <text class="fa-tag" x="248" y="134" text-anchor="middle">normal</text>
+      <path class="fa-arc" d="M288 120 A20 20 0 0 1 328 120"/>
+      <path class="fa-arcn" d="M298.4 102.5 A20 20 0 0 1 317.6 102.5"/>
+      <line class="fa-ag" x1="308" y1="120" x2="310.7" y2="103.2"/>
+      <circle class="fa-hub" cx="308" cy="120" r="2.6"/>
+      <text class="fa-tag" x="308" y="134" text-anchor="middle">normal</text>
+      <line class="fa-li" x1="8" y1="198" x2="352" y2="198"/>
+      <text class="fa-tc" x="8" y="170">Tuberculosa</text>
+      <text class="fa-s" x="8" y="184">semanas</text>
+      <path class="fa-arc" d="M108 176 A20 20 0 0 1 148 176"/>
+      <path class="fa-arcn" d="M118.4 158.5 A20 20 0 0 1 137.6 158.5"/>
+      <line class="fa-ag-al" x1="128" y1="176" x2="141.8" y2="166"/>
+      <circle class="fa-hub" cx="128" cy="176" r="2.6"/>
+      <text class="fa-tag-al" x="128" y="190" text-anchor="middle">alta</text>
+      <path class="fa-arc" d="M168 176 A20 20 0 0 1 208 176"/>
+      <path class="fa-arcn" d="M178.4 158.5 A20 20 0 0 1 197.6 158.5"/>
+      <line class="fa-ag-al" x1="188" y1="176" x2="201.1" y2="165.2"/>
+      <circle class="fa-hub" cx="188" cy="176" r="2.6"/>
+      <text class="fa-tag-al" x="188" y="190" text-anchor="middle">5-500 linfo</text>
+      <path class="fa-arc" d="M228 176 A20 20 0 0 1 268 176"/>
+      <path class="fa-arcn" d="M238.4 158.5 A20 20 0 0 1 257.6 158.5"/>
+      <line class="fa-ag-al" x1="248" y1="176" x2="231.5" y2="171.8"/>
+      <circle class="fa-hub" cx="248" cy="176" r="2.6"/>
+      <text class="fa-tag-al" x="248" y="190" text-anchor="middle">muito baixa</text>
+      <path class="fa-arc" d="M288 176 A20 20 0 0 1 328 176"/>
+      <path class="fa-arcn" d="M298.4 158.5 A20 20 0 0 1 317.6 158.5"/>
+      <line class="fa-ag-al" x1="308" y1="176" x2="323.1" y2="168.3"/>
+      <circle class="fa-hub" cx="308" cy="176" r="2.6"/>
+      <text class="fa-tag-al" x="308" y="190" text-anchor="middle">alta</text>
+      <line class="fa-li" x1="8" y1="254" x2="352" y2="254"/>
+      <text class="fa-tc" x="8" y="226">Criptocócica</text>
+      <text class="fa-s" x="8" y="240">HIV, CD4 &lt; 100</text>
+      <path class="fa-arc" d="M108 232 A20 20 0 0 1 148 232"/>
+      <path class="fa-arcn" d="M118.4 214.5 A20 20 0 0 1 137.6 214.5"/>
+      <line class="fa-ag-al" x1="128" y1="232" x2="144.9" y2="230.4"/>
+      <circle class="fa-hub" cx="128" cy="232" r="2.6"/>
+      <text class="fa-tag-al" x="128" y="246" text-anchor="middle">muito alta</text>
+      <path class="fa-arc" d="M168 232 A20 20 0 0 1 208 232"/>
+      <path class="fa-arcn" d="M178.4 214.5 A20 20 0 0 1 197.6 214.5"/>
+      <line class="fa-ag-al" x1="188" y1="232" x2="197.1" y2="217.6"/>
+      <circle class="fa-hub" cx="188" cy="232" r="2.6"/>
+      <text class="fa-tag-al" x="188" y="246" text-anchor="middle">linfo</text>
+      <path class="fa-arc" d="M228 232 A20 20 0 0 1 268 232"/>
+      <path class="fa-arcn" d="M238.4 214.5 A20 20 0 0 1 257.6 214.5"/>
+      <line class="fa-ag" x1="248" y1="232" x2="242.7" y2="215.8"/>
+      <circle class="fa-hub" cx="248" cy="232" r="2.6"/>
+      <text class="fa-tag" x="248" y="246" text-anchor="middle">normal ou baixa</text>
+      <path class="fa-arc" d="M288 232 A20 20 0 0 1 328 232"/>
+      <path class="fa-arcn" d="M298.4 214.5 A20 20 0 0 1 317.6 214.5"/>
+      <line class="fa-ag-al" x1="308" y1="232" x2="321.8" y2="222"/>
+      <circle class="fa-hub" cx="308" cy="232" r="2.6"/>
+      <text class="fa-tag-al" x="308" y="246" text-anchor="middle">alta</text>
+      <text class="fa-tc" x="8" y="282">Guillain-Barré</text>
+      <text class="fa-s" x="8" y="296">dissociação</text>
+      <path class="fa-arc" d="M108 288 A20 20 0 0 1 148 288"/>
+      <path class="fa-arcn" d="M118.4 270.5 A20 20 0 0 1 137.6 270.5"/>
+      <line class="fa-ag" x1="128" y1="288" x2="128" y2="271"/>
+      <circle class="fa-hub" cx="128" cy="288" r="2.6"/>
+      <text class="fa-tag" x="128" y="302" text-anchor="middle">normal</text>
+      <path class="fa-arc" d="M168 288 A20 20 0 0 1 208 288"/>
+      <path class="fa-arcn" d="M178.4 270.5 A20 20 0 0 1 197.6 270.5"/>
+      <line class="fa-ag" x1="188" y1="288" x2="185.3" y2="271.2"/>
+      <circle class="fa-hub" cx="188" cy="288" r="2.6"/>
+      <text class="fa-tag" x="188" y="302" text-anchor="middle">&lt; 50</text>
+      <path class="fa-arc" d="M228 288 A20 20 0 0 1 268 288"/>
+      <path class="fa-arcn" d="M238.4 270.5 A20 20 0 0 1 257.6 270.5"/>
+      <line class="fa-ag" x1="248" y1="288" x2="248" y2="271"/>
+      <circle class="fa-hub" cx="248" cy="288" r="2.6"/>
+      <text class="fa-tag" x="248" y="302" text-anchor="middle">normal</text>
+      <path class="fa-arc" d="M288 288 A20 20 0 0 1 328 288"/>
+      <path class="fa-arcn" d="M298.4 270.5 A20 20 0 0 1 317.6 270.5"/>
+      <line class="fa-ag-al" x1="308" y1="288" x2="323.1" y2="280.3"/>
+      <circle class="fa-hub" cx="308" cy="288" r="2.6"/>
+      <text class="fa-tag-al" x="308" y="302" text-anchor="middle">alta</text>
+    </svg>
+    <figcaption>Faixa escura do arco = normal; ponteiro âmbar = fora do normal, em posição relativa.<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-26">26</a></sup></figcaption>
+  </figure>
+  <div class="tw w5"><table>
+    <tr><th>Etiologia<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-26">26</a>,<a href="#ref-27">27</a>,<a href="#ref-28">28</a></sup></th><th>Pressão</th><th>Células</th><th>Glicose</th><th>Proteína</th><th>O que fecha</th></tr>
+    <tr><td>Bacteriana</td><td>Alta</td><td>&gt; 500, polimorfonucleares</td><td>Muito baixa</td><td>Muito alta</td><td>Gram, cultura, látex; lactato alto</td></tr>
+    <tr><td>Viral</td><td>Normal</td><td>5-100, linfomonocitárias</td><td>Normal</td><td>Normal ou pouco alta</td><td>PCR (enterovírus, herpes)</td></tr>
+    <tr><td>Tuberculosa</td><td>Alta</td><td>5-500, linfomonocitárias</td><td>Muito baixa</td><td>Alta</td><td>Teste molecular (padrão-ouro); BAAR quase sempre negativo</td></tr>
+    <tr><td>Criptocócica</td><td>Muito alta</td><td>5-500, linfomonocitárias; pouca célula no HIV</td><td>Normal ou baixa</td><td>Alta</td><td>Tinta da China, antígeno criptocócico (látex)</td></tr>
+    <tr><td>Encefalite herpética</td><td>Normal ou alta</td><td>Linfomonocitárias, com hemácias</td><td>Normal</td><td>Pouco alta</td><td>PCR para herpes; se negativo cedo, repetir em 3-5 dias</td></tr>
+    <tr><td>Guillain-Barré</td><td>Normal</td><td>&lt; 50 (em geral &lt; 5)</td><td>Normal</td><td>Alta</td><td>Dissociação albuminocitológica; eletroneuromiografia</td></tr>
+    <tr><td>Hipertensão intracraniana idiopática</td><td>≥ 25 cmH2O no adulto</td><td>Normal</td><td>Normal</td><td>Normal</td><td>RM sem lesão ou hidrocefalia; angiografia venosa normal</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li><strong>Viragem:</strong> nas primeiras 24-48 h a bacteriana pode vir linfomonocitária.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+  </ul>
+
+  <h3>O mecanismo: por que a glicose cai na bacteriana</h3>
+  <ul class="tp">
+    <li>A barreira hematoliquórica íntegra não deixa passar proteína nem célula. A inflamação a abre: entra proteína e migram leucócitos.</li>
+    <li>A glicose entra no líquor por transporte facilitado. Na bacteriana, neutrófilos e bactérias a consomem e a inflamação atrapalha o transporte: ela despenca. O vírus não consome glicose: ela fica normal. TB e fungo consomem devagar.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>A pressão sobe quando o líquor não é reabsorvido: o exsudato espesso da base na TB, as leveduras encapsuladas nas granulações aracnoides no criptococo. Daí as punções de alívio na criptocócica.<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-29">29</a></sup></li>
+  </ul>
+
+  <h3>Os diferenciais que circundam o líquor</h3>
+  <ul class="tp">
+    <li><strong>HSA x acidente de punção.</strong> Na cefaleia súbita, TC sem contraste primeiro; punção só se a TC vier normal e a suspeita persistir. Hemácias que caem do 1º ao último tubo = acidente. Hemácias que não clareiam + <strong>xantocromia</strong> após centrifugar = HSA.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li><strong>Encefalite herpética.</strong> Febre + comportamento alterado, crise, afasia; RM com lesão temporal assimétrica. Aciclovir EV 10 mg/kg 8/8 h já na suspeita, por 14-21 dias. Qualquer idade, inclusive criança.<sup class="ref"><a href="#ref-30">30</a></sup></li>
+    <li><strong>Meningite tuberculosa.</strong> Curso de semanas, par craniano (o VI é o mais comum). 2 meses de RIPE + 10 de RI, com corticoide. No HIV sem TARV, a TARV espera: 8 semanas no Manual de 2019 (o que a UERJ cobrou), 4-6 semanas no PCDT de 2023.<sup class="ref"><a href="#ref-6">6</a>,<a href="#ref-29">29</a></sup></li>
+    <li><strong>Criptocócica.</strong> HIV com CD4 abaixo de 100; cefaleia arrastada com sinais de hipertensão intracraniana. Anfotericina + flucitosina, punções de alívio, <strong>sem corticoide</strong>.<sup class="ref"><a href="#ref-29">29</a></sup></li>
+    <li><strong>Guillain-Barré.</strong> Fraqueza ascendente e simétrica com arreflexia, dias a semanas após infecção. A proteína pode estar normal na 1ª semana. Imunoglobulina ou plasmaférese; corticoide não.<sup class="ref"><a href="#ref-27">27</a>,<a href="#ref-13">13</a></sup></li>
+    <li><strong>Hipertensão intracraniana idiopática.</strong> Mulher jovem e obesa, papiledema, paresia do VI (falso localizatório). Pressão ≥ 25 cmH2O no adulto (≥ 28 na criança sedada) com líquor normal, depois de afastar trombose venosa. Perda de peso + acetazolamida.<sup class="ref"><a href="#ref-28">28</a></sup></li>
+    <li><strong>Empírico da bacteriana na UERJ:</strong> acima de 3 meses, cefalosporina de 3ª geração + vancomicina (Harrison e Nelson); + ampicilina no idoso, gestante e imunossuprimido (Listeria).<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-31">31</a></sup></li>
+  </ul>
+
+  <div class="trap"><span class="albl">Armadilhas da UERJ</span>
+    <ul>
+      <li><strong>2024 Q73.</strong> Lactente de 6 meses: 100 células com 70% de polimorfonucleares, proteína 90, glicose 40 com glicemia 90 (0,44). Bacteriana, sem sinal focal: punciona sem TC; ceftriaxona + vancomicina (C). <strong>Você caiu nisso na UERJ 2024</strong>: marcou a TC antes da punção.</li>
+      <li><strong>2023 Q11.</strong> HIV com TARV irregular, 2 semanas de cefaleia, pleocitose linfocítica discreta, proteína alta, <strong>glicose normal</strong>. Criptococo: látex e anfotericina (D). <strong>Você caiu nisso na UERJ 2023</strong>: marcou BAAR e RIPE, mas a TB exigiria glicose muito baixa.</li>
+      <li><strong>2024 Q17.</strong> Meningite tuberculosa (glicose baixa, teste molecular positivo) em HIV virgem de tratamento, "segundo o MS 2019": RIPE e TARV após 60 dias (B). <strong>Você caiu nisso na UERJ 2024</strong>: marcou 2 semanas, o prazo das outras formas.</li>
+      <li><strong>2023 Q10.</strong> Alucinação, crise, RM temporal assimétrica, líquor linfocítico com glicose normal: herpética, aciclovir (B).</li>
+      <li><strong>2022 Q40.</strong> Criança com ataxia, alteração temporal na RM e líquor misto com hemácias e glicose normal: meningoencefalite herpética (B). As hemácias vêm da necrose hemorrágica.</li>
+      <li><strong>2022 Q43.</strong> Lactente de 2 meses, convulsão, 80 células, proteína 200, glicose 38 e radiografia miliar: TB. Pesquisar o contato e a cicatriz da BCG (A).</li>
+      <li><strong>2023 Q19.</strong> Fraqueza de membros inferiores com arreflexia e sensibilidade preservada: Guillain-Barré (D).</li>
+    </ul>
+  </div>
+
+  <div class="q"><p>Mulher de 28 anos, obesa, cefaleia e escurecimentos visuais, papiledema, TC normal. Punção: pressão de 34 cmH2O, células e bioquímica normais.</p><details><summary>ver resposta</summary><div>Hipertensão intracraniana idiopática, se a angiografia venosa for normal (afastar trombose). Perda de peso + acetazolamida.</div></details></div>
+  <div class="q"><p>Cefaleia súbita há 14 h, TC normal. Punção: 2.000 hemácias no 1º tubo e 1.900 no 4º; sobrenadante amarelado.</p><details><summary>ver resposta</summary><div>HSA: as hemácias não clarearam e há xantocromia. Angiotomografia ou arteriografia em busca de aneurisma.</div></details></div>
+  <div class="q"><p>Fraqueza ascendente há 10 dias, após diarreia; líquor com proteína 150 e 3 células.</p><details><summary>ver resposta</summary><div>Dissociação albuminocitológica: Guillain-Barré. Imunoglobulina ou plasmaférese e vigiar a capacidade vital.</div></details></div>
+</section>
+
+<section class="sec" id="cap-5">
+  <span class="kick">05 · Reumatologia · 2 questões em 2021-2025 (2023 e 2025)</span>
+  <h2>Líquido sinovial: infecção ou cristal</h2>
+  <p class="lede">Monoartrite aguda é punção. Três exames decidem: contagem de leucócitos, cristais na luz polarizada, Gram e cultura.</p>
+
+  <h3>Quando puncionar e o que pedir</h3>
+  <ul class="tp">
+    <li>Toda monoartrite aguda: as três hipóteses são trauma, infecção e cristal, e só o líquido separa.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Sempre os três: celularidade com diferencial, pesquisa de cristais, Gram e cultura. Cristal não exclui infecção.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Na criança com quadril doloroso, os critérios de Kocher (febre &gt; 38,5 °C, recusa de carga, leucócitos &gt; 12.000, VHS &gt; 40) estimam a artrite séptica: com 3, a probabilidade passa de 90%, e a conduta é puncionar e drenar.<sup class="ref"><a href="#ref-32">32</a></sup></li>
+  </ul>
+
+  <h3>A chave de leitura</h3>
+  <div class="tw"><table>
+    <tr><th>Classe</th><th>Leucócitos/mm³</th><th>Causas típicas</th></tr>
+    <tr><td>Não inflamatório</td><td>200-2.000</td><td>Osteoartrite, trauma</td></tr>
+    <tr><td>Inflamatório</td><td>2.000-50.000</td><td>Gota, pseudogota, artrite reumatoide, espondiloartrite, reativa</td></tr>
+    <tr><td>Séptico</td><td>&gt; 50.000, com mais de 90% de neutrófilos</td><td>Bactéria; o corte erra para menos (prótese, gonococo, imunossupressão)</td></tr>
+    <tr><td>Hemorrágico</td><td>Sangue</td><td>Trauma, acidente de punção, hemartrose (hemofilia, anticoagulante)</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Infecção pode vir abaixo de 50.000 (em prótese articular, por exemplo): o corte não afasta infecção sozinho.<sup class="ref"><a href="#ref-33">33</a>,<a href="#ref-13">13</a></sup></li>
+    <li><strong>O mecanismo:</strong> o cristal é fagocitado pelo neutrófilo e dispara a inflamação mediada por interleucina-1. Por isso a gota dá líquido inflamatório, febre e vermelhidão, e imita a artrite séptica.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+  </ul>
+
+  <h3>O diferencial</h3>
+  <div class="tw w5"><table>
+    <tr><th>Quadro<sup class="ref"><a href="#ref-13">13</a>,<a href="#ref-34">34</a></sup></th><th>Pista</th><th>Líquido</th><th>Conduta</th></tr>
+    <tr><td>Séptica não gonocócica</td><td>Monoartrite de joelho; <em>S. aureus</em> em qualquer idade</td><td>Séptico; cocos Gram-positivos</td><td>Drenagem + antibiótico antiestafilocócico</td></tr>
+    <tr><td>Gonocócica disseminada</td><td>Jovem com uretrite recente; poliartralgia migratória, tenossinovite, pústulas</td><td>Inflamatório a séptico; cultura do líquido muitas vezes negativa (a geniturinária rende mais)</td><td>Ceftriaxona</td></tr>
+    <tr><td>Gota</td><td>1ª metatarsofalangeana; diurético, AAS, álcool</td><td>Inflamatório; urato em agulha, birrefringência negativa, dentro do neutrófilo</td><td>Colchicina, AINE ou corticoide</td></tr>
+    <tr><td>Pseudogota</td><td>Idoso; joelho, punho; condrocalcinose</td><td>Inflamatório; pirofosfato romboide, birrefringência fracamente positiva</td><td>Igual à crise de gota</td></tr>
+    <tr><td>Inflamatória crônica</td><td>Poliartrite, rigidez matinal</td><td>Inflamatório, sem cristal, cultura negativa</td><td>Tratar a doença de base</td></tr>
+    <tr><td>TB articular</td><td>Monoartrite crônica de quadril ou joelho</td><td>Inflamatório; biópsia sinovial com granuloma caseoso</td><td>RIPE</td></tr>
+  </table></div>
+
+  <div class="trap"><span class="albl">Armadilhas da UERJ</span>
+    <ul>
+      <li><strong>2023 Q5.</strong> Crise de gota no hálux 3 dias após iniciar alopurinol, com febre de 39 °C. A UERJ deu colchicina e <strong>suspender</strong> o alopurinol recém-iniciado (C). O ACR 2020 manteria o hipouricemiante já em uso, cobrindo com anti-inflamatório: na prova, siga a UERJ. Aumentar o AAS está errado (dose baixa retém urato). E febre não exclui gota.<sup class="ref"><a href="#ref-35">35</a></sup></li>
+      <li><strong>2025 Q16.</strong> Corrimento uretral há 2 semanas, poliartralgia migratória, pústulas e líquido com 30.000 leucócitos e 95% de neutrófilos: gonocócica disseminada, ceftriaxona (B). Oxacilina é da não gonocócica.</li>
+    </ul>
+  </div>
+
+  <div class="q"><p>Idoso, joelho quente; líquido com 28.000 leucócitos e cristais romboides de birrefringência fracamente positiva; condrocalcinose na radiografia.</p><details><summary>ver resposta</summary><div>Pseudogota (pirofosfato de cálcio). Mesmo assim, Gram e cultura: cristal não exclui infecção.</div></details></div>
+  <div class="q"><p>Monoartrite de joelho; líquido com 90.000 leucócitos, 95% de neutrófilos, cocos Gram-positivos em cachos.</p><details><summary>ver resposta</summary><div>Artrite séptica por <em>S. aureus</em>: drenagem articular + antibiótico antiestafilocócico.</div></details></div>
+</section>
+
+<section class="sec" id="fechamento">
+  <span class="kick">06 · Fechamento</span>
+  <h2>A tabela-síntese</h2>
+  <div class="tw w5"><table>
+    <tr><th>Líquido</th><th>Pergunta-chave</th><th>Exame decisivo</th><th>Corte</th><th>Conduta que muda</th></tr>
+    <tr><td>Pleural</td><td>Exsudato? Infectado? TB?</td><td>Light; pH, glicose, LDH; ADA</td><td>1 critério de Light; pH &lt; 7,2, glicose &lt; 40, LDH &gt; 1.000; ADA &gt; 40</td><td>Drenar o complicado; biópsia e RIPE na TB</td></tr>
+    <tr><td>Ascítico</td><td>Hipertensão portal? Infectado?</td><td>GASA + proteína; neutrófilos absolutos</td><td>GASA 1,1; proteína 2,5; neutrófilos 250</td><td>Antibiótico + albumina; profilaxia; Runyon positivo = TC e cirurgia</td></tr>
+    <tr><td>Pericárdico</td><td>Tem repercussão?</td><td>Clínica (Beck, pulso paradoxal) + eco</td><td>Queda da PA sistólica &gt; 10 mmHg na inspiração</td><td>Pericardiocentese; constrição = pericardiectomia</td></tr>
+    <tr><td>Líquor</td><td>Bactéria, vírus, TB ou fungo?</td><td>Pressão, células, glicose, proteína</td><td>&gt; 500 neutrófilos com glicose muito baixa</td><td>Antibiótico já; TC só com critério</td></tr>
+    <tr><td>Sinovial</td><td>Infecção ou cristal?</td><td>Leucócitos, cristais, Gram e cultura</td><td>&gt; 50.000 com &gt; 90% de neutrófilos</td><td>Drenar + antibiótico; colchicina na crise de cristal</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Faça a conta antes de ler as alternativas: razões de Light, GASA, neutrófilos absolutos, glicorraquia sobre glicemia. Em 8 das 24 questões deste documento, a resposta era uma conta.</li>
+    <li>Transudato x exsudato só decide na pleura. No peritônio quem decide é o GASA; no pericárdio, a hemodinâmica.</li>
+  </ul>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Cepuerj/UERJ. Edital nº 15/2026: Processo Seletivo de Residência Médica UERJ 2027, Acesso Direto (estrutura da prova e bibliografia: Harrison, Sabiston, Nelson, Gusso, Duncan). Rio de Janeiro, 2026.</li>
+    <li id="ref-2">Light RW. Pleural Diseases. 5ª ed. Philadelphia: Lippincott Williams &amp; Wilkins; 2007 (toracocentese, critérios absolutos e falso exsudato, glicose, pH, LDH, ADA, lípides, amilase, citologia; derrames tuberculoso, maligno, por TEP, quiloso e por artrite reumatoide). Não conferido no original.</li>
+    <li id="ref-3">Light RW, Macgregor MI, Luchsinger PC, Ball WC Jr. Pleural effusions: the diagnostic separation of transudates and exudates. Ann Intern Med. 1972;77(4):507-513.</li>
+    <li id="ref-4">Sociedade Brasileira de Pneumologia e Tisiologia. Diretrizes brasileiras de derrame pleural parapneumônico e empiema. J Bras Pneumol. 2006 (estágios, critérios de drenagem, antibioticoterapia). Não conferido no original.</li>
+    <li id="ref-5">Shen KR, Bribriesco A, Crabtree T, et al. The American Association for Thoracic Surgery consensus guidelines for the management of empyema. J Thorac Cardiovasc Surg. 2017;153(6):e129-e146. Não conferido no original.</li>
+    <li id="ref-6">Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 2ª ed. Brasília: MS; 2019 (formas pleural, pericárdica e meningoencefálica; TARV na meningite tuberculosa após 8 semanas).</li>
+    <li id="ref-7">Radiopaedia. Hemothorax (hematócrito do líquido pleural ≥ 50% do sanguíneo). https://radiopaedia.org/articles/hemothorax-1, acesso em 30/10/2026. Fonte secundária, usada para conferir um corte isolado.</li>
+    <li id="ref-8">American College of Surgeons. ATLS: Advanced Trauma Life Support. 10ª ed. Chicago: ACS; 2018 (hemotórax maciço, tamponamento cardíaco e pneumotórax hipertensivo no trauma).</li>
+    <li id="ref-9">Runyon BA; AASLD Practice Guidelines Committee. Management of adult patients with ascites due to cirrhosis: an update. Hepatology. 2009;49(6):2087-2107 (indicações e técnica da paracentese, cultura em frasco de hemocultura, PBE). Não conferido no original.</li>
+    <li id="ref-10">European Association for the Study of the Liver. EASL clinical practice guidelines on the management of ascites, spontaneous bacterial peritonitis, and hepatorenal syndrome in cirrhosis. J Hepatol. 2010;53(3):397-417 (albumina na paracentese de grande volume e na PBE, profilaxia). Não conferido no original.</li>
+    <li id="ref-11">Dooley JS, Lok ASF, Garcia-Tsao G, Pinzani M (ed.). Sherlock's Diseases of the Liver and Biliary System. 13ª ed. Hoboken: Wiley-Blackwell; 2018 (ADA, amilase, triglicerídeos e bilirrubina no líquido ascítico; ascite tuberculosa, pancreática, quilosa e biliar). Não conferido no original.</li>
+    <li id="ref-12">Runyon BA, Montano AA, Akriviadis EA, et al. The serum-ascites albumin gradient is superior to the exudate-transudate concept in the differential diagnosis of ascites. Ann Intern Med. 1992;117(3):215-220.</li>
+    <li id="ref-13">Loscalzo J, Fauci AS, Kasper DL, et al. Harrison's Principles of Internal Medicine. 21ª ed. New York: McGraw Hill; 2022 (bibliografia de Clínica Médica do edital): doenças da pleura, ascite, doenças do pericárdio (tamponamento, constrição, restrição), meningites e líquor, hemorragia subaracnóidea, Guillain-Barré, abordagem das doenças articulares e líquido sinovial. Não conferido no original.</li>
+    <li id="ref-14">Fernández J, Navasa M, Planas R, et al. Primary prophylaxis of spontaneous bacterial peritonitis delays hepatorenal syndrome and improves survival in cirrhosis. Gastroenterology. 2007;133(3):818-824 (proteína do líquido abaixo de 1,5 g/dL + creatinina ≥ 1,2 mg/dL, BUN ≥ 25 mg/dL, sódio ≤ 130 mEq/L ou Child-Pugh ≥ 9 com bilirrubina ≥ 3 mg/dL).</li>
+    <li id="ref-15">Akriviadis EA, Runyon BA. Utility of an algorithm in differentiating spontaneous from secondary bacterial peritonitis. Gastroenterology. 1990;98(1):127-133.</li>
+    <li id="ref-16">Wiest R, Garcia-Tsao G. Bacterial translocation (BT) in cirrhosis. Hepatology. 2005;41(3):422-433.</li>
+    <li id="ref-17">Pelletier G, Lesur G, Ink O, et al. Asymptomatic bacterascites: is it spontaneous bacterial peritonitis? Hepatology. 1991;14(1):112-115.</li>
+    <li id="ref-18">Sort P, Navasa M, Arroyo V, et al. Effect of intravenous albumin on renal impairment and mortality in patients with cirrhosis and spontaneous bacterial peritonitis. N Engl J Med. 1999;341(6):403-409.</li>
+    <li id="ref-19">Runyon BA; AASLD. Introduction to the revised American Association for the Study of Liver Diseases Practice Guideline management of adult patients with ascites due to cirrhosis 2012. Hepatology. 2013;57(4):1651-1653 (albumina na PBE quando creatinina &gt; 1 mg/dL, BUN &gt; 30 mg/dL ou bilirrubina &gt; 4 mg/dL). Critérios conferidos em resumo secundário: https://rebelem.com/should-you-give-albumin-in-spontaneous-bacterial-peritonitis-sbp/, acesso em 30/10/2026.</li>
+    <li id="ref-20">Nadim MK, Kellum JA, Forni L, et al. Acute kidney injury in patients with cirrhosis: Acute Disease Quality Initiative (ADQI) and International Club of Ascites (ICA) joint multidisciplinary consensus meeting. J Hepatol. 2024 (critérios de LRA e de síndrome hepatorrenal; terlipressina + albumina). Não conferido no original.</li>
+    <li id="ref-21">Adler Y, Charron P, Imazio M, et al. 2015 ESC Guidelines for the diagnosis and management of pericardial diseases. Eur Heart J. 2015;36(42):2921-2964 (critérios de pericardite, preditores de mau prognóstico e internação, AINE + colchicina, pericardiocentese x drenagem cirúrgica). Preditores conferidos no resumo do ACC: https://www.acc.org/latest-in-cardiology/ten-points-to-remember/2015/10/30/12/01/2015-esc-guidelines-for-the-diagnosis-and-management-of-pericardial-diseases, acesso em 30/10/2026.</li>
+    <li id="ref-22">Montera MW, Mesquita ET, Colafranceschi AS, et al. I Diretriz Brasileira de Miocardites e Pericardites. Arq Bras Cardiol. 2013;100(4 Supl 1):1-36. Não conferida no original.</li>
+    <li id="ref-23">Life in the Fast Lane. David Spodick: os quatro estágios do ECG na pericardite (menos da metade dos pacientes percorre os quatro). https://litfl.com/david-spodick/, acesso em 30/10/2026. Fonte secundária.</li>
+    <li id="ref-24">Konstantinides SV, Meyer G, Becattini C, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543-603 (reperfusão no TEP de alto risco; cirurgia de grande porte nas últimas 3 semanas contraindica a trombólise; embolectomia).</li>
+    <li id="ref-25">Tunkel AR, Hartman BJ, Kaplan SL, et al. Practice guidelines for the management of bacterial meningitis. Clin Infect Dis. 2004;39(9):1267-1284. doi:10.1086/425368 (TC antes da punção, antibiótico sem esperar a TC, dexametasona).</li>
+    <li id="ref-26">Ministério da Saúde. Guia de Vigilância em Saúde. 6ª ed. Brasília: MS; 2023 (meningites: perfil do líquor por etiologia). Não conferido no original.</li>
+    <li id="ref-27">Sejvar JJ, Kohl KS, Gidudu J, et al. Guillain-Barré syndrome and Fisher syndrome: case definitions and guidelines for collection, analysis, and presentation of immunization safety data. Vaccine. 2011;29(3):599-612 (critério de Brighton: proteína acima do normal com menos de 50 células/µL). Critério conferido em resumo de busca, acesso em 30/10/2026.</li>
+    <li id="ref-28">Friedman DI, Liu GT, Digre KB. Revised diagnostic criteria for the pseudotumor cerebri syndrome in adults and children. Neurology. 2013;81(13):1159-1165 (pressão de abertura ≥ 25 cmH2O no adulto e ≥ 28 cmH2O na criança sedada).</li>
+    <li id="ref-29">Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Manejo da Infecção pelo HIV em Adultos. Módulo 2: coinfecções e infecções oportunistas. Brasília: MS; 2023 (TARV na meningite tuberculosa entre a 4ª e a 6ª semana; neurocriptococose: anfotericina + flucitosina, punções de alívio, sem corticoide).</li>
+    <li id="ref-30">Tunkel AR, Glaser CA, Bloch KC, et al. The management of encephalitis: clinical practice guidelines by the Infectious Diseases Society of America. Clin Infect Dis. 2008;47(3):303-327 (aciclovir empírico; PCR para herpes repetido se negativo precoce).</li>
+    <li id="ref-31">Kliegman RM, St Geme JW III, Blum NJ, et al. Nelson Textbook of Pediatrics. 22ª ed. Philadelphia: Elsevier; 2024 (bibliografia de Pediatria do edital): cefalosporina de 3ª geração + vancomicina após o período neonatal, conforme a análise da UERJ 2024 Q73. Não conferido no original.</li>
+    <li id="ref-32">Kocher MS, Zurakowski D, Kasser JR. Differentiating between septic arthritis and transient synovitis of the hip in children: an evidence-based clinical prediction algorithm. J Bone Joint Surg Am. 1999;81(12):1662-1670.</li>
+    <li id="ref-33">Saint Luke's Health System, laboratório. Synovial fluid cell count with differential: faixas de referência (não inflamatório 200-2.000; inflamatório 2.000-50.000; infeccioso &gt; 50.000/µL; prótese pode infectar com contagem menor). https://www.saintlukeskc.org/node/53373, acesso em 30/10/2026. Fonte secundária.</li>
+    <li id="ref-34">Workowski KA, Bachmann LH, Chan PA, et al. Sexually Transmitted Infections Treatment Guidelines, 2021. MMWR Recomm Rep. 2021;70(4):1-187 (infecção gonocócica disseminada: ceftriaxona). Não conferido no original.</li>
+    <li id="ref-35">FitzGerald JD, Dalbeth N, Mikuls T, et al. 2020 American College of Rheumatology Guideline for the Management of Gout. Arthritis Care Res (Hoboken). 2020;72(6):744-760 (manter o hipouricemiante durante a crise; iniciá-lo durante a crise é aceitável). Não conferido no original.</li>
+  </ol>
+</section>
+</div>

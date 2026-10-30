@@ -766,6 +766,56 @@
     "Cirurgia/[CIR] Trauma.md",
     "Preventiva/Medicina de Família e Comunidade.md"
    ]
+  },
+  "liquidos-cavitarios": {
+   "tipo": "aula",
+   "titulo": "Líquidos cavitários: pleural, ascite, pericárdio, líquor e sinovial -- e o diferencial que circunda cada um",
+   "disciplinas": [
+    "Pneumologia",
+    "Hepatologia",
+    "Cardiologia",
+    "Infectologia",
+    "Neurologia",
+    "Reumatologia",
+    "Cirurgia",
+    "Nefrologia",
+    "Pediatria"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Meningites.md",
+    "Clínica Médica/Neurologia/Cefaleias.md",
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "Clínica Médica/Infectologia/Pneumonias Bacterianas.md",
+    "Cirurgia/[CIR] Trauma.md",
+    "Cirurgia/Quadril Pediátrico.md"
+   ]
+  },
+  "aulao-vespera-uerj-2": {
+   "tipo": "aula",
+   "titulo": "Aulão de véspera, parte 2: os temas 11 a 20 da UERJ",
+   "disciplinas": [
+    "Gastroenterologia",
+    "Cirurgia",
+    "Pneumologia",
+    "Ginecologia",
+    "Endocrinologia",
+    "Nefrologia",
+    "Pediatria",
+    "Obstetrícia",
+    "Preventiva"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
+    "Clínica Médica/Pneumologia/Asma.md",
+    "Pediatria/Asma.md",
+    "GO/[GIN] Climatério e TH.md",
+    "Clínica Médica/Endocrinologia/Tireotoxicose.md",
+    "GO/[GIN] Rastreamento Colo.md",
+    "Cirurgia/Hérnia Femoral Encarcerada.md",
+    "GO/Endometriose.md",
+    "GO/[OBS] Sífilis na Gestação e Congênita.md",
+    "Pediatria/Infecção de Trato Urinário em Pediatria (ITU).md"
+   ]
   }
  }
 }

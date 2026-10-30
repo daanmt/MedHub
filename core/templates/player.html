@@ -68,7 +68,9 @@ kbd{
 .topo-acoes{margin-top:0}
 /* s229 (rodada 3, pedido dele): o tamanho compacto do Pausar da v120 nos tres; a paleta fica */
 .topo-acoes button{min-height:36px;padding:var(--esp-1) var(--esp-3);font-size:var(--fs-meta);border-radius:var(--raio-p)}
-.topo-acoes kbd{margin-left:var(--esp-1)}
+/* s236 (pedido dele, 30/10): sem as legendas de teclado (Espaco, P, D) -- os atalhos seguem; os tres cabem
+   numa linha so, sem quebrar */
+.topo-acoes{display:grid;grid-template-columns:auto auto auto;justify-content:start}
 #btn-defeito{border-color:var(--rosa);color:var(--rosa)}
 #btn-defeito:hover,#btn-defeito[aria-expanded="true"]{background:var(--rosa-fraco);border-color:var(--rosa);color:var(--tinta)}
 .tally b{color:var(--tinta2)}
@@ -99,6 +101,12 @@ kbd{
 .bloco .rot{color:var(--tinta2)}
 .bloco.alerta{border-left-color:var(--aviso)}
 .bloco.alerta .rot{color:var(--aviso)}
+/* s236 (pedido dele, 30/10: "tanto o conteudo da frente quanto do verso dos cards sao 'chumbados' e sem vida"): o rosa
+   (a marca) realca a informacao decisoria -- `**assim**` em qualquer campo vira .chave; no verso, numero com unidade
+   (corte, dose, prazo) vira .num. Ciano segue interacao; ambar, armadilha. 1-3 realces por card, nunca o card inteiro */
+.card .chave{color:var(--rosa);font-weight:650}
+.card .num{color:var(--rosa);font-weight:600;font-variant-numeric:tabular-nums}
+.pergunta .chave{font-weight:inherit}
 .taxonomia{color:var(--tinta3);font-size:var(--fs-meta)}
 .acoes{display:flex;flex-wrap:wrap;gap:var(--esp-2);margin-top:var(--esp-4)}
 button{
@@ -193,7 +201,7 @@ pre{
         <span class="metro dia" id="dia-contador" hidden><b id="dia-n">0</b> de <span id="dia-t">0</span> hoje</span>
         <span class="metro" id="metro-lote"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
         <span class="metro fila">fila <b id="pendentes">0</b></span>
-        <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
+        <span class="metro" title="Tempo ativo: só conta com o card na tela"><b id="relogio">00:00</b></span>
       </div>
     </header>
     <div class="barra"><i id="progresso"></i></div>
@@ -201,16 +209,16 @@ pre{
     <!-- s229 (pedido dele, 15/10): os TRES controles do card no bloco de cima, numa linha -- Virar (ciano, o
          primario), Pausar (ambar) e Defeito do card (rosa); as opcoes do defeito abrem logo abaixo -->
     <div class="acoes topo-acoes">
-      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
-      <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
-      <button type="button" id="btn-defeito" class="defeito" aria-expanded="false" aria-controls="defeito-opcoes">Defeito do card <kbd>D</kbd></button>
+      <button id="btn-virar" class="primario">Virar o card</button>
+      <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar</button>
+      <button type="button" id="btn-defeito" class="defeito" aria-expanded="false" aria-controls="defeito-opcoes">Defeito do card</button>
     </div>
     <div class="defeito-opcoes" id="defeito-opcoes" hidden>
       <button type="button" class="fantasma" data-motivo="Card longo">Card longo</button>
       <button type="button" class="fantasma" data-motivo="Pergunta composta">Pergunta composta</button>
       <button type="button" class="fantasma" data-motivo="Pergunta circular">Pergunta circular</button>
       <button type="button" class="fantasma" data-motivo="Contexto cortado">Contexto cortado</button>
-      <button type="button" class="fantasma" data-motivo="Erro de portugues">Erro de portugues</button>
+      <button type="button" class="fantasma" data-motivo="Erro de portugues">Erro de português</button>
       <button type="button" class="fantasma" id="btn-defeito-outro">Outro...</button>
       <button type="button" id="btn-cancelar">Cancelar</button>
     </div>
@@ -224,7 +232,6 @@ pre{
 
   <div id="aviso" class="aviso" hidden></div>
   <div id="aviso-momento" class="aviso" role="status" hidden></div>
-  <div id="aviso-fila" class="aviso" role="status" hidden></div>
 
   <main id="drill">
     <article class="card placa" id="card" tabindex="0" aria-live="polite">
@@ -241,22 +248,22 @@ pre{
 
     <div class="notas" id="notas-botoes" hidden>
       <button data-nota="1"><b>1</b><span>falhei</span></button>
-      <button data-nota="2"><b>2</b><span>com esforco</span></button>
+      <button data-nota="2"><b>2</b><span>com esforço</span></button>
       <button data-nota="3"><b>3</b><span>lembrei</span></button>
-      <button data-nota="4"><b>4</b><span>sem esforco</span></button>
+      <button data-nota="4"><b>4</b><span>sem esforço</span></button>
     </div>
 
   </main>
 
   <section class="painel-fim placa" id="fim" hidden>
-    <h2 id="fim-titulo">Lote concluido</h2>
+    <h2 id="fim-titulo">Lote concluído</h2>
     <p class="sub" id="fim-sub"></p>
     <p class="dica" id="fim-origem"></p>
     <div id="fim-resumo" hidden>
       <div class="fim-grade">
         <div><p class="fim-num" id="fim-pct">-</p><p class="fim-rot">com nota 3 ou 4</p></div>
         <div><p class="fim-num" id="fim-tempo">-</p><p class="fim-rot">tempo ativo</p></div>
-        <div><p class="fim-num" id="fim-medio">-</p><p class="fim-rot">media por card</p></div>
+        <div><p class="fim-num" id="fim-medio">-</p><p class="fim-rot">média por card</p></div>
       </div>
       <p class="rot fim-secao">Notas</p>
       <div class="dist" id="fim-dist"></div>
@@ -265,7 +272,7 @@ pre{
         <ul class="temas" id="fim-temas"></ul>
       </div>
       <figure class="agenda" id="fim-agenda" hidden>
-        <figcaption class="rot fim-secao">Cards previstos nos proximos 7 dias</figcaption>
+        <figcaption class="rot fim-secao">Cards previstos nos próximos 7 dias</figcaption>
         <div id="fim-agenda-grafico"></div>
         <p class="legenda"><span><i class="lg-lote"></i>deste lote</span><span><i class="lg-base"></i>demais cards</span></p>
         <p class="dica" id="fim-agenda-nota" hidden></p>
@@ -305,10 +312,10 @@ pre{
   var interagiu = false;      // trava o remount tardio depois do 1o gesto
 
   var ROTULO = {
-    vencido:"revisao vencida", fresh_error:"erro recente",
-    agendado:"agendado p/ hoje", novo:"novo", pre_bloco:"antes do bloco"
+    vencido:"revisão vencida", fresh_error:"erro recente",
+    agendado:"agendado para hoje", novo:"novo", pre_bloco:"antes do bloco"
   };
-  var NOME_NOTA = {1:"falhei", 2:"com esforco", 3:"lembrei", 4:"sem esforco"};
+  var NOME_NOTA = {1:"falhei", 2:"com esforço", 3:"lembrei", 4:"sem esforço"};
 
   // ------------------------------------------------------------ tempo ativo
   // s194: o relogio era de PAREDE (inicio = menor ts das notas salvas) e marcou
@@ -405,7 +412,7 @@ pre{
     tempo.pausado = !tempo.pausado;
     var b = $("btn-pausa");
     b.setAttribute("aria-pressed", tempo.pausado ? "true" : "false");
-    b.innerHTML = (tempo.pausado ? "Retomar" : "Pausar") + " <kbd>P</kbd>";
+    b.textContent = tempo.pausado ? "Retomar" : "Pausar";
     tique();
   }
 
@@ -431,7 +438,7 @@ pre{
 
   function textoOrigemSemBanco(){
     return espelhoOk
-      ? "As notas estao guardadas neste aparelho e serao enviadas quando esta pagina abrir com conexao. Os dados brutos abaixo sao a copia de seguranca."
+      ? "As notas estão guardadas neste aparelho e serão enviadas quando esta página abrir com conexão. Os dados brutos abaixo são a cópia de segurança."
       : "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
   }
 
@@ -444,7 +451,8 @@ pre{
   }
 
   // O aviso e FORTE de proposito (s195): quem drilla no celular precisa ver, no
-  // primeiro card, que a nota nao esta chegando ao banco.
+  // primeiro card, que a nota nao esta chegando ao banco. s236 (U11): a forca vem do `.aviso.forte` (borda
+  // inteira), nao da caixa-alta; o texto em caixa normal, com acento.
   function declararSemArmazenamento(){
     dbOk = false;
     if(dbDeclarado){ return; }
@@ -452,9 +460,9 @@ pre{
     espelharNotas();
     $("aviso").classList.add("forte");
     avisar(espelhoOk
-      ? "SEM CONEXAO COM O BANCO. As notas ficam guardadas SO neste aparelho ate a pagina abrir com conexao. Pode continuar; nao limpe os dados do navegador e nao troque de aparelho no meio do lote."
-      : "SEM CONEXAO COM O BANCO E SEM ARMAZENAMENTO LOCAL. As notas so existem nesta tela: no fim, copie os dados brutos e cole no chat antes de fechar ou recarregar.");
-    mostrarDadosBrutos("Notas desta sessao");
+      ? "Sem conexão com o banco. As notas ficam guardadas só neste aparelho até a página abrir com conexão. Pode continuar; não limpe os dados do navegador e não troque de aparelho no meio do lote."
+      : "Sem conexão com o banco e sem armazenamento local. As notas só existem nesta tela: no fim, copie os dados brutos e cole no chat antes de fechar ou recarregar.");
+    mostrarDadosBrutos("Notas desta sessão");
   }
 
   // ------------------------------------------------------------- persistir
@@ -528,9 +536,33 @@ pre{
   }
 
   // ----------------------------------------------------------- apresentacao
-  function texto(id, valor, container){
+  // s236: o realce rosa. PURA. `**x**` -> .chave (qualquer campo); com `numeros`, o numero com unidade ou sinal
+  // (>= 250/mm3, 1,5 g/kg, 7-14 dias, 1 a 2 semanas, 140/90 mmHg, 40%) -> .num, UM realce por numero (a faixa vai
+  // junto). Roda sobre o texto JA escapado (o sinal "<" chega como "&lt;"): o texto do card nunca vira markup.
+  // Grupos: 1 = sinal, 2 = faixa ("-14", " a 2", "/90"), 3 = unidade. Sem sinal nem unidade, o numero fica cru.
+  var RE_NUM = /((?:&lt;|&gt;)=?\s?|[≥≤~≈]\s?)?\d+(?:[.,]\d+)*((?:\s?(?:a|até|-|–)\s?|[\/x])\d+(?:[.,]\d+)*)?(x|\s?(?:%|mg\/kg\/dia|mg\/kg\/h|mg\/kg|mg\/dL|mg\/dia|mg\/L|mg|mcg\/kg\/min|mcg\/kg|mcg|[µμ]g\/kg|[µμ]g|g\/dL|g\/kg|g\/L|g|ng\/mL|pg\/mL|mUI\/mL|mUI\/L|UI\/kg|UI\/L|UI|U\/kg|U\/L|U|mEq\/L|mmol\/L|mL\/kg\/h|mL\/kg|mL\/min|mL|ml|L\/min|L|mmHg|cmH2O|kg\/m²|kg|cm|mm|bpm|irpm|ipm|\/min|horas?|h|minutos?|min|segundos?|dias?|semanas?|meses|m[eê]s|anos?|\/mm³|\/mm3|\/[µμ]L|°C?|ºC))?(?![\p{L}\p{N}_°]|[.,]\d)/gu;
+  function colado(txt, ini){           // o numero nasce grudado numa palavra: COVID19, B12, IL-6, COVID-19
+    var antes = txt.slice(Math.max(0, ini - 2), ini);
+    return /[\p{L}\p{N}_]$/u.test(antes) || /[\p{L}\p{N}_][-–]$/u.test(antes);
+  }
+  function pintarNumeros(t){
+    return t.replace(RE_NUM, function(m, sinal, faixa, unidade, ini, txt){
+      var pinta = sinal || (unidade && !colado(txt, ini));
+      return pinta ? '<b class="num">' + m + '</b>' : m;
+    });
+  }
+  function realcar(v, numeros){
+    var partes = esc(v == null ? "" : v).split("**"), out = "";
+    for(var i = 0; i < partes.length; i++){
+      if(i % 2 === 1 && i < partes.length - 1){ out += '<b class="chave">' + partes[i] + '</b>'; continue; }
+      // trecho par (ou o ultimo, aberto por um `**` sem par, que volta literal): texto comum
+      out += (i % 2 === 1 ? "**" : "") + (numeros ? pintarNumeros(partes[i]) : partes[i]);
+    }
+    return out;
+  }
+  function texto(id, valor, container, numeros){
     var alvo = $(id);
-    alvo.textContent = valor || "";
+    alvo.innerHTML = realcar(valor || "", !!numeros);
     if(container){ $(container).hidden = !valor; }
     else { alvo.hidden = !valor; }
   }
@@ -551,10 +583,10 @@ pre{
     // Contrato de apresentacao: area/tema NUNCA aparecem antes da revelacao.
     texto("reason", ROTULO[c.selection_reason] || c.selection_reason || "");
     texto("contexto", c.frente_contexto);
-    $("pergunta").textContent = c.frente_pergunta || "(card sem pergunta)";
-    $("resposta").textContent = c.verso_resposta || "";
-    texto("regra", c.verso_regra_mestre, "bloco-regra");
-    texto("armadilha", c.verso_armadilha, "bloco-armadilha");
+    $("pergunta").innerHTML = realcar(c.frente_pergunta || "(card sem pergunta)", false);
+    $("resposta").innerHTML = realcar(c.verso_resposta || "", true);
+    texto("regra", c.verso_regra_mestre, "bloco-regra", true);
+    texto("armadilha", c.verso_armadilha, "bloco-armadilha", true);
     $("taxonomia").textContent = [c.area, c.tema].filter(Boolean).join(" / ");
     $("card").focus();
     atualizarPainel();
@@ -699,9 +731,9 @@ pre{
       '<line class="ag-eixo" x1="0" x2="' + L + '" y1="' + BASE + '" y2="' + BASE + '"/>' +
       partes.join("") + "</svg>";
     var nota = [];
-    if(ag.herdados){ nota.push("O 1o dia inclui " + ag.herdados + " card(s) vencido(s) que ficaram fora deste lote."); }
-    if(ag.pendentes){ nota.push(ag.pendentes + " card(s) deste lote sem nota continuam vencidos e aparecem no 1o dia."); }
-    if(ag.semPrevisao){ nota.push(ag.semPrevisao + " card(s) sem previsao ficaram fora do grafico."); }
+    if(ag.herdados){ nota.push("O 1º dia inclui " + ag.herdados + " card(s) vencido(s) que ficaram fora deste lote."); }
+    if(ag.pendentes){ nota.push(ag.pendentes + " card(s) deste lote sem nota continuam vencidos e aparecem no 1º dia."); }
+    if(ag.semPrevisao){ nota.push(ag.semPrevisao + " card(s) sem previsão ficaram fora do gráfico."); }
     $("fim-agenda-nota").textContent = nota.join(" ");
     $("fim-agenda-nota").hidden = !nota.length;
     fig.hidden = false;
@@ -739,7 +771,7 @@ pre{
     esconderMomento();
     $("drill").hidden = true;
     $("fim").hidden = false;
-    $("fim-titulo").textContent = "Lote concluido";
+    $("fim-titulo").textContent = "Lote concluído";
     var r = resumo();
     $("fim-sub").textContent = r.avaliados + " card(s) com nota em " + duracao(tempo.ativoMs) + " de tempo ativo.";
     if(dbOk){
@@ -757,7 +789,7 @@ pre{
   // -------------------------------------------------------------- acoes
   function avaliar(nota){
     if(!fila.length){ return; }
-    if(!virado){ avisarMomento("Vire o card antes de dar a nota (Espaco)."); return; }
+    if(!virado){ avisarMomento("Vire o card antes de dar a nota (Espaço)."); return; }
     gesto();
     var c = fila[0];
     var id = c.card_id;

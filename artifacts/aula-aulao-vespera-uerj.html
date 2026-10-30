@@ -68,6 +68,38 @@ td:first-child{color:var(--ink);font-weight:600}
 .fa-lev{fill:var(--card);stroke:var(--ink2);stroke-width:1}
 .fa-trilho{fill:var(--line)}
 .fa-barra{fill:var(--plum)}
+.chave{color:var(--rosa);font-weight:650}
+.fa-rs{fill:var(--rosa)}
+.fa-rsf{stroke:var(--rosa);stroke-width:1.5;fill:none;stroke-linecap:round}
+.fa-rsk{stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round}
+.fa-rst{fill:var(--rosa);font-size:12px;font-weight:650}
+.fa-rsb{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-box{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-fio{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-pt{fill:var(--ink2)}
+.fa-ini{font-weight:750;fill:var(--ink)}
+.fa-nervo{stroke:var(--ink2);stroke-width:1.6;fill:none;stroke-linecap:round}
+.fa-cortex{fill:var(--plum-wash);stroke:var(--ink2);stroke-width:1.2}
+.fa-medula{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-rim{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-corpo{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
+.fa-pulmao{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-cor{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-sangue{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1}
+.fa-traq{stroke:var(--ink2);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-trk{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-zdmg{fill:var(--plum-wash)}
+.fa-zdm{fill:var(--amber-wash)}
+.fa-tk{stroke:var(--ink2);stroke-width:1.8;stroke-linecap:round}
+.fa-col{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
+.fa-flute{stroke:var(--line2);stroke-width:1}
+.fa-circ{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
+.fa-osso{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-mo{fill:var(--sunk)}
+.fa-fise{stroke:var(--ink3);stroke-width:2;fill:none}
+.fa-eixo{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-ref{stroke:var(--line2);stroke-width:1.2;fill:none}
+.fa-nuc{fill:var(--plum-wash);stroke:var(--ink3);stroke-width:1}
 sup.ref a{text-decoration:none}
 .refs ol{padding-left:22px;color:var(--ink2)}
 .refs li{margin-bottom:6px;overflow-wrap:anywhere}
@@ -125,9 +157,40 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <h2>O paciente operado: REMIT, cicatrização, febre e profilaxia</h2>
   <p class="lede">É a cirurgia de conceito da UERJ: ela pede a direção de um hormônio, a célula de uma fase, o dia de uma febre. Tudo se deduz de uma ideia: a cirurgia é uma agressão, e o corpo responde como presa em fuga.</p>
   <h3>O mecanismo: a resposta ao trauma (REMIT)</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>REMIT: duas vias até a adrenal</b></p>
+    <svg viewBox="0 0 360 246" role="img" aria-label="A dor da ferida chega ao hipotálamo, que responde por duas vias até a adrenal, desenhada sobre o rim. Via rápida: o nervo simpático entra até a medula, destacada, que libera catecolaminas. Via lenta: a hipófise libera ACTH, que age no córtex, destacado, e sai cortisol; a hipófise libera também GH e ADH.">
+      <text class="fa-m" x="22" y="36">dor da ferida</text>
+      <line class="fa-li" x1="22" y1="46" x2="134" y2="46"/><path class="fa-seta" d="M142 46 L134 50 L134 42 Z"/>
+      <ellipse class="fa-box" cx="180" cy="46" rx="38" ry="15"/>
+      <text class="fa-m" x="180" y="50" text-anchor="middle">hipotálamo</text>
+      <line class="fa-li" x1="200" y1="58" x2="240" y2="76"/>
+      <ellipse class="fa-box" cx="254" cy="82" rx="17" ry="11"/>
+      <text class="fa-m" x="278" y="86">hipófise</text>
+      <text class="fa-s" x="278" y="101">GH · ADH</text>
+      <ellipse class="fa-rim" cx="201" cy="214" rx="64" ry="25"/>
+      <text class="fa-s" x="236" y="224" text-anchor="middle">rim</text>
+      <path class="fa-cortex" d="M150 199 C156 176 176 142 196 136 C214 142 238 170 250 197 C228 188 172 188 150 199 Z"/>
+      <path class="fa-medula" d="M178 186 C184 170 190 160 197 156 C206 162 214 172 220 186 C206 182 192 182 178 186 Z"/>
+      <line class="fa-li" x1="250" y1="94" x2="229.7" y2="150.5"/><path class="fa-seta" d="M227 158 L225.9 149.1 L233.5 151.8 Z"/>
+      <text class="fa-m" x="246" y="128">ACTH</text>
+      <text class="fa-s" x="246" y="142">lenta</text>
+      <path class="fa-nervo" d="M168 60 C150 92 186 108 178 132 C172 150 192 158 198 170"/>
+      <circle class="fa-pt" cx="198" cy="170" r="2.6"/>
+      <text class="fa-m" x="158" y="102" text-anchor="end">simpático</text>
+      <text class="fa-s" x="158" y="116" text-anchor="end">rápida</text>
+      <line class="fa-fio" x1="150" y1="171" x2="186" y2="178"/><circle class="fa-pt" cx="187" cy="178" r="2"/>
+      <text class="fa-rst" x="146" y="168" text-anchor="end">medula</text>
+      <text class="fa-m" x="146" y="184" text-anchor="end">catecolaminas</text>
+      <line class="fa-fio" x1="256" y1="178" x2="240" y2="182"/><circle class="fa-pt" cx="239" cy="182" r="2"/>
+      <text class="fa-rst" x="260" y="176">córtex</text>
+      <text class="fa-m" x="260" y="192">cortisol</text>
+    </svg>
+    <figcaption>Esquema: rápida na medula; lenta no córtex.<sup class="ref"><a href="#ref-2">2</a></sup></figcaption>
+  </figure>
   <ul class="tp">
-    <li>A dor da ferida chega ao hipotálamo por duas vias. Rápida: simpático e <strong>medula</strong> adrenal (catecolaminas), mais renina-angiotensina-aldosterona. Lenta: ACTH (cortisol, pelo <strong>córtex</strong>), GH e ADH.</li>
-    <li>Meta única: manter volume, gerar glicose, perfundir o órgão nobre. Sobe quem gera glicose ou poupa água e sal (catecolaminas, cortisol, glucagon, GH, aldosterona, ADH). <strong>Desce a insulina</strong>, com T3, testosterona e estrogênio.</li>
+    <li>A dor da ferida chega ao hipotálamo por duas vias. Rápida: simpático e <strong class="chave">medula</strong> adrenal (catecolaminas), mais renina-angiotensina-aldosterona. Lenta: ACTH (cortisol, pelo <strong class="chave">córtex</strong>), GH e ADH.</li>
+    <li>Meta única: manter volume, gerar glicose, perfundir o órgão nobre. Sobe quem gera glicose ou poupa água e sal (catecolaminas, cortisol, glucagon, GH, aldosterona, ADH). <strong class="chave">Desce a insulina</strong>, com T3, testosterona e estrogênio.</li>
     <li>Fases de Cuthbertson: EBB (24-72 h; metabolismo e consumo de O2 caem; lactato) -&gt; FLOW (hipermetabólica; proteólise; balanço nitrogenado negativo) -&gt; anabólica (diurese, reconstrução).</li>
     <li>Citocinas: o TNF-alfa chega primeiro e dá anorexia, proteólise e caquexia; a IL-6 acompanha a gravidade; a IL-10 é a principal anti-inflamatória.</li>
     <li>A urina do trauma se deduz: o ADH segura água (pouca, densa); a aldosterona troca sódio por potássio e H+ (sódio baixo, potássio alto, ácida).<sup class="ref"><a href="#ref-2">2</a></sup></li>
@@ -186,62 +249,55 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   </table></div>
   <h3>Tratar</h3>
   <ul class="tp">
-    <li>2RHZE/4RH = 6 meses. Meníngea e osteoarticular: 2RHZE/10RH = 12 meses, com corticoide na meníngea. Abaixo de 10 anos, RHZ <strong>sem etambutol</strong>: a neurite óptica não se monitora na criança.</li>
+    <li>2RHZE/4RH = 6 meses. Meníngea e osteoarticular: 2RHZE/10RH = 12 meses, com corticoide na meníngea. Abaixo de 10 anos, RHZ <strong class="chave">sem etambutol</strong>: a neurite óptica não se monitora na criança.</li>
     <li>Assinaturas: etambutol = olho (suspende); isoniazida = nervo periférico (piridoxina, não suspende); rifampicina = urina laranja (só orientar). Transaminase 5x sem sintoma, ou 3x com sintoma, suspende; volta uma droga por vez, pirazinamida por último.</li>
-    <li>TB-HIV: RIPE primeiro; TARV em até 7 dias, qualquer CD4, nunca no mesmo dia. Na meníngea, entre a 4ª e a 6ª semana (a reconstituição imune inflama o SNC). Dolutegravir em dose dobrada; inibidor de protease não combina com rifampicina.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>TB-HIV: RIPE primeiro; <span class="chave">TARV em até 7 dias</span>, qualquer CD4, nunca no mesmo dia. Na meníngea, entre a 4ª e a 6ª semana (a reconstituição imune inflama o SNC). Dolutegravir em dose dobrada; inibidor de protease não combina com rifampicina.<sup class="ref"><a href="#ref-3">3</a></sup></li>
   </ul>
   <h3>Contatos e ILTB</h3>
   <figure class="fig-an">
-    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Contato de TB: o sintoma decide</b></p>
-    <svg viewBox="0 0 360 268" role="img" aria-label="Fluxo do contato de tuberculose pulmonar ou laríngea. Se tem sintoma, investigar TB doença com radiografia e escarro. Se assintomático com 10 anos ou mais: prova tuberculínica ou IGRA; 5 mm ou mais pede radiografia e, se normal, trata ILTB; abaixo de 5 mm repete em 8 semanas. Abaixo de 10 anos: prova tuberculínica e radiografia juntas; 5 mm ou mais com radiografia normal é ILTB, com ou sem BCG. Pessoa vivendo com HIV: trata ILTB sem prova tuberculínica, depois de excluir doença. Esquemas: 3HP no adulto e na PVHIV, 3RH ou 3HP abaixo de 10 anos, 4R no hepatopata e no recém-nascido.">
-      <rect class="fa-fase" x="40" y="6" width="280" height="30" rx="8"/>
-      <text class="fa-t" x="180" y="26" text-anchor="middle">Contato de TB pulmonar ou laríngea</text>
-      <line class="fa-li" x1="180" y1="36" x2="180" y2="50"/>
-      <line class="fa-li" x1="47" y1="50" x2="313" y2="50"/>
-      <line class="fa-li" x1="47" y1="50" x2="47" y2="55"/><path class="fa-seta" d="M47 62 l-4 -7 h8 z"/>
-      <line class="fa-li" x1="135" y1="50" x2="135" y2="55"/><path class="fa-seta" d="M135 62 l-4 -7 h8 z"/>
-      <line class="fa-li" x1="225" y1="50" x2="225" y2="55"/><path class="fa-seta" d="M225 62 l-4 -7 h8 z"/>
-      <line class="fa-li" x1="313" y1="50" x2="313" y2="55"/><path class="fa-seta" d="M313 62 l-4 -7 h8 z"/>
-      <rect class="fa-aviso" x="6" y="62" width="82" height="134" rx="8"/>
-      <text class="fa-tc" x="47" y="80" text-anchor="middle">Sintomático</text>
-      <text class="fa-s" x="47" y="95" text-anchor="middle">qualquer idade</text>
-      <text class="fa-m" x="47" y="116" text-anchor="middle">investigar</text>
-      <text class="fa-m" x="47" y="131" text-anchor="middle">TB doença:</text>
-      <text class="fa-m" x="47" y="146" text-anchor="middle">RX + escarro</text>
-      <text class="fa-m" x="47" y="161" text-anchor="middle">(TRM-TB)</text>
-      <text class="fa-av" x="47" y="182" text-anchor="middle">não é ILTB</text>
-      <rect class="fa-fase" x="94" y="62" width="82" height="134" rx="8"/>
-      <text class="fa-tc" x="135" y="80" text-anchor="middle">≥ 10 anos</text>
-      <text class="fa-s" x="135" y="95" text-anchor="middle">assintomático</text>
-      <text class="fa-m" x="135" y="116" text-anchor="middle">PT ou IGRA</text>
-      <text class="fa-m" x="135" y="131" text-anchor="middle">≥ 5 mm: RX</text>
-      <text class="fa-m" x="135" y="146" text-anchor="middle">normal: ILTB</text>
-      <text class="fa-m" x="135" y="166" text-anchor="middle">&lt; 5 mm: repete</text>
-      <text class="fa-m" x="135" y="181" text-anchor="middle">em 8 semanas</text>
-      <rect class="fa-fase" x="184" y="62" width="82" height="134" rx="8"/>
-      <text class="fa-tc" x="225" y="80" text-anchor="middle">&lt; 10 anos</text>
-      <text class="fa-s" x="225" y="95" text-anchor="middle">assintomático</text>
-      <text class="fa-m" x="225" y="116" text-anchor="middle">PT + RX</text>
-      <text class="fa-m" x="225" y="131" text-anchor="middle">juntos</text>
-      <text class="fa-m" x="225" y="151" text-anchor="middle">≥ 5 mm e RX</text>
-      <text class="fa-m" x="225" y="166" text-anchor="middle">normal: ILTB,</text>
-      <text class="fa-m" x="225" y="181" text-anchor="middle">com ou sem BCG</text>
-      <rect class="fa-q4" x="272" y="62" width="82" height="134" rx="8"/>
-      <text class="fa-tc" x="313" y="80" text-anchor="middle">PVHIV</text>
-      <text class="fa-s" x="313" y="95" text-anchor="middle">assintomática</text>
-      <text class="fa-m" x="313" y="116" text-anchor="middle">trata ILTB</text>
-      <text class="fa-m" x="313" y="131" text-anchor="middle">sem PT</text>
-      <text class="fa-m" x="313" y="151" text-anchor="middle">(depois de</text>
-      <text class="fa-m" x="313" y="166" text-anchor="middle">excluir a</text>
-      <text class="fa-m" x="313" y="181" text-anchor="middle">doença)</text>
-      <line class="fa-li" x1="135" y1="196" x2="135" y2="205"/><path class="fa-seta" d="M135 212 l-4 -7 h8 z"/>
-      <line class="fa-li" x1="225" y1="196" x2="225" y2="205"/><path class="fa-seta" d="M225 212 l-4 -7 h8 z"/>
-      <line class="fa-li" x1="313" y1="196" x2="313" y2="205"/><path class="fa-seta" d="M313 212 l-4 -7 h8 z"/>
-      <rect class="fa-q4" x="94" y="212" width="260" height="50" rx="8"/>
-      <text class="fa-t" x="224" y="232" text-anchor="middle">Esquema de ILTB</text>
-      <text class="fa-m" x="224" y="250" text-anchor="middle">3HP adulto e PVHIV · 3RH ou 3HP &lt; 10 a · 4R RN</text>
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Contato de TB: o sintoma decide</b></p>
+    <svg viewBox="0 0 360 276" role="img" aria-label="Fluxo do contato de tuberculose. O contato com sintoma, destacado, sai do fluxo e investiga TB doença com RX e escarro. O assintomático segue pela idade: com 10 anos ou mais, PT ou IGRA, e 5 mm ou mais com RX normal é ILTB; abaixo de 10 anos, PT e RX juntos, e 5 mm ou mais com RX normal é ILTB, com ou sem BCG; a pessoa vivendo com HIV trata sem PT, depois de excluir doença. Os três terminam no esquema de ILTB: 3HP, 3RH ou 4R.">
+      <rect class="fa-box" x="80" y="6" width="200" height="28" rx="8"/>
+      <text class="fa-t" x="180" y="25" text-anchor="middle">Contato de TB</text>
+      <line class="fa-li" x1="180" y1="34" x2="180" y2="42"/><line class="fa-li" x1="47" y1="42" x2="224" y2="42"/>
+      <line class="fa-li" x1="47" y1="42" x2="47" y2="45"/><path class="fa-seta" d="M47 52 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="224" y1="42" x2="224" y2="45"/><path class="fa-seta" d="M224 52 l-4 -7 h8 z"/>
+      <rect class="fa-rsb" x="6" y="52" width="82" height="142" rx="8"/>
+      <text class="fa-rst" x="47" y="72" text-anchor="middle">Sintomático</text>
+      <text class="fa-m" x="47" y="106" text-anchor="middle">investigar</text>
+      <text class="fa-tc" x="47" y="122" text-anchor="middle">TB doença</text>
+      <text class="fa-m" x="47" y="150" text-anchor="middle">RX + escarro</text>
+      <rect class="fa-box" x="94" y="52" width="260" height="24" rx="8"/>
+      <text class="fa-tc" x="224" y="69" text-anchor="middle">Assintomático</text>
+      <line class="fa-li" x1="136" y1="76" x2="136" y2="83"/><path class="fa-seta" d="M136 90 l-4 -7 h8 z"/>
+      <rect class="fa-box" x="94" y="90" width="84" height="104" rx="8"/>
+      <text class="fa-tc" x="136" y="108" text-anchor="middle">≥ 10 anos</text>
+      <text class="fa-m" x="136" y="127" text-anchor="middle">PT ou IGRA</text>
+      <text class="fa-rst" x="136" y="146" text-anchor="middle">≥ 5 mm</text>
+      <text class="fa-m" x="136" y="164" text-anchor="middle">RX normal</text>
+      <line class="fa-li" x1="136" y1="194" x2="136" y2="204"/>
+      <line class="fa-li" x1="224" y1="76" x2="224" y2="83"/><path class="fa-seta" d="M224 90 l-4 -7 h8 z"/>
+      <rect class="fa-box" x="182" y="90" width="84" height="104" rx="8"/>
+      <text class="fa-tc" x="224" y="108" text-anchor="middle">&lt; 10 anos</text>
+      <text class="fa-m" x="224" y="127" text-anchor="middle">PT + RX</text>
+      <text class="fa-rst" x="224" y="146" text-anchor="middle">≥ 5 mm</text>
+      <text class="fa-m" x="224" y="164" text-anchor="middle">RX normal</text>
+      <text class="fa-s" x="224" y="182" text-anchor="middle">com ou sem BCG</text>
+      <line class="fa-li" x1="224" y1="194" x2="224" y2="204"/>
+      <line class="fa-li" x1="312" y1="76" x2="312" y2="83"/><path class="fa-seta" d="M312 90 l-4 -7 h8 z"/>
+      <rect class="fa-box" x="270" y="90" width="84" height="104" rx="8"/>
+      <text class="fa-tc" x="312" y="108" text-anchor="middle">PVHIV</text>
+      <text class="fa-m" x="312" y="127" text-anchor="middle">sem PT</text>
+      <text class="fa-s" x="312" y="146" text-anchor="middle">excluir</text>
+      <text class="fa-s" x="312" y="164" text-anchor="middle">doença</text>
+      <line class="fa-li" x1="312" y1="194" x2="312" y2="204"/>
+      <line class="fa-li" x1="136" y1="204" x2="312" y2="204"/>
+      <line class="fa-li" x1="224" y1="204" x2="224" y2="213"/><path class="fa-seta" d="M224 220 l-4 -7 h8 z"/>
+      <rect class="fa-q4" x="94" y="220" width="260" height="50" rx="8"/>
+      <text class="fa-t" x="224" y="240" text-anchor="middle">ILTB</text>
+      <text class="fa-m" x="224" y="259" text-anchor="middle">3HP · 3RH · 4R</text>
     </svg>
-    <figcaption>Esquemático: o contato sintomático sai do fluxo da ILTB e vai investigar doença.<sup class="ref"><a href="#ref-4">4</a></sup></figcaption>
+    <figcaption>Esquema: o sintoma tira o contato do fluxo da ILTB.<sup class="ref"><a href="#ref-4">4</a></sup></figcaption>
   </figure>
   <ul class="tp">
     <li>PT de 5 mm ou mais trata contato, imunossuprimido, usuário de anti-TNF, cicatriz de TB no RX e pré-transplante; 10 mm ou mais, os outros riscos (silicose, diabetes, diálise). PVHIV com CD4 até 350 trata sem PT: a PT dela mente para baixo.<sup class="ref"><a href="#ref-5">5</a></sup></li>
@@ -250,7 +306,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   </ul>
   <div class="tw"><table>
     <tr><th>Extrapulmonar</th><th>O líquido ou o tecido</th></tr>
-    <tr><td>Pleural (a mais comum sem HIV)</td><td>Exsudato linfocítico, ADA acima de 40, BAAR positivo em menos de 10%; biópsia pleural é o padrão-ouro</td></tr>
+    <tr><td>Pleural (a mais comum sem HIV)</td><td>Exsudato linfocítico, <span class="chave">ADA acima de 40</span>, BAAR positivo em menos de 10%; biópsia pleural é o padrão-ouro</td></tr>
     <tr><td>Peritoneal</td><td>Ascite com gradiente soro-ascite abaixo de 1,1, proteína alta, linfócitos, ADA alta; confirma por biópsia laparoscópica</td></tr>
     <tr><td>Intestinal</td><td>Região ileocecal; granuloma caseoso (o do Crohn não é caseoso); complicação típica = obstrução</td></tr>
     <tr><td>Ganglionar (a mais comum no HIV e na criança)</td><td>Cervical, endurecida, pode fistulizar; punção ou biópsia</td></tr>
@@ -273,6 +329,53 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <li>FAST, RX de tórax e de pelve entram durante o C. A avaliação secundária (SAMPLE, cabeça aos pés) só depois de estabilizar.</li>
   </ul>
   <h3>O tórax que mata no B e no C</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Choque no tórax: a jugular separa</b></p>
+    <svg viewBox="0 0 360 240" role="img" aria-label="Três tórax de frente, com o pescoço. Pneumotórax hipertensivo: pulmão colapsado, traqueia e coração desviados, jugular túrgida, murmúrio abolido, descomprimir. Tamponamento: líquido em volta do coração, pulmões normais, jugular túrgida, murmúrio presente, toracotomia. Hemotórax maciço: sangue na base do hemitórax, jugular vazia, macicez, dreno. A jugular, destacada, separa o choque obstrutivo do hemorrágico.">
+      <g transform="translate(0 12)">
+      <path class="fa-corpo" d="M 50 18 L 50 42 C 34 44 16 52 13 70 C 9 100 11 132 20 150 C 30 158 48 156 62 146 C 76 156 94 158 104 150 C 113 132 115 100 111 70 C 108 52 90 44 74 42 L 74 18 Z"/>
+      <circle class="fa-corpo" cx="62" cy="10" r="11"/>
+      <path class="fa-pulmao" d="M 53 74 C 42 78 39 102 47 112 C 53 108 54 90 53 74 Z"/>
+      <path class="fa-pulmao" d="M 76 62 C 86 58 102 70 104 98 C 106 122 103 142 95 146 C 92 148 90 145 89 140 C 82 128 76 104 76 62 Z"/>
+      <path class="fa-traq" d="M 62 24 C 62 44 69 52 69 68 M 69 68 L 60 80 M 69 68 L 78 80"/>
+      <ellipse class="fa-cor" cx="76" cy="126" rx="12" ry="10"/>
+      <rect class="fa-rsb" x="66" y="23" width="6.5" height="19" rx="3.2"/>
+      </g>
+      <text class="fa-tc" x="62" y="186" text-anchor="middle">PTX hipertensivo</text>
+      <text class="fa-rst" x="62" y="202" text-anchor="middle">jugular túrgida</text>
+      <text class="fa-m" x="62" y="217" text-anchor="middle">MV abolido</text>
+      <text class="fa-s" x="62" y="232" text-anchor="middle">descomprimir</text>
+      <g transform="translate(0 12)">
+      <path class="fa-corpo" d="M 168 18 L 168 42 C 152 44 134 52 131 70 C 127 100 129 132 138 150 C 148 158 166 156 180 146 C 194 156 212 158 222 150 C 231 132 233 100 229 70 C 226 52 208 44 192 42 L 192 18 Z"/>
+      <circle class="fa-corpo" cx="180" cy="10" r="11"/>
+      <path class="fa-pulmao" d="M 173 60 C 160 56 140 68 138 98 C 136 122 139 142 147 146 C 157 148 168 142 171 128 C 173 110 174 82 173 60 Z"/>
+      <path class="fa-pulmao" d="M 187 60 C 200 56 220 68 222 98 C 224 122 221 142 213 146 C 208 148 204 144 201 138 C 193 130 187 104 187 60 Z"/>
+      <path class="fa-traq" d="M 180 24 V68 M 180 68 L 171 80 M 180 68 L 189 80"/>
+      <ellipse class="fa-sangue" cx="186" cy="124" rx="19" ry="16"/>
+      <ellipse class="fa-cor" cx="186" cy="124" rx="11" ry="9"/>
+      <rect class="fa-rsb" x="184" y="23" width="6.5" height="19" rx="3.2"/>
+      </g>
+      <text class="fa-tc" x="180" y="186" text-anchor="middle">Tamponamento</text>
+      <text class="fa-rst" x="180" y="202" text-anchor="middle">jugular túrgida</text>
+      <text class="fa-m" x="180" y="217" text-anchor="middle">MV presente</text>
+      <text class="fa-s" x="180" y="232" text-anchor="middle">toracotomia</text>
+      <g transform="translate(0 12)">
+      <path class="fa-corpo" d="M 286 18 L 286 42 C 270 44 252 52 249 70 C 245 100 247 132 256 150 C 266 158 284 156 298 146 C 312 156 330 158 340 150 C 349 132 351 100 347 70 C 344 52 326 44 310 42 L 310 18 Z"/>
+      <circle class="fa-corpo" cx="298" cy="10" r="11"/>
+      <path class="fa-pulmao" d="M 291 60 C 278 56 258 68 256 92 C 256 104 266 108 276 106 C 286 104 290 96 291 60 Z"/>
+      <path class="fa-sangue" d="M 247 106 C 258 114 276 116 289 116 L 289 151 C 278 156 264 157 256 150 C 250 140 247 124 247 106 Z"/>
+      <path class="fa-pulmao" d="M 305 60 C 318 56 338 68 340 98 C 342 122 339 142 331 146 C 326 148 322 144 319 138 C 311 130 305 104 305 60 Z"/>
+      <path class="fa-traq" d="M 298 24 V68 M 298 68 L 289 80 M 298 68 L 307 80"/>
+      <ellipse class="fa-cor" cx="304" cy="124" rx="13" ry="11"/>
+      <line class="fa-rsf" x1="305" y1="24" x2="305" y2="40"/>
+      </g>
+      <text class="fa-tc" x="298" y="186" text-anchor="middle">Hemotórax maciço</text>
+      <text class="fa-rst" x="298" y="202" text-anchor="middle">jugular vazia</text>
+      <text class="fa-m" x="298" y="217" text-anchor="middle">macicez</text>
+      <text class="fa-s" x="298" y="232" text-anchor="middle">dreno</text>
+    </svg>
+    <figcaption>Esquema: a jugular separa o obstrutivo do hemorrágico.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
   <div class="tw"><table>
     <tr><th>Lesão</th><th>Como se reconhece</th><th>Conduta</th></tr>
     <tr><td>Pneumotórax hipertensivo</td><td>Clínico: choque, jugular túrgida, traqueia desviada, MV abolido, timpanismo</td><td>Descompressão imediata (agulha ou digital, 5º espaço), depois dreno. Nunca esperar RX</td></tr>
@@ -281,7 +384,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <tr><td>Tamponamento</td><td>Tríade de Beck: hipotensão, jugular túrgida, bulhas abafadas</td><td>Toracotomia ou esternotomia; pericardiocentese só como resgate</td></tr>
   </table></div>
   <ul class="tp">
-    <li>A jugular separa os dois choques do tórax: <strong>túrgida</strong> no obstrutivo (hipertensivo, tamponamento), <strong>vazia</strong> no hemorrágico. O murmúrio vesicular separa o hipertensivo (abolido) do tamponamento (presente).<sup class="ref"><a href="#ref-6">6</a></sup></li>
+    <li>A jugular separa os dois choques do tórax: <strong class="chave">túrgida</strong> no obstrutivo (hipertensivo, tamponamento), <strong class="chave">vazia</strong> no hemorrágico. O murmúrio vesicular separa o hipertensivo (abolido) do tamponamento (presente).<sup class="ref"><a href="#ref-6">6</a></sup></li>
   </ul>
   <h3>Choque: estimar a perda</h3>
   <div class="tw"><table>
@@ -293,7 +396,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   </table></div>
   <ul class="tp">
     <li>Hipotensão é sinal tardio (perda acima de 30%). Betabloqueador e atleta escondem a taquicardia.</li>
-    <li>Tríade letal: hipotermia, acidose, coagulopatia. O frio desliga as enzimas da coagulação: o sangue fica <strong>incoagulável</strong>, não trombosa (UERJ 2022).</li>
+    <li>Tríade letal: hipotermia, acidose, coagulopatia. O frio desliga as enzimas da coagulação: o sangue fica <strong class="chave">incoagulável</strong>, não trombosa (UERJ 2022).</li>
     <li>Choque neurogênico (lesão medular acima de T6) é o único com bradicardia e hipotensão.</li>
     <li>Hipotensão permissiva (PAS 80-90) até controlar o sangramento, exceto no TCE. Ácido tranexâmico nas 3 primeiras horas.<sup class="ref"><a href="#ref-6">6</a></sup></li>
   </ul>
@@ -320,10 +423,41 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <li>O DMG surge depois da organogênese (5ª-8ª semana): malforma menos que o DM prévio.</li>
   </ul>
   <h3>DMG: o diagnóstico</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>TOTG 75 g: um valor basta</b></p>
+    <svg viewBox="0 0 360 196" role="img" aria-label="Três réguas de glicemia do TOTG 75 g, em mg/dL. Jejum: 92 a 125 é DMG, 126 ou mais é DM prévio. Uma hora: 180 ou mais é DMG. Duas horas: 153 a 199 é DMG, 200 ou mais é DM prévio. Os cortes de DMG estão destacados: basta um valor neles.">
+      <text class="fa-s" x="77.5" y="36" text-anchor="middle">normal</text>
+      <text class="fa-s" x="132.1" y="36" text-anchor="middle">DMG</text>
+      <text class="fa-s" x="256.9" y="36" text-anchor="middle">DM prévio</text>
+      <text class="fa-tc" x="6" y="59">jejum</text>
+      <rect class="fa-trk" x="56" y="46" width="292.5" height="18" rx="9"/>
+      <rect class="fa-zdmg" x="98.9" y="46" width="66.3" height="18"/>
+      <path class="fa-zdm" d="M165.2 46 H339.5 A9 9 0 0 1 348.5 55 A9 9 0 0 1 339.5 64 H165.2 Z"/>
+      <line class="fa-rsk" x1="98.9" y1="41" x2="98.9" y2="69"/>
+      <text class="fa-rst" x="98.9" y="82" text-anchor="middle">92</text>
+      <line class="fa-tk" x1="165.2" y1="41" x2="165.2" y2="69"/>
+      <text class="fa-tc" x="165.2" y="82" text-anchor="middle">126</text>
+      <text class="fa-tc" x="6" y="107">1 h</text>
+      <rect class="fa-trk" x="56" y="94" width="292.5" height="18" rx="9"/>
+      <path class="fa-zdmg" d="M270.5 94 H339.5 A9 9 0 0 1 348.5 103 A9 9 0 0 1 339.5 112 H270.5 Z"/>
+      <line class="fa-rsk" x1="270.5" y1="89" x2="270.5" y2="117"/>
+      <text class="fa-rst" x="270.5" y="130" text-anchor="middle">180</text>
+      <text class="fa-tc" x="6" y="155">2 h</text>
+      <rect class="fa-trk" x="56" y="142" width="292.5" height="18" rx="9"/>
+      <rect class="fa-zdmg" x="217.8" y="142" width="91.7" height="18"/>
+      <path class="fa-zdm" d="M309.5 142 H339.5 A9 9 0 0 1 348.5 151 A9 9 0 0 1 339.5 160 H309.5 Z"/>
+      <line class="fa-rsk" x1="217.8" y1="137" x2="217.8" y2="165"/>
+      <text class="fa-rst" x="217.8" y="178" text-anchor="middle">153</text>
+      <line class="fa-tk" x1="309.5" y1="137" x2="309.5" y2="165"/>
+      <text class="fa-tc" x="309.5" y="178" text-anchor="middle">200</text>
+      <text class="fa-s" x="348.5" y="192" text-anchor="end">mg/dL</text>
+    </svg>
+    <figcaption>Esquema: um valor alterado basta.<sup class="ref"><a href="#ref-7">7</a></sup></figcaption>
+  </figure>
   <div class="tw"><table>
     <tr><th>Momento</th><th>Exame</th><th>Leitura</th></tr>
     <tr><td>1ª consulta (até 20 semanas)</td><td>Glicemia de jejum</td><td>Abaixo de 92: TOTG em 24-28 semanas · 92-125: DMG · 126 ou mais: DM prévio</td></tr>
-    <tr><td>24-28 semanas</td><td>TOTG 75 g</td><td><strong>Um valor basta</strong>: jejum 92-125, 1 h 180 ou mais, 2 h 153-199 = DMG. Jejum 126 ou 2 h 200 ou mais = DM prévio</td></tr>
+    <tr><td>24-28 semanas</td><td>TOTG 75 g</td><td><strong class="chave">Um valor basta</strong>: jejum 92-125, 1 h 180 ou mais, 2 h 153-199 = DMG. Jejum 126 ou 2 h 200 ou mais = DM prévio</td></tr>
     <tr><td>Sem TOTG disponível</td><td>Jejum repetida</td><td>Jejum abaixo de 92 na 1ª consulta: repetir a jejum em 24-28 semanas</td></tr>
     <tr><td>Pré-natal após 28 semanas</td><td>TOTG</td><td>O mais cedo possível</td></tr>
     <tr><td>6 semanas pós-parto</td><td>TOTG 75 g, critérios da população geral</td><td>Jejum abaixo de 100 e 2 h abaixo de 140 = normal. HbA1c não vale</td></tr>
@@ -331,7 +465,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <ul class="tp">
     <li>Tratar: dieta, atividade e glicemia capilar (até 85% controlam só assim). Metas: jejum abaixo de 95, 1 h abaixo de 140, 2 h abaixo de 120.<sup class="ref"><a href="#ref-7">7</a></sup></li>
     <li>Insulina se 2 ou mais medidas fora da meta em 7-14 dias, ou circunferência abdominal fetal no percentil 75 ou acima (29-33 semanas). A metformina cruza a placenta: alternativa, não 1ª escolha.<sup class="ref"><a href="#ref-8">8</a></sup></li>
-    <li>Puerpério: DMG <strong>suspende</strong> a insulina (a causa saiu com a placenta); DM prévio reduz a dose.</li>
+    <li>Puerpério: DMG <strong class="chave">suspende</strong> a insulina (a causa saiu com a placenta); DM prévio reduz a dose.</li>
   </ul>
   <h3>Pré-eclâmpsia: o mecanismo</h3>
   <ul class="tp">
@@ -342,7 +476,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <div class="tw"><table>
     <tr><th>Situação</th><th>Regra</th></tr>
     <tr><td>Diagnóstico</td><td>PA 140/90 ou mais após 20 semanas + proteinúria (300 mg/24 h ou relação proteína/creatinina de 0,3) ou lesão de órgão-alvo</td></tr>
-    <tr><td>Gravidade (basta um)</td><td>PA 160/110 ou mais; plaquetas abaixo de 100 mil; creatinina acima de 1,1; transaminases 2x; dor epigástrica; cefaleia ou escotomas; edema pulmonar. <strong>Proteinúria não é gravidade</strong></td></tr>
+    <tr><td>Gravidade (basta um)</td><td>PA 160/110 ou mais; plaquetas abaixo de 100 mil; creatinina acima de 1,1; transaminases 2x; dor epigástrica; cefaleia ou escotomas; edema pulmonar. <strong class="chave">Proteinúria não é gravidade</strong></td></tr>
     <tr><td>Sobreposta</td><td>Hipertensa crônica (antes de 20 semanas) com proteinúria nova ou piora depois de 20 semanas (UERJ 2025)</td></tr>
     <tr><td>Prevenção</td><td>AAS 100-150 mg/dia de 12 a 36 semanas no alto risco (diabetes, PE prévia); cálcio se a dieta é pobre</td></tr>
     <tr><td>Sulfato de magnésio</td><td>PE grave, iminência, eclâmpsia, HELLP; manter 24 h pós-parto. Também neuroproteção fetal abaixo de 32 semanas. Não baixa a PA</td></tr>
@@ -360,41 +494,39 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <h2>O idoso inteiro: avaliação multidimensional</h2>
   <p class="lede">A consulta do idoso mede o que ele consegue decidir e fazer, não a lista de doenças. Diante de cada achado novo: é doença, é idade ou é remédio?</p>
   <figure class="fig-an">
-    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Funcionalidade = decidir + executar</b></p>
-    <svg viewBox="0 0 360 250" role="img" aria-label="Esquema em pilares. No topo, funcionalidade, que é decidir mais executar. Pilar da autonomia, decidir: depende de cognição e humor, cai por incapacidade cognitiva (demência, depressão, delirium), mede-se com MEEM e AVD instrumentais. Pilar da independência, executar: depende de mobilidade e comunicação, cai por instabilidade, imobilidade, incontinência e incapacidade comunicativa, mede-se com Katz, Timed Up and Go, sussurro e Snellen. Na base, em volta dos dois, iatrogenia e insuficiência familiar derrubam os dois pilares.">
-      <rect class="fa-q4" x="8" y="8" width="344" height="34" rx="8"/>
-      <text class="fa-t" x="180" y="30" text-anchor="middle">Funcionalidade = decidir + executar</text>
-      <line class="fa-li" x1="92" y1="42" x2="92" y2="56"/>
-      <line class="fa-li" x1="268" y1="42" x2="268" y2="56"/>
-      <rect class="fa-fase" x="8" y="56" width="168" height="128" rx="8"/>
-      <text class="fa-t" x="92" y="76" text-anchor="middle">Autonomia (decidir)</text>
-      <text class="fa-m" x="92" y="96" text-anchor="middle">cognição e humor</text>
-      <text class="fa-s" x="92" y="116" text-anchor="middle">cai por</text>
-      <text class="fa-m" x="92" y="131" text-anchor="middle">incapacidade cognitiva:</text>
-      <text class="fa-m" x="92" y="146" text-anchor="middle">demência, depressão,</text>
-      <text class="fa-m" x="92" y="161" text-anchor="middle">delirium</text>
-      <text class="fa-ok" x="92" y="177" text-anchor="middle">MEEM; AVD instrumentais</text>
-      <rect class="fa-fase" x="184" y="56" width="168" height="128" rx="8"/>
-      <text class="fa-t" x="268" y="76" text-anchor="middle">Independência (executar)</text>
-      <text class="fa-m" x="268" y="96" text-anchor="middle">mobilidade e comunicação</text>
-      <text class="fa-s" x="268" y="116" text-anchor="middle">cai por</text>
-      <text class="fa-m" x="268" y="131" text-anchor="middle">instabilidade, imobilidade,</text>
-      <text class="fa-m" x="268" y="146" text-anchor="middle">incontinência, incapacidade</text>
-      <text class="fa-m" x="268" y="161" text-anchor="middle">comunicativa</text>
-      <text class="fa-ok" x="268" y="177" text-anchor="middle">Katz; TUG; sussurro; Snellen</text>
-      <line class="fa-li" x1="92" y1="184" x2="92" y2="196"/>
-      <line class="fa-li" x1="268" y1="184" x2="268" y2="196"/>
-      <rect class="fa-aviso" x="8" y="196" width="344" height="46" rx="8"/>
-      <text class="fa-av" x="180" y="215" text-anchor="middle">Em volta dos dois: iatrogenia e família</text>
-      <text class="fa-m" x="180" y="232" text-anchor="middle">remédio demais e cuidador ausente derrubam os dois pilares</text>
+    <p class="fa-cab"><span>Fig 5 · esquema</span><b>Idoso: dois pilares da função</b></p>
+    <svg viewBox="0 0 360 224" role="img" aria-label="Templo de dois pilares sob o frontão funcionalidade. Pilar da autonomia, decidir: cognição e humor, medida pelo MEEM. Pilar da independência, executar: mobilidade e comunicação, medida por Katz e TUG. A base, destacada, é iatrogenia e família: quando falha, derruba os dois pilares.">
+      <path class="fa-box" d="M14 50 L180 10 L346 50 Z"/>
+      <text class="fa-t" x="180" y="42" text-anchor="middle">Funcionalidade</text>
+      <rect class="fa-fase" x="14" y="50" width="332" height="10"/>
+      <rect class="fa-fase" x="30" y="60" width="124" height="8"/>
+      <rect class="fa-col" x="38" y="68" width="108" height="118"/>
+      <line class="fa-flute" x1="43" y1="72" x2="43" y2="182"/><line class="fa-flute" x1="141" y1="72" x2="141" y2="182"/>
+      <rect class="fa-fase" x="30" y="186" width="124" height="8"/>
+      <text class="fa-t" x="92" y="90" text-anchor="middle">Autonomia</text>
+      <text class="fa-m" x="92" y="106" text-anchor="middle">decidir</text>
+      <text class="fa-m" x="92" y="132" text-anchor="middle">cognição</text>
+      <text class="fa-m" x="92" y="147" text-anchor="middle">humor</text>
+      <text class="fa-s" x="92" y="172" text-anchor="middle">MEEM</text>
+      <rect class="fa-fase" x="206" y="60" width="124" height="8"/>
+      <rect class="fa-col" x="214" y="68" width="108" height="118"/>
+      <line class="fa-flute" x1="219" y1="72" x2="219" y2="182"/><line class="fa-flute" x1="317" y1="72" x2="317" y2="182"/>
+      <rect class="fa-fase" x="206" y="186" width="124" height="8"/>
+      <text class="fa-tc" x="268" y="90" text-anchor="middle">Independência</text>
+      <text class="fa-m" x="268" y="106" text-anchor="middle">executar</text>
+      <text class="fa-m" x="268" y="132" text-anchor="middle">mobilidade</text>
+      <text class="fa-m" x="268" y="147" text-anchor="middle">comunicação</text>
+      <text class="fa-s" x="268" y="172" text-anchor="middle">Katz · TUG</text>
+      <rect class="fa-rsb" x="6" y="194" width="348" height="24" rx="4"/>
+      <text class="fa-rst" x="180" y="211" text-anchor="middle">iatrogenia · família</text>
     </svg>
-    <figcaption>Esquema (metáfora de pilares): a avaliação multidimensional mede função, não lista doenças.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
+    <figcaption>Esquema: a avaliação mede função, não lista doenças.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
   </figure>
   <h3>Senescência x senilidade</h3>
   <ul class="tp">
-    <li>Senescência é envelhecer sem doença: a TFG cai, a massa magra cai, a gordura sobe, há lapsos leves de memória e sarcopenia (UERJ 2024). Envelhecer não causa demência, incontinência nem depressão.</li>
+    <li>Senescência é envelhecer sem doença: a TFG cai, a massa magra cai, a gordura sobe, há lapsos leves de memória e sarcopenia (UERJ 2024). <span class="chave">Envelhecer não causa demência, incontinência nem depressão</span>.</li>
     <li>Creatinina normal no idoso não é rim normal: há menos músculo. Estime o clearance antes de dosar remédio.</li>
-    <li>A doença chega atípica: infecção sem febre, pneumonia pela taquipneia, e a <strong>confusão aguda</strong> é o grande alarme.</li>
+    <li>A doença chega atípica: infecção sem febre, pneumonia pela taquipneia, e a <strong class="chave">confusão aguda</strong> é o grande alarme.</li>
   </ul>
   <h3>O roteiro da avaliação</h3>
   <div class="tw"><table>
@@ -408,7 +540,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <tr><td>Nutrição e suporte</td><td>Peso em toda consulta; com quem mora, quem cuida</td><td>Rede fraca = risco de violência</td></tr>
   </table></div>
   <ul class="tp">
-    <li><strong>Queda</strong>: queda prévia é o maior preditor; benzodiazepínico é a classe que mais derruba. Prevenir: reduzir remédio de SNC, adaptar a casa, exercício de força e equilíbrio, corrigir a visão (UERJ 2025).</li>
+    <li><strong>Queda</strong>: <span class="chave">queda prévia é o maior preditor</span>; benzodiazepínico é a classe que mais derruba. Prevenir: reduzir remédio de SNC, adaptar a casa, exercício de força e equilíbrio, corrigir a visão (UERJ 2025).</li>
     <li><strong>Demência</strong>: rastreio etiológico com hemograma, função renal e hepática, TSH, cálcio, B12, folato, VDRL (HIV abaixo de 60 anos) e TC ou RM de crânio para todos (UERJ 2024).<sup class="ref"><a href="#ref-11">11</a></sup></li>
     <li><strong>Delirium</strong>: agudo, flutuante, desatento. Sempre tem causa orgânica: infecção, sódio, cálcio, glicemia, hipóxia, retenção urinária, fecaloma, remédio novo. No fim de vida (delirium terminal), explicar à família e controlar o sintoma (UERJ 2025).</li>
     <li><strong>Violência</strong>: as mais comuns são negligência e abandono; dinheiro que some é violência financeira (UERJ 2021). Risco: dependência, isolamento, cuidador sobrecarregado ou dependente químico (UERJ 2023). Entrevistar idoso e cuidador em separado; comunicar é dever de todo cidadão.<sup class="ref"><a href="#ref-12">12</a></sup></li>
@@ -436,17 +568,40 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   </table></div>
   <p class="lede">Os três primeiros têm o mesmo lugar nas duas versões; o 4º muda.<sup class="ref"><a href="#ref-10">10</a></sup><sup class="ref"><a href="#ref-13">13</a></sup></p>
   <h3>O mecanismo: doença e experiência divergem</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 6 · esquema</span><b>MCCP: doença, experiência e plano</b></p>
+    <svg viewBox="0 0 360 240" role="img" aria-label="Dois círculos que se cruzam dentro de um quadro. À esquerda, a doença: diagnóstico e exames. À direita, a experiência da doença: sentimentos, ideias, funções e expectativas. Explorar as duas é o 1º componente. A interseção, destacada, é o plano conjunto, 3º componente. O quadro em volta é a vida da pessoa, família, trabalho e fé: o 2º componente.">
+      <rect class="fa-box" x="4" y="4" width="352" height="232" rx="14"/>
+      <text class="fa-m" x="180" y="26" text-anchor="middle">2º · a vida: família, trabalho, fé</text>
+      <circle class="fa-circ" cx="136" cy="124" r="78"/>
+      <circle class="fa-circ" cx="224" cy="124" r="78"/>
+      <path class="fa-rsb" d="M180 59.6 A78 78 0 0 1 180 188.4 A78 78 0 0 1 180 59.6 Z"/>
+      <text class="fa-t" x="100" y="112" text-anchor="middle">Doença</text>
+      <text class="fa-m" x="100" y="130" text-anchor="middle">diagnóstico</text>
+      <text class="fa-m" x="100" y="146" text-anchor="middle">exames</text>
+      <text class="fa-rst" x="180" y="108" text-anchor="middle">3º</text>
+      <text class="fa-rst" x="180" y="126" text-anchor="middle">plano</text>
+      <text class="fa-rst" x="180" y="142" text-anchor="middle">conjunto</text>
+      <text class="fa-tc" x="256" y="98" text-anchor="middle">Experiência</text>
+      <text class="fa-s" x="256" y="117" text-anchor="middle"><tspan class="fa-ini">S</tspan>entimentos</text>
+      <text class="fa-s" x="256" y="132" text-anchor="middle"><tspan class="fa-ini">I</tspan>deias</text>
+      <text class="fa-s" x="256" y="147" text-anchor="middle"><tspan class="fa-ini">F</tspan>unções</text>
+      <text class="fa-s" x="256" y="162" text-anchor="middle"><tspan class="fa-ini">E</tspan>xpectativas</text>
+      <text class="fa-m" x="180" y="224" text-anchor="middle">1º · explorar as duas</text>
+    </svg>
+    <figcaption>Esquema: o plano nasce do encontro das duas.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
+  </figure>
   <ul class="tp">
     <li><strong>SIFE</strong> (1º componente): Sentimentos (o que teme), Ideias (o que acha que tem), Funções (o efeito no dia a dia), Expectativas (o que espera da consulta).</li>
     <li>Doença é o diagnóstico; experiência é como a pessoa vive o adoecer. Elas divergem: o hipertenso sem sintoma não adere porque não se sente doente; a queixa com exames normais é experiência sem doença achada.</li>
-    <li>O 1º pergunta o efeito <em>desta doença</em> na vida; o 2º pergunta <em>sobre a vida</em> (família, ciclo de vida, trabalho, fé), com genograma e ecomapa.</li>
+    <li>O 1º pergunta o efeito <span class="chave"><em>desta doença</em></span> na vida; o 2º pergunta <span class="chave"><em>sobre a vida</em></span> (família, ciclo de vida, trabalho, fé), com genograma e ecomapa.</li>
     <li>O 3º é o encontro de dois especialistas (Tuckett): o médico na doença, a pessoa na própria experiência. Combinam problemas, metas e papéis.</li>
   </ul>
   <h3>Decidir junto</h3>
   <div class="tw"><table>
     <tr><th>Modelo</th><th>Quem decide</th><th>O erro</th></tr>
     <tr><td>Paternalista</td><td>O médico</td><td>Plano que a pessoa não segue</td></tr>
-    <tr><td>Informativo</td><td>A pessoa, sozinha, diante dos dados</td><td>O médico se omite de recomendar: é abandono</td></tr>
+    <tr><td>Informativo</td><td>A pessoa, sozinha, diante dos dados</td><td>O médico se omite de recomendar: <span class="chave">é abandono</span></td></tr>
     <tr><td>Compartilhado</td><td>Os dois: evidência e recomendação + valores e contexto</td><td>Pede tempo e clareza</td></tr>
   </table></div>
   <ul class="tp">
@@ -475,10 +630,38 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <p class="lede">O HIV aparece de carona: na TB, na meningite, na gestante, no recém-nascido, na diarreia. As arboviroses chegam como surto na APS e como diagnóstico diferencial de febre.</p>
   <h3>HIV: a régua</h3>
   <ul class="tp">
-    <li>Retrovírus que destrói o linfócito CD4. AIDS = CD4 abaixo de 200 ou doença definidora (pneumocistose, neurotoxoplasmose, neurocriptococose, TB, candidíase esofágica, Kaposi). Candidíase oral e zóster não definem.</li>
+    <li>Retrovírus que destrói o linfócito CD4. AIDS = <span class="chave">CD4 abaixo de 200</span> ou doença definidora (pneumocistose, neurotoxoplasmose, neurocriptococose, TB, candidíase esofágica, Kaposi). Candidíase oral e zóster não definem.</li>
     <li>Diagnóstico: 2 testes reagentes de fabricantes ou métodos diferentes. O teste rápido tem janela longa: não serve para a infecção aguda (aí, carga viral).</li>
     <li>TARV para todos, com qualquer CD4: <strong>tenofovir + lamivudina + dolutegravir</strong> (UERJ 2024, no bloco de MFC).</li>
   </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 7 · esquema</span><b>CD4: o corte liga a profilaxia</b></p>
+    <svg viewBox="0 0 360 206" role="img" aria-label="Régua de CD4 de cima para baixo, com um linfócito no topo. Abaixo de 350 começa a ILTB, de preferência 3HP. Abaixo de 200, destacado, é AIDS e entra o SMX-TMP contra a pneumocistose. Abaixo de 100 o mesmo SMX-TMP cobre a toxoplasmose.">
+      <line class="fa-eixo" x1="84" y1="40" x2="84" y2="196"/>
+      <circle class="fa-col" cx="84" cy="24" r="13"/><circle class="fa-nuc" cx="85" cy="25" r="6.5"/>
+      <line class="fa-fio" x1="71.8" y1="19.6" x2="67.1" y2="17.8"/><circle class="fa-pt" cx="67.1" cy="17.8" r="1.6"/>
+      <line class="fa-fio" x1="79.6" y1="11.8" x2="77.8" y2="7.1"/><circle class="fa-pt" cx="77.8" cy="7.1" r="1.6"/>
+      <line class="fa-fio" x1="88.4" y1="11.8" x2="90.2" y2="7.1"/><circle class="fa-pt" cx="90.2" cy="7.1" r="1.6"/>
+      <line class="fa-fio" x1="96.2" y1="19.6" x2="100.9" y2="17.8"/><circle class="fa-pt" cx="100.9" cy="17.8" r="1.6"/>
+      <text class="fa-tc" x="108" y="29">CD4</text>
+      <line class="fa-ref" x1="78" y1="91" x2="350" y2="91"/>
+      <line class="fa-ref" x1="78" y1="166" x2="350" y2="166"/>
+      <rect class="fa-q4" x="130" y="91" width="26" height="105" rx="3"/>
+      <rect class="fa-rsb" x="230" y="136" width="26" height="60" rx="3"/>
+      <line class="fa-rsf" x1="78" y1="136" x2="350" y2="136"/>
+      <line class="fa-eixo" x1="78" y1="196" x2="350" y2="196"/>
+      <text class="fa-s" x="72" y="95" text-anchor="end">350</text>
+      <text class="fa-rst" x="72" y="140" text-anchor="end">200</text>
+      <text class="fa-rst" x="350" y="128" text-anchor="end">AIDS</text>
+      <text class="fa-s" x="72" y="170" text-anchor="end">100</text>
+      <text class="fa-s" x="72" y="200" text-anchor="end">0</text>
+      <text class="fa-tc" x="143" y="83" text-anchor="middle">ILTB · 3HP</text>
+      <text class="fa-s" x="243" y="114" text-anchor="middle">pneumocistose</text>
+      <text class="fa-rst" x="243" y="128" text-anchor="middle">SMX-TMP</text>
+      <text class="fa-m" x="264" y="160">+ toxo</text>
+    </svg>
+    <figcaption>Esquema: cada corte de CD4 liga uma profilaxia.<sup class="ref"><a href="#ref-3">3</a></sup></figcaption>
+  </figure>
   <div class="tw"><table>
     <tr><th>CD4</th><th>Profilaxia</th></tr>
     <tr><td>Até 350 (ou contato de TB)</td><td>ILTB, de preferência 3HP</td></tr>
@@ -499,11 +682,11 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <tr><td>Aleitamento</td><td>Contraindicado. Exposição pelo leite: suspender e investigar a criança</td></tr>
   </table></div>
   <ul class="tp">
-    <li>O anticorpo da mãe atravessa a placenta: o diagnóstico da criança é <strong>virológico</strong> (carga viral), nunca sorológico no início.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>O anticorpo da mãe atravessa a placenta: o diagnóstico da criança é <strong class="chave">virológico</strong> (carga viral), nunca sorológico no início.<sup class="ref"><a href="#ref-14">14</a></sup></li>
   </ul>
   <h3>Arboviroses</h3>
   <ul class="tp">
-    <li>Dengue: o choque vem do <strong>extravasamento de plasma</strong> quando a febre cede (fase crítica), não do sangramento. O hematócrito que sobe é o sinal.</li>
+    <li>Dengue: o choque vem do <strong class="chave">extravasamento de plasma</strong> quando a febre cede (fase crítica), não do sangramento. O hematócrito que sobe é o sinal.</li>
     <li>NS1 ou PCR até o 5º dia; IgM a partir do 6º.</li>
   </ul>
   <div class="tw"><table>
@@ -531,8 +714,8 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <h2>Meningites e meningoencefalites: o líquor conta a etiologia</h2>
   <p class="lede">Três perguntas resolvem a maioria: quanto tempo (agudo ou crônico), consciência preservada ou não (meningite ou encefalite), e o que o líquor mostra.</p>
   <figure class="fig-an">
-    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Quatro tubos de líquor, quatro etiologias</b></p>
-    <svg viewBox="0 0 360 272" role="img" aria-label="Quatro tubos de líquor lado a lado. Bacteriana: turvo, mais de 500 células com polimorfonucleares, glicose muito baixa, proteína muito alta, pressão alta. Viral: límpido, 5 a 100 células linfomonocitárias, glicose normal, proteína normal, pressão normal. Tuberculosa: xantocrômico, 5 a 500 células linfomonocitárias, glicose muito baixa, proteína alta, pressão alta. Fúngica: límpido ou turvo, 5 a 500 células linfomonocitárias e leveduras encapsuladas, glicose baixa, proteína alta, pressão muito alta. Barras em posição relativa, esquemáticas.">
+    <p class="fa-cab"><span>Fig 8 · esquema</span><b>Quatro tubos de líquor</b></p>
+    <svg viewBox="0 0 360 272" role="img" aria-label="Quatro tubos de líquor lado a lado. Bacteriana: turvo, mais de 500 células com polimorfonucleares, glicose muito baixa, proteína muito alta, pressão alta. Viral: límpido, 5 a 100 células linfomonocitárias, glicose normal, proteína e pressão normais. Tuberculosa: xantocrômico, 5 a 500 linfomonocitárias, glicose muito baixa, proteína e pressão altas. Fúngica: límpido ou turvo, 5 a 500 linfomonocitárias e leveduras encapsuladas, glicose baixa, proteína alta, pressão muito alta. A linha da glicose está destacada; as barras são ilustrativas.">
       <rect class="fa-borda" x="30" y="10" width="34" height="5" rx="2"/>
       <path class="fa-turvo" d="M35 40 V96 A12 12 0 0 0 59 96 V40 Z"/>
       <path class="fa-vidro" d="M34 15 V96 A13 13 0 0 0 60 96 V15"/>
@@ -552,7 +735,8 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
       <circle class="fa-lev" cx="308" cy="54" r="3.2"/><circle class="fa-cel" cx="308" cy="54" r="1.2"/>
       <circle class="fa-lev" cx="318" cy="72" r="3.2"/><circle class="fa-cel" cx="318" cy="72" r="1.2"/>
       <circle class="fa-lev" cx="309" cy="92" r="3.2"/><circle class="fa-cel" cx="309" cy="92" r="1.2"/>
-      <circle class="fa-cel" cx="319" cy="50" r="1.6"/><circle class="fa-cel" cx="306" cy="74" r="1.6"/><circle class="fa-cel" cx="319" cy="98" r="1.6"/>
+      <circle class="fa-cel" cx="319" cy="50" r="1.6"/>
+      <line class="fa-fio" x1="290" y1="54" x2="304" y2="54"/><text class="fa-s" x="287" y="58" text-anchor="end">levedura</text><circle class="fa-cel" cx="306" cy="74" r="1.6"/><circle class="fa-cel" cx="319" cy="98" r="1.6"/>
       <text class="fa-t" x="47" y="128" text-anchor="middle">Bacteriana</text>
       <text class="fa-t" x="135" y="128" text-anchor="middle">Viral</text>
       <text class="fa-t" x="225" y="128" text-anchor="middle">Tuberculosa</text>
@@ -565,11 +749,11 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
       <text class="fa-m" x="135" y="160" text-anchor="middle">5-100, linfo</text>
       <text class="fa-m" x="225" y="160" text-anchor="middle">5-500, linfo</text>
       <text class="fa-m" x="313" y="160" text-anchor="middle">5-500, linfo</text>
-      <text class="fa-s" x="12" y="180">glicose</text>
-      <rect class="fa-trilho" x="12" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="12" y="184" width="10" height="6" rx="3"/>
-      <rect class="fa-trilho" x="100" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="184" width="52" height="6" rx="3"/>
-      <rect class="fa-trilho" x="190" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="190" y="184" width="10" height="6" rx="3"/>
-      <rect class="fa-trilho" x="278" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="278" y="184" width="28" height="6" rx="3"/>
+      <text class="fa-rst" x="12" y="180">glicose</text>
+      <rect class="fa-trilho" x="12" y="184" width="70" height="6" rx="3"/><rect class="fa-rs" x="12" y="184" width="10" height="6" rx="3"/>
+      <rect class="fa-trilho" x="100" y="184" width="70" height="6" rx="3"/><rect class="fa-rs" x="100" y="184" width="52" height="6" rx="3"/>
+      <rect class="fa-trilho" x="190" y="184" width="70" height="6" rx="3"/><rect class="fa-rs" x="190" y="184" width="10" height="6" rx="3"/>
+      <rect class="fa-trilho" x="278" y="184" width="70" height="6" rx="3"/><rect class="fa-rs" x="278" y="184" width="28" height="6" rx="3"/>
       <text class="fa-s" x="12" y="206">proteína</text>
       <rect class="fa-trilho" x="12" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="12" y="210" width="64" height="6" rx="3"/>
       <rect class="fa-trilho" x="100" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="210" width="14" height="6" rx="3"/>
@@ -580,9 +764,9 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
       <rect class="fa-trilho" x="100" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="236" width="20" height="6" rx="3"/>
       <rect class="fa-trilho" x="190" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="190" y="236" width="48" height="6" rx="3"/>
       <rect class="fa-trilho" x="278" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="278" y="236" width="66" height="6" rx="3"/>
-      <text class="fa-s" x="180" y="264" text-anchor="middle">barras: posição relativa (esquema), não valor medido</text>
+      <text class="fa-s" x="180" y="264" text-anchor="middle">barras ilustrativas</text>
     </svg>
-    <figcaption>Esquemático; o círculo com halo no tubo fúngico é a levedura encapsulada da tinta da China.<sup class="ref"><a href="#ref-17">17</a></sup></figcaption>
+    <figcaption>Esquema: perfil do líquor por etiologia.<sup class="ref"><a href="#ref-17">17</a></sup></figcaption>
   </figure>
   <h3>Antes da punção</h3>
   <ul class="tp">
@@ -594,12 +778,12 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <div class="tw"><table>
     <tr><th>Idade</th><th>Agentes</th><th>Empírico</th></tr>
     <tr><td>Abaixo de 2 meses</td><td>Estreptococo do grupo B, E. coli, Listeria</td><td>Ampicilina + cefotaxima (ou aminoglicosídeo)</td></tr>
-    <tr><td>Acima de 3 meses e adulto</td><td>Pneumococo, meningococo, Hib</td><td>Ceftriaxona; <strong>na UERJ, + vancomicina</strong> (Harrison e Nelson)</td></tr>
+    <tr><td>Acima de 3 meses e adulto</td><td>Pneumococo, meningococo, Hib</td><td>Ceftriaxona; <strong class="chave">na UERJ, + vancomicina</strong> (Harrison e Nelson)</td></tr>
     <tr><td>Idoso, gestante, imunossuprimido</td><td>Os mesmos + Listeria</td><td>+ ampicilina (a Listeria resiste à cefalosporina)</td></tr>
   </table></div>
   <ul class="tp">
     <li>Gram: diplococo positivo = pneumococo; diplococo negativo = meningococo. O agente mais comum é o meningococo para o MS e o pneumococo para o Harrison, que é a bibliografia da UERJ.<sup class="ref"><a href="#ref-19">19</a></sup></li>
-    <li>Dexametasona antes ou junto da 1ª dose do antibiótico, em pneumococo e Hib: o antibiótico lisa a bactéria e a lise inflama. Antibiótico já correndo, a janela passou.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Dexametasona <span class="chave">antes ou junto da 1ª dose do antibiótico</span>, em pneumococo e Hib: o antibiótico lisa a bactéria e a lise inflama. Antibiótico já correndo, a janela passou.<sup class="ref"><a href="#ref-18">18</a></sup></li>
     <li>Quimioprofilaxia só para meningococo e Hib, nunca pneumococo. Rifampicina (meningococo: 12/12 h por 2 dias); gestante: ceftriaxona 250 mg IM, dose única; adulto não gestante: ciprofloxacino, dose única. O caso tratado com ceftriaxona já está coberto (UERJ 2021).<sup class="ref"><a href="#ref-5">5</a></sup></li>
     <li>Precaução de gotículas até 24 h de antibiótico; notificação imediata.</li>
   </ul>
@@ -608,7 +792,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
     <tr><th>Etiologia</th><th>Pista</th><th>Conduta</th></tr>
     <tr><td>Herpética (HSV-1)</td><td>Febre + comportamento alterado, crise, afasia; RM com lesão temporal assimétrica; líquor linfocítico, glicose normal, pode ter hemácias</td><td>Aciclovir EV 10 mg/kg 8/8 h por 14-21 dias, já na suspeita. PCR negativo precoce não suspende: repetir em 3-5 dias</td></tr>
     <tr><td>Tuberculosa</td><td>Semanas; par craniano (sobretudo o VI); glicose muito baixa</td><td>2RHZE/10RH + corticoide (cap. 2)</td></tr>
-    <tr><td>Criptocócica (CD4 abaixo de 100)</td><td>Hipertensão intracraniana, pressão de abertura muito alta, tinta da China, antígeno criptocócico</td><td>Anfotericina + flucitosina; punções de alívio; <strong>sem corticoide</strong>; TARV após 4-6 semanas</td></tr>
+    <tr><td>Criptocócica (CD4 abaixo de 100)</td><td>Hipertensão intracraniana, pressão de abertura muito alta, tinta da China, antígeno criptocócico</td><td>Anfotericina + flucitosina; punções de alívio; <strong class="chave">sem corticoide</strong>; TARV após 4-6 semanas</td></tr>
   </table></div>
   <div class="trap"><span class="albl">Armadilha</span><p>Corticoide na criptocócica aumenta a mortalidade: é o oposto do pneumococo. E "herpes só acima de 50 anos" está errado: é qualquer idade, inclusive na criança (UERJ 2022).</p></div>
   <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em 2024 a UERJ deu ceftriaxona + vancomicina ao lactente acima de 3 meses: a bibliografia é o Nelson, não o Guia do MS.<sup class="ref"><a href="#ref-20">20</a></sup> Em 2023 vieram a herpética e a criptocócica na mesma prova.</p></div>
@@ -622,10 +806,10 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <h2>Polifarmácia, desprescrição e reação adversa</h2>
   <p class="lede">Polifarmácia é um número; a cascata de prescrição é o mecanismo. No idoso polimedicado, todo sintoma novo é efeito de remédio até prova em contrário.</p>
   <figure class="fig-an">
-    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Cascata de prescrição</b></p>
-    <svg viewBox="0 0 360 240" role="img" aria-label="Três cascatas de prescrição em linha. IECA causa tosse seca, que recebe xarope. Tiazídico causa ácido úrico alto, que recebe alopurinol. Pioglitazona causa edema de membros inferiores, que recebe diurético. O efeito adverso no meio é lido como doença nova; o segundo remédio é o erro. Abaixo, o corte certo: rever o primeiro remédio, não tratar o efeito.">
+    <p class="fa-cab"><span>Fig 9 · esquema</span><b>Cascata de prescrição</b></p>
+    <svg viewBox="0 0 360 240" role="img" aria-label="Três cascatas de prescrição em linha. IECA dá tosse seca, tratada com xarope; tiazídico dá ácido úrico alto, tratado com alopurinol; pioglitazona dá edema de membros inferiores, tratado com diurético. Abaixo, destacado, o passo certo: rever o 1º remédio.">
       <text class="fa-s" x="58" y="16" text-anchor="middle">1º remédio</text>
-      <text class="fa-s" x="180" y="16" text-anchor="middle">efeito lido como doença</text>
+      <text class="fa-s" x="180" y="16" text-anchor="middle">efeito adverso</text>
       <text class="fa-s" x="302" y="16" text-anchor="middle">2º remédio</text>
       <rect class="fa-fase" x="8" y="26" width="100" height="40" rx="8"/><text class="fa-t" x="58" y="50" text-anchor="middle">IECA</text>
       <line class="fa-li" x1="108" y1="46" x2="123" y2="46"/><path class="fa-seta" d="M130 46 l-7 -4 v8 z"/>
@@ -642,11 +826,11 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
       <rect class="fa-aviso" x="130" y="142" width="100" height="40" rx="8"/><text class="fa-av" x="180" y="166" text-anchor="middle">edema de MMII</text>
       <line class="fa-li" x1="230" y1="162" x2="245" y2="162"/><path class="fa-seta" d="M252 162 l-7 -4 v8 z"/>
       <rect class="fa-erro" x="252" y="142" width="100" height="40" rx="8"/><text class="fa-er" x="302" y="166" text-anchor="middle">diurético</text>
-      <line class="fa-li" x1="58" y1="182" x2="58" y2="197"/><path class="fa-seta" d="M58 204 l-4 -7 h8 z"/>
-      <rect class="fa-alvo" x="8" y="204" width="344" height="30" rx="8"/>
-      <text class="fa-ok" x="180" y="224" text-anchor="middle">Cortar: rever o 1º remédio, não tratar o efeito</text>
+      <line class="fa-rsf" x1="58" y1="204" x2="58" y2="191"/><path class="fa-rs" d="M58 183 l-4.5 8 h9 z"/>
+      <rect class="fa-rsb" x="8" y="204" width="344" height="30" rx="8"/>
+      <text class="fa-rst" x="180" y="224" text-anchor="middle">rever o 1º remédio</text>
     </svg>
-    <figcaption>Esquema: em âmbar o efeito adverso lido como doença nova; em vermelho, o remédio que não devia existir.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
+    <figcaption>Esquema: o 2º remédio trata o efeito do 1º.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
   </figure>
   <h3>Por que o idoso faz mais reação adversa</h3>
   <div class="tw"><table>
@@ -660,7 +844,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <p class="lede">Por isso a regra da prescrição no idoso: começar com dose baixa e subir devagar.</p>
   <h3>Definições e risco</h3>
   <ul class="tp">
-    <li><strong>Polifarmácia</strong>: o corte clássico é 5 ou mais fármacos; o MS usa 4 ou mais. <strong>Multimorbidade</strong>: 2 ou mais condições crônicas; HAS + DM já conta (UERJ 2025).</li>
+    <li><strong>Polifarmácia</strong>: o corte clássico é <span class="chave">5 ou mais fármacos</span>; o MS usa 4 ou mais. <strong>Multimorbidade</strong>: 2 ou mais condições crônicas; <span class="chave">HAS + DM já conta</span> (UERJ 2025).</li>
     <li>O risco não é só da idade: multimorbidade, vários prescritores e automedicação também produzem polifarmácia (UERJ 2022 pediu os grupos vulneráveis além do idoso).</li>
     <li>RAM pesa mais acima de 85 anos, com TFG abaixo de 50, fragilidade, muitas doenças, muitos remédios e RAM prévia. Insuficiência cardíaca e demência entram na lista de risco; osteoartrose e hipotireoidismo, não (a UERJ 2024 misturou as duas numa alternativa).<sup class="ref"><a href="#ref-21">21</a></sup></li>
     <li>Classes que mais levam o idoso à emergência: cardiovasculares e anticoagulantes (varfarina à frente), insulina e sulfonilureia, psicotrópicos, AINE (UERJ 2024).</li>
@@ -674,7 +858,7 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   </table></div>
   <ul class="tp">
     <li>Desprescrever é prevenção quaternária planejada: revisar a lista ao menos 1 vez por ano, pesar o tempo até o benefício contra a expectativa de vida, retirar devagar o que é de SNC (benzodiazepínico, opioide, antidepressivo) e o betabloqueador.</li>
-    <li>Desprescrição criteriosa de IBP, estatina e anti-hipertensivo não aumentou mortalidade: foi a evidência que a UERJ aceitou em 2025.</li>
+    <li>Desprescrição criteriosa de IBP, estatina e anti-hipertensivo <span class="chave">não aumentou mortalidade</span>: foi a evidência que a UERJ aceitou em 2025.</li>
     <li>Insônia no idoso em luto: escuta, higiene do sono e revisão da receita; benzodiazepínico novo piora queda e delirium.<sup class="ref"><a href="#ref-10">10</a></sup></li>
   </ul>
   <div class="trap"><span class="albl">Armadilha</span><p>"De 5 a 10 medicamentos é seguro na maioria" (UERJ 2025): nenhum número libera; julga-se fármaco a fármaco. E desprescrição é prevenção quaternária, não terciária.</p></div>
@@ -689,9 +873,48 @@ p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
   <h2>Oncologia ortopédica e osteomielite: idade, lugar e periósteo</h2>
   <p class="lede">Tumor ósseo se acerta com três dados: a idade, o segmento do osso e a reação do periósteo. No adulto, lesão óssea é metástase até prova em contrário.</p>
   <h3>O mecanismo da imagem</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 10 · esquema</span><b>Osso longo: lugar e periósteo</b></p>
+    <svg viewBox="0 0 360 218" role="img" aria-label="Osso longo deitado, da epífise à diáfise, com a fise marcada. Na metáfise, o osteossarcoma da 2ª década faz espículas em raios de sol e o triângulo de Codman. Na diáfise, o Ewing da 1ª década faz camadas em casca de cebola. As reações do periósteo estão destacadas.">
+      <path class="fa-osso" d="M60 72 C38 66 14 80 14 110 C14 140 38 154 60 148 C82 142 102 132 124 130 L346 130 L342 120 L348 110 L342 100 L346 90 L124 90 C102 88 82 78 60 72 Z"/>
+      <path class="fa-mo" d="M128 98 H341 L337 110 L341 122 H128 C118 120 112 115 112 110 C112 105 118 100 128 98 Z"/>
+      <path class="fa-fise" d="M60 74 C56 92 56 128 60 146"/>
+      <line class="fa-rsf" x1="104" y1="86.2" x2="112.3" y2="72.5"/>
+      <line class="fa-rsf" x1="100.1" y1="85.1" x2="107.6" y2="65.5"/>
+      <line class="fa-rsf" x1="96.2" y1="83.9" x2="99.5" y2="66.2"/>
+      <line class="fa-rsf" x1="92.3" y1="82.6" x2="92.5" y2="59.6"/>
+      <line class="fa-rsf" x1="88.3" y1="81.3" x2="85.6" y2="62.5"/>
+      <line class="fa-rsf" x1="84.4" y1="79.9" x2="78.3" y2="58.8"/>
+      <line class="fa-rsf" x1="80.5" y1="78.6" x2="73.9" y2="62.9"/>
+      <line class="fa-rsf" x1="76.6" y1="77.2" x2="67.1" y2="59.6"/>
+      <path class="fa-rsb" d="M122 72 L122 89.8 L140 90 Z"/>
+      <path class="fa-rsf" d="M211 90 Q211 86 221 86 H289 Q299 86 299 90"/>
+      <path class="fa-rsf" d="M211 130 Q211 134 221 134 H289 Q299 134 299 130"/>
+      <path class="fa-rsf" d="M208 90 Q208 82 218 82 H292 Q302 82 302 90"/>
+      <path class="fa-rsf" d="M208 130 Q208 138 218 138 H292 Q302 138 302 130"/>
+      <path class="fa-rsf" d="M205 90 Q205 78 215 78 H295 Q305 78 305 90"/>
+      <path class="fa-rsf" d="M205 130 Q205 142 215 142 H295 Q305 142 305 130"/>
+      <text class="fa-m" x="84" y="46" text-anchor="middle">raios de sol</text>
+      <text class="fa-m" x="146" y="74">Codman</text>
+      <text class="fa-m" x="255" y="68" text-anchor="middle">casca de cebola</text>
+      <line class="fa-eixo" x1="14" y1="160" x2="346" y2="160"/>
+      <line class="fa-eixo" x1="14" y1="156" x2="14" y2="164"/>
+      <line class="fa-eixo" x1="60" y1="156" x2="60" y2="164"/>
+      <line class="fa-eixo" x1="124" y1="156" x2="124" y2="164"/>
+      <line class="fa-eixo" x1="346" y1="156" x2="346" y2="164"/>
+      <text class="fa-s" x="37" y="176" text-anchor="middle">epífise</text>
+      <text class="fa-s" x="92" y="176" text-anchor="middle">metáfise</text>
+      <text class="fa-s" x="235" y="176" text-anchor="middle">diáfise</text>
+      <text class="fa-tc" x="92" y="198" text-anchor="middle">Osteossarcoma</text>
+      <text class="fa-s" x="92" y="212" text-anchor="middle">2ª década</text>
+      <text class="fa-tc" x="255" y="198" text-anchor="middle">Ewing</text>
+      <text class="fa-s" x="255" y="212" text-anchor="middle">1ª década</text>
+    </svg>
+    <figcaption>Esquema: lugar e periósteo apontam o tumor.<sup class="ref"><a href="#ref-22">22</a></sup></figcaption>
+  </figure>
   <ul class="tp">
     <li>Quanto mais rápido o crescimento, menos o osso consegue reagir: borda esclerótica = lento (benigno); aspecto permeativo, cortical rompida e massa de partes moles = agressivo.</li>
-    <li>Periósteo levantado aos poucos faz camadas (<strong>casca de cebola</strong>); rompido por tumor rápido faz o <strong>triângulo de Codman</strong>; espículas divergentes, os <strong>raios de sol</strong>.</li>
+    <li>Periósteo levantado aos poucos faz camadas (<strong class="chave">casca de cebola</strong>); rompido por tumor rápido faz o <strong class="chave">triângulo de Codman</strong>; espículas divergentes, os <strong class="chave">raios de sol</strong>.</li>
     <li>Lesão blástica = o tumor faz osso; lítica = destrói.</li>
   </ul>
   <div class="tw"><table>

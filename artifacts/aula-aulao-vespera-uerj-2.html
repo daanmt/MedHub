@@ -1,0 +1,861 @@
+<title>Aulão de véspera · UERJ 2026 · parte 2</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:20px 0 8px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:28px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+ol.toc .qc{display:block}
+.qc a,.lede a,ul.tp a{color:var(--teal-ink)}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.banca{margin:16px 0;padding:12px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.banca p{margin:4px 0 0;color:var(--ink2)}
+.blbl{color:var(--plum-ink);font-weight:600;font-size:14px}
+.q{margin:14px 0 0;padding:12px 14px;background:var(--sunk);border-radius:var(--raio,10px)}
+.q p{margin:0 0 6px;color:var(--ink)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:32px;display:flex;align-items:center}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);color:var(--ink2)}
+.qc{color:var(--ink3);font-size:13px}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-er{fill:var(--carmine-ink);font-size:12px;font-weight:650}
+.fa-fio{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-pt{fill:var(--ink2)}
+.fa-dia{fill:var(--ink3)}
+.fa-esof{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-est{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.2}
+.fa-alca{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.2}
+.fa-eixo{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-ref{stroke:var(--line2);stroke-width:1.2;fill:none}
+.fa-curva{stroke:var(--ink);stroke-width:2.2;fill:none;stroke-linecap:round}
+.fa-zav{fill:var(--amber-wash)}
+.fa-zer{fill:var(--carmine-wash)}
+.fa-lig{stroke:var(--ink2);stroke-width:5;fill:none;stroke-linecap:round}
+.fa-osso{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-musc{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-vaso{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-tri{fill:var(--plum-wash)}
+.fa-aviso{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.4}
+.fa-esc{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-zt{fill:var(--plum-wash);stroke:var(--ink2);stroke-width:1.2}
+.fa-col{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.2}
+.fa-cel{fill:var(--ink2)}
+.chave{color:var(--rosa);font-weight:650}
+.fa-rs{fill:var(--rosa)}
+.fa-rsl{stroke:var(--rosa);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-rst{fill:var(--rosa);font-size:12px;font-weight:650}
+.fa-rsb{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-box{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-x{fill:var(--carmine-ink);font-size:17px;font-weight:700}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Véspera · parte 2 · capítulos 11 a 20 pelo peso da UERJ 2021-2025</p>
+  <h1>Aulão de véspera, parte 2: os temas 11 a 20 da UERJ</h1>
+  <p class="sub">Mesma régua da parte 1: o que a banca pergunta, o mecanismo que amarra os fatos, os cortes e as armadilhas que ela já usou. Aqui ficam os dez temas que vêm logo depois, e em todos eles você já errou uma questão da UERJ.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho de hoje</h2>
+  <ol class="toc" start="11">
+    <li><a href="#cap-11">Esôfago e estômago: a junção, o hiato e o tumor</a><span class="qc">CIR e CM · 11 questões</span></li>
+    <li><a href="#cap-12">Asma: o corticoide manda, a PaCO2 avisa</a><span class="qc">CM, PED e GO · 8 questões</span></li>
+    <li><a href="#cap-13">Climatério e assoalho pélvico</a><span class="qc">GO e MFC · 7 questões</span></li>
+    <li><a href="#cap-14">Tireoide: o nódulo, a captação e o TSH sem remédio</a><span class="qc">CIR, CM e MFC · 6 questões</span></li>
+    <li><a href="#cap-15">Colo do útero: do laudo à colposcopia</a><span class="qc">GO · 6 questões</span></li>
+    <li><a href="#cap-16">Hérnias da parede: o vaso, o ligamento e o sofrimento</a><span class="qc">CIR · 6 questões</span></li>
+    <li><a href="#cap-17">Doenças glomerulares: inflamação que sangra, peneira que vaza</a><span class="qc">CM e PED · 5 questões</span></li>
+    <li><a href="#cap-18">Endometriose: o hormônio trata a dor, a cirurgia trata o resto</a><span class="qc">GO · 5 questões</span></li>
+    <li><a href="#cap-19">Infecções congênitas: cada agente tem uma assinatura</a><span class="qc">PED · 5 questões</span></li>
+    <li><a href="#cap-20">ITU na criança: a urina certa, a imagem certa</a><span class="qc">PED · 5 questões</span></li>
+  </ol>
+  <p class="qc">Antes: <a href="#abertura">onde a parte 1 parou</a>. Depois: <a href="#gatilhos">os dez gatilhos</a> e as <a href="#refs">referências</a>.</p>
+</nav>
+
+<section class="sec" id="abertura">
+  <span class="kick">00 · Abertura</span>
+  <h2>Onde a parte 1 parou</h2>
+  <ul class="tp">
+    <li>A <a href="aulas/aulao-vespera-uerj.html" data-hub-aula="aulao-vespera-uerj" data-titulo="Aulão de véspera: os 10 temas que a UERJ mais cobra">parte 1</a> cobriu os dez temas de maior peso: paciente operado, tuberculose, trauma, DMG e pré-eclâmpsia, idoso, MCCP, HIV e arboviroses, meningites, polifarmácia e oncologia ortopédica. Ela pesa mais: leia-a primeiro.</li>
+    <li>Esta parte usa a mesma régua (as 420 questões de 2021 a 2025, contadas por tema, com presença em 3 ou mais edições) e pega os dez seguintes. Somam 64 questões: cerca de 15 por prova, mais de uma por bloco.</li>
+    <li>Não repete o que já tem aula própria. Rastreamento, epidemiologia e testes diagnósticos estão no <a href="aulas/uerj-de-bolso-mfc.html" data-hub-aula="uerj-de-bolso-mfc" data-titulo="UERJ de Bolso: MFC e a banca">UERJ de Bolso: MFC</a>; derrame pleural, ascite, pericárdio, líquor e líquido sinovial, na aula <a href="aulas/liquidos-cavitarios.html" data-hub-aula="liquidos-cavitarios" data-titulo="Líquidos cavitários">Líquidos cavitários</a>.</li>
+    <li>O capítulo 13 (climatério) entrou pela regra das cinco áreas: sem ele, MFC ficaria fora desta parte. A ordem dos capítulos é o número de questões de cada um.</li>
+    <li>Onde o livro do edital e a diretriz divergem, ou onde duas especialidades discordam, o capítulo marca o que a UERJ já aceitou.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Todo capítulo traz, no box âmbar, uma armadilha em que você já caiu numa UERJ anterior. Com pouco tempo, leia só os boxes âmbar e os "teste agora".</li>
+  </ul>
+</section>
+
+<section class="sec" id="cap-11">
+  <span class="kick">11 · Cirurgia e CM · 11 questões em 2021, 2023, 2024 e 2025</span>
+  <h2>Esôfago e estômago: a junção, o hiato e o tumor</h2>
+  <p class="lede">A UERJ cobra esôfago e estômago como anatomia com nome: onde está a junção esofagogástrica (JEG), qual triângulo, quantos graus de válvula, que camada o tumor atingiu.</p>
+  <h3>DRGE: tratar antes de investigar</h3>
+  <ul class="tp">
+    <li>Refluxo é falha da barreira da JEG (esfíncter inferior + pinça diafragmática). Obesidade e hérnia por deslizamento a abrem; por isso perder peso trata.</li>
+    <li>Pirose e regurgitação típicas, sem alarme: IBP empírico por 8 semanas + perda de peso. Endoscopia de entrada só com alarme (disfagia, sangramento, emagrecimento, anemia, vômitos) ou falha do IBP.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>A endoscopia vê dano (Los Angeles A a D, Barrett), não prova refluxo: quem prova é a pHmetria. A manometria vem antes de operar.</li>
+    <li>Barrett = metaplasia intestinal, mucosa cor de salmão acima da JEG: é o caminho para o adenocarcinoma. A cirurgia antirrefluxo não reverte Barrett.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+  <h3>A cirurgia antirrefluxo</h3>
+  <ul class="tp">
+    <li>Opera: falha ou intolerância ao IBP, desejo de parar o remédio, esofagite C ou D, sintoma respiratório com refluxo documentado.</li>
+    <li>Melhor preditor de bom resultado: <span class="chave">sintoma típico que respondia ao IBP</span>. A resposta prova que o ácido causa o sintoma. Sintoma atípico isolado ou falha total do IBP preveem mau resultado.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Nissen = fundoplicatura total, 360°. Dismotilidade na manometria pede válvula parcial (Toupet, 270°). Obeso com IMC de 35 ou mais: bypass gástrico em Y de Roux.<sup class="ref"><a href="#ref-2">2</a>,<a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Hérnia de hiato: a JEG classifica</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Hérnia de hiato: onde está a JEG?</b></p>
+    <svg viewBox="0 0 360 250" role="img" aria-label="Quatro tipos de hérnia de hiato lado a lado, com o diafragma como faixa horizontal e a junção esofagogástrica, destacada, como ponto. Tipo I, deslizamento: a junção sobe para o tórax junto com a cárdia. Tipo II, paraesofágica: a junção fica no lugar, abaixo do diafragma, e o fundo gástrico sobe ao lado do esôfago. Tipo III, mista: a junção e o fundo sobem. Tipo IV, gigante: o hiato muito largo deixa subir boa parte do estômago e outro órgão, em âmbar.">
+      <path class="fa-est" d="M43 84 C34 92 33 110 40 120 C30 134 26 160 34 182 C42 202 70 204 78 186 C84 172 74 160 66 152 C60 144 57 132 56 120 C63 110 62 92 53 84 Z"/>
+      <rect class="fa-dia" x="8" y="117" width="31" height="6" rx="3"/>
+      <rect class="fa-dia" x="57" y="117" width="31" height="6" rx="3"/>
+      <rect class="fa-esof" x="43" y="14" width="10" height="72" rx="2"/>
+      <circle class="fa-rs" cx="48" cy="86" r="4.2"/>
+      <path class="fa-est" d="M133 124 C122 138 118 164 126 184 C134 202 160 204 168 188 C174 174 166 160 162 148 C160 140 163 132 165 124 C170 112 172 100 168 90 C164 78 148 78 145 90 C142 102 145 114 147 124 L143 124 Z"/>
+      <rect class="fa-dia" x="98" y="117" width="31" height="6" rx="3"/>
+      <rect class="fa-dia" x="170" y="117" width="8" height="6" rx="3"/>
+      <rect class="fa-esof" x="133" y="14" width="10" height="112" rx="2"/>
+      <circle class="fa-rs" cx="138" cy="126" r="4.2"/>
+      <path class="fa-est" d="M223 86 C214 96 214 114 219 124 C209 140 206 166 214 184 C222 202 250 204 258 188 C264 174 256 160 252 148 C250 140 253 132 256 124 C262 112 264 96 258 86 C252 74 240 74 237 84 C236 86 234 87 233 86 Z"/>
+      <rect class="fa-dia" x="188" y="117" width="29" height="6" rx="3"/>
+      <rect class="fa-dia" x="260" y="117" width="8" height="6" rx="3"/>
+      <rect class="fa-esof" x="223" y="14" width="10" height="72" rx="2"/>
+      <circle class="fa-rs" cx="228" cy="86" r="4.2"/>
+      <path class="fa-est" d="M313 74 C302 84 300 110 305 124 C296 138 298 158 310 166 C324 174 344 166 346 150 C347 140 347 132 347 124 C354 106 354 76 340 64 C332 58 324 64 323 74 Z"/>
+      <rect class="fa-alca" x="326" y="92" width="20" height="12" rx="6"/>
+      <rect class="fa-dia" x="278" y="117" width="25" height="6" rx="3"/>
+      <rect class="fa-dia" x="350" y="117" width="6" height="6" rx="3"/>
+      <rect class="fa-esof" x="313" y="14" width="10" height="60" rx="2"/>
+      <circle class="fa-rs" cx="318" cy="74" r="4.2"/>
+      <line class="fa-fio" x1="40" y1="73" x2="46" y2="82"/>
+      <text class="fa-rst" x="38" y="70" text-anchor="end">JEG</text>
+      <text class="fa-s" x="128" y="110" text-anchor="end">diafragma</text>
+      <text class="fa-tc" x="48" y="218" text-anchor="middle">Tipo I</text>
+      <text class="fa-s" x="48" y="232" text-anchor="middle">deslizamento</text>
+      <text class="fa-rst" x="48" y="246" text-anchor="middle">JEG no tórax</text>
+      <text class="fa-tc" x="138" y="218" text-anchor="middle">Tipo II</text>
+      <text class="fa-s" x="138" y="232" text-anchor="middle">paraesofágica</text>
+      <text class="fa-rst" x="138" y="246" text-anchor="middle">JEG no lugar</text>
+      <text class="fa-tc" x="228" y="218" text-anchor="middle">Tipo III</text>
+      <text class="fa-s" x="228" y="232" text-anchor="middle">mista</text>
+      <text class="fa-rst" x="228" y="246" text-anchor="middle">JEG + fundo</text>
+      <text class="fa-tc" x="318" y="218" text-anchor="middle">Tipo IV</text>
+      <text class="fa-s" x="318" y="232" text-anchor="middle">gigante</text>
+      <text class="fa-rst" x="318" y="246" text-anchor="middle">+ outro órgão</text>
+    </svg>
+    <figcaption>Esquema: a posição da JEG define o tipo.<sup class="ref"><a href="#ref-4">4</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Tipo I é a mais comum e anda com a DRGE: trata-se como DRGE.</li>
+    <li>Tipos II a IV são paraesofágicas: o fundo (ou mais) sobe ao lado do esôfago. Não dão refluxo, mas podem torcer (volvo) e encarcerar; a sintomática vai à cirurgia.<sup class="ref"><a href="#ref-4">4</a></sup></li>
+  </ul>
+  <h3>Disfagia: qual peça falhou</h3>
+  <ul class="tp">
+    <li>Zenker: pseudodivertículo de pulsão na parede posterior da hipofaringe, no <strong>triângulo de Killian</strong>, entre as fibras oblíquas do constritor inferior (tireofaríngeo) e as transversas do cricofaríngeo.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>Acalasia: perda dos neurônios inibitórios do plexo mioentérico (Auerbach). Sem o freio, o esfíncter inferior não relaxa e o corpo perde a peristalse. No Brasil, a causa mais comum é a doença de Chagas; a manometria confirma.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+  </ul>
+  <ul class="tp">
+    <li>Câncer de esôfago: escamoso = terço médio, tabaco e álcool (e acalasia, cáustico, tilose); adenocarcinoma = distal e JEG, DRGE, Barrett, obesidade.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Câncer gástrico: duas classificações e uma cirurgia</h3>
+  <ul class="tp">
+    <li>Borrmann (o que se vê): I polipoide; II ulcerado com borda elevada, bem delimitado; III ulcerado e infiltrativo, borda mal delimitada (o mais comum); IV difusamente infiltrativo, a linite plástica.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>Lauren (o microscópio): <strong>intestinal</strong> = idoso, homem, antro, forma glândula, nasce de gastrite atrófica e metaplasia (H. pylori). <strong>Difuso</strong> = jovem, mulher, proximal, células em anel de sinete, sem lesão precursora.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+    <li>T pela camada: T1 mucosa ou submucosa; T2 muscular própria; <span class="chave">T3 subserosa</span>; T4 serosa ou órgão vizinho. N pelo número: N1 1-2, N2 3-6, N3 7 ou mais linfonodos.<sup class="ref"><a href="#ref-7">7</a></sup></li>
+    <li>Ressecável: gastrectomia + linfadenectomia D2. Tumor distal (antro, corpo distal): subtotal. Proximal: total.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>O tamanho não classifica a hérnia; a JEG classifica. Você caiu nisso na UERJ 2025: linha Z na altura do pinçamento e estômago no tórax é tipo II, não I. Na UERJ 2021 o erro foi o inverso (no tipo I, a JEG está no mediastino). Na UERJ 2024, tumor até a subserosa com 4 linfonodos era pT3N2, não T2.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Nove das 11 vieram em Cirurgia, quase sempre como nome: tipo de hérnia (2021, 2025), graus do Nissen (2025), Killian (2023), Borrmann e Lauren (2021), TNM (2024). Em CM: DRGE sem alarme aos 45 anos (IBP empírico, 2024) e o mecanismo da acalasia (2025).</p></div>
+  <div class="q"><p>Imagem: JEG na altura do hiato, fundo gástrico no tórax ao lado do esôfago.</p><details><summary>ver resposta</summary><div>Hérnia paraesofágica, tipo II. Com a JEG no tórax seria tipo I (só ela) ou III (ela e o fundo). <span class="qc">2025/Q38</span></div></details></div>
+  <div class="q"><p>Adenocarcinoma de antro até a subserosa, 4 de 24 linfonodos, sem metástase. Estádio e cirurgia?</p><details><summary>ver resposta</summary><div>pT3N2M0. Gastrectomia subtotal com linfadenectomia D2. <span class="qc">2024/Q27</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-12">
+  <span class="kick">12 · CM, PED e GO · 8 questões em 2021-2025, todas as edições</span>
+  <h2>Asma: o corticoide manda, a PaCO2 avisa</h2>
+  <p class="lede">Toda questão de asma é uma de três: ler a espirometria, subir o degrau certo ou reconhecer a crise que mata. As três saem do mesmo mecanismo: inflamação crônica que estreita a via aérea de forma variável.</p>
+  <h3>O mecanismo</h3>
+  <ul class="tp">
+    <li>Inflamação crônica (tipo 2 na maioria) gera hiper-responsividade e obstrução variável, reversível. Por isso o pilar da manutenção é o anti-inflamatório (corticoide inalatório, CI) e o pilar da crise é o broncodilatador.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>A partir dos 6 anos, SABA isolado está proibido em qualquer degrau: todo asmático recebe CI. Abaixo de 6 anos, SABA por demanda ainda é o degrau 1.<sup class="ref"><a href="#ref-9">9</a>,<a href="#ref-10">10</a></sup></li>
+  </ul>
+  <h3>Espirometria: a razão decide</h3>
+  <ul class="tp">
+    <li>Obstrução = VEF1/CVF abaixo de 0,70 (ou do limite inferior da normalidade). Asma = obstrução que reverte: VEF1 sobe 12% e 200 mL após o broncodilatador.<sup class="ref"><a href="#ref-10">10</a>,<a href="#ref-11">11</a></sup></li>
+    <li>VEF1/CVF normal ou alta com CVF baixa sugere restrição; quem confirma é a capacidade pulmonar total baixa.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    <li>Espirometria normal não exclui asma: entre as crises, ela pode ser normal.</li>
+  </ul>
+  <h3>Manutenção: os degraus (6 anos ou mais)</h3>
+  <div class="tw"><table>
+    <tr><th>Degrau</th><th>Preferido (resgate com CI-formoterol)</th><th>Alternativa (resgate com SABA)</th></tr>
+    <tr><td>1-2</td><td>CI-formoterol em dose baixa, por demanda</td><td>CI em dose baixa diário</td></tr>
+    <tr><td>3</td><td>CI-formoterol dose baixa na manutenção e no resgate (MART)</td><td>CI dose baixa + LABA</td></tr>
+    <tr><td>4</td><td>MART com CI em dose média</td><td>CI dose média + LABA</td></tr>
+    <tr><td>5</td><td colspan="2">Encaminhar: tiotrópio, fenotipagem, biológico</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>MART só existe com <span class="chave">formoterol</span>, que age em minutos. Com salmeterol ou vilanterol, o resgate continua sendo o SABA.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>Sobe o degrau: sintoma ou resgate mais de 2 vezes por semana, despertar noturno, crise. Despertar noturno já é degrau 3 no mínimo.</li>
+    <li>Abaixo de 6 anos: sem LABA e sem MART. Subir = dobrar a dose do CI (degrau 3); depois, especialista.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>Broncoespasmo no exercício: alívio com broncodilatador de ação rápida (SABA ou CI-formoterol); para prevenir, o mesmo antes do esforço, com a asma de base controlada.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>Gestante: manter o tratamento e nunca descer degrau na gravidez. Derivados do ergot podem causar broncoespasmo: evite-os na asmática.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+  </ul>
+  <h3>Crise: a PaCO2 que engana</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>PaCO2 na crise de asma</b></p>
+    <svg viewBox="0 0 360 232" role="img" aria-label="Gráfico ilustrativo da PaCO2 ao longo da piora de uma crise de asma. Na crise leve a grave, a hiperventilação derruba a PaCO2 abaixo de 40 mmHg. Com a fadiga, a PaCO2 volta a 40, ponto destacado, valor que parece normal e é alarme. Com 45 mmHg ou mais, falência respiratória.">
+      <rect class="fa-zav" x="232" y="30" width="58" height="150"/>
+      <rect class="fa-zer" x="290" y="30" width="56" height="150"/>
+      <line class="fa-ref" x1="46" y1="105" x2="346" y2="105"/>
+      <line class="fa-eixo" x1="46" y1="30" x2="46" y2="180"/>
+      <line class="fa-eixo" x1="46" y1="180" x2="346" y2="180"/>
+      <line class="fa-eixo" x1="41" y1="155" x2="46" y2="155"/>
+      <line class="fa-eixo" x1="41" y1="105" x2="46" y2="105"/>
+      <line class="fa-eixo" x1="41" y1="80" x2="46" y2="80"/>
+      <line class="fa-eixo" x1="41" y1="55" x2="46" y2="55"/>
+      <text class="fa-s" x="38" y="159" text-anchor="end">30</text>
+      <text class="fa-s" x="38" y="109" text-anchor="end">40</text>
+      <text class="fa-s" x="38" y="84" text-anchor="end">45</text>
+      <text class="fa-s" x="38" y="59" text-anchor="end">50</text>
+      <text class="fa-s" x="46" y="20">PaCO2 (mmHg)</text>
+      <text class="fa-s" x="52" y="99">normal</text>
+      <path class="fa-curva" d="M60 125 C90 140 130 158 170 155 C205 152 235 120 260 105 C280 93 300 76 336 50"/>
+      <circle class="fa-pt" cx="60" cy="125" r="3"/>
+      <circle class="fa-pt" cx="336" cy="50" r="3"/>
+      <circle class="fa-rs" cx="260" cy="105" r="4.5"/>
+      <text class="fa-m" x="122" y="131" text-anchor="middle">PaCO2 cai</text>
+      <text class="fa-rst" x="256" y="64" text-anchor="middle">volta a 40</text>
+      <text class="fa-er" x="318" y="44" text-anchor="middle">45 ou +</text>
+      <text class="fa-m" x="80" y="196" text-anchor="middle">leve</text>
+      <text class="fa-m" x="165" y="196" text-anchor="middle">grave</text>
+      <text class="fa-m" x="261" y="196" text-anchor="middle">fadiga</text>
+      <text class="fa-m" x="318" y="196" text-anchor="middle">falência</text>
+      <text class="fa-s" x="196" y="214" text-anchor="middle">gravidade -&gt;</text>
+      <text class="fa-s" x="196" y="228" text-anchor="middle">curva ilustrativa</text>
+    </svg>
+    <figcaption>Esquema: na crise, PaCO2 de 40 é fadiga.<sup class="ref"><a href="#ref-9">9</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Na crise, o asmático hiperventila e derruba a PaCO2. <span class="chave">Quando ela volta a 40, o músculo cansou.</span> PaCO2 de 45 ou mais = insuficiência respiratória.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>Grave: frases incompletas, FR acima de 30, FC acima de 120, PFE de 50% ou menos. Risco de vida: sonolência, confusão, tórax silencioso: preparar a via aérea.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>Tratar: SABA repetido na 1ª hora, corticoide sistêmico cedo (via oral vale o mesmo que a venosa), oxigênio se hipoxemia. Alta sempre com CI.</li>
+  </ul>
+  <h3>O vizinho: DPOC retentor de CO2</h3>
+  <ul class="tp">
+    <li>No retentor crônico, oxigênio em excesso sobe a PaCO2 e acidifica: o alvo é <span class="chave">SpO2 de 88-92%</span>, com máscara de Venturi ou o menor fluxo que alcance o alvo.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Retentor crônico tem bicarbonato alto; o pH separa o estável (normal) do agudizado (baixo).</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>PaCO2 de 40 na crise parece normal e é o achado mais grave do caso: você caiu nisso na UERJ 2021 (marcou a FR de 36). Na UERJ 2022 leu VEF1/CVF de 85% com CVF baixa como obstrução: obstrução exige razão abaixo de 0,70; ali era restrição.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Caiu em CM, PED e GO. CM e PED pedem o degrau seguinte (2023, 2024 e o MART em 2025); GO pede o remédio que a asmática não pode receber (2023). Ela segue o GINA: SABA isolado a partir dos 6 anos, ou LABA abaixo dos 6, é alternativa errada.</p></div>
+  <div class="q"><p>Pré-escolar de 4 anos em CI dose baixa diária, ainda com sintomas e uma crise no mês.</p><details><summary>ver resposta</summary><div>Dobrar a dose do CI (degrau 3). LABA e MART não entram abaixo de 6 anos. <span class="qc">2024/Q62</span></div></details></div>
+  <div class="q"><p>Adolescente em CI + formoterol fixo, mal controlado, usando SABA de resgate. Estratégia?</p><details><summary>ver resposta</summary><div>MART: o mesmo CI-formoterol na manutenção e no resgate. <span class="qc">2025/Q67</span></div></details></div>
+  <div class="q"><p>Crise de asma: FR 34, pulso paradoxal, SpO2 88%, PaCO2 40.</p><details><summary>ver resposta</summary><div>A PaCO2 normal é o sinal de gravidade (fadiga): falência iminente. <span class="qc">2021/Q12</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-13">
+  <span class="kick">13 · GO e MFC · 7 questões em 2022, 2023, 2024 e 2025</span>
+  <h2>Climatério e assoalho pélvico: tratar o sintoma, não o exame</h2>
+  <p class="lede">O estrogênio cai e leva junto o fogacho, o osso e o trofismo do assoalho pélvico. A UERJ cobra duas coisas: quando e como dar hormônio, e quando não pedir exame.</p>
+  <h3>O mecanismo</h3>
+  <ul class="tp">
+    <li>Os folículos acabam: inibina B e estradiol caem, o FSH sobe. Menopausa = 12 meses de amenorreia, diagnóstico retrospectivo e clínico.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>FSH só com dúvida real: amenorreia antes da idade esperada, histerectomizada ou quadro atípico.</li>
+    <li>Sem estrogênio vêm o fogacho, a atrofia urogenital, a perda óssea acelerada nos primeiros anos e o pior perfil cardiovascular.</li>
+  </ul>
+  <h3>Terapia hormonal (TH)</h3>
+  <ul class="tp">
+    <li>Indicação: fogacho que atrapalha a vida. Atrofia urogenital isolada: estrogênio vaginal, que vale mesmo fora da janela.<sup class="ref"><a href="#ref-14">14</a>,<a href="#ref-15">15</a></sup></li>
+    <li>Janela de oportunidade: menos de 60 anos e menos de 10 anos de menopausa. Fora dela, o risco cardiovascular supera o benefício da TH sistêmica.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Com útero: estrogênio + progestágeno, que protege o endométrio. Sem útero: estrogênio isolado, exceto se houve endometriose.</li>
+    <li>A via oral passa pelo fígado (sobe fatores de coagulação, triglicerídeo e PA); a transdérmica, não. Diabética, hipertensa, obesa, tabagista ou com triglicerídeo alto: <span class="chave">transdérmica</span>. DM e HAS controlados não contraindicam.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>Contraindicam: câncer de mama (inclusive in situ, até o estrogênio vaginal), câncer de endométrio, sangramento sem causa, doença coronariana ou cerebrovascular, trombose atual ou prévia, hepatopatia descompensada.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>Sem TH: ISRS ou IRSN (desvenlafaxina, venlafaxina) e gabapentina. Com tamoxifeno, nada de paroxetina e fluoxetina: inibem a CYP2D6 e tiram o efeito do tamoxifeno.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+  </ul>
+  <h3>O que não pedir</h3>
+  <ul class="tp">
+    <li>Densitometria: <span class="chave">a partir dos 65 anos</span>, ou antes com fator de risco (FRAX). Não aos 50 por rotina.<sup class="ref"><a href="#ref-16">16</a></sup></li>
+    <li>FSH, estradiol e ultrassonografia transvaginal de rotina na assintomática: não. A mama segue o programa do MS (50-74 anos, a cada 2 anos), que está no UERJ de Bolso.</li>
+  </ul>
+  <h3>Incontinência urinária: a história separa</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Incontinência: onde falha</b></p>
+    <svg viewBox="0 0 360 248" role="img" aria-label="Duas bexigas em corte. À esquerda, incontinência de esforço: a tosse empurra a bexiga para baixo e a uretra, destacada, não fecha; a urina escapa. À direita, incontinência de urgência: setas mostram o detrusor, destacado, contraindo fora de hora; a uretra é normal e a urina escapa.">
+      <line class="fa-li" x1="68" y1="6" x2="68" y2="22"/><path class="fa-seta" d="M68 30 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="112" y1="6" x2="112" y2="22"/><path class="fa-seta" d="M112 30 l-4 -8 h8 z"/>
+      <text class="fa-s" x="90" y="20" text-anchor="middle">tosse</text>
+      <path class="fa-est" d="M40 120 C28 80 50 36 90 36 C130 36 152 80 140 120 C126 136 102 140 97 142 L83 142 C78 140 54 136 40 120 Z"/>
+      <rect class="fa-musc" x="30" y="150" width="51" height="8" rx="3"/>
+      <rect class="fa-musc" x="99" y="150" width="51" height="8" rx="3"/>
+      <rect class="fa-rsb" x="85" y="142" width="10" height="48" rx="3"/>
+      <circle class="fa-cel" cx="90" cy="198" r="2.4"/><circle class="fa-cel" cx="90" cy="207" r="1.9"/>
+      <text class="fa-s" x="90" y="92" text-anchor="middle">bexiga</text>
+      <text class="fa-rst" x="101" y="182">uretra</text>
+      <text class="fa-s" x="30" y="174">assoalho</text>
+      <text class="fa-tc" x="90" y="228" text-anchor="middle">Esforço</text>
+      <text class="fa-s" x="90" y="242" text-anchor="middle">uretra não fecha</text>
+      <line class="fa-li" x1="270" y1="8" x2="270" y2="24"/><path class="fa-seta" d="M270 33 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="190" y1="85" x2="202" y2="85"/><path class="fa-seta" d="M211 85 l-8 -4 v8 z"/>
+      <line class="fa-li" x1="350" y1="85" x2="338" y2="85"/><path class="fa-seta" d="M329 85 l8 -4 v8 z"/>
+      <path class="fa-rsb" d="M220 120 C208 80 230 36 270 36 C310 36 332 80 320 120 C306 136 282 140 277 142 L263 142 C258 140 234 136 220 120 Z"/>
+      <rect class="fa-musc" x="210" y="150" width="51" height="8" rx="3"/>
+      <rect class="fa-musc" x="279" y="150" width="51" height="8" rx="3"/>
+      <rect class="fa-esof" x="265" y="142" width="10" height="48" rx="3"/>
+      <circle class="fa-cel" cx="270" cy="198" r="2.4"/><circle class="fa-cel" cx="270" cy="207" r="1.9"/>
+      <text class="fa-rst" x="270" y="92" text-anchor="middle">detrusor</text>
+      <text class="fa-tc" x="270" y="228" text-anchor="middle">Urgência</text>
+      <text class="fa-s" x="270" y="242" text-anchor="middle">detrusor contrai</text>
+    </svg>
+    <figcaption>Esquema: no esforço falha a uretra; na urgência, o detrusor.<sup class="ref"><a href="#ref-17">17</a></sup></figcaption>
+  </figure>
+  <div class="tw"><table>
+    <tr><th></th><th>Esforço</th><th>Urgência (bexiga hiperativa)</th></tr>
+    <tr><td>Mecanismo</td><td>A uretra não fecha: hipermobilidade do colo vesical ou deficiência do esfíncter</td><td>O detrusor contrai fora de hora</td></tr>
+    <tr><td>Clínica</td><td>Perde ao tossir, rir, pegar peso</td><td>Vontade súbita que não espera; noctúria</td></tr>
+    <tr><td>1ª linha</td><td>Fisioterapia do assoalho pélvico</td><td>Medidas comportamentais + fisioterapia</td></tr>
+    <tr><td>Depois</td><td>Sling de uretra média</td><td>Antimuscarínico ou beta-3 agonista (mirabegrona); refratária: toxina botulínica no detrusor</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>O treino da musculatura do assoalho pélvico é a primeira linha em qualquer tipo.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Urodinâmica não é obrigatória para começar: entra antes de operar ou no quadro misto. Pressão de perda <span class="chave">abaixo de 60 cmH2O</span> = deficiência esfincteriana intrínseca; acima de 90 = hipermobilidade do colo vesical.<sup class="ref"><a href="#ref-19">19</a></sup></li>
+    <li>Antimuscarínico: cuidado no glaucoma de ângulo fechado e no idoso (piora a cognição); o beta-3 agonista é a alternativa.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+  </ul>
+  <h3>Prolapso: o POP-Q localiza</h3>
+  <ul class="tp">
+    <li>Pontos do ápice: C = colo (ou cúpula vaginal, na histerectomizada); D = fundo de saco posterior, que a histerectomizada não tem.<sup class="ref"><a href="#ref-20">20</a></sup></li>
+    <li>Prolapso apical com vida sexual ativa: sacrocolpopexia (tela fixada no promontório). Idosa frágil sem vida sexual: colpocleise, que fecha a vagina.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Bexiga hiperativa se trata relaxando o detrusor: antimuscarínico, beta-3 agonista ou toxina botulínica intradetrusora; bloqueador adrenérgico não trata. Você caiu nisso na UERJ 2025. Na UERJ 2024, POP-Q sem ponto D era cúpula: histerectomizada com vida sexual vai à sacrocolpopexia.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em MFC ela premia o não: não dosar hormônio, não pedir densitometria antes da hora, não indicar TH sem sintoma (2025); e a escolha da TH para o fogacho (2024). Em GO pede a via na diabética (2022), a pressão de perda (2023) e a primeira linha da incontinência (2025).</p></div>
+  <div class="q"><p>52 anos, fogachos intensos, DM2 controlado, útero presente.</p><details><summary>ver resposta</summary><div>Estrogênio transdérmico + progestágeno. DM controlado não contraindica; a via transdérmica poupa fígado e coagulação. <span class="qc">2022/Q26</span></div></details></div>
+  <div class="q"><p>Urodinâmica: perda aos esforços com pressão de 45 cmH2O.</p><details><summary>ver resposta</summary><div>Deficiência esfincteriana intrínseca (abaixo de 60). <span class="qc">2023/Q48</span></div></details></div>
+  <div class="q"><p>55 anos, sem queixa, pede "os exames da menopausa".</p><details><summary>ver resposta</summary><div>Só o rastreio do programa. FSH não diagnostica nada aqui; densitometria aos 65 ou com fator de risco. <span class="qc">2025/Q100</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-14">
+  <span class="kick">14 · CIR, CM e MFC · 6 questões em 2021, 2024 e 2025</span>
+  <h2>Tireoide: o nódulo, a captação e o TSH sem remédio</h2>
+  <p class="lede">O nódulo segue um trilho fixo (TSH e US, depois punção se o US mandar), a tireotoxicose se resolve pela captação, e o TSH pouco alto, no bloco de MFC, não pede levotiroxina.</p>
+  <h3>O trilho do nódulo</h3>
+  <ul class="tp">
+    <li>1º passo: TSH + US. TSH suprimido = cintilografia (nódulo quente é autônomo, de baixo risco). TSH normal ou alto = o US decide.<sup class="ref"><a href="#ref-22">22</a></sup></li>
+    <li>US que puxa para câncer: sólido, hipoecoico, mais alto que largo, margem irregular, microcalcificação.</li>
+    <li>TI-RADS soma pontos: <span class="chave">TR1 e TR2 nunca puncionam</span>; TR3 a partir de 2,5 cm; TR4 a partir de 1,5 cm; TR5 a partir de 1 cm.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>Bethesda: I repete (insatisfatório não é negativo); II segue; III repete; IV, V e VI operam.<sup class="ref"><a href="#ref-24">24</a></sup></li>
+  </ul>
+  <h3>Os carcinomas</h3>
+  <div class="tw"><table>
+    <tr><th>Tipo</th><th>Célula e marcador</th><th>Marca</th></tr>
+    <tr><td>Papilífero (o mais comum)</td><td>Folicular; tireoglobulina</td><td>Vai pela linfa. A punção diagnostica: núcleo em vidro fosco ("olhos da órfã Annie"), fendas e pseudoinclusões, corpos psamomatosos</td></tr>
+    <tr><td>Folicular</td><td>Folicular; tireoglobulina</td><td>Vai pelo sangue. A punção não diagnostica: só a invasão de cápsula ou vaso, na peça</td></tr>
+    <tr><td>Medular</td><td>Célula C; calcitonina e CEA</td><td>RET, NEM 2. Total + esvaziamento; radioiodo não serve</td></tr>
+    <tr><td>Anaplásico</td><td>Indiferenciado</td><td>Idoso, massa que cresce em semanas; traqueostomia</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>No diferenciado, a idade é o principal fator prognóstico: o jovem vai melhor (o corte do estadiamento é 55 anos).<sup class="ref"><a href="#ref-7">7</a>,<a href="#ref-22">22</a></sup></li>
+    <li>Pescoço crescendo, estridor e agitação horas após a tireoidectomia = hematoma: abrir a ferida no leito, já. Sem imagem, sem esperar centro cirúrgico.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Tireotoxicose: a captação separa</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Tireotoxicose: a captação decide</b></p>
+    <svg viewBox="0 0 360 172" role="img" aria-label="Fluxo da tireotoxicose. Captação alta: Graves, bócio multinodular tóxico, adenoma tóxico. Captação baixa: com tireoglobulina alta, tireoidite; com tireoglobulina baixa, destacada, tireotoxicose factícia.">
+      <rect class="fa-box" x="115" y="6" width="130" height="28" rx="8"/>
+      <text class="fa-tc" x="180" y="25" text-anchor="middle">Tireotoxicose</text>
+      <line class="fa-li" x1="180" y1="34" x2="180" y2="46"/>
+      <line class="fa-li" x1="92" y1="46" x2="268" y2="46"/>
+      <line class="fa-li" x1="92" y1="46" x2="92" y2="56"/><path class="fa-seta" d="M92 64 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="268" y1="46" x2="268" y2="56"/><path class="fa-seta" d="M268 64 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="12" y="64" width="160" height="28" rx="8"/>
+      <text class="fa-tc" x="92" y="83" text-anchor="middle">Captação alta</text>
+      <text class="fa-m" x="92" y="112" text-anchor="middle">Graves</text>
+      <text class="fa-m" x="92" y="128" text-anchor="middle">BMN tóxico</text>
+      <text class="fa-m" x="92" y="144" text-anchor="middle">adenoma tóxico</text>
+      <rect class="fa-box" x="188" y="64" width="160" height="28" rx="8"/>
+      <text class="fa-tc" x="268" y="83" text-anchor="middle">Captação baixa</text>
+      <line class="fa-li" x1="268" y1="92" x2="268" y2="102"/>
+      <line class="fa-li" x1="226" y1="102" x2="310" y2="102"/>
+      <line class="fa-li" x1="226" y1="102" x2="226" y2="110"/><path class="fa-seta" d="M226 118 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="310" y1="102" x2="310" y2="110"/><path class="fa-seta" d="M310 118 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="190" y="118" width="72" height="26" rx="8"/>
+      <text class="fa-m" x="226" y="135" text-anchor="middle">Tg alta</text>
+      <rect class="fa-rsb" x="274" y="118" width="72" height="26" rx="8"/>
+      <text class="fa-rst" x="310" y="135" text-anchor="middle">Tg baixa</text>
+      <text class="fa-m" x="226" y="162" text-anchor="middle">tireoidite</text>
+      <text class="fa-rst" x="310" y="162" text-anchor="middle">factícia</text>
+    </svg>
+    <figcaption>Esquema: captação baixa com Tg baixa é hormônio de fora.<sup class="ref"><a href="#ref-25">25</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Factícia: o hormônio de fora suprime a glândula, que não capta nem libera tireoglobulina. Na tireoidite, a glândula inflamada derrama hormônio pronto e a tireoglobulina sobe.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+  </ul>
+  <h3>Hipotireoidismo subclínico: a lente do bloco decide</h3>
+  <ul class="tp">
+    <li>TSH alto com T4 livre normal: confirme com nova dosagem antes de rotular.</li>
+    <li>Endocrinologia (SBEM): TSH de 10 ou mais = repor; 4,5-10 = individualizar até 65 anos (sintoma, risco cardiovascular, progressão); acima de 65, não repor.<sup class="ref"><a href="#ref-26">26</a></sup></li>
+    <li>Atenção primária (BMJ 2019): adulto sem sintoma importante e <span class="chave">TSH abaixo de 20 = não tratar</span>, salvo gestação ou desejo de gestar.<sup class="ref"><a href="#ref-27">27</a></sup> Foi a linha da UERJ 2025 (MFC): TSH 11, 60 anos, assintomática = hábitos de vida, sem levotiroxina.</li>
+    <li>Na mesma questão, glicemia de jejum de 102 não era pré-diabetes: pela OMS e pelo MS, glicemia de jejum alterada é 110-125.<sup class="ref"><a href="#ref-28">28</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Nódulo de 12 mm, isoecoico e parcialmente cístico soma 2 pontos (TR2): só segue, não punciona. Você caiu nisso na UERJ 2024. Na UERJ 2025, tireotoxicose com captação baixa e tireoide normal em quem quer emagrecer era factícia, não Graves: Graves capta muito.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em CIR, o critério do US (2024), a citologia do papilífero (2025), a emergência do hematoma (2024) e o prognóstico (2021); em CM, a captação (2025); em MFC, a prevenção quaternária (2025). Divergência entre especialidades: vale a lente do bloco.</p></div>
+  <div class="q"><p>Tireoidectomia há 4 horas: pescoço aumentando, estridor, agitação.</p><details><summary>ver resposta</summary><div>Hematoma: abrir a ferida no leito e evacuar. <span class="qc">2024/Q35</span></div></details></div>
+  <div class="q"><p>Punção: núcleos claros em vidro fosco, fendas nucleares, corpos psamomatosos.</p><details><summary>ver resposta</summary><div>Carcinoma papilífero. <span class="qc">2025/Q31</span></div></details></div>
+  <div class="q"><p>Tireotoxicose, captação baixa e difusa, tireoglobulina indetectável, tireoide de tamanho normal.</p><details><summary>ver resposta</summary><div>Tireotoxicose factícia. <span class="qc">2025/Q17</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-15">
+  <span class="kick">15 · GO · 6 questões em 2021-2025, todas as edições</span>
+  <h2>Colo do útero: do laudo à colposcopia</h2>
+  <p class="lede">A UERJ quase nunca pergunta quem rastrear (isso está no UERJ de Bolso): ela entrega um laudo de citologia e pede o próximo passo. As respostas de 2021 a 2025 seguem a diretriz do INCA de 2016.</p>
+  <h3>Onde a lesão nasce</h3>
+  <ul class="tp">
+    <li>O colo tem dois epitélios: escamoso na ectocérvice e colunar (glandular) no canal. Eles se encontram na junção escamocolunar (JEC).</li>
+    <li>Com estrogênio alto (menacme, gestação, pílula), o colunar se exterioriza; exposto ao meio ácido da vagina, vira escamoso. É a metaplasia escamosa, fisiológica.</li>
+    <li><strong>Zona de transformação (ZT)</strong> = a faixa entre a JEC original e a JEC atual, onde a metaplasia aconteceu. É ali que o HPV age, e é dela que se colhe e se biopsia.<sup class="ref"><a href="#ref-29">29</a></sup></li>
+    <li>Na pós-menopausa a JEC entra no canal: a ZT pode sair da vista (tipo 3) e a colposcopia fica insatisfatória.<sup class="ref"><a href="#ref-29">29</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 5 · esquema</span><b>Colo de frente: duas junções</b></p>
+    <svg viewBox="0 0 360 212" role="img" aria-label="Colo do útero visto de frente. Por fora, o epitélio escamoso original. Um anel marca a junção escamocolunar original. Entre ela e a junção escamocolunar atual fica a zona de transformação, destacada, área de metaplasia escamosa. No centro, ao redor do orifício externo, o epitélio colunar do canal.">
+      <circle class="fa-esc" cx="100" cy="110" r="86"/>
+      <circle class="fa-zt" cx="100" cy="110" r="58"/>
+      <circle class="fa-col" cx="100" cy="110" r="32"/>
+      <circle class="fa-cel" cx="86" cy="96" r="1.6"/><circle class="fa-cel" cx="112" cy="95" r="1.6"/><circle class="fa-cel" cx="80" cy="115" r="1.6"/><circle class="fa-cel" cx="120" cy="118" r="1.6"/><circle class="fa-cel" cx="95" cy="128" r="1.6"/><circle class="fa-cel" cx="108" cy="127" r="1.6"/><circle class="fa-cel" cx="99" cy="90" r="1.6"/>
+      <ellipse class="fa-cel" cx="100" cy="110" rx="9" ry="4"/>
+      <line class="fa-fio" x1="203" y1="34" x2="146" y2="52"/><circle class="fa-pt" cx="146" cy="52" r="2.4"/>
+      <line class="fa-fio" x1="203" y1="76" x2="153" y2="87"/><circle class="fa-pt" cx="153" cy="87" r="2.4"/>
+      <line class="fa-fio" x1="203" y1="110" x2="146" y2="110"/><circle class="fa-rs" cx="146" cy="110" r="2.8"/>
+      <line class="fa-fio" x1="203" y1="152" x2="128" y2="126"/><circle class="fa-pt" cx="128" cy="126" r="2.4"/>
+      <line class="fa-fio" x1="203" y1="188" x2="110" y2="122"/><circle class="fa-pt" cx="110" cy="122" r="2.4"/>
+      <text class="fa-m" x="206" y="38">escamoso</text>
+      <text class="fa-m" x="206" y="80">JEC original</text>
+      <text class="fa-rst" x="206" y="114">zona de transformação</text>
+      <text class="fa-m" x="206" y="156">JEC atual</text>
+      <text class="fa-m" x="206" y="192">colunar</text>
+    </svg>
+    <figcaption>Esquema: a ZT fica entre as duas junções.<sup class="ref"><a href="#ref-29">29</a></sup></figcaption>
+  </figure>
+  <h3>Laudo -&gt; conduta</h3>
+  <div class="tw"><table>
+    <tr><th>Laudo</th><th>Conduta</th></tr>
+    <tr><td>ASC-US</td><td>Abaixo de 25 anos: repetir em 3 anos. 25-29: em 12 meses. 30 ou mais: em 6 meses</td></tr>
+    <tr><td>LSIL (baixo grau)</td><td>Abaixo de 25: repetir em 3 anos. <span class="chave">25 ou mais: repetir em 6 meses</span>; persistiu, colposcopia</td></tr>
+    <tr><td>ASC-H</td><td>Colposcopia, em qualquer idade</td></tr>
+    <tr><td>HSIL (alto grau)</td><td>Colposcopia, em qualquer idade; "ver e tratar" se a colposcopia for satisfatória com achado maior</td></tr>
+    <tr><td>AGC</td><td>Colposcopia + avaliação do canal; endométrio a partir de 35 anos ou com sangramento anormal</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>LSIL que se repete vai à colposcopia; dois exames normais seguidos, de 6 em 6 meses, devolvem a mulher ao rastreio de rotina.<sup class="ref"><a href="#ref-30">30</a></sup></li>
+    <li>AGC: a célula glandular pode vir do canal ou do endométrio. Colposcopia normal não encerra: <span class="chave">nova citologia com atenção ao canal + USG transvaginal</span>. Conização só se o AGC persistir, se a colposcopia for insatisfatória ou com achado anormal.<sup class="ref"><a href="#ref-30">30</a></sup></li>
+    <li>Imunossuprimida: qualquer atipia vai direto à colposcopia. Gestante: colhe como a não gestante; lesão sem suspeita de invasão espera o pós-parto.</li>
+  </ul>
+  <h3>Quando já é câncer</h3>
+  <ul class="tp">
+    <li>Biópsia com microinvasão: conização primeiro, porque é ela que estadia. Histerectomia direta pode subtratar.</li>
+    <li>FIGO 2018: IB1 até 2 cm; IB2 de 2 a 4 cm; <span class="chave">IB3 acima de 4 cm</span>, ainda restrito ao colo.<sup class="ref"><a href="#ref-31">31</a></sup></li>
+    <li>IB3 e doença localmente avançada: quimiorradiação com cisplatina + braquiterapia.<sup class="ref"><a href="#ref-32">32</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>AGC com colposcopia normal não é conização: é nova citologia e avaliação do endométrio. Você caiu nisso na UERJ 2023. Na UERJ 2021, LSIL a partir dos 25 anos era repetir em 6 meses; na UERJ 2025, a zona de transformação era metaplasia escamosa fisiológica, não lesão.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Cinco edições seguidas, quatro delas pedindo o próximo passo diante de um laudo (LSIL em 2021 e 2024, AGC em 2022 e 2023). A questão do câncer IB3 (2023/Q43) foi anulada, mas a regra vale: tumor acima de 4 cm vai à quimiorradiação.</p></div>
+  <div class="q"><p>30 anos, LSIL; 6 meses depois, LSIL de novo.</p><details><summary>ver resposta</summary><div>Colposcopia. <span class="qc">2024/Q44</span></div></details></div>
+  <div class="q"><p>Colposcopia: o que é a faixa entre a JEC original e a atual?</p><details><summary>ver resposta</summary><div>Zona de transformação, área de metaplasia escamosa. <span class="qc">2025/Q43</span></div></details></div>
+  <div class="q"><p>40 anos, AGC "não se pode afastar alto grau"; colposcopia satisfatória e normal.</p><details><summary>ver resposta</summary><div>Nova citologia com atenção ao canal + USG transvaginal para o endométrio. <span class="qc">2023/Q47</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-16">
+  <span class="kick">16 · Cirurgia · 6 questões em 2021, 2023 e 2024</span>
+  <h2>Hérnias da parede: o vaso, o ligamento e o sofrimento</h2>
+  <p class="lede">Duas estruturas resolvem o diagnóstico (os vasos epigástricos inferiores e o ligamento inguinal) e uma pergunta resolve a conduta: a alça está sofrendo?</p>
+  <h3>A anatomia que classifica</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 6 · esquema</span><b>Três saídas, dois limites</b></p>
+    <svg viewBox="0 0 360 272" role="img" aria-label="Esquema da região inguinal direita vista de frente, lateral à esquerda e medial à direita. O ligamento inguinal vai da espinha ilíaca anterossuperior ao púbis. Os vasos epigástricos inferiores, destacados, sobem da ilíaca externa até a borda do músculo reto. O triângulo de Hesselbach, entre o reto, os vasos epigástricos e o ligamento inguinal, é a saída da hérnia direta. Lateral aos vasos epigástricos, acima do ligamento, o anel inguinal interno é a saída da hérnia indireta. Abaixo do ligamento, medial à veia femoral, o canal femoral é a saída da hérnia femoral.">
+      <rect class="fa-musc" x="304" y="8" width="50" height="200" rx="6"/>
+      <path class="fa-tri" d="M186 134 C220 100 270 60 304 44 L304 199 Z"/>
+      <rect class="fa-vaso" x="170" y="100" width="8" height="162" rx="4"/>
+      <rect class="fa-vaso" x="184" y="100" width="12" height="162" rx="5"/>
+      <ellipse class="fa-aviso" cx="210" cy="163" rx="8" ry="7"/>
+      <ellipse class="fa-aviso" cx="156" cy="104" rx="11" ry="7"/>
+      <path class="fa-rsl" d="M184 126 C220 100 270 60 304 44"/>
+      <circle class="fa-rs" cx="184" cy="126" r="2.8"/>
+      <circle class="fa-rs" cx="304" cy="44" r="2.8"/>
+      <path class="fa-lig" d="M30 52 L298 196"/>
+      <circle class="fa-osso" cx="30" cy="52" r="6.5"/>
+      <circle class="fa-osso" cx="298" cy="196" r="6.5"/>
+      <line class="fa-fio" x1="214" y1="50" x2="243" y2="79"/><circle class="fa-rs" cx="244" cy="81" r="2.4"/>
+      <line class="fa-fio" x1="229" y1="225" x2="214" y2="171"/><circle class="fa-pt" cx="214" cy="169.5" r="2.2"/>
+      <text class="fa-s" x="42" y="44">EIAS</text>
+      <text class="fa-s" x="298" y="221" text-anchor="middle">púbis</text>
+      <text class="fa-s" x="329" y="24" text-anchor="middle">m. reto</text>
+      <text class="fa-s" x="60" y="84" transform="rotate(28.2 60 84)">ligamento inguinal</text>
+      <text class="fa-tc" x="156" y="74" text-anchor="middle">indireta</text>
+      <text class="fa-s" x="156" y="89" text-anchor="middle">anel interno</text>
+      <text class="fa-rst" x="150" y="46">epigástricos</text>
+      <text class="fa-tc" x="268" y="140" text-anchor="middle">direta</text>
+      <text class="fa-s" x="268" y="154" text-anchor="middle">Hesselbach</text>
+      <text class="fa-tc" x="226" y="238">femoral</text>
+      <text class="fa-s" x="226" y="252">medial à veia</text>
+      <text class="fa-s" x="174" y="258" text-anchor="middle">A</text>
+      <text class="fa-s" x="190" y="258" text-anchor="middle">V</text>
+      <text class="fa-s" x="14" y="268">lateral</text>
+      <text class="fa-s" x="346" y="268" text-anchor="end">medial</text>
+    </svg>
+    <figcaption>Esquema: o vaso epigástrico e o ligamento separam as três.<sup class="ref"><a href="#ref-3">3</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Indireta: sai pelo anel inguinal interno, lateral aos vasos epigástricos inferiores; é o conduto peritônio-vaginal que não fechou. A mais comum nos dois sexos e na criança.<sup class="ref"><a href="#ref-3">3</a>,<a href="#ref-33">33</a></sup></li>
+    <li>Direta: dentro do triângulo de Hesselbach (borda do reto, vasos epigástricos inferiores e ligamento inguinal), por fraqueza da fáscia transversal.</li>
+    <li>Femoral: abaixo do ligamento inguinal, medial à veia femoral. Mais na mulher. O anel é rígido (ligamentos inguinal, lacunar e de Cooper), por isso encarcera muito mais.<sup class="ref"><a href="#ref-33">33</a></sup></li>
+    <li>Nyhus: I e II indiretas (anel normal ou dilatado); IIIA direta; IIIB indireta grande; IIIC femoral; IV recidivada.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Conduta</h3>
+  <div class="tw"><table>
+    <tr><th>Situação</th><th>Conduta</th></tr>
+    <tr><td>Homem com pouco ou nenhum sintoma</td><td>Espera vigilante é segura; opera pelo sintoma</td></tr>
+    <tr><td>Mulher com hérnia na virilha</td><td>Operar: pode ser femoral</td></tr>
+    <tr><td>Encarcerada, sem sinal de sofrimento</td><td>Redução manual cuidadosa e reparo precoce; nunca alta sem cirurgia</td></tr>
+    <tr><td>Dor intensa, hiperemia, febre, taquicardia, obstrução</td><td>Estrangulada: cirurgia de urgência, <span class="chave">sem tentar reduzir</span></td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Lichtenstein = tela sem tensão. A borda inferior da tela vai em sutura contínua no <span class="chave">ligamento inguinal</span>, do tubérculo púbico ao anel interno; a superior, no tendão conjunto.<sup class="ref"><a href="#ref-33">33</a></sup></li>
+    <li>Teciduais (com tensão): Bassini tem a maior recidiva; Shouldice é a melhor sem tela; McVay (tendão conjunto no ligamento de Cooper) é a única tecidual que fecha o canal femoral.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>Campo contaminado (perfuração, pus): sem tela sintética.<sup class="ref"><a href="#ref-34">34</a></sup> Na UERJ, femoral estrangulada com necrose = ressecar a alça e reparar sem tela (McVay).</li>
+    <li>Profilaxia antibiótica e alergia a betalactâmico: capítulo 1 da parte 1.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Umbilical "encarcerada" com febre e taquicardia já é estrangulada: operar, não reduzir. Você caiu nisso na UERJ 2024. Redução manual só sem nenhum sinal de sofrimento.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Seis questões em três edições, metade conduta e metade nome: tipo mais frequente (2023), ancoragem do Lichtenstein (2024), tela contraindicada (2023), técnica na femoral com necrose (2021), umbilical com sofrimento (2024) e profilaxia no alérgico (2024).</p></div>
+  <div class="q"><p>Hérnia que sai medial aos vasos epigástricos inferiores, acima do ligamento inguinal.</p><details><summary>ver resposta</summary><div>Direta, pelo triângulo de Hesselbach (Nyhus IIIA).</div></details></div>
+  <div class="q"><p>Hérnia femoral estrangulada com alça necrosada.</p><details><summary>ver resposta</summary><div>Ressecar a alça e reparar sem tela (McVay, no ligamento de Cooper). <span class="qc">2021/Q17</span></div></details></div>
+  <div class="q"><p>Onde vai a sutura contínua da borda inferior da tela no Lichtenstein?</p><details><summary>ver resposta</summary><div>No ligamento inguinal, do tubérculo púbico ao anel interno. <span class="qc">2024/Q40</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-17">
+  <span class="kick">17 · CM e PED · 5 questões em 2021, 2024 e 2025</span>
+  <h2>Doenças glomerulares: inflamação que sangra, peneira que vaza</h2>
+  <p class="lede">Nefrítica é glomérulo inflamado que retém sal e sangra; nefrótica é podócito lesado que deixa a proteína passar. O enunciado nunca dá a biópsia de graça: dá a idade, o intervalo desde a infecção e o complemento.</p>
+  <h3>As duas síndromes</h3>
+  <div class="tw"><table>
+    <tr><th></th><th>Nefrítica</th><th>Nefrótica</th></tr>
+    <tr><td>Define</td><td>Hematúria glomerular (hemácia dismórfica, cilindro hemático) + edema + hipertensão</td><td>Proteinúria nefrótica + albumina baixa + edema</td></tr>
+    <tr><td>Proteinúria</td><td>Subnefrótica</td><td>Adulto: acima de 3,5 g/dia. Criança: relação proteína/creatinina de 2 ou mais (mg/mg) ou 3+ na fita, com albumina abaixo de 3 g/dL</td></tr>
+    <tr><td>Por que incha</td><td>Retém sal e água: volume alto, PA alta</td><td>Perde proteína; arrasta dislipidemia, trombose e infecção</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>O complemento abre três gavetas: só C3 baixo = pós-estreptocócica; C3 e C4 baixos = lúpus, membranoproliferativa, crioglobulinemia; complemento normal = IgA, vasculite ANCA, anti-MBG.<sup class="ref"><a href="#ref-35">35</a>,<a href="#ref-36">36</a></sup></li>
+  </ul>
+  <h3>Nefrítica: o relógio separa</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 7 · esquema</span><b>O relógio da nefrite</b></p>
+    <svg viewBox="0 0 360 150" role="img" aria-label="Linha do tempo em dias após uma infecção de garganta. A nefropatia por IgA, destacada, aparece durante a infecção ou até cerca de 5 dias depois, com complemento normal. A glomerulonefrite pós-estreptocócica aparece de 7 a 21 dias depois, com C3 baixo.">
+      <line class="fa-li" x1="40" y1="24" x2="40" y2="104"/>
+      <text class="fa-s" x="36" y="16">infecção</text>
+      <rect class="fa-rsb" x="40" y="34" width="54" height="18" rx="6"/>
+      <text class="fa-rst" x="102" y="47">IgA</text>
+      <text class="fa-s" x="128" y="47">C3 normal</text>
+      <rect class="fa-zt" x="115" y="66" width="150" height="18" rx="6"/>
+      <text class="fa-tc" x="190" y="79" text-anchor="middle">GNPE</text>
+      <text class="fa-s" x="272" y="79">C3 baixo</text>
+      <line class="fa-eixo" x1="40" y1="104" x2="340" y2="104"/>
+      <line class="fa-eixo" x1="115" y1="104" x2="115" y2="109"/>
+      <line class="fa-eixo" x1="190" y1="104" x2="190" y2="109"/>
+      <line class="fa-eixo" x1="265" y1="104" x2="265" y2="109"/>
+      <line class="fa-eixo" x1="340" y1="104" x2="340" y2="109"/>
+      <text class="fa-s" x="40" y="122" text-anchor="middle">0</text>
+      <text class="fa-s" x="115" y="122" text-anchor="middle">7</text>
+      <text class="fa-s" x="190" y="122" text-anchor="middle">14</text>
+      <text class="fa-s" x="265" y="122" text-anchor="middle">21</text>
+      <text class="fa-s" x="340" y="122" text-anchor="end">28</text>
+      <text class="fa-s" x="190" y="142" text-anchor="middle">dias após a faringite</text>
+    </svg>
+    <figcaption>Esquema: dias é IgA; semanas é GNPE.<sup class="ref"><a href="#ref-36">36</a></sup></figcaption>
+  </figure>
+  <div class="tw"><table>
+    <tr><th></th><th>Pós-estreptocócica (GNPE)</th><th>Nefropatia por IgA</th></tr>
+    <tr><td>Quando</td><td>1 a 3 semanas após faringite; 3 a 6 após infecção de pele</td><td>Durante a infecção de via aérea ou poucos dias depois</td></tr>
+    <tr><td>Quem</td><td>Criança</td><td>Adulto jovem, homem; hematúria que volta a cada infecção</td></tr>
+    <tr><td>Complemento</td><td>C3 baixo, normaliza em até 8 semanas</td><td>Normal</td></tr>
+    <tr><td>Biópsia</td><td>Dispensável; se feita, proliferação endocapilar com neutrófilos</td><td>Depósito de IgA no mesângio (proliferação mesangial)</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>GNPE se trata tirando volume: sal, água e furosemida. Penicilina só se houver infecção ativa; ela não muda a nefrite. Biopsiar se o C3 seguir baixo além de 8 semanas ou a função não melhorar.<sup class="ref"><a href="#ref-36">36</a>,<a href="#ref-37">37</a></sup></li>
+  </ul>
+  <h3>Nefrótica: a idade escolhe a lesão</h3>
+  <ul class="tp">
+    <li>Criança nefrótica típica = lesão mínima até prova em contrário: prednisona sem biópsia. Biopsiar se abaixo de 1 ano ou na adolescência, com hematúria macroscópica, complemento baixo, hipertensão ou função ruim, ou sem resposta ao corticoide.<sup class="ref"><a href="#ref-35">35</a>,<a href="#ref-37">37</a></sup></li>
+    <li>Investigação inicial da criança: urina tipo 1, relação proteína/creatinina, albumina, colesterol, creatinina e C3. O que separa a nefrótica de outros edemas (cardíaco, hepático, desnutrição, enteropatia perdedora) é a proteinúria maciça.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+    <li>Adulto nefrótico: biópsia. Membranosa = adulto acima dos 50, trombose de veia renal. <span class="chave">Anti-PLA2R positivo = membranosa primária</span>; negativo = procurar causa (neoplasia, hepatite B, lúpus, droga).<sup class="ref"><a href="#ref-38">38</a></sup></li>
+    <li>A urina leva IgG e opsoninas: risco de germe encapsulado. Peritonite primária da criança nefrótica = <span class="chave">pneumococo</span>, não a E. coli do cirrótico.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Hematúria 4 a 5 dias depois da faringite, com complemento normal, é IgA (depósito mesangial), não GNPE (proliferação com neutrófilos). Você caiu nisso na UERJ 2025. Na UERJ 2021 foram duas: anti-PLA2R positivo = membranosa primária, e a peritonite da criança nefrótica = pneumococo.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>As cinco vieram como diagnóstico: o que a biópsia mostra (2025), o que o anticorpo significa (2021), o agente (2021). Em PED, três de cinco foram síndrome nefrótica da criança: investigar (2024) e separar de outro edema (2025).</p></div>
+  <div class="q"><p>Menino de 9 anos: urina escura 2 semanas após amigdalite, edema, PA alta, C3 baixo.</p><details><summary>ver resposta</summary><div>GNPE: restrição de sal e água + diurético; C3 volta em até 8 semanas.</div></details></div>
+  <div class="q"><p>Criança de 4 anos com anasarca, proteinúria 3+, albumina 1,8, C3 normal, PA normal.</p><details><summary>ver resposta</summary><div>Lesão mínima presumida: prednisona, sem biópsia.</div></details></div>
+  <div class="q"><p>Criança nefrótica com ascite, febre e dor abdominal.</p><details><summary>ver resposta</summary><div>Peritonite primária, pneumococo: ceftriaxona. <span class="qc">2021/Q43</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-18">
+  <span class="kick">18 · GO · 5 questões em 2021-2025, todas as edições</span>
+  <h2>Endometriose: o hormônio trata a dor, a cirurgia trata o resto</h2>
+  <p class="lede">Endométrio fora do útero, dependente de estrogênio, que sangra a cada ciclo onde não devia: daí a dor, a aderência e a infertilidade. A UERJ cobra o alcance de cada tratamento.</p>
+  <h3>O mecanismo</h3>
+  <ul class="tp">
+    <li>Menstruação retrógrada (Sampson) + falha imune que deixa o tecido implantar. O implante produz o próprio estrogênio (aromatase alta) e resiste à progesterona.<sup class="ref"><a href="#ref-39">39</a></sup></li>
+    <li>A dor depende da profundidade do implante e da inervação, não do estádio. A infertilidade aparece já nos estádios iniciais.</li>
+  </ul>
+  <h3>Diagnóstico</h3>
+  <ul class="tp">
+    <li>É clínico: dismenorreia progressiva, dispareunia de profundidade, dor pélvica crônica, infertilidade. Sintoma urinário ou intestinal cíclico aponta doença profunda.</li>
+    <li>USG transvaginal com preparo intestinal ou RM mapeiam endometrioma e doença profunda; "ovários em beijo" (colados atrás do útero) indicam aderência grave. A laparoscopia não é pré-requisito para tratar, e o CA-125 não diagnostica.<sup class="ref"><a href="#ref-39">39</a></sup></li>
+  </ul>
+  <h3>Cada tratamento tem um alcance</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 8 · esquema</span><b>O alcance de cada tratamento</b></p>
+    <svg viewBox="0 0 360 180" role="img" aria-label="Dois tratamentos ligados a três alvos. O hormônio alcança a dor, ligação destacada, e não alcança o endometrioma nem a fertilidade, marcados com um x. A cirurgia alcança os três.">
+      <line class="fa-li" x1="120" y1="44" x2="212" y2="79"/>
+      <text class="fa-x" x="224" y="89" text-anchor="middle">×</text>
+      <line class="fa-li" x1="120" y1="44" x2="208" y2="123"/>
+      <text class="fa-x" x="219" y="138" text-anchor="middle">×</text>
+      <line class="fa-li" x1="120" y1="136" x2="238" y2="29"/><circle class="fa-pt" cx="240" cy="28" r="2.6"/>
+      <line class="fa-li" x1="120" y1="136" x2="238" y2="91"/><circle class="fa-pt" cx="240" cy="90" r="2.6"/>
+      <line class="fa-li" x1="120" y1="136" x2="238" y2="151"/><circle class="fa-pt" cx="240" cy="152" r="2.6"/>
+      <path class="fa-rsl" d="M120 44 L238 28.5"/><circle class="fa-rs" cx="240" cy="28" r="3"/>
+      <rect class="fa-box" x="12" y="30" width="108" height="28" rx="8"/>
+      <text class="fa-tc" x="66" y="49" text-anchor="middle">Hormônio</text>
+      <rect class="fa-box" x="12" y="122" width="108" height="28" rx="8"/>
+      <text class="fa-tc" x="66" y="141" text-anchor="middle">Cirurgia</text>
+      <rect class="fa-rsb" x="240" y="14" width="108" height="28" rx="8"/>
+      <text class="fa-rst" x="294" y="33" text-anchor="middle">Dor</text>
+      <rect class="fa-box" x="240" y="76" width="108" height="28" rx="8"/>
+      <text class="fa-tc" x="294" y="95" text-anchor="middle">Endometrioma</text>
+      <rect class="fa-box" x="240" y="138" width="108" height="28" rx="8"/>
+      <text class="fa-tc" x="294" y="157" text-anchor="middle">Fertilidade</text>
+    </svg>
+    <figcaption>Esquema: o hormônio alcança só a dor.<sup class="ref"><a href="#ref-39">39</a></sup></figcaption>
+  </figure>
+  <div class="tw"><table>
+    <tr><th>Situação</th><th>Conduta</th></tr>
+    <tr><td>Dor, sem desejo de engravidar</td><td>AINE + <span class="chave">progestágeno contínuo</span> (dienogeste) ou pílula combinada: 1ª linha hormonal</td></tr>
+    <tr><td>Falha da 1ª linha</td><td>Análogo do GnRH com add-back (2ª linha), ou cirurgia</td></tr>
+    <tr><td>Endometrioma</td><td>O hormônio não o resolve. Sintomático e grande: cistectomia laparoscópica, nunca punção</td></tr>
+    <tr><td>Infertilidade</td><td>Cirurgia ou reprodução assistida (pela idade, reserva e dor); <span class="chave">supressão hormonal não melhora a fertilidade</span></td></tr>
+    <tr><td>Doença profunda com obstrução (ureter, intestino)</td><td>Cirurgia: hormônio não desobstrui</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>A regra é separar o alvo (dor, endometrioma, fertilidade) antes de escolher a arma: cada tratamento só alcança o seu.<sup class="ref"><a href="#ref-39">39</a></sup></li>
+    <li>Endometriose prévia e TH no climatério, mesmo sem útero: estrogênio + progestágeno (capítulo 13).</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Na dor da endometriose, a 1ª linha hormonal é progestágeno contínuo ou pílula; o análogo do GnRH é 2ª linha. Você caiu nisso na UERJ 2024. E o tratamento clínico só trata a dor: não some com endometrioma nem melhora a fertilidade (UERJ 2025).</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Com o colo, é o tema de GO presente nas cinco edições. Quatro de cinco foram conduta: dienogeste com ovários em beijo (2021), cirurgia na estenose ureteral (2022), endometrioma com desejo de gestar (2023), 1ª linha clínica (2024) e o alcance do clínico (2025).</p></div>
+  <div class="q"><p>Dismenorreia progressiva, sem desejo de gestar, exame e USG normais.</p><details><summary>ver resposta</summary><div>Tratamento empírico: AINE + progestágeno contínuo ou pílula; sem laparoscopia.</div></details></div>
+  <div class="q"><p>Endometriose profunda com hidronefrose por estenose ureteral.</p><details><summary>ver resposta</summary><div>Cirurgia (videolaparoscopia). <span class="qc">2022/Q29</span></div></details></div>
+  <div class="q"><p>O dienogeste controlou a dor. O que ele não faz?</p><details><summary>ver resposta</summary><div>Não trata o endometrioma nem a infertilidade. <span class="qc">2025/Q50</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-19">
+  <span class="kick">19 · PED · 5 questões em 2022, 2023, 2024 e 2025</span>
+  <h2>Infecções congênitas: cada agente tem uma assinatura</h2>
+  <p class="lede">A UERJ descreve o recém-nascido e pede o agente ou a sequela. Decore a assinatura de cada um; o resto é exclusão.</p>
+  <div class="tw"><table>
+    <tr><th>Agente</th><th>Assinatura</th><th>Sequela que a banca pede</th></tr>
+    <tr><td>Toxoplasmose</td><td>Tétrade de Sabin: coriorretinite, calcificações difusas, hidro ou microcefalia, deficiência intelectual</td><td>Coriorretinite, que pode surgir anos depois</td></tr>
+    <tr><td>Citomegalovírus (o mais comum)</td><td>Calcificações <span class="chave">periventriculares</span>, microcefalia, petéquias, hepatoesplenomegalia</td><td>Surdez neurossensorial: a principal causa infecciosa de surdez na infância</td></tr>
+    <tr><td>Rubéola</td><td>Catarata, surdez e cardiopatia (persistência do canal arterial)</td><td>Surdez</td></tr>
+    <tr><td>Sífilis</td><td>Lesões de pele (inclusive palmoplantares), hepatoesplenomegalia, alterações ósseas, pseudoparalisia de Parrot</td><td>Tardia: tíbia em sabre, dentes de Hutchinson, nariz em sela</td></tr>
+    <tr><td>Zika</td><td>Microcefalia grave, calcificações, artrogripose, microftalmia</td><td>Neurológica</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Calcificação: periventricular aponta CMV; difusa aponta toxoplasmose.<sup class="ref"><a href="#ref-37">37</a>,<a href="#ref-40">40</a></sup></li>
+    <li>CMV congênito com sintoma moderado a grave: valganciclovir por 6 meses, iniciado no primeiro mês de vida, melhora audição e desenvolvimento.<sup class="ref"><a href="#ref-40">40</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 9 · esquema</span><b>Onde está a calcificação</b></p>
+    <svg viewBox="0 0 360 192" role="img" aria-label="Dois cortes coronais do cérebro do recém-nascido. No citomegalovírus, as calcificações, destacadas, contornam os ventrículos: periventriculares. Na toxoplasmose, os ventrículos estão dilatados e as calcificações se espalham pelo parênquima: difusas.">
+      <ellipse class="fa-esc" cx="95" cy="88" rx="72" ry="60"/>
+      <line class="fa-li" x1="95" y1="28" x2="95" y2="62"/>
+      <ellipse class="fa-col" cx="81" cy="90" rx="8" ry="15"/>
+      <ellipse class="fa-col" cx="109" cy="90" rx="8" ry="15"/>
+      <circle class="fa-rs" cx="70" cy="90" r="2.3"/><circle class="fa-rs" cx="72.6" cy="101.6" r="2.3"/><circle class="fa-rs" cx="72.6" cy="78.4" r="2.3"/><circle class="fa-rs" cx="79.1" cy="107.7" r="2.3"/><circle class="fa-rs" cx="79.1" cy="72.3" r="2.3"/>
+      <circle class="fa-rs" cx="120" cy="90" r="2.3"/><circle class="fa-rs" cx="117.4" cy="101.6" r="2.3"/><circle class="fa-rs" cx="117.4" cy="78.4" r="2.3"/><circle class="fa-rs" cx="110.9" cy="107.7" r="2.3"/><circle class="fa-rs" cx="110.9" cy="72.3" r="2.3"/>
+      <ellipse class="fa-esc" cx="265" cy="88" rx="72" ry="60"/>
+      <line class="fa-li" x1="265" y1="28" x2="265" y2="58"/>
+      <ellipse class="fa-col" cx="250" cy="92" rx="13" ry="22"/>
+      <ellipse class="fa-col" cx="280" cy="92" rx="13" ry="22"/>
+      <circle class="fa-rs" cx="215" cy="62" r="2.3"/><circle class="fa-rs" cx="232" cy="120" r="2.3"/><circle class="fa-rs" cx="300" cy="58" r="2.3"/><circle class="fa-rs" cx="312" cy="112" r="2.3"/><circle class="fa-rs" cx="240" cy="42" r="2.3"/><circle class="fa-rs" cx="290" cy="130" r="2.3"/><circle class="fa-rs" cx="205" cy="96" r="2.3"/><circle class="fa-rs" cx="325" cy="84" r="2.3"/><circle class="fa-rs" cx="276" cy="46" r="2.3"/>
+      <text class="fa-tc" x="95" y="168" text-anchor="middle">CMV</text>
+      <text class="fa-rst" x="95" y="184" text-anchor="middle">periventricular</text>
+      <text class="fa-tc" x="265" y="168" text-anchor="middle">Toxoplasmose</text>
+      <text class="fa-rst" x="265" y="184" text-anchor="middle">difusa</text>
+    </svg>
+    <figcaption>Esquema: a posição da calcificação aponta o agente.<sup class="ref"><a href="#ref-40">40</a></sup></figcaption>
+  </figure>
+  <h3>Sífilis: classificar o recém-nascido</h3>
+  <ul class="tp">
+    <li>Mãe adequadamente tratada = penicilina benzatina, esquema completo para a fase, <span class="chave">iniciado 30 dias ou mais antes do parto</span>.<sup class="ref"><a href="#ref-41">41</a></sup></li>
+    <li>Mãe adequada + RN assintomático + VDRL do RN abaixo de 2 diluições acima do materno = <span class="chave">criança exposta</span>: sem tratamento, seguimento com VDRL em 1, 3, 6, 12 e 18 meses.<sup class="ref"><a href="#ref-41">41</a></sup></li>
+    <li>Sífilis congênita: mãe não tratada ou inadequada; VDRL do RN 2 diluições ou mais acima do materno; ou clínica ou exame alterado. Investiga (hemograma, RX de ossos longos, líquor) e trata por 10 dias com penicilina cristalina (procaína se o líquor for normal).<sup class="ref"><a href="#ref-41">41</a></sup></li>
+    <li>Criança exposta ao HIV pela amamentação: capítulo 7 da parte 1.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Persistência do canal arterial é da rubéola, não do CMV: você caiu nisso na UERJ 2024. Na mesma prova, o RN assintomático com VDRL igual ao da mãe bem tratada era criança exposta (seguimento), não sífilis congênita.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Quatro edições seguidas, sempre pela assinatura: a sequela da calcificação periventricular (2022), a tríade da rubéola (2023), a correlação errada entre agente e achado (2024) e a criança exposta ao HIV na amamentação (2025).</p></div>
+  <div class="q"><p>RN com catarata, surdez e sopro contínuo.</p><details><summary>ver resposta</summary><div>Rubéola congênita (persistência do canal arterial). <span class="qc">2023/Q70</span></div></details></div>
+  <div class="q"><p>RN com microcefalia e calcificações periventriculares. Sequela mais comum?</p><details><summary>ver resposta</summary><div>Perda auditiva neurossensorial (CMV). <span class="qc">2022/Q41</span></div></details></div>
+  <div class="q"><p>Mãe tratada com benzatina 2 meses antes do parto, VDRL 1:4; RN assintomático, VDRL 1:4.</p><details><summary>ver resposta</summary><div>Criança exposta: seguimento com VDRL em 1, 3, 6, 12 e 18 meses. <span class="qc">2024/Q79</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-20">
+  <span class="kick">20 · PED · 4 questões + 1 de febre sem foco, 2021, 2022, 2023 e 2025</span>
+  <h2>ITU na criança: a urina certa, a imagem certa</h2>
+  <p class="lede">No lactente, a ITU é a febre sem foco. A UERJ pergunta como colher, o que pedir depois e o que a ITU que se repete está escondendo.</p>
+  <h3>Febre sem foco no lactente</h3>
+  <ul class="tp">
+    <li>Lactente vacinado, em bom estado, com febre sem foco: a infecção bacteriana grave mais comum é a ITU. O primeiro exame é a urina.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    <li>Bom estado, aceitando via oral: antibiótico oral, ambulatorial, com reavaliação em 48-72 h. A via oral rende o mesmo que a venosa.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    <li>Sinais vitais pela idade: FC de 120 e FR de 40 são normais aos 8 meses.</li>
+  </ul>
+  <h3>Colher e confirmar</h3>
+  <ul class="tp">
+    <li>Sem controle esfincteriano: cateterismo vesical ou punção suprapúbica. Saco coletor só vale negativo (falso-positivo alto): positivo, recolhe por cateter.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    <li>Urocultura positiva: punção, qualquer crescimento; cateterismo, 50.000 UFC/mL ou mais com piúria; jato médio, 100.000.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    <li>E. coli em até 90%. Coco Gram-positivo em criança com refluxo ou uropatia = <span class="chave">Enterococcus</span>: cefalosporina não cobre, ampicilina cobre.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+  </ul>
+  <h3>Imagem depois da 1ª ITU febril</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 10 · esquema</span><b>Depois da 1ª ITU febril</b></p>
+    <svg viewBox="0 0 360 192" role="img" aria-label="Fluxo depois da primeira ITU febril do lactente. Primeiro, destacado, o ultrassom de rins e vias urinárias. Se normal, observar. Se alterado ou se a ITU febril se repete, uretrocistografia miccional.">
+      <rect class="fa-box" x="110" y="6" width="140" height="28" rx="8"/>
+      <text class="fa-tc" x="180" y="25" text-anchor="middle">1ª ITU febril</text>
+      <line class="fa-li" x1="180" y1="34" x2="180" y2="44"/><path class="fa-seta" d="M180 52 l-4 -8 h8 z"/>
+      <rect class="fa-rsb" x="95" y="52" width="170" height="30" rx="8"/>
+      <text class="fa-rst" x="180" y="72" text-anchor="middle">USG rins e vias</text>
+      <line class="fa-li" x1="180" y1="82" x2="180" y2="92"/>
+      <line class="fa-li" x1="86" y1="92" x2="274" y2="92"/>
+      <line class="fa-li" x1="86" y1="92" x2="86" y2="102"/><path class="fa-seta" d="M86 110 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="274" y1="92" x2="274" y2="102"/><path class="fa-seta" d="M274 110 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="16" y="110" width="140" height="28" rx="8"/>
+      <text class="fa-tc" x="86" y="129" text-anchor="middle">normal</text>
+      <text class="fa-m" x="86" y="158" text-anchor="middle">observar</text>
+      <rect class="fa-box" x="204" y="110" width="140" height="28" rx="8"/>
+      <text class="fa-m" x="274" y="128" text-anchor="middle">alterado ou recidiva</text>
+      <line class="fa-li" x1="274" y1="138" x2="274" y2="150"/><path class="fa-seta" d="M274 158 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="234" y="158" width="80" height="28" rx="8"/>
+      <text class="fa-tc" x="274" y="177" text-anchor="middle">UCM</text>
+    </svg>
+    <figcaption>Esquema: o USG vem primeiro; a UCM só se ele pedir.<sup class="ref"><a href="#ref-42">42</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Todo lactente com a 1ª ITU febril faz <span class="chave">USG de rins e vias urinárias</span>. Uretrocistografia miccional só se o USG vier alterado, se a ITU febril se repetir ou se o caso for atípico.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    <li>Cintilografia com DMSA mostra cicatriz; se pedida, é meses depois do episódio, não na fase aguda.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+  </ul>
+  <h3>A ITU que se repete</h3>
+  <ul class="tp">
+    <li>Disfunção vesicointestinal: constipação + criança que segura a urina (urgência, manobras de contenção, escape diurno). Trata-se a constipação e faz-se uroterapia antes de pensar em cirurgia.<sup class="ref"><a href="#ref-43">43</a></sup></li>
+    <li>Cicatriz renal (nefropatia do refluxo) leva a hipertensão e doença renal crônica ainda na infância. ITU de repetição + PA alta + anemia + baixa estatura = confirmar DRC (função renal).<sup class="ref"><a href="#ref-37">37</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>PA de 128/86 aos 7 anos é hipertensão, e com ITU de repetição, anemia e baixa estatura fecha DRC por nefropatia do refluxo: você caiu nisso na UERJ 2023 (foi ao mielograma). Na UERJ 2022, coco Gram-positivo na ITU com refluxo era Enterococcus; na UERJ 2021, a lactente bem com febre sem foco pedia EAS e antibiótico oral, não internação.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>PED cobra ITU como raciocínio: o agente fora do padrão (2022), a consequência crônica (2023), a causa funcional da recorrência e a primeira imagem (2025, duas questões seguidas). A febre sem foco entrou em 2021.</p></div>
+  <div class="q"><p>Lactente de 6 meses, 1ª ITU febril tratada. Primeira imagem?</p><details><summary>ver resposta</summary><div>USG de rins e vias urinárias. <span class="qc">2025/Q69</span></div></details></div>
+  <div class="q"><p>Menina de 6 anos, ITUs de repetição, constipação, segura a urina até o último minuto.</p><details><summary>ver resposta</summary><div>Disfunção vesicointestinal: tratar a constipação e uroterapia. <span class="qc">2025/Q68</span></div></details></div>
+  <div class="q"><p>Saco coletor positivo em lactente de 10 meses, febril, sem toxemia.</p><details><summary>ver resposta</summary><div>Recolher por cateterismo antes de tratar: o saco só vale quando é negativo.</div></details></div>
+</section>
+
+<section class="sec" id="gatilhos">
+  <span class="kick">Síntese</span>
+  <h2>Os dez gatilhos</h2>
+  <div class="tw"><table>
+    <tr><th>Cap.</th><th>Se o enunciado traz</th><th>Pense</th></tr>
+    <tr><td>11</td><td>JEG no tórax; ou JEG no lugar e fundo ao lado</td><td>Tipo I; tipo II (paraesofágica)</td></tr>
+    <tr><td>12</td><td>PaCO2 de 40 numa crise de asma</td><td>Fadiga: falência iminente</td></tr>
+    <tr><td>13</td><td>Fogacho em diabética ou hipertensa</td><td>TH transdérmica (+ progestágeno se tem útero)</td></tr>
+    <tr><td>14</td><td>TSH entre 10 e 20, sem sintoma, no bloco de MFC</td><td>Não tratar; repetir e orientar hábitos</td></tr>
+    <tr><td>15</td><td>LSIL a partir dos 25; AGC com colposcopia normal</td><td>Repetir em 6 meses; nova citologia + endométrio</td></tr>
+    <tr><td>16</td><td>Hérnia com dor intensa, hiperemia, febre</td><td>Estrangulada: operar sem reduzir</td></tr>
+    <tr><td>17</td><td>Hematúria dias após a faringite, C3 normal</td><td>IgA; semanas depois e C3 baixo = GNPE</td></tr>
+    <tr><td>18</td><td>Dor de endometriose, 1º tratamento</td><td>Progestágeno contínuo ou pílula; GnRH é 2ª linha</td></tr>
+    <tr><td>19</td><td>Catarata + surdez + canal arterial</td><td>Rubéola; periventricular = CMV</td></tr>
+    <tr><td>20</td><td>1ª ITU febril no lactente</td><td>USG de rins e vias; Gram-positivo = Enterococcus</td></tr>
+  </table></div>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Cepuerj/UERJ. Edital nº 15/2026: Processo Seletivo de Residência Médica UERJ 2027, Acesso Direto (estrutura da prova e Anexo II, bibliografia). Rio de Janeiro; 2026.</li>
+    <li id="ref-2">Katz PO, Dunbar KB, Schnoll-Sussman FH, Greer KB, Yadlapati R, Spechler SJ. ACG Clinical Guideline for the Diagnosis and Management of Gastroesophageal Reflux Disease. Am J Gastroenterol. 2022;117(1):27-56.</li>
+    <li id="ref-3">Townsend CM, Beauchamp RD, Evers BM, Mattox KL. Sabiston Textbook of Surgery. 21ª ed. Philadelphia: Elsevier; 2022 (bibliografia de Cirurgia do edital): cirurgia antirrefluxo, divertículo de Zenker, câncer de esôfago e de estômago, complicações da tireoidectomia, anatomia da região inguinal, classificação de Nyhus e técnicas de herniorrafia. Não conferido no original.</li>
+    <li id="ref-4">Kohn GP, Price RR, DeMeester SR, et al. Guidelines for the management of hiatal hernia. Surg Endosc. 2013;27(12):4409-4428.</li>
+    <li id="ref-5">Vaezi MF, Pandolfino JE, Yadlapati RH, Greer KB, Kavitt RT. ACG Clinical Guidelines: Diagnosis and Management of Achalasia. Am J Gastroenterol. 2020;115(9):1393-1411.</li>
+    <li id="ref-6">Lauren P. The two histological main types of gastric carcinoma: diffuse and so-called intestinal-type carcinoma. An attempt at a histo-clinical classification. Acta Pathol Microbiol Scand. 1965;64:31-49.</li>
+    <li id="ref-7">Amin MB, Edge SB, Greene FL, et al. (ed.). AJCC Cancer Staging Manual. 8ª ed. New York: Springer; 2017 (TNM do câncer gástrico; corte de 55 anos no carcinoma diferenciado de tireoide).</li>
+    <li id="ref-8">Japanese Gastric Cancer Association. Japanese gastric cancer treatment guidelines 2018 (5th edition). Gastric Cancer. 2021;24(1):1-21.</li>
+    <li id="ref-9">Global Initiative for Asthma (GINA). Global Strategy for Asthma Management and Prevention, 2025 update. Disponível em www.ginasthma.org.</li>
+    <li id="ref-10">Pizzichini MMM, Carvalho-Pinto RM, Cançado JED, et al. 2020 Brazilian Thoracic Association recommendations for the management of asthma. J Bras Pneumol. 2020;46(1):e20190307.</li>
+    <li id="ref-11">Stanojevic S, Kaminsky DA, Miller MR, et al. ERS/ATS technical standard on interpretive strategies for routine lung function tests. Eur Respir J. 2022;60(1):2101499.</li>
+    <li id="ref-12">Cunningham FG, Leveno KJ, Dashe JS, Hoffman BL, Spong CY, Casey BM. Williams Obstetrics. 26ª ed. New York: McGraw Hill; 2022 (bibliografia de GO do edital): asma na gestação e fármacos que causam broncoespasmo. Não conferido no original.</li>
+    <li id="ref-13">Global Initiative for Chronic Obstructive Lung Disease (GOLD). Global Strategy for the Diagnosis, Management, and Prevention of Chronic Obstructive Pulmonary Disease, 2025 report. Disponível em www.goldcopd.org.</li>
+    <li id="ref-14">Pompei LM, Machado RB, Wender MCO, Fernandes CE (ed.). Consenso Brasileiro de Terapêutica Hormonal da Menopausa. Associação Brasileira de Climatério (SOBRAC). São Paulo: Leitura Médica; 2018.</li>
+    <li id="ref-15">The 2022 hormone therapy position statement of The North American Menopause Society. Menopause. 2022;29(7):767-794.</li>
+    <li id="ref-16">Radominski SC, Bernardo W, Paula AP, et al. Diretrizes brasileiras para o diagnóstico e tratamento da osteoporose em mulheres na pós-menopausa. Rev Bras Reumatol. 2017;57(Supl 2):452-466.</li>
+    <li id="ref-17">Cameron AP, Chung DE, Dielubanza EJ, et al. The AUA/SUFU Guideline on the Diagnosis and Treatment of Idiopathic Overactive Bladder. J Urol. 2024;212(1):11-20.</li>
+    <li id="ref-18">Dumoulin C, Cacciari LP, Hay-Smith EJC. Pelvic floor muscle training versus no treatment, or inactive control treatments, for urinary incontinence in women. Cochrane Database Syst Rev. 2018;10:CD005654.</li>
+    <li id="ref-19">McGuire EJ, Fitzpatrick CC, Wan J, et al. Clinical assessment of urethral sphincter function. J Urol. 1993;150(5 Pt 1):1452-1454.</li>
+    <li id="ref-20">Bump RC, Mattiasson A, Bø K, et al. The standardization of terminology of female pelvic organ prolapse and pelvic floor dysfunction. Am J Obstet Gynecol. 1996;175(1):10-17.</li>
+    <li id="ref-21">Maher C, Feiner B, Baessler K, Christmann-Schmid C, Haya N, Brown J. Surgery for women with apical vaginal prolapse. Cochrane Database Syst Rev. 2016;10:CD012376.</li>
+    <li id="ref-22">Haugen BR, Alexander EK, Bible KC, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133.</li>
+    <li id="ref-23">Tessler FN, Middleton WD, Grant EG, et al. ACR Thyroid Imaging, Reporting and Data System (TI-RADS): White Paper of the ACR TI-RADS Committee. J Am Coll Radiol. 2017;14(5):587-595.</li>
+    <li id="ref-24">Cibas ES, Ali SZ. The 2017 Bethesda System for Reporting Thyroid Cytopathology. Thyroid. 2017;27(11):1341-1346.</li>
+    <li id="ref-25">Ross DS, Burch HB, Cooper DS, et al. 2016 American Thyroid Association Guidelines for Diagnosis and Management of Hyperthyroidism and Other Causes of Thyrotoxicosis. Thyroid. 2016;26(10):1343-1421.</li>
+    <li id="ref-26">Sgarbi JA, Teixeira PFS, Maciel LMZ, et al. Consenso brasileiro para a abordagem clínica e tratamento do hipotireoidismo subclínico em adultos: recomendações do Departamento de Tireoide da Sociedade Brasileira de Endocrinologia e Metabologia. Arq Bras Endocrinol Metab. 2013;57(3):166-183.</li>
+    <li id="ref-27">Bekkering GE, Agoritsas T, Lytvyn L, et al. Thyroid hormones treatment for subclinical hypothyroidism: a clinical practice guideline. BMJ. 2019;365:l2006.</li>
+    <li id="ref-28">World Health Organization, International Diabetes Federation. Definition and diagnosis of diabetes mellitus and intermediate hyperglycaemia. Geneva: WHO; 2006 (glicemia de jejum alterada de 110 a 125 mg/dL, o corte também usado pelo Ministério da Saúde).</li>
+    <li id="ref-29">Bornstein J, Bentley J, Bösze P, et al. 2011 colposcopic terminology of the International Federation for Cervical Pathology and Colposcopy. Obstet Gynecol. 2012;120(1):166-172.</li>
+    <li id="ref-30">Instituto Nacional de Câncer José Alencar Gomes da Silva (INCA). Diretrizes brasileiras para o rastreamento do câncer do colo do útero. 2ª ed. Rio de Janeiro: INCA; 2016.</li>
+    <li id="ref-31">Bhatla N, Berek JS, Cuello Fredes M, et al. Revised FIGO staging for carcinoma of the cervix uteri. Int J Gynaecol Obstet. 2019;145(1):129-135.</li>
+    <li id="ref-32">Bhatla N, Aoki D, Sharma DN, Sankaranarayanan R. Cancer of the cervix uteri: 2021 update. Int J Gynaecol Obstet. 2021;155(Suppl 1):28-44.</li>
+    <li id="ref-33">HerniaSurge Group. International guidelines for groin hernia management. Hernia. 2018;22(1):1-165.</li>
+    <li id="ref-34">Birindelli A, Sartelli M, Di Saverio S, et al. 2017 update of the WSES guidelines for emergency repair of complicated abdominal wall hernias. World J Emerg Surg. 2017;12:37.</li>
+    <li id="ref-35">Kidney Disease: Improving Global Outcomes (KDIGO) Glomerular Diseases Work Group. KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276.</li>
+    <li id="ref-36">Loscalzo J, Fauci AS, Kasper DL, et al. Harrison's Principles of Internal Medicine. 21ª ed. New York: McGraw Hill; 2022 (bibliografia de CM do edital): síndromes nefrítica e nefrótica, complemento, glomerulonefrite pós-estreptocócica. Não conferido no original.</li>
+    <li id="ref-37">Kliegman RM, St Geme JW III, Blum NJ, et al. Nelson Textbook of Pediatrics. 22ª ed. Philadelphia: Elsevier; 2024 (bibliografia de Pediatria do edital): síndrome nefrótica da criança e peritonite pneumocócica, infecções congênitas, ITU (Enterococcus, cicatriz renal, DMSA). Não conferido no original.</li>
+    <li id="ref-38">Beck LH Jr, Bonegio RGB, Lambeau G, et al. M-type phospholipase A2 receptor as target antigen in idiopathic membranous nephropathy. N Engl J Med. 2009;361(1):11-21.</li>
+    <li id="ref-39">Becker CM, Bokor A, Heikinheimo O, et al. ESHRE guideline: endometriosis. Hum Reprod Open. 2022;2022(2):hoac009.</li>
+    <li id="ref-40">Rawlinson WD, Boppana SB, Fowler KB, et al. Congenital cytomegalovirus infection in pregnancy and the neonate: consensus recommendations for prevention, diagnosis, and therapy. Lancet Infect Dis. 2017;17(6):e177-e188.</li>
+    <li id="ref-41">Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Prevenção da Transmissão Vertical de HIV, Sífilis e Hepatites Virais. Brasília: MS; 2022.</li>
+    <li id="ref-42">Roberts KB; Subcommittee on Urinary Tract Infection, Steering Committee on Quality Improvement and Management. Urinary tract infection: clinical practice guideline for the diagnosis and management of the initial UTI in febrile infants and children 2 to 24 months. Pediatrics. 2011;128(3):595-610.</li>
+    <li id="ref-43">Austin PF, Bauer SB, Bower W, et al. The standardization of terminology of lower urinary tract function in children and adolescents: update report from the standardization committee of the International Children's Continence Society. Neurourol Urodyn. 2016;35(4):471-481.</li>
+  </ol>
+</section>
+</div>

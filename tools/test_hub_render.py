@@ -105,7 +105,7 @@ FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLAT
                       "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
                       "function qzDefeitoUi(r){", "function qzEhSimulado(l){", "function qzModoDaLista(l){",
                       "function qzComFlag(l){", "function qzListaAtual(){", "function qzModoUi(l){",
-                      "function temaExibido(t){",
+                      "function temaExibido(t){", "function tituloCurto(t){",
                       "function qzResponder(){", "function qzRevelaAoAbrir(r){", "function qzTrava(q, r){",
                       "function qzResumoElos(qs, resp){", "function qzElosFimHtml(qs, resp){",
                       "function qzConcluirUi(pendentes){", "function qzGrifoMesclar(intervalos, novo){",
@@ -545,7 +545,7 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                        # s214: as semanas das Listas recolhem; o estado (secAberta) e lido na renderizacao
                        re.search(r"\n  (var SECOES_CHAVE = [^\n]+;)", TEMPLATE).group(1)] +
                       [extrair_funcao(TEMPLATE, a) for a in (
-                          "function qzEsc(s){", "function temaExibido(t){",   # P20: o titulo da lista
+                          "function qzEsc(s){", "function temaExibido(t){", "function tituloCurto(t){",   # P20: o titulo da lista
                           "function qzLs(k, v){", "function qzChip(l){",       # s226: chip so fora do normal
                           "function qzItemLista(l, atrasada, motivo){",   # P21 (s220): sem qzAulasHtml
                           "function qzEhSimulado(l){",
@@ -624,6 +624,19 @@ def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
     assert "60 questões" in html and "~3 h" in html and " -- prova INTEIRA" not in html
     assert out["botoes"][1][1] is True and out["sub"] == ""
     assert '<li data-area="Simulado"><button' in html and '<span class="qz-area">Simulado</span>' in html
+
+
+def test_simulados_com_titulo_curto_e_o_parte_n_dos_cadernos_irmaos():
+    """s236 (U5 da auditoria de UI; P44 nos Simulados): a linha do simulado passa pelo `temaExibido` (o `tituloCurto`)
+    -- os 2 cadernos UERJ 2017-2020 saiam com o MESMO titulo tecnico de 80 caracteres. O "parte N" do sufixo fica."""
+    tema = "Caderno UERJ 2017-2020 no banco do EMED (filtro instituição=UERJ, anos 2017-2020) -- parte %d"
+    ls = [{"_id": "t179%d" % (7 + n), "tema": tema % n, "area": "Simulado", "semana": 3, "seq": 90 + n, "q": 50,
+           "status": "capturada"} for n in (1, 2)]
+    html = _listas("simulados", listas=ls)["html"]
+    titulos = [t.strip() for t in re.findall(r'<p class="qz-tema">([^<]*)', html)]
+    assert titulos == ["Caderno UERJ 2017-2020 no banco do EMED · parte 1",
+                       "Caderno UERJ 2017-2020 no banco do EMED · parte 2"], titulos
+    assert "filtro" not in html and " -- " not in html
 
 
 # ------------------------------------------------ s226 (sprint-final-uerj part-4): Listas pelo sprint
@@ -938,19 +951,23 @@ def test_questao_fim_e_leitor_em_placas():
 # o inventario da tela da questao e do leitor ANTES da part 4 (HEAD 232bab5): id, data-*/type/role e rotulo, na
 # ordem do documento. A part 4 so pos classe e wrapper: nenhum id, botao, ordem ou rotulo pode mudar
 INVENTARIO_QUESTAO = [
-    ["div", "qz-player", "", ""], ["button", "qz-voltar", "type=button", "‹ Todas as listas"], ["p", "qz-tema", "", ""],
+    ["div", "qz-player", "", ""], ["button", "qz-voltar", "type=button", "‹ Listas"],
+    # s236 (pedido dele, 30/10): o paginador (anterior | n de N | proxima) na barra, entre o voltar e o Grifo
+    ["div", "qz-pag", "", ""], ["button", "qz-ant", "type=button", "‹"], ["label", "", "", ""],
+    ["input", "qz-pag-n", "type=number", ""], ["span", "qz-pag-t", "", ""], ["button", "qz-pular", "type=button", "›"],
+    ["p", "qz-tema", "", ""],
     # s229 (pedido dele, 15/10): o botao unico do grifo (3 cores em cascata) tambem nas Listas; o seletor de modo
     # (`qz-modo-lista`, `qz-modo-escolha`) saiu: lista = Estudo, simulado = Prova
     ["div", "qz-grifo", "data-aberto=false", ""], ["button", "qz-grifo-btn", "type=button", "Aa"],
-    ["div", "qz-grifo-cor", "role=group", ""], ["button", "", "data-cor=rosa type=button", "Aa"],
-    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=amarelo type=button", "Aa"],
+    ["div", "qz-grifo-cor", "role=group", ""], ["button", "", "data-cor=amarelo type=button", "Aa"],
+    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=rosa type=button", "Aa"],
     ["span", "qz-relogio", "", ""],
     ["p", "qz-aviso-lista", "", ""],
     ["div", "qz-questao", "", ""], ["span", "qz-pos", "", ""], ["span", "qz-banca", "", ""], ["span", "qz-tags", "", ""],
     ["p", "qz-enun", "", ""], ["div", "qz-figs", "", ""], ["p", "qz-figura", "", ""], ["div", "qz-alts", "role=radiogroup", ""],
     ["div", "qz-antes", "", ""], ["div", "qz-seg", "", ""], ["button", "", "data-c=solida type=button", "Sólida"],
     ["button", "", "data-c=duvida type=button", "Dúvida"], ["button", "", "data-c=chute type=button", "Chute"],
-    # s229 (rodada 3): Responder centralizado; s235: Anterior e Pular viraram as setas do paginador no pe da questao
+    # s236: Responder a direita da certeza, na mesma linha; s235: Anterior e Pular viraram as setas do paginador
     ["button", "qz-responder", "type=button", "Responder"],
     ["div", "qz-depois", "", ""], ["p", "qz-veredito", "", ""], ["section", "qz-medhub-box", "", ""],
     ["p", "qz-cad-tit", "", ""], ["span", "qz-obj", "", ""], ["span", "qz-conferir", "", ""], ["div", "qz-medhub", "", ""],
@@ -960,9 +977,6 @@ INVENTARIO_QUESTAO = [
     ["div", "qz-sol-pe", "", ""], ["details", "qz-sol-box", "", ""], ["summary", "", "", "Comentário do professor"],
     ["div", "qz-sol", "", ""], ["details", "qz-forum-box", "", ""], ["summary", "", "", "Fórum"], ["div", "qz-forum", "", ""],
     ["p", "qz-status", "", ""], ["button", "qz-proxima", "type=button", "Próxima"],
-    # s235: o paginador no pe da questao (anterior | n de N | proxima), nos dois estados
-    ["div", "qz-pag", "", ""], ["button", "qz-ant", "type=button", "‹"], ["label", "", "", ""],
-    ["input", "qz-pag-n", "type=number", ""], ["span", "qz-pag-t", "", ""], ["button", "qz-pular", "type=button", "›"],
     ["div", "qz-fim", "", ""],
     ["div", "qz-tiles", "", ""], ["p", "qz-erradas", "", ""], ["div", "qz-porobj", "", ""], ["div", "qz-elos-fim", "", ""],
     ["ol", "qz-revisao", "", ""], ["button", "qz-concluir", "type=button", "Concluir lista"],
@@ -972,8 +986,8 @@ INVENTARIO_LEITOR = [
     ["div", "hub-leitor", "", ""], ["button", "hub-leitor-voltar", "type=button", "‹ Teoria"], ["p", "hub-leitor-titulo", "", ""],
     # s228: o botao unico da cor do grifo, so no leitor da Teoria, com as tres cores em cascata
     ["div", "hub-grifo", "data-aberto=false", ""], ["button", "hub-grifo-btn", "type=button", "Aa"],
-    ["div", "hub-grifo-cor", "role=group", ""], ["button", "", "data-cor=rosa type=button", "Aa"],
-    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=amarelo type=button", "Aa"],
+    ["div", "hub-grifo-cor", "role=group", ""], ["button", "", "data-cor=amarelo type=button", "Aa"],
+    ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=rosa type=button", "Aa"],
     ["p", "hub-leitor-aviso", "", ""], ["a", "hub-leitor-link", "", ""], ["iframe", "hub-leitor-quadro", "", ""],
     ["div", "hub-assina", "data-st=sem role=group", ""], ["p", "hub-assina-tit", "", ""],
     ["textarea", "hub-assina-coment", "", ""], ["p", "hub-assina-retorno", "", ""], ["p", "hub-assina-st", "role=status", ""],
@@ -992,6 +1006,33 @@ def test_ids_botoes_e_ordem_da_questao_e_do_leitor_nao_mudaram():
     for trecho in ('"ABCDE".indexOf(k)', '"12345".indexOf(k)', '{S: "solida", D: "duvida", C: "chute"}[k]',
                    '$("qz-responder").click()', '$("qz-proxima").click()'):
         assert trecho in teclas, trecho
+
+
+def test_certeza_anuncia_o_estado_por_aria_pressed():
+    """s236 (U12 da auditoria de UI, WCAG 4.1.2): Solida/Duvida/Chute nascem `aria-pressed="false"` e o estado anda
+    junto com a classe `.on` -- um lugar so (`qzCertezaUi`) poe e limpa os dois; marcar uma desmarca as outras."""
+    for c, rot in (("solida", "Sólida"), ("duvida", "Dúvida"), ("chute", "Chute")):
+        assert '<button type="button" data-c="%s" aria-pressed="false">%s</button>' % (c, rot) in TEMPLATE
+    assert TEMPLATE.count("qzCertezaUi(") == 4, "a funcao + clique, limpar ao abrir e restaurar a respondida"
+    assert 'classList.remove("on")' not in TEMPLATE[TEMPLATE.index("function qzMostrar"):TEMPLATE.index("function qzDepoisDe")]
+    prog = (r"""
+function botao(c){ var b = {c: c, on: false, a: {"aria-pressed": "false"}};
+  b.getAttribute = function(k){ return k === "data-c" ? b.c : b.a[k]; };
+  b.setAttribute = function(k, v){ b.a[k] = v; };
+  b.classList = {toggle: function(_n, v){ b.on = !!v; }};
+  return b; }
+var BOT = [botao("solida"), botao("duvida"), botao("chute")];
+function $(id){ return {querySelectorAll: function(){ return BOT; }}; }
+""" + extrair_funcao(TEMPLATE, "function qzCertezaUi(c){") + r"""
+function foto(){ return BOT.map(function(b){ return [b.on, b.a["aria-pressed"]]; }); }
+var saida = [];
+qzCertezaUi("duvida"); saida.push(foto());
+qzCertezaUi("chute"); saida.push(foto());
+qzCertezaUi(null); saida.push(foto());
+console.log(JSON.stringify(saida));
+""")
+    f, t = [False, "false"], [True, "true"]
+    assert _node(prog) == [[f, t, f], [f, f, t], [f, f, f]]
 
 
 def test_hub_sprint_no_build_e_null_sem_sprint():
@@ -1039,6 +1080,12 @@ def test_titulo_do_simulado_e_o_nome_da_prova_no_player_e_no_painel():
     from tools import plano
     assert plano.tema_exibido("UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos") == "UERJ 2025"
     assert plano.tema_exibido("Hérnias | Parede") == "Hérnias · Parede"
+    # s236 (pedido dele, 30/10): titulo longo (> 70) encurta na tela; o dado do plano nao muda
+    assert plano.tema_exibido("Tuberculose 360: adulto, criança (RIP sem etambutol < 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV") == "Tuberculose 360"
+    assert plano.tema_exibido("Oncologia pediátrica pelos sinais de alarme (leucemia, linfoma, neuroblastoma, tumor ósseo, tiflite) + Wilms x neuroblastoma") == "Oncologia pediátrica pelos sinais de alarme"
+    assert plano.tema_exibido("Pré-Natal | Distúrbios Hipertensivos da Gestação | Sífilis na Gestação e Sífilis Congênita | Sangramento da Primeira Metade") == "Pré-Natal · Distúrbios Hipertensivos da Gestação +2"
+    assert plano.tema_exibido("Neoplasias benignas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia") == "Neoplasias benignas e malignas de cabeça e pescoço"
+    assert plano.tema_exibido("Arboviroses | HIV | Tuberculose | Meningites e Meningoencefalites") == "Arboviroses · HIV · Tuberculose · Meningites e Meningoencefalites", "ate 70 fica inteiro"
     # a linha do cabecalho do player, como esta no template (o harness nao abre lista)
     assert ("$(\"qz-tema\").textContent = (temaExibido(l.tema) || id) + (l.area && !qzEhSimulado(l) ? \" · \" + l.area : \"\");"
             in TEMPLATE)
@@ -2443,7 +2490,7 @@ SAIDA.html = $("qz-listas").innerHTML;"""
 
 CARDS_DIA = _funcs("function vivoDia(t){", "function vivoCards(notas, lote, sessaoGravada){",
                    "function loteNoAr(){", "function cardsDia(){", "function cardsContador(dia, notas, lote){",
-                   "function cardsDiaDoLote(iso){", "function cardsAvisoFila(lote, hojeLocal){",
+                   "function cardsDiaDoLote(iso){",
                    "function cardsPintar(notas){")
 
 DOM_CARDS = r"""
@@ -2452,8 +2499,8 @@ function $(id){ return els[id] || null; }
 function el(id, txt){ var cl = {}; els[id] = {id: id, hidden: false, textContent: txt || "",
   classList: {add: function(c){ cl[c] = 1; }, has: function(c){ return !!cl[c]; }}}; return els[id]; }
 var metros = el("metros");
-["dia-n", "dia-t", "metro-lote", "aviso-fila"].forEach(function(i){ el(i); });
-el("dia-contador").hidden = true; els["dia-contador"].parentNode = metros; els["aviso-fila"].hidden = true;
+["dia-n", "dia-t", "metro-lote"].forEach(function(i){ el(i); });
+el("dia-contador").hidden = true; els["dia-contador"].parentNode = metros;
 el("lote", __LOTE__); el("hub-dia", __DIA__);
 """
 
@@ -2463,8 +2510,7 @@ def _rodar_cards(lote, dia, notas):
             .replace("__DIA__", json.dumps(json.dumps(dia))) + CARDS_DIA + """
 cardsPintar(%s);
 console.log(JSON.stringify({n: $("dia-n").textContent, t: $("dia-t").textContent, visivel: !$("dia-contador").hidden,
-  lote_oculto: $("metro-lote").hidden, menor: $("metros").classList.has("com-dia"),
-  aviso: $("aviso-fila").hidden ? null : $("aviso-fila").textContent}));""" % json.dumps(notas))
+  lote_oculto: $("metro-lote").hidden, menor: $("metros").classList.has("com-dia")}));""" % json.dumps(notas))
     return _node(prog)
 
 
@@ -2496,23 +2542,24 @@ def test_cards_e_painel_mostram_o_mesmo_contador():
     assert "iniciarCardsDia();" in TEMPLATE and 'assinarResiliente(function(db){ return db.collection("sessoes/" + lote.sessao + "/notas"); }' in TEMPLATE
 
 
-def test_fila_de_outro_dia_avisa_e_segue_drenavel():
-    """DoD 3: lote com `gerado_em` de ontem = aviso unico "Fila de DD/MM -- a de hoje ainda nao saiu.";
-    de hoje (ou a de vespera, amanha) = sem aviso. O aviso so pinta: a fila do player nao muda."""
+def test_fila_de_outro_dia_nao_avisa_e_os_botoes_do_topo_nao_tem_legenda():
+    """s236 (pedido dele, 30/10/2026): "a remocao desse bloco amarelo citando a fila atrasada e o texto dele, bem
+    como as legendas (espaco, p, d) dos botoes, para que eles fiquem alinhados na mesma linha". O lote de dia
+    anterior segue drenavel, sem aviso; os atalhos de teclado seguem, sem legenda; os 3 botoes numa linha.
+    ⚰️ s226: o aviso "Fila de DD/MM -- a de hoje ainda nao saiu." acima do 1o card."""
     ontem = _hoje_iso(-1)
-    rot = "Fila de %s/%s -- a de hoje ainda não saiu." % (ontem[8:10], ontem[5:7])
     lote = {"sessao": "x", "gerado_em": ontem + "T21:40:00", "cards": [{"card_id": 1}, {"card_id": 2}]}
     dia = {"data": ontem, "consumo_hoje": 3, "teto": 150, "sessao_gravada": ""}
-    assert _rodar_cards(lote, dia, [])["aviso"] == rot
-    assert _rodar_cards(dict(lote, gerado_em=_hoje_iso() + "T01:17:20"), dia, [])["aviso"] is None
-    assert _rodar_cards(dict(lote, gerado_em=_hoje_iso(1) + "T06:00:00"), dia, [])["aviso"] is None
-    assert _rodar_cards(dict(lote, cards=[]), dia, [])["aviso"] is None, "lote vazio: nada a drenar, sem aviso"
-    assert _rodar_cards(lote, None, [])["aviso"] == rot, "o aviso nao depende do contador"
+    out = _rodar_cards(lote, dia, [])
+    assert out["n"] == "3" and out["visivel"], "lote de ontem: o contador pinta como sempre"
+    assert "cardsAvisoFila" not in TEMPLATE and "aviso-fila" not in TEMPLATE
     player = (ROOT / "core" / "templates" / "player.html").read_text(encoding="utf-8")
-    corpo = player[player.index("<!-- @player:corpo:inicio -->"):player.index('<main id="drill">')]
-    assert corpo.count('id="aviso-fila"') == 1, "um aviso so, acima do 1o card"
-    assert "aviso-fila" not in player[player.index("<!-- @player:js:inicio -->"):], \
-        "o player nao le o aviso: a fila e a gravacao sao as de sempre (nota com o ts de hoje)"
+    assert "aviso-fila" not in player
+    corpo = player[player.index('<div class="acoes topo-acoes">'):player.index('<div class="defeito-opcoes"')]
+    assert "<kbd>" not in corpo and "Virar o card</button>" in corpo and "Pausar</button>" in corpo \
+        and "Defeito do card</button>" in corpo
+    assert "<kbd>" not in player[player.index("<!-- @player:js:inicio -->"):], "o Retomar/Pausar tambem sem legenda"
+    assert ".topo-acoes{display:grid;grid-template-columns:auto auto auto;justify-content:start}" in player, "3 colunas: nunca quebra"
 
 
 # ======================================================================== s227: hub-tema-v4 parts 6 e 7
@@ -2547,7 +2594,8 @@ def test_seletor_da_cor_do_grifo_e_um_botao_unico_so_no_leitor_da_teoria():
     grupo = re.search(r'<div class="hub-grifo-cor" id="hub-grifo-cor" role="group" aria-label="Cor do próximo grifo">(.*?)</div>', barra, re.S)
     assert grupo, "o grupo com o nome acessivel"
     botoes = re.findall(r'<button type="button" data-cor="(\w+)" aria-pressed="(true|false)" aria-label="(\w+)"', grupo.group(1))
-    assert botoes == [("rosa", "true", "Rosa"), ("ciano", "false", "Ciano"), ("amarelo", "false", "Amarelo")]
+    # s236 (pedido dele, 30/10): amarelo em cima, rosa embaixo; a ativa segue a rosa
+    assert botoes == [("amarelo", "false", "Amarelo"), ("ciano", "false", "Ciano"), ("rosa", "true", "Rosa")]
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     assert ".hub-grifo-cor button{min-width:44px;min-height:44px;" in css and "min-height:44px" in css.split(".hub-grifo-btn{", 1)[1].split("}", 1)[0]
     assert '.hub-grifo-cor button[aria-pressed="true"]{border-color:var(--acento)}' in css
@@ -2798,7 +2846,7 @@ var GRIFOS = [["b", "texto grifado"], ["cap", "ainda na faixa"], ["trail", "gaba
     var d4 = await carregar(%s); SAIDA.nova = {stats: refsMontar(d4), hub: d4.querySelectorAll("section.hub-refs").length,
       refs: Array.prototype.map.call(d4.querySelectorAll("section.refs ol > li"), function(li){ return [li.id, txt(li)]; }),
       sup: Array.prototype.map.call(d4.querySelectorAll("#y sup a"), function(a){ return [a.getAttribute("href"), a.textContent]; }),
-      base: txt(d4.querySelector("p.base")), fora: fontesFora(d4)};
+      base: {txt: txt(d4.querySelector("p.base")), oculto: !!d4.querySelector("p.base") && d4.querySelector("p.base").hidden}, fora: fontesFora(d4)};
   }catch(e){ SAIDA.erro = String(e && e.stack || e); }
   fim();
 })();
@@ -2822,8 +2870,7 @@ def test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim(refs_saida):
     assert s["stats"] == {"referencias": 3, "base": 3, "movidas": 7}
     assert s["refs"] == [["hub-ref-1", "SBC. Diretriz de IC 2023"], ["hub-ref-2", "PMID 42366997, DOI 10.1161/CIR.1."],
                          ["hub-ref-3", "Ministério da Saúde. PCDT de Hepatites Virais, 2022"]]
-    assert s["base"] == ["resumos/Cirurgia/30. Complicações Pós-Operatórias.pdf (febre)", "Apostila Estratégia MED -- Prof. X (2024)",
-                         "resumos/Pediatria/34. Kawasaki.pdf (EMED)"]
+    assert s["base"] == [], "s236: a base interna (resumo, apostila) conta mas nao aparece em lugar nenhum"
     assert s["sups"] == [["#hub-ref-1", "1", "cap"], ["#hub-ref-1", "1", "b"], ["#hub-ref-2", "2", "trail"], ["#hub-ref-3", "3", "passo2"]]
     assert s["sup_no_texto_do_passo"] is True, "na linha em grade o sobrescrito entra no texto, nunca vira um item novo"
     assert s["txt"]["a"] == "A principal fonte de ferro na dieta é a carne. Fonte de calor alta.", "citar a palavra nao move"
@@ -2832,7 +2879,7 @@ def test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim(refs_saida):
     assert s["txt"]["trap"] == "Armadilha um.", "fonte interna nao deixa numero"
     assert s["txt"]["passo2"] == "2Passo dois da escada.3"
     assert s["txt"]["olho"] == "Câncer mais frequente nas mulheres", "no '> Fonte:' do resumo so a 1a linha e a fonte"
-    assert s["sec"] == {"n": 1, "h2": "Referências", "base_tit": "Base deste documento:", "pai": "wrap", "ultima": True,
+    assert s["sec"] == {"n": 1, "h2": "Referências", "base_tit": None, "pai": "wrap", "ultima": True,
                         "depois_do_rodape": True}
     assert s["ocultos"] == {"rodape": True, "olho_visivel": True, "lugares": 4, "lugares_escondidos": True}
 
@@ -2859,7 +2906,7 @@ def test_referencias_idempotentes_sem_fonte_nada_e_aula_nova_usa_a_lista_dela(re
     n = s["nova"]
     assert n["hub"] == 0 and n["stats"] == {"referencias": 1, "base": 1, "movidas": 2}
     assert n["refs"] == [["ref-1", "AHA 2020"], ["hub-ref-2", "KDIGO 2021"]] and n["sup"] == [["#hub-ref-2", "2"]]
-    assert n["base"] == "Base deste documento: resumos/X.md · verso do card 12" and n["fora"] == []
+    assert n["base"] == {"txt": "Base deste documento: resumos/X.md", "oculto": True} and n["fora"] == [], "s236: o p.base some"
 
 
 # ======================================================================== s229 (front, pedido dele em 15/10)
@@ -2934,10 +2981,31 @@ def test_rodada3_cabecalho_da_questao_e_botoes_compactos_do_card():
     compactos (o tamanho do Pausar da v120) com a mesma paleta. s235 (pedido dele, 29/10): voltar, Grifo e tempo numa
     linha so (Grifo empurrado para a direita), o titulo entre eles em tela larga e abaixo no celular."""
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
-    assert "#qz-player .hub-leitor-barra #qz-tema{order:4;flex:1 1 100%;min-width:0}" in css
-    assert "#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:auto}" in css
-    assert "#qz-player .hub-leitor-barra #qz-tema{order:1;flex:1 1 8rem}" in css
-    assert "#qz-player .hub-leitor-barra .qz-relogio{order:3;" in css and "#qz-antes .qz-pe{justify-content:center}" in css
+    # s236 (pedido dele, 30/10): voltar | paginador | (titulo em tela larga) | Grifo | tempo; o titulo desce no celular;
+    # a certeza sem legenda e o Responder a direita dela, na mesma linha
+    assert "#qz-player .hub-leitor-barra #qz-voltar{order:0}" in css
+    assert "#qz-player .hub-leitor-barra .qz-pag{order:1;" in css
+    assert "#qz-player .hub-leitor-barra #qz-grifo{order:3;margin-left:auto}" in css
+    assert "#qz-player .hub-leitor-barra .qz-relogio{order:4;" in css
+    assert "#qz-player .hub-leitor-barra #qz-tema{order:-2;flex:1 1 100%;min-width:0}" in css, "o titulo acima da barra"
+    # s236 (U2, posicao fixa > elemento condicional): no celular a base do titulo e FIXA (100% menos o lugar do tempo)
+    # -- a 1a linha e sempre titulo + tempo e o voltar nunca sobe, qualquer que seja o comprimento do titulo
+    celular = css[css.index("@media (max-width:699px){\n  #qz-player .hub-grifo-rot"):]
+    celular = celular[:celular.index("\n}")]
+    assert "#qz-player .hub-leitor-barra #qz-tema{flex:1 1 calc(100% - 6rem)}" in celular
+    assert "#qz-player .hub-leitor-barra .qz-relogio{order:-1;flex:0 0 auto}" in celular, "o tempo sobe para a linha do titulo"
+    assert "60%" not in celular, "a base em % solto deixava o voltar subir com titulo curto"
+    assert "#hub-leitor .hub-leitor-barra .hub-leitor-titulo{order:-1;flex:1 1 100%}" in css
+    assert "#qz-antes{display:flex;align-items:stretch;gap:var(--esp-2)}" in css and "#qz-antes .primario{flex:0 0 auto;" in css
+    assert "<small>eu sei" not in TEMPLATE and ".qz-seg button small" not in css
+    barra = TEMPLATE[TEMPLATE.index('id="qz-voltar"'):TEMPLATE.index('id="qz-tema"')]
+    assert 'id="qz-pag"' in barra and "&lsaquo; Listas" in barra, "o paginador mora na barra, entre o voltar e o titulo"
+    # s236 (U2, D2-a): UM rotulo e UM destino -- o voltar sempre "‹ Listas" e sempre a lista de listas; o fim abre pelo
+    # paginador. ⚰️ s236: `qzBarra` trocava para "‹ Lista" (o fim) com a lista completa
+    assert "qzBarra" not in TEMPLATE and "&lsaquo; Lista\"" not in TEMPLATE and "qzCompleta" not in TEMPLATE
+    voltar = TEMPLATE[TEMPLATE.index('$("qz-voltar").addEventListener("click"'):]
+    voltar = voltar[:voltar.index("\n  });")]
+    assert "qzFecharLista();" in voltar and "qzFim" not in voltar
     from tools.fsrs_queue import TEMPLATE_PLAYER
     p = TEMPLATE_PLAYER.read_text(encoding="utf-8")
     assert ".topo-acoes button{min-height:36px;padding:var(--esp-1) var(--esp-3);font-size:var(--fs-meta)" in p

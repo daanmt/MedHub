@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "core/templates/player.html"
+        ],
+        "createdAt": "2026-10-30T22:07:54.524Z",
+        "reason": "DESIGN.md Components: filete a esquerda (neutro/ambar) nas seccoes do card e no aviso e decisao documentada do tema v4 (s227), nunca caixa dentro do card; pre-existente, nao regressao da s236"
+      }
+    ]
+  }
+}

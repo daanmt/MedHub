@@ -48,8 +48,36 @@ td{color:var(--ink2);border-top:1px solid var(--line)}
 .fa-eso{fill:var(--card);stroke:var(--ink2);stroke-width:1.4;stroke-linejoin:round}
 .fa-est{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.5;stroke-linejoin:round}
 .fa-orgao{fill:var(--card);stroke:var(--ink3);stroke-width:1.4;stroke-linejoin:round}
-.fa-jeg{fill:var(--amber);stroke:var(--paper);stroke-width:1.2}
+.fa-jeg{fill:var(--rosa);stroke:var(--paper);stroke-width:1.2}
 
+/* realce rosa = o que decide (s236): no texto .chave; na figura .fa-ro* */
+@media(max-width:520px){.fig-an{padding:10px 6px 8px}}
+.chave{color:var(--rosa);font-weight:650}
+.fa-ro{fill:var(--rosa);font-size:12.5px;font-weight:700}
+.fa-rof{fill:var(--rosa)}
+.fa-rol{fill:none;stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-row{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-pt{fill:var(--plum-ink);font-size:12px;font-weight:650}
+.fa-o2{fill:var(--ink2);font-size:12px}
+.fa-reg{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-tk{stroke:var(--ink3);stroke-width:1}
+.fa-tkf{stroke:var(--line2);stroke-width:1}
+.fa-pl{fill:var(--plum)}
+.fa-plw{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-plf{fill:var(--plum-wash)}
+.fa-pll{fill:none;stroke:var(--plum);stroke-width:2;stroke-linecap:round}
+.fa-ln{fill:none;stroke:var(--ink3);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-ln2{fill:none;stroke:var(--ink2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.fa-cd{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-cd2{fill:var(--card);stroke:var(--ink2);stroke-width:1.3;stroke-linejoin:round}
+.fa-sk{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-sk2{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.4;stroke-linejoin:round}
+.fa-i2{fill:var(--ink2)}
+.fa-i3{fill:var(--ink3)}
+.fa-sept{fill:var(--ink3);opacity:.75}
+.fa-vf{fill:var(--card);stroke:var(--ink2);stroke-width:.9}
+.fa-fol{fill:var(--plum-wash);stroke:var(--ink3);stroke-width:2.6}
+.fa-agulha{stroke:var(--ink2);stroke-width:2.2;stroke-linecap:butt}
 sup.ref{font-size:12px;margin-left:1px}
 sup.ref a{text-decoration:none;color:var(--teal-ink)}
 .refs{padding:24px 0 0}
@@ -71,14 +99,14 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <h2>A JEG decide o tipo da hérnia</h2>
   <p class="pede"><b>A banca pediu:</b> o tipo de uma hérnia com linha Z no pinçamento e estômago no tórax (Q38); os graus da Nissen (Q27); a bariátrica com ação hormonal (Q37).</p>
   <ol class="esc">
-    <li><span class="n">1</span><div>Na hérnia hiatal, olhe primeiro a <strong>junção esofagogástrica (JEG)</strong>. Linha Z coincidente com o pinçamento diafragmático = JEG no lugar.</div></li>
-    <li><span class="n">2</span><div><strong>Tipo I</strong> (deslizamento): a JEG sobe; é a mais comum e a ligada à DRGE. <strong>Tipo II</strong> (paraesofágica): a JEG fica e o fundo sobe ao lado do esôfago. III soma os dois; IV leva outro órgão junto<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
+    <li><span class="n">1</span><div>Na hérnia hiatal, olhe primeiro a <strong class="chave">junção esofagogástrica (JEG)</strong>. Linha Z coincidente com o pinçamento diafragmático = JEG no lugar.</div></li>
+    <li><span class="n">2</span><div><strong>Tipo I</strong> (deslizamento): a JEG sobe; é a mais comum e a ligada à DRGE. <strong class="chave">Tipo II</strong> (paraesofágica): a JEG fica e o fundo sobe ao lado do esôfago. III soma os dois; IV leva outro órgão junto<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
     <li><span class="n">3</span><div>DRGE refratária com motilidade normal: <strong>Nissen, 360 graus</strong>. Com dismotilidade, válvula parcial: <strong>Toupet, 270 graus</strong> (posterior) ou Dor, 180 graus (anterior)<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
-    <li><span class="n">4</span><div>A <strong>gastrectomia vertical</strong> retira o fundo, onde mora a grelina: além de restritiva, tem ação hormonal. A banda ajustável é só restritiva<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+    <li><span class="n">4</span><div>A <strong class="chave">gastrectomia vertical</strong> retira o fundo, onde mora a grelina: além de restritiva, tem ação hormonal. A banda ajustável é só restritiva<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
   </ol>
   <figure class="fig-an">
     <p class="fa-cab"><span>Fig 1 · esquema</span><b>Onde está a JEG</b></p>
-    <svg viewBox="0 0 344 300" role="img" aria-label="Quatro esquemas frontais da hérnia hiatal com o diafragma como uma faixa horizontal com o hiato no meio. Tipo I, deslizamento: a junção esofagogástrica e a cárdia sobem acima do diafragma. Tipo II, paraesofágica: a junção fica no hiato e o fundo gástrico sobe ao lado do esôfago. Tipo III, mista: a junção e o fundo sobem. Tipo IV: além do estômago, outro órgão, como o cólon, sobe pelo hiato alargado.">
+    <svg viewBox="0 0 344 300" role="img" aria-label="Quatro hérnias hiatais com o diafragma em faixa. No tipo I a JEG sobe; no II a JEG fica no hiato e o fundo sobe ao lado do esôfago; no III sobem os dois; no IV sobe também outro órgão, como o cólon.">
       <!-- Painel I: deslizamento -->
       <g transform="translate(2,4)">
         <rect class="fa-pn" x="0" y="0" width="168" height="142" rx="8"/>
@@ -90,7 +118,7 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
         <path class="fa-est" d="M83 48 C89 54 92 62 93 70 L93 80 C116 80 130 92 127 108 C124 124 102 132 82 129 C70 127 61 123 56 118 L60 112 C70 116 81 112 82 101 C82 92 70 86 68 78 L68 66 C68 58 70 52 73 48 Z"/>
         <path class="fa-eso" d="M73 24 L83 24 L83 48 L73 48 Z"/>
         <circle class="fa-jeg" cx="78" cy="48" r="3.6"/>
-        <text class="fa-av" x="88" y="44">JEG</text>
+        <text class="fa-ro" x="88" y="44">JEG</text>
       </g>
       <!-- Painel II: paraesofagica -->
       <g transform="translate(174,4)">
@@ -101,7 +129,7 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
         <path class="fa-est" d="M83 80 C84 74 85 70 86 64 C86 46 93 32 107 32 C122 32 128 47 122 59 C118 66 105 68 94 69 L94 81 C117 82 130 94 127 110 C124 125 102 133 82 130 C70 128 61 124 56 119 L60 113 C70 117 81 113 82 102 C82 93 75 87 73 80 Z"/>
         <path class="fa-eso" d="M73 24 L83 24 L83 80 L73 80 Z"/>
         <circle class="fa-jeg" cx="78" cy="80" r="3.6"/>
-        <text class="fa-av" x="30" y="94">JEG</text>
+        <text class="fa-ro" x="30" y="94">JEG</text>
         <text class="fa-o" x="106" y="52" text-anchor="middle">fundo</text>
       </g>
       <!-- Painel III: mista -->
@@ -113,7 +141,7 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
         <path class="fa-est" d="M83 48 C86 40 94 30 107 30 C122 30 128 45 122 57 C118 64 105 66 94 68 L94 80 C116 81 130 93 127 109 C124 125 102 133 82 130 C70 128 61 124 56 119 L60 113 C70 117 81 113 82 102 C82 93 70 87 68 79 L68 64 C68 57 70 52 73 48 Z"/>
         <path class="fa-eso" d="M73 22 L83 22 L83 48 L73 48 Z"/>
         <circle class="fa-jeg" cx="78" cy="48" r="3.6"/>
-        <text class="fa-av" x="40" y="44">JEG</text>
+        <text class="fa-ro" x="40" y="44">JEG</text>
         <text class="fa-o" x="108" y="50" text-anchor="middle">fundo</text>
       </g>
       <!-- Painel IV: outro orgao -->
@@ -130,7 +158,7 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
         <text class="fa-o" x="108" y="50" text-anchor="middle">fundo</text>
       </g>
     </svg>
-    <figcaption>Tipo I: a JEG sobe. Tipo II: a JEG fica no hiato e o fundo sobe ao lado.<sup class="ref"><a href="#ref-1">1</a></sup> Esquema frontal, sem escala.</figcaption>
+    <figcaption>Tipo I: a JEG sobe; no II, fica e o fundo sobe.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
   </figure>
   <div class="trap">Q38: a esofagite na EDA puxou para o tipo I, mas o tipo sai da posição da JEG, não do refluxo. Q37: Collis (alonga o esôfago) e gastrectomia subtotal operam o estômago, mas não são bariátricas.</div>
   <p class="base">Fonte: resumos/Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md; resumos/Clínica Médica/Gastroenterologia/10. Disfagia, Alterações Estruturais e Distúrbios da Motilidade do Esôfago.pdf; resumos/Cirurgia/2. Cirurgia Bariátrica e Metabólica (Tratamento Cirúrgico da Obesidade).pdf</p>
@@ -141,12 +169,67 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <h2>O escore e o lado do sinusoide</h2>
   <p class="pede"><b>A banca pediu:</b> as variáveis do MELD (Q26) e o espaço comprometido nas varizes de quem tem trombose das veias supra-hepáticas (Q33).</p>
   <ol class="esc">
-    <li><span class="n">1</span><div><strong>MELD = bilirrubina, INR e creatinina</strong> (BIC): ordena a fila do transplante hepático<sup class="ref"><a href="#ref-4">4</a></sup>. O MELD-Na soma o sódio.</div></li>
+    <li><span class="n">1</span><div><strong class="chave">MELD = bilirrubina, INR e creatinina</strong> (BIC): ordena a fila do transplante hepático<sup class="ref"><a href="#ref-4">4</a></sup>. O MELD-Na soma o sódio.</div></li>
     <li><span class="n">2</span><div>O <strong>Child-Pugh</strong> é outro escore: bilirrubina, albumina, INR, ascite e encefalopatia<sup class="ref"><a href="#ref-5">5</a></sup>. Viu albumina, pense em Child.</div></li>
     <li><span class="n">3</span><div>Hipertensão portal se localiza pelo obstáculo em relação ao sinusoide. <strong>Pré-sinusoidal</strong>: esquistossomose (a principal); <strong>sinusoidal</strong>: cirrose.</div></li>
-    <li><span class="n">4</span><div><strong>Budd-Chiari</strong> obstrui a saída venosa do fígado, depois do sinusoide: na divisão pré x pós, é <strong>pós-sinusoidal</strong> (em três níveis, pós-hepático)<sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
+    <li><span class="n">4</span><div><strong>Budd-Chiari</strong> obstrui a saída venosa do fígado, depois do sinusoide: na divisão pré x pós, é <strong class="chave">pós-sinusoidal</strong> (em três níveis, pós-hepático)<sup class="ref"><a href="#ref-6">6</a></sup>.</div></li>
   </ol>
   <div class="tw"><table><tr><th>Escore</th><th>Variáveis</th><th>Para quê</th></tr><tr><td>MELD</td><td>Bilirrubina, INR, creatinina</td><td>Fila do transplante</td></tr><tr><td>MELD-Na</td><td>As três + sódio</td><td>Fila do transplante</td></tr><tr><td>Child-Pugh</td><td>Bilirrubina, albumina, INR, ascite, encefalopatia</td><td>Classe A, B ou C e prognóstico</td></tr></table></div>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Onde está o obstáculo</b></p>
+    <svg viewBox="0 0 344 160" role="img" aria-label="O sangue entra pela veia porta, passa pelos sinusoides entre as traves de hepatócitos e sai pelas veias hepáticas para a cava. A esquistossomose obstrui antes do sinusoide, a cirrose no sinusoide e o Budd-Chiari depois dele, na saída.">
+      <rect class="fa-sk2" x="8" y="79" width="100" height="16" rx="8"/>
+      <rect class="fa-sk2" x="226" y="79" width="80" height="16" rx="8"/>
+      <rect class="fa-sk2" x="100" y="46" width="132" height="82" rx="8"/>
+      <rect class="fa-cd" x="106" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="112" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="121.2" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="127.2" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="136.4" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="142.4" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="151.6" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="157.6" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="166.8" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="172.8" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="182" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="188" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="197.2" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="203.2" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="212.4" y="52" width="12" height="12" rx="3"/><circle class="fa-i3" cx="218.4" cy="58" r="1.8"/>
+      <rect class="fa-cd" x="106" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="112" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="121.2" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="127.2" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="136.4" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="142.4" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="151.6" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="157.6" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="166.8" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="172.8" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="182" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="188" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="197.2" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="203.2" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="212.4" y="72" width="12" height="12" rx="3"/><circle class="fa-i3" cx="218.4" cy="78" r="1.8"/>
+      <rect class="fa-cd" x="106" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="112" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="121.2" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="127.2" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="136.4" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="142.4" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="151.6" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="157.6" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="166.8" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="172.8" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="182" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="188" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="197.2" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="203.2" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="212.4" y="92" width="12" height="12" rx="3"/><circle class="fa-i3" cx="218.4" cy="98" r="1.8"/>
+      <rect class="fa-cd" x="106" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="112" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="121.2" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="127.2" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="136.4" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="142.4" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="151.6" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="157.6" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="166.8" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="172.8" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="182" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="188" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="197.2" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="203.2" cy="118" r="1.8"/>
+      <rect class="fa-cd" x="212.4" y="112" width="12" height="12" rx="3"/><circle class="fa-i3" cx="218.4" cy="118" r="1.8"/>
+      <path class="fa-sept" d="M156 47 C162 66 150 84 160 102 C166 112 162 120 164 127 L172 127 C170 118 175 110 168 100 C160 84 172 66 166 47 Z"/>
+      <rect class="fa-sk2" x="298" y="12" width="22" height="150" rx="10"/>
+      <circle class="fa-plw" cx="68" cy="87" r="11"/><ellipse class="fa-pl" cx="68" cy="87" rx="6.5" ry="4.4"/><polygon class="fa-pl" points="70,83 74,78 73,84"/>
+      <ellipse class="fa-rof" cx="262" cy="87" rx="11" ry="9"/>
+      <polygon class="fa-i3" points="34,87 26,82.5 26,91.5"/>
+      <polygon class="fa-i3" points="309,22 304.5,30 313.5,30"/>
+      <text class="fa-s" x="30" y="72" text-anchor="middle">porta</text>
+      <text class="fa-s" x="294" y="24" text-anchor="end">cava</text>
+      <text class="fa-o2" x="62" y="36" text-anchor="middle">pré</text>
+      <text class="fa-o2" x="166" y="36" text-anchor="middle">sinusoidal</text>
+      <text class="fa-ro" x="262" y="36" text-anchor="middle">pós</text>
+      <text class="fa-o2" x="56" y="150" text-anchor="middle">esquistossomose</text>
+      <text class="fa-o2" x="166" y="150" text-anchor="middle">cirrose</text>
+      <text class="fa-ro" x="258" y="150" text-anchor="middle">Budd-Chiari</text>
+    </svg>
+    <figcaption>Budd-Chiari obstrui a saída, depois do sinusoide: pós-sinusoidal.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
   <div class="trap">Q26: B misturava sódio (MELD-Na) com albumina (Child) para parecer certo. Q33: "veias supra-hepáticas" é a palavra que põe o obstáculo depois do sinusoide.</div>
   <p class="base">Fonte: resumos/Clínica Médica/Hepatologia/5. Cirrose Hepática.pdf; resumos/Clínica Médica/Hepatologia/6. Complicações da Cirrose Hepática.pdf; resumos/Clínica Médica/Hepatologia/9. Transplante Hepático e Hepatite Fulminante.pdf</p>
 </section>
@@ -157,10 +240,74 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <p class="pede"><b>A banca pediu:</b> o exame NÃO indicado num incidentaloma adrenal de 7 cm (Q34); diagnóstico e cirurgia de um nódulo tireoidiano de 4 cm com núcleos em vidro fosco (Q31).</p>
   <ol class="esc">
     <li><span class="n">1</span><div>Todo <strong>incidentaloma adrenal</strong> responde a duas perguntas: funciona? (cortisol após 1 mg de dexametasona, metanefrinas; aldosterona/renina se hipertenso) e parece maligno? (TC sem contraste, washout ou RM)<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
-    <li><span class="n">2</span><div><strong>Não se punciona</strong> massa adrenal de rotina: a citologia não separa adenoma de carcinoma, e no feocromocitoma não excluído a punção arrisca crise hipertensiva. Exceção rara: suspeita de metástase que mude a conduta, depois das metanefrinas<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
-    <li><span class="n">3</span><div>Na tireoide, a PAAF fecha o <strong>papilífero</strong> (núcleos em vidro fosco, fendas e pseudoinclusões), mas <strong>não o folicular</strong>: invasão capsular ou vascular só se vê na peça<sup class="ref"><a href="#ref-8">8</a></sup>.</div></li>
+    <li><span class="n">2</span><div><strong class="chave">Não se punciona</strong> massa adrenal de rotina: a citologia não separa adenoma de carcinoma, e no feocromocitoma não excluído a punção arrisca crise hipertensiva. Exceção rara: suspeita de metástase que mude a conduta, depois das metanefrinas<sup class="ref"><a href="#ref-7">7</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Na tireoide, a PAAF fecha o <strong>papilífero</strong> (núcleos em vidro fosco, fendas e pseudoinclusões), mas <strong class="chave">não o folicular</strong>: invasão capsular ou vascular só se vê na peça<sup class="ref"><a href="#ref-8">8</a></sup>.</div></li>
     <li><span class="n">4</span><div>Extensão: tumor <strong>&gt; 4 cm</strong>, extensão extratireoidiana grosseira ou metástase = tireoidectomia total; de 1 a 4 cm cabe lobectomia ou total<sup class="ref"><a href="#ref-9">9</a></sup>. Com 4 cm, só C unia o diagnóstico certo a uma cirurgia aceitável.</div></li>
   </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>O que a agulha alcança</b></p>
+    <svg viewBox="0 0 344 194" role="img" aria-label="Dois nódulos de tireoide com a agulha da PAAF no centro. No papilífero, a agulha colhe células com núcleos claros em vidro fosco e fecha o diagnóstico; no folicular, o que define o câncer é a invasão da cápsula, na borda, que só a peça mostra.">
+      <circle class="fa-sk2" cx="86" cy="100" r="50" style="stroke-width:3"/>
+      <circle class="fa-cd" cx="79" cy="63.7" r="6.4"/><circle class="fa-vf" cx="79" cy="63.7" r="3.6"/>
+      <circle class="fa-cd" cx="93" cy="63.7" r="6.4"/><circle class="fa-vf" cx="93" cy="63.7" r="3.6"/>
+      <circle class="fa-cd" cx="58" cy="75.8" r="6.4"/><circle class="fa-vf" cx="58" cy="75.8" r="3.6"/>
+      <circle class="fa-cd" cx="72" cy="75.8" r="6.4"/><circle class="fa-vf" cx="72" cy="75.8" r="3.6"/>
+      <circle class="fa-cd" cx="86" cy="75.8" r="6.4"/><circle class="fa-vf" cx="86" cy="75.8" r="3.6"/>
+      <circle class="fa-cd" cx="100" cy="75.8" r="6.4"/><circle class="fa-vf" cx="100" cy="75.8" r="3.6"/>
+      <circle class="fa-cd" cx="114" cy="75.8" r="6.4"/><circle class="fa-vf" cx="114" cy="75.8" r="3.6"/>
+      <circle class="fa-cd" cx="51" cy="87.9" r="6.4"/><circle class="fa-vf" cx="51" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="65" cy="87.9" r="6.4"/><circle class="fa-vf" cx="65" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="79" cy="87.9" r="6.4"/><circle class="fa-vf" cx="79" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="93" cy="87.9" r="6.4"/><circle class="fa-vf" cx="93" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="107" cy="87.9" r="6.4"/><circle class="fa-vf" cx="107" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="121" cy="87.9" r="6.4"/><circle class="fa-vf" cx="121" cy="87.9" r="3.6"/>
+      <circle class="fa-cd" cx="58" cy="100" r="6.4"/><circle class="fa-vf" cx="58" cy="100" r="3.6"/>
+      <circle class="fa-cd" cx="72" cy="100" r="6.4"/><circle class="fa-vf" cx="72" cy="100" r="3.6"/>
+      <circle class="fa-cd" cx="86" cy="100" r="6.4"/><circle class="fa-vf" cx="86" cy="100" r="3.6"/>
+      <circle class="fa-cd" cx="100" cy="100" r="6.4"/><circle class="fa-vf" cx="100" cy="100" r="3.6"/>
+      <circle class="fa-cd" cx="114" cy="100" r="6.4"/><circle class="fa-vf" cx="114" cy="100" r="3.6"/>
+      <circle class="fa-cd" cx="51" cy="112.1" r="6.4"/><circle class="fa-vf" cx="51" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="65" cy="112.1" r="6.4"/><circle class="fa-vf" cx="65" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="79" cy="112.1" r="6.4"/><circle class="fa-vf" cx="79" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="93" cy="112.1" r="6.4"/><circle class="fa-vf" cx="93" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="107" cy="112.1" r="6.4"/><circle class="fa-vf" cx="107" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="121" cy="112.1" r="6.4"/><circle class="fa-vf" cx="121" cy="112.1" r="3.6"/>
+      <circle class="fa-cd" cx="58" cy="124.2" r="6.4"/><circle class="fa-vf" cx="58" cy="124.2" r="3.6"/>
+      <circle class="fa-cd" cx="72" cy="124.2" r="6.4"/><circle class="fa-vf" cx="72" cy="124.2" r="3.6"/>
+      <circle class="fa-cd" cx="86" cy="124.2" r="6.4"/><circle class="fa-vf" cx="86" cy="124.2" r="3.6"/>
+      <circle class="fa-cd" cx="100" cy="124.2" r="6.4"/><circle class="fa-vf" cx="100" cy="124.2" r="3.6"/>
+      <circle class="fa-cd" cx="114" cy="124.2" r="6.4"/><circle class="fa-vf" cx="114" cy="124.2" r="3.6"/>
+      <circle class="fa-cd" cx="79" cy="136.3" r="6.4"/><circle class="fa-vf" cx="79" cy="136.3" r="3.6"/>
+      <circle class="fa-cd" cx="93" cy="136.3" r="6.4"/><circle class="fa-vf" cx="93" cy="136.3" r="3.6"/>
+      <line class="fa-agulha" x1="152" y1="34" x2="96" y2="90"/>
+      <rect class="fa-cd2" x="150" y="29.5" width="16" height="9" rx="2" transform="rotate(-45 152 34)"/>
+      <text class="fa-s" x="144" y="26" text-anchor="end">PAAF</text>
+      <circle class="fa-sk2" cx="258" cy="100" r="50" style="stroke-width:3"/>
+      <circle class="fa-fol" cx="258" cy="63.6" r="8.4"/>
+      <circle class="fa-fol" cx="226.5" cy="81.8" r="8.4"/>
+      <circle class="fa-fol" cx="247.5" cy="81.8" r="8.4"/>
+      <circle class="fa-fol" cx="268.5" cy="81.8" r="8.4"/>
+      <circle class="fa-fol" cx="289.5" cy="81.8" r="8.4"/>
+      <circle class="fa-fol" cx="237" cy="100" r="8.4"/>
+      <circle class="fa-fol" cx="258" cy="100" r="8.4"/>
+      <circle class="fa-fol" cx="279" cy="100" r="8.4"/>
+      <circle class="fa-fol" cx="226.5" cy="118.2" r="8.4"/>
+      <circle class="fa-fol" cx="247.5" cy="118.2" r="8.4"/>
+      <circle class="fa-fol" cx="268.5" cy="118.2" r="8.4"/>
+      <circle class="fa-fol" cx="289.5" cy="118.2" r="8.4"/>
+      <circle class="fa-fol" cx="258" cy="136.4" r="8.4"/>
+      <ellipse class="fa-row" cx="219.7" cy="132.1" rx="13" ry="8.5" transform="rotate(-40 219.7 132.1)"/>
+      <text class="fa-ro" x="202" y="158" text-anchor="end">invasão</text>
+      <line class="fa-agulha" x1="324" y1="34" x2="268" y2="90"/>
+      <rect class="fa-cd2" x="322" y="29.5" width="16" height="9" rx="2" transform="rotate(-45 324 34)"/>
+      <text class="fa-s" x="316" y="26" text-anchor="end">PAAF</text>
+      <text class="fa-t" x="86" y="172" text-anchor="middle">papilífero</text>
+      <text class="fa-t" x="258" y="172" text-anchor="middle">folicular</text>
+      <text class="fa-o2" x="86" y="188" text-anchor="middle">a PAAF fecha</text>
+      <text class="fa-o2" x="258" y="188" text-anchor="middle">só na peça</text>
+    </svg>
+    <figcaption>A agulha lê o núcleo; a invasão da cápsula, só a peça.<sup class="ref"><a href="#ref-8">8</a></sup></figcaption>
+  </figure>
   <div class="trap">Q34: o disgerminoma prévio é o chamariz para "biopsiar a metástase"; massa de 7 cm vai para adrenalectomia depois da avaliação funcional. Q31: D trazia uma cirurgia possível junto do diagnóstico que a PAAF não faz.</div>
   <p class="base">Fonte: resumos/Clínica Médica/Endocrinologia/19. Adrenal - Feocromocitoma, Hiperaldosteronismo e Incidentaloma Adrenal.pdf; resumos/Cirurgia/6. Manejo do Nódulos Tireoidianos, Câncer de Tireoide e Tireoidectomia.pdf</p>
 </section>
@@ -171,8 +318,8 @@ sup.ref a{text-decoration:none;color:var(--teal-ink)}
   <ul class="pt">
     <li>Correção rápida de <strong>hiponatremia crônica</strong> (&gt; 48 h) = desmielinização osmótica (mielinólise pontina). Limite clássico: 10-12 mEq/L em 24 h ou 18 em 48 h; a apostila já mira 6-8 (Q21)<sup class="ref"><a href="#ref-10">10</a></sup>.</li>
     <li>Gestante: a emergência cirúrgica não obstétrica mais comum é a <strong>apendicite</strong>; a colecistite é a 2ª (Q23)<sup class="ref"><a href="#ref-3">3</a></sup>.</li>
-    <li>Câncer de pâncreas: o principal fator externo é o <strong>tabagismo</strong>; álcool e diabetes são controversos (Q24)<sup class="ref"><a href="#ref-11">11</a></sup>.</li>
-    <li>Glasgow: abre o olho à dor = 2; sons incompreensíveis = 2; retira sem localizar = <strong>4</strong> (localizar é 5). Total 8 = TCE grave, via aérea definitiva (Q28)<sup class="ref"><a href="#ref-12">12</a></sup><sup class="ref"><a href="#ref-13">13</a></sup>.</li>
+    <li>Câncer de pâncreas: o principal fator externo é o <strong class="chave">tabagismo</strong>; álcool e diabetes são controversos (Q24)<sup class="ref"><a href="#ref-11">11</a></sup>.</li>
+    <li>Glasgow: abre o olho à dor = 2; sons incompreensíveis = 2; retira sem localizar = <strong class="chave">4</strong> (localizar é 5). Total 8 = TCE grave, via aérea definitiva (Q28)<sup class="ref"><a href="#ref-12">12</a></sup><sup class="ref"><a href="#ref-13">13</a></sup>.</li>
     <li>Sepse pós-esplenectomia: <strong>pneumococo</strong> é o mais comum; depois Hib e meningococo, os três na vacina (Q32)<sup class="ref"><a href="#ref-14">14</a></sup>.</li>
     <li>Ogilvie é pseudo-obstrução: a distensão vai do <strong>ceco ao transverso</strong>; sigmoide em U invertido é volvo (Q35)<sup class="ref"><a href="#ref-15">15</a></sup>.</li>
     <li>Hemorroida interna que prolapsa e volta sozinha = grau II; falhou o clínico = <strong>ligadura elástica</strong> no consultório. Hemorroidectomia é para III e IV (Q40)<sup class="ref"><a href="#ref-16">16</a></sup>.</li>

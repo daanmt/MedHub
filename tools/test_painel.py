@@ -389,7 +389,7 @@ def test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed():
     sim = _li(**dict(base, area="Simulado", no_hub=True))
     assert 'data-hub-modo="simulados"' in sim
     assert painel._acao(base) == ('<a class="t-btn t-btn-prim" href="https://exemplo/40" rel="noopener noreferrer">'
-                                  'Abrir lista</a>')
+                                  'Abrir lista</a><span class="t-btn t-btn-off" aria-disabled="true">Abrir aula</span>')
 
 
 def test_questoes_do_dia_sao_o_ritmo_da_meta_e_nao_uma_cota_de_semana(db_sintetico):
@@ -706,7 +706,9 @@ def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
     base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf", "area": "Simulado"}
     assert 'data-hub-aba="questoes" data-hub-modo="simulados" data-hub-tarefa="9">Resolver</a>' in _li(**dict(base, no_hub=True))
     assert painel._acao(dict(base, no_hub=True)).count("<a ") == 1, "no hub, so o Resolver"
-    assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'
+    # s236: a prova em PDF no computador nao vira link para o disco -- o lugar do Resolver fica, apagado
+    assert painel._acao(base) == ('<span class="t-btn t-btn-prim t-btn-off" aria-disabled="true">Resolver</span>'
+                                  '<span class="t-btn t-btn-off" aria-disabled="true">Abrir aula</span>')
 
 
 def test_documentacao_sai_do_painel_e_fica_no_json(db_sintetico, tmp_path, monkeypatch):
@@ -834,9 +836,11 @@ def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
         return painel._html_tarefa(base)
     sem_nada = t()
     assert '<p class="t-meta"><span class="t-rot">CIR</span><span class="t-n">sem lista ainda</span></p>' in sem_nada
-    assert "t-acao" not in sem_nada and "tenue" not in sem_nada
+    # s236 (pedido dele, 30/10): toda tarefa tem os DOIS lugares; sem lista e sem aula, os dois apagados
+    assert ('<p class="t-acao"><span class="t-btn t-btn-prim t-btn-off" aria-disabled="true">Resolver</span>'
+            '<span class="t-btn t-btn-off" aria-disabled="true">Abrir aula</span></p>') in sem_nada and "tenue" not in sem_nada
     aula = t(classe="aula")
-    assert '<span class="t-n">aula a preparar</span>' in aula and "t-acao" not in aula
+    assert '<span class="t-n">aula a preparar</span>' in aula and aula.count("t-btn-off") == 2
     remit = t(q=20, no_hub=True, aula="remit", aulas=[{"slug": "remit", "titulo": "REMIT"}],
               tema="Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas")
     assert '<span class="t-n">20 questões</span>' in remit and "sem lista" not in remit
@@ -846,7 +850,7 @@ def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
     assert '<p class="t-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de Feridas</p>' in remit
     caderno = t(classe="caderno", q=43)
     assert '<span class="t-n">43 questões</span><span class="t-n">caderno a montar</span>' in caderno
-    assert "t-acao" not in caderno, "a classe nunca mais na coluna de acao"
+    assert "caderno a montar" not in caderno.split("t-acao")[1] and caderno.count("t-btn-off") == 2, "a classe fica na meta; a coluna de acao so tem os dois lugares (apagados)"
 
 
 # ------------------------------------------ s226 (part-3): a Semana no padrao da Teoria (P21)
@@ -1003,9 +1007,11 @@ def test_hoje_do_sprint_soma_os_cards_do_dia_e_a_rd_nao_assinada(db_sintetico, t
     assert d["sprint"]["rd"] == {"slug": "rd-velha", "titulo": "RD velha", "data": "2026-09-01"}
     bloco = painel._html_sprint(d["sprint"], {"consumo_hoje": 10, "restantes": 40, "teto": 50})
     assert "72&nbsp;questões + 40&nbsp;cards." in bloco
-    # s229: o cartao da RD -- o estado num span SO (`t-rd-st`, que o hub reescreve ao vivo) e o botao
+    # s229: o cartao da RD -- o estado num span SO (`t-rd-st`, que o hub reescreve ao vivo) e o botao.
+    # s236 (U6, P39): os DOIS lugares, como toda tarefa -- o Resolver apagado (a RD nao tem lista) e o Abrir aula
     assert ('<li class="tarefa rd"><i class="t-faixa" data-area="RD" aria-hidden="true"></i><p class="t-meta"><span class="t-rot">RD</span><span class="t-rd-st">revisão '
-            'direcionada ainda não assinada</span></p><p class="t-tema">RD velha</p><p class="t-acao"><a class="t-btn" '
+            'direcionada ainda não assinada</span></p><p class="t-tema">RD velha</p><p class="t-acao">'
+            '<span class="t-btn t-btn-prim t-btn-off" aria-disabled="true">Resolver</span><a class="t-btn" '
             'href="aulas/rd-velha.html" data-hub-aula="rd-velha" data-titulo="RD velha">Abrir aula</a></p></li>') in bloco
     sem_contador = painel._html_sprint(dict(d["sprint"], rd=None), {"consumo_hoje": None, "restantes": None,
                                                                    "teto": 100})
@@ -1449,9 +1455,41 @@ def test_tarefa_com_aula_lida_sai_do_cronograma(tmp_path, monkeypatch):
     monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
     monkeypatch.setattr(painel, "PEND_ESTADO", tmp_path / "nada")
     assert painel._aulas_lidas() == {"a1"}
-    li = _li(aulas=[{"slug": "a1", "titulo": "A", "cumpre": True}])
+    li = _li(aulas=[{"slug": "a1", "titulo": "A", "cumpre": True}], q=0, classe="aula")
     assert 'data-hub-aula="a1" data-titulo="A" data-cumpre="1">Abrir aula</a>' in li
     assert ".tarefa[hidden]{display:none}" in painel.CSS
+
+
+def test_aula_lida_nao_tira_do_hoje_a_tarefa_com_lista_pendente(tmp_path, monkeypatch):
+    """s236 (U1 da auditoria de UI; s194/s219: `plano.py --concluir --leitura` RECUSA tarefa com lista): a #1797
+    (Tuberculose 360) saia do Hoje porque a aula que a CUMPRE foi lida, mas o `q_hoje` seguia contando as 20
+    questoes dela e a aba Listas a mostrava. Com lista pendente, a leitura nao conclui: a tarefa FICA no Hoje (o
+    `q_hoje` = os cartoes visiveis) e o botao da aula sai sem `data-cumpre` (o hub nao a esconde ao vivo). A
+    tarefa de aula SEM lista segue saindo."""
+    reg = tmp_path / "quadro.json"
+    reg.write_text(json.dumps({"itens": {"tb": {"tipo": "aula", "titulo": "TB", "tarefa_id": 1797},
+                                         "so-aula": {"tipo": "aula", "titulo": "So aula", "tarefa_id": 50}}}),
+                   encoding="utf-8")
+    for slug in ("tb", "so-aula"):
+        (tmp_path / ("aula-%s.html" % slug)).write_text("<title>x</title>", encoding="utf-8")
+    estado = tmp_path / "estado"
+    estado.mkdir()
+    for slug in ("tb", "so-aula"):
+        (estado / ("%s.json" % slug)).write_text('{"feito": true}', encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    monkeypatch.setattr(painel, "QUADRO_ESTADO", estado)
+    monkeypatch.setattr(painel, "PEND_ESTADO", tmp_path / "nada")
+    base = {"status": "pendente", "dia_plano": "2026-10-30", "area": "Infectologia", "bloco": "CM",
+            "semana_plano": 7, "url_lista": None, "nota": None, "fonte": "custom"}
+    linhas = [dict(base, id=1797, tema="Tuberculose", q_hub=20),
+              dict(base, id=50, tema="Aula pura"),
+              dict(base, id=60, tema="Lista", q_hub=60)]
+    s = painel._bloco_sprint(linhas, date(2026, 10, 30))
+    assert [t["id"] for t in s["hoje"]] == [1797, 60], "a da lista pendente fica; a so de aula, lida, sai"
+    assert s["q_hoje"] == sum(t["q"] for t in s["hoje"]) == 80, "a contagem = os cartoes visiveis"
+    tb = painel._html_tarefa(s["hoje"][0])
+    assert 'data-hub-tarefa="1797">Resolver</a>' in tb and "data-cumpre" not in tb
 
 
 def test_flashcards_da_semana_empilha_os_da_ultima_sessao():

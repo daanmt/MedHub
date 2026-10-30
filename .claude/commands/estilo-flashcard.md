@@ -126,6 +126,19 @@ Isto **não** repudia o card ancorado no erro -- **refina**. O diagnóstico meta
 
 ---
 
+## Realce e referência (s236, 30/10/2026)
+
+Pedido dele: *"tanto o conteúdo da frente quanto do verso dos cards são 'chumbados' e sem vida"* e *"a partir de hoje,
+todos os cards devem conter referências sobre a informação que eles trazem"*.  <!-- NAO-NORMATIVA: contexto do pedido -->
+
+- **Realce:** marque com `**assim**` o dado que decide o card (o corte, o achado que exclui, a conduta) -- o player o
+  pinta de rosa (`.chave`); no verso, número com unidade ou sinal já sai em rosa sem marcação (`.num`). Dose: 1 realce
+  na frente (opcional) e 1-2 no verso; nunca a frase inteira. Não use `**` como negrito decorativo.  <!-- CHECK: test_realcar_pinta_chave_e_numero_com_unidade_e_escapa_o_html -->
+- **Referência:** até o banco de evidências entrar (P43, ADR do /ai-eng, F2 a partir de 02/11), a fonte vai no fim do
+  `verso_regra_mestre` entre colchetes: `[Fonte: SBC 2020, Diretriz de HAS]` -- artigo, diretriz, consenso, PCDT ou livro
+  do edital; **nunca** resumo, apostila ou "verso de card". Card sem fonte não entra. Com o banco, a fonte migra para a  <!-- NAO-VERIFICAVEL: regra provisoria de autoria ate o gate do evidence-bank (revisar: 2026-11-15) -->
+  ponte `card_evidencia` e o colchete sai.  <!-- NAO-VERIFICAVEL: a fonte no colchete e regra provisoria de autoria ate o gate do evidence-bank (revisar: 2026-11-15) -->
+
 ## Convenção de Encoding e Zero LaTeX (sessão 103/108)
 
 É rigorosamente **proibido** utilizar sintaxe de LaTeX inline (`$ ... $` ou `$$ ... $$`), comandos matemáticos (`\rightarrow`, `\le`, `\ge`, `\mu`), ou cifrões encapsulando números e desigualdades (`$< 60$`, `$> 1000$`, `$\rightarrow$`) na redação dos campos `frente_pergunta`, `frente_contexto`, `verso_resposta`, `verso_regra_mestre` e `verso_armadilha`.

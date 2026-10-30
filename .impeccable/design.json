@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-19T14:37:41+00:00",
+  "generatedAt": "2026-10-30T22:16:00+00:00",
   "title": "Design System: MedHub",
   "extensions": {
     "tokenSource": "core/templates/tema.css",
@@ -681,9 +681,9 @@
       "name": "Botão secundário (contorno ciano)",
       "kind": "button",
       "refersTo": "botao-ciano",
-      "description": "Abrir aula, Todas as listas, Anterior, Pular: o desenho do Responder em contorno ciano (.hub-btn / .t-btn).",
-      "html": "<button class=\"ds-btn-sec\">Abrir aula</button>",
-      "css": ".ds-btn-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);background:transparent;color:var(--acento-tinta);font-family:var(--fonte);font-weight:650;cursor:pointer;transition:background var(--transicao)} .ds-btn-sec:hover{background:var(--acento-fraco)} .ds-btn-sec:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-btn-sec[disabled]{border-color:var(--linha-forte);color:var(--tinta3);background:transparent}"
+      "description": "`.hub-btn` (hub) = `.t-btn` (painel): Abrir aula, Abrir resumo, Todas as listas, ‹ Listas, o paginador. O desenho do Responder em contorno ciano; desabilitado em linha-forte + tinta3.",
+      "html": "<button class=\"ds-btn-sec\">Abrir aula</button> <button class=\"ds-btn-sec\" disabled>Abrir resumo</button>",
+      "css": ".ds-btn-sec{display:inline-flex;align-items:center;justify-content:center;gap:var(--esp-1);min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);background:transparent;color:var(--acento-tinta);font-family:var(--fonte);font-weight:650;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent} .ds-btn-sec:hover{background:var(--acento-fraco)} .ds-btn-sec:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-btn-sec[disabled]{border-color:var(--linha-forte);color:var(--tinta3);background:transparent;cursor:default}"
     },
     {
       "name": "Botão neutro do player",
@@ -705,9 +705,9 @@
       "name": "Barra do Cronograma",
       "kind": "custom",
       "refersTo": "tarefa",
-      "description": "O item de backlog de Painel, Teoria e Listas: faixa de 4 px + fundo tingido pela área, chip, tema e botões à direita (embaixo no celular).",
-      "html": "<div class=\"ds-tarefa\" style=\"--area:var(--rosa)\"><i class=\"ds-faixa\"></i><div class=\"ds-t-meta\"><span class=\"ds-chip ds-chip-area\">CIR</span><span>30 q</span></div><div class=\"ds-t-tema\">Abdome agudo inflamatório</div><div class=\"ds-t-acao\"><a class=\"ds-t-btn ds-t-prim\" href=\"#\">Resolver</a><a class=\"ds-t-btn\" href=\"#\">Abrir aula</a></div></div>",
-      "css": ".ds-tarefa{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:\"meta acao\" \"tema acao\";align-items:center;gap:2px var(--esp-4);padding:var(--esp-2) var(--esp-4) var(--esp-2) calc(var(--esp-4) + 4px);background:color-mix(in srgb,var(--area) 9%,var(--afundado));border:1px solid var(--linha);border-radius:var(--raio);font-family:var(--fonte);color:var(--tinta)} .ds-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)} .ds-t-meta{grid-area:meta;display:flex;gap:var(--esp-3);align-items:center;color:var(--tinta3);font-size:var(--fs-meta)} .ds-t-tema{grid-area:tema;font-weight:600;line-height:1.35} .ds-t-acao{grid-area:acao;display:flex;flex-wrap:wrap;gap:var(--esp-2);font-size:var(--fs-legenda)} .ds-t-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-4);border:1px solid var(--acento);border-radius:var(--raio);color:var(--acento-tinta);font-weight:650;text-decoration:none} .ds-t-btn:hover{background:var(--acento-fraco)} .ds-t-btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-t-prim{background:var(--acento);color:var(--sobre)} .ds-t-prim:hover{background:var(--acento-tinta)} .ds-chip{display:inline-block;padding:1px var(--esp-2);border-radius:var(--raio-pilula);font-family:var(--fonte);font-size:var(--fs-meta);font-weight:650} .ds-chip-area{background:var(--rosa-fraco);color:var(--rosa)} @media (max-width:520px){.ds-tarefa{grid-template-columns:minmax(0,1fr);grid-template-areas:\"meta\" \"tema\" \"acao\"}}"
+      "description": "O item de backlog de Painel, Teoria e Listas: faixa de 4 px + fundo tingido pela área, chip, tema e os DOIS lugares fixos de botão (Resolver | Abrir aula, mesma largura mínima); o que não existe fica apagado (`.t-btn-off`, aria-disabled), nunca some (s236).",
+      "html": "<div class=\"ds-tarefa\" style=\"--area:var(--rosa)\"><i class=\"ds-faixa\"></i><div class=\"ds-t-meta\"><span class=\"ds-chip ds-chip-area\">CIR</span><span>30 q</span></div><div class=\"ds-t-tema\">Abdome agudo inflamatório</div><div class=\"ds-t-acao\"><a class=\"ds-t-btn ds-t-btn-prim\" href=\"#\">Resolver</a><span class=\"ds-t-btn ds-t-btn-off\" aria-disabled=\"true\">Abrir aula</span></div></div>",
+      "css": ".ds-tarefa{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:\"meta acao\" \"tema acao\";align-items:center;gap:2px var(--esp-4);padding:var(--esp-2) var(--esp-4) var(--esp-2) calc(var(--esp-4) + 4px);background:color-mix(in srgb,var(--area) 9%,var(--afundado));border:1px solid var(--linha);border-radius:var(--raio);font-family:var(--fonte);color:var(--tinta)} .ds-faixa{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--area)} .ds-t-meta{grid-area:meta;display:flex;gap:var(--esp-3);align-items:center;color:var(--tinta3);font-size:var(--fs-meta)} .ds-t-tema{grid-area:tema;font-weight:600;line-height:1.35} .ds-t-acao{grid-area:acao;display:flex;flex-wrap:wrap;gap:var(--esp-2);font-size:var(--fs-legenda)} .ds-chip{display:inline-block;padding:1px var(--esp-2);border-radius:var(--raio-pilula);font-family:var(--fonte);font-size:var(--fs-meta);font-weight:650} .ds-chip-area{background:var(--rosa-fraco);color:var(--rosa)} @media (max-width:520px){.ds-tarefa{grid-template-columns:minmax(0,1fr);grid-template-areas:\"meta\" \"tema\" \"acao\"}} .ds-t-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 var(--esp-4);border-radius:var(--raio);border:1px solid var(--acento);color:var(--acento-tinta);background:transparent;font-weight:650;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:filter var(--transicao),background var(--transicao)} .ds-t-btn:hover{background:var(--acento-fraco)} .ds-t-btn-prim{background:var(--acento);color:var(--sobre)} .ds-t-btn-prim:hover{background:var(--acento-tinta);border-color:var(--acento-tinta)} .ds-t-acao .ds-t-btn{flex:0 0 auto;min-width:6.75rem} .ds-t-btn-off,.ds-t-btn-off.ds-t-btn-prim{background:transparent;border-color:var(--linha);color:var(--tinta3);cursor:default;pointer-events:none} .ds-t-btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px}"
     },
     {
       "name": "Abas do hub",
@@ -721,9 +721,25 @@
       "name": "Card do player",
       "kind": "card",
       "refersTo": "card-player",
-      "description": "O flashcard: placa elevada (afundado) com borda de controle; o verso abre como o degrau de baixo da mesma placa; armadilha com filete âmbar.",
-      "html": "<article class=\"ds-card\"><span class=\"ds-reason\">discriminador</span><p class=\"ds-pergunta\">Qual dado EXCLUI apendicite no quadro?</p><div class=\"ds-verso\"><p class=\"ds-resposta\">Dor que precede a febre.</p><div class=\"ds-bloco ds-alerta\"><div class=\"ds-rot\">Armadilha</div>Febre alta no início sugere outra causa.</div></div></article>",
-      "css": ".ds-card{position:relative;min-height:220px;display:flex;flex-direction:column;background:var(--afundado);border:1px solid var(--linha-forte);border-radius:var(--raio-placa);padding:var(--esp-4) var(--esp-4) 0;color:var(--tinta);font-family:var(--fonte);cursor:pointer} .ds-card::before{content:\"\";position:absolute;left:var(--raio-placa);right:var(--raio-placa);top:-1px;height:1px;background:var(--cromado)} .ds-card:hover{border-color:var(--acento)} .ds-reason{align-self:flex-start;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--card);border-radius:var(--raio-pilula);padding:1px var(--esp-2);margin-bottom:var(--esp-3)} .ds-pergunta{margin:0;font-size:clamp(1.2rem,1.05rem + .6vw,1.5rem);line-height:1.3;font-weight:700} .ds-verso{margin:var(--esp-5) calc(-1 * var(--esp-4)) 0;padding:var(--esp-4);background:var(--card);border-top:1px solid var(--borda-placa);border-radius:0 0 13px 13px;display:grid;gap:var(--esp-4)} .ds-resposta{margin:0;font-size:1.125rem;line-height:1.45;font-weight:600} .ds-bloco{padding-left:var(--esp-3);border-left:2px solid var(--linha-forte);color:var(--tinta2)} .ds-alerta{border-left-color:var(--aviso)} .ds-rot{font-size:var(--fs-meta);font-weight:650;color:var(--aviso);margin-bottom:var(--esp-1)}"
+      "description": "O flashcard: placa elevada (afundado) com borda de controle; o verso abre como o degrau de baixo da mesma placa. Realce rosa (s236): `**x**` vira .chave em qualquer campo; no verso, número com unidade ou sinal vira .num (1-3 por card). Regra-mestre com filete neutro, armadilha âmbar.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-reason\">revisão vencida</span><p class=\"ds-pergunta\">Na cetoacidose, qual <b class=\"ds-chave\">potássio</b> libera a insulina?</p><div class=\"ds-verso\"><p class=\"ds-resposta\">K <b class=\"ds-num\">≥ 3,3 mEq/L</b>.</p><div class=\"ds-bloco\"><div class=\"ds-rot\">Regra-mestre</div><b class=\"ds-chave\">Potássio antes da insulina</b>: abaixo de <b class=\"ds-num\">3,3 mEq/L</b>, repor primeiro.</div><div class=\"ds-bloco ds-alerta\"><div class=\"ds-rot\">Armadilha</div>Insulina com potássio baixo leva o K para dentro da célula: arritmia.</div></div></article>",
+      "css": ".ds-card{position:relative;min-height:220px;display:flex;flex-direction:column;background:var(--afundado);border:1px solid var(--linha-forte);border-radius:var(--raio-placa);padding:var(--esp-4) var(--esp-4) 0;color:var(--tinta);font-family:var(--fonte);cursor:pointer} .ds-card::before{content:\"\";position:absolute;left:var(--raio-placa);right:var(--raio-placa);top:-1px;height:1px;background:var(--cromado)} .ds-card:hover{border-color:var(--acento)} .ds-reason{align-self:flex-start;font-size:var(--fs-meta);font-weight:600;color:var(--tinta2);background:var(--card);border-radius:var(--raio-pilula);padding:1px var(--esp-2);margin-bottom:var(--esp-3)} .ds-pergunta{margin:0;font-size:clamp(1.2rem,1.05rem + .6vw,1.5rem);line-height:1.3;font-weight:700} .ds-verso{margin:var(--esp-5) calc(-1 * var(--esp-4)) 0;padding:var(--esp-4);background:var(--card);border-top:1px solid var(--borda-placa);border-radius:0 0 13px 13px;display:grid;gap:var(--esp-4)} .ds-resposta{margin:0;font-size:1.125rem;line-height:1.45;font-weight:600} .ds-bloco{padding-left:var(--esp-3);border-left:2px solid var(--linha-forte);color:var(--tinta2)} .ds-alerta{border-left-color:var(--aviso)} .ds-alerta .ds-rot{color:var(--aviso)} .ds-rot{font-size:var(--fs-meta);font-weight:650;color:var(--tinta2);margin-bottom:var(--esp-1)} .ds-card .ds-chave{color:var(--rosa);font-weight:650} .ds-card .ds-num{color:var(--rosa);font-weight:600;font-variant-numeric:tabular-nums} .ds-pergunta .ds-chave{font-weight:inherit}"
+    },
+    {
+      "name": "Paginador da questão",
+      "kind": "nav",
+      "refersTo": "qz-pag",
+      "description": "`‹ [n] de N ›` na barra da questão (s235-s236): número editável no meio, os botões do contorno ciano a 44 px; substituiu o trilho de quadradinhos.",
+      "html": "<div class=\"ds-pag\"><button class=\"ds-btn-sec\" aria-label=\"Anterior\">‹</button><label><input type=\"number\" value=\"12\" min=\"1\" aria-label=\"Ir para a questão\"> de <span>97</span></label><button class=\"ds-btn-sec\" aria-label=\"Próxima\">›</button></div>",
+      "css": ".ds-pag{display:flex;align-items:center;justify-content:center;gap:var(--esp-2);font-family:var(--fonte)} .ds-btn-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--acento);border-radius:var(--raio);background:transparent;color:var(--acento-tinta);font-family:var(--fonte);font-weight:650;cursor:pointer} .ds-btn-sec:hover{background:var(--acento-fraco)} .ds-btn-sec:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-pag .ds-btn-sec{min-width:44px;padding:0 var(--esp-3);font-size:var(--fs-secao);line-height:1} .ds-pag label{display:inline-flex;align-items:center;gap:var(--esp-1);color:var(--tinta2);font-size:var(--fs-meta)} .ds-pag input{width:3.75rem;min-height:44px;margin:0;padding:0 var(--esp-2);text-align:center;border:1px solid var(--linha-forte);border-radius:var(--raio);background:transparent;color:var(--tinta);font-family:var(--fonte);font-size:var(--fs-item);font-weight:650;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield} .ds-pag input::-webkit-outer-spin-button,.ds-pag input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0} .ds-pag input:focus-visible{outline:2px solid var(--acento);outline-offset:2px;border-color:var(--acento)}"
+    },
+    {
+      "name": "Certeza + Responder",
+      "kind": "input",
+      "refersTo": "qz-seg",
+      "description": "O pé da questão numa linha: Sólida | Dúvida | Chute (segmentos de 44 px, sem legenda; ligado = cor do estado + lavagem + contorno interno) e Responder, apagado até letra + certeza.",
+      "html": "<div class=\"ds-antes\"><div class=\"ds-seg\"><button>Sólida</button><button class=\"on\" data-c=\"duvida\">Dúvida</button><button>Chute</button></div><button class=\"ds-resp\" disabled>Responder</button></div><div class=\"ds-antes\"><div class=\"ds-seg\"><button class=\"on\" data-c=\"solida\">Sólida</button><button>Dúvida</button><button>Chute</button></div><button class=\"ds-resp\">Responder</button></div>",
+      "css": ".ds-antes{display:flex;align-items:stretch;gap:var(--esp-2);margin-bottom:var(--esp-3);font-family:var(--fonte)} .ds-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--esp-2);flex:1 1 auto;min-width:0} .ds-seg button,.ds-resp{font-family:var(--fonte);cursor:pointer;min-height:44px;border-radius:var(--raio)} .ds-seg button{text-align:center;font-weight:650;font-size:var(--fs-legenda);padding:var(--esp-2) var(--esp-1);border:1px solid var(--linha-forte);background:transparent;color:var(--tinta2)} .ds-seg button:hover{background:var(--afundado)} .ds-seg button:focus-visible,.ds-resp:focus-visible{outline:2px solid var(--acento);outline-offset:2px} .ds-seg button.on{box-shadow:inset 0 0 0 1px currentColor} .ds-seg button[data-c=\"solida\"].on{border-color:var(--acento);color:var(--acento-tinta);background:var(--acento-fraco)} .ds-seg button[data-c=\"duvida\"].on{border-color:var(--aviso);color:var(--aviso);background:var(--aviso-fraco)} .ds-seg button[data-c=\"chute\"].on{border-color:var(--roxo);color:var(--roxo-tinta);background:var(--roxo-fraco)} .ds-resp{flex:0 0 auto;padding:0 var(--esp-3);background:var(--acento);border:1px solid var(--acento);color:var(--sobre);font-weight:650} .ds-resp:hover{filter:brightness(1.08)} .ds-resp[disabled]{background:transparent;border:1px solid var(--linha-forte);color:var(--tinta3);cursor:default;filter:none}"
     },
     {
       "name": "Aviso",
@@ -755,6 +771,11 @@
       {
         "name": "The Um Papel por Cor Rule",
         "body": "Ciano interage, rosa assina, âmbar avisa, roxo decora e mede. Rosa nunca é estado; ciano nunca é título nem rótulo; roxo puro nunca é texto.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rosa Realça Rule",
+        "body": "s236, 30/10, pedido dele: *\"sinto falta do rosa nas imagens e/ou nos textos, como elementos naturais de realce de informações importantes\"*. Além de assinar, o rosa é o realce da **informação decisória**: nas aulas e RDs, o elemento do SVG que decide (o corte, o achado que exclui, a seta do fluxo) e, no texto, o dado que decide a questão (`strong.chave` / `span.chave`, `color:var(--rosa)`); nos cards do player, `**assim**` em qualquer campo e, no verso, número com unidade ou sinal (`.chave`, `.num`). Dose: 1-3 realces por seção ou por card, nunca um parágrafo rosa. Âmbar segue sendo aviso/armadilha; ciano, interação.",
         "section": "colors"
       },
       {
@@ -791,6 +812,16 @@
         "name": "The Cromado É Luz Rule",
         "body": "O azul → violeta é reflexo (1 px) ou luz de fundo, nunca uma superfície, faixa ou preenchimento.",
         "section": "elevation"
+      },
+      {
+        "name": "The Posição Fixa Rule",
+        "body": "Posição fixa > elemento condicional (s236, 30/10, pedido dele): um controle que ora aparece, ora não, incomoda mais do que um controle apagado. Botões de tarefa: sempre DOIS lugares, na mesma ordem (Resolver/Abrir lista | Abrir aula), com largura mínima igual; o que não existe fica apagado (`.t-btn-off`, `aria-disabled`), nunca some.",
+        "section": "components"
+      },
+      {
+        "name": "The Figura Domina Rule",
+        "body": "Uma figura (`/anima`) em toda seção com mecanismo, fluxo de decisão ou diferencial espacial (metade ou mais das seções; nunca só a 1ª) (s236, 30/10, pedido dele). A imagem domina: rótulos de 1-3 palavras dentro do SVG, sem legenda de cores em frase, sem repetir o parágrafo; `figcaption` de uma linha curta com o número da referência, ou nenhuma. O rosa marca o elemento que decide; âmbar = armadilha; roxo = dado.",
+        "section": "components"
       }
     ],
     "dos": [
@@ -802,7 +833,10 @@
       "**Do** usar `roxo-tinta` quando o roxo for texto.",
       "**Do** conferir a tela a 390 px primeiro e no tema escuro, com `python tools/ui_capturas.py`, antes de publicar.",
       "**Do** manter um só `.wrap` (`max-width`) por página e todos os filhos a 100% dele.",
-      "**Do** deixar só a mecânica e o botão: mensagem de erro com a ação de recuperar (\"Toque para reenviar\") fica."
+      "**Do** deixar só a mecânica e o botão: mensagem de erro com a ação de recuperar (\"Toque para reenviar\") fica.",
+      "**Do** manter cada controle no mesmo lugar em todas as linhas; o que não existe fica apagado (`aria-disabled`), nunca some.",
+      "**Do** usar o rosa como realce do dado que decide (1-3 por seção/card) -- no SVG, no texto da aula e no card.",
+      "**Do** pôr figura (`/anima`) em toda seção com mecanismo, fluxo ou diferencial espacial, não só na primeira; a imagem domina: rótulos de 1-3 palavras dentro do SVG, `figcaption` de uma linha ou nenhuma."
     ],
     "donts": [
       "**Don't** usar sombra, glow, halo, `text-shadow` ou borda neon; a profundidade é degrau + borda + fio cromado.",
@@ -815,6 +849,8 @@
       "**Don't** explicar o gesto que o controle já mostra (\"toque no card para virar\", \"toque numa questão para ver...\", \"· toque para ampliar\", a legenda da certeza) — regra dele, s229, 15/10: *\"pode todos esses pequenos excessos. basta a mecânica e o botão que já existe\"*.",
       "**Don't** pôr legenda em prosa que repete o dado (Teoria, frase do Ritmo, \"Fora da tabela\", `p.nota` no dashboard, legenda de instrução das Listas).",
       "**Don't** somar unidades diferentes num número só.",
+      "**Don't** escrever legenda de cores em frase dentro ou abaixo da figura (\"âmbar = pressão alta · roxo = derrame\"): o rótulo colorido ao lado do elemento já diz; nem repetir dentro do SVG o que o parágrafo explica (s236).",
+      "**Don't** mostrar o título técnico do plano na tela (`tema_exibido` + `titulo_curto`: simulado = \"UERJ 2025\"; título > 70 caracteres encurta) nem um controle que precise de legenda para ser entendido (\"Revisar depois\", `<kbd>`).",
       "**Don't** usar jargão de bastidor no painel, inclusive nos comentários do `tema.css` (viaja embutido)."
     ]
   }

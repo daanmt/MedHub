@@ -105,6 +105,7 @@ FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLAT
                       "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
                       "function qzDefeitoUi(r){", "function qzEhSimulado(l){", "function qzModoDaLista(l){",
                       "function qzComFlag(l){", "function qzListaAtual(){", "function qzModoUi(l){",
+                      "function temaExibido(t){",
                       "function qzResponder(){", "function qzRevelaAoAbrir(r){", "function qzTrava(q, r){",
                       "function qzResumoElos(qs, resp){", "function qzElosFimHtml(qs, resp){",
                       "function qzConcluirUi(pendentes){", "function qzGrifoMesclar(intervalos, novo){",
@@ -902,8 +903,8 @@ def test_questao_fim_e_leitor_em_placas():
     for id_ in ("qz-veredito", "qz-medhub-box", "qz-medhub", "qz-analise", "qz-racional", "qz-defeito", "qz-sol-box",
                 "qz-forum-box"):
         assert placa_de(id_) == "placa qz-resultado", id_
-    for id_ in ("qz-voltar", "qz-tema", "qz-grifo", "qz-relogio", "qz-trilho", "qz-aviso-lista",
-                "qz-alts", "qz-antes", "qz-seg", "qz-flag", "qz-ant", "qz-pular", "qz-responder", "qz-status",
+    for id_ in ("qz-voltar", "qz-tema", "qz-grifo", "qz-relogio", "qz-pag", "qz-pag-n", "qz-aviso-lista",
+                "qz-alts", "qz-antes", "qz-seg", "qz-ant", "qz-pular", "qz-responder", "qz-status",
                 "qz-proxima", "qz-concluir", "qz-rever", "qz-fim-status", "hub-leitor-voltar", "hub-leitor-aviso"):
         assert placa_de(id_) is None, id_
     assert placa_de("qz-tiles") == placa_de("qz-erradas") == "placa qz-p-metricas"
@@ -914,7 +915,7 @@ def test_questao_fim_e_leitor_em_placas():
     assert placa_de("hub-assina") == placa_de("hub-assina-btn") == "hub-assina placa"
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     assert "#aba-cards,#hub-leitor,#qz-player{max-width:var(--wrap);margin-inline:auto}" in css
-    assert not re.search(r"\.(qz-trilho|hub-leitor-barra|qz-corpo|qz-enun-placa|qz-resultado)\{[^}]*max-width", css)
+    assert not re.search(r"\.(qz-pag|hub-leitor-barra|qz-corpo|qz-enun-placa|qz-resultado)\{[^}]*max-width", css)
     assert not re.search(r"(?:^|[}\n])\.placa(?:::before)?\{", css), "a placa e composta, nunca redefinida"
     assert ".placa.hub-leitor-placa{padding:0}" in css
     assert ".hub-assina.placa{margin-inline:0!important}" in css, "assinatura com a largura da placa do leitor"
@@ -943,15 +944,14 @@ INVENTARIO_QUESTAO = [
     ["div", "qz-grifo", "data-aberto=false", ""], ["button", "qz-grifo-btn", "type=button", "Aa"],
     ["div", "qz-grifo-cor", "role=group", ""], ["button", "", "data-cor=rosa type=button", "Aa"],
     ["button", "", "data-cor=ciano type=button", "Aa"], ["button", "", "data-cor=amarelo type=button", "Aa"],
-    ["span", "qz-relogio", "", ""], ["div", "qz-trilho", "", ""],
+    ["span", "qz-relogio", "", ""],
     ["p", "qz-aviso-lista", "", ""],
     ["div", "qz-questao", "", ""], ["span", "qz-pos", "", ""], ["span", "qz-banca", "", ""], ["span", "qz-tags", "", ""],
     ["p", "qz-enun", "", ""], ["div", "qz-figs", "", ""], ["p", "qz-figura", "", ""], ["div", "qz-alts", "role=radiogroup", ""],
     ["div", "qz-antes", "", ""], ["div", "qz-seg", "", ""], ["button", "", "data-c=solida type=button", "Sólida"],
     ["button", "", "data-c=duvida type=button", "Dúvida"], ["button", "", "data-c=chute type=button", "Chute"],
-    ["label", "qz-marca", "", ""], ["input", "qz-flag", "type=checkbox", ""], ["button", "qz-ant", "type=button", "‹ Anterior"],
-    # s229 (rodada 3): Anterior | Responder | Pular, centralizados
-    ["button", "qz-responder", "type=button", "Responder"], ["button", "qz-pular", "type=button", "Pular ›"],
+    # s229 (rodada 3): Responder centralizado; s235: Anterior e Pular viraram as setas do paginador no pe da questao
+    ["button", "qz-responder", "type=button", "Responder"],
     ["div", "qz-depois", "", ""], ["p", "qz-veredito", "", ""], ["section", "qz-medhub-box", "", ""],
     ["p", "qz-cad-tit", "", ""], ["span", "qz-obj", "", ""], ["span", "qz-conferir", "", ""], ["div", "qz-medhub", "", ""],
     ["div", "qz-analise", "", ""], ["input", "qz-racional", "type=text", ""], ["div", "qz-defeito", "", ""],
@@ -959,7 +959,11 @@ INVENTARIO_QUESTAO = [
     ["input", "qz-defeito-motivo", "type=text", ""], ["button", "", "type=submit", "Enviar"], ["p", "qz-defeito-st", "", ""],
     ["div", "qz-sol-pe", "", ""], ["details", "qz-sol-box", "", ""], ["summary", "", "", "Comentário do professor"],
     ["div", "qz-sol", "", ""], ["details", "qz-forum-box", "", ""], ["summary", "", "", "Fórum"], ["div", "qz-forum", "", ""],
-    ["p", "qz-status", "", ""], ["button", "qz-proxima", "type=button", "Próxima"], ["div", "qz-fim", "", ""],
+    ["p", "qz-status", "", ""], ["button", "qz-proxima", "type=button", "Próxima"],
+    # s235: o paginador no pe da questao (anterior | n de N | proxima), nos dois estados
+    ["div", "qz-pag", "", ""], ["button", "qz-ant", "type=button", "‹"], ["label", "", "", ""],
+    ["input", "qz-pag-n", "type=number", ""], ["span", "qz-pag-t", "", ""], ["button", "qz-pular", "type=button", "›"],
+    ["div", "qz-fim", "", ""],
     ["div", "qz-tiles", "", ""], ["p", "qz-erradas", "", ""], ["div", "qz-porobj", "", ""], ["div", "qz-elos-fim", "", ""],
     ["ol", "qz-revisao", "", ""], ["button", "qz-concluir", "type=button", "Concluir lista"],
     ["button", "qz-rever", "type=button", "Rever uma a uma"], ["p", "qz-fim-status", "", ""],
@@ -1001,33 +1005,49 @@ def test_hub_sprint_no_build_e_null_sem_sprint():
 
 # ------------------------------------------------ s211 part-3: modo Estudo/Prova + tela de fim com os elos
 
-def test_simulado_e_sempre_prova_e_so_ele_tem_revisar_depois():
+def test_simulado_e_sempre_prova_e_ninguem_tem_revisar_depois():
     """s229 (pedido dele, 15/10): simulado SEMPRE Prova e lista SEMPRE Estudo -- o doc da lista e o aparelho nao
-    mudam isso; o "Revisar depois" (voltar antes de entregar) so aparece no simulado."""
-    acao = """var sim = {area: "Simulado", modo: "estudo"}; qzModoUi(sim); var flag_sim = $("qz-marca").hidden;
-qzModoUi({area: "Obstetrícia", modo: "prova"}); var flag_lista = $("qz-marca").hidden;
+    mudam isso. s235 (pedido dele, 29/10: "ate hoje nao entendi a funcao do botao Revisar depois"): o checkbox
+    saiu do player para todo mundo; `qzComFlag` e false e `qzModoUi` nao mexe em nada."""
+    acao = """var sim = {area: "Simulado", modo: "estudo"}; qzModoUi(sim); qzModoUi({area: "Obstetrícia", modo: "prova"});
 SAIDA = {sim: qzModoDaLista(sim), lista: qzModoDaLista({area: "Obstetrícia", modo: "prova"}), vazio: qzModoDaLista(null),
-         flag_sim: flag_sim, flag_lista: flag_lista, com_flag: [qzComFlag(sim), qzComFlag({area: "Cirurgia"})]};"""
+         com_flag: [qzComFlag(sim), qzComFlag({area: "Cirurgia"})]};"""
     out = _rodar(_q(), None, None, acao)
-    assert out == {"sim": "prova", "lista": "estudo", "vazio": "estudo", "flag_sim": False, "flag_lista": True,
-                   "com_flag": [True, False]}
+    assert out == {"sim": "prova", "lista": "estudo", "vazio": "estudo", "com_flag": [False, False]}
 
 
 def test_lista_nao_pergunta_o_modo_nem_grava_revisar_depois():
-    """s229: sem o seletor (`#qz-modo-escolha` e `#qz-modo-lista` sairam do HTML e do JS); na lista, a resposta
-    grava `flag: false` mesmo com o checkbox marcado (ninguem le no backend; so o simulado usa)."""
+    """s229: sem o seletor (`#qz-modo-escolha` e `#qz-modo-lista` sairam do HTML e do JS). s235: sem o checkbox
+    "Revisar depois" (saiu do HTML, do CSS e do JS); a resposta grava `flag: false` na lista E no simulado."""
     corpo = TEMPLATE.split("<script", 1)[0]
     assert "qz-modo-escolha" not in corpo and "qz-modo-lista" not in TEMPLATE
     assert "Antes de ver o gabarito" not in TEMPLATE, "s229: a legenda da certeza saiu"
     assert "function qzEscolher(" not in TEMPLATE and "function qzEscolheModo(" not in TEMPLATE
-    assert '<label class="qz-marca" id="qz-marca" hidden>' in corpo
+    assert "qz-marca" not in TEMPLATE and "qz-flag" not in TEMPLATE and "Revisar depois" not in TEMPLATE
     acao = """QZ.listas = [{_id: "t26", tarefa: 26, area: "Cirurgia"}, {_id: "s1", tarefa: 90, area: "Simulado"}];
-QZ.letra = "C"; QZ.conf = "duvida"; QZ.t0 = Date.now(); $("qz-flag").checked = true;
+QZ.letra = "C"; QZ.conf = "duvida"; QZ.t0 = Date.now();
 QZ.lista = "t26"; QZ.modoLista = "estudo"; function qzRevelar(){} function qzDepoisDe(){} function qzParar(){}
 qzResponder(); QZ.lista = "s1"; QZ.modoLista = "prova"; qzResponder();
 SAIDA = {lista: GRAVADOS[0].flag, simulado: GRAVADOS[1].flag};"""
     out = _rodar(_q(), None, None, acao)
-    assert out == {"lista": False, "simulado": True}
+    assert out == {"lista": False, "simulado": False}
+
+
+def test_titulo_do_simulado_e_o_nome_da_prova_no_player_e_no_painel():
+    """s235 (pedido dele, 29/10: "nao gosto desses titulos poluidos"): "UERJ 2025 -- prova INTEIRA (100q),
+    cronometrada, 5 blocos · Simulado" vira "UERJ 2025" no cabecalho do player; a lista comum segue com a area."""
+    from tools import plano
+    assert plano.tema_exibido("UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos") == "UERJ 2025"
+    assert plano.tema_exibido("Hérnias | Parede") == "Hérnias · Parede"
+    # a linha do cabecalho do player, como esta no template (o harness nao abre lista)
+    assert ("$(\"qz-tema\").textContent = (temaExibido(l.tema) || id) + (l.area && !qzEhSimulado(l) ? \" · \" + l.area : \"\");"
+            in TEMPLATE)
+    acao = """function cab(l){ return (temaExibido(l.tema) || l._id) + (l.area && !qzEhSimulado(l) ? " · " + l.area : ""); }
+SAIDA = {sim: cab({_id: "t891", area: "Simulado", tema: "UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos"}),
+         lista: cab({_id: "t26", area: "Cirurgia", tema: "Hérnias"}),
+         exib: temaExibido("UERJ 2026 -- prova INTEIRA (100q), cronometrada, 5 blocos"), pipe: temaExibido("A | B")};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"sim": "UERJ 2025", "lista": "Hérnias · Cirurgia", "exib": "UERJ 2026", "pipe": "A · B"}
 
 
 def test_estudo_revela_apos_responder_e_prova_nao():
@@ -2902,7 +2922,7 @@ def test_botoes_tematicos_da_teoria_e_das_listas():
     tema em ciano (item 6e)."""
     corpo = TEMPLATE.split("<script", 1)[0]
     for id_ in ("qz-voltar", "hub-leitor-voltar", "qz-ant", "qz-pular"):
-        assert re.search(r'<button type="button" class="hub-btn" id="%s">' % id_, corpo), id_
+        assert re.search(r'<button type="button" class="hub-btn" id="%s"' % id_, corpo), id_
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     regra = re.search(r"\n\.hub-btn\{([^}]*)\}", css).group(1)
     assert "min-height:44px" in regra and "border:1px solid var(--acento)" in regra and "var(--raio)" in regra
@@ -2910,10 +2930,13 @@ def test_botoes_tematicos_da_teoria_e_das_listas():
 
 
 def test_rodada3_cabecalho_da_questao_e_botoes_compactos_do_card():
-    """s229 (rodada 3): titulo numa linha, Grifo e tempo lado a lado em bloquinhos; Anterior | Responder | Pular
-    centralizados; os tres botoes do card compactos (o tamanho do Pausar da v120) com a mesma paleta."""
+    """s229 (rodada 3): Grifo e tempo lado a lado em bloquinhos; Responder centralizado; os tres botoes do card
+    compactos (o tamanho do Pausar da v120) com a mesma paleta. s235 (pedido dele, 29/10): voltar, Grifo e tempo numa
+    linha so (Grifo empurrado para a direita), o titulo entre eles em tela larga e abaixo no celular."""
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
-    assert "#qz-player .hub-leitor-barra #qz-tema{flex:1 1 100%;order:1}" in css
+    assert "#qz-player .hub-leitor-barra #qz-tema{order:4;flex:1 1 100%;min-width:0}" in css
+    assert "#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:auto}" in css
+    assert "#qz-player .hub-leitor-barra #qz-tema{order:1;flex:1 1 8rem}" in css
     assert "#qz-player .hub-leitor-barra .qz-relogio{order:3;" in css and "#qz-antes .qz-pe{justify-content:center}" in css
     from tools.fsrs_queue import TEMPLATE_PLAYER
     p = TEMPLATE_PLAYER.read_text(encoding="utf-8")

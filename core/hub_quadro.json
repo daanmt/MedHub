@@ -1,649 +1,771 @@
 {
-  "_doc": "Registro do quadro da aba Teoria (id aulas) do MedHub HUB (s194; por semanas desde a s195; Teoria desde a s216). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefas: ids de plano_tarefas que a aula PREPARA (lista ou aula) -- a aula aparece dentro do bloco de cada tarefa. tarefa_id: a tarefa custom de aula que a aula CUMPRE -- so ela ganha o controle 'feito', e marcar no hub vira `plano.py --concluir ID --leitura` no tique do /hub-backend. Aula sem tarefa pendente e aula concluida ficam na Biblioteca da Teoria (s216, decisao do operador em 05/10: so daqui em diante); nada vai para artifacts/arquivo/ e a entrada daqui fica. A analise mora so na Documentacao do Painel. bloco (s217, P17; pedido do operador em 06/10: 'organize por grande area'): a grande area do item na Biblioteca, em CM | CIR | MFC | PED | GO | VARIAS (VARIAS = varias areas, como as pilulas; grupo final 'Varias areas'). Era OBRIGATORIO no item sem tarefa ate a s217 (desde a s218 a RD declara disciplinas, abaixo): a aula com tarefa_id/tarefas herda o bloco da tarefa no plano (a de tarefa_id vence; senao a primeira de tarefas) e o bloco daqui so vale se a tarefa nao estiver no plano. Item sem area resolvivel cai no grupo 'Sem area' e o build e o --check AVISAM pelo slug; a suite (test_registro_real_rds_com_disciplinas_e_fontes_no_disco) barra o commit. A analise nao entra na Teoria e dispensa bloco. s218 (pedido do operador em 07/10: 'as revisoes podem entrar na biblioteca, sem problemas, mas devem estar com a taxonomia correta, integrando os respectivos blocos de disciplinas na biblioteca'): a Biblioteca e por grande area -> DISCIPLINA. disciplinas: lista (>= 1) do vocabulario de tools/hub.py (DISCIPLINAS; nome fora dele falha alto), OBRIGATORIA na revisao direcionada: a RD aparece em CADA disciplina listada, dentro da grande area dela (Obstetricia/Ginecologia -> GO; Pediatria -> PED; Cirurgia/Ortopedia -> CIR; Preventiva -> MFC; o resto -> CM), e a ainda nao lida leva 'nova' no topo da disciplina. resumos: lista de caminhos relativos a resumos/ = de onde a RD saiu (o item mostra as fontes, com link para o resumo publicado; o resumo mostra a RD que o cita); caminho inexistente = AVISO do build e a suite barra. O bloco passa a ser DERIVADO das disciplinas e so vale como leitura antiga (item sem disciplinas). ⚰️ s218: VARIAS como destino de RD (a pilula declara as disciplinas de cada ponto); ⚰️ s218: a secao 'Revisoes direcionadas' no topo da Teoria (a RD mora so na Biblioteca). A aula com tarefa segue herdando o bloco e a disciplina (a area) da tarefa no plano. Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
-  "itens": {
-    "dmg": {
-      "tipo": "aula",
-      "titulo": "A Escada do DMG",
-      "tarefas": [
-        26,
-        40
-      ]
-    },
-    "topicos-pediatria": {
-      "tipo": "aula",
-      "titulo": "Tópicos em Pediatria",
-      "tarefas": [
-        96,
-        100
-      ]
-    },
-    "prevencao-quaternaria": {
-      "tipo": "aula",
-      "titulo": "Prevenção Quaternária",
-      "tarefa_id": 875
-    },
-    "rd-vias-biliares": {
-      "tipo": "revisao",
-      "titulo": "Vias biliares e apendicite",
-      "disciplinas": [
-        "Cirurgia"
-      ],
-      "resumos": [
-        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
-      ]
-    },
-    "rd-hemostasia": {
-      "tipo": "revisao",
-      "titulo": "Hemostasia",
-      "disciplinas": [
-        "Hematologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Hematologia/Hemostasia.md"
-      ]
-    },
-    "rd-lupus-saf": {
-      "tipo": "revisao",
-      "titulo": "Lúpus, SAF e vasculites",
-      "disciplinas": [
-        "Reumatologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Reumatologia/DITC II.md",
-        "Clínica Médica/Reumatologia/DITC.md"
-      ]
-    },
-    "rd-hepato": {
-      "tipo": "revisao",
-      "titulo": "Hepatites, icterícia e cirrose",
-      "disciplinas": [
-        "Hepatologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Hepatologia/Hepatites Virais.md",
-        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md"
-      ]
-    },
-    "rd-dii-polipos": {
-      "tipo": "revisao",
-      "titulo": "DII e pólipos",
-      "disciplinas": [
-        "Gastroenterologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
-      ]
-    },
-    "rd-intensiva-sepse": {
-      "tipo": "revisao",
-      "titulo": "Ventilação, SDRA e sepse",
-      "disciplinas": [
-        "Pneumologia",
-        "Infectologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
-        "Clínica Médica/Infectologia/Sepse.md"
-      ]
-    },
-    "rd-pediatria": {
-      "tipo": "revisao",
-      "titulo": "Cardiopatias, emergência e vacinas",
-      "disciplinas": [
-        "Pediatria"
-      ],
-      "resumos": [
-        "Pediatria/Cardiopatias Congênitas.md",
-        "Pediatria/Emergências Pediátricas.md",
-        "Pediatria/Imunizações.md"
-      ]
-    },
-    "rd-ortopedia-cirurgia": {
-      "tipo": "revisao",
-      "titulo": "Ortopedia, cicatrização e cir. infantil",
-      "disciplinas": [
-        "Cirurgia"
-      ],
-      "resumos": [
-        "Cirurgia/Quadril Pediátrico.md",
-        "Cirurgia/Politrauma Ortopédico.md",
-        "Cirurgia/Cirurgia Infantil.md"
-      ]
-    },
-    "rd-pilulas": {
-      "tipo": "revisao",
-      "titulo": "Pílulas: pontos soltos",
-      "disciplinas": [
-        "Obstetrícia",
-        "Ginecologia",
-        "Neurologia",
-        "Cardiologia",
-        "Endocrinologia",
-        "Pediatria",
-        "Preventiva"
-      ],
-      "resumos": [
-        "GO/Síndromes Hipertensivas da Gestação.md",
-        "Clínica Médica/Neurologia/Epilepsias.md",
-        "Clínica Médica/Neurologia/Cefaleias.md",
-        "GO/Úlceras Genitais.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md",
-        "Pediatria/Diarreia.md",
-        "Preventiva/Medicina de Família e Comunidade.md"
-      ]
-    },
-    "dossie-uerj": {
-      "tipo": "analise",
-      "titulo": "Dossiê UERJ: anatomia e maldades da prova"
-    },
-    "autopsia-uerj-2021": {
-      "tipo": "analise",
-      "titulo": "Autópsia UERJ 2021"
-    },
-    "remit-cicatrizacao": {
-      "tipo": "aula",
-      "titulo": "REMIT e Cicatrização",
-      "tarefa_id": 530
-    },
-    "aorta-cardiomiopatias-pericardio": {
-      "tipo": "aula",
-      "titulo": "Aorta, Miocárdio e Pericárdio",
-      "tarefa_id": 768
-    },
-    "tireoide-nodulo-cancer": {
-      "tipo": "aula",
-      "titulo": "Nódulo e Câncer de Tireoide",
-      "tarefa_id": 367
-    },
-    "vulva-vagina-anatomia": {
-      "tipo": "aula",
-      "titulo": "Embriologia, Vulva e Vagina",
-      "tarefa_id": 590
-    },
-    "tb-360": {
-      "tipo": "aula",
-      "titulo": "Tuberculose 360",
-      "tarefa_id": 1797
-    },
-    "rd-ventilacao-degrau-0": {
-      "tipo": "revisao",
-      "titulo": "Ventilação: degrau 0",
-      "disciplinas": [
-        "Pneumologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md"
-      ]
-    },
-    "rd-neoplasias-tgi": {
-      "tipo": "revisao",
-      "titulo": "Pólipos, CCR e câncer gástrico",
-      "disciplinas": [
-        "Gastroenterologia",
-        "Cirurgia"
-      ],
-      "resumos": [
-        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
-        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
-      ]
-    },
-    "rd-meningites": {
-      "tipo": "revisao",
-      "titulo": "Meningites",
-      "disciplinas": [
-        "Infectologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Infectologia/Meningites.md"
-      ]
-    },
-    "rd-dm-cronicas": {
-      "tipo": "revisao",
-      "titulo": "DM: complicações crônicas",
-      "disciplinas": [
-        "Endocrinologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
-      ]
-    },
-    "rd-hemostasia-2": {
-      "tipo": "revisao",
-      "titulo": "Hemostasia II: HIT e PTT",
-      "disciplinas": [
-        "Hematologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Hematologia/Hemostasia.md",
-        "Clínica Médica/Hematologia/Anemias Hemolíticas.md"
-      ]
-    },
-    "rd-pilulas-0510": {
-      "tipo": "revisao",
-      "titulo": "Pílulas de 05/10",
-      "disciplinas": [
-        "Cirurgia",
-        "Cardiologia",
-        "Hepatologia",
-        "Infectologia",
-        "Nefrologia",
-        "Pneumologia",
-        "Reumatologia"
-      ],
-      "resumos": [
-        "Cirurgia/Urologia.md",
-        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 1) - Diagnóstico, Classificação e Estratificação de Risco.md",
-        "Clínica Médica/Hepatologia/Hepatites Virais.md",
-        "Clínica Médica/Infectologia/Arboviroses.md",
-        "Clínica Médica/Infectologia/Sepse.md",
-        "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
-        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
-        "Clínica Médica/Reumatologia/DITC II.md"
-      ]
-    },
-    "rd-hernias": {
-      "tipo": "revisao",
-      "titulo": "Hérnias da parede abdominal (lista t49)",
-      "disciplinas": [
-        "Cirurgia"
-      ],
-      "resumos": [
-        "Cirurgia/Hérnia Femoral Encarcerada.md"
-      ]
-    },
-    "rd-cir-0610": {
-      "tipo": "revisao",
-      "titulo": "Cirurgia de 06/10: via biliar, plastrão e hérnia",
-      "disciplinas": [
-        "Cirurgia"
-      ],
-      "resumos": [
-        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md",
-        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
-      ]
-    },
-    "rd-go-0610": {
-      "tipo": "revisao",
-      "titulo": "Obstetrícia de 06/10: pré-eclâmpsia",
-      "disciplinas": [
-        "Obstetrícia"
-      ],
-      "resumos": [
-        "GO/Síndromes Hipertensivas da Gestação.md"
-      ]
-    },
-    "rd-ped-0610": {
-      "tipo": "revisao",
-      "titulo": "Pediatria de 06/10: tiflite, febre no lactente e coreia",
-      "disciplinas": [
-        "Pediatria"
-      ],
-      "resumos": [
-        "Pediatria/Febre Reumática.md",
-        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
-      ]
-    },
-    "rd-cm-0610": {
-      "tipo": "revisao",
-      "titulo": "Clínica Médica de 06/10: laboratório, imune, via aérea e NCC",
-      "disciplinas": [
-        "Endocrinologia",
-        "Hematologia",
-        "Hepatologia",
-        "Infectologia",
-        "Pneumologia",
-        "Reumatologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
-        "Clínica Médica/Hematologia/Hemostasia.md",
-        "Clínica Médica/Hepatologia/Hepatites Virais.md",
-        "Clínica Médica/Infectologia/Meningites.md",
-        "Clínica Médica/Infectologia/Sepse.md",
-        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
-        "Clínica Médica/Reumatologia/DITC II.md"
-      ]
-    },
-    "anemias-macrociticas": {
-      "tipo": "aula",
-      "titulo": "Anemias Macrocíticas",
-      "tarefa_id": 811
-    },
-    "oncohemato-cronicas": {
-      "tipo": "aula",
-      "titulo": "Leucemias Crônicas, Linfomas e Mieloproliferações",
-      "tarefa_id": 811
-    },
-    "insuficiencia-adrenal": {
-      "tipo": "aula",
-      "titulo": "Insuficiência Adrenal",
-      "tarefa_id": 310
-    },
-    "iamcsst": {
-      "tipo": "aula",
-      "titulo": "IAM com Supra de ST",
-      "tarefa_id": 777
-    },
-    "rastreamento-programas-br": {
-      "tipo": "aula",
-      "titulo": "Rastreamento: critérios e programas",
-      "tarefa_id": 881
-    },
-    "mccp-decisao-compartilhada": {
-      "tipo": "aula",
-      "titulo": "MCCP e decisão compartilhada",
-      "tarefa_id": 878
-    },
-    "uerj-de-bolso-mfc": {
-      "tipo": "aula",
-      "titulo": "UERJ de Bolso: MFC e a banca",
-      "tarefa_id": 5426
-    },
-    "cronicas-aps-metas": {
-      "tipo": "aula",
-      "titulo": "Crônicas na APS: metas e manejo",
-      "tarefa_id": 1796
-    },
-    "idoso-amg-polifarmacia": {
-      "tipo": "aula",
-      "titulo": "Idoso: avaliação e polifarmácia",
-      "tarefas": [
-        876,
-        879
-      ]
-    },
-    "rodapes-retorno-alto": {
-      "tipo": "aula",
-      "titulo": "Rodapés de retorno alto",
-      "tarefa_id": 5425
-    },
-    "imagem-obstetrica": {
-      "tipo": "aula",
-      "titulo": "Imagem obstétrica",
-      "tarefa_id": 5424
-    },
-    "glomerulopatias": {
-      "tipo": "aula",
-      "titulo": "Doenças Glomerulares",
-      "tarefas": [
-        68,
-        115
-      ]
-    },
-    "kawasaki": {
-      "tipo": "aula",
-      "titulo": "Doença de Kawasaki",
-      "tarefas": [
-        651,
-        754
-      ]
-    },
-    "neuromusculares": {
-      "tipo": "aula",
-      "titulo": "Doenças Neuromusculares",
-      "tarefas": [
-        141
-      ]
-    },
-    "rd-cir-1310": {
-      "tipo": "revisao",
-      "titulo": "Cirurgia da UERJ 2022: pós-operatório, perioperatório e reto",
-      "disciplinas": [
-        "Cirurgia",
-        "Gastroenterologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
-        "Clínica Médica/Hematologia/Hemostasia.md",
-        "Cirurgia/[CIR] Trauma.md",
-        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
-      ]
-    },
-    "rd-cm-1310": {
-      "tipo": "revisao",
-      "titulo": "Clínica Médica da UERJ 2022: tumor, sopro, rim e reticulócito",
-      "disciplinas": [
-        "Cardiologia",
-        "Cirurgia",
-        "Endocrinologia",
-        "Hematologia",
-        "Nefrologia",
-        "Neurologia",
-        "Pneumologia",
-        "Reumatologia"
-      ],
-      "resumos": [
-        "Cirurgia/Urologia.md",
-        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md",
-        "Clínica Médica/Nefrologia/Doença Renal Crônica.md",
-        "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
-        "Clínica Médica/Pneumologia/Asma.md",
-        "Clínica Médica/Reumatologia/DITC II.md"
-      ]
-    },
-    "rd-go-1310": {
-      "tipo": "revisao",
-      "titulo": "GO da UERJ 2022: EGB, fisiologia da gestação e histologia antes de tratar",
-      "disciplinas": [
-        "Ginecologia",
-        "Obstetrícia"
-      ],
-      "resumos": [
-        "GO/Pré-Natal.md",
-        "GO/[GIN] Rastreamento Colo.md",
-        "GO/[GIN] CA de Mama.md",
-        "GO/Endometriose.md",
-        "GO/[GIN] CA de Endométrio.md"
-      ]
-    },
-    "rd-mfc-1310": {
-      "tipo": "revisao",
-      "titulo": "MFC da UERJ 2022: o que o resultado do teste permite concluir",
-      "disciplinas": [
-        "Preventiva",
-        "Endocrinologia"
-      ],
-      "resumos": [
-        "Preventiva/Medidas de Saúde Coletiva.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md"
-      ]
-    },
-    "rd-ped-1310": {
-      "tipo": "revisao",
-      "titulo": "Pediatria da UERJ 2022: ITU, hipertensão portal, HAC e tubulopatia",
-      "disciplinas": [
-        "Pediatria"
-      ],
-      "resumos": [
-        "Pediatria/Infecção de Trato Urinário em Pediatria (ITU).md",
-        "Cirurgia/Cirurgia Infantil.md",
-        "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
-        "Clínica Médica/Nefrologia/Distúrbios do Potássio.md"
-      ]
-    },
-    "rd-cir-1510": {
-      "tipo": "revisao",
-      "titulo": "Cirurgia dos cards 10-15/10: complicações da colelitíase, massa na criança, idade e janela",
-      "disciplinas": [
-        "Cirurgia",
-        "Ortopedia",
-        "Gastroenterologia"
-      ],
-      "resumos": [
-        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md",
-        "Cirurgia/Cirurgia Infantil.md",
-        "Cirurgia/Quadril Pediátrico.md",
-        "Cirurgia/Politrauma Ortopédico.md",
-        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
-      ]
-    },
-    "rd-cm-1510": {
-      "tipo": "revisao",
-      "titulo": "Clínica Médica dos cards 10-15/10: imunofluorescência, Coombs, líquor e exame normal",
-      "disciplinas": [
-        "Reumatologia",
-        "Hematologia",
-        "Infectologia",
-        "Hepatologia",
-        "Endocrinologia",
-        "Dermatologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Reumatologia/DITC II.md",
-        "Clínica Médica/Hematologia/Hemostasia.md",
-        "Clínica Médica/Hematologia/Medicina Transfusional.md",
-        "Clínica Médica/Infectologia/Meningites.md",
-        "Clínica Médica/Infectologia/Sepse.md",
-        "Clínica Médica/Infectologia/Arboviroses.md",
-        "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
-        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
-        "Clínica Médica/Hepatologia/Hepatites Virais.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
-      ]
-    },
-    "rd-go-1510": {
-      "tipo": "revisao",
-      "titulo": "GO dos cards 10-15/10: contar do início, ler a direção",
-      "disciplinas": [
-        "Obstetrícia",
-        "Ginecologia"
-      ],
-      "resumos": [
-        "GO/[OBS] Sífilis na Gestação e Congênita.md",
-        "GO/Restrição de Crescimento Fetal.md",
-        "GO/Síndromes Hipertensivas da Gestação.md",
-        "GO/Vulvovaginites.md",
-        "GO/Úlceras Genitais.md"
-      ]
-    },
-    "rd-ped-1510": {
-      "tipo": "revisao",
-      "titulo": "Pediatria dos cards 10-15/10: gravidade é clínica, intervalo é dose",
-      "disciplinas": [
-        "Pediatria"
-      ],
-      "resumos": [
-        "Pediatria/Reanimação Neonatal.md",
-        "Pediatria/Icterícia e Sepse Neonatal.md",
-        "Pediatria/Imunizações.md",
-        "Pediatria/Asma.md",
-        "Pediatria/Febre Reumática.md",
-        "Pediatria/Síndrome de Down.md"
-      ]
-    },
-    "rd-mfc-1510": {
-      "tipo": "revisao",
-      "titulo": "MFC dos cards 10-15/10: janela de transmissão e regra de acesso",
-      "disciplinas": [
-        "Preventiva",
-        "Infectologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Infectologia/Arboviroses.md",
-        "Preventiva/Vigilância em Saúde.md"
-      ]
-    },
-    "rd-cm-1910": {
-      "tipo": "revisao",
-      "titulo": "Clínica Médica da UERJ 2024: sopro, sangue, AVC e o dado que localiza",
-      "disciplinas": [
-        "Cardiologia",
-        "Hematologia",
-        "Neurologia",
-        "Pneumologia",
-        "Infectologia",
-        "Dermatologia",
-        "Reumatologia",
-        "Endocrinologia",
-        "Gastroenterologia",
-        "Hepatologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
-        "Clínica Médica/Hematologia/Anemia Megaloblástica e Perniciosa.md",
-        "Clínica Médica/Neurologia/Cefaleias.md",
-        "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
-        "Clínica Médica/Infectologia/Tuberculose.md",
-        "Clínica Médica/Reumatologia/DITC II.md",
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
-        "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md"
-      ]
-    },
-    "rd-cir-1910": {
-      "tipo": "revisao",
-      "titulo": "Cirurgia da UERJ 2024: TNM gástrico, nódulo de tireoide, quando abrir e profilaxia",
-      "disciplinas": [
-        "Cirurgia",
-        "Gastroenterologia",
-        "Endocrinologia",
-        "Ginecologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
-        "Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md",
-        "Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md",
-        "Cirurgia/Hérnia Femoral Encarcerada.md",
-        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md"
-      ]
-    },
-    "rd-go-1910": {
-      "tipo": "revisao",
-      "titulo": "GO da UERJ 2024: o tipo decide o tratamento, o marcador decide o risco",
-      "disciplinas": [
-        "Ginecologia",
-        "Obstetrícia",
-        "Hepatologia"
-      ],
-      "resumos": [
-        "GO/Endometriose.md",
-        "GO/[GIN] CA de Mama.md",
-        "GO/[GIN] Doenças Benignas da Mama.md",
-        "GO/[GIN] Rastreamento Colo.md",
-        "GO/Pré-Natal.md",
-        "GO/Diabetes Mellitus na Gestação.md",
-        "GO/Descolamento Prematuro de Placenta.md",
-        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
-        "Pediatria/Aleitamento Materno e Mastite Lactacional.md"
-      ]
-    },
-    "rd-ped-1910": {
-      "tipo": "revisao",
-      "titulo": "Pediatria da UERJ 2024: transmissão vertical, seio materno, meningite e anafilaxia",
-      "disciplinas": [
-        "Pediatria",
-        "Infectologia",
-        "Obstetrícia",
-        "Otorrinolaringologia",
-        "Neurologia"
-      ],
-      "resumos": [
-        "Pediatria/Aleitamento Materno e Mastite Lactacional.md",
-        "Pediatria/Diarreia.md",
-        "Pediatria/Icterícia e Sepse Neonatal.md",
-        "Pediatria/Doenças Exantemáticas.md",
-        "Pediatria/Cardiopatias Congênitas.md",
-        "Clínica Médica/Infectologia/HIV.md",
-        "Clínica Médica/Infectologia/Meningites.md",
-        "GO/[OBS] Sífilis na Gestação e Congênita.md",
-        "Clínica Médica/Neurologia/Epilepsias.md"
-      ]
-    },
-    "rd-mfc-1910": {
-      "tipo": "revisao",
-      "titulo": "MFC da UERJ 2024: o teste que pega mais doentes e o critério do programa",
-      "disciplinas": [
-        "Preventiva",
-        "Endocrinologia",
-        "Infectologia",
-        "Ginecologia"
-      ],
-      "resumos": [
-        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
-        "Clínica Médica/Infectologia/Tuberculose.md",
-        "GO/[GIN] Climatério e TH.md"
-      ]
-    }
+ "_doc": "Registro do quadro da aba Teoria (id aulas) do MedHub HUB (s194; por semanas desde a s195; Teoria desde a s216). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefas: ids de plano_tarefas que a aula PREPARA (lista ou aula) -- a aula aparece dentro do bloco de cada tarefa. tarefa_id: a tarefa custom de aula que a aula CUMPRE -- so ela ganha o controle 'feito', e marcar no hub vira `plano.py --concluir ID --leitura` no tique do /hub-backend. Aula sem tarefa pendente e aula concluida ficam na Biblioteca da Teoria (s216, decisao do operador em 05/10: so daqui em diante); nada vai para artifacts/arquivo/ e a entrada daqui fica. A analise mora so na Documentacao do Painel. bloco (s217, P17; pedido do operador em 06/10: 'organize por grande area'): a grande area do item na Biblioteca, em CM | CIR | MFC | PED | GO | VARIAS (VARIAS = varias areas, como as pilulas; grupo final 'Varias areas'). Era OBRIGATORIO no item sem tarefa ate a s217 (desde a s218 a RD declara disciplinas, abaixo): a aula com tarefa_id/tarefas herda o bloco da tarefa no plano (a de tarefa_id vence; senao a primeira de tarefas) e o bloco daqui so vale se a tarefa nao estiver no plano. Item sem area resolvivel cai no grupo 'Sem area' e o build e o --check AVISAM pelo slug; a suite (test_registro_real_rds_com_disciplinas_e_fontes_no_disco) barra o commit. A analise nao entra na Teoria e dispensa bloco. s218 (pedido do operador em 07/10: 'as revisoes podem entrar na biblioteca, sem problemas, mas devem estar com a taxonomia correta, integrando os respectivos blocos de disciplinas na biblioteca'): a Biblioteca e por grande area -> DISCIPLINA. disciplinas: lista (>= 1) do vocabulario de tools/hub.py (DISCIPLINAS; nome fora dele falha alto), OBRIGATORIA na revisao direcionada: a RD aparece em CADA disciplina listada, dentro da grande area dela (Obstetricia/Ginecologia -> GO; Pediatria -> PED; Cirurgia/Ortopedia -> CIR; Preventiva -> MFC; o resto -> CM), e a ainda nao lida leva 'nova' no topo da disciplina. resumos: lista de caminhos relativos a resumos/ = de onde a RD saiu (o item mostra as fontes, com link para o resumo publicado; o resumo mostra a RD que o cita); caminho inexistente = AVISO do build e a suite barra. O bloco passa a ser DERIVADO das disciplinas e so vale como leitura antiga (item sem disciplinas). ⚰️ s218: VARIAS como destino de RD (a pilula declara as disciplinas de cada ponto); ⚰️ s218: a secao 'Revisoes direcionadas' no topo da Teoria (a RD mora so na Biblioteca). A aula com tarefa segue herdando o bloco e a disciplina (a area) da tarefa no plano. Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
+ "itens": {
+  "dmg": {
+   "tipo": "aula",
+   "titulo": "A Escada do DMG",
+   "tarefas": [
+    26,
+    40
+   ]
+  },
+  "topicos-pediatria": {
+   "tipo": "aula",
+   "titulo": "Tópicos em Pediatria",
+   "tarefas": [
+    96,
+    100
+   ]
+  },
+  "prevencao-quaternaria": {
+   "tipo": "aula",
+   "titulo": "Prevenção Quaternária",
+   "tarefa_id": 875
+  },
+  "rd-vias-biliares": {
+   "tipo": "revisao",
+   "titulo": "Vias biliares e apendicite",
+   "disciplinas": [
+    "Cirurgia"
+   ],
+   "resumos": [
+    "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
+   ]
+  },
+  "rd-hemostasia": {
+   "tipo": "revisao",
+   "titulo": "Hemostasia",
+   "disciplinas": [
+    "Hematologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Hematologia/Hemostasia.md"
+   ]
+  },
+  "rd-lupus-saf": {
+   "tipo": "revisao",
+   "titulo": "Lúpus, SAF e vasculites",
+   "disciplinas": [
+    "Reumatologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Reumatologia/DITC II.md",
+    "Clínica Médica/Reumatologia/DITC.md"
+   ]
+  },
+  "rd-hepato": {
+   "tipo": "revisao",
+   "titulo": "Hepatites, icterícia e cirrose",
+   "disciplinas": [
+    "Hepatologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Hepatologia/Hepatites Virais.md",
+    "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md"
+   ]
+  },
+  "rd-dii-polipos": {
+   "tipo": "revisao",
+   "titulo": "DII e pólipos",
+   "disciplinas": [
+    "Gastroenterologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
+   ]
+  },
+  "rd-intensiva-sepse": {
+   "tipo": "revisao",
+   "titulo": "Ventilação, SDRA e sepse",
+   "disciplinas": [
+    "Pneumologia",
+    "Infectologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+    "Clínica Médica/Infectologia/Sepse.md"
+   ]
+  },
+  "rd-pediatria": {
+   "tipo": "revisao",
+   "titulo": "Cardiopatias, emergência e vacinas",
+   "disciplinas": [
+    "Pediatria"
+   ],
+   "resumos": [
+    "Pediatria/Cardiopatias Congênitas.md",
+    "Pediatria/Emergências Pediátricas.md",
+    "Pediatria/Imunizações.md"
+   ]
+  },
+  "rd-ortopedia-cirurgia": {
+   "tipo": "revisao",
+   "titulo": "Ortopedia, cicatrização e cir. infantil",
+   "disciplinas": [
+    "Cirurgia"
+   ],
+   "resumos": [
+    "Cirurgia/Quadril Pediátrico.md",
+    "Cirurgia/Politrauma Ortopédico.md",
+    "Cirurgia/Cirurgia Infantil.md"
+   ]
+  },
+  "rd-pilulas": {
+   "tipo": "revisao",
+   "titulo": "Pílulas: pontos soltos",
+   "disciplinas": [
+    "Obstetrícia",
+    "Ginecologia",
+    "Neurologia",
+    "Cardiologia",
+    "Endocrinologia",
+    "Pediatria",
+    "Preventiva"
+   ],
+   "resumos": [
+    "GO/Síndromes Hipertensivas da Gestação.md",
+    "Clínica Médica/Neurologia/Epilepsias.md",
+    "Clínica Médica/Neurologia/Cefaleias.md",
+    "GO/Úlceras Genitais.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md",
+    "Pediatria/Diarreia.md",
+    "Preventiva/Medicina de Família e Comunidade.md"
+   ]
+  },
+  "dossie-uerj": {
+   "tipo": "analise",
+   "titulo": "Dossiê UERJ: anatomia e maldades da prova"
+  },
+  "autopsia-uerj-2021": {
+   "tipo": "analise",
+   "titulo": "Autópsia UERJ 2021"
+  },
+  "remit-cicatrizacao": {
+   "tipo": "aula",
+   "titulo": "REMIT e Cicatrização",
+   "tarefa_id": 530
+  },
+  "aorta-cardiomiopatias-pericardio": {
+   "tipo": "aula",
+   "titulo": "Aorta, Miocárdio e Pericárdio",
+   "tarefa_id": 768
+  },
+  "tireoide-nodulo-cancer": {
+   "tipo": "aula",
+   "titulo": "Nódulo e Câncer de Tireoide",
+   "tarefa_id": 367
+  },
+  "vulva-vagina-anatomia": {
+   "tipo": "aula",
+   "titulo": "Embriologia, Vulva e Vagina",
+   "tarefa_id": 590
+  },
+  "tb-360": {
+   "tipo": "aula",
+   "titulo": "Tuberculose 360",
+   "tarefa_id": 1797
+  },
+  "rd-ventilacao-degrau-0": {
+   "tipo": "revisao",
+   "titulo": "Ventilação: degrau 0",
+   "disciplinas": [
+    "Pneumologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Pneumologia/Pneumologia Intensiva.md"
+   ]
+  },
+  "rd-neoplasias-tgi": {
+   "tipo": "revisao",
+   "titulo": "Pólipos, CCR e câncer gástrico",
+   "disciplinas": [
+    "Gastroenterologia",
+    "Cirurgia"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+   ]
+  },
+  "rd-meningites": {
+   "tipo": "revisao",
+   "titulo": "Meningites",
+   "disciplinas": [
+    "Infectologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Meningites.md"
+   ]
+  },
+  "rd-dm-cronicas": {
+   "tipo": "revisao",
+   "titulo": "DM: complicações crônicas",
+   "disciplinas": [
+    "Endocrinologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
+   ]
+  },
+  "rd-hemostasia-2": {
+   "tipo": "revisao",
+   "titulo": "Hemostasia II: HIT e PTT",
+   "disciplinas": [
+    "Hematologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Hematologia/Hemostasia.md",
+    "Clínica Médica/Hematologia/Anemias Hemolíticas.md"
+   ]
+  },
+  "rd-pilulas-0510": {
+   "tipo": "revisao",
+   "titulo": "Pílulas de 05/10",
+   "disciplinas": [
+    "Cirurgia",
+    "Cardiologia",
+    "Hepatologia",
+    "Infectologia",
+    "Nefrologia",
+    "Pneumologia",
+    "Reumatologia"
+   ],
+   "resumos": [
+    "Cirurgia/Urologia.md",
+    "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 1) - Diagnóstico, Classificação e Estratificação de Risco.md",
+    "Clínica Médica/Hepatologia/Hepatites Virais.md",
+    "Clínica Médica/Infectologia/Arboviroses.md",
+    "Clínica Médica/Infectologia/Sepse.md",
+    "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
+    "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+    "Clínica Médica/Reumatologia/DITC II.md"
+   ]
+  },
+  "rd-hernias": {
+   "tipo": "revisao",
+   "titulo": "Hérnias da parede abdominal (lista t49)",
+   "disciplinas": [
+    "Cirurgia"
+   ],
+   "resumos": [
+    "Cirurgia/Hérnia Femoral Encarcerada.md"
+   ]
+  },
+  "rd-cir-0610": {
+   "tipo": "revisao",
+   "titulo": "Cirurgia de 06/10: via biliar, plastrão e hérnia",
+   "disciplinas": [
+    "Cirurgia"
+   ],
+   "resumos": [
+    "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
+   ]
+  },
+  "rd-go-0610": {
+   "tipo": "revisao",
+   "titulo": "Obstetrícia de 06/10: pré-eclâmpsia",
+   "disciplinas": [
+    "Obstetrícia"
+   ],
+   "resumos": [
+    "GO/Síndromes Hipertensivas da Gestação.md"
+   ]
+  },
+  "rd-ped-0610": {
+   "tipo": "revisao",
+   "titulo": "Pediatria de 06/10: tiflite, febre no lactente e coreia",
+   "disciplinas": [
+    "Pediatria"
+   ],
+   "resumos": [
+    "Pediatria/Febre Reumática.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+   ]
+  },
+  "rd-cm-0610": {
+   "tipo": "revisao",
+   "titulo": "Clínica Médica de 06/10: laboratório, imune, via aérea e NCC",
+   "disciplinas": [
+    "Endocrinologia",
+    "Hematologia",
+    "Hepatologia",
+    "Infectologia",
+    "Pneumologia",
+    "Reumatologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
+    "Clínica Médica/Hematologia/Hemostasia.md",
+    "Clínica Médica/Hepatologia/Hepatites Virais.md",
+    "Clínica Médica/Infectologia/Meningites.md",
+    "Clínica Médica/Infectologia/Sepse.md",
+    "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+    "Clínica Médica/Reumatologia/DITC II.md"
+   ]
+  },
+  "anemias-macrociticas": {
+   "tipo": "aula",
+   "titulo": "Anemias Macrocíticas",
+   "tarefa_id": 811
+  },
+  "oncohemato-cronicas": {
+   "tipo": "aula",
+   "titulo": "Leucemias Crônicas, Linfomas e Mieloproliferações",
+   "tarefa_id": 811
+  },
+  "insuficiencia-adrenal": {
+   "tipo": "aula",
+   "titulo": "Insuficiência Adrenal",
+   "tarefa_id": 310
+  },
+  "iamcsst": {
+   "tipo": "aula",
+   "titulo": "IAM com Supra de ST",
+   "tarefa_id": 777
+  },
+  "rastreamento-programas-br": {
+   "tipo": "aula",
+   "titulo": "Rastreamento: critérios e programas",
+   "tarefa_id": 881
+  },
+  "mccp-decisao-compartilhada": {
+   "tipo": "aula",
+   "titulo": "MCCP e decisão compartilhada",
+   "tarefa_id": 878
+  },
+  "uerj-de-bolso-mfc": {
+   "tipo": "aula",
+   "titulo": "UERJ de Bolso: MFC e a banca",
+   "tarefa_id": 5426
+  },
+  "cronicas-aps-metas": {
+   "tipo": "aula",
+   "titulo": "Crônicas na APS: metas e manejo",
+   "tarefa_id": 1796
+  },
+  "idoso-amg-polifarmacia": {
+   "tipo": "aula",
+   "titulo": "Idoso: avaliação e polifarmácia",
+   "tarefas": [
+    876,
+    879
+   ]
+  },
+  "rodapes-retorno-alto": {
+   "tipo": "aula",
+   "titulo": "Rodapés de retorno alto",
+   "tarefa_id": 5425
+  },
+  "imagem-obstetrica": {
+   "tipo": "aula",
+   "titulo": "Imagem obstétrica",
+   "tarefa_id": 5424
+  },
+  "glomerulopatias": {
+   "tipo": "aula",
+   "titulo": "Doenças Glomerulares",
+   "tarefas": [
+    68,
+    115
+   ]
+  },
+  "kawasaki": {
+   "tipo": "aula",
+   "titulo": "Doença de Kawasaki",
+   "tarefas": [
+    651,
+    754
+   ]
+  },
+  "neuromusculares": {
+   "tipo": "aula",
+   "titulo": "Doenças Neuromusculares",
+   "tarefas": [
+    141
+   ]
+  },
+  "rd-cir-1310": {
+   "tipo": "revisao",
+   "titulo": "Cirurgia da UERJ 2022: pós-operatório, perioperatório e reto",
+   "disciplinas": [
+    "Cirurgia",
+    "Gastroenterologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
+    "Clínica Médica/Hematologia/Hemostasia.md",
+    "Cirurgia/[CIR] Trauma.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+   ]
+  },
+  "rd-cm-1310": {
+   "tipo": "revisao",
+   "titulo": "Clínica Médica da UERJ 2022: tumor, sopro, rim e reticulócito",
+   "disciplinas": [
+    "Cardiologia",
+    "Cirurgia",
+    "Endocrinologia",
+    "Hematologia",
+    "Nefrologia",
+    "Neurologia",
+    "Pneumologia",
+    "Reumatologia"
+   ],
+   "resumos": [
+    "Cirurgia/Urologia.md",
+    "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md",
+    "Clínica Médica/Nefrologia/Doença Renal Crônica.md",
+    "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
+    "Clínica Médica/Pneumologia/Asma.md",
+    "Clínica Médica/Reumatologia/DITC II.md"
+   ]
+  },
+  "rd-go-1310": {
+   "tipo": "revisao",
+   "titulo": "GO da UERJ 2022: EGB, fisiologia da gestação e histologia antes de tratar",
+   "disciplinas": [
+    "Ginecologia",
+    "Obstetrícia"
+   ],
+   "resumos": [
+    "GO/Pré-Natal.md",
+    "GO/[GIN] Rastreamento Colo.md",
+    "GO/[GIN] CA de Mama.md",
+    "GO/Endometriose.md",
+    "GO/[GIN] CA de Endométrio.md"
+   ]
+  },
+  "rd-mfc-1310": {
+   "tipo": "revisao",
+   "titulo": "MFC da UERJ 2022: o que o resultado do teste permite concluir",
+   "disciplinas": [
+    "Preventiva",
+    "Endocrinologia"
+   ],
+   "resumos": [
+    "Preventiva/Medidas de Saúde Coletiva.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md"
+   ]
+  },
+  "rd-ped-1310": {
+   "tipo": "revisao",
+   "titulo": "Pediatria da UERJ 2022: ITU, hipertensão portal, HAC e tubulopatia",
+   "disciplinas": [
+    "Pediatria"
+   ],
+   "resumos": [
+    "Pediatria/Infecção de Trato Urinário em Pediatria (ITU).md",
+    "Cirurgia/Cirurgia Infantil.md",
+    "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
+    "Clínica Médica/Nefrologia/Distúrbios do Potássio.md"
+   ]
+  },
+  "rd-cir-1510": {
+   "tipo": "revisao",
+   "titulo": "Cirurgia dos cards 10-15/10: complicações da colelitíase, massa na criança, idade e janela",
+   "disciplinas": [
+    "Cirurgia",
+    "Ortopedia",
+    "Gastroenterologia"
+   ],
+   "resumos": [
+    "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md",
+    "Cirurgia/Cirurgia Infantil.md",
+    "Cirurgia/Quadril Pediátrico.md",
+    "Cirurgia/Politrauma Ortopédico.md",
+    "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
+   ]
+  },
+  "rd-cm-1510": {
+   "tipo": "revisao",
+   "titulo": "Clínica Médica dos cards 10-15/10: imunofluorescência, Coombs, líquor e exame normal",
+   "disciplinas": [
+    "Reumatologia",
+    "Hematologia",
+    "Infectologia",
+    "Hepatologia",
+    "Endocrinologia",
+    "Dermatologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Reumatologia/DITC II.md",
+    "Clínica Médica/Hematologia/Hemostasia.md",
+    "Clínica Médica/Hematologia/Medicina Transfusional.md",
+    "Clínica Médica/Infectologia/Meningites.md",
+    "Clínica Médica/Infectologia/Sepse.md",
+    "Clínica Médica/Infectologia/Arboviroses.md",
+    "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
+    "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
+    "Clínica Médica/Hepatologia/Hepatites Virais.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
+   ]
+  },
+  "rd-go-1510": {
+   "tipo": "revisao",
+   "titulo": "GO dos cards 10-15/10: contar do início, ler a direção",
+   "disciplinas": [
+    "Obstetrícia",
+    "Ginecologia"
+   ],
+   "resumos": [
+    "GO/[OBS] Sífilis na Gestação e Congênita.md",
+    "GO/Restrição de Crescimento Fetal.md",
+    "GO/Síndromes Hipertensivas da Gestação.md",
+    "GO/Vulvovaginites.md",
+    "GO/Úlceras Genitais.md"
+   ]
+  },
+  "rd-ped-1510": {
+   "tipo": "revisao",
+   "titulo": "Pediatria dos cards 10-15/10: gravidade é clínica, intervalo é dose",
+   "disciplinas": [
+    "Pediatria"
+   ],
+   "resumos": [
+    "Pediatria/Reanimação Neonatal.md",
+    "Pediatria/Icterícia e Sepse Neonatal.md",
+    "Pediatria/Imunizações.md",
+    "Pediatria/Asma.md",
+    "Pediatria/Febre Reumática.md",
+    "Pediatria/Síndrome de Down.md"
+   ]
+  },
+  "rd-mfc-1510": {
+   "tipo": "revisao",
+   "titulo": "MFC dos cards 10-15/10: janela de transmissão e regra de acesso",
+   "disciplinas": [
+    "Preventiva",
+    "Infectologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Arboviroses.md",
+    "Preventiva/Vigilância em Saúde.md"
+   ]
+  },
+  "rd-cm-1910": {
+   "tipo": "revisao",
+   "titulo": "Clínica Médica da UERJ 2024: sopro, sangue, AVC e o dado que localiza",
+   "disciplinas": [
+    "Cardiologia",
+    "Hematologia",
+    "Neurologia",
+    "Pneumologia",
+    "Infectologia",
+    "Dermatologia",
+    "Reumatologia",
+    "Endocrinologia",
+    "Gastroenterologia",
+    "Hepatologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
+    "Clínica Médica/Hematologia/Anemia Megaloblástica e Perniciosa.md",
+    "Clínica Médica/Neurologia/Cefaleias.md",
+    "Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "Clínica Médica/Reumatologia/DITC II.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+    "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md"
+   ]
+  },
+  "rd-cir-1910": {
+   "tipo": "revisao",
+   "titulo": "Cirurgia da UERJ 2024: TNM gástrico, nódulo de tireoide, quando abrir e profilaxia",
+   "disciplinas": [
+    "Cirurgia",
+    "Gastroenterologia",
+    "Endocrinologia",
+    "Ginecologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
+    "Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md",
+    "Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md",
+    "Cirurgia/Hérnia Femoral Encarcerada.md",
+    "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md"
+   ]
+  },
+  "rd-go-1910": {
+   "tipo": "revisao",
+   "titulo": "GO da UERJ 2024: o tipo decide o tratamento, o marcador decide o risco",
+   "disciplinas": [
+    "Ginecologia",
+    "Obstetrícia",
+    "Hepatologia"
+   ],
+   "resumos": [
+    "GO/Endometriose.md",
+    "GO/[GIN] CA de Mama.md",
+    "GO/[GIN] Doenças Benignas da Mama.md",
+    "GO/[GIN] Rastreamento Colo.md",
+    "GO/Pré-Natal.md",
+    "GO/Diabetes Mellitus na Gestação.md",
+    "GO/Descolamento Prematuro de Placenta.md",
+    "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md",
+    "Pediatria/Aleitamento Materno e Mastite Lactacional.md"
+   ]
+  },
+  "rd-ped-1910": {
+   "tipo": "revisao",
+   "titulo": "Pediatria da UERJ 2024: transmissão vertical, seio materno, meningite e anafilaxia",
+   "disciplinas": [
+    "Pediatria",
+    "Infectologia",
+    "Obstetrícia",
+    "Otorrinolaringologia",
+    "Neurologia"
+   ],
+   "resumos": [
+    "Pediatria/Aleitamento Materno e Mastite Lactacional.md",
+    "Pediatria/Diarreia.md",
+    "Pediatria/Icterícia e Sepse Neonatal.md",
+    "Pediatria/Doenças Exantemáticas.md",
+    "Pediatria/Cardiopatias Congênitas.md",
+    "Clínica Médica/Infectologia/HIV.md",
+    "Clínica Médica/Infectologia/Meningites.md",
+    "GO/[OBS] Sífilis na Gestação e Congênita.md",
+    "Clínica Médica/Neurologia/Epilepsias.md"
+   ]
+  },
+  "rd-mfc-1910": {
+   "tipo": "revisao",
+   "titulo": "MFC da UERJ 2024: o teste que pega mais doentes e o critério do programa",
+   "disciplinas": [
+    "Preventiva",
+    "Endocrinologia",
+    "Infectologia",
+    "Ginecologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "GO/[GIN] Climatério e TH.md"
+   ]
+  },
+  "rd-cm-2910": {
+   "tipo": "revisao",
+   "titulo": "Clínica Médica da UERJ 2025: onde está o bloqueio, o que a captação diz e o líquido que conta a causa",
+   "disciplinas": [
+    "Cardiologia",
+    "Endocrinologia",
+    "Nefrologia",
+    "Reumatologia",
+    "Hepatologia",
+    "Pneumologia",
+    "Infectologia",
+    "Neurologia",
+    "Gastroenterologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Endocrinologia/Tireotoxicose.md",
+    "Clínica Médica/Cardiologia/Insuficiência Cardíaca.md",
+    "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 2) - Tratamento.md",
+    "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 3) - Secundária e Crise Hipertensiva.md"
+   ]
+  },
+  "rd-cir-2910": {
+   "tipo": "revisao",
+   "titulo": "Cirurgia da UERJ 2025: o hiato, o fígado, a agulha e o primeiro da fila",
+   "disciplinas": [
+    "Cirurgia",
+    "Gastroenterologia",
+    "Hepatologia",
+    "Endocrinologia",
+    "Nefrologia",
+    "Neurologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md",
+    "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md",
+    "Cirurgia/[CIR] Trauma.md",
+    "Clínica Médica/Neurologia/TCE.md"
+   ]
+  },
+  "rd-go-2910": {
+   "tipo": "revisao",
+   "titulo": "GO da UERJ 2025: a direção da metaplasia, a placenta compartilhada e a janela da vacina",
+   "disciplinas": [
+    "Ginecologia",
+    "Obstetrícia"
+   ],
+   "resumos": [
+    "GO/[GIN] Rastreamento Colo.md",
+    "GO/Vulvovaginites.md",
+    "GO/Pré-Natal.md",
+    "GO/Diabetes Mellitus na Gestação.md",
+    "GO/Gravidez ectópica.md",
+    "GO/[GIN] Amenorreia.md",
+    "GO/Planejamento Familiar.md",
+    "GO/Tumores Anexiais e Câncer de Ovário.md",
+    "GO/Endometriose.md",
+    "GO/Descolamento Prematuro de Placenta.md"
+   ]
+  },
+  "rd-ped-2910": {
+   "tipo": "revisao",
+   "titulo": "Pediatria da UERJ 2025: dor óssea e hemograma, SIM-P, Down e o leite que transmite HIV",
+   "disciplinas": [
+    "Pediatria",
+    "Hematologia",
+    "Ortopedia",
+    "Infectologia",
+    "Pneumologia"
+   ],
+   "resumos": [
+    "Pediatria/Síndrome de Down.md",
+    "Pediatria/Pneumonias na Infância.md",
+    "Pediatria/Imunizações.md",
+    "Pediatria/Crescimento.md",
+    "Pediatria/Asma.md",
+    "Clínica Médica/Infectologia/HIV.md"
+   ]
+  },
+  "rd-mfc-2910": {
+   "tipo": "revisao",
+   "titulo": "MFC da UERJ 2025: o teste negativo que não tranquiliza e a medicina que tira",
+   "disciplinas": [
+    "Preventiva",
+    "Cardiologia",
+    "Endocrinologia",
+    "Cirurgia",
+    "Ortopedia"
+   ],
+   "resumos": [
+    "Preventiva/Medicina de Família e Comunidade.md",
+    "Preventiva/Atenção Primária à Saúde no Brasil.md",
+    "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md",
+    "Cirurgia/Doenças da Coluna Vertebral e Maus-Tratos.md"
+   ]
+  },
+  "aulao-vespera-uerj": {
+   "tipo": "aula",
+   "titulo": "Aulão de véspera: os 10 temas que a UERJ mais cobra",
+   "disciplinas": [
+    "Cirurgia",
+    "Infectologia",
+    "Obstetrícia",
+    "Preventiva",
+    "Neurologia",
+    "Pediatria",
+    "Ortopedia"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "Clínica Médica/Infectologia/Meningites.md",
+    "Clínica Médica/Infectologia/HIV.md",
+    "Clínica Médica/Infectologia/Arboviroses.md",
+    "Clínica Médica/Neurologia/Delirium no Idoso.md",
+    "Clínica Médica/Neurologia/Demências.md",
+    "Clínica Médica/Neurologia/TCE.md",
+    "GO/Diabetes Mellitus na Gestação.md",
+    "GO/Síndromes Hipertensivas da Gestação.md",
+    "Cirurgia/[CIR] Trauma.md",
+    "Preventiva/Medicina de Família e Comunidade.md"
+   ]
   }
+ }
 }

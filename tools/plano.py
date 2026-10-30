@@ -995,6 +995,10 @@ def tema_exibido(tema):
     ' | ' viram ' · ' (o hifen solto, com espaco, nao e quebra)."""
     t = re.sub(r"(?<=\S)-\s*\|\s*", "-", str(tema or ""))
     t = re.sub(r"\s*\|\s*", " · ", t)
+    # s235 (pedido dele, 29/10: "nao gosto desses titulos poluidos"): o simulado se apresenta pelo nome da
+    # prova -- "UERJ 2025" --; o sufixo tecnico do banco ("-- prova INTEIRA (100q), cronometrada, 5 blocos")
+    # e dado do plano, nunca titulo de tela. O mesmo corte vive no JS do hub (`temaExibido`).
+    t = re.sub(r"\s*--\s*prova INTEIRA\b.*$", "", t)
     return t.strip(" ·")
 
 

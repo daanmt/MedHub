@@ -291,15 +291,16 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 .qz-chip.resolvida{background:var(--ok-fraco);color:var(--ok)}
 .qz-chip.resolvida::before{content:"\2713\00A0"}
 .qz-relogio{margin-left:auto;font-size:var(--fs-legenda);color:var(--tinta3)}
-/* s212: o trilho e o corpo da questao ocupam a MESMA largura das abas (um so .wrap; nada de teto proprio).
-   s225: o segmento tem 10 px visiveis e 26 px de toque (borda transparente); respondida = preenchida
-   discreta, atual = o unico ciano, marcada para revisar = base ambar, nao respondida = trilho vazio */
-.qz-trilho{display:grid;grid-template-columns:repeat(auto-fit,minmax(14px,1fr));gap:0 3px;margin:0 0 var(--esp-3)}
-.qz-trilho i{display:block;min-width:0;height:26px;border-block:8px solid transparent;background:var(--afundado);background-clip:padding-box;border-radius:2px;cursor:pointer}
-@media (min-width:700px){.qz-trilho{grid-template-columns:repeat(auto-fit,minmax(10px,1fr))}}   /* tela larga: 60 questoes numa linha so */
-.qz-trilho i.f{background-color:var(--linha-forte)}
-.qz-trilho i.flag{box-shadow:inset 0 -3px 0 var(--aviso)}
-.qz-trilho i.atual{background-color:var(--acento)}
+/* s235 (pedido dele, 29/10: "esses diversos quadradinhos poderiam ser resumidos tal como o EMED faz, '37/97'"):
+   o trilho de segmentos saiu (s212/s225). A navegacao e o PAGINADOR no pe da questao, nos dois estados:
+   anterior | numero editavel "de" total | proxima -- os mesmos 44 px e o contorno ciano dos botoes de rota */
+.qz-pag{display:flex;align-items:center;justify-content:center;gap:var(--esp-2);margin-top:var(--esp-2)}
+.qz-pag .hub-btn{min-width:44px;padding:0 var(--esp-3);font-size:var(--fs-secao);line-height:1}
+.qz-pag label{display:inline-flex;align-items:center;gap:var(--esp-2);color:var(--tinta2);font-size:var(--fs-legenda)}
+.qz-pag input{width:3.75rem;min-height:44px;margin:0;padding:0 var(--esp-2);text-align:center;border:1px solid var(--linha-forte);border-radius:var(--raio);
+  background:transparent;color:var(--tinta);font-size:var(--fs-item);font-weight:650;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+.qz-pag input::-webkit-outer-spin-button,.qz-pag input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.qz-pag input:focus-visible{outline:2px solid var(--acento);outline-offset:2px;border-color:var(--acento)}
 .qz-corpo{display:grid;gap:var(--esp-4);min-width:0}
 .qz-metaq{display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-3);font-size:var(--fs-meta);color:var(--tinta3);margin:0}
 /* s229 (pedido dele, 15/10): a banca da questao na cor da marca (rosa) e o tema em ciano */
@@ -334,20 +335,23 @@ details.qd-area[data-area="RD"]:not([data-ver-lidas]) .qd-disc:not(:has(.qd-item
 .qz-seg button[data-c="duvida"].on{border-color:var(--aviso);color:var(--aviso);background:var(--aviso-fraco)}
 .qz-seg button[data-c="chute"].on{border-color:var(--roxo);color:var(--roxo-tinta);background:var(--roxo-fraco)}
 .qz-pe{display:flex;flex-wrap:wrap;gap:var(--esp-2);align-items:center;justify-content:space-between}
-.qz-marca{display:flex;gap:var(--esp-2);align-items:center;font-size:var(--fs-legenda);color:var(--tinta2);min-height:44px}
-.qz-marca input{width:18px;height:18px;margin:0;accent-color:var(--acento)}
-.qz-marca[hidden]{display:none}
-/* s229: "Revisar depois" so no simulado (modo prova); na lista sai, e a navegacao fica a direita */
-/* s229 (rodada 3): Anterior | Responder | Pular, nessa ordem, centralizados */
+/* s235 (pedido dele, 29/10: nunca entendeu a funcao do checkbox de marcar a questao para rever antes de entregar):
+   o checkbox saiu do player; o trilho continua sendo a navegacao para voltar a qualquer questao */
+/* s229 (rodada 3): Responder centralizado. s235: Anterior e Pular viraram as setas do paginador (abaixo) */
 .qz-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--esp-2);margin-inline:auto}
 #qz-antes .qz-pe{justify-content:center}
-/* s229 (rodada 3): no cabecalho da questao, o titulo numa linha e, abaixo, o Grifo e o TEMPO lado a lado, cada um no
-   seu bloquinho (o tempo no mesmo desenho do botao do Grifo) */
-#qz-player .hub-leitor-barra #qz-tema{flex:1 1 100%;order:1}
+#qz-antes .primario{min-width:12rem}
+/* s235 (pedido dele, 29/10: "o grifo, o tempo, o botao de voltar poderiam estar na mesma linha"): UMA linha -- voltar a
+   esquerda, Grifo e tempo a direita (bloquinhos iguais); o titulo fica entre eles em tela larga e desce para a 2a
+   linha no celular. ⚰️ s229: titulo numa linha propria, Grifo e tempo abaixo */
 #qz-player .hub-leitor-barra #qz-voltar{order:0}
-#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:0}
+#qz-player .hub-leitor-barra #qz-tema{order:4;flex:1 1 100%;min-width:0}
+#qz-player .hub-leitor-barra #qz-grifo{order:2;margin-left:auto}
 #qz-player .hub-leitor-barra .qz-relogio{order:3;margin-left:0;display:inline-flex;align-items:center;min-height:44px;padding:0 var(--esp-3);
   border:1px solid var(--linha-forte);border-radius:var(--raio);color:var(--tinta2);font-variant-numeric:tabular-nums}
+@media (min-width:700px){
+  #qz-player .hub-leitor-barra #qz-tema{order:1;flex:1 1 8rem}   /* quebra se precisar (regra do celular) */
+}
 .qz-veredito{padding:var(--esp-3) var(--esp-4);border-radius:var(--raio);font-weight:650;display:flex;flex-wrap:wrap;gap:var(--esp-1) var(--esp-4);align-items:baseline;margin:0}
 .qz-veredito.certa{background:var(--ok-fraco);color:var(--ok)} .qz-veredito.errada{background:var(--erro-fraco);color:var(--erro)}
 .qz-veredito small{font-weight:400;color:var(--tinta2)}
@@ -572,7 +576,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
         </div>
         <span class="qz-relogio" id="qz-relogio">00:00</span>
       </div>
-      <div class="qz-trilho" id="qz-trilho" aria-label="Progresso"></div>
       <p class="qd-aviso" id="qz-aviso-lista" hidden></p>
       <div class="qz-corpo" id="qz-questao" hidden>
         <div class="placa qz-enun-placa">
@@ -589,8 +592,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
             <button type="button" data-c="chute">Chute<small>não sei</small></button>
           </div>
           <div class="qz-pe" style="margin-top:10px">
-            <label class="qz-marca" id="qz-marca" hidden><input type="checkbox" id="qz-flag"> Revisar depois</label>
-            <span class="qz-nav"><button type="button" class="hub-btn" id="qz-ant">&lsaquo; Anterior</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button><button type="button" class="hub-btn" id="qz-pular">Pular &rsaquo;</button></span>
+            <span class="qz-nav"><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
           </div>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:16px">
@@ -613,6 +615,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
           </div>
           <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
         </div>
+        <div class="qz-pag" id="qz-pag"><button type="button" class="hub-btn" id="qz-ant" aria-label="Anterior" title="Anterior">&lsaquo;</button><label><input type="number" id="qz-pag-n" min="1" step="1" inputmode="numeric" aria-label="Ir para a questão"> de <span id="qz-pag-t">0</span></label><button type="button" class="hub-btn" id="qz-pular" aria-label="Próxima" title="Próxima">&rsaquo;</button></div>
       </div>
       <div id="qz-fim" hidden style="display:grid;gap:16px">
         <h2 class="hub-titulo">Lista concluída</h2>
@@ -2625,7 +2628,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // Painel o mostram -- hifen colado antes do ' | ' junta; os demais ' | ' viram ' · '. Paridade com
   // `plano.tema_exibido` presa por teste; o doc no banco nao muda. PURA.
   function temaExibido(t){
-    return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/^[ ·]+|[ ·]+$/g, "");
+    // s235: o simulado se apresenta pelo nome da prova ("UERJ 2025"); o sufixo tecnico do plano nao e titulo (espelho de `plano.tema_exibido`)
+    return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/\s*--\s*prova INTEIRA\b.*$/, "").replace(/^[ ·]+|[ ·]+$/g, "");
   }
   // s226 (part-1, A21): chip so quando a lista foge do normal -- "pronta" (capturada) nao tem chip; em curso
   // (resposta no espelho local do aparelho, ou o status do doc) mostra respondidas/total; resolvida, o check.
@@ -2794,10 +2798,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false; QZ.modoLista = "";
     QZ.grifos = qzLs("medhub.grifos." + id) || {};
     var l = QZ.listas.filter(function(x){ return x._id === id; })[0] || {};
-    $("qz-tema").textContent = (temaExibido(l.tema) || id) + (l.area ? " · " + l.area : "");
+    // s235: o simulado nao repete a area no cabecalho ("UERJ 2025", nao "UERJ 2025 · Simulado")
+    $("qz-tema").textContent = (temaExibido(l.tema) || id) + (l.area && !qzEhSimulado(l) ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
     $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
-    $("qz-trilho").innerHTML = "";
     window.scrollTo(0, 0);
     if(!QZ.db){ return; }
     qzAssinarLista("questoes", id, function(s){
@@ -2852,16 +2856,22 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   // Estudo ou Prova antes da 1a questao e a barra da lista trocava o modo (os dois controles sairam); o
   // `modo` gravado no doc da lista e o espelho `medhub.listas.modo.<id>` deixaram de ser lidos.*
   function qzModoDaLista(l){ return qzEhSimulado(l || {}) ? "prova" : "estudo"; }
-  // a flag "Revisar depois" (voltar antes de entregar): so no simulado. PURA.
-  function qzComFlag(l){ return qzEhSimulado(l || {}); }
-  function qzModoUi(l){
-    var m = $("qz-marca"); if(m){ m.hidden = !qzComFlag(l); }
-  }
+  // s235: a marca de rever-antes-de-entregar saiu do player (ele nunca entendeu a funcao); `flag` fica false na
+  // resposta e o campo antigo nas respostas gravadas e ignorado. PURAS.
+  function qzComFlag(l){ return false; }
+  function qzModoUi(l){ }
   function qzTrilho(){
-    // modo prova: o trilho mostra so feita/nao feita (sem cor de acerto) e serve de navegacao
-    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (r && r.flag ? " flag" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + (r && r.flag ? " (revisar depois)" : "") + '"></i>'; }).join("");
+    // s235: o paginador no lugar do trilho -- a posicao (editavel) de total; a seta de voltar desliga na 1a. PURA no DOM.
+    var n = $("qz-pag-n"); n.value = QZ.pos + 1; n.max = QZ.qs.length; $("qz-pag-t").textContent = QZ.qs.length;
+    $("qz-ant").disabled = QZ.pos <= 0;
   }
-  $("qz-trilho").addEventListener("click", function(e){ var i = e.target.closest("i[data-i]"); if(i && !$("qz-player").hidden){ QZ.revendo = false; qzMostrar(parseInt(i.getAttribute("data-i"), 10)); } });
+  function qzIrPara(v){
+    var i = parseInt(v, 10) - 1;
+    if(isNaN(i) || i < 0 || i >= QZ.qs.length){ qzTrilho(); return; }
+    if(i !== QZ.pos){ QZ.revendo = false; qzMostrar(i); }
+  }
+  $("qz-pag-n").addEventListener("change", function(){ qzIrPara(this.value); });
+  $("qz-pag-n").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); qzIrPara(this.value); this.blur(); } });
   function qzAlts(txt){
     var out = []; String(txt || "").split(/\r?\n/).forEach(function(ln){ var m = ln.match(/^\s*\(?([A-Ea-e])\s*[\)\.\-:\]]\s*(.*)$/); if(m){ out.push({l: m[1].toUpperCase(), t: m[2]}); } else if(out.length && ln.trim()){ out[out.length - 1].t += "\n" + ln.trim(); } });
     return out;
@@ -2899,7 +2909,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
   function qzMostrar(i){
     QZ.pos = i; QZ.letra = null; QZ.conf = null; var q = QZ.qs[i];
     $("qz-questao").hidden = false; $("qz-fim").hidden = true; $("qz-antes").hidden = false; $("qz-depois").hidden = true;
-    $("qz-pos").textContent = "Questão " + q.num + " · " + (i + 1) + " de " + QZ.qs.length;
+    $("qz-pos").textContent = "Questão " + q.num;   // s235: a posicao "n de N" mora no paginador
     var lq = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {};
     $("qz-banca").textContent = qzBanca(q.banca); $("qz-banca").title = q.banca || "";
     $("qz-tags").textContent = qzAssunto(q.tags, lq.tema);
@@ -2916,7 +2926,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     $("qz-figura").hidden = !$("qz-figura").textContent;
     $("qz-alts").innerHTML = qzAltsHtml(q, null, false, qzGrifosDe(q));
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
-    $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
+    $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
     // questao ja respondida (voltou pelo trilho ou pelo Anterior): mostra o que marcou e deixa alterar
     var r0 = QZ.resp[q.num];
     if(r0){
@@ -2924,7 +2934,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
       Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"); x.classList.toggle("marcada", l === r0.letra); x.classList.toggle("riscada", !!(r0.riscadas && r0.riscadas.indexOf(l) >= 0)); });
       qzMarcarAria();
       Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-c") === r0.confianca); });
-      $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Mudar resposta"; qzPode();
+      $("qz-responder").textContent = "Mudar resposta"; qzPode();
     }
     $("qz-ant").disabled = i === 0;
     qzTrilho(); qzIniciar(); qzBarra();
@@ -3064,7 +3074,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     var gab = String(q.gabarito || "").toUpperCase(), estudo = QZ.modoLista === "estudo";
     var riscadas = Array.prototype.map.call($("qz-alts").querySelectorAll(".qz-alt.riscada"), function(x){ return x.getAttribute("data-l"); });
     var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
-             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: qzComFlag(qzListaAtual()) && !!$("qz-flag").checked, respondido_em: qzAgora(),
+             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: false, respondido_em: qzAgora(),
              modo: estudo ? "estudo" : "prova"};
     var g = QZ.grifos[q.num]; if(g && Object.keys(g).some(function(k){ return g[k] && g[k].length; })){ r.grifos = g; }
     qzGravar(r).then(function(ok){ var st = $("qz-status");
@@ -3104,10 +3114,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     qzAnalise(); qzTrava(q, r);
   }
   function qzSalvarMeta(){
-    // racional e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
+    // racional da questao aberta: grava ao sair dela, por qualquer saida (s235: a marca de rever saiu)
     var q = QZ.qs[QZ.pos]; var r = q && QZ.resp[q.num]; if(!r){ return null; }
-    var rac = $("qz-racional").value.trim(); var flag = qzComFlag(qzListaAtual()) ? !!$("qz-flag").checked : !!r.flag;
-    if(rac !== (r.racional || "") || flag !== !!r.flag){ r.racional = rac; r.flag = flag; qzGravar(r); }
+    var rac = $("qz-racional").value.trim();
+    if(rac !== (r.racional || "")){ r.racional = rac; qzGravar(r); }
     return r;
   }
   // s211 (part-2): "cadeia com defeito" = um toque + motivo curto (o padrao do defeito de card no
@@ -3141,7 +3151,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:var(--esp-1) 0}
     // Estudo (s211): a proxima nao respondida, depois desta ou antes dela (as puladas); sem nenhuma, o fim
     qzDepoisDe(QZ.pos);
   });
-  function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-flag").checked = !!r.flag; $("qz-relogio").textContent = "--:--"; } }
+  function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-relogio").textContent = "--:--"; } }
   $("qz-rever").addEventListener("click", function(){ QZ.revendo = true; qzRever(0); });
   function qzFim(){
     qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false; qzBarra();

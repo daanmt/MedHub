@@ -1,0 +1,777 @@
+<title>Aulão de véspera · UERJ 2026</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:20px 0 8px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:24px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+ol.toc .qc{display:block}
+.qc a{color:var(--teal-ink)}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.banca{margin:16px 0;padding:12px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.banca p{margin:4px 0 0;color:var(--ink2)}
+.blbl{color:var(--plum-ink);font-weight:600;font-size:14px}
+.q{margin:14px 0 0;padding:12px 14px;background:var(--sunk);border-radius:var(--raio,10px)}
+.q p{margin:0 0 6px;color:var(--ink)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:32px;display:flex;align-items:center}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px solid var(--line2);color:var(--ink2)}
+.qc{color:var(--ink3);font-size:13px}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-t{fill:var(--ink);font-size:13px;font-weight:650}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-ok{fill:var(--teal-ink);font-size:12px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-er{fill:var(--carmine-ink);font-size:12px;font-weight:650}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-fase{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-q4{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-alvo{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.4}
+.fa-aviso{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.4}
+.fa-erro{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1.2}
+.fa-vidro{fill:none;stroke:var(--ink2);stroke-width:1.4}
+.fa-borda{fill:var(--sunk);stroke:var(--ink2);stroke-width:1}
+.fa-turvo{fill:var(--plum-wash)}
+.fa-limpido{fill:var(--card)}
+.fa-xanto{fill:var(--amber-wash)}
+.fa-misto{fill:var(--sunk)}
+.fa-cel{fill:var(--ink2)}
+.fa-lev{fill:var(--card);stroke:var(--ink2);stroke-width:1}
+.fa-trilho{fill:var(--line)}
+.fa-barra{fill:var(--plum)}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+p.base{color:var(--ink3);font-size:14px;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Véspera · leitura de 31/10 · 10 capítulos pelo peso da UERJ 2021-2025</p>
+  <h1>Aulão de véspera: os 10 temas que a UERJ mais cobra</h1>
+  <p class="sub">Cada capítulo traz o que a banca pergunta, o mecanismo que amarra os fatos, o fluxo de decisão, os cortes e as armadilhas que ela já usou. A ordem é o número de questões de 2021 a 2025, não a área.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho de hoje</h2>
+  <ol class="toc">
+    <li><a href="#cap-1">O paciente operado: REMIT, cicatrização, febre e profilaxia</a><span class="qc">CIR · 12 questões</span></li>
+    <li><a href="#cap-2">Tuberculose 360: um bacilo, quatro portas</a><span class="qc">CM, PED, CIR e MFC · 11 questões</span></li>
+    <li><a href="#cap-3">Trauma: a ordem salva antes da técnica</a><span class="qc">CIR · 11 questões</span></li>
+    <li><a href="#cap-4">Gestação de risco: diabetes gestacional e pré-eclâmpsia</a><span class="qc">GO · 11 questões</span></li>
+    <li><a href="#cap-5">O idoso inteiro: avaliação multidimensional</a><span class="qc">MFC · 10 questões</span></li>
+    <li><a href="#cap-6">MCCP e decisão compartilhada</a><span class="qc">MFC · 8 questões</span></li>
+    <li><a href="#cap-7">HIV e arboviroses</a><span class="qc">CM, GO, PED e MFC · 5 questões + 5 cruzadas</span></li>
+    <li><a href="#cap-8">Meningites e meningoencefalites</a><span class="qc">CM e PED · 5 questões + 2 cruzadas</span></li>
+    <li><a href="#cap-9">Polifarmácia, desprescrição e reação adversa</a><span class="qc">MFC · 5 questões</span></li>
+    <li><a href="#cap-10">Oncologia ortopédica e osteomielite</a><span class="qc">CM e PED · 3 questões</span></li>
+  </ol>
+  <p class="qc">Antes: <a href="#abertura">como a UERJ pergunta</a>. Depois: <a href="#fechamento">checklist das últimas 24 horas</a>.</p>
+</nav>
+
+<section class="sec" id="abertura">
+  <span class="kick">00 · Abertura</span>
+  <h2>Como a UERJ pergunta</h2>
+  <ul class="tp">
+    <li>100 questões, 20 por conteúdo, sempre na mesma ordem: CM, CIR, GO, PED, MFC. Quatro alternativas, etapa única de 5 horas: cerca de 3 minutos por questão. Aprova quem faz 50 ou mais <strong>e não zera nenhum conteúdo</strong>.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Até 2022 eram 60 questões (12 por área); de 2023 em diante, 100. As 420 questões de 2021 a 2025 são a régua deste aulão.</li>
+    <li>7 em cada 10 são vinheta clínica; imagem quase nunca (2 em 420). O caso é longo e a pergunta é curta: leia o comando antes do caso.</li>
+    <li>Cada bloco tem um sotaque. CM e PED pedem diagnóstico; GO pede conduta; CIR e MFC pedem <strong>conceito de livro</strong> (em CIR, 1 em cada 3 questões é definição pura).</li>
+    <li>Banca autorreferente: vale a bibliografia do edital (Harrison, Sabiston, Williams, Rezende, Febrasgo, Nelson, Gusso, Duncan) e os PCDT do Ministério da Saúde. Onde livro e diretriz divergem, cada capítulo marca o que a UERJ já aceitou.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Pegadinha que se repete</th><th>Pergunta antes de marcar</th></tr>
+    <tr><td>Comando negativo</td><td>Sublinhei EXCETO ou INCORRETA? Rotulei cada alternativa como V ou F?</td></tr>
+    <tr><td>Conceito trocado</td><td>O nome está certo e a definição, invertida? (medula x córtex da adrenal; SIFE com palavras erradas)</td></tr>
+    <tr><td>Fato certo, contexto errado</td><td>O fato vale para esta pessoa? (regra do DM prévio aplicada ao DMG; esquema do adulto na criança)</td></tr>
+    <tr><td>Gabarito antigo</td><td>A diretriz mudou? (TARV na TB-HIV, ILTB, xABCDE, antirretroviral na gestante)</td></tr>
+    <tr><td>Over-tratamento</td><td>O caso pede agir ou esperar? (febre de 24 h no pós-operatório; PA 150/100 sem sinal de gravidade)</td></tr>
+  </table></div>
+  <p class="lede">O resto do bloco de MFC (rastreamento, prevenção quaternária, probabilidade pré-teste, crônicas na APS, atributos da APS) está na aula <strong>UERJ de Bolso: MFC e a banca</strong>, que este aulão não repete. Aqui, MFC entra só por idoso, MCCP e polifarmácia.</p>
+</section>
+
+<section class="sec" id="cap-1">
+  <span class="kick">01 · Cirurgia · 12 questões em 2021-2025, todas as edições</span>
+  <h2>O paciente operado: REMIT, cicatrização, febre e profilaxia</h2>
+  <p class="lede">É a cirurgia de conceito da UERJ: ela pede a direção de um hormônio, a célula de uma fase, o dia de uma febre. Tudo se deduz de uma ideia: a cirurgia é uma agressão, e o corpo responde como presa em fuga.</p>
+  <h3>O mecanismo: a resposta ao trauma (REMIT)</h3>
+  <ul class="tp">
+    <li>A dor da ferida chega ao hipotálamo por duas vias. Rápida: simpático e <strong>medula</strong> adrenal (catecolaminas), mais renina-angiotensina-aldosterona. Lenta: ACTH (cortisol, pelo <strong>córtex</strong>), GH e ADH.</li>
+    <li>Meta única: manter volume, gerar glicose, perfundir o órgão nobre. Sobe quem gera glicose ou poupa água e sal (catecolaminas, cortisol, glucagon, GH, aldosterona, ADH). <strong>Desce a insulina</strong>, com T3, testosterona e estrogênio.</li>
+    <li>Fases de Cuthbertson: EBB (24-72 h; metabolismo e consumo de O2 caem; lactato) -&gt; FLOW (hipermetabólica; proteólise; balanço nitrogenado negativo) -&gt; anabólica (diurese, reconstrução).</li>
+    <li>Citocinas: o TNF-alfa chega primeiro e dá anorexia, proteólise e caquexia; a IL-6 acompanha a gravidade; a IL-10 é a principal anti-inflamatória.</li>
+    <li>A urina do trauma se deduz: o ADH segura água (pouca, densa); a aldosterona troca sódio por potássio e H+ (sódio baixo, potássio alto, ácida).<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+  <h3>Cicatrização: uma célula manda em cada fase</h3>
+  <div class="tw"><table>
+    <tr><th>Fase</th><th>Célula</th><th>Marca</th></tr>
+    <tr><td>Hemostasia</td><td>Plaqueta</td><td>Trombo; minutos</td></tr>
+    <tr><td>Inflamatória</td><td>Neutrófilo (a 1ª célula), depois macrófago (a fundamental)</td><td>Dias 1 a ~5</td></tr>
+    <tr><td>Proliferativa</td><td>Fibroblasto, endotélio, queratinócito</td><td>Granulação; pico de colágeno em 2-3 semanas</td></tr>
+    <tr><td>Maturação</td><td>Miofibroblasto</td><td>Contração; colágeno III vira I; meses a 1 ano</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Hidroxilar prolina e lisina dá força ao colágeno e exige <strong>vitamina C, O2 e ferro</strong>. A vitamina A reverte o efeito do corticoide; o zinco é cofator.</li>
+    <li>Infecção é a principal causa de falha. A ferida crônica fica presa na inflamação pelo <strong>biofilme</strong>: comunidade de bactérias numa matriz própria, tolerante a antibiótico.</li>
+    <li>Hipertrófica respeita a borda e regride; queloide passa da borda, não regride e tem base genética.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+  <h3>Febre pós-operatória: o dia decide</h3>
+  <div class="tw"><table>
+    <tr><th>Quando</th><th>Causa principal</th><th>Conduta</th></tr>
+    <tr><td>1º-3º dia</td><td>Atelectasia ou resposta inflamatória</td><td>Fisioterapia respiratória; sem cultura nem antibiótico</td></tr>
+    <tr><td>3º-5º dia</td><td>Pneumonia, infecção urinária</td><td>Procurar o foco</td></tr>
+    <tr><td>5º-7º dia</td><td>Infecção de ferida; deiscência ou fístula</td><td>Ferida: abrir, retirar pontos, lavar; antibiótico só com sinal sistêmico</td></tr>
+    <tr><td>Após o 7º dia</td><td>Abscesso intra-abdominal</td><td>Imagem e drenagem</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Profilaxia antibiótica serve para <strong>reduzir infecção de sítio cirúrgico</strong>, não para tratar. Cefazolina até 60 minutos antes da incisão; repique em cirurgia longa ou sangramento acima de 1.500 mL; não passar de 24 h. Alergia a betalactâmico: clindamicina ou vancomicina. Cólon e apêndice: cobrir anaeróbio (cefoxitina).</li>
+    <li>Ferida limpa só leva profilaxia com prótese ou tela; limpa-contaminada e contaminada levam; infectada recebe tratamento.</li>
+    <li>Íleo pós-operatório volta na ordem: delgado (0-24 h), estômago (24-48 h), cólon (48-72 h). Ruído hidroaéreo volta antes do trânsito; quem marca o fim é o flato.</li>
+    <li>Ileostomia: cerca de 500 mL/dia, pode passar de 1.000; desidrata e perde eletrólito. Colostomia: 100-200 mL/dia.</li>
+    <li>Laparoscopia: pneumoperitônio com CO2 a 12-15 mmHg; dor no ombro depois = CO2 irritando o frênico.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Febre nas primeiras 24 h com a alternativa "hemocultura e antibiótico": é over-tratamento; a UERJ 2022 deu atelectasia (a literatura recente questiona o elo, mas é o gabarito). E "a insulina sobe no trauma" é a falsa clássica do "todos aumentam, exceto".</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em 2023 foram quatro questões de REMIT e cicatrização numa prova só: primeira célula, efeito do TNF, biofilme, vitaminas. Quando as vitaminas vêm em par, julgue cada metade. Em 2024, queloide x hipertrófica; em 2025, o débito da ileostomia.</p></div>
+  <div class="q"><p>5º dia de colectomia, febre e saída de pus pela incisão.</p><details><summary>ver resposta</summary><div>Infecção de ferida: abrir, retirar pontos, drenar e lavar. Antibiótico só se houver sinal sistêmico. <span class="qc">2022/Q18</span></div></details></div>
+  <div class="q"><p>Qual hormônio cai na resposta endócrino-metabólica ao trauma?</p><details><summary>ver resposta</summary><div>Insulina (com T3, testosterona e estrogênio). Quem gera glicose sobe.</div></details></div>
+  <div class="q"><p>Cicatriz elevada que passou da borda da incisão e apareceu meses depois.</p><details><summary>ver resposta</summary><div>Queloide. A hipertrófica fica dentro da borda e regride. <span class="qc">2024/Q33</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-2">
+  <span class="kick">02 · CM, PED, CIR e MFC · 11 questões em 2022-2025, o único tema nos 4 blocos</span>
+  <h2>Tuberculose 360: um bacilo, quatro portas</h2>
+  <p class="lede">Muda a porta, muda o exame que decide; o bacilo e a lógica são os mesmos.</p>
+  <h3>A régua</h3>
+  <ul class="tp">
+    <li>Aeróbio estrito: prefere ápice e cavidade, onde há oxigênio; o cavitário transmite mais. Só a forma <strong>pulmonar e a laríngea</strong> transmitem; pleural e ganglionar isoladas, não.</li>
+    <li>Quem inala: cerca de 10% adoecem logo (primária: criança, pouco sintoma respiratório, adenomegalia hilar); 90% ficam em infecção latente (ILTB), que não transmite e reativa em 5-10% ao longo da vida.</li>
+  </ul>
+  <h3>As quatro portas</h3>
+  <div class="tw"><table>
+    <tr><th>Porta</th><th>O que decide</th><th>O que a UERJ cobrou</th></tr>
+    <tr><td>CM, adulto</td><td>TRM-TB no escarro (já mostra resistência à rifampicina); cultura com teste de sensibilidade no retratamento</td><td>TARV na meníngea com HIV (2024); HIV novo com PT positiva = tratar ILTB (2022)</td></tr>
+    <tr><td>PED, abaixo de 10 anos</td><td>Escore do MS, porque há pouco bacilo e a bacteriologia falha</td><td>Contato infantil (2025); adenomegalia crônica e esquema pediátrico (2024); meníngea miliar no lactente (2022)</td></tr>
+    <tr><td>CIR, o órgão</td><td>Tecido: granuloma caseoso, ADA, cultura do fragmento</td><td>ADA pleural (2024); TB intestinal ileocecal e obstrução (2023); ascite com gradiente baixo (2023)</td></tr>
+    <tr><td>MFC, o território</td><td>Busca ativa, contatos, tratamento observado</td><td>Contatos e sintomáticos respiratórios (2024); tosse crônica no tabagista idoso (2024)</td></tr>
+  </table></div>
+  <h3>Tratar</h3>
+  <ul class="tp">
+    <li>2RHZE/4RH = 6 meses. Meníngea e osteoarticular: 2RHZE/10RH = 12 meses, com corticoide na meníngea. Abaixo de 10 anos, RHZ <strong>sem etambutol</strong>: a neurite óptica não se monitora na criança.</li>
+    <li>Assinaturas: etambutol = olho (suspende); isoniazida = nervo periférico (piridoxina, não suspende); rifampicina = urina laranja (só orientar). Transaminase 5x sem sintoma, ou 3x com sintoma, suspende; volta uma droga por vez, pirazinamida por último.</li>
+    <li>TB-HIV: RIPE primeiro; TARV em até 7 dias, qualquer CD4, nunca no mesmo dia. Na meníngea, entre a 4ª e a 6ª semana (a reconstituição imune inflama o SNC). Dolutegravir em dose dobrada; inibidor de protease não combina com rifampicina.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Contatos e ILTB</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Contato de TB: o sintoma decide</b></p>
+    <svg viewBox="0 0 360 268" role="img" aria-label="Fluxo do contato de tuberculose pulmonar ou laríngea. Se tem sintoma, investigar TB doença com radiografia e escarro. Se assintomático com 10 anos ou mais: prova tuberculínica ou IGRA; 5 mm ou mais pede radiografia e, se normal, trata ILTB; abaixo de 5 mm repete em 8 semanas. Abaixo de 10 anos: prova tuberculínica e radiografia juntas; 5 mm ou mais com radiografia normal é ILTB, com ou sem BCG. Pessoa vivendo com HIV: trata ILTB sem prova tuberculínica, depois de excluir doença. Esquemas: 3HP no adulto e na PVHIV, 3RH ou 3HP abaixo de 10 anos, 4R no hepatopata e no recém-nascido.">
+      <rect class="fa-fase" x="40" y="6" width="280" height="30" rx="8"/>
+      <text class="fa-t" x="180" y="26" text-anchor="middle">Contato de TB pulmonar ou laríngea</text>
+      <line class="fa-li" x1="180" y1="36" x2="180" y2="50"/>
+      <line class="fa-li" x1="47" y1="50" x2="313" y2="50"/>
+      <line class="fa-li" x1="47" y1="50" x2="47" y2="55"/><path class="fa-seta" d="M47 62 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="135" y1="50" x2="135" y2="55"/><path class="fa-seta" d="M135 62 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="225" y1="50" x2="225" y2="55"/><path class="fa-seta" d="M225 62 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="313" y1="50" x2="313" y2="55"/><path class="fa-seta" d="M313 62 l-4 -7 h8 z"/>
+      <rect class="fa-aviso" x="6" y="62" width="82" height="134" rx="8"/>
+      <text class="fa-tc" x="47" y="80" text-anchor="middle">Sintomático</text>
+      <text class="fa-s" x="47" y="95" text-anchor="middle">qualquer idade</text>
+      <text class="fa-m" x="47" y="116" text-anchor="middle">investigar</text>
+      <text class="fa-m" x="47" y="131" text-anchor="middle">TB doença:</text>
+      <text class="fa-m" x="47" y="146" text-anchor="middle">RX + escarro</text>
+      <text class="fa-m" x="47" y="161" text-anchor="middle">(TRM-TB)</text>
+      <text class="fa-av" x="47" y="182" text-anchor="middle">não é ILTB</text>
+      <rect class="fa-fase" x="94" y="62" width="82" height="134" rx="8"/>
+      <text class="fa-tc" x="135" y="80" text-anchor="middle">≥ 10 anos</text>
+      <text class="fa-s" x="135" y="95" text-anchor="middle">assintomático</text>
+      <text class="fa-m" x="135" y="116" text-anchor="middle">PT ou IGRA</text>
+      <text class="fa-m" x="135" y="131" text-anchor="middle">≥ 5 mm: RX</text>
+      <text class="fa-m" x="135" y="146" text-anchor="middle">normal: ILTB</text>
+      <text class="fa-m" x="135" y="166" text-anchor="middle">&lt; 5 mm: repete</text>
+      <text class="fa-m" x="135" y="181" text-anchor="middle">em 8 semanas</text>
+      <rect class="fa-fase" x="184" y="62" width="82" height="134" rx="8"/>
+      <text class="fa-tc" x="225" y="80" text-anchor="middle">&lt; 10 anos</text>
+      <text class="fa-s" x="225" y="95" text-anchor="middle">assintomático</text>
+      <text class="fa-m" x="225" y="116" text-anchor="middle">PT + RX</text>
+      <text class="fa-m" x="225" y="131" text-anchor="middle">juntos</text>
+      <text class="fa-m" x="225" y="151" text-anchor="middle">≥ 5 mm e RX</text>
+      <text class="fa-m" x="225" y="166" text-anchor="middle">normal: ILTB,</text>
+      <text class="fa-m" x="225" y="181" text-anchor="middle">com ou sem BCG</text>
+      <rect class="fa-q4" x="272" y="62" width="82" height="134" rx="8"/>
+      <text class="fa-tc" x="313" y="80" text-anchor="middle">PVHIV</text>
+      <text class="fa-s" x="313" y="95" text-anchor="middle">assintomática</text>
+      <text class="fa-m" x="313" y="116" text-anchor="middle">trata ILTB</text>
+      <text class="fa-m" x="313" y="131" text-anchor="middle">sem PT</text>
+      <text class="fa-m" x="313" y="151" text-anchor="middle">(depois de</text>
+      <text class="fa-m" x="313" y="166" text-anchor="middle">excluir a</text>
+      <text class="fa-m" x="313" y="181" text-anchor="middle">doença)</text>
+      <line class="fa-li" x1="135" y1="196" x2="135" y2="205"/><path class="fa-seta" d="M135 212 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="225" y1="196" x2="225" y2="205"/><path class="fa-seta" d="M225 212 l-4 -7 h8 z"/>
+      <line class="fa-li" x1="313" y1="196" x2="313" y2="205"/><path class="fa-seta" d="M313 212 l-4 -7 h8 z"/>
+      <rect class="fa-q4" x="94" y="212" width="260" height="50" rx="8"/>
+      <text class="fa-t" x="224" y="232" text-anchor="middle">Esquema de ILTB</text>
+      <text class="fa-m" x="224" y="250" text-anchor="middle">3HP adulto e PVHIV · 3RH ou 3HP &lt; 10 a · 4R RN</text>
+    </svg>
+    <figcaption>Esquemático: o contato sintomático sai do fluxo da ILTB e vai investigar doença.<sup class="ref"><a href="#ref-4">4</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>PT de 5 mm ou mais trata contato, imunossuprimido, usuário de anti-TNF, cicatriz de TB no RX e pré-transplante; 10 mm ou mais, os outros riscos (silicose, diabetes, diálise). PVHIV com CD4 até 350 trata sem PT: a PT dela mente para baixo.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+    <li>4R (rifampicina por 4 meses) também é a escolha no hepatopata e acima de 50 anos; o RN de mãe bacilífera faz 4R sem PPD e só recebe a BCG no fim.<sup class="ref"><a href="#ref-4">4</a></sup></li>
+    <li>Escore da criança abaixo de 10 anos: 40 ou mais trata; 30-35 a critério; 25 ou menos investiga. RX normal tira 5 pontos; melhora com antibiótico comum tira 10.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Extrapulmonar</th><th>O líquido ou o tecido</th></tr>
+    <tr><td>Pleural (a mais comum sem HIV)</td><td>Exsudato linfocítico, ADA acima de 40, BAAR positivo em menos de 10%; biópsia pleural é o padrão-ouro</td></tr>
+    <tr><td>Peritoneal</td><td>Ascite com gradiente soro-ascite abaixo de 1,1, proteína alta, linfócitos, ADA alta; confirma por biópsia laparoscópica</td></tr>
+    <tr><td>Intestinal</td><td>Região ileocecal; granuloma caseoso (o do Crohn não é caseoso); complicação típica = obstrução</td></tr>
+    <tr><td>Ganglionar (a mais comum no HIV e na criança)</td><td>Cervical, endurecida, pode fistulizar; punção ou biópsia</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>TRM-TB positivo depois da alta não é recidiva: o teste acha DNA de bacilo morto, e o controle de cura é a baciloscopia mensal. BAAR negativo no líquido pleural ou ascítico não exclui TB.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em 2024 a TARV na meningite tuberculosa veio pela norma de 2019 (esperar 8 semanas); a vigente fala em 4-6 semanas. A resposta era a mesma: RIPE primeiro, TARV adiada.</p></div>
+  <div class="q"><p>Criança de 6 anos, contato domiciliar de bacilífero, sem sintomas. Primeiro passo?</p><details><summary>ver resposta</summary><div>PT e RX juntos. PT de 5 mm ou mais com RX normal = ILTB (3RH ou 3HP), qualquer que seja o tempo desde a BCG. <span class="qc">2025/Q70</span></div></details></div>
+  <div class="q"><p>PVHIV virgem de TARV começa RIPE por TB pulmonar. Quando entra a TARV?</p><details><summary>ver resposta</summary><div>Em até 7 dias, qualquer CD4, nunca no mesmo dia. Se fosse meníngea, entre a 4ª e a 6ª semana. <span class="qc">2024/Q17</span></div></details></div>
+  <div class="q"><p>Derrame pleural unilateral, exsudato linfocítico, ADA 70, BAAR negativo.</p><details><summary>ver resposta</summary><div>TB pleural até prova em contrário; a biópsia pleural confirma (granuloma). <span class="qc">2024/Q5</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-3">
+  <span class="kick">03 · Cirurgia · 11 questões em 2021-2025, todas as edições</span>
+  <h2>Trauma: a ordem salva antes da técnica</h2>
+  <p class="lede">A UERJ cobra trauma como sequência: o que vem primeiro. Quase toda alternativa errada é uma conduta certa no momento errado.</p>
+  <h3>A sequência</h3>
+  <ul class="tp">
+    <li>As provas até 2025 seguem o ATLS 10: ABCDE. A 11ª edição (setembro de 2025) virou <strong>xABCDE</strong>: o x é a hemorragia externa exsanguinante de extremidade, controlada com compressão ou torniquete antes da via aérea.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+    <li>A: via aérea com proteção cervical. B: ventilação. C: circulação e controle do sangramento. D: Glasgow e pupilas. E: exposição, evitando a hipotermia. Falhou uma letra, não se passa à próxima.</li>
+    <li>FAST, RX de tórax e de pelve entram durante o C. A avaliação secundária (SAMPLE, cabeça aos pés) só depois de estabilizar.</li>
+  </ul>
+  <h3>O tórax que mata no B e no C</h3>
+  <div class="tw"><table>
+    <tr><th>Lesão</th><th>Como se reconhece</th><th>Conduta</th></tr>
+    <tr><td>Pneumotórax hipertensivo</td><td>Clínico: choque, jugular túrgida, traqueia desviada, MV abolido, timpanismo</td><td>Descompressão imediata (agulha ou digital, 5º espaço), depois dreno. Nunca esperar RX</td></tr>
+    <tr><td>Pneumotórax aberto</td><td>Ferida de 2/3 ou mais do diâmetro da traqueia</td><td>Curativo de três pontas, dreno em outro local, reparo da parede</td></tr>
+    <tr><td>Hemotórax maciço</td><td>Macicez, jugular vazia, choque</td><td>Dreno; toracotomia se sair mais de 1.500 mL de imediato ou 200 mL/h ou mais por 2-4 h</td></tr>
+    <tr><td>Tamponamento</td><td>Tríade de Beck: hipotensão, jugular túrgida, bulhas abafadas</td><td>Toracotomia ou esternotomia; pericardiocentese só como resgate</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>A jugular separa os dois choques do tórax: <strong>túrgida</strong> no obstrutivo (hipertensivo, tamponamento), <strong>vazia</strong> no hemorrágico. O murmúrio vesicular separa o hipertensivo (abolido) do tamponamento (presente).<sup class="ref"><a href="#ref-6">6</a></sup></li>
+  </ul>
+  <h3>Choque: estimar a perda</h3>
+  <div class="tw"><table>
+    <tr><th>Classe</th><th>Perda</th><th>Marca</th><th>Reposição</th></tr>
+    <tr><td>I</td><td>Até 15% (até 750 mL)</td><td>Sinais normais</td><td>Observar</td></tr>
+    <tr><td>II</td><td>15-30% (750-1.500 mL)</td><td>Taquicardia, pressão de pulso estreita</td><td>Cristaloide</td></tr>
+    <tr><td>III</td><td>31-40% (1.500-2.000 mL)</td><td>Hipotensão, confusão</td><td>Cristaloide + sangue</td></tr>
+    <tr><td>IV</td><td>Acima de 40%</td><td>Letargia, choque profundo</td><td>Transfusão maciça</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Hipotensão é sinal tardio (perda acima de 30%). Betabloqueador e atleta escondem a taquicardia.</li>
+    <li>Tríade letal: hipotermia, acidose, coagulopatia. O frio desliga as enzimas da coagulação: o sangue fica <strong>incoagulável</strong>, não trombosa (UERJ 2022).</li>
+    <li>Choque neurogênico (lesão medular acima de T6) é o único com bradicardia e hipotensão.</li>
+    <li>Hipotensão permissiva (PAS 80-90) até controlar o sangramento, exceto no TCE. Ácido tranexâmico nas 3 primeiras horas.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+  </ul>
+  <h3>Glasgow</h3>
+  <ul class="tp">
+    <li>Soma das melhores respostas: ocular (até 4), verbal (até 5), motora (até 6), de 3 a 15. Leve 13-15, moderado 9-12, grave 8 ou menos = via aérea definitiva. A pupila se registra à parte.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Evisceração com o paciente falando: A e B estão pérvios, o próximo passo é o C (acesso venoso, volume). Correr para a laparotomia ou chamar "cobrir as vísceras" de etapa E erra a sequência (UERJ 2022).</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Tríade de Beck caiu em 2022 e em 2025; o hemotórax maciço, duas vezes em 2023 (tratamento inicial e débito do dreno para toracotomia); classe de choque, em 2021 e 2025. Ela dá a vinheta e pede o nome do achado ou o número do corte.</p></div>
+  <div class="q"><p>Facada no tórax, PA 70/40, jugular túrgida, murmúrio presente dos dois lados, bulhas abafadas.</p><details><summary>ver resposta</summary><div>Tamponamento (Beck): toracotomia. O murmúrio presente afasta o pneumotórax hipertensivo. <span class="qc">2025/Q25</span></div></details></div>
+  <div class="q"><p>O dreno de tórax devolve 1.700 mL na inserção.</p><details><summary>ver resposta</summary><div>Hemotórax maciço: toracotomia. <span class="qc">2023/Q37</span></div></details></div>
+  <div class="q"><p>FC 130, PA 85/60, confuso, após trauma. Classe e reposição?</p><details><summary>ver resposta</summary><div>Classe III (31-40%): cristaloide e hemoderivado já, controlando a fonte. <span class="qc">2025/Q29</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-4">
+  <span class="kick">04 · GO · 11 questões em 2021-2025, todas as edições</span>
+  <h2>Gestação de risco: diabetes gestacional e pré-eclâmpsia</h2>
+  <p class="lede">As duas doenças maternas que a UERJ cobra todo ano nascem da placenta: uma pela resistência à insulina que ela produz, a outra por uma placenta mal implantada. Saiu a placenta, a causa sai junto.</p>
+  <h3>DMG: o mecanismo</h3>
+  <ul class="tp">
+    <li>Hormônios placentários (lactogênio placentário, GH placentário, progesterona, prolactina, CRH) criam resistência à insulina crescente, com pico no 3º trimestre. Se o pâncreas não compensa, hiperglicemia.</li>
+    <li>A glicose atravessa a placenta; a insulina materna, não. O feto responde com <strong>hiperinsulinemia</strong>: macrossomia, distocia de ombro, hipoglicemia neonatal, desconforto respiratório (a insulina atrasa o surfactante), policitemia.</li>
+    <li>No longo prazo, a prole tem mais obesidade, DM2 e doença cardiovascular (UERJ 2024); a mãe, mais DM2.</li>
+    <li>O DMG surge depois da organogênese (5ª-8ª semana): malforma menos que o DM prévio.</li>
+  </ul>
+  <h3>DMG: o diagnóstico</h3>
+  <div class="tw"><table>
+    <tr><th>Momento</th><th>Exame</th><th>Leitura</th></tr>
+    <tr><td>1ª consulta (até 20 semanas)</td><td>Glicemia de jejum</td><td>Abaixo de 92: TOTG em 24-28 semanas · 92-125: DMG · 126 ou mais: DM prévio</td></tr>
+    <tr><td>24-28 semanas</td><td>TOTG 75 g</td><td><strong>Um valor basta</strong>: jejum 92-125, 1 h 180 ou mais, 2 h 153-199 = DMG. Jejum 126 ou 2 h 200 ou mais = DM prévio</td></tr>
+    <tr><td>Sem TOTG disponível</td><td>Jejum repetida</td><td>Jejum abaixo de 92 na 1ª consulta: repetir a jejum em 24-28 semanas</td></tr>
+    <tr><td>Pré-natal após 28 semanas</td><td>TOTG</td><td>O mais cedo possível</td></tr>
+    <tr><td>6 semanas pós-parto</td><td>TOTG 75 g, critérios da população geral</td><td>Jejum abaixo de 100 e 2 h abaixo de 140 = normal. HbA1c não vale</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Tratar: dieta, atividade e glicemia capilar (até 85% controlam só assim). Metas: jejum abaixo de 95, 1 h abaixo de 140, 2 h abaixo de 120.<sup class="ref"><a href="#ref-7">7</a></sup></li>
+    <li>Insulina se 2 ou mais medidas fora da meta em 7-14 dias, ou circunferência abdominal fetal no percentil 75 ou acima (29-33 semanas). A metformina cruza a placenta: alternativa, não 1ª escolha.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+    <li>Puerpério: DMG <strong>suspende</strong> a insulina (a causa saiu com a placenta); DM prévio reduz a dose.</li>
+  </ul>
+  <h3>Pré-eclâmpsia: o mecanismo</h3>
+  <ul class="tp">
+    <li>A 2ª onda de invasão do trofoblasto (2º trimestre, até a camada muscular das artérias espiraladas) falha: a placenta fica com resistência alta e fluxo baixo.</li>
+    <li>A placenta isquêmica libera sFlt-1 e endoglina, que sequestram VEGF e PlGF: lesão endotelial difusa, semanas antes da clínica (UERJ 2023). Cai o fator, não o receptor.</li>
+    <li>Endotélio lesado: menos prostaciclina, mais tromboxano. Por isso o AAS, que inibe o tromboxano da plaqueta, previne.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Situação</th><th>Regra</th></tr>
+    <tr><td>Diagnóstico</td><td>PA 140/90 ou mais após 20 semanas + proteinúria (300 mg/24 h ou relação proteína/creatinina de 0,3) ou lesão de órgão-alvo</td></tr>
+    <tr><td>Gravidade (basta um)</td><td>PA 160/110 ou mais; plaquetas abaixo de 100 mil; creatinina acima de 1,1; transaminases 2x; dor epigástrica; cefaleia ou escotomas; edema pulmonar. <strong>Proteinúria não é gravidade</strong></td></tr>
+    <tr><td>Sobreposta</td><td>Hipertensa crônica (antes de 20 semanas) com proteinúria nova ou piora depois de 20 semanas (UERJ 2025)</td></tr>
+    <tr><td>Prevenção</td><td>AAS 100-150 mg/dia de 12 a 36 semanas no alto risco (diabetes, PE prévia); cálcio se a dieta é pobre</td></tr>
+    <tr><td>Sulfato de magnésio</td><td>PE grave, iminência, eclâmpsia, HELLP; manter 24 h pós-parto. Também neuroproteção fetal abaixo de 32 semanas. Não baixa a PA</td></tr>
+    <tr><td>Resolução</td><td>Sem gravidade: 37 semanas · grave: 34 semanas · eclâmpsia ou HELLP: após estabilizar, qualquer idade gestacional<sup class="ref"><a href="#ref-9">9</a></sup></td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>Reduzir a insulina pela metade no puerpério é a conduta do DM prévio, não do DMG. E PA 150/100 sem sinal de gravidade não pede hidralazina venosa: anti-hipertensivo oral (metildopa) e reavaliação.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>O diagnóstico do DMG caiu quatro vezes em cinco anos (critérios do TOTG e da jejum, curva limítrofe, exame certo para a idade gestacional) e o AAS duas (diabética de alto risco, PE recorrente). Na "exceção" do sulfato (2022), julgue indicação por indicação: PE grave, iminência, eclâmpsia, HELLP e neuroproteção abaixo de 32 semanas entram; baixar a PA, não.</p></div>
+  <div class="q"><p>Jejum de 98 mg/dL na 1ª consulta, com 10 semanas.</p><details><summary>ver resposta</summary><div>DMG (92-125). Não precisa de TOTG para confirmar.</div></details></div>
+  <div class="q"><p>TOTG com 25 semanas: jejum 88, 1 h 182, 2 h 140.</p><details><summary>ver resposta</summary><div>DMG: um valor alterado (1 h de 180 ou mais) basta. <span class="qc">2021/Q36</span></div></details></div>
+  <div class="q"><p>Hipertensa crônica, 30 semanas, proteinúria nova, PA 150/95, sem sintomas, exames normais.</p><details><summary>ver resposta</summary><div>PE sobreposta sem gravidade: anti-hipertensivo oral e resolução com 37 semanas. <span class="qc">2025/Q59</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-5">
+  <span class="kick">05 · MFC · 10 questões em 2021-2025, 4 edições</span>
+  <h2>O idoso inteiro: avaliação multidimensional</h2>
+  <p class="lede">A consulta do idoso mede o que ele consegue decidir e fazer, não a lista de doenças. Diante de cada achado novo: é doença, é idade ou é remédio?</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Funcionalidade = decidir + executar</b></p>
+    <svg viewBox="0 0 360 250" role="img" aria-label="Esquema em pilares. No topo, funcionalidade, que é decidir mais executar. Pilar da autonomia, decidir: depende de cognição e humor, cai por incapacidade cognitiva (demência, depressão, delirium), mede-se com MEEM e AVD instrumentais. Pilar da independência, executar: depende de mobilidade e comunicação, cai por instabilidade, imobilidade, incontinência e incapacidade comunicativa, mede-se com Katz, Timed Up and Go, sussurro e Snellen. Na base, em volta dos dois, iatrogenia e insuficiência familiar derrubam os dois pilares.">
+      <rect class="fa-q4" x="8" y="8" width="344" height="34" rx="8"/>
+      <text class="fa-t" x="180" y="30" text-anchor="middle">Funcionalidade = decidir + executar</text>
+      <line class="fa-li" x1="92" y1="42" x2="92" y2="56"/>
+      <line class="fa-li" x1="268" y1="42" x2="268" y2="56"/>
+      <rect class="fa-fase" x="8" y="56" width="168" height="128" rx="8"/>
+      <text class="fa-t" x="92" y="76" text-anchor="middle">Autonomia (decidir)</text>
+      <text class="fa-m" x="92" y="96" text-anchor="middle">cognição e humor</text>
+      <text class="fa-s" x="92" y="116" text-anchor="middle">cai por</text>
+      <text class="fa-m" x="92" y="131" text-anchor="middle">incapacidade cognitiva:</text>
+      <text class="fa-m" x="92" y="146" text-anchor="middle">demência, depressão,</text>
+      <text class="fa-m" x="92" y="161" text-anchor="middle">delirium</text>
+      <text class="fa-ok" x="92" y="177" text-anchor="middle">MEEM; AVD instrumentais</text>
+      <rect class="fa-fase" x="184" y="56" width="168" height="128" rx="8"/>
+      <text class="fa-t" x="268" y="76" text-anchor="middle">Independência (executar)</text>
+      <text class="fa-m" x="268" y="96" text-anchor="middle">mobilidade e comunicação</text>
+      <text class="fa-s" x="268" y="116" text-anchor="middle">cai por</text>
+      <text class="fa-m" x="268" y="131" text-anchor="middle">instabilidade, imobilidade,</text>
+      <text class="fa-m" x="268" y="146" text-anchor="middle">incontinência, incapacidade</text>
+      <text class="fa-m" x="268" y="161" text-anchor="middle">comunicativa</text>
+      <text class="fa-ok" x="268" y="177" text-anchor="middle">Katz; TUG; sussurro; Snellen</text>
+      <line class="fa-li" x1="92" y1="184" x2="92" y2="196"/>
+      <line class="fa-li" x1="268" y1="184" x2="268" y2="196"/>
+      <rect class="fa-aviso" x="8" y="196" width="344" height="46" rx="8"/>
+      <text class="fa-av" x="180" y="215" text-anchor="middle">Em volta dos dois: iatrogenia e família</text>
+      <text class="fa-m" x="180" y="232" text-anchor="middle">remédio demais e cuidador ausente derrubam os dois pilares</text>
+    </svg>
+    <figcaption>Esquema (metáfora de pilares): a avaliação multidimensional mede função, não lista doenças.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
+  </figure>
+  <h3>Senescência x senilidade</h3>
+  <ul class="tp">
+    <li>Senescência é envelhecer sem doença: a TFG cai, a massa magra cai, a gordura sobe, há lapsos leves de memória e sarcopenia (UERJ 2024). Envelhecer não causa demência, incontinência nem depressão.</li>
+    <li>Creatinina normal no idoso não é rim normal: há menos músculo. Estime o clearance antes de dosar remédio.</li>
+    <li>A doença chega atípica: infecção sem febre, pneumonia pela taquipneia, e a <strong>confusão aguda</strong> é o grande alarme.</li>
+  </ul>
+  <h3>O roteiro da avaliação</h3>
+  <div class="tw"><table>
+    <tr><th>Domínio</th><th>Teste</th><th>Se alterado</th></tr>
+    <tr><td>Cognição</td><td>MEEM (30 pontos; corte ajustado pela escolaridade)</td><td>Investigar demência e causas reversíveis</td></tr>
+    <tr><td>Humor</td><td>Depressão nova no idoso</td><td>Antes do rótulo: TSH, cálcio, B12, sódio e revisão da receita (UERJ 2023)</td></tr>
+    <tr><td>AVD básicas</td><td>Katz: banho, vestir, banheiro, transferência, continência, comer</td><td>Grau de dependência</td></tr>
+    <tr><td>AVD instrumentais</td><td>Telefone, transporte, compras, cozinhar, remédio, dinheiro</td><td>Pode morar sozinho?</td></tr>
+    <tr><td>Mobilidade</td><td>Timed Up and Go (levantar, andar 3 m, voltar, sentar)</td><td>Risco de queda: fisioterapia</td></tr>
+    <tr><td>Visão e audição</td><td>Snellen; teste do sussurro</td><td>Otoscopia (cerume) antes da audiometria</td></tr>
+    <tr><td>Nutrição e suporte</td><td>Peso em toda consulta; com quem mora, quem cuida</td><td>Rede fraca = risco de violência</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li><strong>Queda</strong>: queda prévia é o maior preditor; benzodiazepínico é a classe que mais derruba. Prevenir: reduzir remédio de SNC, adaptar a casa, exercício de força e equilíbrio, corrigir a visão (UERJ 2025).</li>
+    <li><strong>Demência</strong>: rastreio etiológico com hemograma, função renal e hepática, TSH, cálcio, B12, folato, VDRL (HIV abaixo de 60 anos) e TC ou RM de crânio para todos (UERJ 2024).<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    <li><strong>Delirium</strong>: agudo, flutuante, desatento. Sempre tem causa orgânica: infecção, sódio, cálcio, glicemia, hipóxia, retenção urinária, fecaloma, remédio novo. No fim de vida (delirium terminal), explicar à família e controlar o sintoma (UERJ 2025).</li>
+    <li><strong>Violência</strong>: as mais comuns são negligência e abandono; dinheiro que some é violência financeira (UERJ 2021). Risco: dependência, isolamento, cuidador sobrecarregado ou dependente químico (UERJ 2023). Entrevistar idoso e cuidador em separado; comunicar é dever de todo cidadão.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Atribuir à idade o que é doença: incontinência, declínio cognitivo e depressão não são senescência. E cozinhar, telefonar, tomar remédio e cuidar do dinheiro são AVD instrumentais, não básicas.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em 2025 vieram três seguidas (Q81-83): delirium terminal, insônia no luto de idoso polimedicado, prevenção de queda. A alternativa certa escuta, revisa a receita e não medicaliza.</p></div>
+  <div class="q"><p>Idosa de 78 anos: "o dinheiro da aposentadoria some"; o neto administra o cartão.</p><details><summary>ver resposta</summary><div>Violência financeira, não negligência. <span class="qc">2021/Q56</span></div></details></div>
+  <div class="q"><p>Idoso com tristeza há 3 semanas, constipação e poliúria. Antes de diagnosticar depressão?</p><details><summary>ver resposta</summary><div>Dosar cálcio (hiperparatireoidismo) e TSH; rever a receita. <span class="qc">2023/Q91</span></div></details></div>
+  <div class="q"><p>Quais exames no rastreio etiológico de demência?</p><details><summary>ver resposta</summary><div>Hemograma, função renal e hepática, TSH, cálcio, B12, folato, VDRL (HIV abaixo de 60 anos) e neuroimagem. <span class="qc">2024/Q84</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-6">
+  <span class="kick">06 · MFC · 8 questões em 2021-2024, 4 edições</span>
+  <h2>MCCP e decisão compartilhada: ler a cena da consulta</h2>
+  <p class="lede">A banca descreve um médico fazendo algo numa consulta e pede o componente do método clínico centrado na pessoa (MCCP). O verbo da cena aponta a resposta.</p>
+  <h3>Os componentes, nas duas versões</h3>
+  <div class="tw"><table>
+    <tr><th>Nº</th><th>Revisada: 4 (Gusso)</th><th>Original: 6 (Duncan)</th></tr>
+    <tr><td>1º</td><td>Explorar a saúde, a doença e a experiência da doença (SIFE)</td><td>Explorar a doença e a experiência da doença</td></tr>
+    <tr><td>2º</td><td>Entender a pessoa como um todo</td><td>Igual</td></tr>
+    <tr><td>3º</td><td>Elaborar um plano conjunto de manejo</td><td>Elaborar um projeto comum de manejo</td></tr>
+    <tr><td>4º</td><td>Intensificar a relação pessoa-médico</td><td>Incorporar prevenção e promoção</td></tr>
+    <tr><td>5º</td><td>Não existe</td><td>Fortalecer a relação médico-pessoa</td></tr>
+    <tr><td>6º</td><td>Não existe</td><td>Ser realista: tempo, recursos, equipe</td></tr>
+  </table></div>
+  <p class="lede">Os três primeiros têm o mesmo lugar nas duas versões; o 4º muda.<sup class="ref"><a href="#ref-10">10</a></sup><sup class="ref"><a href="#ref-13">13</a></sup></p>
+  <h3>O mecanismo: doença e experiência divergem</h3>
+  <ul class="tp">
+    <li><strong>SIFE</strong> (1º componente): Sentimentos (o que teme), Ideias (o que acha que tem), Funções (o efeito no dia a dia), Expectativas (o que espera da consulta).</li>
+    <li>Doença é o diagnóstico; experiência é como a pessoa vive o adoecer. Elas divergem: o hipertenso sem sintoma não adere porque não se sente doente; a queixa com exames normais é experiência sem doença achada.</li>
+    <li>O 1º pergunta o efeito <em>desta doença</em> na vida; o 2º pergunta <em>sobre a vida</em> (família, ciclo de vida, trabalho, fé), com genograma e ecomapa.</li>
+    <li>O 3º é o encontro de dois especialistas (Tuckett): o médico na doença, a pessoa na própria experiência. Combinam problemas, metas e papéis.</li>
+  </ul>
+  <h3>Decidir junto</h3>
+  <div class="tw"><table>
+    <tr><th>Modelo</th><th>Quem decide</th><th>O erro</th></tr>
+    <tr><td>Paternalista</td><td>O médico</td><td>Plano que a pessoa não segue</td></tr>
+    <tr><td>Informativo</td><td>A pessoa, sozinha, diante dos dados</td><td>O médico se omite de recomendar: é abandono</td></tr>
+    <tr><td>Compartilhado</td><td>Os dois: evidência e recomendação + valores e contexto</td><td>Pede tempo e clareza</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Cabe quando há mais de uma opção razoável e a escolha depende dos valores da pessoa: mamografia aos 40-49 anos, PSA a pedido, antidepressivo na depressão leve.</li>
+    <li>Quem sabe e não faz precisa de decisão compartilhada e de explorar crenças e contexto; receita nova e encaminhamento precoce são os distratores (UERJ 2023).</li>
+    <li>Más notícias e fim de vida (UERJ 2023): explorar o que a pessoa já entende e o que sente antes de informar.</li>
+    <li>Grupo educativo (UERJ 2024): dialógico, troca de experiências, qualquer profissional conduz; "palestra" e "produtividade" marcam a errada.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Pergunta sobre a família</th><th>Ferramenta</th></tr>
+    <tr><td>Crise acidental ou normativa</td><td>Ciclo de vida familiar (UERJ 2022)</td></tr>
+    <tr><td>Gerações e padrão de doença</td><td>Genograma, ao menos 3 gerações</td></tr>
+    <tr><td>Rede de apoio fora de casa</td><td>Ecomapa</td></tr>
+    <tr><td>Satisfação com a família</td><td>APGAR familiar</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Como a dor tem atrapalhado o trabalho?" é Função, 1º componente, não contexto (2º). E "o 4º componente é prevenção e promoção" só vale na versão de seis (Duncan).</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Quando a alternativa relacional (acolher, explorar, decidir junto) e a programática (protocolo, encaminhar) cabem as duas, a UERJ premia a relacional. Três questões de MCCP numa prova só em 2023.</p></div>
+  <div class="q"><p>O médico pergunta o que a paciente acha que está causando a dor.</p><details><summary>ver resposta</summary><div>1º componente, Ideias (SIFE).</div></details></div>
+  <div class="q"><p>O médico monta o genograma e pergunta sobre o emprego e a igreja.</p><details><summary>ver resposta</summary><div>2º componente: entender a pessoa como um todo.</div></details></div>
+  <div class="q"><p>O médico lista as opções, inclusive esperar, e diz "a senhora decide", sem recomendar.</p><details><summary>ver resposta</summary><div>Modelo informativo, não compartilhado: o médico mantém o dever de recomendar.</div></details></div>
+</section>
+
+<section class="sec" id="cap-7">
+  <span class="kick">07 · CM, GO, PED e MFC · 5 questões próprias + 5 cruzadas, 2022-2025</span>
+  <h2>HIV e arboviroses: infecção que cai em qualquer bloco</h2>
+  <p class="lede">O HIV aparece de carona: na TB, na meningite, na gestante, no recém-nascido, na diarreia. As arboviroses chegam como surto na APS e como diagnóstico diferencial de febre.</p>
+  <h3>HIV: a régua</h3>
+  <ul class="tp">
+    <li>Retrovírus que destrói o linfócito CD4. AIDS = CD4 abaixo de 200 ou doença definidora (pneumocistose, neurotoxoplasmose, neurocriptococose, TB, candidíase esofágica, Kaposi). Candidíase oral e zóster não definem.</li>
+    <li>Diagnóstico: 2 testes reagentes de fabricantes ou métodos diferentes. O teste rápido tem janela longa: não serve para a infecção aguda (aí, carga viral).</li>
+    <li>TARV para todos, com qualquer CD4: <strong>tenofovir + lamivudina + dolutegravir</strong> (UERJ 2024, no bloco de MFC).</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>CD4</th><th>Profilaxia</th></tr>
+    <tr><td>Até 350 (ou contato de TB)</td><td>ILTB, de preferência 3HP</td></tr>
+    <tr><td>Até 200</td><td>Pneumocistose: SMX-TMP</td></tr>
+    <tr><td>Até 100</td><td>Toxoplasmose: o mesmo SMX-TMP cobre</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Oportunista no SNC adia a TARV 4-6 semanas (TB meníngea, criptococose) para a reconstituição imune não inflamar o cérebro. Fora do SNC, começa cedo.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+  </ul>
+  <h3>Gestante e criança exposta</h3>
+  <div class="tw"><table>
+    <tr><th>Situação</th><th>Conduta</th></tr>
+    <tr><td>Gestante</td><td>TDF + 3TC + DTG em <strong>qualquer idade gestacional</strong></td></tr>
+    <tr><td>Carga viral na 34ª semana indetectável</td><td>Via obstétrica, só a TARV</td></tr>
+    <tr><td>Detectável, abaixo de 1.000 cópias</td><td>AZT venoso no parto; via obstétrica</td></tr>
+    <tr><td>1.000 ou mais, ou desconhecida</td><td>AZT venoso + cesárea</td></tr>
+    <tr><td>Recém-nascido</td><td>Profilaxia em até 4 h, por 4 semanas. Alto risco: abaixo de 34 semanas, só AZT; 34-37, AZT + 3TC + nevirapina; 37 ou mais, AZT + 3TC + raltegravir</td></tr>
+    <tr><td>Aleitamento</td><td>Contraindicado. Exposição pelo leite: suspender e investigar a criança</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>O anticorpo da mãe atravessa a placenta: o diagnóstico da criança é <strong>virológico</strong> (carga viral), nunca sorológico no início.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+  </ul>
+  <h3>Arboviroses</h3>
+  <ul class="tp">
+    <li>Dengue: o choque vem do <strong>extravasamento de plasma</strong> quando a febre cede (fase crítica), não do sangramento. O hematócrito que sobe é o sinal.</li>
+    <li>NS1 ou PCR até o 5º dia; IgM a partir do 6º.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Grupo</th><th>Quem</th><th>Conduta</th></tr>
+    <tr><td>A</td><td>Sem alarme, sem risco</td><td>Casa; via oral, 60 mL/kg/dia</td></tr>
+    <tr><td>B</td><td>Sangramento de pele ou laço positivo; abaixo de 2 ou acima de 65 anos, gestante, comorbidade</td><td>Hemograma obrigatório antes de liberar</td></tr>
+    <tr><td>C</td><td>Sinal de alarme: dor abdominal contínua, vômitos persistentes, sangramento de mucosa, letargia, hepatomegalia, hematócrito subindo</td><td>Internar; soro 10 mL/kg na 1ª hora</td></tr>
+    <tr><td>D</td><td>Choque, sangramento grave, disfunção de órgão</td><td>UTI; 20 mL/kg em 20 minutos, até 3 vezes</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Sem AINE, AAS nem corticoide em nenhum grupo.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Chikungunya: poliartralgia simétrica que incapacita e febre alta; sem AINE na fase aguda. Zika: exantema que coça, conjuntivite não purulenta, pouca febre; microcefalia na gestação.</li>
+    <li>Sorologias de dengue, chikungunya e zika negativas num surto febril: pensar em <strong>Oropouche</strong>, transmitida pelo maruim (Culicoides paraensis); os sintomas voltam em até 60% dos casos em 1-2 semanas; confirma por RT-qPCR; notificação imediata (UERJ 2025).<sup class="ref"><a href="#ref-16">16</a></sup></li>
+    <li>Surto na APS (UERJ 2024): classificar o risco de todo febril na chegada, pelos grupos, e notificar o caso suspeito.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Dar 20 mL/kg em 20 minutos a quem só tem sinal de alarme: isso é grupo D. E "dolutegravir proibido no 1º trimestre" é regra antiga; hoje vale em qualquer idade gestacional.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>O HIV entrou de carona em cinco questões de outros temas: PT positiva no HIV recém-diagnosticado (2022), criptococose com TARV irregular (2023), TARV na meníngea (2024), isosporíase (2025), exposição pelo leite (2025). Leia o CD4 e a oportunista antes da droga.</p></div>
+  <div class="q"><p>Gestante com HIV, carga viral de 5.000 cópias na 34ª semana.</p><details><summary>ver resposta</summary><div>AZT venoso no parto + cesárea.</div></details></div>
+  <div class="q"><p>Dengue em observação; surge dor abdominal contínua e vômitos persistentes.</p><details><summary>ver resposta</summary><div>Grupo C: internar e dar soro 10 mL/kg na 1ª hora.</div></details></div>
+  <div class="q"><p>PVHIV com CD4 de 150, sem sintoma respiratório.</p><details><summary>ver resposta</summary><div>SMX-TMP (pneumocistose) e tratar ILTB (CD4 até 350) depois de excluir TB ativa. Toxoplasmose ainda não (até 100).</div></details></div>
+</section>
+
+<section class="sec" id="cap-8">
+  <span class="kick">08 · CM e PED · 5 questões próprias + 2 cruzadas, 2021-2024</span>
+  <h2>Meningites e meningoencefalites: o líquor conta a etiologia</h2>
+  <p class="lede">Três perguntas resolvem a maioria: quanto tempo (agudo ou crônico), consciência preservada ou não (meningite ou encefalite), e o que o líquor mostra.</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Quatro tubos de líquor, quatro etiologias</b></p>
+    <svg viewBox="0 0 360 272" role="img" aria-label="Quatro tubos de líquor lado a lado. Bacteriana: turvo, mais de 500 células com polimorfonucleares, glicose muito baixa, proteína muito alta, pressão alta. Viral: límpido, 5 a 100 células linfomonocitárias, glicose normal, proteína normal, pressão normal. Tuberculosa: xantocrômico, 5 a 500 células linfomonocitárias, glicose muito baixa, proteína alta, pressão alta. Fúngica: límpido ou turvo, 5 a 500 células linfomonocitárias e leveduras encapsuladas, glicose baixa, proteína alta, pressão muito alta. Barras em posição relativa, esquemáticas.">
+      <rect class="fa-borda" x="30" y="10" width="34" height="5" rx="2"/>
+      <path class="fa-turvo" d="M35 40 V96 A12 12 0 0 0 59 96 V40 Z"/>
+      <path class="fa-vidro" d="M34 15 V96 A13 13 0 0 0 60 96 V15"/>
+      <circle class="fa-cel" cx="40" cy="48" r="1.6"/><circle class="fa-cel" cx="47" cy="45" r="1.6"/><circle class="fa-cel" cx="54" cy="50" r="1.6"/><circle class="fa-cel" cx="42" cy="58" r="1.6"/><circle class="fa-cel" cx="50" cy="60" r="1.6"/><circle class="fa-cel" cx="56" cy="64" r="1.6"/><circle class="fa-cel" cx="39" cy="70" r="1.6"/><circle class="fa-cel" cx="46" cy="72" r="1.6"/><circle class="fa-cel" cx="53" cy="76" r="1.6"/><circle class="fa-cel" cx="41" cy="83" r="1.6"/><circle class="fa-cel" cx="49" cy="86" r="1.6"/><circle class="fa-cel" cx="56" cy="90" r="1.6"/><circle class="fa-cel" cx="44" cy="96" r="1.6"/><circle class="fa-cel" cx="51" cy="101" r="1.6"/>
+      <rect class="fa-borda" x="118" y="10" width="34" height="5" rx="2"/>
+      <path class="fa-limpido" d="M123 40 V96 A12 12 0 0 0 147 96 V40 Z"/>
+      <path class="fa-vidro" d="M122 15 V96 A13 13 0 0 0 148 96 V15"/>
+      <line class="fa-li" x1="123" y1="40" x2="147" y2="40"/>
+      <circle class="fa-cel" cx="130" cy="62" r="1.6"/><circle class="fa-cel" cx="140" cy="80" r="1.6"/><circle class="fa-cel" cx="134" cy="97" r="1.6"/>
+      <rect class="fa-borda" x="208" y="10" width="34" height="5" rx="2"/>
+      <path class="fa-xanto" d="M213 40 V96 A12 12 0 0 0 237 96 V40 Z"/>
+      <path class="fa-vidro" d="M212 15 V96 A13 13 0 0 0 238 96 V15"/>
+      <circle class="fa-cel" cx="219" cy="52" r="1.6"/><circle class="fa-cel" cx="230" cy="58" r="1.6"/><circle class="fa-cel" cx="222" cy="70" r="1.6"/><circle class="fa-cel" cx="232" cy="78" r="1.6"/><circle class="fa-cel" cx="218" cy="86" r="1.6"/><circle class="fa-cel" cx="228" cy="94" r="1.6"/><circle class="fa-cel" cx="224" cy="102" r="1.6"/>
+      <rect class="fa-borda" x="296" y="10" width="34" height="5" rx="2"/>
+      <path class="fa-misto" d="M301 40 V96 A12 12 0 0 0 325 96 V40 Z"/>
+      <path class="fa-vidro" d="M300 15 V96 A13 13 0 0 0 326 96 V15"/>
+      <circle class="fa-lev" cx="308" cy="54" r="3.2"/><circle class="fa-cel" cx="308" cy="54" r="1.2"/>
+      <circle class="fa-lev" cx="318" cy="72" r="3.2"/><circle class="fa-cel" cx="318" cy="72" r="1.2"/>
+      <circle class="fa-lev" cx="309" cy="92" r="3.2"/><circle class="fa-cel" cx="309" cy="92" r="1.2"/>
+      <circle class="fa-cel" cx="319" cy="50" r="1.6"/><circle class="fa-cel" cx="306" cy="74" r="1.6"/><circle class="fa-cel" cx="319" cy="98" r="1.6"/>
+      <text class="fa-t" x="47" y="128" text-anchor="middle">Bacteriana</text>
+      <text class="fa-t" x="135" y="128" text-anchor="middle">Viral</text>
+      <text class="fa-t" x="225" y="128" text-anchor="middle">Tuberculosa</text>
+      <text class="fa-t" x="313" y="128" text-anchor="middle">Fúngica</text>
+      <text class="fa-s" x="47" y="143" text-anchor="middle">turvo</text>
+      <text class="fa-s" x="135" y="143" text-anchor="middle">límpido</text>
+      <text class="fa-s" x="225" y="143" text-anchor="middle">xantocrômico</text>
+      <text class="fa-s" x="313" y="143" text-anchor="middle">límpido ou turvo</text>
+      <text class="fa-m" x="47" y="160" text-anchor="middle">&gt; 500, PMN</text>
+      <text class="fa-m" x="135" y="160" text-anchor="middle">5-100, linfo</text>
+      <text class="fa-m" x="225" y="160" text-anchor="middle">5-500, linfo</text>
+      <text class="fa-m" x="313" y="160" text-anchor="middle">5-500, linfo</text>
+      <text class="fa-s" x="12" y="180">glicose</text>
+      <rect class="fa-trilho" x="12" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="12" y="184" width="10" height="6" rx="3"/>
+      <rect class="fa-trilho" x="100" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="184" width="52" height="6" rx="3"/>
+      <rect class="fa-trilho" x="190" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="190" y="184" width="10" height="6" rx="3"/>
+      <rect class="fa-trilho" x="278" y="184" width="70" height="6" rx="3"/><rect class="fa-barra" x="278" y="184" width="28" height="6" rx="3"/>
+      <text class="fa-s" x="12" y="206">proteína</text>
+      <rect class="fa-trilho" x="12" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="12" y="210" width="64" height="6" rx="3"/>
+      <rect class="fa-trilho" x="100" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="210" width="14" height="6" rx="3"/>
+      <rect class="fa-trilho" x="190" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="190" y="210" width="48" height="6" rx="3"/>
+      <rect class="fa-trilho" x="278" y="210" width="70" height="6" rx="3"/><rect class="fa-barra" x="278" y="210" width="42" height="6" rx="3"/>
+      <text class="fa-s" x="12" y="232">pressão de abertura</text>
+      <rect class="fa-trilho" x="12" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="12" y="236" width="48" height="6" rx="3"/>
+      <rect class="fa-trilho" x="100" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="100" y="236" width="20" height="6" rx="3"/>
+      <rect class="fa-trilho" x="190" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="190" y="236" width="48" height="6" rx="3"/>
+      <rect class="fa-trilho" x="278" y="236" width="70" height="6" rx="3"/><rect class="fa-barra" x="278" y="236" width="66" height="6" rx="3"/>
+      <text class="fa-s" x="180" y="264" text-anchor="middle">barras: posição relativa (esquema), não valor medido</text>
+    </svg>
+    <figcaption>Esquemático; o círculo com halo no tubo fúngico é a levedura encapsulada da tinta da China.<sup class="ref"><a href="#ref-17">17</a></sup></figcaption>
+  </figure>
+  <h3>Antes da punção</h3>
+  <ul class="tp">
+    <li>Até 4 semanas: vírus e bactéria. Mais de 4 semanas: TB e fungo.</li>
+    <li>TC antes da punção só com critério: imunossupressão, doença prévia do SNC, convulsão recente, papiledema, consciência alterada, déficit focal. Sem critério, punciona direto. Hemocultura e antibiótico não esperam a TC.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Viragem: nas primeiras 24-48 h a bacteriana pode vir linfomonocitária.</li>
+  </ul>
+  <h3>Bacteriana: agente pela idade, esquema pela bibliografia</h3>
+  <div class="tw"><table>
+    <tr><th>Idade</th><th>Agentes</th><th>Empírico</th></tr>
+    <tr><td>Abaixo de 2 meses</td><td>Estreptococo do grupo B, E. coli, Listeria</td><td>Ampicilina + cefotaxima (ou aminoglicosídeo)</td></tr>
+    <tr><td>Acima de 3 meses e adulto</td><td>Pneumococo, meningococo, Hib</td><td>Ceftriaxona; <strong>na UERJ, + vancomicina</strong> (Harrison e Nelson)</td></tr>
+    <tr><td>Idoso, gestante, imunossuprimido</td><td>Os mesmos + Listeria</td><td>+ ampicilina (a Listeria resiste à cefalosporina)</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Gram: diplococo positivo = pneumococo; diplococo negativo = meningococo. O agente mais comum é o meningococo para o MS e o pneumococo para o Harrison, que é a bibliografia da UERJ.<sup class="ref"><a href="#ref-19">19</a></sup></li>
+    <li>Dexametasona antes ou junto da 1ª dose do antibiótico, em pneumococo e Hib: o antibiótico lisa a bactéria e a lise inflama. Antibiótico já correndo, a janela passou.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Quimioprofilaxia só para meningococo e Hib, nunca pneumococo. Rifampicina (meningococo: 12/12 h por 2 dias); gestante: ceftriaxona 250 mg IM, dose única; adulto não gestante: ciprofloxacino, dose única. O caso tratado com ceftriaxona já está coberto (UERJ 2021).<sup class="ref"><a href="#ref-5">5</a></sup></li>
+    <li>Precaução de gotículas até 24 h de antibiótico; notificação imediata.</li>
+  </ul>
+  <h3>Encefalite herpética, tuberculosa e criptocócica</h3>
+  <div class="tw"><table>
+    <tr><th>Etiologia</th><th>Pista</th><th>Conduta</th></tr>
+    <tr><td>Herpética (HSV-1)</td><td>Febre + comportamento alterado, crise, afasia; RM com lesão temporal assimétrica; líquor linfocítico, glicose normal, pode ter hemácias</td><td>Aciclovir EV 10 mg/kg 8/8 h por 14-21 dias, já na suspeita. PCR negativo precoce não suspende: repetir em 3-5 dias</td></tr>
+    <tr><td>Tuberculosa</td><td>Semanas; par craniano (sobretudo o VI); glicose muito baixa</td><td>2RHZE/10RH + corticoide (cap. 2)</td></tr>
+    <tr><td>Criptocócica (CD4 abaixo de 100)</td><td>Hipertensão intracraniana, pressão de abertura muito alta, tinta da China, antígeno criptocócico</td><td>Anfotericina + flucitosina; punções de alívio; <strong>sem corticoide</strong>; TARV após 4-6 semanas</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>Corticoide na criptocócica aumenta a mortalidade: é o oposto do pneumococo. E "herpes só acima de 50 anos" está errado: é qualquer idade, inclusive na criança (UERJ 2022).</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Em 2024 a UERJ deu ceftriaxona + vancomicina ao lactente acima de 3 meses: a bibliografia é o Nelson, não o Guia do MS.<sup class="ref"><a href="#ref-20">20</a></sup> Em 2023 vieram a herpética e a criptocócica na mesma prova.</p></div>
+  <div class="q"><p>Gestante, contato próximo de doença meningocócica.</p><details><summary>ver resposta</summary><div>Ceftriaxona 250 mg IM, dose única. <span class="qc">2021/Q8</span></div></details></div>
+  <div class="q"><p>Lactente de 8 meses com meningite bacteriana. Empírico na UERJ?</p><details><summary>ver resposta</summary><div>Ceftriaxona (ou cefotaxima) + vancomicina. <span class="qc">2024/Q73</span></div></details></div>
+  <div class="q"><p>Adulto, febre e confusão há 2 dias, crise focal; líquor com 80 células linfomonocitárias, glicose normal, hemácias.</p><details><summary>ver resposta</summary><div>Encefalite herpética: aciclovir EV já, RM de encéfalo e PCR para HSV no líquor. <span class="qc">2023/Q10</span></div></details></div>
+</section>
+
+<section class="sec" id="cap-9">
+  <span class="kick">09 · MFC · 5 questões em 2021-2025, 4 edições</span>
+  <h2>Polifarmácia, desprescrição e reação adversa</h2>
+  <p class="lede">Polifarmácia é um número; a cascata de prescrição é o mecanismo. No idoso polimedicado, todo sintoma novo é efeito de remédio até prova em contrário.</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Cascata de prescrição</b></p>
+    <svg viewBox="0 0 360 240" role="img" aria-label="Três cascatas de prescrição em linha. IECA causa tosse seca, que recebe xarope. Tiazídico causa ácido úrico alto, que recebe alopurinol. Pioglitazona causa edema de membros inferiores, que recebe diurético. O efeito adverso no meio é lido como doença nova; o segundo remédio é o erro. Abaixo, o corte certo: rever o primeiro remédio, não tratar o efeito.">
+      <text class="fa-s" x="58" y="16" text-anchor="middle">1º remédio</text>
+      <text class="fa-s" x="180" y="16" text-anchor="middle">efeito lido como doença</text>
+      <text class="fa-s" x="302" y="16" text-anchor="middle">2º remédio</text>
+      <rect class="fa-fase" x="8" y="26" width="100" height="40" rx="8"/><text class="fa-t" x="58" y="50" text-anchor="middle">IECA</text>
+      <line class="fa-li" x1="108" y1="46" x2="123" y2="46"/><path class="fa-seta" d="M130 46 l-7 -4 v8 z"/>
+      <rect class="fa-aviso" x="130" y="26" width="100" height="40" rx="8"/><text class="fa-av" x="180" y="50" text-anchor="middle">tosse seca</text>
+      <line class="fa-li" x1="230" y1="46" x2="245" y2="46"/><path class="fa-seta" d="M252 46 l-7 -4 v8 z"/>
+      <rect class="fa-erro" x="252" y="26" width="100" height="40" rx="8"/><text class="fa-er" x="302" y="50" text-anchor="middle">xarope</text>
+      <rect class="fa-fase" x="8" y="84" width="100" height="40" rx="8"/><text class="fa-t" x="58" y="108" text-anchor="middle">Tiazídico</text>
+      <line class="fa-li" x1="108" y1="104" x2="123" y2="104"/><path class="fa-seta" d="M130 104 l-7 -4 v8 z"/>
+      <rect class="fa-aviso" x="130" y="84" width="100" height="40" rx="8"/><text class="fa-av" x="180" y="108" text-anchor="middle">ácido úrico alto</text>
+      <line class="fa-li" x1="230" y1="104" x2="245" y2="104"/><path class="fa-seta" d="M252 104 l-7 -4 v8 z"/>
+      <rect class="fa-erro" x="252" y="84" width="100" height="40" rx="8"/><text class="fa-er" x="302" y="108" text-anchor="middle">alopurinol</text>
+      <rect class="fa-fase" x="8" y="142" width="100" height="40" rx="8"/><text class="fa-t" x="58" y="166" text-anchor="middle">Pioglitazona</text>
+      <line class="fa-li" x1="108" y1="162" x2="123" y2="162"/><path class="fa-seta" d="M130 162 l-7 -4 v8 z"/>
+      <rect class="fa-aviso" x="130" y="142" width="100" height="40" rx="8"/><text class="fa-av" x="180" y="166" text-anchor="middle">edema de MMII</text>
+      <line class="fa-li" x1="230" y1="162" x2="245" y2="162"/><path class="fa-seta" d="M252 162 l-7 -4 v8 z"/>
+      <rect class="fa-erro" x="252" y="142" width="100" height="40" rx="8"/><text class="fa-er" x="302" y="166" text-anchor="middle">diurético</text>
+      <line class="fa-li" x1="58" y1="182" x2="58" y2="197"/><path class="fa-seta" d="M58 204 l-4 -7 h8 z"/>
+      <rect class="fa-alvo" x="8" y="204" width="344" height="30" rx="8"/>
+      <text class="fa-ok" x="180" y="224" text-anchor="middle">Cortar: rever o 1º remédio, não tratar o efeito</text>
+    </svg>
+    <figcaption>Esquema: em âmbar o efeito adverso lido como doença nova; em vermelho, o remédio que não devia existir.<sup class="ref"><a href="#ref-10">10</a></sup></figcaption>
+  </figure>
+  <h3>Por que o idoso faz mais reação adversa</h3>
+  <div class="tw"><table>
+    <tr><th>Etapa</th><th>O que muda</th><th>Consequência</th></tr>
+    <tr><td>Distribuição (água)</td><td>Menos água e massa magra</td><td>Hidrossolúvel concentra: lítio, digoxina</td></tr>
+    <tr><td>Distribuição (gordura)</td><td>Mais gordura</td><td>Lipossolúvel acumula e dura mais: benzodiazepínico, amitriptilina</td></tr>
+    <tr><td>Ligação a proteína</td><td>Albumina baixa</td><td>Mais fração livre: fenitoína, diazepam</td></tr>
+    <tr><td>Metabolismo</td><td>Fígado menor, P450 mais lento</td><td>Oxidação cai; conjugação preservada</td></tr>
+    <tr><td>Excreção</td><td>TFG cai</td><td>O que mais altera: ajustar pelo clearance</td></tr>
+  </table></div>
+  <p class="lede">Por isso a regra da prescrição no idoso: começar com dose baixa e subir devagar.</p>
+  <h3>Definições e risco</h3>
+  <ul class="tp">
+    <li><strong>Polifarmácia</strong>: o corte clássico é 5 ou mais fármacos; o MS usa 4 ou mais. <strong>Multimorbidade</strong>: 2 ou mais condições crônicas; HAS + DM já conta (UERJ 2025).</li>
+    <li>O risco não é só da idade: multimorbidade, vários prescritores e automedicação também produzem polifarmácia (UERJ 2022 pediu os grupos vulneráveis além do idoso).</li>
+    <li>RAM pesa mais acima de 85 anos, com TFG abaixo de 50, fragilidade, muitas doenças, muitos remédios e RAM prévia. Insuficiência cardíaca e demência entram na lista de risco; osteoartrose e hipotireoidismo, não (a UERJ 2024 misturou as duas numa alternativa).<sup class="ref"><a href="#ref-21">21</a></sup></li>
+    <li>Classes que mais levam o idoso à emergência: cardiovasculares e anticoagulantes (varfarina à frente), insulina e sulfonilureia, psicotrópicos, AINE (UERJ 2024).</li>
+  </ul>
+  <h3>Beers, STOPP, START e desprescrição</h3>
+  <div class="tw"><table>
+    <tr><th>Lista</th><th>Função</th><th>Exemplos</th></tr>
+    <tr><td>Beers</td><td>O que evitar no idoso</td><td>Anti-histamínico de 1ª geração, benzodiazepínico, zolpidem, sulfonilureia de ação longa, AINE crônico</td></tr>
+    <tr><td>STOPP</td><td>O que suspender, conforme a doença</td><td>AAS sem doença vascular; neuroléptico como hipnótico</td></tr>
+    <tr><td>START</td><td>O que está faltando</td><td>Anticoagulante na fibrilação atrial; IECA na insuficiência cardíaca</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Desprescrever é prevenção quaternária planejada: revisar a lista ao menos 1 vez por ano, pesar o tempo até o benefício contra a expectativa de vida, retirar devagar o que é de SNC (benzodiazepínico, opioide, antidepressivo) e o betabloqueador.</li>
+    <li>Desprescrição criteriosa de IBP, estatina e anti-hipertensivo não aumentou mortalidade: foi a evidência que a UERJ aceitou em 2025.</li>
+    <li>Insônia no idoso em luto: escuta, higiene do sono e revisão da receita; benzodiazepínico novo piora queda e delirium.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"De 5 a 10 medicamentos é seguro na maioria" (UERJ 2025): nenhum número libera; julga-se fármaco a fármaco. E desprescrição é prevenção quaternária, não terciária.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Ela pede a classe de maior risco, a definição exata (polifarmácia x multimorbidade) e a evidência da desprescrição. Nunca a dose.</p></div>
+  <div class="q"><p>Idoso em uso de IECA começou xarope para tosse seca há 2 meses.</p><details><summary>ver resposta</summary><div>Cascata de prescrição: rever o IECA, não tratar a tosse.</div></details></div>
+  <div class="q"><p>HAS + DM em uso de 3 fármacos: polifarmácia ou multimorbidade?</p><details><summary>ver resposta</summary><div>Multimorbidade (2 ou mais crônicas). Polifarmácia ainda não (corte de 4 ou 5). <span class="qc">2025/Q91</span></div></details></div>
+  <div class="q"><p>Benzodiazepínico há 10 anos, idosa com duas quedas no ano.</p><details><summary>ver resposta</summary><div>Desprescrever com retirada gradual; a suspensão abrupta dá síndrome de abstinência.</div></details></div>
+</section>
+
+<section class="sec" id="cap-10">
+  <span class="kick">10 · CM e PED (Ortopedia) · 3 questões em 2021-2025</span>
+  <h2>Oncologia ortopédica e osteomielite: idade, lugar e periósteo</h2>
+  <p class="lede">Tumor ósseo se acerta com três dados: a idade, o segmento do osso e a reação do periósteo. No adulto, lesão óssea é metástase até prova em contrário.</p>
+  <h3>O mecanismo da imagem</h3>
+  <ul class="tp">
+    <li>Quanto mais rápido o crescimento, menos o osso consegue reagir: borda esclerótica = lento (benigno); aspecto permeativo, cortical rompida e massa de partes moles = agressivo.</li>
+    <li>Periósteo levantado aos poucos faz camadas (<strong>casca de cebola</strong>); rompido por tumor rápido faz o <strong>triângulo de Codman</strong>; espículas divergentes, os <strong>raios de sol</strong>.</li>
+    <li>Lesão blástica = o tumor faz osso; lítica = destrói.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Lesão</th><th>Quem</th><th>Onde</th><th>Marca</th></tr>
+    <tr><td>Osteossarcoma</td><td>2ª década</td><td>Metáfise do joelho; úmero proximal</td><td>Raios de sol, Codman; metástase pulmonar</td></tr>
+    <tr><td>Ewing</td><td>1ª década</td><td>Diáfise ou metadiáfise; pelve</td><td>Casca de cebola; febre e VHS alto imitam infecção; t(11;22)</td></tr>
+    <tr><td>Osteoma osteoide</td><td>Adolescente e adulto jovem, homem</td><td>Fêmur proximal, tíbia</td><td>Nidus lítico com esclerose em volta; dor noturna que cede com AINE (prostaglandina do tumor)</td></tr>
+    <tr><td>Metástase</td><td>Adulto, idoso</td><td>Coluna</td><td>Mama e próstata se o primário é conhecido; pulmão e rim se desconhecido</td></tr>
+    <tr><td>Mieloma</td><td>Idoso</td><td>Coluna</td><td>Lítica; hipercalcemia, rim, anemia</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Próstata dá metástase <strong>blástica</strong>: lesão vertebral blástica no idoso pede PSA, não eletroforese de proteínas (UERJ 2022).</li>
+    <li>Primário desconhecido: a imuno-histoquímica da biópsia aponta a origem; PSA no tecido = próstata, tireoglobulina = tireoide (UERJ 2021).</li>
+  </ul>
+  <h3>Osteomielite</h3>
+  <ul class="tp">
+    <li>Criança: via hematogênica, na <strong>metáfise</strong> de osso longo (fluxo lento e turbulento). S. aureus em todas as idades; Salmonella na anemia falciforme; Kingella em alta.</li>
+    <li>Febre, dor metafisária e claudicação. RX demora até 2 semanas para alterar; RM é o melhor exame; PCR é a prova inflamatória mais sensível.</li>
+    <li>Oxacilina venosa, ajustada à cultura, por semanas, guiada pelo VHS; abscesso ou forma crônica = drenagem e desbridamento.</li>
+    <li>Adulto: mais por contaminação direta (pós-operatório, pé diabético); a hematogênica vai à coluna.</li>
+    <li>Ewing e osteomielite se confundem (febre, VHS alto): a biópsia separa (células pequenas, redondas e azuis x inflamação). O abscesso de Brodie imita o osteoma osteoide.<sup class="ref"><a href="#ref-22">22</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Dor noturna que cede com anti-inflamatório no adolescente é osteoma osteoide, não "dor do crescimento" nem osteossarcoma (UERJ 2025). E eletroforese para lesão blástica é o distrator: o mieloma é lítico.</p></div>
+  <div class="banca"><span class="blbl">Como a UERJ cobra</span><p>Caiu como diagnóstico em CM e PED, não em CIR. A pergunta vem pelo dado que discrimina: idade, reação do periósteo, blástica ou lítica.</p></div>
+  <div class="q"><p>Menino de 8 anos, dor e massa na diáfise do fêmur, febre, VHS alto, reação em casca de cebola.</p><details><summary>ver resposta</summary><div>Sarcoma de Ewing; a biópsia o separa da osteomielite.</div></details></div>
+  <div class="q"><p>Idoso com lombalgia e lesões vertebrais blásticas.</p><details><summary>ver resposta</summary><div>Metástase de próstata: PSA. <span class="qc">2022/Q3</span></div></details></div>
+  <div class="q"><p>Criança com anemia falciforme e osteomielite: qual agente é característico?</p><details><summary>ver resposta</summary><div>Salmonella. O S. aureus segue o mais comum no geral.</div></details></div>
+</section>
+
+<section class="sec" id="fechamento">
+  <span class="kick">Véspera</span>
+  <h2>Checklist das últimas 24 horas</h2>
+  <h3>Hoje, 31/10</h3>
+  <ul class="tp">
+    <li>Leia os boxes "Armadilha" e os "Teste agora" deste aulão e a grade de gatilhos do UERJ de Bolso. É revisão de reconhecimento, não estudo.</li>
+    <li><strong>O que não estudar</strong>: tema que você nunca viu (o retorno de um dia é mínimo e a insegurança cresce), tabela longa de dose, técnica cirúrgica rara, questão nova difícil que abale a confiança.</li>
+    <li>Cards: só se a fila do dia for curta. Não drenar atraso.</li>
+    <li>Sono é desempenho: jante leve, café só até o começo da tarde, tela longe antes de deitar, deite cedo o bastante para acordar descansado.</li>
+  </ul>
+  <h3>Logística de 01/11 (domingo)</h3>
+  <ul class="tp">
+    <li>Campus Maracanã da UERJ, Pavilhão João Lyra Filho; etapa única de 5 horas.<sup class="ref"><a href="#ref-1">1</a></sup> Confira hoje, no cartão de confirmação, o horário de abertura dos portões.</li>
+    <li>Separe hoje o documento oficial com foto e o que o edital pedir; deixe tudo junto da porta.</li>
+    <li>Saia com folga para o trânsito; leve água e um lanche que você já conhece.</li>
+  </ul>
+  <h3>Na prova</h3>
+  <ul class="tp">
+    <li>20 questões por bloco em 5 horas: cerca de 1 hora por bloco, com margem para revisar. Escreva no rascunho o horário-limite de cada bloco.</li>
+    <li>Comando antes do caso; sublinhe EXCETO e INCORRETA; elimine por conteúdo, não pela forma.</li>
+    <li>Questão marcada só volta com motivo novo.</li>
+    <li>Não deixe bloco em branco: aprovação exige nota em todos os conteúdos.</li>
+  </ul>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Cepuerj/UERJ. Edital nº 15/2026: Processo Seletivo de Residência Médica UERJ 2027, Acesso Direto (estrutura da prova, local e Anexo II, bibliografia). Rio de Janeiro, 2026.</li>
+    <li id="ref-2">Townsend CM, Beauchamp RD, Evers BM, Mattox KL. Sabiston Textbook of Surgery. 21ª ed. Elsevier; 2022 (bibliografia de Cirurgia do edital). REMIT, cicatrização, febre pós-operatória, íleo, ostomias e profilaxia antibiótica citados pelo material do curso; não conferido no original.</li>
+    <li id="ref-3">Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Manejo da Infecção pelo HIV em Adultos. Módulo 2: coinfecções e infecções oportunistas. Brasília: MS; 2023 (TARV na TB-HIV e na neurocriptococose; 3HP na PVHIV). Citado pelos resumos.</li>
+    <li id="ref-4">Ministério da Saúde, Coordenação-Geral de Vigilância da Tuberculose. Notas Informativas nº 5/2024 (TB não grave na criança), nº 6/2024 (RN coabitante de caso bacilífero) e nº 15/2024 (tratamento da ILTB); Portaria SCTIE/MS nº 50/2020 (IGRA no SUS). Citadas pelo resumo de Tuberculose.</li>
+    <li id="ref-5">Ministério da Saúde. Guia de Vigilância em Saúde. 6ª ed. Brasília: MS; 2023-2024 (tuberculose: escore pediátrico, indicações da ILTB; meningites: quimioprofilaxia e notificação). Citado pelos resumos.</li>
+    <li id="ref-6">American College of Surgeons. ATLS: Advanced Trauma Life Support. 10ª ed. Chicago: ACS; 2018 (sequência ABCDE, trauma torácico, classes de choque, Glasgow). A 11ª ed. (2025) introduziu o xABCDE. Citado pelo resumo de Trauma.</li>
+    <li id="ref-7">OPAS, Ministério da Saúde, FEBRASGO, Sociedade Brasileira de Diabetes. Rastreamento e diagnóstico de diabetes mellitus gestacional no Brasil. Brasília: OPAS; 2016 (diretriz conjunta). Citada pelo resumo.</li>
+    <li id="ref-8">Sociedade Brasileira de Diabetes. Diretriz da SBD 2023-2024: diabetes na gestação (critérios para iniciar insulina). Citada pelo resumo.</li>
+    <li id="ref-9">FEBRASGO. Protocolo nº 8/2018: pré-eclâmpsia/eclâmpsia; Ministério da Saúde, Fiocruz-IFF. Portal de Boas Práticas: pré-eclâmpsia, 2023 (critérios, gravidade, sulfato de magnésio, AAS, resolução). Citados pelo resumo.</li>
+    <li id="ref-10">Gusso G, Lopes JMC, Dias LC (org.). Tratado de Medicina de Família e Comunidade: princípios, formação e prática. 2ª ed. Porto Alegre: Artmed; 2019 (bibliografia de MFC do edital): MCCP em 4 componentes, avaliação multidimensional do idoso, polifarmácia. Citado pelo material do curso; não conferido no original.</li>
+    <li id="ref-11">Academia Brasileira de Neurologia. Recomendações para o diagnóstico de demência: exames complementares obrigatórios. Citadas pelo resumo de Demências.</li>
+    <li id="ref-12">Brasil. Lei nº 10.741, de 1º de outubro de 2003: Estatuto da Pessoa Idosa (dever de comunicar violação de direitos).</li>
+    <li id="ref-13">Duncan BB, Schmidt MI, Giugliani ERJ, et al. (org.). Medicina Ambulatorial: condutas de atenção primária baseadas em evidências. 5ª ed. Porto Alegre: Artmed; 2022 (bibliografia de MFC do edital): MCCP na versão de 6 componentes. Citado pelo resumo; não conferido no original.</li>
+    <li id="ref-14">Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Prevenção da Transmissão Vertical de HIV, Sífilis e Hepatites Virais. Brasília: MS; 2022. Esquema da gestante em qualquer idade gestacional conferido em resumo secundário (med.estrategia.com/portal/conteudos-gratis/procedimentos/atualizacao-do-pcdt-para-a-prevencao-da-transmissao-vertical-de-ist/, acesso em 29/10/2026); profilaxia do RN citada pelo resumo.</li>
+    <li id="ref-15">Ministério da Saúde. Dengue: diagnóstico e manejo clínico, adulto e criança. 6ª ed. Brasília: MS; 2024. Citado pelo resumo de Arboviroses.</li>
+    <li id="ref-16">Ministério da Saúde. Nota Técnica nº 117/2024: atualização das orientações para a vigilância do Oropouche. Republicada pela SES-MG (www.saude.mg.gov.br/wp-content/uploads/2025/01/Nota-Tecnica-No-117-2024-Atualizacao-das-orientacoes-para-a-vigilancia-do-Oropouche.pdf, acesso em 29/10/2026); lida por resumo de busca, não no PDF inteiro.</li>
+    <li id="ref-17">Material de curso (EMED). Infectologia, cap. 1: Meningites (infecções do sistema nervoso central), perfil do líquor por etiologia. Apoio só de material de curso.</li>
+    <li id="ref-18">Tunkel AR, Hartman BJ, Kaplan SL, et al. Practice guidelines for the management of bacterial meningitis. Clin Infect Dis. 2004;39(9):1267-1284. doi:10.1086/425368 (TC antes da punção; dexametasona antes ou junto do antibiótico).</li>
+    <li id="ref-19">Loscalzo J, Fauci AS, Kasper DL, et al. Harrison's Principles of Internal Medicine. 22ª ed. McGraw Hill (bibliografia de CM do edital): pneumococo como agente mais comum e vancomicina no esquema empírico. Citado pelo resumo; não conferido no original.</li>
+    <li id="ref-20">Kliegman RM, St Geme JW III, Blum NJ, et al. Nelson Textbook of Pediatrics. 22ª ed. Philadelphia: Elsevier; 2024 (bibliografia de Pediatria do edital): cefalosporina de 3ª geração + vancomicina após o período neonatal, conforme a análise da UERJ 2024 Q73; não conferido no original.</li>
+    <li id="ref-21">2023 American Geriatrics Society Beers Criteria Update Expert Panel. American Geriatrics Society 2023 updated AGS Beers Criteria for potentially inappropriate medication use in older adults. J Am Geriatr Soc. 2023;71(7):2052-2081. doi:10.1111/jgs.18372.</li>
+    <li id="ref-22">Canale ST, Beaty JH. Campbell's Operative Orthopaedics. 12ª ed. Philadelphia: Elsevier; 2013 (referência do material de curso de oncologia ortopédica e osteomielite; não conferido no original).</li>
+  </ol>
+  <p class="base">Base deste documento: resumos/Clínica Médica/Infectologia/Tuberculose.md; resumos/Clínica Médica/Infectologia/Meningites.md; resumos/Clínica Médica/Infectologia/HIV.md; resumos/Clínica Médica/Infectologia/Arboviroses.md; resumos/Clínica Médica/Neurologia/Delirium no Idoso.md; resumos/Clínica Médica/Neurologia/Demências.md; resumos/Clínica Médica/Neurologia/TCE.md; resumos/GO/Diabetes Mellitus na Gestação.md; resumos/GO/Síndromes Hipertensivas da Gestação.md; resumos/Cirurgia/[CIR] Trauma.md; resumos/Preventiva/Medicina de Família e Comunidade.md. PDFs do curso (locais, gitignored): Cirurgia/24 (Temas Gerais), 25 (REMIT), 30 (Complicações Pós-Operatórias), 31 (Cicatrização), 33 (Medicina Perioperatória), 6 (Trauma: Avaliação Inicial) e 6 (Oncologia Ortopédica e Osteomielite); Preventiva/19 (MFC) e 20 (Saúde do Idoso) e Pediatria/33 (TB na Infância), lidos por meio das aulas já publicadas (TB 360, Idoso, MCCP, REMIT e cicatrização, RD de Meningites). Peso de cada capítulo: mapa das provas UERJ 2021-2025 (420 questões), contagem em tmp/aulao/temas.md. Complementa a aula UERJ de Bolso: MFC e a banca.</p>
+</section>
+</div>

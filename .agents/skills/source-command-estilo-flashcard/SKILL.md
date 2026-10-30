@@ -142,10 +142,14 @@ todos os cards devem conter referências sobre a informação que eles trazem"*.
 - **Realce:** marque com `**assim**` o dado que decide o card (o corte, o achado que exclui, a conduta) -- o player o
   pinta de rosa (`.chave`); no verso, número com unidade ou sinal já sai em rosa sem marcação (`.num`). Dose: 1 realce
   na frente (opcional) e 1-2 no verso; nunca a frase inteira. Não use `**` como negrito decorativo.  <!-- CHECK: test_realcar_pinta_chave_e_numero_com_unidade_e_escapa_o_html -->
-- **Referência:** até o banco de evidências entrar (P43, ADR do /ai-eng, F2 a partir de 02/11), a fonte vai no fim do
-  `verso_regra_mestre` entre colchetes: `[Fonte: SBC 2020, Diretriz de HAS]` -- artigo, diretriz, consenso, PCDT ou livro
-  do edital; **nunca** resumo, apostila ou "verso de card". Card sem fonte não entra. Com o banco, a fonte migra para a
-  ponte `card_evidencia` e o colchete sai.  <!-- NAO-VERIFICAVEL: a fonte no colchete e regra provisoria de autoria ate o gate do evidence-bank (revisar: 2026-11-15) -->
+- **Referência (s236, banco de evidências no ar):** a fonte mora no `evidencias.db` (pacote `evidence-bank`; contrato
+  `evidence-governance` v1.5 §7) e chega ao card pela ponte `card_evidencia`; o verso não leva colchete de fonte.  <!-- NAO-VERIFICAVEL: o render da citacao a partir da ponte ainda nao existe no player (F3 do ADR); hoje e autoria (revisar: 2026-11-30) -->
+  No JSON do card, mande `evidencias: ["ev-..."]` quando a afirmação já está no banco (`python -m evidence_bank buscar
+  "<termo>"`, rodado na raiz do pacote) ou `afirmacoes: [...]` (sem elas, vale a regra-mestre): o card entra em
+  quarentena, fora do FSRS, e as afirmações vão à fila do banco até a decisão (folha em `pendencias/`).  <!-- CHECK: test_insert_card_base_poe_card_sem_evidencia_em_quarentena_e_nao_recusa -->
+  Fonte é documento citável (artigo, diretriz, consenso, PCDT, livro do edital); resumo, apostila e verso de card nunca são.  <!-- NAO-VERIFICAVEL: a recusa de Resumo/Apostila/EMED como fonte e do evidence-bank (tipo=publica), fora deste repo (revisar: 2026-12-15) -->
+  ⚰️ *30/10/2026 (s236): até aqui a fonte ia no fim do `verso_regra_mestre` entre colchetes (`[Fonte: SBC 2020, ...]`),
+  regra provisória até o banco entrar; saiu com a ponte. O writer apaga o colchete da afirmação que manda à fila.*  <!-- NAO-NORMATIVA: lapide da regra provisoria -->
 
 ## Convenção de Encoding e Zero LaTeX (sessão 103/108)
 
@@ -198,7 +202,9 @@ Persiste cards de andaime (qualquer altura via `tipo`) **sem erro de origem** (`
 python tools/insert_card_base.py --area AREA --tema "TEMA" --from cards.json [--dry-run]
 ```
 
-JSON: lista de `{tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?}` (`tipo` default `'base'`). Cada card de andaime segue os 5 princípios acima + a regra de grounding: razão de existir explicável em 1 linha, ancorada no resumo + no cluster que o motivou (`ai-eng`: "especificidade sem contexto é criptografia").
+JSON: lista de `{tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?, evidencias?, afirmacoes?}` (`tipo` default `'base'`; `evidencias`/`afirmacoes` na §Realce e referência, os mesmos no `cards` do `insert_questao.py` e no lote do `insert_card_extra.py`). Cada card de andaime segue os 5 princípios acima + a regra de grounding: razão de existir explicável em 1 linha, ancorada no resumo + no cluster que o motivou (`ai-eng`: "especificidade sem contexto é criptografia").
+
+Com `evidencias.db` pareado (ao lado do `ipub.db`), card sem evidência ativa entra em **quarentena** e as afirmações dele na fila do banco; o `--dry-run` conta os dois sem gravar. Recusa só por forma (o lote da fila não valida), nunca por falta de evidência.  <!-- CHECK: test_lote_da_fila_com_forma_invalida_derruba_o_insert_inteiro -->
 
 ---
 

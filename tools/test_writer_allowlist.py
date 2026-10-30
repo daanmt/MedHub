@@ -44,7 +44,12 @@ ALLOWLIST = {
     # referencia/solucao_referencia (Fase 0 Lote 2 part 2.1, M-031): o `fontes` da Solucao
     # estruturado em referencia + vinculo N:M; `referencias_sincronizar` (estoque) e `emed_upsert_solucoes` (cunhagem, part 2.2) escrevem nas duas
     # -- o `tools/emed_banco.py --referencias` e camada fina e NAO aparece aqui.
-    "app/utils/db.py": {"emed_card_ancora", "emed_questoes", "emed_respostas",
+    # card_evidencia/questao_evidencia (s236, evidence-bank): as pontes ipub -> evidencias.db;
+    # `ponte_evidencia_gravar` e o writer UNICO do lado medhub -- `app/utils/evidencias_ponte.py`
+    # (chamado pelos 3 writers de card) o usa com a conexao do insert e NAO ganha a tabela. O
+    # outro escritor das pontes e o pacote `evidence-bank` (decisao `incluir`), fora deste repo.
+    "app/utils/db.py": {"card_evidencia", "questao_evidencia",
+                        "emed_card_ancora", "emed_questoes", "emed_respostas",
                         "emed_solucoes", "referencia", "solucao_referencia",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",

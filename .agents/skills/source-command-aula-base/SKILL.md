@@ -155,12 +155,12 @@ aula-base, Revisão Direcionada, dossiê e autópsia.
   assim, nunca vestido de diretriz; nada de diretriz citada de memória (§7 "nada de memória").  <!-- NAO-VERIFICAVEL: escolha da fonte que sustenta o fato e julgamento de autoria; nenhum gate le a hierarquia das referencias da aula (revisar: 2027-03-31) -->
 - **A base interna NÃO é referência e NÃO aparece na aula (s236, 30/10, decisão dele: *"Não podemos referenciar
   resumos, apenas artigos, guidelines, consensos, etc."*):** o resumo do MedHub, o verso de um card e o PDF/apostila do
-  curso são ponto de partida para achar a fonte, nunca entrada em Referências nem linha final. O registro da RD
+  curso são ponto de partida para achar a fonte, nunca entrada em Referências nem linha final. O registro da RD  <!-- CHECK: test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim -->
   (`"resumos"` no `quadro_entry`/`hub_quadro.json`, `/revisar` 8a) é o único lugar onde os resumos consultados ficam.
   ⚰️ *s227-s235: `<p class="base">Base deste documento: ...</p>` depois da lista; o leitor do hub hoje esconde esse `p.base`
   e descarta a base interna que acha no texto.*  <!-- CHECK: test_referencias_tiram_a_fonte_do_meio_e_montam_a_lista_no_fim -->
 - **Figura (`figure.fig-an`, /anima) -- s236, pedido dele:** uma figura em TODA seção que tenha mecanismo, fluxo de
-  decisão ou diferencial espacial (metade ou mais das seções; nunca só a 1ª). A imagem domina: rótulos de 1-3 palavras
+  decisão ou diferencial espacial (metade ou mais das seções; nunca só a 1ª). A imagem domina: rótulos de 1-3 palavras  <!-- NAO-VERIFICAVEL: forma da figura e autoria da aula; nenhum gate le o SVG (revisar: 2027-03-31) -->
   dentro do SVG; sem legenda de cores em frase; sem repetir o parágrafo; `figcaption` de uma linha curta + o número da
   referência, ou nenhuma; sem "Fonte:" na legenda. O rosa (`--rosa`) realça o elemento que decide (corte, achado que
   exclui, seta decisória) e, no texto, `strong.chave`/`span.chave` com `color:var(--rosa)` no dado que decide (1-3 por

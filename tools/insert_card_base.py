@@ -38,6 +38,13 @@ JSON: lista de objetos. Campos por card:
   verso_regra_mestre  (opcional)
   verso_armadilha     (opcional)
   tipo                (opcional; default 'base')
+  evidencias          (opcional; ["ev-..."] ativas no evidence-bank -> ponte `ativa`)
+  afirmacoes          (opcional; [str | {afirmacao, tipo}] -> itens da fila; sem elas, a regra-mestre)
+
+Evidência (s236, evidence-bank; contrato evidence-governance v1.5 §7): com `evidencias.db`
+pareado, card sem evidência ativa entra EM QUARENTENA (fora do FSRS) com as afirmações na
+fila do banco -- nunca recusado por falta de evidência; recusa só por forma
+(`app/utils/evidencias_ponte.py`). O `--dry-run` conta quarentena e fila sem gravar.
 """
 import sqlite3
 import os
@@ -59,6 +66,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 import app.utils.areas as areas  # fonte unica do vocabulario de area (F89)
+from app.utils import evidencias_ponte  # s236: quarentena + fila do evidence-bank
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -111,8 +119,11 @@ def main():
     conn.execute("PRAGMA foreign_keys = ON")  # part-4: FKs impostas
     c = conn.cursor()
     tema_id = get_or_create_tema(c, args.area, args.tema)
+    area_tema = c.execute("SELECT area FROM taxonomia_cronograma WHERE id = ?",
+                          (tema_id,)).fetchone()[0]
 
     n_novos = n_skip = 0
+    pendentes = []  # s236: (card_id, card, area, tema, tema_id) -> evidencias_ponte.aplicar
     for i, card in enumerate(cards):
         fp = (card.get('frente_pergunta') or '').strip()
         vr = (card.get('verso_resposta') or '').strip()
@@ -128,6 +139,7 @@ def main():
             continue
 
         print(f"  [NOVO] {tipo}: \"{fp[:60]}...\"")
+        card_id = 0  # dry-run: sem id; a fila valida a forma com `card:0`
         if not args.dry_run:
             c.execute(
                 "INSERT INTO flashcards (questao_id, tema_id, tipo, frente_contexto, "
@@ -139,8 +151,25 @@ def main():
             card_id = c.lastrowid
             c.execute("INSERT INTO fsrs_cards (card_id, state, due) VALUES (?, 0, ?)",
                       (card_id, datetime.now()))
+        pendentes.append((card_id, card, area_tema, args.tema, tema_id))
 
         n_novos += 1
+
+    # s236: evidência ANTES do commit -- ponte `ativa`, ou quarentena + fila. Falha de forma
+    # (ou pacote ausente com banco pareado) desfaz o lote inteiro: nada gravado.
+    try:
+        ev = evidencias_ponte.aplicar(None if args.dry_run else conn, pendentes,
+                                      agente="medhub:insert_card_base", db_path=DB_PATH,
+                                      dry_run=args.dry_run)
+    except Exception as e:  # noqa: BLE001 -- qualquer recusa derruba o lote (all-or-nothing)
+        conn.rollback()
+        conn.close()
+        print(f"\n[ERRO] evidence-bank: {e}. NADA gravado.")
+        sys.exit(1)
+    for a in ev["avisos"]:
+        print(f"  [AVISO-EVIDENCIA] {a}")
+    if evidencias_ponte.linha_resumo(ev):
+        print(f"  {evidencias_ponte.linha_resumo(ev)}")
 
     if not args.dry_run:
         conn.commit()

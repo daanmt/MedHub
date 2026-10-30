@@ -11,6 +11,12 @@ Transação de 4 passos em commit único:
    REMOVIDO (part-1, incidente dos 68 em 2026-08-13): sem cards = falha alta.
 4. Init de estado FSRS em `fsrs_cards` para cada card.
 
+Evidencia (s236, evidence-bank; contrato evidence-governance v1.5 §7): com `evidencias.db`
+pareado, cada card sem `evidencias: ["ev-..."]` ativas entra EM QUARENTENA (fora do FSRS) e
+as afirmacoes dele (`afirmacoes` do card; sem elas, a regra-mestre) vao a fila do banco, antes
+do commit -- nunca recusado por falta de evidencia; recusa so por forma
+(`app/utils/evidencias_ponte.py`). No lote, a fila e as pontes saem no commit do lote.
+
 Vinculos opcionais (s199, elo questoes -> cards), na MESMA transacao: `--sessao ID`
 grava `questoes_erros.sessao_bulk_id` (id da LINHA de `sessoes_bulk`, nunca o
 `sessao_num`); `--emed LISTA_NUM` (ex.: `t40_7`) grava `emed_respostas.questao_erro_id`
@@ -36,12 +42,30 @@ from app.utils import card_checks  # gate de qualidade — biblioteca pura, font
 # chamado pelo ATRIBUTO do modulo (db.agora()) para o teste congelar o instante.
 import app.utils.db as db
 import app.utils.areas as areas
+from app.utils import evidencias_ponte  # s236: quarentena + fila do evidence-bank
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 # P3 part-4: eventos aguardando COMMIT — evento de transacao que faz rollback
 # seria fato falso no log; o flush so acontece pos-commit (own_conn ou lote).
 _EVENTOS_PENDENTES = []
+# s236: cards novos aguardando a ponte do evidence-bank, aplicada ANTES do commit (own_conn
+# ou lote) na mesma conexao; rollback limpa a lista junto.
+_EVIDENCIA_PENDENTE = []
+
+
+def _aplicar_evidencia(conn):
+    """Pontes/fila dos cards pendentes (antes do commit). Excecao propaga: o chamador desfaz."""
+    try:
+        res = evidencias_ponte.aplicar(conn, list(_EVIDENCIA_PENDENTE),
+                                       agente="medhub:insert_questao", db_path=DB_PATH)
+    finally:
+        _EVIDENCIA_PENDENTE.clear()
+    for a in res["avisos"]:
+        print(f"[AVISO-EVIDENCIA] {a}")
+    if evidencias_ponte.linha_resumo(res):
+        print(evidencias_ponte.linha_resumo(res))
+    return res
 
 
 def _flush_eventos():
@@ -384,7 +408,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
 
         # 2. Inserção dos cards (lista construída no topo — caminho qualitativo
         # único; sempre quality_source='qualitative' e needs_qualitative=0).
-        for tipo_card, fc_, fp_, vr_, vrm_, va_ in cards_to_insert:
+        for card_dict, (tipo_card, fc_, fp_, vr_, vrm_, va_) in zip(aval["cards"], cards_to_insert):
             cursor.execute('''
                 INSERT INTO flashcards (questao_id, tema_id, tipo,
                                         frente_contexto, frente_pergunta, verso_resposta,
@@ -399,6 +423,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                 INSERT INTO fsrs_cards (card_id, state, due)
                 VALUES (?, 0, ?)
             ''', (card_id, db.agora()))
+            _EVIDENCIA_PENDENTE.append((card_id, card_dict, area, tema, tema_id))
 
         # 4. Atualizar ultima_revisao do tema (usado pelo widget Foco Crítico).
         #    NOTA ARQUITETURAL: questoes_realizadas e questoes_acertadas NÃO são
@@ -418,6 +443,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                 "avisos": len(aval["avisos"])}))
 
         if own_conn:
+            _aplicar_evidencia(conn)  # s236: antes do commit; recusa de forma desfaz tudo
             conn.commit()
             _flush_eventos()
         if cards_to_insert:
@@ -472,6 +498,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         if not own_conn:
             raise  # transacao do lote: o chamador faz o rollback TOTAL
         _EVENTOS_PENDENTES.clear()  # P3: rollback implicito -> evento seria fato falso
+        _EVIDENCIA_PENDENTE.clear()  # s236: idem para a ponte do evidence-bank
         print(f"Erro ao inserir no banco: {e}")
         return False
     finally:
@@ -543,6 +570,7 @@ def insert_batch(errors_file, dry_run=False):
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA foreign_keys = ON")  # part-1: FKs do schema impostas
     inseridos, pulados = [], []
+    _EVIDENCIA_PENDENTE.clear()
     try:
         cursor = conn.cursor()
         _ensure_status_column(cursor)
@@ -576,11 +604,13 @@ def insert_batch(errors_file, dry_run=False):
                 conn=conn,   # transacao do lote: excecao propaga p/ rollback total
             )
             inseridos.append(i)
+        _aplicar_evidencia(conn)  # s236: pontes/fila do lote, antes do commit do lote
         conn.commit()
         _flush_eventos()  # P3: eventos do lote so existem apos o commit real
     except Exception as e:
         conn.rollback()
         _EVENTOS_PENDENTES.clear()  # P3: rollback total -> nenhum evento
+        _EVIDENCIA_PENDENTE.clear()
         print(f"[ERRO] lote abortado: {e}. ROLLBACK TOTAL -- zero inserido nesta execucao.")
         return False
     finally:

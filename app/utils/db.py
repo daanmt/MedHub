@@ -69,7 +69,111 @@ def hoje():
 # ÚNICA. Antes havia 3 definições divergentes em 5 arquivos (`!= 2`, `< 2` sem
 # COALESCE, sem filtro). CLIs read-only que não importam este módulo replicam a
 # expressão LITERALMENTE, com comentário apontando para cá.
-ATIVO_WHERE = "COALESCE(needs_qualitative, 0) < 2"
+#
+# s236 (30/10/2026, evidence-bank; ADR banco-evidencias v1.1 Adendo 2 R2; contrato
+# evidence-governance v1.5 §7): a definição ganha a conjunção de QUARENTENA. Card criado
+# acima do watermark (`meta.watermark_flashcards` do `evidencias.db` PAREADO -- o arquivo ao
+# lado do ipub em uso) só é ativo com >= 1 ponte `card_evidencia.estado = 'ativa'`; o legado
+# (id <= watermark) segue servido. Sem `evidencias.db` pareado (fixture, clone novo) não há
+# watermark e a definição é a de antes. Por isso `ATIVO_WHERE` deixou de ser constante: é a
+# expressão de `ativo_where()` sem alias, resolvida na hora (PEP 562, `__getattr__` no fim
+# do bloco) -- `db.ATIVO_WHERE` continua valendo para quem o lê de fora.
+# Limite declarado: os CLIs read-only que replicam a expressão literalmente (fsrs_load,
+# day_plan, review_radar, fsrs_optimize, cards_rendimento, audits) NÃO ganharam a conjunção:
+# nenhum serve card, e card em quarentena nunca é revisado (fica state 0). Contam como "novo"
+# o card em quarentena -- diferença de contagem, não de serviço.
+EVIDENCIAS_NOME = "evidencias.db"
+#: Sem a variável, o banco é o pareado ao `DB_PATH` (mesmo diretório). O conftest a aponta
+#: para um caminho vazio em todo teste (suíte hermética, inclusive nos CLIs em subprocesso);
+#: o teste que exercita a quarentena a aponta para o seu `evidencias.db`.
+EVIDENCIAS_ENV = "MEDHUB_EVIDENCIAS_DB"
+_WATERMARK_CACHE = {}
+
+#: DDL das pontes ipub -> evidence-bank: cópia LITERAL de
+#: `evidence-bank:adapters/medhub.py::PONTES_DDL` (o dono; paridade travada por
+#: `tools/test_evidencias_quarentena.py`). Aqui só para o `_ensure_views` recriar a ponte
+#: que faltar quando há watermark (ipub restaurado de backup anterior ao `init --ipub`).
+PONTES_DDL = {
+    "card_evidencia": """CREATE TABLE IF NOT EXISTS card_evidencia (
+  flashcard_id INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE,
+  evidencia_id TEXT NOT NULL,
+  papel        TEXT NOT NULL DEFAULT 'sustenta' CHECK (papel IN ('sustenta','armadilha')),
+  estado       TEXT NOT NULL CHECK (estado IN ('fila','ativa')),
+  fila_id      INTEGER,
+  criado_em    TEXT NOT NULL,
+  PRIMARY KEY (flashcard_id, evidencia_id)
+)""",
+    "questao_evidencia": """CREATE TABLE IF NOT EXISTS questao_evidencia (
+  questao_id   INTEGER NOT NULL REFERENCES questoes_erros(id) ON DELETE CASCADE,
+  evidencia_id TEXT NOT NULL,
+  papel        TEXT NOT NULL DEFAULT 'sustenta' CHECK (papel IN ('sustenta','armadilha','banca')),
+  estado       TEXT NOT NULL CHECK (estado IN ('fila','ativa')),
+  fila_id      INTEGER,
+  criado_em    TEXT NOT NULL,
+  PRIMARY KEY (questao_id, evidencia_id)
+)""",
+}
+
+
+def evidencias_path(db_path=None):
+    """O `evidencias.db` pareado com o ipub em uso (`MEDHUB_EVIDENCIAS_DB` sobrepõe)."""
+    sobre = os.environ.get(EVIDENCIAS_ENV)
+    if sobre:
+        return sobre
+    return os.path.join(os.path.dirname(os.path.abspath(db_path or DB_PATH)), EVIDENCIAS_NOME)
+
+
+def watermark_flashcards(db_path=None):
+    """`meta.watermark_flashcards` do `evidencias.db` pareado (somente leitura), ou None quando
+    não há banco pareado (sem banco = sem quarentena). Lido uma vez por caminho (o pacote o
+    grava no 1º `init --ipub` e nunca o muda); a ausência não fica em cache."""
+    caminho = evidencias_path(db_path)
+    if caminho in _WATERMARK_CACHE:
+        return _WATERMARK_CACHE[caminho]
+    if not os.path.exists(caminho):
+        return None
+    from pathlib import Path as _Path
+    con = sqlite3.connect(_Path(caminho).resolve().as_uri() + "?mode=ro", uri=True)
+    try:
+        linha = con.execute(
+            "SELECT valor FROM meta WHERE chave = 'watermark_flashcards'").fetchone()
+    finally:
+        con.close()
+    wm = int(linha[0]) if linha and linha[0] is not None else None
+    _WATERMARK_CACHE[caminho] = wm
+    return wm
+
+
+def quarentena_sql(alias="", watermark=None):
+    """A conjunção de quarentena: porte LITERAL de
+    `evidence-bank:adapters/medhub.py::quarentena_sql` (o dono do fragmento; paridade travada
+    por `tools/test_evidencias_quarentena.py`). `watermark=None` emite `:watermark` (bind)."""
+    wm = ":watermark" if watermark is None else str(int(watermark))
+    return (f"NOT ({alias}id > {wm} AND NOT EXISTS (SELECT 1 FROM card_evidencia ce_q "
+            f"WHERE ce_q.flashcard_id = {alias}id AND ce_q.estado = 'ativa'))")
+
+
+def ponte_evidencia_gravar(conn, alvo, alvo_id, evidencia_id, estado, fila_id=None):
+    """Writer ÚNICO, do lado medhub, das pontes ipub -> evidence-bank (card/questão novos;
+    chamado por `app/utils/evidencias_ponte.py` com a conexão do insert, na MESMA transação
+    do card). Upsert na PK: a ponte `fila` vira `ativa` -- a semântica do
+    `adapters.medhub.ligar` do pacote. Não comita."""
+    if estado not in ("fila", "ativa"):
+        raise ValueError(f"estado de ponte invalido: {estado!r}")
+    if alvo == "card":
+        conn.execute(
+            "INSERT INTO card_evidencia (flashcard_id, evidencia_id, estado, fila_id, criado_em) "
+            "VALUES (?, ?, ?, ?, ?) ON CONFLICT(flashcard_id, evidencia_id) DO UPDATE SET "
+            "estado = excluded.estado, fila_id = excluded.fila_id",
+            (int(alvo_id), evidencia_id, estado, fila_id, carimbo()))
+    elif alvo == "questao":
+        conn.execute(
+            "INSERT INTO questao_evidencia (questao_id, evidencia_id, estado, fila_id, criado_em) "
+            "VALUES (?, ?, ?, ?, ?) ON CONFLICT(questao_id, evidencia_id) DO UPDATE SET "
+            "estado = excluded.estado, fila_id = excluded.fila_id",
+            (int(alvo_id), evidencia_id, estado, fila_id, carimbo()))
+    else:
+        raise ValueError(f"alvo de ponte invalido: {alvo!r}")
 
 # s195: card com marca de reforja ABERTA dada por gente (origem `player`, sessao,
 # ledger) fica FORA da fila ate a marca fechar. O defeito que isto encerra: o
@@ -108,7 +212,7 @@ def ids_retidos_por_reforja():
         if not _tem_tabela(conn, "reforja_marks"):
             return []
         linhas = conn.execute(
-            f"SELECT f.id FROM flashcards f WHERE {ATIVO_WHERE.replace('needs_qualitative', 'f.needs_qualitative')} "
+            f"SELECT f.id FROM flashcards f WHERE {ativo_where('f.')} "
             f"AND f.id IN ({RETIDO_REFORJA_SUBQUERY}) ORDER BY f.id").fetchall()
     finally:
         conn.close()
@@ -116,16 +220,42 @@ def ids_retidos_por_reforja():
 
 
 def ativo_where(alias=""):
-    """Expressão canônica de ativo, com alias opcional (ex.: ativo_where('f.'))."""
-    return f"COALESCE({alias}needs_qualitative, 0) < 2"
+    """Expressão canônica de ativo, com alias opcional (ex.: ativo_where('f.')): fora o
+    aposentado (`needs_qualitative >= 2`) e, com `evidencias.db` pareado, o card em
+    quarentena acima do watermark (`quarentena_sql`)."""
+    base = f"COALESCE({alias}needs_qualitative, 0) < 2"
+    wm = watermark_flashcards()
+    return base if wm is None else f"{base} AND {quarentena_sql(alias, wm)}"
+
+
+def __getattr__(nome):
+    """PEP 562: `db.ATIVO_WHERE` = `ativo_where()` (o watermark depende do banco em uso)."""
+    if nome == "ATIVO_WHERE":
+        return ativo_where()
+    raise AttributeError(f"module {__name__!r} has no attribute {nome!r}")
 
 
 def _ensure_views(conn):
     """VIEW canônica dos ativos. Idempotente; em fixture sem a tabela, a view
-    fica pendente sem quebrar a conexão (SQLite só resolve nomes no SELECT)."""
+    fica pendente sem quebrar a conexão (SQLite só resolve nomes no SELECT).
+
+    s236: a definição depende do watermark do banco pareado, e `CREATE VIEW IF NOT EXISTS`
+    sozinho manteria a definição antiga para sempre -- a view é RECRIADA quando o texto
+    gravado não termina na definição corrente. Com watermark, a ponte `card_evidencia` que
+    faltar é criada antes (DDL do pacote), senão a view e todo `ativo_where` quebrariam."""
+    corpo = f"SELECT * FROM flashcards WHERE {ativo_where()}"
     try:
-        conn.execute("CREATE VIEW IF NOT EXISTS flashcards_ativos AS "
-                     f"SELECT * FROM flashcards WHERE {ATIVO_WHERE}")
+        if watermark_flashcards() is not None:
+            for nome, ddl in PONTES_DDL.items():
+                if not _tem_tabela(conn, nome):
+                    conn.execute(ddl)
+        linha = conn.execute("SELECT sql FROM sqlite_master WHERE type = 'view' "
+                             "AND name = 'flashcards_ativos'").fetchone()
+        if linha is not None and not (linha[0] or "").rstrip().endswith(corpo):
+            conn.execute("DROP VIEW flashcards_ativos")
+            linha = None
+        if linha is None:
+            conn.execute("CREATE VIEW flashcards_ativos AS " + corpo)
     except sqlite3.OperationalError:
         pass  # db mínimo de teste sem flashcards — view é opcional aí
 
@@ -274,7 +404,7 @@ def get_fresh_error_cards(tema=None, janela_horas=48):
             JOIN fsrs_cards fc ON fc.card_id = f.id
             JOIN taxonomia_cronograma t ON t.id = f.tema_id
             WHERE fc.state = 0 AND fc.due >= ?
-              AND COALESCE(f.needs_qualitative, 0) < 2''' + extra + '''
+              AND ''' + ativo_where('f.') + extra + '''
             ORDER BY f.id DESC
         ''', conn, params=params)
     finally:
@@ -1298,7 +1428,7 @@ def cards_ativos_para_predicado():
     try:
         linhas = conn.execute(
             "SELECT id, frente_contexto, frente_pergunta, verso_resposta, "
-            f"verso_regra_mestre, verso_armadilha FROM flashcards WHERE {ATIVO_WHERE} "
+            f"verso_regra_mestre, verso_armadilha FROM flashcards WHERE {ativo_where()} "
             "ORDER BY id").fetchall()
     finally:
         conn.close()

@@ -48,4 +48,24 @@ BANCA × EVIDÊNCIA: <só se DESATUALIZADO: gabarito esperado vs diretriz atual>
 CONFIANÇA: <alta|média|baixa> — <1 linha do porquê>
 ```
 
+**Depois do texto, sempre, o mesmo resultado como dado** (contrato v1.5 §8; formato do Adendo 1 item 3 do ADR `ai-eng:artifacts/adr-banco-evidencias-clinicas-medhub-2026-10-30.md`, = §1 da spec do `evidence-bank`): um único bloco ```json no fim, 1 item por afirmação, que quem invocou você grava num arquivo e passa a `python -m evidence_bank fila-add --from <arquivo> --db <medhub>/evidencias.db` (na raiz do pacote `C:/Users/daanm/evidence-bank`).
+
+```json
+{"agente": "evidence-researcher", "gerado_em": "AAAA-MM-DDTHH:MM",
+ "itens": [{"afirmacao": "<proposição, verbatim>", "tipo": "cutoff|dose|conduta|criterio|indicacao|epidemio|fisiopato",
+   "valor": "<cifra/IC95 verbatim ou null>", "area": "<área do MedHub>", "tema": "<tema ou null>", "tema_id": null,
+   "bloco_edital": null, "veredito": "CONFIRMADO|DIVERGENTE-VALOR|DIVERGENTE-CONDUTA|DESATUALIZADO|NAO-VERIFICAVEL",
+   "substrato": "canonico|fallback|local", "confianca": "alta|media|baixa",
+   "o_que_diz": "<O QUE A EVIDÊNCIA DIZ, verbatim>", "banca_x_evidencia": "<só se DESATUALIZADO, senão null>",
+   "banca_espera": null, "origem": "<card:<id> | questao:<id> | aula:<slug> | researcher>",
+   "fontes": [{"rotulo": "<EMISSOR ANO Documento>", "tier": 1, "origem": "BR|INT", "papel": "sustenta|contradiz|banca",
+               "url": null, "doi": "<DOI ou null>", "pmid": "<PMID ou null>", "localizador": "<p./§/tabela ou null>",
+               "verificada_em": "AAAA-MM-DD"}]}]}
+```
+
+- Os campos são os do texto: `veredito` sem acento (`NAO-VERIFICAVEL`), `confianca` sem acento; `origem` = a que veio no pedido (sem pedido, `researcher`).
+- `rotulo` na gramática do parser (`SIGLA ANO Documento`, ex. `SBD 2024 Diretriz da Sociedade Brasileira de Diabetes`); `tier`/`origem` pelo §2 do contrato (Tier 1 = sociedade BR/MS). Resumo, apostila e card **nunca** são fonte: o pacote recusa o lote inteiro.
+- `NAO-VERIFICAVEL` vai com `fontes: []` (honest-negative): entra na fila e a folha propõe rejeitar ou adiar; nunca invente uma fonte para preencher o item.
+- Divergência (`DIVERGENTE-*`, `DESATUALIZADO`): a diretriz vigente vai com `papel: "sustenta"` e o gabarito/fonte da banca com `papel: "banca"` ou `"contradiz"`.
+
 Seja minucioso na busca, econômico no relato. O que importa é o veredito correto com a fonte certa — não um dump das buscas.

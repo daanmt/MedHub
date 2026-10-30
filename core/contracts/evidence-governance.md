@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.4
+version: 1.5
 relates_to: [AGENTE, fsrs-management-contract, reconcile-contract]
 ---
 
 # Contrato de Governança de Evidência (Evidence Governance)
-**Versão 1.4 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2), fonte da Solução MedHub em 2026-10-11 (Fase 0 Lote 2, 2.2), Referências no fim do resumo e da aula em 2026-10-13 (s227) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
+**Versão 1.5 | 2026-06-04 (sessão 076), substrato `canonico` trocado na sessão 169, substrato `local` trocado em 2026-10-11 (Fase 0 Lote 3, 3.0b2), fonte da Solução MedHub em 2026-10-11 (Fase 0 Lote 2, 2.2), Referências no fim do resumo e da aula em 2026-10-13 (s227), banco de evidências dedicado (`evidencias.db`, pacote `evidence-bank`) em 2026-10-30 (s236) — primeira instância; adaptado do mecanismo de evidência/auditoria do agente irmão `agente-daktus-content` (`pubmed-audit-layer.md` v1.1 + `evidence-bank-governance.md` v1.1 + `daktus-evidence` SKILL v2.0).**
 
 > Documento normativo. Define como o MedHub garante que **toda afirmação clínica decisória seja a mais consistente com a melhor evidência que a sustenta** — e como essa evidência é buscada, hierarquizada, auditada e rastreada.
 > Referenciado por: `AGENTE.md` (§6 decisões, §7 skills), `.claude/commands/{analisar-questao,estilo-resumo,auditar-resumos,estilo-flashcard,pesquisar-evidencia}.md`, `.claude/agents/evidence-researcher.md`, `docs/SOLUCAO-MEDHUB-BRIEF.md` (§7.1).
@@ -37,6 +37,8 @@ Princípio-mãe (herdado do irmão, adaptado): *a afirmação clínica que entra
 **Escopo travado (v1.0):** **go-forward + skill sob demanda.** NÃO há varredura retroativa dos 45 resumos existentes nesta versão (ver §11 Fora de escopo).
 
 **Não auditar:** fatos consolidados de baixa controvérsia (anatomia, fisiologia básica, definições estáveis). Auditoria é cara — reservá-la ao que muda decisão e tem risco de estar errado/desatualizado.
+
+A **base interna** — `resumos/`, apostila EMED, verso de card — **não é referência** (operador, 30/10/2026). Só documento citável (`tipo = publica` no parser `db.fonte_estruturada`) sustenta uma afirmação.  <!-- NAO-VERIFICAVEL: no banco, a recusa de Resumo/Apostila/EMED (tipo=publica) e do pacote evidence-bank, fora do registro deste repo; nas aulas e resumos e autoria (revisar: 2026-12-15) -->
 
 ---
 
@@ -120,6 +122,8 @@ Isto espelha o princípio do irmão *"drift clínico é falha estrutural — div
 
 - **Citação obrigatória** em toda afirmação decisória auditada: **fonte + ano** (`SBD 2024`, `ADA 2025`) e/ou **PMID/DOI** quando `canonico`. **Onde ela vai (v1.4, s227, pedido do operador de 13/10/2026: "concentrá-los ao final, tal como um artigo"):** no **resumo e na aula**, um número `[N]` no fim da frase e o item N da seção **Referências** no fim do documento (forma em `.claude/commands/estilo-resumo.md` §Referências e `.claude/commands/aula-base.md` §6), sem linha "Fonte:" no meio do texto; no **card** (sem lista de referências), compacta na regra-mestre (`SBD 2024`). As Referências seguem a ordem do §2 (Tier 1 primeiro); a base interna (resumo do MedHub, verso de card, apostila do curso) não é referência e vai numa linha "Base deste documento" depois da lista.  <!-- NAO-VERIFICAVEL: onde a citacao vai e medido so no resumo (audit_resumos FONTE_INLINE); na aula e no card e autoria, sem gate (revisar: 2027-03-31) -->
   ⚰️ *13/10/2026 (v1.4): era "A citação vai na regra-mestre/armadilha do resumo e do card — densidade clínica, como manda o `estilo-resumo`." Motivo: a fonte espalhada no meio do texto do resumo e da aula; o card não muda.*
+- **Fonte da citação renderizada (v1.5):** no card e na questão, a citação compacta (`SBD 2024`) é **gerada** a partir das pontes `card_evidencia`/`questao_evidencia` (ipub) → `evidencia` → `evidencia_fonte` → `fonte` (`evidencias.db`, pacote `evidence-bank`); nunca digitada no verso.  <!-- NAO-VERIFICAVEL: o render da citacao a partir das pontes ainda nao existe no player nem no hub (F3 do ADR) (revisar: 2026-11-30) -->
+  Card criado após o watermark sem ponte `estado='ativa'` fica em **quarentena** (não servido) até a decisão na fila. A forma visual (§7 v1.4) não muda.  <!-- CHECK: test_card_acima_do_watermark_sem_ponte_ativa_nao_e_ativo -->
 - **Honest-negative (invariante):** se a busca precisa (cap 2 tentativas) não sustenta a afirmação → `NÃO-VERIFICÁVEL`, declarado. **Jamais fabricar** uma confirmação, um PMID ou uma cifra.
 - **Substrato declarado:** um `CONFIRMADO` via `fallback` (WebSearch) **não** tem a mesma força que via `canonico` (PubMed PMID/DOI) — a diferença fica registrada.
 
@@ -140,6 +144,8 @@ Vale para o campo `fontes` de `emed_solucoes` quando a Solução é cunhada ou o
 ## 8. Audit-Before-Advance (afirmação decisória nova)
 
 Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica decisória nova** que entra em `resumos/` ou num card go-forward **não se fecha** com o estado `NÃO-AUDITADO` quando há sinal de controvérsia/baixa confiança. O fechamento exige: veredito atribuído + fonte citada (ou `NÃO-VERIFICÁVEL` declarado honestamente). Não bloqueia conteúdo de baixa controvérsia (§1).
+
+A afirmação decisória nova entra pela **fila** do banco (`aberta → triada → pesquisada → decidida`); `incluida` exige ≥1 fonte `sustenta`; `DIVERGENTE-*` entra com a fonte como `contradiz` e **não é incluída sem correção**; `NAO-VERIFICAVEL` só `rejeitada` ou `adiada`. Decisão = folha assinada pelo operador (inbox), salvo delegação declarada por ele.  <!-- NAO-VERIFICAVEL: as transicoes e as recusas sao do pacote evidence-bank (selftest itens 1-2), fora do registro deste repo; o lado medhub (card sem evidencia -> quarentena + fila) tem test_insert_card_base_poe_card_sem_evidencia_em_quarentena_e_nao_recusa (revisar: 2026-12-15) -->
 
 ---
 
@@ -165,7 +171,7 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 - **Varredura retroativa** dos 45 resumos existentes (auditoria em ondas) — candidata a uma v1.1 se o go-forward provar valor.
 - **Capacidade B do irmão:** detecção proativa de drift guideline×literatura, scoring de robustez, cobertura automática de SR/MA recentes.
 - **Pipeline programático em batch** (fetch/dedup/scoring) — só se a Capacidade A provar valor.
-- **Persistência claim-level em DB** (o irmão tem banco de claims; o MedHub registra a citação no próprio documento -- número + Referências no resumo/aula, compacta no card --, sem tabela de claims). A Solução ganha `referencia` + `solucao_referencia` na v1.3 (§7.1): elas estruturam a FONTE da Solução, não o claim.
+- **Persistência claim-level em DB** — ⚰️ *30/10/2026 (v1.5): revogado por ordem do operador — o claim passa a entidade (`evidencia`) em `evidencias.db`, banco dedicado fora do `ipub.db` (ADR `ai-eng:artifacts/adr-banco-evidencias-clinicas-medhub-2026-10-30.md` v1.1). O que fica fora: varredura retroativa em massa dos 2.146 cards (entram pela reforja) e Capacidade B. Era: "o irmão tem banco de claims; o MedHub registra a citação no próprio documento -- número + Referências no resumo/aula, compacta no card --, sem tabela de claims. A Solução ganha `referencia` + `solucao_referencia` na v1.3 (§7.1): elas estruturam a FONTE da Solução, não o claim."*
 
 ---
 
@@ -189,6 +195,8 @@ Espelha o `canon-governance` do irmão, adaptado: uma **afirmação clínica dec
 ---
 
 ## 14. Changelog
+
+**v1.5 — 2026-10-30 (ai-eng N=94, ordem do operador de 30/10)** — banco de evidências dedicado (`evidencias.db`, pacote `evidence-bank`), grão por afirmação com N fontes, fila tipo inbox com folha de decisão, pontes no ipub com quarentena por watermark via `ativo_where`, base interna ≠ referência. Hierarquia (§2), substrato (§3), vereditos (§4), query Entrez (§5), budget (§9): **inalterados**. Aplicado no medhub na s236: `db.ativo_where`/`flashcards_ativos` com a conjunção de quarentena, `app/utils/evidencias_ponte.py` nos três writers de card (`insert_card_base`, `insert_questao`, `insert_card_extra`), `evidence-researcher` com o bloco JSON, folhas em `pendencias/`.
 
 **v1.4 — 2026-10-13 (s227, pedido do operador)** — **Referências no fim, como num artigo.** §7: no resumo e na aula a citação vira `[N]` + a seção Referências no fim (Tier 1 do §2 primeiro: sociedades BR, MS/PCDT); a base interna (resumo, card, apostila) sai da lista para a linha "Base deste documento"; o card segue com a citação compacta. ⚰️ Revogado (AGENTE §10.10, 3 passos no mesmo commit): "A citação vai na regra-mestre/armadilha do resumo e do card" -- lápide no §7; termo cadastrado no §12 do `docs/MEMORIA-AUDITORIA.md`. Portadores da forma: `estilo-resumo` §Referências, `aula-base` §6; sensor: `audit_resumos` WARN `FONTE_INLINE` (regra nova nasce WARN).
 

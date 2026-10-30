@@ -11,6 +11,7 @@ Globais isolados em tmp_path, em TODO teste, pelo autouse `_event_log_isolado`
   - `ledger_self.ROOT_DIR` e `tools.ledger_self.ROOT_DIR`
                                               -> history/ledger_self{.jsonl,_state.json}
   - `tools.utils.state_utils.WATERMARK_PATH`  -> history/card_watermark.json
+  - `MEDHUB_EVIDENCIAS_DB` (env)              -> evidencias.db pareado ao ipub.db (s236)
 
 A Fase 0 Lote 0 part-2a (10/10/2026) acrescentou também:
   - o fixture `db_sintetico` (schema canônico do `tools/init_db.py` em tmp_path, com
@@ -121,6 +122,12 @@ def _event_log_isolado(tmp_path, monkeypatch):
         mod = sys.modules.get(nome)
         if mod is not None and hasattr(mod, "WATERMARK_PATH"):
             monkeypatch.setattr(mod, "WATERMARK_PATH", tmp_path / "card_watermark.json")
+    # s236 (evidence-bank): o `evidencias.db` ao lado do ipub.db real é global do mesmo jeito --
+    # pareado, ele põe a conjunção de quarentena (e a tabela `card_evidencia`) no
+    # `db.ativo_where` de fixtures que não a têm. Todo teste começa SEM banco pareado, também
+    # nos CLIs que ele roda em subprocesso (herdam o ambiente); quem exercita a quarentena
+    # aponta `MEDHUB_EVIDENCIAS_DB` para o seu (`tools/test_evidencias_quarentena.py`).
+    monkeypatch.setenv("MEDHUB_EVIDENCIAS_DB", str(tmp_path / "evidencias_ausente.db"))
 
 
 @pytest.fixture

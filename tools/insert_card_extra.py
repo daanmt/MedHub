@@ -10,6 +10,11 @@ escrita (tambem no dry-run): ancora invalida ou card sem ancora = exit 1, NADA g
 Idempotente: mesma `frente_pergunta` no mesmo `questao_id` ou ja ancorada no mesmo
 `(lista, num)` vira [SKIP]. --dry-run e o default; o DDL so roda sob --apply.
 
+Evidencia (s236, evidence-bank; contrato evidence-governance v1.5 §7): com `evidencias.db`
+pareado, card sem `evidencias: ["ev-..."]` ativas entra EM QUARENTENA (fora do FSRS) e as
+afirmacoes dele (`afirmacoes`; sem elas, a regra-mestre) vao a fila do banco antes do commit --
+nunca recusado por falta de evidencia; recusa so por forma (`app/utils/evidencias_ponte.py`).
+
 JSON de entrada (--from): lista de
   {tema_id, questao_id?, emed? ("t40_5" ou ["t40_5", "t40_17"]), tipo?, frente_contexto?,
    frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?, origem_card?}
@@ -41,6 +46,7 @@ except Exception:
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 from app.utils import db  # P6: emed_chave / emed_validar_ancora / emed_ancorar_card (writer unico)
+from app.utils import evidencias_ponte  # s236: quarentena + fila do evidence-bank
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -147,6 +153,7 @@ def inserir(args):
         sys.exit(1)
 
     ins = skip = 0
+    pendentes = []  # s236: (card_id, card, area, tema, tema_id) -> evidencias_ponte.aplicar
     if not dry and any(chaves for _, _, _, chaves in plano):
         db._ensure_emed_tables(conn)  # DDL idempotente, so sob --apply
     try:
@@ -173,6 +180,7 @@ def inserir(args):
                 continue
             print(f"  [INSERT] questao {qid} emed {ancoras} tema {tid} "
                   f"(origem #{c.get('origem_card')}): {fp[:60]}")
+            cid = 0  # dry-run: sem id; a fila do evidence-bank valida a forma com `card:0`
             if not dry:
                 cur.execute(
                     "INSERT INTO flashcards (questao_id, tema_id, tipo, frente_contexto, frente_pergunta, "
@@ -184,7 +192,18 @@ def inserir(args):
                 cur.execute("INSERT INTO fsrs_cards (card_id, state, due) VALUES (?, 0, ?)", (cid, datetime.now()))
                 for lista, num in chaves:
                     db.emed_ancorar_card(conn, lista, num, cid)
+            area_tema = cur.execute("SELECT area, tema FROM taxonomia_cronograma WHERE id = ?",
+                                    (tid,)).fetchone() or (None, None)
+            pendentes.append((cid, c, area_tema[0], area_tema[1], tid))
             ins += 1
+        # s236: evidência ANTES do commit -- ponte `ativa`, ou quarentena + fila do evidence-bank.
+        ev = evidencias_ponte.aplicar(None if dry else conn, pendentes,
+                                      agente="medhub:insert_card_extra", db_path=DB_PATH,
+                                      dry_run=dry)
+        for a in ev["avisos"]:
+            print(f"  [AVISO-EVIDENCIA] {a}")
+        if evidencias_ponte.linha_resumo(ev):
+            print(f"  {evidencias_ponte.linha_resumo(ev)}")
     except Exception as e:
         conn.rollback()
         conn.close()

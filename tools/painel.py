@@ -855,7 +855,7 @@ def _html_tarefa(t, proxima=False):
     return ('<li class="%s" data-tarefa="%s"><i class="t-faixa" data-area="%s" aria-hidden="true"></i>'
             '<p class="t-meta">%s</p><p class="t-tema">%s</p>%s</li>'
             % (classes, _e(t["id"]), _e(t["rotulo"] or ""), "".join(meta), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
-               '<p class="t-acao">%s</p>' % acao if acao else ""))
+               '<p class="t-acao%s">%s</p>' % (" t-varias" if acao.count("data-hub-aula=") > 1 else "", acao) if acao else ""))
 
 
 def _html_rota(rota):
@@ -1211,6 +1211,14 @@ a{color:var(--acento);text-underline-offset:2px}
 .tarefa > .t-meta{grid-area:meta;justify-content:flex-start;color:var(--tinta2)}   /* s236 (U3): tinta3 sobre o fundo tingido = 4,4:1 */
 .tarefa > .t-tema{grid-area:tema}
 .tarefa > .t-acao{grid-area:acao;margin:0;padding:0;justify-content:flex-end}
+/* s236 (pedido dele, 30/10: o cartao com 4 aulas engoliu a coluna do titulo): com 2+ aulas (`.t-varias`) o cartao vira
+   uma coluna -- meta, tema e, abaixo, uma aula por linha com o titulo inteiro; o Resolver (apagado ou nao) fica na
+   1a linha das acoes. A coluna do titulo nunca encolhe abaixo de 10rem */
+.tarefa{grid-template-columns:minmax(10rem,1fr) auto}
+.tarefa:has(> .t-acao.t-varias){grid-template-columns:minmax(0,1fr);grid-template-areas:"meta" "tema" "acao"}
+.tarefa > .t-acao.t-varias{justify-content:flex-start;padding-top:var(--esp-2)}
+.t-acao.t-varias .t-btn{flex:1 1 100%;justify-content:flex-start;text-align:left;padding:var(--esp-2) var(--esp-3);min-height:40px;line-height:1.3}
+.t-acao.t-varias > .t-btn-prim{flex:0 0 auto}
 @media (max-width:520px){
   .tarefa{grid-template-columns:minmax(0,1fr);grid-template-areas:"meta" "tema" "acao"}
   .tarefa > .t-acao{justify-content:flex-start;padding-top:var(--esp-1)}

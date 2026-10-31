@@ -916,6 +916,24 @@
    "tarefas": [
     5426
    ]
+  },
+  "rd-orto-3010": {
+   "tipo": "revisao",
+   "titulo": "Dor óssea e claudicação: o diferencial por idade, sede e achado",
+   "disciplinas": [
+    "Ortopedia",
+    "Pediatria",
+    "Reumatologia",
+    "Infectologia"
+   ],
+   "resumos": [
+    "Cirurgia/Quadril Pediátrico.md",
+    "Pediatria/Febre Reumática.md",
+    "Cirurgia/Doenças da Coluna Vertebral e Maus-Tratos.md"
+   ],
+   "tarefas": [
+    5426
+   ]
   }
  }
 }

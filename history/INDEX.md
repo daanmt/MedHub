@@ -4,6 +4,8 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
+**session_237.md (2026-10-30/31, sexta, noite):** 📘🎯 **Sprint UERJ da Estratégia (250 inéditas) com gabarito autoral e veredito (20% x 34% em tema alto); 5 aulas de véspera no hub (erros UERJ 1-2, Sprint, RD TB, RD dor óssea); TB 360 11/20 e t740 5/11 registradas; cadeia v3 de t740/t876/t878; hub Version 149.**
+
 **session_234.md (2026-10-28/29, quarta-quinta):** 🏗️🔎 **Sessão de ENGENHARIA: sabatina do /ai-eng (ordem dele: "macetar sem dó"), rodadas 1 e 2, só leitura -- 4 relatórios em `tmp/aieng/` (arquitetura + pedagogia; autoauditoria pela régua da trilha, 41 achados; inventário de defesa com árvore mínima 1.098 -> 283 arquivos; r2 = 7 defendidos x 19 concedidos). Achado grave conferido: cópia do banco de 14/03 no histórico do repo PÚBLICO -> decisão D-01 com ele. 1 tique (fila 2026-10-28a, Version 137); UERJ 2025 em andamento. Limite semanal estourado (1,63 milhão de tokens em subagentes).**
 
 **session_233.md (2026-10-27, terça, noite):** 🧭🃏 **Volta depois de 6 dias sem estudo: rota até 31/10 recalculada -- UERJ 2025 em 28/10, TB 360 + Arbo/HIV/TB em 29/10, UERJ 2026 (ensaio geral) em 30/10, véspera leve em 31/10 com Meningites, MFC e UERJ de Bolso; 348 q no sprint, 66 fora, 8.413 em 01/11 cumprindo o sprint. Fila de cards 2026-10-27a (149) no ar.** Hub Version 136; suíte 1819; sem subagentes.

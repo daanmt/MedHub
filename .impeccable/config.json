@@ -23,6 +23,15 @@
         ],
         "createdAt": "2026-10-31T02:32:13.646Z",
         "reason": "aula-base.md 2b + DESIGN.md (decisao do tema v4, s227): callout de armadilha = filete a esquerda + lavagem ambar, o mesmo .trap do aulao publicado; nao e cartao com aba"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "artifacts/aula-rd-orto-3010.html"
+        ],
+        "createdAt": "2026-10-31T02:53:01.064Z",
+        "reason": "aula-base.md 2b + DESIGN.md (tema v4, s227): callout .trap = filete a esquerda + lavagem ambar, igual as RDs publicadas"
       }
     ]
   }

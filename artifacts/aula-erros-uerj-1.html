@@ -1,0 +1,995 @@
+<title>Seus erros na UERJ, parte 1: Clínica e Cirurgia</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:20px 0 8px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:28px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+ol.toc .qc{display:block}
+.qc a,.lede a,ul.tp a,.rem a{color:var(--teal-ink)}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.qc{color:var(--ink3);font-size:13px}
+.rem{margin:14px 0 0;color:var(--ink3);font-size:14px}
+details.lote{margin:12px 0 0;border-top:1px solid var(--line)}
+details.lote summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:44px;display:flex;align-items:center}
+details.lote .tw{margin-top:4px}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-eixo{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-ref{stroke:var(--line2);stroke-width:1.2;fill:none}
+.fa-fio{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-pt{fill:var(--ink2)}
+.fa-box{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-cor{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-pulmao{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-nuc{fill:var(--plum-wash);stroke:var(--ink3);stroke-width:1}
+.fa-musc{fill:var(--sunk);stroke:var(--ink3);stroke-width:1}
+.fa-col{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
+.fa-osso{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-hole{fill:var(--paper);stroke:var(--ink3);stroke-width:1}
+.fa-blast{fill:var(--ink3);stroke:var(--ink2);stroke-width:.8;opacity:.75}
+.fa-erro{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1.2}
+.fa-sangue{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1}
+.fa-q4{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-l1{fill:var(--plum-wash);stroke:var(--line2);stroke-width:1}
+.fa-l2{fill:var(--card);stroke:var(--line2);stroke-width:1}
+.fa-l3{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-lig{stroke:var(--ink2);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-endo{stroke:var(--ink3);stroke-width:1.4;fill:none;stroke-linecap:round}
+.fa-arm{stroke:var(--ink3);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-varis{stroke:var(--carmine);stroke-width:2.2;fill:none;stroke-linecap:round}
+.fa-porta{stroke:var(--ink2);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-bar{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
+.fa-bar2{stroke:var(--ink2);stroke-width:1.8;stroke-linecap:round}
+.fa-bar3{stroke:var(--ink);stroke-width:4;stroke-linecap:round}
+.chave{color:var(--rosa);font-weight:650}
+.fa-rs{fill:var(--rosa)}
+.fa-rsf{stroke:var(--rosa);stroke-width:1.6;fill:none;stroke-linecap:round}
+.fa-rsk{stroke:var(--rosa);stroke-width:2.6;fill:none;stroke-linecap:round}
+.fa-rst{fill:var(--rosa);font-size:12px;font-weight:650}
+.fa-rsb{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Véspera · Clínica e Cirurgia · os seus 66 erros nas provas UERJ 2021-2025</p>
+  <h1>Seus erros na UERJ, parte 1: Clínica e Cirurgia</h1>
+  <p class="sub">O degrau que faltou em cada erro, agrupado pelo tema que a UERJ mais cobra. O que o aulão já ensina fica de fora; aqui entra só o que você errou.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho</h2>
+  <ol class="toc">
+    <li><a href="#cap-1">Tuberculose fora do pulmão: o íleo, o peritônio e a meninge</a><span class="qc">CM e CIR · 5 erros</span></li>
+    <li><a href="#cap-2">Pericárdio ou artéria pulmonar: onde o sangue para</a><span class="qc">CM · 3 erros</span></li>
+    <li><a href="#cap-3">Esôfago e estômago: a JEG classifica, o laudo dá T, N e M</a><span class="qc">CIR · 5 erros</span></li>
+    <li><a href="#cap-4">Cirurgia geral: o espaço, a flora e o relógio</a><span class="qc">CIR · 4 erros</span></li>
+    <li><a href="#cap-5">Depois da cirurgia: a célula do dia e a febre do dia</a><span class="qc">CIR · 5 erros</span></li>
+    <li><a href="#cap-6">Glomerulopatias: o depósito tem endereço</a><span class="qc">CM · 2 erros</span></li>
+    <li><a href="#cap-7">Hematologia: o reticulócito separa, o FvW carrega</a><span class="qc">CM e CIR · 4 erros</span></li>
+    <li><a href="#cap-8">Osso: quem destrói e quem constrói</a><span class="qc">CM · 3 erros</span></li>
+    <li><a href="#cap-9">Valvas: a fase do ciclo e a manobra</a><span class="qc">CM · 3 erros</span></li>
+    <li><a href="#cap-10">HDA: o fluxo que enche a variz</a><span class="qc">CIR · 2 erros</span></li>
+    <li><a href="#cap-11">Urologia: obstruído e infectado drena; AFP separa</a><span class="qc">CM · 2 erros</span></li>
+  </ol>
+  <p class="qc">Antes: <a href="#retrato">o retrato</a> e <a href="#certezas">o que você errou com certeza</a>. Depois: <a href="#avulsos">os temas com um erro só</a> e <a href="#gatilhos">os gatilhos</a>.</p>
+</nav>
+
+<section class="sec" id="retrato">
+  <span class="kick">00 · O retrato</span>
+  <h2>66 erros, e onde eles se juntam</h2>
+  <p class="lede">Cirurgia e Clínica são os seus blocos de pior acerto acumulado na UERJ (60% e 61% até 2024); aqui estão os 66 erros dos dois nas cinco provas que você fez.</p>
+  <ul class="tp">
+    <li>33 em CM e 33 em CIR. Por prova: 10 (2021), 12 (2022), 19 (2023), 16 (2024) e 9 (2025). Em 2025 a CIR deu 16 de 19: o bloco subiu, mas a base de 2021-2023 ainda tem buraco.</li>
+    <li>24 erros (36%) são de tema de prevalência alta (4 questões ou mais nas 5 provas UERJ 2021-2025). Em CIR, <strong class="chave">18 de 33</strong>: o erro mora no tema que mais cai. Em CM, 25 de 33 estão em tema médio ou raro: o erro se espalha.</li>
+    <li>Você reconhece a cena e quebra no elo seguinte: dos 37 erros com elos declarados, 26 começaram com "sim" no 1º elo.</li>
+    <li>Em mais de 20, o dado que excluía a sua alternativa estava escrito (Valsalva, glicorraquia normal, PCP normal, "osteoblásticas", "não obstruído"). Em 10, faltou um número de corte (2 cm, 1,5 cm, 30 mil, 1,1, 0,70, 3-6 linfonodos, 3 semanas, 24-48 h, 10 mm, o hematócrito do reticulócito).</li>
+    <li>Confiança: 7 com certeza (6 em CM), 28 em dúvida, 12 no chute; os 19 de 2023 não têm registro. Se o tempo apertar, leia as certezas e os gatilhos; os capítulos são o degrau.</li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>Seus erros de CM e CIR por prova</b></p>
+    <svg viewBox="0 0 360 208" role="img" aria-label="Barras de erros por prova, Cirurgia e Clínica lado a lado, de 2021 a 2025. Cirurgia: 5, 7, 12, 6 e 3 erros; Clínica: 5, 5, 7, 10 e 6. A parte destacada de cada barra é o erro em tema de prevalência alta nas 5 provas UERJ 2021-2025: mais da metade da barra de Cirurgia, pouco da de Clínica.">
+      <rect class="fa-rsb" x="14" y="10" width="12" height="12" rx="2"/>
+      <text class="fa-s" x="32" y="20">tema de prevalência alta</text>
+      <rect class="fa-box" x="196" y="10" width="12" height="12" rx="2"/>
+      <text class="fa-s" x="214" y="20">demais temas</text>
+      <rect class="fa-rsb" x="24" y="130" width="20" height="40"/>
+      <rect class="fa-box" x="24" y="120" width="20" height="10"/>
+      <text class="fa-tc" x="34" y="115" text-anchor="middle">5</text>
+      <text class="fa-s" x="34" y="184" text-anchor="middle">CIR</text>
+      <rect class="fa-rsb" x="48" y="150" width="20" height="20"/>
+      <rect class="fa-box" x="48" y="120" width="20" height="30"/>
+      <text class="fa-tc" x="58" y="115" text-anchor="middle">5</text>
+      <text class="fa-s" x="58" y="184" text-anchor="middle">CM</text>
+      <text class="fa-m" x="46" y="201" text-anchor="middle">2021</text>
+      <rect class="fa-rsb" x="92" y="140" width="20" height="30"/>
+      <rect class="fa-box" x="92" y="100" width="20" height="40"/>
+      <text class="fa-tc" x="102" y="95" text-anchor="middle">7</text>
+      <text class="fa-s" x="102" y="184" text-anchor="middle">CIR</text>
+      <rect class="fa-box" x="116" y="120" width="20" height="50"/>
+      <text class="fa-tc" x="126" y="115" text-anchor="middle">5</text>
+      <text class="fa-s" x="126" y="184" text-anchor="middle">CM</text>
+      <text class="fa-m" x="114" y="201" text-anchor="middle">2022</text>
+      <rect class="fa-rsb" x="160" y="110" width="20" height="60"/>
+      <rect class="fa-box" x="160" y="50" width="20" height="60"/>
+      <text class="fa-tc" x="170" y="45" text-anchor="middle">12</text>
+      <text class="fa-s" x="170" y="184" text-anchor="middle">CIR</text>
+      <rect class="fa-rsb" x="184" y="150" width="20" height="20"/>
+      <rect class="fa-box" x="184" y="100" width="20" height="50"/>
+      <text class="fa-tc" x="194" y="95" text-anchor="middle">7</text>
+      <text class="fa-s" x="194" y="184" text-anchor="middle">CM</text>
+      <text class="fa-m" x="182" y="201" text-anchor="middle">2023</text>
+      <rect class="fa-rsb" x="228" y="140" width="20" height="30"/>
+      <rect class="fa-box" x="228" y="110" width="20" height="30"/>
+      <text class="fa-tc" x="238" y="105" text-anchor="middle">6</text>
+      <text class="fa-s" x="238" y="184" text-anchor="middle">CIR</text>
+      <rect class="fa-rsb" x="252" y="160" width="20" height="10"/>
+      <rect class="fa-box" x="252" y="70" width="20" height="90"/>
+      <text class="fa-tc" x="262" y="65" text-anchor="middle">10</text>
+      <text class="fa-s" x="262" y="184" text-anchor="middle">CM</text>
+      <text class="fa-m" x="250" y="201" text-anchor="middle">2024</text>
+      <rect class="fa-rsb" x="296" y="150" width="20" height="20"/>
+      <rect class="fa-box" x="296" y="140" width="20" height="10"/>
+      <text class="fa-tc" x="306" y="135" text-anchor="middle">3</text>
+      <text class="fa-s" x="306" y="184" text-anchor="middle">CIR</text>
+      <rect class="fa-rsb" x="320" y="160" width="20" height="10"/>
+      <rect class="fa-box" x="320" y="110" width="20" height="50"/>
+      <text class="fa-tc" x="330" y="105" text-anchor="middle">6</text>
+      <text class="fa-s" x="330" y="184" text-anchor="middle">CM</text>
+      <text class="fa-m" x="318" y="201" text-anchor="middle">2025</text>
+      <line class="fa-eixo" x1="14" y1="170" x2="346" y2="170"/>
+    </svg>
+    <figcaption>Esquema: em CIR o erro mora no tema que mais cai (18 de 33); em CM, se espalha (6 de 33).</figcaption>
+  </figure>
+</section>
+
+<section class="sec" id="certezas">
+  <span class="kick">Certezas a desinstalar · 7 erros</span>
+  <h2>O que você errou com certeza</h2>
+  <p class="lede">Erro com certeza é conceito errado instalado: na prova ele volta com a mesma convicção.</p>
+  <ul class="tp">
+    <li><strong>TARV na meningite tuberculosa</strong> (CM 2024 Q17). Você achava: 2 semanas -&gt; é mais tarde, porque a reconstituição inflamatória dentro do crânio mata. A questão citava o MS 2019 (8 semanas); o PCDT 2023 encurtou para 4-6 semanas.<sup class="ref"><a href="#ref-1">1</a>,<a href="#ref-2">2</a></sup> <a href="#cap-1">Cap. 1</a></li>
+    <li><strong>Gravidade na crise de asma</strong> (CM 2021 Q12). Você achava a FR de 36 o mais grave -&gt; é a <strong class="chave">PaCO2 de 40</strong>. Na crise o asmático hiperventila e a PaCO2 cai; se ela "normalizou", é fadiga: risco de vida.<sup class="ref"><a href="#ref-3">3</a></sup> O resto da asma está no aulão, parte 2.</li>
+    <li><strong>Anemia hiperproliferativa</strong> (CM 2024 Q10). Você achava B12 baixa + hipersegmentação -&gt; é reticulocitose + LDH alto + haptoglobina baixa. "Hiperproliferativa" quer dizer medula soltando hemácia, e a megaloblástica não solta. <a href="#cap-7">Cap. 7</a></li>
+    <li><strong>Von Willebrand</strong> (CIR 2021 Q21). Você achava fator VII -&gt; é o <strong>VIII</strong>, que cai porque perde quem o carrega. <a href="#cap-7">Cap. 7</a></li>
+    <li><strong>Espirometria</strong> (CM 2022 Q10). Você achava obstrutivo -&gt; é restritivo. Obstrução exige VEF1/CVF abaixo de 0,70 (ou do limite inferior); 85% com CVF de 60% do previsto é restrição, que a CPT confirma.<sup class="ref"><a href="#ref-4">4</a></sup> Os 35 maços-ano eram isca.</li>
+    <li><strong>Choque com PCP normal</strong> (CM 2025 Q8). Você achava tamponamento -&gt; é TEP maciço: PA sem variação respiratória e PCP normal tiram o pericárdio. <a href="#cap-2">Cap. 2</a></li>
+    <li><strong>Espondiloartrite axial</strong> (CM 2025 Q19). Você achava HLA-B27 + corticoide -&gt; é RX de sacroilíacas + AINE em dose plena. Corticoide sistêmico não age no esqueleto axial; depois de 2 AINEs, biológico.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+  </ul>
+</section>
+
+<section class="sec" id="cap-1">
+  <span class="kick">01 · Tuberculose (caiu 9 vezes em 2021-2025) e meningites (5) · você errou 5 (2023 e 2024)</span>
+  <h2>Tuberculose fora do pulmão: o íleo, o peritônio e a meninge</h2>
+  <p class="lede">A TB do pulmão você sabe; errou a que mora em outro órgão, onde o exame que decide é outro.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Onde a TB intestinal se instala e por que ela opera (CIR 2023 Q23 e Q27, seguidas).</li>
+    <li>O próximo passo numa ascite de GASA baixo (CM 2023 Q8).</li>
+    <li>TB x criptococo no líquor do HIV e a hora da TARV (CM 2023 Q11, CM 2024 Q17).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>O bacilo deglutido precisa de tempo de contato e de tecido linfoide para atravessar a mucosa. O íleo terminal tem os dois: placas de Peyer e a estase da válvula. A região ileocecal é o sítio mais comum (64%).<sup class="ref"><a href="#ref-6">6</a></sup></li>
+    <li>A lesão cicatriza por fibrose: a complicação mais comum é a <strong class="chave">obstrução</strong>. O tratamento é o RIPE; a cirurgia fica para obstrução que não resolve, perfuração, abscesso ou fístula.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>TB intestinal: linfoide + estase</b></p>
+    <svg viewBox="0 0 360 200" role="img" aria-label="O íleo terminal entra no ceco pela válvula ileocecal. No íleo, placas de Peyer e bacilos na luz; perto da válvula, a estase. Antes da válvula, destacada, a estenose fibrosa que estreita a luz.">
+      <text class="fa-m" x="20" y="98">íleo terminal</text>
+      <path class="fa-cor" d="M20 108 L168 108 C178 108 180 119 188 119 L202 119 C210 119 212 108 222 108 L244 106 L244 144 L222 142 C212 142 210 131 202 131 L188 131 C180 131 178 142 168 142 L20 142 Z"/>
+      <ellipse class="fa-nuc" cx="55" cy="137" rx="15" ry="3.5"/>
+      <ellipse class="fa-nuc" cx="100" cy="137" rx="15" ry="3.5"/>
+      <ellipse class="fa-nuc" cx="145" cy="137" rx="15" ry="3.5"/>
+      <rect class="fa-pt" x="88" y="122" width="7" height="2.2" rx="1.1"/>
+      <rect class="fa-pt" x="102" y="125" width="7" height="2.2" rx="1.1"/>
+      <rect class="fa-pt" x="94" y="129" width="7" height="2.2" rx="1.1"/>
+      <path class="fa-rsf" d="M168 108 C178 108 180 119 188 119 L202 119 C210 119 212 108 222 108"/>
+      <path class="fa-rsf" d="M168 142 C178 142 180 131 188 131 L202 131 C210 131 212 142 222 142"/>
+      <path class="fa-cor" d="M250 22 L320 22 L320 150 C320 176 302 190 282 190 C260 190 242 176 242 154 L242 92 C242 84 246 80 250 76 Z"/>
+      <path class="fa-ref" d="M250 46 C272 52 298 52 320 46"/>
+      <path class="fa-ref" d="M250 70 C272 76 298 76 320 70"/>
+      <path class="fa-box" d="M242 106 C256 110 258 121 250 124 C248 118 246 113 242 112 Z"/>
+      <path class="fa-box" d="M242 144 C256 140 258 129 250 126 C248 132 246 137 242 138 Z"/>
+      <text class="fa-m" x="262" y="120">válvula</text>
+      <text class="fa-s" x="262" y="135">estase</text>
+      <text class="fa-m" x="282" y="172" text-anchor="middle">ceco</text>
+      <text class="fa-m" x="285" y="38" text-anchor="middle">cólon</text>
+      <text class="fa-rst" x="195" y="99" text-anchor="middle">estenose</text>
+      <line class="fa-rsf" x1="195" y1="104" x2="195" y2="117"/>
+      <circle class="fa-rs" cx="195" cy="119" r="2"/>
+      <line class="fa-fio" x1="100" y1="153" x2="100" y2="141"/>
+      <circle class="fa-pt" cx="100" cy="140.5" r="1.8"/>
+      <text class="fa-m" x="100" y="166" text-anchor="middle">placas de Peyer</text>
+    </svg>
+    <figcaption>Esquema: tecido linfoide + estase escolhem o íleo; a cicatriz fibrosa obstrui.<sup class="ref"><a href="#ref-6">6</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>GASA = albumina do soro menos a do líquido. 1,1 ou mais: hipertensão portal. Abaixo: peritônio (câncer, TB), pâncreas ou nefrose.<sup class="ref"><a href="#ref-7">7</a></sup></li>
+    <li>Dentro do GASA baixo, a proteína do líquido separa o mecanismo. Pobre (abaixo de 2,5 g/dL) e com poucas células = edema oncótico, síndrome nefrótica. Rica e celular = serosa inflamada, câncer ou TB.</li>
+    <li>Na Q8: 2,0 - 1,3 = 0,7, proteína do líquido 2,3, anasarca, fígado e creatinina normais. O passo é quantificar a proteinúria e biopsiar o rim; o tabagismo era isca para carcinomatose.</li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Ascite: o GASA e depois a proteína</b></p>
+    <svg viewBox="0 0 360 184" role="img" aria-label="Fluxo de decisão. GASA, albumina do soro menos a do líquido. 1,1 ou mais: hipertensão portal. Abaixo de 1,1: sem hipertensão portal, e a proteína do líquido separa: abaixo de 2,5, destacada, síndrome nefrótica; 2,5 ou mais, câncer ou tuberculose.">
+      <rect class="fa-box" x="110" y="8" width="140" height="34" rx="8"/>
+      <text class="fa-tc" x="180" y="23" text-anchor="middle">GASA</text>
+      <text class="fa-s" x="180" y="36" text-anchor="middle">soro - líquido</text>
+      <line class="fa-li" x1="150" y1="42" x2="96" y2="64"/>
+      <line class="fa-li" x1="210" y1="42" x2="264" y2="64"/>
+      <rect class="fa-box" x="18" y="64" width="150" height="40" rx="8"/>
+      <text class="fa-rst" x="93" y="81" text-anchor="middle">1,1 ou mais</text>
+      <text class="fa-s" x="93" y="96" text-anchor="middle">hipertensão portal</text>
+      <rect class="fa-box" x="192" y="64" width="150" height="40" rx="8"/>
+      <text class="fa-rst" x="267" y="81" text-anchor="middle">abaixo de 1,1</text>
+      <text class="fa-s" x="267" y="96" text-anchor="middle">sem hipertensão portal</text>
+      <line class="fa-li" x1="240" y1="104" x2="222" y2="126"/>
+      <line class="fa-li" x1="294" y1="104" x2="312" y2="126"/>
+      <rect class="fa-rsb" x="180" y="126" width="84" height="52" rx="8"/>
+      <text class="fa-s" x="222" y="142" text-anchor="middle">proteína</text>
+      <text class="fa-tc" x="222" y="157" text-anchor="middle">&lt; 2,5</text>
+      <text class="fa-m" x="222" y="171" text-anchor="middle">nefrótica</text>
+      <rect class="fa-box" x="270" y="126" width="84" height="52" rx="8"/>
+      <text class="fa-s" x="312" y="142" text-anchor="middle">proteína</text>
+      <text class="fa-tc" x="312" y="157" text-anchor="middle">&gt;= 2,5</text>
+      <text class="fa-m" x="312" y="171" text-anchor="middle">câncer ou TB</text>
+    </svg>
+    <figcaption>Esquema: o GASA tira a hipertensão portal; a proteína do líquido separa a nefrose.<sup class="ref"><a href="#ref-7">7</a></sup></figcaption>
+  </figure>
+  <div class="tw"><table>
+    <tr><th>Líquor no HIV</th><th>TB meníngea</th><th>Criptococo</th></tr>
+    <tr><td>Glicose</td><td>Baixa, marcada</td><td><strong class="chave">Normal</strong> ou pouco baixa</td></tr>
+    <tr><td>Células</td><td>Linfocítica</td><td>Pouca: sem CD4, não há quem inflame</td></tr>
+    <tr><td>Proteína</td><td>Muito alta</td><td>Alta</td></tr>
+    <tr><td>Confirma</td><td>GeneXpert (BAAR direto quase nunca)</td><td>Antígeno (látex) e tinta da China</td></tr>
+    <tr><td>Trata</td><td>RIPE + corticoide</td><td>Anfotericina B na indução</td></tr>
+    <tr><td>TARV</td><td>4ª a 6ª semana</td><td>4ª a 6ª semana</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Nas outras formas de TB a TARV entra em até 7 dias do RIPE, qualquer CD4, nunca no mesmo dia.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>Questão que nomeia a fonte responde pela fonte: "segundo o MS 2019", 8 semanas. Sem fonte, PCDT 2023. E "HIV + meningite subaguda linfocítica" puxa TB: a glicose normal é o único fio que leva ao criptococo.</p></div>
+  <p class="rem">O aulão, parte 1 (TB 360 e meningites), cobre o resto.</p>
+</section>
+
+<section class="sec" id="cap-2">
+  <span class="kick">02 · Pericardiopatias (caiu 2 vezes em 2021-2025) e TEP (2) · você errou 3 (2024 e 2025)</span>
+  <h2>Pericárdio ou artéria pulmonar: onde o sangue para</h2>
+  <p class="lede">Os três erros são o mesmo mapa: antes do capilar pulmonar é TEP; em volta do coração, pericárdio.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Tamponamento x constrição numa paciente com câncer (CM 2025 Q4).</li>
+    <li>O tipo de choque pelo Swan-Ganz (CM 2025 Q8).</li>
+    <li>A reperfusão do TEP de alto risco 7 dias depois de uma gastrectomia (CM 2024 Q3).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Tamponamento: o líquido aperta as quatro câmaras, e as pressões diastólicas se igualam altas (PVC = PCP). Pulso paradoxal (PAS cai mais de 10 mmHg na inspiração) + Beck. Conduta: pericardiocentese.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+    <li>Constrição leva meses: Kussmaul (jugular sobe na inspiração), knock pericárdico, pulso paradoxal só em cerca de 1/3. Trata-se com pericardiectomia, não com quimioterapia.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+    <li>TEP maciço bloqueia antes do capilar: PVC alta, <strong class="chave">PCP normal ou baixa</strong> (o VE recebe pouco), DC baixo, RVS alta.<sup class="ref"><a href="#ref-9">9</a>,<a href="#ref-10">10</a></sup></li>
+    <li>TEP com hipotensão = alto risco: reperfundir. Cirurgia de grande porte há menos de 3 semanas contraindica a trombólise: embolectomia, cirúrgica ou por cateter.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>Choque: onde o sangue para</b></p>
+    <svg viewBox="0 0 360 200" role="img" aria-label="Dois circuitos do ventrículo direito ao esquerdo, passando pela artéria pulmonar e pelo capilar do pulmão. Tamponamento: líquido em volta dos dois ventrículos; PVC alta e PCP alta, iguais, destacado. TEP maciço: trombo na artéria pulmonar, antes do capilar; PVC alta, débito baixo e PCP normal, destacado.">
+      <text class="fa-tc" x="14" y="18">Tamponamento</text>
+      <text class="fa-s" x="306" y="22" text-anchor="middle">líquido</text>
+      <rect class="fa-sangue" x="30" y="28" width="72" height="46" rx="14"/>
+      <rect class="fa-cor" x="44" y="40" width="44" height="22" rx="6"/>
+      <text class="fa-tc" x="66" y="55" text-anchor="middle">VD</text>
+      <line class="fa-li" x1="102" y1="51" x2="144" y2="51"/><path class="fa-seta" d="M151 51 L143 55 L143 47 Z"/>
+      <text class="fa-s" x="123" y="44" text-anchor="middle">AP</text>
+      <ellipse class="fa-pulmao" cx="186" cy="51" rx="34" ry="19"/>
+      <text class="fa-s" x="186" y="55" text-anchor="middle">capilar</text>
+      <line class="fa-li" x1="220" y1="51" x2="262" y2="51"/><path class="fa-seta" d="M269 51 L261 55 L261 47 Z"/>
+      <text class="fa-s" x="243" y="44" text-anchor="middle">PCP</text>
+      <rect class="fa-sangue" x="270" y="28" width="72" height="46" rx="14"/>
+      <rect class="fa-cor" x="284" y="40" width="44" height="22" rx="6"/>
+      <text class="fa-tc" x="306" y="55" text-anchor="middle">VE</text>
+      <text class="fa-m" x="66" y="92" text-anchor="middle">PVC alta</text>
+      <text class="fa-rst" x="186" y="92" text-anchor="middle">iguais</text>
+      <text class="fa-m" x="306" y="92" text-anchor="middle">PCP alta</text>
+      <text class="fa-tc" x="14" y="118">TEP maciço</text>
+      <rect class="fa-cor" x="44" y="140" width="44" height="22" rx="6"/>
+      <text class="fa-tc" x="66" y="155" text-anchor="middle">VD</text>
+      <line class="fa-li" x1="88" y1="151" x2="144" y2="151"/><path class="fa-seta" d="M151 151 L143 155 L143 147 Z"/>
+      <ellipse class="fa-erro" cx="118" cy="151" rx="11" ry="7"/>
+      <text class="fa-s" x="118" y="138" text-anchor="middle">trombo</text>
+      <ellipse class="fa-pulmao" cx="186" cy="151" rx="34" ry="19"/>
+      <text class="fa-s" x="186" y="155" text-anchor="middle">capilar</text>
+      <line class="fa-li" x1="220" y1="151" x2="276" y2="151"/><path class="fa-seta" d="M283 151 L275 155 L275 147 Z"/>
+      <text class="fa-s" x="248" y="144" text-anchor="middle">PCP</text>
+      <rect class="fa-cor" x="284" y="140" width="44" height="22" rx="6"/>
+      <text class="fa-tc" x="306" y="155" text-anchor="middle">VE</text>
+      <text class="fa-m" x="66" y="190" text-anchor="middle">PVC alta</text>
+      <text class="fa-m" x="186" y="190" text-anchor="middle">DC baixo</text>
+      <text class="fa-rst" x="306" y="190" text-anchor="middle">PCP normal</text>
+    </svg>
+    <figcaption>Esquema: em volta do coração as pressões se igualam; antes do capilar, a PCP fica normal.<sup class="ref"><a href="#ref-8">8</a>,<a href="#ref-9">9</a></sup></figcaption>
+  </figure>
+  <div class="tw"><table>
+    <tr><th>Choque</th><th>PVC</th><th>PCP</th><th>DC</th><th>RVS</th></tr>
+    <tr><td>Tamponamento</td><td>Alta</td><td>Alta, igual à PVC</td><td>Baixo</td><td>Alta</td></tr>
+    <tr><td>TEP maciço</td><td>Alta</td><td>Normal ou baixa</td><td>Baixo</td><td>Alta</td></tr>
+    <tr><td>Cardiogênico (VE)</td><td>Alta</td><td>Alta, acima da PVC</td><td>Baixo</td><td>Alta</td></tr>
+    <tr><td>Hipovolêmico</td><td>Baixa</td><td>Baixa</td><td>Baixo</td><td>Alta</td></tr>
+    <tr><td>Distributivo</td><td>Baixa ou normal</td><td>Baixa ou normal</td><td>Alto</td><td>Baixa</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>Jugular túrgida + choque diz "obstrutivo", não qual. E TEP com choque puxa trombólise no reflexo: leia a data da cirurgia antes.</p></div>
+  <p class="rem">O tamponamento do trauma (Beck, toracotomia) está no aulão, parte 1.</p>
+</section>
+
+<section class="sec" id="cap-3">
+  <span class="kick">03 · DRGE e hérnia de hiato (caiu 5 vezes em 2021-2025) e neoplasias gástricas (4) · você errou 5 (2021, 2024 e 2025)</span>
+  <h2>Esôfago e estômago: a JEG classifica, o laudo dá T, N e M</h2>
+  <p class="lede">Cinco erros de classificação: você sabia os nomes, faltava a régua de cada um.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O tipo de hérnia de hiato, como definição (CIR 2021 Q13) e como laudo (CIR 2025 Q38).</li>
+    <li>Borrmann + Lauren e a cirurgia do mesmo caso (CIR 2021 Q23 e Q24); o pTNM de uma peça (CIR 2024 Q27).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Hérnia: pergunte só onde está a JEG. Subiu = tipo I (III, se o fundo subiu junto). Ficou no lugar com o estômago no tórax = tipo II. "Linha Z coincidente com o pinçamento" é a JEG no lugar.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    <li>Borrmann III = úlcera de borda infiltrada (II tem borda nítida). Anel de sinete = Lauren difuso.<sup class="ref"><a href="#ref-12">12</a>,<a href="#ref-13">13</a></sup></li>
+    <li>A extensão sai da margem proximal: 3 cm no padrão expansivo, 5 cm no infiltrativo. Pré-pilórico a 10 cm da JEG cabe na subtotal, mesmo difuso; D2 é o padrão.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>T pela camada: subserosa = T3; serosa perfurada = T4a; órgão vizinho = T4b. N conta linfonodo regional: 1-2 = N1, <strong class="chave">3-6 = N2</strong>, 7-15 = N3a, mais de 15 = N3b. M1 é só metástase à distância.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 5 · esquema</span><b>T pela camada, N pelo linfonodo</b></p>
+    <svg viewBox="0 0 360 222" role="img" aria-label="Corte da parede do estômago em camadas, da luz para fora: mucosa, submucosa, muscular própria, subserosa e serosa, com o T de cada uma. O tumor desce da luz até a subserosa, T3. Abaixo, seis linfonodos regionais ligados ao tumor, quatro comprometidos: N2, destacado. À direita, o fígado: metástase à distância é M1.">
+      <text class="fa-s" x="20" y="18">luz</text>
+      <rect class="fa-l1" x="20" y="26" width="220" height="18"/>
+      <rect class="fa-l2" x="20" y="44" width="220" height="18"/>
+      <rect class="fa-l3" x="20" y="62" width="220" height="30"/>
+      <rect class="fa-l2" x="20" y="92" width="220" height="16"/>
+      <rect class="fa-l1" x="20" y="108" width="220" height="7"/>
+      <path class="fa-erro" d="M120 26 L196 26 L182 58 L172 86 L164 104 L154 104 L146 86 L136 58 Z"/>
+      <text class="fa-s" x="26" y="39">mucosa</text>
+      <text class="fa-s" x="26" y="57">submucosa</text>
+      <text class="fa-s" x="26" y="81">muscular própria</text>
+      <text class="fa-s" x="26" y="104">subserosa</text>
+      <text class="fa-s" x="248" y="39">T1a</text>
+      <text class="fa-s" x="248" y="57">T1b</text>
+      <text class="fa-s" x="248" y="81">T2</text>
+      <text class="fa-tc" x="248" y="104">T3</text>
+      <text class="fa-s" x="248" y="118">T4a serosa</text>
+      <line class="fa-fio" x1="159" y1="115" x2="50" y2="145"/>
+      <line class="fa-fio" x1="159" y1="115" x2="84" y2="155"/>
+      <line class="fa-fio" x1="159" y1="115" x2="118" y2="145"/>
+      <line class="fa-fio" x1="159" y1="115" x2="152" y2="155"/>
+      <line class="fa-fio" x1="159" y1="115" x2="186" y2="145"/>
+      <line class="fa-fio" x1="159" y1="115" x2="220" y2="155"/>
+      <ellipse class="fa-box" cx="50" cy="152" rx="11" ry="7"/>
+      <ellipse class="fa-erro" cx="84" cy="162" rx="11" ry="7"/>
+      <ellipse class="fa-erro" cx="118" cy="152" rx="11" ry="7"/>
+      <ellipse class="fa-erro" cx="152" cy="162" rx="11" ry="7"/>
+      <ellipse class="fa-erro" cx="186" cy="152" rx="11" ry="7"/>
+      <ellipse class="fa-box" cx="220" cy="162" rx="11" ry="7"/>
+      <text class="fa-m" x="40" y="192">N: linfonodo regional</text>
+      <text class="fa-rst" x="40" y="208">4 de 24 = N2</text>
+      <path class="fa-cor" d="M258 138 C294 124 348 130 352 150 C356 174 334 204 300 207 C274 209 258 194 258 172 Z"/>
+      <text class="fa-m" x="306" y="164" text-anchor="middle">fígado</text>
+      <text class="fa-s" x="306" y="180" text-anchor="middle">M1: distância</text>
+    </svg>
+    <figcaption>Esquema: a camada dá o T; linfonodo regional é N, nunca M.<sup class="ref"><a href="#ref-15">15</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Quatro linfonodos apresentando metástases" é N2, não M1. E "tipo difuso" puxa para a gastrectomia total; quem decide é a margem.</p></div>
+  <p class="rem">O aulão, parte 2 (esôfago e estômago), tem a figura da hérnia, a DRGE e o Nissen.</p>
+</section>
+
+<section class="sec" id="cap-4">
+  <span class="kick">04 · Temas gerais em cirurgia (caiu 7 vezes em 2021-2025) e anestesiologia (2) · você errou 4 (2022 e 2023)</span>
+  <h2>Cirurgia geral: o espaço, a flora e o relógio</h2>
+  <p class="lede">Perguntas de conceito puro: o lugar anatômico, o espectro mínimo, o prazo, o reflexo. Faltou o fato, não o raciocínio.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>A história que NÃO leva a abscesso retroperitoneal (CIR 2022 Q24).</li>
+    <li>A profilaxia na cirurgia gastroduodenal e de delgado não obstruído (CIR 2023 Q30).</li>
+    <li>Quando parar a dabigatrana (CIR 2022 Q21) e a arritmia da insuflação (CIR 2023 Q25).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>O úraco, resto do alantoide, vai da bexiga ao umbigo entre a fáscia transversal e o peritônio: espaço pré-peritoneal, parede anterior. Duodeno, pâncreas e rim ficam atrás do peritônio, e o apêndice retrocecal encosta nele: perfuração duodenal posterior na CPRE, necrose pancreática infectada e apendicite retrocecal dão abscesso retroperitoneal.<sup class="ref"><a href="#ref-16">16</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 6 · esquema</span><b>Os espaços do abdome</b></p>
+    <svg viewBox="0 0 360 222" role="img" aria-label="Corte sagital esquemático. À esquerda, a parede anterior com o umbigo; logo atrás dela, no espaço pré-peritoneal, o úraco, destacado, sobe da bexiga ao umbigo. No meio, a cavidade peritoneal com alças. À direita, atrás do peritônio, o retroperitônio com duodeno, pâncreas e rim, encostado na coluna.">
+      <text class="fa-s" x="32" y="12" text-anchor="middle">parede</text>
+      <text class="fa-s" x="156" y="12" text-anchor="middle">cavidade</text>
+      <text class="fa-s" x="288" y="12" text-anchor="middle">retroperitônio</text>
+      <rect class="fa-musc" x="20" y="16" width="24" height="186"/>
+      <rect class="fa-ref" x="62" y="16" width="188" height="140" rx="22"/>
+      <ellipse class="fa-box" cx="118" cy="46" rx="28" ry="14"/>
+      <ellipse class="fa-box" cx="184" cy="48" rx="30" ry="15"/>
+      <ellipse class="fa-box" cx="140" cy="92" rx="32" ry="15"/>
+      <ellipse class="fa-box" cx="208" cy="102" rx="26" ry="14"/>
+      <ellipse class="fa-cor" cx="96" cy="182" rx="42" ry="20"/>
+      <text class="fa-s" x="96" y="186" text-anchor="middle">bexiga</text>
+      <path class="fa-rsk" d="M64 169 C55 150 53 120 47 80"/>
+      <circle class="fa-pt" cx="44" cy="78" r="3"/>
+      <text class="fa-s" x="68" y="82">umbigo</text>
+      <text class="fa-rst" x="68" y="132">úraco</text>
+      <ellipse class="fa-nuc" cx="288" cy="46" rx="28" ry="14"/>
+      <text class="fa-s" x="288" y="50" text-anchor="middle">duodeno</text>
+      <rect class="fa-nuc" x="262" y="72" width="52" height="24" rx="10"/>
+      <text class="fa-s" x="288" y="88" text-anchor="middle">pâncreas</text>
+      <ellipse class="fa-nuc" cx="288" cy="132" rx="20" ry="26"/>
+      <text class="fa-s" x="288" y="136" text-anchor="middle">rim</text>
+      <rect class="fa-col" x="324" y="18" width="24" height="30" rx="4"/>
+      <rect class="fa-col" x="324" y="52" width="24" height="30" rx="4"/>
+      <rect class="fa-col" x="324" y="86" width="24" height="30" rx="4"/>
+      <rect class="fa-col" x="324" y="120" width="24" height="30" rx="4"/>
+      <rect class="fa-col" x="324" y="154" width="24" height="30" rx="4"/>
+      <text class="fa-s" x="336" y="200" text-anchor="middle">coluna</text>
+      <text class="fa-s" x="96" y="217" text-anchor="middle">pré-peritoneal</text>
+    </svg>
+    <figcaption>Esquema: o úraco corre na parede anterior; duodeno, pâncreas e rim ficam atrás do peritônio.<sup class="ref"><a href="#ref-16">16</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>A profilaxia cobre a flora exposta, não a pior imaginável. Estômago, duodeno e delgado sem estase: flora escassa e aeróbia, <strong class="chave">cefazolina</strong>. Delgado obstruído ou cólon: anaeróbio, + metronidazol (ou cefoxitina).<sup class="ref"><a href="#ref-17">17</a></sup></li>
+    <li>DOAC não leva ponte: suspender 24 h antes (sangramento baixo ou moderado) ou 48 h (alto). Dabigatrana com filtração abaixo de 50 mL/min: 3-4 dias. Varfarina: 5 dias.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>A insuflação rápida estira o peritônio e dispara o vago: bradicardia, até assistolia. Conduta: parar, desinsuflar, anticolinérgico. A taquicardia da hipercapnia vem depois.<sup class="ref"><a href="#ref-19">19</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Não obstruído", no fim do enunciado, é o dado que escolhe o antibiótico. E SAF + LES não fazem do DOAC uma varfarina: o prazo é do remédio e do rim.</p></div>
+</section>
+
+<section class="sec" id="cap-5">
+  <span class="kick">05 · REMIT e cicatrização (caiu 5 vezes em 2021-2025) e complicações pós-operatórias (4) · você errou 5 (2022 e 2023)</span>
+  <h2>Depois da cirurgia: a célula do dia e a febre do dia</h2>
+  <p class="lede">Quatro dos cinco erros pedem a mesma coisa: em que hora estamos e quem manda nela.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>A primeira célula, o efeito do TNF e as vitaminas da cicatrização (CIR 2023 Q36, Q29 e Q26, na mesma prova).</li>
+    <li>A febre de 24 h e o abscesso de ferida (CIR 2022 Q14 e Q18).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>"Primeira a ser recrutada" e "aguda" = imunidade inata: <strong class="chave">neutrófilo</strong> (horas, pico em 24-48 h), já circulante e em maior número. O macrófago chega depois e conduz a proliferação; o linfócito T é adaptativo, de dias.<sup class="ref"><a href="#ref-16">16</a></sup></li>
+    <li>TNF-alfa (a caquectina): febre, anorexia, catabolismo e hipotensão por óxido nítrico. Três alternativas tinham o sinal trocado: rotule cada uma V ou F pela direção.</li>
+    <li>Vitamina C hidroxila prolina e lisina (sem ela, o colágeno não forma a tripla hélice); vitamina A epiteliza e reverte o efeito do corticoide. Zinco é oligoelemento, não vitamina.</li>
+    <li>Febre nas primeiras 48 h: atelectasia ou resposta inflamatória, sem cultura. Fístula pancreática só depois do 3º dia.</li>
+    <li>Abscesso de ferida é incisional: retirar pontos, abrir e drenar. Antibiótico só com resposta sistêmica importante (eritema acima de 5 cm, T acima de 38,5, FC acima de 110, leucócitos acima de 12 mil). Relaparotomia é para coleção de órgão ou cavidade.<sup class="ref"><a href="#ref-20">20</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 7 · esquema</span><b>Quem manda em cada dia</b></p>
+    <svg viewBox="0 0 360 204" role="img" aria-label="Linha do tempo de 0 a 10 dias. Em cima, quem manda na ferida: neutrófilo nas primeiras 48 horas, destacado; macrófago do 2º ao 5º dia; fibroblasto e colágeno a partir do 4º. Embaixo, a febre: atelectasia nas primeiras 48 horas, destacada; pneumonia e infecção urinária do 3º ao 5º; ferida do 5º ao 7º; abscesso depois do 7º.">
+      <text class="fa-s" x="40" y="16">quem manda</text>
+      <rect class="fa-rsb" x="40" y="22" width="60" height="14" rx="4"/>
+      <text class="fa-rst" x="106" y="33">neutrófilo</text>
+      <rect class="fa-box" x="100" y="40" width="90" height="14" rx="4"/>
+      <text class="fa-m" x="196" y="51">macrófago</text>
+      <rect class="fa-box" x="160" y="58" width="180" height="14" rx="4"/>
+      <text class="fa-s" x="250" y="69" text-anchor="middle">fibroblasto, colágeno</text>
+      <line class="fa-eixo" x1="40" y1="84" x2="340" y2="84"/>
+      <line class="fa-eixo" x1="40" y1="84" x2="40" y2="89"/><line class="fa-eixo" x1="100" y1="84" x2="100" y2="89"/>
+      <line class="fa-eixo" x1="160" y1="84" x2="160" y2="89"/><line class="fa-eixo" x1="220" y1="84" x2="220" y2="89"/>
+      <line class="fa-eixo" x1="280" y1="84" x2="280" y2="89"/><line class="fa-eixo" x1="340" y1="84" x2="340" y2="89"/>
+      <text class="fa-s" x="40" y="100" text-anchor="middle">0</text>
+      <text class="fa-s" x="100" y="100" text-anchor="middle">2</text>
+      <text class="fa-s" x="160" y="100" text-anchor="middle">4</text>
+      <text class="fa-s" x="220" y="100" text-anchor="middle">6</text>
+      <text class="fa-s" x="280" y="100" text-anchor="middle">8</text>
+      <text class="fa-s" x="348" y="100" text-anchor="end">10 dias</text>
+      <text class="fa-s" x="40" y="115">febre</text>
+      <rect class="fa-rsb" x="40" y="120" width="60" height="14" rx="4"/>
+      <text class="fa-rst" x="106" y="131">atelectasia</text>
+      <rect class="fa-box" x="130" y="138" width="60" height="14" rx="4"/>
+      <text class="fa-m" x="196" y="149">pneumonia, ITU</text>
+      <rect class="fa-box" x="190" y="156" width="60" height="14" rx="4"/>
+      <text class="fa-m" x="256" y="167">ferida</text>
+      <rect class="fa-box" x="250" y="174" width="90" height="14" rx="4"/>
+      <text class="fa-m" x="244" y="185" text-anchor="end">abscesso</text>
+    </svg>
+    <figcaption>Esquema: nas primeiras horas, neutrófilo e atelectasia; no 5º dia, a ferida.<sup class="ref"><a href="#ref-16">16</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>A pancreatectomia puxa para complicação do pâncreas; o dia da febre decide. E febre com taquicardia não faz o abscesso de parede virar cavidade: o sítio decide a abordagem.</p></div>
+  <p class="rem">O aulão, parte 1 (o paciente operado), cobre a REMIT, as fases da cicatrização e a profilaxia.</p>
+</section>
+
+<section class="sec" id="cap-6">
+  <span class="kick">06 · Doenças glomerulares · caiu 5 vezes em 2021-2025 · você errou 2 (2021 e 2025), as duas no chute</span>
+  <h2>Glomerulopatias: o depósito tem endereço</h2>
+  <p class="lede">Você chutou as duas porque faltava o mapa: onde cada doença deposita e o que o anticorpo diz.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O que significa anti-PLA2R positivo numa membranosa (CM 2021 Q2).</li>
+    <li>O achado de biópsia na hematúria de dias após a faringite, com complemento normal (CM 2025 Q5).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>O PLA2R é um antígeno do próprio podócito: anticorpo positivo = membranosa <strong class="chave">primária</strong>. Com nefrótico e anti-PLA2R positivo, o KDIGO 2021 dispensa a biópsia. Negativo: procurar neoplasia, lúpus, hepatite B, droga.<sup class="ref"><a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup></li>
+    <li>IgA: hematúria durante a infecção ou poucos dias depois, recorrente, C3 normal; a imunofluorescência mostra IgA no mesângio, em geral com C3. GNPE: 1-3 semanas depois, C3 baixo, proliferação endocapilar com neutrófilos.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 8 · esquema</span><b>Glomerulopatia: onde fica o depósito</b></p>
+    <svg viewBox="0 0 360 210" role="img" aria-label="Uma alça capilar do glomérulo em corte: a membrana basal em arco, o podócito por fora, com seus pés, e o mesângio embaixo. Membranosa: depósitos finos por fora da membrana, sob o podócito. Glomerulonefrite pós-estreptocócica: depósitos grandes por fora (humps) e neutrófilos dentro da luz. Nefropatia por IgA, destacada: depósito no mesângio.">
+      <ellipse class="fa-box" cx="180" cy="186" rx="34" ry="16"/>
+      <circle class="fa-rs" cx="170" cy="185" r="2.3"/>
+      <circle class="fa-rs" cx="181" cy="181" r="2.3"/>
+      <circle class="fa-rs" cx="191" cy="187" r="2.3"/>
+      <circle class="fa-rs" cx="176" cy="192" r="2.3"/>
+      <circle class="fa-rs" cx="187" cy="193" r="2.3"/>
+      <path class="fa-endo" d="M192.5 170.7 A60 60 0 1 0 167.5 170.7"/>
+      <path class="fa-lig" d="M202.6 174.0 A66 66 0 1 0 157.4 174.0"/>
+      <circle class="fa-nuc" cx="242.2" cy="78.9" r="3"/>
+      <circle class="fa-nuc" cx="237.0" cy="70.6" r="3"/>
+      <circle class="fa-nuc" cx="230.7" cy="63.0" r="3"/>
+      <circle class="fa-nuc" cx="223.4" cy="56.4" r="3"/>
+      <circle class="fa-nuc" cx="215.2" cy="50.9" r="3"/>
+      <circle class="fa-nuc" cx="206.4" cy="46.6" r="3"/>
+      <circle class="fa-nuc" cx="197.1" cy="43.6" r="3"/>
+      <circle class="fa-nuc" cx="187.4" cy="41.9" r="3"/>
+      <circle class="fa-nuc" cx="177.5" cy="41.5" r="3"/>
+      <circle class="fa-nuc" cx="167.8" cy="42.6" r="3"/>
+      <circle class="fa-nuc" cx="158.2" cy="45.0" r="3"/>
+      <circle class="fa-nuc" cx="149.1" cy="48.6" r="3"/>
+      <circle class="fa-nuc" cx="140.6" cy="53.6" r="3"/>
+      <circle class="fa-nuc" cx="132.8" cy="59.6" r="3"/>
+      <circle class="fa-nuc" cx="126.0" cy="66.7" r="3"/>
+      <circle class="fa-nuc" cx="120.2" cy="74.6" r="3"/>
+      <path class="fa-arm" d="M152 31 C140 37 134 45 131.5 57"/>
+      <path class="fa-arm" d="M208 31 C220 37 226 45 228.5 57"/>
+      <ellipse class="fa-nuc" cx="180" cy="24" rx="44" ry="12"/>
+      <text class="fa-s" x="180" y="28" text-anchor="middle">podócito</text>
+      <circle class="fa-pt" cx="115.2" cy="88.4" r="1.8"/>
+      <circle class="fa-pt" cx="113.0" cy="95.3" r="1.8"/>
+      <circle class="fa-pt" cx="111.7" cy="102.4" r="1.8"/>
+      <circle class="fa-pt" cx="111.0" cy="109.6" r="1.8"/>
+      <circle class="fa-pt" cx="111.2" cy="116.8" r="1.8"/>
+      <circle class="fa-pt" cx="112.0" cy="124.0" r="1.8"/>
+      <circle class="fa-pt" cx="113.7" cy="131.0" r="1.8"/>
+      <circle class="fa-pt" cx="116.0" cy="137.8" r="1.8"/>
+      <circle class="fa-erro" cx="249.8" cy="121.8" r="5"/>
+      <circle class="fa-erro" cx="250.3" cy="107.1" r="5"/>
+      <circle class="fa-erro" cx="247.8" cy="92.6" r="5"/>
+      <circle class="fa-box" cx="212" cy="104" r="6.5"/>
+      <circle class="fa-pt" cx="209.8" cy="102.5" r="1.4"/><circle class="fa-pt" cx="214.2" cy="102.5" r="1.4"/><circle class="fa-pt" cx="212" cy="106" r="1.4"/>
+      <circle class="fa-box" cx="220" cy="124" r="6.5"/>
+      <circle class="fa-pt" cx="217.8" cy="122.5" r="1.4"/><circle class="fa-pt" cx="222.2" cy="122.5" r="1.4"/><circle class="fa-pt" cx="220" cy="126" r="1.4"/>
+      <circle class="fa-box" cx="203" cy="130" r="6.5"/>
+      <circle class="fa-pt" cx="200.8" cy="128.5" r="1.4"/><circle class="fa-pt" cx="205.2" cy="128.5" r="1.4"/><circle class="fa-pt" cx="203" cy="132" r="1.4"/>
+      <text class="fa-s" x="160" y="116" text-anchor="middle">luz</text>
+      <text class="fa-m" x="14" y="104">membranosa</text>
+      <text class="fa-s" x="14" y="118">subepitelial</text>
+      <line class="fa-fio" x1="82" y1="108" x2="108.7" y2="116.8"/>
+      <text class="fa-m" x="262" y="90">GNPE</text>
+      <text class="fa-s" x="262" y="104">humps</text>
+      <text class="fa-s" x="262" y="118">neutrófilos</text>
+      <text class="fa-s" x="252" y="160">MBG</text>
+      <text class="fa-rst" x="222" y="198">IgA: mesângio</text>
+    </svg>
+    <figcaption>Esquema: IgA no mesângio; membranosa sob o podócito; GNPE inflama a luz.<sup class="ref"><a href="#ref-21">21</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>ASLO pouco acima do normal puxa GNPE; latência de dias e C3 normal decidem IgA. Os 65 anos puxam neoplasia; o anticorpo diz primária.</p></div>
+  <p class="rem">O relógio da nefrite e as duas síndromes estão no aulão, parte 2.</p>
+</section>
+
+<section class="sec" id="cap-7">
+  <span class="kick">07 · Anemias hemolíticas (caiu 3 vezes em 2021-2025) e hemostasia (3) · você errou 4 (2021, 2022 e 2024), duas com certeza</span>
+  <h2>Hematologia: o reticulócito separa, o FvW carrega</h2>
+  <p class="lede">Duas certezas erradas aqui: a megaloblástica "hiperproliferativa" e o fator VII no von Willebrand.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O laboratório da anemia hiperproliferativa (CM 2024 Q10) e a classificação pelo reticulócito (CM 2022 Q6).</li>
+    <li>PTI do adulto: diagnóstico e quando tratar (CM 2021 Q4); o fator que cai no von Willebrand (CIR 2021 Q21).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Reticulócito em % infla na anemia grave: corrija pelo hematócrito (x Ht/45) e pelo tempo de maturação. Na Q6, 2,5% com Ht de 18% vira 1%: hipoproliferativa, e VCM 67 com CHCM 28 é ferro.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>Hiperproliferativa = hemólise ou sangramento agudo. Na hemólise, LDH alto e haptoglobina consumida; o VCM sobe porque o reticulócito é grande.</li>
+    <li>A megaloblástica é <strong class="chave">hipo</strong>proliferativa: a medula trabalha, mas o eritroblasto morre antes de sair (eritropoese ineficaz). LDH pode subir; o reticulócito fica baixo.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 9 · esquema</span><b>Anemia: o reticulócito separa</b></p>
+    <svg viewBox="0 0 360 200" role="img" aria-label="Fluxo de decisão. Primeiro, destacado, o reticulócito corrigido pelo hematócrito e pela maturação. Índice acima de 2: hiperproliferativa, que é hemólise, com LDH alto e haptoglobina baixa, ou sangramento agudo. Índice de 2 ou menos: hipoproliferativa, separada pelo VCM: baixo é ferro; alto, destacado, é B12 ou folato; normal é rim ou inflamação.">
+      <rect class="fa-rsb" x="96" y="8" width="168" height="38" rx="8"/>
+      <text class="fa-tc" x="180" y="24" text-anchor="middle">reticulócito corrigido</text>
+      <text class="fa-s" x="180" y="39" text-anchor="middle">x Ht/45, pela maturação</text>
+      <line class="fa-li" x1="140" y1="46" x2="92" y2="70"/>
+      <line class="fa-li" x1="220" y1="46" x2="268" y2="70"/>
+      <rect class="fa-box" x="14" y="70" width="156" height="38" rx="8"/>
+      <text class="fa-tc" x="92" y="86" text-anchor="middle">acima de 2</text>
+      <text class="fa-s" x="92" y="100" text-anchor="middle">hiperproliferativa</text>
+      <rect class="fa-box" x="190" y="70" width="156" height="38" rx="8"/>
+      <text class="fa-tc" x="268" y="86" text-anchor="middle">2 ou menos</text>
+      <text class="fa-s" x="268" y="100" text-anchor="middle">hipoproliferativa</text>
+      <line class="fa-li" x1="92" y1="108" x2="92" y2="128"/>
+      <line class="fa-li" x1="268" y1="108" x2="268" y2="128"/>
+      <rect class="fa-box" x="14" y="128" width="156" height="66" rx="8"/>
+      <text class="fa-m" x="92" y="146" text-anchor="middle">hemólise</text>
+      <text class="fa-s" x="92" y="160" text-anchor="middle">LDH alto</text>
+      <text class="fa-s" x="92" y="173" text-anchor="middle">haptoglobina baixa</text>
+      <text class="fa-s" x="92" y="187" text-anchor="middle">ou sangramento agudo</text>
+      <rect class="fa-box" x="190" y="128" width="156" height="66" rx="8"/>
+      <text class="fa-s" x="268" y="150" text-anchor="middle">VCM baixo: ferro</text>
+      <text class="fa-rst" x="268" y="166" text-anchor="middle">VCM alto: B12, folato</text>
+      <text class="fa-s" x="268" y="182" text-anchor="middle">normal: rim, inflamação</text>
+    </svg>
+    <figcaption>Esquema: corrigido o reticulócito, a megaloblástica cai do lado hipo.<sup class="ref"><a href="#ref-23">23</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>PTI = plaquetopenia isolada (Hb e leucócitos normais), sem visceromegalia nem droga. No adulto ela não precisa de infecção antes (isso é da criança); Henoch-Schönlein tem plaqueta normal.</li>
+    <li>Adulto com 30 mil ou mais e sangramento mucocutâneo leve: observar, sem corticoide.<sup class="ref"><a href="#ref-24">24</a></sup></li>
+    <li>O FvW cola a plaqueta no colágeno e carrega o FVIII, que sem ele é degradado: por isso o VIII cai junto.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 10 · esquema</span><b>Von Willebrand: a ponte e a carga</b></p>
+    <svg viewBox="0 0 360 130" role="img" aria-label="Dois painéis. Normal: a plaqueta se prende ao colágeno por uma corrente de fator de von Willebrand, destacada, que leva o fator VIII preso a ela. Von Willebrand: sem a corrente, a plaqueta fica solta e o fator VIII, livre, é degradado.">
+      <ellipse class="fa-nuc" cx="90" cy="28" rx="38" ry="14"/>
+      <text class="fa-s" x="90" y="32" text-anchor="middle">plaqueta</text>
+      <rect class="fa-musc" x="10" y="92" width="160" height="14"/>
+      <text class="fa-s" x="90" y="103" text-anchor="middle">colágeno</text>
+      <circle class="fa-rs" cx="90" cy="45.2" r="3.2"/><circle class="fa-rs" cx="90" cy="52" r="3.2"/>
+      <circle class="fa-rs" cx="90" cy="58.8" r="3.2"/><circle class="fa-rs" cx="90" cy="65.6" r="3.2"/>
+      <circle class="fa-rs" cx="90" cy="72.4" r="3.2"/><circle class="fa-rs" cx="90" cy="79.2" r="3.2"/>
+      <circle class="fa-rs" cx="90" cy="86" r="3.2"/>
+      <ellipse class="fa-box" cx="105" cy="64" rx="12" ry="8"/>
+      <text class="fa-s" x="105" y="68" text-anchor="middle">VIII</text>
+      <text class="fa-rst" x="80" y="70" text-anchor="end">FvW</text>
+      <ellipse class="fa-nuc" cx="270" cy="28" rx="38" ry="14"/>
+      <text class="fa-s" x="270" y="32" text-anchor="middle">plaqueta</text>
+      <rect class="fa-musc" x="190" y="92" width="160" height="14"/>
+      <text class="fa-s" x="270" y="103" text-anchor="middle">colágeno</text>
+      <ellipse class="fa-erro" cx="262" cy="64" rx="12" ry="8"/>
+      <text class="fa-s" x="262" y="68" text-anchor="middle">VIII</text>
+      <text class="fa-m" x="280" y="68">degradado</text>
+      <text class="fa-tc" x="90" y="124" text-anchor="middle">normal</text>
+      <text class="fa-tc" x="270" y="124" text-anchor="middle">von Willebrand</text>
+    </svg>
+    <figcaption>Esquema: o FvW cola a plaqueta e carrega o VIII; sem ele, o VIII cai.<sup class="ref"><a href="#ref-25">25</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>VCM de 106 puxa B12; "hiperproliferativa" exclui a megaloblástica. E "PTI vem depois de uma virose" é a regra da criança.</p></div>
+</section>
+
+<section class="sec" id="cap-8">
+  <span class="kick">08 · Oncologia ortopédica (caiu 3 vezes em 2021-2025) e hipercalcemia (2) · você errou 3 (2021, 2022 e 2024)</span>
+  <h2>Osso: quem destrói e quem constrói</h2>
+  <p class="lede">Os três erros são uma pergunta só: a lesão é lítica ou blástica? Dela saem o primário, a imagem e o marcador.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O exame da lesão vertebral blástica com compressão medular (CM 2022 Q3).</li>
+    <li>O marcador de imuno-histoquímica no primário desconhecido (CM 2021 Q10).</li>
+    <li>A imagem e o rim do mieloma (CM 2024 Q11).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Blástica = o tumor faz osso: próstata no homem idoso, até prova em contrário (e mama). Lítica = destrói: mieloma, rim, tireoide, pulmão. Você pensou em mieloma diante de "osteoblásticas".</li>
+    <li>Mieloma é lítico puro: o osteoclasto trabalha e o osteoblasto está inibido. A cintilografia mede osteoblasto, então <strong class="chave">não capta</strong>; quem mostra é a RM, a TC de baixa dose ou o PET-CT.<sup class="ref"><a href="#ref-26">26</a></sup></li>
+    <li>Mieloma: hipercalcemia com PTH suprimido, anemia, gap entre proteína total e albumina. Cadeia leve no túbulo proximal dá Fanconi (glicosúria, aminoacidúria).<sup class="ref"><a href="#ref-26">26</a></sup></li>
+    <li>No primário desconhecido a imagem é normal por definição; a imuno-histoquímica do tecido aponta a origem. PSA = próstata, tireoglobulina = tireoide; CEA e beta-hCG não apontam sítio.<sup class="ref"><a href="#ref-27">27</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 11 · esquema</span><b>O que a cintilografia vê</b></p>
+    <svg viewBox="0 0 360 196" role="img" aria-label="Duas vértebras. Lítica: furos no osso, mieloma e rim. Blástica: placas de osso a mais, próstata e mama. Embaixo, a cintilografia: a coluna blástica capta; a lítica pura, destacada, não capta.">
+      <text class="fa-tc" x="95" y="20" text-anchor="middle">lítica</text>
+      <text class="fa-tc" x="265" y="20" text-anchor="middle">blástica</text>
+      <rect class="fa-osso" x="40" y="28" width="110" height="70" rx="12"/>
+      <ellipse class="fa-hole" cx="72" cy="52" rx="11" ry="7"/>
+      <ellipse class="fa-hole" cx="112" cy="72" rx="13" ry="8"/>
+      <ellipse class="fa-hole" cx="128" cy="46" rx="7" ry="5"/>
+      <ellipse class="fa-hole" cx="76" cy="82" rx="8" ry="5"/>
+      <rect class="fa-osso" x="210" y="28" width="110" height="70" rx="12"/>
+      <ellipse class="fa-blast" cx="240" cy="50" rx="14" ry="9"/>
+      <ellipse class="fa-blast" cx="282" cy="70" rx="18" ry="11"/>
+      <ellipse class="fa-blast" cx="300" cy="44" rx="9" ry="7"/>
+      <ellipse class="fa-blast" cx="248" cy="84" rx="10" ry="6"/>
+      <text class="fa-s" x="95" y="114" text-anchor="middle">mieloma, rim</text>
+      <text class="fa-s" x="265" y="114" text-anchor="middle">próstata, mama</text>
+      <text class="fa-s" x="180" y="134" text-anchor="middle">cintilografia</text>
+      <rect class="fa-col" x="86" y="142" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="86" y="153" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="86" y="164" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="86" y="175" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="256" y="142" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="256" y="153" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="256" y="164" width="18" height="9" rx="2"/>
+      <rect class="fa-col" x="256" y="175" width="18" height="9" rx="2"/>
+      <circle class="fa-pt" cx="265" cy="157.5" r="4"/>
+      <circle class="fa-pt" cx="265" cy="179.5" r="4"/>
+      <text class="fa-rst" x="114" y="168">não capta</text>
+      <text class="fa-m" x="282" y="168">capta</text>
+    </svg>
+    <figcaption>Esquema: a cintilografia vê osteoblasto; o mieloma, lítico puro, não aparece.<sup class="ref"><a href="#ref-26">26</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>Idoso com lesão vertebral e déficit puxa mieloma; "osteoblásticas" manda para o PSA. E a TC sem alteração na próstata não tira o PSA da imuno-histoquímica.</p></div>
+  <p class="rem">Idade, segmento e periósteo dos tumores ósseos estão no aulão, parte 1.</p>
+</section>
+
+<section class="sec" id="cap-9">
+  <span class="kick">09 · Valvopatias (caiu 3 vezes em 2021-2025) e endocardite (3) · você errou 3 (2022, 2023 e 2024)</span>
+  <h2>Valvas: a fase do ciclo e a manobra</h2>
+  <p class="lede">Você ouviu o sopro, mas não o pôs na fase certa nem testou a manobra.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Estenose aórtica x cardiomiopatia hipertrófica pela manobra (CM 2022 Q5).</li>
+    <li>A etiologia do ruflar diastólico com estalido (CM 2024 Q1).</li>
+    <li>Os exames que fecham endocardite num valvopata febril (CM 2023 Q9).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Valsalva reduz a pré-carga: quase todo sopro diminui. O da CMH aumenta, porque o VE menor aproxima o septo da valva mitral. Sopro que <strong class="chave">diminui</strong> com Valsalva exclui CMH.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>EAo: angina, síncope e dispneia de esforço; sopro ejetivo no foco aórtico; B4 pela hipertrofia. Gallavardin: o mesmo sopro soa agudo no ápice e parece mitral.</li>
+    <li>EM: B1 hiperfonética + estalido logo após B2 + ruflar diastólico com reforço pré-sistólico no ápice. No Brasil, quase sempre reumática. O prolapso é sistólico: clique e sopro telessistólico.<sup class="ref"><a href="#ref-28">28</a></sup></li>
+    <li>Endocardite: os dois critérios maiores são hemoculturas positivas em amostras separadas e lesão endocárdica na imagem (eco). Janeway, Osler, Roth e glomerulonefrite são menores.<sup class="ref"><a href="#ref-29">29</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 12 · esquema</span><b>Sopro: a fase do ciclo e a manobra</b></p>
+    <svg viewBox="0 0 360 190" role="img" aria-label="Dois fonocardiogramas. Estenose aórtica: B4, B1, sopro sistólico ejetivo em diamante entre B1 e B2; com Valsalva, o sopro da estenose diminui e, destacado, só o da cardiomiopatia hipertrófica aumenta. Estenose mitral: B1 forte, B2, estalido de abertura logo depois, destacado, e ruflar diastólico com reforço antes da B1 seguinte.">
+      <text class="fa-tc" x="20" y="20">Estenose aórtica</text>
+      <line class="fa-eixo" x1="20" y1="70" x2="344" y2="70"/>
+      <path class="fa-q4" d="M76 70 L134 42 L190 70 Z"/>
+      <text class="fa-s" x="134" y="36" text-anchor="middle">ejetivo</text>
+      <line class="fa-bar2" x1="40" y1="60" x2="40" y2="70"/>
+      <line class="fa-bar" x1="62" y1="44" x2="62" y2="70"/>
+      <line class="fa-bar" x1="200" y1="46" x2="200" y2="70"/>
+      <line class="fa-bar" x1="330" y1="44" x2="330" y2="70"/>
+      <text class="fa-s" x="40" y="84" text-anchor="middle">B4</text>
+      <text class="fa-s" x="62" y="84" text-anchor="middle">B1</text>
+      <text class="fa-s" x="200" y="84" text-anchor="middle">B2</text>
+      <text class="fa-s" x="330" y="84" text-anchor="middle">B1</text>
+      <text class="fa-m" x="20" y="104">Valsalva: EAo diminui</text>
+      <text class="fa-rst" x="200" y="104">CMH aumenta</text>
+      <text class="fa-tc" x="20" y="124">Estenose mitral</text>
+      <line class="fa-eixo" x1="20" y1="168" x2="344" y2="168"/>
+      <path class="fa-q4" d="M232 168 L232 150 L298 162 L326 142 L326 168 Z"/>
+      <line class="fa-bar3" x1="62" y1="134" x2="62" y2="168"/>
+      <line class="fa-bar" x1="200" y1="146" x2="200" y2="168"/>
+      <line class="fa-rsk" x1="222" y1="152" x2="222" y2="168"/>
+      <line class="fa-bar3" x1="330" y1="134" x2="330" y2="168"/>
+      <text class="fa-rst" x="212" y="142">estalido</text>
+      <text class="fa-s" x="62" y="182" text-anchor="middle">B1</text>
+      <text class="fa-s" x="200" y="182" text-anchor="middle">B2</text>
+      <text class="fa-s" x="279" y="182" text-anchor="middle">ruflar + reforço</text>
+      <text class="fa-s" x="330" y="182" text-anchor="middle">B1</text>
+    </svg>
+    <figcaption>Esquema: o lugar no ciclo e a resposta à manobra separam os sopros.<sup class="ref"><a href="#ref-23">23</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>Síncope no futebol + HVE evocam CMH; o sopro que diminui com Valsalva a exclui. E "valvopata com febre" puxa febre reumática: febre de 40 dias com Roth e Janeway é endocardite.</p></div>
+</section>
+
+<section class="sec" id="cap-10">
+  <span class="kick">10 · Hemorragia digestiva alta · caiu 3 vezes em 2021-2025 · você errou 2 (2023 e 2024)</span>
+  <h2>HDA: o fluxo que enche a variz</h2>
+  <p class="lede">Um erro de classe de fármaco e um de frequência; os dois se resolvem com o mapa da pressão portal.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O fármaco do sangramento agudo de varizes (CIR 2023 Q28).</li>
+    <li>A causa mais comum de HDA no paciente internado (CIR 2024 Q31).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Pressão portal = resistência do fígado x fluxo que entra. Em minutos só se mexe no fluxo: terlipressina, somatostatina ou octreotide contraem a arteríola esplâncnica.</li>
+    <li>Começar já na suspeita, antes da endoscopia, e manter por 2-5 dias; endoscopia com ligadura em até 12 h e antibiótico profilático no cirrótico.<sup class="ref"><a href="#ref-30">30</a></sup> A fenoxibenzamina que você marcou é alfabloqueador (feocromocitoma): vasodilata.</li>
+    <li>Úlcera péptica é a principal causa de HDA, também no internado (com a úlcera de estresse). Varizes só lideram quando o enunciado dá hipertensão portal.<sup class="ref"><a href="#ref-16">16</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 13 · esquema</span><b>Variz: o fluxo que entra</b></p>
+    <svg viewBox="0 0 360 190" role="img" aria-label="Esquema do fluxo portal. A artéria esplâncnica leva sangue ao intestino; dali a veia porta segue até o fígado, onde a cirrose é a resistência. Do meio da porta, as varizes sobem até o esôfago. Na artéria, destacado, o vasoconstritor fecha a entrada do fluxo.">
+      <rect class="fa-cor" x="186" y="10" width="28" height="40" rx="8"/>
+      <text class="fa-s" x="222" y="30">esôfago</text>
+      <path class="fa-varis" d="M200 127 C188 112 212 100 200 88 C188 76 212 64 200 50"/>
+      <text class="fa-m" x="216" y="82">varizes</text>
+      <line class="fa-li" x1="20" y1="130" x2="76" y2="130"/>
+      <path class="fa-seta" d="M84 130 L76 134 L76 126 Z"/>
+      <path class="fa-rs" d="M46 121 L46 139 L58 130 Z M70 121 L70 139 L58 130 Z"/>
+      <text class="fa-rst" x="20" y="108">vasoconstritor</text>
+      <rect class="fa-box" x="84" y="112" width="56" height="36" rx="8"/>
+      <text class="fa-s" x="112" y="134" text-anchor="middle">intestino</text>
+      <line class="fa-porta" x1="140" y1="130" x2="244" y2="130"/>
+      <path class="fa-seta" d="M252 130 L244 134.5 L244 125.5 Z"/>
+      <text class="fa-s" x="166" y="148" text-anchor="middle">veia porta</text>
+      <path class="fa-cor" d="M252 106 C286 92 344 98 348 118 C352 140 320 164 290 166 C266 168 252 152 252 136 Z"/>
+      <text class="fa-m" x="302" y="128" text-anchor="middle">fígado</text>
+      <text class="fa-s" x="302" y="143" text-anchor="middle">resistência</text>
+      <text class="fa-s" x="20" y="164">artéria esplâncnica</text>
+      <text class="fa-m" x="180" y="184" text-anchor="middle">pressão = fluxo x resistência</text>
+    </svg>
+    <figcaption>Esquema: em minutos, só o fluxo que entra pode ser fechado.<sup class="ref"><a href="#ref-30">30</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Hospitalizados" evoca o cirrótico internado; sem hepatopatia no enunciado, é úlcera péptica.</p></div>
+</section>
+
+<section class="sec" id="cap-11">
+  <span class="kick">11 · Urologia · caiu 2 vezes em 2021-2025 · você errou 2 (2023)</span>
+  <h2>Urologia: obstruído e infectado drena; AFP separa</h2>
+  <p class="lede">Dois erros de régua: quando a cólica vira urgência, e qual marcador diferencia em vez de só subir.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Antibiótico e conduta definitiva no cálculo ureteral distal de 9 mm com febre e hidronefrose (CM 2023 Q14).</li>
+    <li>O marcador que separa seminoma de não seminoma (CM 2023 Q17).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <ul class="tp">
+    <li>Urina infectada atrás de obstrução é um abscesso sob pressão: urossepse rápida. Desobstruir já (duplo J ou nefrostomia, equivalentes)<sup class="ref"><a href="#ref-31">31</a></sup> + antibiótico para enterobactéria, como a ceftriaxona; o SMX-TMP tem resistência alta no Brasil.</li>
+    <li>Terapia expulsiva (tansulosina) é para cálculo distal pequeno, sem febre e sem obstrução complicada. O definitivo vem depois da infecção: ureterolitotripsia no ureter distal. A questão pedia o definitivo.<sup class="ref"><a href="#ref-31">31</a></sup></li>
+    <li>A AFP vem do saco vitelino e do carcinoma embrionário; o seminoma puro não tem nenhum dos dois. Seminoma com <strong class="chave">AFP alta</strong> se trata como não seminoma. O beta-hCG sobe em parte dos seminomas, então não separa; a DHL mede carga tumoral.<sup class="ref"><a href="#ref-32">32</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 14 · esquema</span><b>Cálculo: a febre muda a pergunta</b></p>
+    <svg viewBox="0 0 360 182" role="img" aria-label="Fluxo de decisão. Cálculo com hidronefrose: tem febre? Sim, destacado: desobstruir já, por duplo J ou nefrostomia, com ceftriaxona; depois, o definitivo, ureterolitotripsia. Não: cálculo distal de até 10 mm vai à terapia expulsiva com tansulosina; maior ou que falhou, ureterolitotripsia.">
+      <rect class="fa-box" x="100" y="8" width="160" height="36" rx="8"/>
+      <text class="fa-tc" x="180" y="23" text-anchor="middle">cálculo + hidronefrose</text>
+      <text class="fa-s" x="180" y="38" text-anchor="middle">tem febre?</text>
+      <line class="fa-li" x1="140" y1="44" x2="92" y2="66"/>
+      <line class="fa-li" x1="220" y1="44" x2="268" y2="66"/>
+      <text class="fa-rst" x="108" y="54" text-anchor="end">sim</text>
+      <text class="fa-m" x="252" y="54">não</text>
+      <rect class="fa-rsb" x="14" y="66" width="156" height="52" rx="8"/>
+      <text class="fa-tc" x="92" y="82" text-anchor="middle">desobstruir já</text>
+      <text class="fa-s" x="92" y="97" text-anchor="middle">duplo J ou nefrostomia</text>
+      <text class="fa-s" x="92" y="111" text-anchor="middle">+ ceftriaxona</text>
+      <rect class="fa-box" x="190" y="66" width="156" height="52" rx="8"/>
+      <text class="fa-tc" x="268" y="82" text-anchor="middle">distal, até 10 mm</text>
+      <text class="fa-s" x="268" y="97" text-anchor="middle">expulsiva</text>
+      <text class="fa-s" x="268" y="111" text-anchor="middle">tansulosina</text>
+      <line class="fa-li" x1="92" y1="118" x2="92" y2="136"/>
+      <line class="fa-li" x1="268" y1="118" x2="268" y2="136"/>
+      <rect class="fa-box" x="14" y="136" width="156" height="40" rx="8"/>
+      <text class="fa-m" x="92" y="152" text-anchor="middle">depois, o definitivo</text>
+      <text class="fa-s" x="92" y="167" text-anchor="middle">ureterolitotripsia</text>
+      <rect class="fa-box" x="190" y="136" width="156" height="40" rx="8"/>
+      <text class="fa-m" x="268" y="152" text-anchor="middle">maior ou falhou</text>
+      <text class="fa-s" x="268" y="167" text-anchor="middle">ureterolitotripsia</text>
+    </svg>
+    <figcaption>Esquema: com febre, a pergunta deixa de ser quando o cálculo sai e vira quando drenar.<sup class="ref"><a href="#ref-31">31</a></sup></figcaption>
+  </figure>
+  <div class="trap"><span class="albl">Armadilha</span><p>Quem raciocina certo procura o duplo J e não acha: a pergunta era o definitivo. Quem ignora a febre cai na tansulosina. E "o que diferencia" não é "o que sobe".</p></div>
+</section>
+
+<section class="sec" id="avulsos">
+  <span class="kick">Um erro por tema · 25 erros</span>
+  <h2>Temas com um erro só: o erro e a correção</h2>
+  <p class="lede">Uma linha por erro. O número entre parênteses é quantas vezes o tema caiu nas 5 provas UERJ 2021-2025; os mais cobrados vêm primeiro. Asma, espirometria e espondiloartrite estão nas certezas.</p>
+  <details class="lote">
+    <summary>Cirurgia · 14 erros</summary>
+    <div class="tw"><table>
+      <tr><th>Tema</th><th>Você marcou</th><th>O certo, e por quê</th></tr>
+      <tr><td>Temas gerais (7) · 2025 Q24</td><td>Álcool</td><td>Tabaco, o principal fator externo do câncer de pâncreas; álcool e diabetes são controversos.<sup class="ref"><a href="#ref-33">33</a></sup></td></tr>
+      <tr><td>Hérnias (6) · 2024 Q29</td><td>Reduzir</td><td>Dor que virou contínua + febre + taquicardia = estrangulada: explorar. Reduzir devolve alça isquêmica à cavidade.<sup class="ref"><a href="#ref-34">34</a></sup></td></tr>
+      <tr><td>Vias biliares (4) · 2021 Q22</td><td>Strasberg E5</td><td>E2: a menos de 2 cm da confluência. E1, mais de 2 cm; E3, hilar; E4, confluência destruída; E5, ducto direito aberrante.<sup class="ref"><a href="#ref-35">35</a></sup></td></tr>
+      <tr><td>Nódulo de tireoide (4) · 2024 Q25</td><td>PAAF</td><td>Seguir com US. O corte da PAAF depende do padrão: alta ou intermediária suspeição, 1 cm; baixa, 1,5 cm; muito baixa, 2 cm ou observar.<sup class="ref"><a href="#ref-36">36</a></sup></td></tr>
+      <tr><td>Proctologia (3) · 2022 Q23</td><td>Miles + RT adjuvante</td><td>No reto localmente avançado a radioterapia (com quimio) vem antes;<sup class="ref"><a href="#ref-37">37</a></sup> reto médio vai à ressecção anterior com excisão do mesorreto. Miles, só se o tumor invade o esfíncter.</td></tr>
+      <tr><td>Nutrição (2) · 2024 Q38</td><td>Glutamina</td><td>Dieta enteral: sem nutriente no lúmen a mucosa atrofia. Glutamina é imunonutriente, não substitui a dieta.<sup class="ref"><a href="#ref-38">38</a></sup></td></tr>
+      <tr><td>Disfagia (2) · 2023 Q38</td><td>Larrey</td><td>Killian: entre o tireofaríngeo (oblíquo) e o cricofaríngeo (transverso). Larrey é diafragmático.<sup class="ref"><a href="#ref-16">16</a></sup></td></tr>
+      <tr><td>Ovário (2) · 2024 Q32</td><td>Endométrio</td><td>Ovário: semeia a cavidade por implante e toma o omento. O endométrio dissemina por linfa.<sup class="ref"><a href="#ref-16">16</a></sup></td></tr>
+      <tr><td>Cirurgia vascular (1) · 2023 Q22</td><td>Gastroduodenal</td><td>Esplênica, o aneurisma visceral mais comum (40-60%). A gastroduodenal é rara, pseudoaneurisma de pancreatite.<sup class="ref"><a href="#ref-39">39</a></sup></td></tr>
+      <tr><td>IRAS (1) · 2022 Q22</td><td>Clorexidina + PVPI</td><td>Sem clorexidina alcoólica, tudo em PVPI: degermante e solução do mesmo princípio ativo, esperando secar.<sup class="ref"><a href="#ref-40">40</a></sup></td></tr>
+      <tr><td>Neuroendócrino (1) · 2022 Q19</td><td>Linfoma</td><td>Gastrinoma: o Octreoscan é octreotide marcado, que se liga ao receptor de somatostatina do tumor neuroendócrino.</td></tr>
+      <tr><td>Fora do mapa · 2023 Q31</td><td>Cortisol</td><td>Epinefrina: a medula vem da crista neural e só ela tem a enzima que faz adrenalina. Cortisol é do córtex.<sup class="ref"><a href="#ref-16">16</a></sup></td></tr>
+      <tr><td>Fora do mapa · 2023 Q39</td><td>Lynch</td><td>Desmoide: mulher jovem, gatilho hormonal (gestação) ou cicatriz; a síndrome associada é a PAF (APC).</td></tr>
+      <tr><td>Fora do mapa · 2025 Q34</td><td>RM</td><td>Comando NÃO: a PAAF é a não indicada. Não separa adenoma de carcinoma e, sem metanefrinas, arrisca crise de feocromocitoma.<sup class="ref"><a href="#ref-41">41</a></sup></td></tr>
+    </table></div>
+  </details>
+  <details class="lote">
+    <summary>Clínica · 11 erros</summary>
+    <div class="tw"><table>
+      <tr><th>Tema</th><th>Você marcou</th><th>O certo, e por quê</th></tr>
+      <tr><td>DM2 (3) · 2024 Q14</td><td>Sitagliptina</td><td>Empagliflozina: glicosúria no túbulo proximal dá diurese e perda de peso sem depender de insulina. A semaglutida emagrece, mas pela insulina.<sup class="ref"><a href="#ref-42">42</a></sup></td></tr>
+      <tr><td>IAM com supra (2) · 2023 Q15</td><td>DA + trombólise</td><td>DII, DIII e aVF = parede inferior: coronária direita ou, sem ela na lista, circunflexa. Com hemodinâmica no prazo, angioplastia primária.<sup class="ref"><a href="#ref-43">43</a></sup></td></tr>
+      <tr><td>Neoplasia pulmonar (2) · 2024 Q6</td><td>RM de crânio</td><td>Dor no ombro e no braço + Horner do mesmo lado = tumor do ápice (Pancoast): TC de tórax.</td></tr>
+      <tr><td>Osteoporose (2) · 2025 Q11</td><td>Parar de fumar</td><td>Bisfosfonato. Fratura vertebral por fragilidade é osteoporose em qualquer T-score, e o fármaco é o que mais reduz nova fratura.<sup class="ref"><a href="#ref-44">44</a></sup></td></tr>
+      <tr><td>AVC (1) · 2024 Q9</td><td>AIT</td><td>AVC: restrição à difusão é infarto, mesmo com o déficit regredido.<sup class="ref"><a href="#ref-45">45</a></sup> AVC menor: AAS + clopidogrel por 21 dias.<sup class="ref"><a href="#ref-46">46</a></sup></td></tr>
+      <tr><td>Antibióticos (1) · 2021 Q9</td><td>Carbapenêmico</td><td>Quinolona: a cepa NAP1/027, hipervirulenta, é resistente a ela e se espalhou com o uso.<sup class="ref"><a href="#ref-47">47</a></sup></td></tr>
+      <tr><td>Cefaleia (1) · 2024 Q4</td><td>Localização</td><td>Dor que perturba o sono é alarme; hemicrania, náusea e fotofobia são da enxaqueca.<sup class="ref"><a href="#ref-48">48</a></sup></td></tr>
+      <tr><td>Colagenoses (1) · 2024 Q13</td><td>Quadro de LES</td><td>FAN nucleolar = esclerose sistêmica: Raynaud, pele espessa, esôfago, pulmão intersticial.<sup class="ref"><a href="#ref-49">49</a></sup></td></tr>
+      <tr><td>HAS secundária (1) · 2022 Q4</td><td>DRC</td><td>Estenose de artéria renal: a creatinina subiu com o IECA; na mulher jovem, displasia fibromuscular. Rins de 9-10 cm afastam DRC.<sup class="ref"><a href="#ref-50">50</a></sup></td></tr>
+      <tr><td>Tireotoxicose (1) · 2025 Q17</td><td>Graves</td><td>Factícia: captação baixa em toda a glândula = ela não está sintetizando. Tireoide normal e indolor em obesa; tireoglobulina baixa confirma.<sup class="ref"><a href="#ref-51">51</a></sup></td></tr>
+      <tr><td>Fora do mapa · 2023 Q16</td><td>RM</td><td>Dix-Hallpike: vertigem posicional, audição normal e nenhum sinal central = VPPB, diagnóstico de beira de leito, sem imagem.<sup class="ref"><a href="#ref-52">52</a></sup></td></tr>
+    </table></div>
+  </details>
+</section>
+
+<section class="sec" id="gatilhos">
+  <span class="kick">Fechamento</span>
+  <h2>Os gatilhos</h2>
+  <p class="lede">Uma linha por capítulo: a pergunta que você faz ao enunciado antes de marcar.</p>
+  <div class="tw"><table>
+    <tr><th>Capítulo</th><th>Na hora da prova</th></tr>
+    <tr><td>1 · TB fora do pulmão</td><td>Ascite: GASA primeiro. Líquor do HIV com glicose normal = criptococo. Meninge: TARV na 4ª-6ª semana (MS 2019: 8).</td></tr>
+    <tr><td>2 · Choque obstrutivo</td><td>PCP igual à PVC com pulso paradoxal = tamponamento; PCP normal = TEP. Cirurgia há menos de 3 semanas = embolectomia.</td></tr>
+    <tr><td>3 · Esôfago e estômago</td><td>Onde está a JEG? Linfonodo do laudo é N. A margem escolhe a gastrectomia.</td></tr>
+    <tr><td>4 · Cirurgia geral</td><td>Úraco é pré-peritoneal. "Não obstruído" = cefazolina. DOAC: 24-48 h. Insuflou e bradicardiou = vago.</td></tr>
+    <tr><td>5 · Pós-operatório</td><td>Que hora é? Horas: neutrófilo e atelectasia. 5º dia: ferida, abrir e drenar.</td></tr>
+    <tr><td>6 · Glomérulo</td><td>Onde está o depósito? Mesângio = IgA. Anti-PLA2R = membranosa primária.</td></tr>
+    <tr><td>7 · Hematologia</td><td>Corrija o reticulócito. Megaloblástica é hipo. O FvW carrega o VIII. PTI com 30 mil e sangramento leve = observar.</td></tr>
+    <tr><td>8 · Osso</td><td>Lítica ou blástica? Blástica no idoso = PSA. Mieloma não capta na cintilografia.</td></tr>
+    <tr><td>9 · Valvas</td><td>Em que fase do ciclo? Valsalva: só a CMH aumenta. Estalido + ruflar = EM reumática.</td></tr>
+    <tr><td>10 · HDA</td><td>Variz sangrando: vasoconstritor esplâncnico antes da endoscopia. HDA sem cirrose = úlcera.</td></tr>
+    <tr><td>11 · Urologia</td><td>Febre + hidronefrose = drenar já. AFP alta = não seminoma.</td></tr>
+  </table></div>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 2ª ed. Brasília: MS; 2019 (a fonte que a UERJ 2024 Q17 cita: TARV após 8 semanas na meningite tuberculosa).</li>
+    <li id="ref-2">Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Manejo da Infecção pelo HIV em Adultos. Módulo 2: coinfecções e infecções oportunistas. Brasília: MS; 2023 (TARV em até 7 dias do RIPE nas formas não meníngeas; entre a 4ª e a 6ª semana na meningite tuberculosa e na criptocócica).</li>
+    <li id="ref-3">British Thoracic Society, Scottish Intercollegiate Guidelines Network. British guideline on the management of asthma (SIGN 158). Edimburgo: SIGN; 2019. Algoritmo da asma aguda no adulto: PaCO2 'normal' (35-45 mmHg) como marcador de crise com risco de vida.</li>
+    <li id="ref-4">Stanojevic S, Kaminsky DA, Miller MR, et al. ERS/ATS technical standard on interpretive strategies for routine lung function tests. Eur Respir J. 2022;60(1):2101499.</li>
+    <li id="ref-5">Ramiro S, Nikiphorou E, Sepriano A, et al. ASAS-EULAR recommendations for the management of axial spondyloarthritis: 2022 update. Ann Rheum Dis. 2023;82(1):19-34. doi:10.1136/ard-2022-223296.</li>
+    <li id="ref-6">Debi U, Ravisankar V, Prasad KK, Sinha SK, Sharma AK. Abdominal tuberculosis of the gastrointestinal tract: revisited. World J Gastroenterol. 2014;20(40):14831-14840 (região ileocecal em 64% da TB gastrointestinal; obstrução como complicação mais comum; cirurgia reservada a obstrução que não resolve, perfuração, abscesso ou fístula).</li>
+    <li id="ref-7">Biggins SW, Angeli P, Garcia-Tsao G, et al. Diagnosis, evaluation, and management of ascites, spontaneous bacterial peritonitis and hepatorenal syndrome: 2021 Practice Guidance by the American Association for the Study of Liver Diseases. Hepatology. 2021;74(2):1014-1048. doi:10.1002/hep.31884.</li>
+    <li id="ref-8">Adler Y, Charron P, Imazio M, et al. 2015 ESC Guidelines for the diagnosis and management of pericardial diseases. Eur Heart J. 2015;36(42):2921-2964. doi:10.1093/eurheartj/ehv318.</li>
+    <li id="ref-9">Konstantinides SV, Meyer G, Becattini C, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543-603. doi:10.1093/eurheartj/ehz405.</li>
+    <li id="ref-10">Vincent JL, De Backer D. Circulatory shock. N Engl J Med. 2013;369(18):1726-1734. doi:10.1056/NEJMra1208943.</li>
+    <li id="ref-11">Kohn GP, Price RR, DeMeester SR, et al. Guidelines for the management of hiatal hernia (SAGES). Surg Endosc. 2013;27(12):4409-4428. doi:10.1007/s00464-013-3173-3.</li>
+    <li id="ref-12">Hu B, El Hajj N, Sittler S, et al. Gastric cancer: classification, histology and application of molecular pathology. J Gastrointest Oncol. 2012;3(3):251-261 (Borrmann I-IV; anel de sinete no tipo difuso).</li>
+    <li id="ref-13">Lauren P. The two histological main types of gastric carcinoma: diffuse and so-called intestinal-type carcinoma. Acta Pathol Microbiol Scand. 1965;64:31-49.</li>
+    <li id="ref-14">Japanese Gastric Cancer Association. Japanese gastric cancer treatment guidelines 2014 (ver. 4). Gastric Cancer. 2017;20(1):1-19 (margem proximal de 3 cm no tumor T2 ou mais de padrão expansivo e de 5 cm no infiltrativo; gastrectomia distal quando a margem cabe; D2 como padrão).</li>
+    <li id="ref-15">Amin MB, Edge SB, Greene FL, et al. (ed.). AJCC Cancer Staging Manual. 8ª ed. New York: Springer; 2017 (estômago: T pela camada atingida, N pelo número de linfonodos regionais, M só para metástase à distância).</li>
+    <li id="ref-16">Townsend CM, Beauchamp RD, Evers BM, Mattox KL. Sabiston Textbook of Surgery. 21ª ed. Philadelphia: Elsevier; 2022 (bibliografia de Cirurgia do edital): úraco e espaços do abdome, inflamação e cicatrização, febre pós-operatória, divertículo de Zenker, omento, medula adrenal, causas de HDA. Não conferido no original.</li>
+    <li id="ref-17">Bratzler DW, Dellinger EP, Olsen KM, et al. Clinical practice guidelines for antimicrobial prophylaxis in surgery. Am J Health Syst Pharm. 2013;70(3):195-283. PMID 23327981.</li>
+    <li id="ref-18">Douketis JD, Spyropoulos AC, Murad MH, et al. Perioperative management of antithrombotic therapy: an American College of Chest Physicians clinical practice guideline. Chest. 2022;162(5):e207-e243 (DOAC sem ponte: 24 h antes no risco de sangramento baixo ou moderado, 48 h no alto; dabigatrana com filtração abaixo de 50 mL/min: 3 a 4 dias; varfarina: 5 dias). Tabela conferida no resumo da AAFP, 2023.</li>
+    <li id="ref-19">Nguyen JH, Tanaka PP. Anesthesia for laparoscopic surgery. In: Society of Laparoscopic &amp; Robotic Surgeons. Prevention and Management of Laparoendoscopic Surgical Complications. 3ª ed., cap. 15. sls.org (acesso em 30/10).</li>
+    <li id="ref-20">Stevens DL, Bisno AL, Chambers HF, et al. Practice guidelines for the diagnosis and management of skin and soft tissue infections: 2014 update by the Infectious Diseases Society of America. Clin Infect Dis. 2014;59(2):e10-e52 (recomendações 22 e 23: infecção de sítio cirúrgico).</li>
+    <li id="ref-21">Kidney Disease: Improving Global Outcomes (KDIGO) Glomerular Diseases Work Group. KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276. doi:10.1016/j.kint.2021.05.021.</li>
+    <li id="ref-22">Beck LH Jr, Bonegio RGB, Lambeau G, et al. M-type phospholipase A2 receptor as target antigen in idiopathic membranous nephropathy. N Engl J Med. 2009;361(1):11-21.</li>
+    <li id="ref-23">Loscalzo J, Fauci AS, Kasper DL, et al. Harrison's Principles of Internal Medicine. 21ª ed. New York: McGraw Hill; 2022 (bibliografia de CM do edital): reticulócito e índice de produção, hemólise, eritropoese ineficaz, manobras dinâmicas na ausculta. Não conferido no original.</li>
+    <li id="ref-24">Neunert C, Terrell DR, Arnold DM, et al. American Society of Hematology 2019 guidelines for immune thrombocytopenia. Blood Adv. 2019;3(23):3829-3866.</li>
+    <li id="ref-25">James PD, Connell NT, Ameer B, et al. ASH ISTH NHF WFH 2021 guidelines on the diagnosis of von Willebrand disease. Blood Adv. 2021;5(1):280-300. PMID 33570651.</li>
+    <li id="ref-26">Rajkumar SV, Dimopoulos MA, Palumbo A, et al. International Myeloma Working Group updated criteria for the diagnosis of multiple myeloma. Lancet Oncol. 2014;15(12):e538-e548. doi:10.1016/S1470-2045(14)70442-5.</li>
+    <li id="ref-27">Krämer A, Bochtler T, Pauli C, et al. Cancer of unknown primary: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(3):228-246.</li>
+    <li id="ref-28">Tarasoutchi F, Montera MW, Ramos AIO, et al. Atualização das Diretrizes Brasileiras de Valvopatias - 2020 (Sociedade Brasileira de Cardiologia). Arq Bras Cardiol. 2020;115(4):720-775.</li>
+    <li id="ref-29">Delgado V, Ajmone Marsan N, de Waha S, et al. 2023 ESC Guidelines for the management of endocarditis. Eur Heart J. 2023;44(39):3948-4042. doi:10.1093/eurheartj/ehad193.</li>
+    <li id="ref-30">de Franchis R, Bosch J, Garcia-Tsao G, Reiberger T, Ripoll C; Baveno VII Faculty. Baveno VII: renewing consensus in portal hypertension. J Hepatol. 2022;76(4):959-974.</li>
+    <li id="ref-31">European Association of Urology. EAU Guidelines on Urolithiasis. Arnhem: EAU Guidelines Office; edição vigente (uroweb.org): descompressão urgente do rim obstruído e infectado por duplo J ou nefrostomia, equivalentes; tratamento definitivo do cálculo depois de resolvida a infecção. Conteúdo conferido em revisões que resumem a diretriz.</li>
+    <li id="ref-32">PDQ Adult Treatment Editorial Board. Testicular Cancer Treatment (PDQ): Health Professional Version. Bethesda: National Cancer Institute; cancer.gov (acesso em 30/10): tumor com histologia de seminoma e AFP elevada se trata como não seminoma.</li>
+    <li id="ref-33">Instituto Nacional de Câncer (INCA). Câncer de pâncreas. Rio de Janeiro: INCA. https://www.gov.br/inca/pt-br/assuntos/cancer/tipos/pancreas</li>
+    <li id="ref-34">Birindelli A, Sartelli M, Di Saverio S, et al. 2017 update of the WSES guidelines for emergency repair of complicated abdominal wall hernias. World J Emerg Surg. 2017;12:37.</li>
+    <li id="ref-35">Strasberg SM, Hertl M, Soper NJ. An analysis of the problem of biliary injury during laparoscopic cholecystectomy. J Am Coll Surg. 1995;180(1):101-125. PMID 8000648.</li>
+    <li id="ref-36">Haugen BR, Alexander EK, Bible KC, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133. doi:10.1089/thy.2015.0020.</li>
+    <li id="ref-37">Scott AJ, Kennedy EB, Berlin J, et al. Management of locally advanced rectal cancer: ASCO guideline. J Clin Oncol. 2024. doi:10.1200/JCO.24.01160 (terapia neoadjuvante, quimiorradioterapia e quimioterapia, antes da excisão total do mesorreto).</li>
+    <li id="ref-38">McClave SA, Taylor BE, Martindale RG, et al. Guidelines for the Provision and Assessment of Nutrition Support Therapy in the Adult Critically Ill Patient (SCCM/ASPEN). JPEN J Parenter Enteral Nutr. 2016;40(2):159-211. PMID 26773077.</li>
+    <li id="ref-39">Chaer RA, et al. The Society for Vascular Surgery clinical practice guidelines on the management of visceral aneurysms. J Vasc Surg. 2020;72(1S):3S-39S (artéria esplênica como o aneurisma visceral mais comum, 40-60%).</li>
+    <li id="ref-40">Agência Nacional de Vigilância Sanitária. Medidas de Prevenção de Infecção Relacionada à Assistência à Saúde. Brasília: ANVISA; 2017 (preparo da pele para cateter central: clorexidina alcoólica acima de 0,5%; alternativa, PVPI). Conferido em revisões que a resumem.</li>
+    <li id="ref-41">Fassnacht M, Tsagarakis S, Terzolo M, et al. European Society of Endocrinology clinical practice guidelines on the management of adrenal incidentalomas, in collaboration with the European Network for the Study of Adrenal Tumors. Eur J Endocrinol. 2023;189(1):G1-G42. doi:10.1093/ejendo/lvad066.</li>
+    <li id="ref-42">Sociedade Brasileira de Diabetes. Diretriz da SBD 2024: tratamento farmacológico da hiperglicemia no DM2. https://diretriz.diabetes.org.br/</li>
+    <li id="ref-43">Byrne RA, Rossello X, Coughlan JJ, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720-3826. doi:10.1093/eurheartj/ehad191 (angioplastia primária preferida à trombólise quando feita em até 120 min do diagnóstico).</li>
+    <li id="ref-44">Radominski SC, Bernardo W, Paula AP, et al. Diretrizes brasileiras para o diagnóstico e tratamento da osteoporose em mulheres na pós-menopausa (Sociedade Brasileira de Reumatologia). Rev Bras Reumatol. 2017;57(Supl 2):S452-S466.</li>
+    <li id="ref-45">Easton JD, Saver JL, Albers GW, et al. Definition and evaluation of transient ischemic attack (AHA/ASA). Stroke. 2009;40(6):2276-2293. doi:10.1161/STROKEAHA.108.192218.</li>
+    <li id="ref-46">Kleindorfer DO, Towfighi A, Chaturvedi S, et al. 2021 Guideline for the prevention of stroke in patients with stroke and transient ischemic attack (AHA/ASA). Stroke. 2021;52(7):e364-e467. doi:10.1161/STR.0000000000000375.</li>
+    <li id="ref-47">McDonald LC, Gerding DN, Johnson S, et al. Clinical practice guidelines for Clostridium difficile infection in adults and children: 2017 update by IDSA and SHEA. Clin Infect Dis. 2018;66(7):e1-e48.</li>
+    <li id="ref-48">Do TP, Remmers A, Schytz HW, et al. Red and orange flags for secondary headaches in clinical practice: SNNOOP10 list. Neurology. 2019;92(3):134-144. doi:10.1212/WNL.0000000000006697.</li>
+    <li id="ref-49">Cruvinel WM, Andrade LEC, von Mühlen CA, et al. V Consenso Brasileiro para pesquisa de autoanticorpos em células HEp-2. Adv Rheumatol. 2019;59(1):28.</li>
+    <li id="ref-50">Barroso WKS, Rodrigues CIS, Bortolotto LA, et al. Diretrizes Brasileiras de Hipertensão Arterial - 2020 (Sociedade Brasileira de Cardiologia). Arq Bras Cardiol. 2021;116(3):516-658. doi:10.36660/abc.20201238.</li>
+    <li id="ref-51">Ross DS, Burch HB, Cooper DS, et al. 2016 American Thyroid Association Guidelines for Diagnosis and Management of Hyperthyroidism and Other Causes of Thyrotoxicosis. Thyroid. 2016;26(10):1343-1421. doi:10.1089/thy.2016.0229.</li>
+    <li id="ref-52">Bhattacharyya N, Gubbels SP, Schwartz SR, et al. Clinical Practice Guideline: Benign Paroxysmal Positional Vertigo (Update). Otolaryngol Head Neck Surg. 2017;156(3 Suppl):S1-S47. doi:10.1177/0194599816689667.</li>
+  </ol>
+</section>
+</div>

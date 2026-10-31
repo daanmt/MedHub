@@ -1,0 +1,988 @@
+<title>Seus erros na UERJ, parte 2: GO, Pediatria e MFC</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:20px 0 8px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:28px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+ol.toc .qc{display:block}
+.qc a,.lede a,ul.tp a{color:var(--teal-ink)}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.banca{margin:16px 0;padding:12px 14px;border-left:3px solid var(--plum);background:var(--plum-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.banca p{margin:4px 0 0;color:var(--ink2)}
+.blbl{color:var(--plum-ink);font-weight:600;font-size:14px}
+.qc{color:var(--ink3);font-size:13px}
+details.lote{margin:12px 0 0;border-top:1px solid var(--line)}
+details.lote summary{cursor:pointer;color:var(--teal-ink);font-weight:600;min-height:44px;display:flex;align-items:center}
+details.lote .tw{margin-top:4px}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-q4{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-cel{fill:var(--ink2)}
+.fa-barra{fill:var(--plum)}
+.chave{color:var(--rosa);font-weight:650}
+.fa-rs{fill:var(--rosa)}
+.fa-rsf{stroke:var(--rosa);stroke-width:1.5;fill:none;stroke-linecap:round}
+.fa-rsk{stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round}
+.fa-rst{fill:var(--rosa);font-size:12px;font-weight:650}
+.fa-rsb{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-rsl{stroke:var(--rosa);stroke-width:3;fill:none;stroke-linecap:round}
+.fa-rsbar{fill:var(--rosa)}
+.fa-box{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-fio{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-pt{fill:var(--ink2)}
+.fa-nervo{stroke:var(--ink2);stroke-width:1.6;fill:none;stroke-linecap:round}
+.fa-medula{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-rim{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.fa-corpo{fill:var(--card);stroke:var(--ink3);stroke-width:1.2}
+.fa-trk{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-zdmg{fill:var(--plum-wash)}
+.fa-zdm{fill:var(--amber-wash)}
+.fa-osso{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-eixo{stroke:var(--ink3);stroke-width:1;fill:none}
+.fa-vaso{fill:var(--card);stroke:var(--ink2);stroke-width:1.2}
+.fa-zt{fill:var(--plum-wash);stroke:var(--ink2);stroke-width:1.2}
+.fa-plac{fill:var(--plum-wash);stroke:var(--ink2);stroke-width:1.2}
+.fa-feto{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.1}
+.fa-memb{stroke:var(--ink2);stroke-width:1.1;fill:none}
+.fa-membg{stroke:var(--ink2);stroke-width:3;fill:none}
+.fa-cordao{stroke:var(--ink2);stroke-width:1.5;fill:none;stroke-linecap:round}
+.fa-lumen{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-mio{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.1}
+.fa-figado{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.2}
+.fa-v1{stroke:var(--ink2);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fa-v2{stroke:var(--card);stroke-width:5.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fa-e1{stroke:var(--ink2);stroke-width:13;fill:none}
+.fa-e2{stroke:var(--card);stroke-width:9.6;fill:none}
+.fa-variz{fill:var(--plum-wash);stroke:var(--ink2);stroke-width:1}
+.fa-detr{fill:var(--card);stroke:var(--ink2);stroke-width:3}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Véspera · leitura de 31/10 · parte 2 de 2 · 71 erros de 5 provas</p>
+  <h1>Seus erros na UERJ, parte 2: GO, Pediatria e MFC</h1>
+  <p class="sub">O que você errou nas provas de 2021 a 2025, agrupado por tema e pelo degrau que faltou; onde o aulão já cobre, fica só o degrau.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho de hoje</h2>
+  <p class="qc">Antes: <a href="#abertura">o retrato</a> e <a href="#certeza">o que você errou com certeza</a>.</p>
+  <ol class="toc">
+    <li><a href="#cap-1">Sangramento da 1ª metade: o beta decide antes da imagem</a><span class="qc">GO · 3 erros</span></li>
+    <li><a href="#cap-2">Gêmeos: a placenta e a bolsa decidem a complicação</a><span class="qc">GO · 3 erros</span></li>
+    <li><a href="#cap-3">Parto: o estreptococo B e a ocitocina</a><span class="qc">GO · 2 erros</span></li>
+    <li><a href="#cap-4">Pré-natal: cada exame e cada vacina têm a sua janela</a><span class="qc">GO · 2 erros com certeza + 1</span></li>
+    <li><a href="#cap-5">Colo, DMG, pré-eclâmpsia e endometriose: só o degrau</a><span class="qc">GO · 6 erros · temas do aulão</span></li>
+    <li><a href="#cap-6">Aleitamento: o seio é a regra; HIV e HTLV são a exceção</a><span class="qc">PED · 4 erros</span></li>
+    <li><a href="#cap-7">Recém-nascido: o cateter que vira varizes, o cordão que vira pletora</a><span class="qc">PED · 2 erros</span></li>
+    <li><a href="#cap-8">Meningite, ITU, congênitas e nefrótica: só o degrau</a><span class="qc">PED · 7 erros · temas do aulão</span></li>
+    <li><a href="#cap-9">Teste diagnóstico: o pré-teste manda no negativo</a><span class="qc">MFC · 5 erros</span></li>
+    <li><a href="#cap-10">Rastreamento e prevenção: o momento da história natural decide</a><span class="qc">MFC · 3 erros</span></li>
+    <li><a href="#cap-11">Idoso e polifarmácia: só o degrau</a><span class="qc">MFC · 3 erros · temas do aulão</span></li>
+  </ol>
+  <p class="qc">Depois: <a href="#um-erro">temas de um erro só</a> e <a href="#gatilhos">os gatilhos</a>.</p>
+</nav>
+
+<section class="sec" id="abertura">
+  <span class="kick">00 · O retrato</span>
+  <h2>O retrato: 71 erros, 13 deles com certeza</h2>
+  <p class="lede">Esta parte junta seus erros de GO (30), Pediatria (29) e MFC (12) nas cinco UERJ que você fez. Quase todos são de conteúdo, não de leitura, e se concentram nos temas que a banca mais repete.</p>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · dado</span><b>Onde estão os 71 erros</b></p>
+    <svg viewBox="0 0 360 196" role="img" aria-label="Grade de erros por bloco e por ano. GO: 5 em 2021, 2 em 2022, 10 em 2023, 8 em 2024, 5 em 2025. Pediatria: 6, 5, 9, 8 e 1. MFC: 0, 2, 4, 3 e 3. Pontos destacados marcam os erros com certeza: em GO, 1 em 2021, 2 em 2024 e 2 em 2025; em Pediatria, 2 em 2021, 2 em 2024 e 1 em 2025; em MFC, 2 em 2024 e 1 em 2025. Em 2023 a certeza não era registrada.">
+      <text class="fa-tc" x="116" y="18" text-anchor="middle">2021</text>
+      <text class="fa-tc" x="164" y="18" text-anchor="middle">2022</text>
+      <text class="fa-tc" x="212" y="18" text-anchor="middle">2023</text>
+      <text class="fa-tc" x="260" y="18" text-anchor="middle">2024</text>
+      <text class="fa-tc" x="308" y="18" text-anchor="middle">2025</text>
+      <text class="fa-s" x="8" y="32">questões</text>
+      <text class="fa-s" x="116" y="32" text-anchor="middle">60</text>
+      <text class="fa-s" x="164" y="32" text-anchor="middle">59</text>
+      <text class="fa-s" x="212" y="32" text-anchor="middle">100</text>
+      <text class="fa-s" x="260" y="32" text-anchor="middle">98</text>
+      <text class="fa-s" x="308" y="32" text-anchor="middle">97</text>
+      <text class="fa-tc" x="8" y="57">GO</text>
+      <text class="fa-s" x="8" y="71">30 erros</text>
+      <rect class="fa-zdmg" x="94" y="42" width="44" height="34" rx="6"/>
+      <rect class="fa-trk" x="142" y="42" width="44" height="34" rx="6"/>
+      <rect class="fa-q4" x="190" y="42" width="44" height="34" rx="6"/>
+      <rect class="fa-q4" x="238" y="42" width="44" height="34" rx="6"/>
+      <rect class="fa-zdmg" x="286" y="42" width="44" height="34" rx="6"/>
+      <text class="fa-tc" x="116" y="61" text-anchor="middle">5</text>
+      <text class="fa-tc" x="164" y="61" text-anchor="middle">2</text>
+      <text class="fa-tc" x="212" y="61" text-anchor="middle">10</text>
+      <text class="fa-tc" x="260" y="61" text-anchor="middle">8</text>
+      <text class="fa-tc" x="308" y="61" text-anchor="middle">5</text>
+      <circle class="fa-rs" cx="116" cy="69" r="2.6"/>
+      <circle class="fa-rs" cx="256" cy="69" r="2.6"/><circle class="fa-rs" cx="264" cy="69" r="2.6"/>
+      <circle class="fa-rs" cx="304" cy="69" r="2.6"/><circle class="fa-rs" cx="312" cy="69" r="2.6"/>
+      <text class="fa-tc" x="8" y="99">PED</text>
+      <text class="fa-s" x="8" y="113">29 erros</text>
+      <rect class="fa-zdmg" x="94" y="84" width="44" height="34" rx="6"/>
+      <rect class="fa-zdmg" x="142" y="84" width="44" height="34" rx="6"/>
+      <rect class="fa-q4" x="190" y="84" width="44" height="34" rx="6"/>
+      <rect class="fa-q4" x="238" y="84" width="44" height="34" rx="6"/>
+      <rect class="fa-trk" x="286" y="84" width="44" height="34" rx="6"/>
+      <text class="fa-tc" x="116" y="103" text-anchor="middle">6</text>
+      <text class="fa-tc" x="164" y="103" text-anchor="middle">5</text>
+      <text class="fa-tc" x="212" y="103" text-anchor="middle">9</text>
+      <text class="fa-tc" x="260" y="103" text-anchor="middle">8</text>
+      <text class="fa-tc" x="308" y="103" text-anchor="middle">1</text>
+      <circle class="fa-rs" cx="112" cy="111" r="2.6"/><circle class="fa-rs" cx="120" cy="111" r="2.6"/>
+      <circle class="fa-rs" cx="256" cy="111" r="2.6"/><circle class="fa-rs" cx="264" cy="111" r="2.6"/>
+      <circle class="fa-rs" cx="308" cy="111" r="2.6"/>
+      <text class="fa-tc" x="8" y="141">MFC</text>
+      <text class="fa-s" x="8" y="155">12 erros</text>
+      <rect class="fa-trk" x="94" y="126" width="44" height="34" rx="6"/>
+      <rect class="fa-trk" x="142" y="126" width="44" height="34" rx="6"/>
+      <rect class="fa-zdmg" x="190" y="126" width="44" height="34" rx="6"/>
+      <rect class="fa-zdmg" x="238" y="126" width="44" height="34" rx="6"/>
+      <rect class="fa-zdmg" x="286" y="126" width="44" height="34" rx="6"/>
+      <text class="fa-tc" x="116" y="145" text-anchor="middle">0</text>
+      <text class="fa-tc" x="164" y="145" text-anchor="middle">2</text>
+      <text class="fa-tc" x="212" y="145" text-anchor="middle">4</text>
+      <text class="fa-tc" x="260" y="145" text-anchor="middle">3</text>
+      <text class="fa-tc" x="308" y="145" text-anchor="middle">3</text>
+      <circle class="fa-rs" cx="256" cy="153" r="2.6"/><circle class="fa-rs" cx="264" cy="153" r="2.6"/>
+      <circle class="fa-rs" cx="308" cy="153" r="2.6"/>
+      <circle class="fa-rs" cx="12" cy="180" r="2.6"/>
+      <text class="fa-m" x="20" y="184">com certeza</text>
+      <text class="fa-s" x="352" y="184" text-anchor="end">2023: certeza não registrada</text>
+    </svg>
+    <figcaption>Dado: erros por bloco e por prova.</figcaption>
+  </figure>
+  <ul class="tp">
+    <li><strong>21 de 71</strong> caíram em tema de prevalência alta nas 5 provas UERJ 2021-2025 (4 ou mais questões); 33 em média (2-3), 12 em baixa (1) e 5 fora do mapa. Os capítulos seguem os temas de prevalência alta e os de média com 2 ou mais erros seus.</li>
+    <li><strong>58 de 71 (82%)</strong> são lacuna de conhecimento: faltou o fato ou o mecanismo, não a leitura. O remédio é conteúdo, e é o que esta aula traz.</li>
+    <li>Padrão 1, <strong>o negativo lido como "não tem"</strong>, 7 vezes: os quatro testes de MFC (sensibilidade e RT-PCR em 2022, ergométrico em 2023 e 2025), a USG sem saco (2023), a colposcopia normal no AGC (2023) e o útero vazio na ectópica (2025).</li>
+    <li>Padrão 2, <strong>escalar sem indicação</strong>, 6 vezes: TC antes de toda punção (2024), internar a lactente bem (2021), mielograma (2023), conização no AGC (2023), GnRH antes do progestágeno (2024) e três rótulos num homem de 34 anos (2023).</li>
+    <li>Padrão 3, <strong>errar a janela</strong>, 7 vezes: dTpa (2025), bolsa rota de 18 h (2022), PEP de 72 h (2025), AMH em qualquer dia (2024), USG de 11-14 semanas (2023), exame por trimestre (2024) e varicela no periparto (2024).</li>
+    <li>Tendência: Pediatria caiu de 9 erros (2023) e 8 (2024) para <span class="chave">1 em 2025</span>. GO segue com 5 em 2025, dois deles com certeza.</li>
+  </ul>
+</section>
+
+<section class="sec" id="certeza">
+  <span class="kick">Com certeza · 13 erros</span>
+  <h2>O que você errou com certeza</h2>
+  <p class="lede">Você marcou estas 13 com certeza sólida: é conceito errado instalado, o mais perigoso na véspera. Leia cada uma como troca: o que você achava -&gt; o que é.</p>
+  <h3>GO (5)</h3>
+  <ul class="tp">
+    <li>LSIL aos 27 anos (2021): você achava repetir em 12 meses -&gt; é <strong>citologia em 6 meses</strong>. O LSIL tem um corte etário só (25 anos); 12 meses na faixa de 25-29 é regra do ASC-US.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Exames do 1º trimestre (2024): você pôs a sorologia de CMV na rotina -&gt; <strong>CMV não é rastreado</strong> no pré-natal. Um item fora da rotina derruba a alternativa, mesmo com glicemia e HIV certos.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Vacina em qualquer idade gestacional (2025): você marcou dTpa -&gt; é a <strong>influenza</strong>. A dTpa tem janela: a partir da 20ª semana, a cada gestação.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>BI-RADS 3 (2024): você leu o risco residual como "suspeito" -&gt; é <strong>provavelmente benigno</strong> (risco de 2% ou menos, controle em 6 meses). Suspeito é o 4, que vai à biópsia.<sup class="ref"><a href="#ref-4">4</a></sup></li>
+    <li>Ectópica a 7 semanas (2025): você achava que a dilatação cervical reforçava -&gt; colo dilatado aponta abortamento. Com útero vazio, quem sustenta a ectópica é o <strong>beta-hCG positivo</strong>.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+  </ul>
+  <h3>Pediatria (5)</h3>
+  <ul class="tp">
+    <li>Febre sem foco aos 8 meses (2021): você viu "qSOFA alterado" e quis internar -&gt; qSOFA é régua de adulto. FC 120 e FR 40 são normais aos 8 meses; vacinada e bem, é <strong>EAS, urocultura e antibiótico oral</strong> em casa.<sup class="ref"><a href="#ref-6">6</a>, <a href="#ref-7">7</a></sup></li>
+    <li>Escore Z de IMC aos 4 anos (2021): você chamou z acima de +2 de sobrepeso -&gt; pela OMS, abaixo de 5 anos, <span class="chave">você estava certo</span> (obesidade só acima de +3); a banca usou a régua de 5 a 19 anos. Na prova, decida pela outra metade: PA no p90 e hábitos ruins pedem <strong>rastrear comorbidade</strong>, não só reavaliar em 3 meses.<sup class="ref"><a href="#ref-8">8</a></sup></li>
+    <li>Punção na meningite do lactente (2024): você achava "TC antes de toda punção" -&gt; TC só <strong>com critério</strong>. Sem critério, punciona; o empírico acima de 3 meses, na UERJ, é cefalosporina de 3ª + vancomicina.<sup class="ref"><a href="#ref-9">9</a>, <a href="#ref-10">10</a></sup></li>
+    <li>RN com VDRL 1:2 de mãe tratada (2024): você chamou de sífilis congênita -&gt; é <strong>criança exposta</strong>: mãe adequadamente tratada, RN assintomático e título que não passa 2 diluições acima do materno. Seguimento com VDRL, sem tratar.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    <li>Mãe com HIV descoberto na lactação (2025): você pediu anti-HIV e profilaxia de pneumocistose -&gt; é <strong>carga viral e PEP</strong>, se a última mamada foi há até 72 h. O leite é a exposição, e o relógio conta dela.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+  </ul>
+  <h3>MFC (3)</h3>
+  <ul class="tp">
+    <li>Critério de programa de rastreamento (2024): você marcou "teste de alta especificidade" -&gt; o critério é teste aceitável e válido e <strong>população disposta a seguir a investigação e o tratamento</strong>.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+    <li>Reação adversa no idoso (2024): você marcou a lista "IC, osteoartrose, hipotireoidismo, demência" -&gt; osteoartrose e hipotireoidismo não estão nela. A frase limpa era a outra: <strong>fármacos cardiovasculares</strong> estão entre os de maior risco.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Demanda da APS (2025): você marcou HAS, angina e DM2 -&gt; o gabarito foi <strong>ausência de doença</strong>, depressão e hipotireoidismo. Angina é rara na demanda da APS; consulta sem doença é das mais frequentes.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+  </ul>
+</section>
+
+<section class="sec" id="cap-1">
+  <span class="kick">01 · GO · Sangramento da 1ª metade · caiu 3 vezes em 2021-2025 · você errou 3 (2023, 2024, 2025)</span>
+  <h2>Sangramento da 1ª metade: o beta decide antes da imagem</h2>
+  <p class="lede">Nas três você deu peso ao achado mais visível (útero vazio, colo, uma teoria imunológica) e não ao dado que decide: o beta-hCG contra a zona discriminatória, ou a causa que tem prova.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O diagnóstico com beta de 145 -&gt; 554 em 72 h e USG sem saco (2023): gestação tópica inicial.</li>
+    <li>O dado que reforça a ectópica com útero vazio a 7 semanas (2025): o beta positivo.</li>
+    <li>A causa aceita de aborto de repetição (2024): translocação de um dos pais.</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Útero vazio: depende do beta</b></p>
+    <svg viewBox="0 0 360 158" role="img" aria-label="Régua do beta-hCG em escala logarítmica. Os valores do caso de 2023, 145 e 554, ficam à esquerda da zona discriminatória, destacada, de 1.500 a 2.000 mUI/mL. À esquerda dela, útero vazio é cedo: repetir o beta. À direita, útero vazio é ectópica até prova em contrário.">
+      <text class="fa-rst" x="140" y="22" text-anchor="middle">zona discriminatória</text>
+      <text class="fa-s" x="140" y="36" text-anchor="middle">1.500-2.000</text>
+      <rect class="fa-trk" x="20" y="46" width="320" height="16" rx="8"/>
+      <path class="fa-zdmg" d="M28 46 H134 V62 H28 A8 8 0 0 1 20 54 A8 8 0 0 1 28 46 Z"/>
+      <path class="fa-zdm" d="M146 46 H332 A8 8 0 0 1 340 54 A8 8 0 0 1 332 62 H146 Z"/>
+      <rect class="fa-rsb" x="134" y="42" width="12" height="24" rx="2"/>
+      <circle class="fa-pt" cx="35.6" cy="54" r="3"/>
+      <circle class="fa-pt" cx="92.1" cy="54" r="3"/>
+      <text class="fa-tc" x="35.6" y="80" text-anchor="middle">145</text>
+      <text class="fa-tc" x="92.1" y="80" text-anchor="middle">554</text>
+      <text class="fa-m" x="64" y="98" text-anchor="middle">x4 em 72 h</text>
+      <text class="fa-s" x="340" y="80" text-anchor="end">mUI/mL, escala log</text>
+      <text class="fa-tc" x="77" y="128" text-anchor="middle">útero vazio = cedo</text>
+      <text class="fa-m" x="77" y="144" text-anchor="middle">repetir o beta</text>
+      <text class="fa-tc" x="243" y="128" text-anchor="middle">útero vazio = ectópica</text>
+      <text class="fa-m" x="243" y="144" text-anchor="middle">até prova em contrário</text>
+    </svg>
+    <figcaption>Esquema: abaixo da zona, não ver o saco é o esperado.<sup class="ref"><a href="#ref-5">5</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>A <strong>zona discriminatória</strong> (cerca de 1.500-2.000 mUI/mL na via transvaginal) é o beta a partir do qual a gestação tópica já aparece. Abaixo dela, útero vazio é o esperado: localização indeterminada, não diagnóstico.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+    <li>Abaixo da zona, quem decide é a cinética: a gestação viável sobe ao menos cerca de 35% em 48 h. De 145 para 554 em 72 h é quase 4 vezes: curva viável. Ectópica e gestação inviável tendem a platô, subida lenta ou queda.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+    <li>Acima da zona, <span class="chave">útero vazio com beta positivo</span> = ectópica até prova em contrário. Indução de ovulação soma risco, inclusive de gestação heterotópica.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Os achados que excluem: colo fechado afasta abortamento em curso; colo dilatado aponta abortamento, não ectópica; culdocentese negativa só diz que não há hemoperitônio.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Aborto de repetição tem poucas causas comprovadas: translocação balanceada de um dos pais (cariótipo do casal), SAAF e malformação que distorce a cavidade (septo, mioma submucoso, sinéquia). Imunoterapia com linfócitos paternos e pesquisa de MTHFR não são recomendadas.<sup class="ref"><a href="#ref-16">16</a></sup></li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Útero vazio, beta positivo</th><th>A pista</th><th>Conduta</th></tr>
+    <tr><td>Gestação muito inicial</td><td>Beta abaixo da zona e subindo bem; colo fechado</td><td>Beta em 48-72 h e nova USG</td></tr>
+    <tr><td>Ectópica</td><td>Beta acima da zona; dor, sangramento, útero doloroso à mobilização</td><td>Conduzir como ectópica</td></tr>
+    <tr><td>Abortamento</td><td>Colo dilatado, restos ovulares</td><td>Conduta do abortamento</td></tr>
+    <tr><td>Mola</td><td>Beta muito alto, útero maior que a idade gestacional, cistos tecaluteínicos</td><td>Esvaziamento uterino</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>Sangramento com USG sem saco dispara o alarme de coisa ruim. Com beta de 554, é só cedo demais para ver; com beta acima da zona, o mesmo útero vazio é ectópica.</p></div>
+</section>
+
+<section class="sec" id="cap-2">
+  <span class="kick">02 · GO · Gestação múltipla · caiu 3 vezes em 2021-2025 · você errou 3 (2021, 2023, 2025)</span>
+  <h2>Gêmeos: a placenta e a bolsa decidem a complicação</h2>
+  <p class="lede">Nas três você misturou dois eixos: o que nasce de dividir a placenta (córion) com o que nasce de dividir a bolsa (âmnio), e o trimestre em que cada um se enxerga.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>A complicação exclusiva da monoamniótica (2021): gêmeos acolados.</li>
+    <li>O que é indicação própria da USG de 1º trimestre (2023): a corionicidade.</li>
+    <li>O achado que define a TAPS (2025): anemia num feto e policitemia no outro.</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · esquema</span><b>Placenta e bolsa: três arranjos</b></p>
+    <svg viewBox="0 0 360 232" role="img" aria-label="Três úteros com gêmeos. Di/di: duas placentas, uma cunha de placenta entre as bolsas, o sinal do lambda, e membrana espessa; menos risco. Mono/di: uma placenta com anastomoses entre as circulações, destacadas, membrana fina que encontra a placenta em T; risco de STFF e TAPS. Mono/mono: uma placenta, uma bolsa só e cordões que se cruzam; risco de acolados e de entrelaçamento de cordões.">
+      <ellipse class="fa-corpo" cx="60" cy="104" rx="52" ry="66"/>
+      <ellipse class="fa-plac" cx="44" cy="60" rx="16" ry="8"/>
+      <ellipse class="fa-plac" cx="76" cy="60" rx="16" ry="8"/>
+      <path class="fa-plac" d="M54 62 L66 62 L60 78 Z"/>
+      <line class="fa-membg" x1="60" y1="78" x2="60" y2="170"/>
+      <path class="fa-cordao" d="M50 67 C56 88 54 110 46 122"/>
+      <path class="fa-cordao" d="M70 67 C64 88 66 110 74 122"/>
+      <circle class="fa-feto" cx="36" cy="100" r="8"/><ellipse class="fa-feto" cx="36" cy="122" rx="10" ry="14"/>
+      <circle class="fa-feto" cx="84" cy="100" r="8"/><ellipse class="fa-feto" cx="84" cy="122" rx="10" ry="14"/>
+
+      <ellipse class="fa-corpo" cx="180" cy="104" rx="52" ry="66"/>
+      <ellipse class="fa-plac" cx="180" cy="58" rx="30" ry="9"/>
+      <path class="fa-rsl" d="M162 58 Q180 50 198 58"/>
+      <circle class="fa-rs" cx="162" cy="58" r="2.4"/><circle class="fa-rs" cx="198" cy="58" r="2.4"/>
+      <line class="fa-memb" x1="180" y1="67" x2="180" y2="170"/>
+      <path class="fa-cordao" d="M170 66 C176 88 174 110 166 122"/>
+      <path class="fa-cordao" d="M190 66 C184 88 186 110 194 122"/>
+      <circle class="fa-feto" cx="156" cy="100" r="8"/><ellipse class="fa-feto" cx="156" cy="122" rx="10" ry="14"/>
+      <circle class="fa-feto" cx="204" cy="100" r="8"/><ellipse class="fa-feto" cx="204" cy="122" rx="10" ry="14"/>
+
+      <ellipse class="fa-corpo" cx="300" cy="104" rx="52" ry="66"/>
+      <ellipse class="fa-plac" cx="300" cy="58" rx="30" ry="9"/>
+      <path class="fa-cordao" d="M285 66 C326 86 276 98 312 122"/>
+      <path class="fa-cordao" d="M315 66 C274 86 324 98 288 122"/>
+      <circle class="fa-feto" cx="278" cy="100" r="8"/><ellipse class="fa-feto" cx="278" cy="122" rx="10" ry="14"/>
+      <circle class="fa-feto" cx="322" cy="100" r="8"/><ellipse class="fa-feto" cx="322" cy="122" rx="10" ry="14"/>
+
+      <text class="fa-tc" x="60" y="192" text-anchor="middle">di/di</text>
+      <text class="fa-tc" x="180" y="192" text-anchor="middle">mono/di</text>
+      <text class="fa-tc" x="300" y="192" text-anchor="middle">mono/mono</text>
+      <text class="fa-m" x="60" y="208" text-anchor="middle">lambda</text>
+      <text class="fa-m" x="180" y="208" text-anchor="middle">T</text>
+      <text class="fa-m" x="300" y="208" text-anchor="middle">1 bolsa</text>
+      <text class="fa-s" x="60" y="224" text-anchor="middle">menos risco</text>
+      <text class="fa-rst" x="180" y="224" text-anchor="middle">STFF · TAPS</text>
+      <text class="fa-s" x="300" y="224" text-anchor="middle">acolados · cordões</text>
+    </svg>
+    <figcaption>Esquema: anastomose é da placenta única; acolado, da bolsa única.<sup class="ref"><a href="#ref-17">17</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Córion = placenta. Placenta única (monocoriônica) liga as duas circulações por <strong>anastomoses</strong>: daí STFF, TAPS e TRAP, que não existem na dicoriônica.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+    <li>Âmnio = bolsa. Bolsa única (monoamniótica) traz o que é mecânico: <span class="chave">acolados e entrelaçamento de cordões</span>. Acolado é divisão tardia e incompleta do embrião, sempre mono/mono.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+    <li>A corionicidade se define na USG de 11 a 13+6 semanas: sinal do lambda = dicoriônica; sinal do T = monocoriônica. Depois a membrana afina e o sinal se perde. Líquido e crescimento são perguntas do 2º e 3º trimestres.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+    <li>Monocoriônica pede USG a cada 2 semanas, porque STFF e TAPS se instalam em semanas.<sup class="ref"><a href="#ref-17">17</a></sup></li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Complicação</th><th>Exige</th><th>O que diverge</th></tr>
+    <tr><td>STFF</td><td>Placenta única</td><td>O líquido: oligoâmnio no doador, polidrâmnio no receptor</td></tr>
+    <tr><td>TAPS</td><td>Placenta única</td><td>Só a hemoglobina: pico sistólico da cerebral média alto no anêmico, baixo no policitêmico; líquido normal</td></tr>
+    <tr><td>TRAP</td><td>Placenta única</td><td>Um feto acárdico, perfundido pelo outro</td></tr>
+    <tr><td>Acolados</td><td>Bolsa única</td><td>Os corpos não se separam</td></tr>
+    <tr><td>Entrelaçamento</td><td>Bolsa única</td><td>Os cordões dão nó</td></tr>
+  </table></div>
+  <div class="trap"><span class="albl">Armadilha</span><p>STFF é a complicação gemelar mais famosa, por isso atrai na pergunta da monoamniótica. Mas STFF é de placenta; o que só a bolsa única produz é o acolado. E diferença de peso pequena não é complicação nenhuma.</p></div>
+</section>
+
+<section class="sec" id="cap-3">
+  <span class="kick">03 · GO · Assistência ao parto · caiu 3 vezes em 2021-2025 · você errou 2 (2022, 2024)</span>
+  <h2>Parto: o estreptococo B e a ocitocina</h2>
+  <p class="lede">Os dois erros foram de lista: um corte de tempo trocado (12 h no lugar de 18 h) e um hormônio trocado (a ocitocina ejeta o leite; quem produz é a prolactina).</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>A indicação de profilaxia para EGB com cultura desconhecida (2022).</li>
+    <li>A exceção entre os usos da ocitocina, em comando EXCETO (2024).</li>
+  </ul>
+  <h3>O degrau que faltou: o EGB</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · fluxo</span><b>Profilaxia intraparto para EGB</b></p>
+    <svg viewBox="0 0 360 196" role="img" aria-label="Fluxo da profilaxia para estreptococo do grupo B. Primeiro, destacado: bacteriúria por EGB nesta gestação ou filho anterior com doença por EGB; se sim, profilaxia. Se não, swab de 36 a 37 semanas: positivo, profilaxia. Desconhecido: profilaxia se houver trabalho de parto abaixo de 37 semanas, febre de 38 graus ou mais, ou bolsa rota há 18 horas ou mais, destacado. Swab negativo sem fator de risco: sem profilaxia.">
+      <rect class="fa-rsb" x="8" y="8" width="214" height="32" rx="8"/>
+      <text class="fa-rst" x="115" y="29" text-anchor="middle">bacteriúria ou filho com EGB</text>
+      <line class="fa-li" x1="222" y1="24" x2="262" y2="24"/><path class="fa-seta" d="M270 24 l-8 -4 v8 z"/>
+      <text class="fa-s" x="242" y="18" text-anchor="middle">sim</text>
+      <rect class="fa-box" x="270" y="10" width="82" height="28" rx="8"/>
+      <text class="fa-tc" x="311" y="28" text-anchor="middle">profilaxia</text>
+      <line class="fa-li" x1="115" y1="40" x2="115" y2="54"/><path class="fa-seta" d="M115 62 l-4 -8 h8 z"/>
+      <text class="fa-s" x="122" y="54">não</text>
+      <rect class="fa-box" x="8" y="62" width="214" height="32" rx="8"/>
+      <text class="fa-tc" x="115" y="82" text-anchor="middle">swab de 36-37 semanas</text>
+      <line class="fa-li" x1="222" y1="78" x2="262" y2="78"/><path class="fa-seta" d="M270 78 l-8 -4 v8 z"/>
+      <text class="fa-s" x="242" y="72" text-anchor="middle">positivo</text>
+      <rect class="fa-box" x="270" y="64" width="82" height="28" rx="8"/>
+      <text class="fa-tc" x="311" y="82" text-anchor="middle">profilaxia</text>
+      <line class="fa-li" x1="115" y1="94" x2="115" y2="108"/><path class="fa-seta" d="M115 116 l-4 -8 h8 z"/>
+      <text class="fa-s" x="122" y="108">desconhecido</text>
+      <rect class="fa-box" x="8" y="116" width="214" height="44" rx="8"/>
+      <text class="fa-m" x="115" y="134" text-anchor="middle">&lt; 37 sem · febre &gt;= 38 graus</text>
+      <text class="fa-m" x="115" y="150" text-anchor="middle">bolsa rota <tspan class="fa-rst">&gt;= 18 h</tspan></text>
+      <line class="fa-li" x1="222" y1="138" x2="262" y2="138"/><path class="fa-seta" d="M270 138 l-8 -4 v8 z"/>
+      <text class="fa-s" x="242" y="132" text-anchor="middle">algum</text>
+      <rect class="fa-box" x="270" y="124" width="82" height="28" rx="8"/>
+      <text class="fa-tc" x="311" y="142" text-anchor="middle">profilaxia</text>
+      <text class="fa-s" x="8" y="184">swab negativo, sem fator de risco: sem profilaxia</text>
+    </svg>
+    <figcaption>Fluxo: a bacteriúria por EGB dispensa o swab.<sup class="ref"><a href="#ref-18">18</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Duas indicações dispensam o swab: <span class="chave">bacteriúria por EGB na gestação atual</span>, sinal de colonização intensa, e filho anterior com doença invasiva por EGB. Com elas, profilaxia intraparto sempre.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Rastreio universal com swab vaginal e retal entre 36 0/7 e 37 6/7 semanas (ACOG 2020; o texto clássico, que muitas provas ainda usam, diz 35-37). Positivo = profilaxia, exceto cesárea antes do trabalho de parto com bolsa íntegra.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Status desconhecido: profilaxia se o parto vier abaixo de 37 semanas, se a bolsa estiver rota há 18 h ou mais ou se houver febre intraparto de 38 graus ou mais.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+    <li>Colonização numa gestação anterior, sem filho doente, não é indicação clássica; o ACOG 2020 só aceita considerá-la no termo, com status desconhecido.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+  </ul>
+  <h3>O degrau que faltou: a ocitocina contrai, a prolactina produz</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 5 · esquema</span><b>Alvéolo: quem produz, quem ejeta</b></p>
+    <svg viewBox="0 0 360 200" role="img" aria-label="Alvéolo mamário em corte. Um anel de células secretoras envolve a luz com gotas de leite; a prolactina, da adeno-hipófise, age nelas e produz o leite. Por fora, células mioepiteliais destacadas; a ocitocina, da neuro-hipófise, as contrai e ejeta o leite pelo ducto até o mamilo.">
+      <ellipse class="fa-mio" cx="223" cy="88" rx="2.6" ry="9"/>
+      <ellipse class="fa-mio" cx="214.8" cy="113.3" rx="2.6" ry="9" transform="rotate(36 214.8 113.3)"/>
+      <ellipse class="fa-mio" cx="145.2" cy="113.3" rx="2.6" ry="9" transform="rotate(-36 145.2 113.3)"/>
+      <ellipse class="fa-mio" cx="137" cy="88" rx="2.6" ry="9"/>
+      <ellipse class="fa-mio" cx="145.2" cy="62.7" rx="2.6" ry="9" transform="rotate(36 145.2 62.7)"/>
+      <ellipse class="fa-mio" cx="166.7" cy="47.1" rx="2.6" ry="9" transform="rotate(72 166.7 47.1)"/>
+      <ellipse class="fa-mio" cx="193.3" cy="47.1" rx="2.6" ry="9" transform="rotate(-72 193.3 47.1)"/>
+      <ellipse class="fa-mio" cx="214.8" cy="62.7" rx="2.6" ry="9" transform="rotate(-36 214.8 62.7)"/>
+      <circle class="fa-lumen" cx="180" cy="88" r="20"/>
+      <circle class="fa-zt" cx="208.5" cy="97.3" r="8.5"/>
+      <circle class="fa-zt" cx="197.6" cy="112.3" r="8.5"/>
+      <circle class="fa-zt" cx="162.4" cy="112.3" r="8.5"/>
+      <circle class="fa-zt" cx="151.5" cy="97.3" r="8.5"/>
+      <circle class="fa-zt" cx="151.5" cy="78.7" r="8.5"/>
+      <circle class="fa-zt" cx="162.4" cy="63.7" r="8.5"/>
+      <circle class="fa-zt" cx="180" cy="58" r="8.5"/>
+      <circle class="fa-zt" cx="197.6" cy="63.7" r="8.5"/>
+      <circle class="fa-zt" cx="208.5" cy="78.7" r="8.5"/>
+      <circle class="fa-pt" cx="174" cy="82" r="1.8"/><circle class="fa-pt" cx="186" cy="88" r="1.8"/><circle class="fa-pt" cx="178" cy="95" r="1.8"/>
+      <line class="fa-li" x1="174" y1="107" x2="174" y2="176"/>
+      <line class="fa-li" x1="186" y1="107" x2="186" y2="176"/>
+      <rect class="fa-corpo" x="166" y="176" width="28" height="10" rx="5"/>
+      <text class="fa-m" x="194" y="150">ducto</text>
+      <text class="fa-s" x="200" y="186">mamilo</text>
+      <text class="fa-tc" x="16" y="60">prolactina</text>
+      <text class="fa-m" x="16" y="76">produz</text>
+      <text class="fa-s" x="16" y="92">adeno-hipófise</text>
+      <line class="fa-fio" x1="86" y1="72" x2="143.2" y2="77.5"/><circle class="fa-pt" cx="143.2" cy="77.5" r="2.2"/>
+      <text class="fa-rst" x="262" y="60">ocitocina</text>
+      <text class="fa-m" x="262" y="76">ejeta</text>
+      <text class="fa-s" x="262" y="92">neuro-hipófise</text>
+      <line class="fa-fio" x1="258" y1="72" x2="225.3" y2="84"/><circle class="fa-rs" cx="225.3" cy="84" r="2.4"/>
+    </svg>
+    <figcaption>Esquema: a prolactina age na secretora; a ocitocina, na mioepitelial.<sup class="ref"><a href="#ref-15">15</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>A ocitocina (neuro-hipófise, no reflexo da sucção) contrai dois músculos: o útero e a <strong>célula mioepitelial</strong> do alvéolo, que espreme o leite já pronto. A produção é da prolactina (adeno-hipófise).<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Usos obstétricos: indução com colo favorável, correção da hipoatividade na fase ativa prolongada (com amniotomia) e profilaxia da hemorragia pós-parto (10 UI IM). Aumentar a produção de leite não está na lista.<sup class="ref"><a href="#ref-15">15</a></sup></li>
+    <li>Seu receio na fase ativa prolongada era sofrimento fetal: esse risco é o da hiperestimulação, que se vigia ao titular a dose. Ele não tira a ocitocina da distocia por hipoatividade.</li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Bolsa rota há mais de 12 h" parece tempo demais, mas o corte é 18 h. E "lactação" evoca ocitocina, enquanto aumentar a produção é tarefa da prolactina.</p></div>
+</section>
+
+<section class="sec" id="cap-4">
+  <span class="kick">04 · GO · Pré-natal · caiu 3 vezes em 2021-2025 · você errou 2, ambas com certeza (2024, 2025), e 1 vizinha (fisiologia, 2022)</span>
+  <h2>Pré-natal: cada exame e cada vacina têm a sua janela</h2>
+  <p class="lede">Os dois erros com certeza foram de calendário: um exame que não é rotina posto no 1º trimestre e uma vacina com janela respondendo por "qualquer idade gestacional".</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Os exames obrigatórios do 1º trimestre (2024).</li>
+    <li>A vacina indicada em qualquer idade gestacional (2025).</li>
+    <li>O que muda na hemodinâmica e na coagulação da gestante (2022).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 6 · esquema</span><b>A gestação em 40 semanas</b></p>
+    <svg viewBox="0 0 360 168" role="img" aria-label="Linha do tempo da gestação, de 0 a 40 semanas. No alto, por toda a linha, destacada, a vacina influenza, em qualquer idade gestacional. Marcas: exames da 1ª consulta no início; USG de 11 a 14 semanas; dTpa a partir de 20 semanas, destacada; TOTG de 24 a 28; vacina VSR a partir de 28; swab de EGB perto de 36-37 semanas.">
+      <rect class="fa-rsb" x="20" y="14" width="320" height="22" rx="8"/>
+      <text class="fa-rst" x="180" y="29" text-anchor="middle">influenza: qualquer IG</text>
+      <line class="fa-eixo" x1="20" y1="128" x2="340" y2="128"/>
+      <line class="fa-li" x1="20" y1="124" x2="20" y2="132"/>
+      <line class="fa-li" x1="100" y1="124" x2="100" y2="132"/>
+      <line class="fa-li" x1="180" y1="124" x2="180" y2="132"/>
+      <line class="fa-li" x1="260" y1="124" x2="260" y2="132"/>
+      <line class="fa-li" x1="340" y1="124" x2="340" y2="132"/>
+      <text class="fa-s" x="20" y="146" text-anchor="middle">0</text>
+      <text class="fa-s" x="100" y="146" text-anchor="middle">10</text>
+      <text class="fa-s" x="180" y="146" text-anchor="middle">20</text>
+      <text class="fa-s" x="260" y="146" text-anchor="middle">30</text>
+      <text class="fa-s" x="340" y="146" text-anchor="middle">40</text>
+      <text class="fa-s" x="340" y="162" text-anchor="end">semanas</text>
+      <rect class="fa-zdmg" x="108" y="122" width="24" height="12" rx="3"/>
+      <rect class="fa-zdmg" x="212" y="122" width="32" height="12" rx="3"/>
+      <rect class="fa-zdmg" x="308" y="122" width="16" height="12" rx="3"/>
+      <text class="fa-m" x="76" y="62" text-anchor="middle">exames</text>
+      <line class="fa-fio" x1="76" y1="66" x2="76" y2="128"/><circle class="fa-pt" cx="76" cy="128" r="2.4"/>
+      <text class="fa-rst" x="180" y="62" text-anchor="middle">dTpa</text>
+      <line class="fa-rsf" x1="180" y1="66" x2="180" y2="128"/><circle class="fa-rs" cx="180" cy="128" r="2.8"/>
+      <text class="fa-m" x="228" y="62" text-anchor="middle">TOTG</text>
+      <line class="fa-fio" x1="228" y1="66" x2="228" y2="122"/>
+      <text class="fa-m" x="120" y="96" text-anchor="middle">USG</text>
+      <line class="fa-fio" x1="120" y1="100" x2="120" y2="122"/>
+      <text class="fa-m" x="244" y="96" text-anchor="middle">VSR</text>
+      <line class="fa-fio" x1="244" y1="100" x2="244" y2="128"/><circle class="fa-pt" cx="244" cy="128" r="2.4"/>
+      <text class="fa-m" x="316" y="96" text-anchor="middle">EGB</text>
+      <line class="fa-fio" x1="316" y1="100" x2="316" y2="122"/>
+    </svg>
+    <figcaption>Esquema: só a influenza não tem janela na lista da questão.<sup class="ref"><a href="#ref-3">3</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>1ª consulta (MS): tipagem ABO-Rh (Coombs indireto se Rh negativo), hemograma, glicemia de jejum, EAS e urocultura, sífilis, HIV, hepatite B e toxoplasmose. Sorologia para CMV não entra.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    <li>Cada exame no seu tempo: USG de 11-14 semanas (datação, número de fetos, corionicidade, translucência nucal); TOTG de 24-28; swab de EGB no fim da gestação (capítulo 3).<sup class="ref"><a href="#ref-2">2</a>, <a href="#ref-19">19</a></sup></li>
+    <li>Vacina na gestante: inativada sim, vírus vivo não (tríplice viral, varicela). Sem janela: influenza (dose da temporada), covid-19 e hepatite B conforme o histórico. Com janela: <span class="chave">dTpa a partir da 20ª semana</span>, a cada gestação; perdida, até 45 dias pós-parto.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>Novidade do calendário vigente: vacina contra o vírus sincicial respiratório (VSR) a partir da 28ª semana, para proteger o bebê até os 6 meses.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    <li>Fisiologia (2022): no 3º trimestre, em supino, o útero comprime a cava, e caem retorno venoso, enchimento e débito; o decúbito lateral esquerdo descomprime. A gestação é pró-trombótica (fatores sobem, fibrinólise cai), a capacidade residual funcional cai e a pCO2 cai (alcalose respiratória compensada).<sup class="ref"><a href="#ref-15">15</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>dTpa é "a vacina da gestante", mas tem janela: 20 semanas. Entre as opções de 2025, só a influenza servia para qualquer idade gestacional. Em alternativa composta de exames, um item fora da rotina derruba os certos.</p></div>
+</section>
+
+<section class="sec" id="cap-5">
+  <span class="kick">05 · GO · temas do aulão · colo (caiu 5 vezes em 2021-2025; você errou 3), DMG (6; 1), pré-eclâmpsia (5; 1), endometriose (5; 1)</span>
+  <h2>Colo, DMG, pré-eclâmpsia e endometriose: só o degrau</h2>
+  <p class="lede">O aulão já cobre os quatro temas e cita estes erros; aqui fica o degrau exato que faltou em cada um e a atualização do colo, que o aulão não traz.</p>
+  <h3>Colo do útero (2021, 2023, 2025)</h3>
+  <ul class="tp">
+    <li>Seu racional de 2021 ("pra mim 6 meses era acima de 30") é a tabela do ASC-US, que tem três faixas: abaixo de 25, 3 anos; 25-29, 12 meses; 30 ou mais, 6 meses. O <strong>LSIL tem uma</strong>: abaixo de 25, 3 anos; 25 ou mais, 6 meses.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>AGC com colposcopia normal não encerra, porque a célula glandular pode ser do endométrio: acima de 35 anos, nova citologia com atenção ao canal + USG transvaginal.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Zona de transformação: a metaplasia vai do colunar para o escamoso, nunca o contrário.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Atualização: a diretriz do INCA de 2025 troca a citologia pelo <span class="chave">teste de DNA-HPV oncogênico</span>, dos 25 aos 64 anos, a cada 5 anos se negativo. HPV 16 ou 18 vai direto à colposcopia; outros tipos fazem citologia reflexa na mesma amostra.<sup class="ref"><a href="#ref-20">20</a></sup></li>
+  </ul>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 7 · fluxo</span><b>Rastreio com DNA-HPV (INCA 2025)</b></p>
+    <svg viewBox="0 0 360 206" role="img" aria-label="Fluxo do rastreio com teste de DNA-HPV oncogênico, de 25 a 64 anos. Negativo: repetir em 5 anos. HPV 16 ou 18, destacado: colposcopia. Outros tipos: citologia reflexa; se alterada, colposcopia; se normal, novo teste em 12 meses. Onde não há o teste, segue a citologia da diretriz de 2016.">
+      <rect class="fa-box" x="90" y="6" width="180" height="30" rx="8"/>
+      <text class="fa-tc" x="180" y="26" text-anchor="middle">DNA-HPV · 25 a 64 anos</text>
+      <line class="fa-li" x1="180" y1="36" x2="180" y2="46"/>
+      <line class="fa-li" x1="52" y1="46" x2="299" y2="46"/>
+      <line class="fa-li" x1="52" y1="46" x2="52" y2="62"/><path class="fa-seta" d="M52 70 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="180" y1="46" x2="180" y2="62"/><path class="fa-seta" d="M180 70 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="299" y1="46" x2="299" y2="62"/><path class="fa-seta" d="M299 70 l-4 -8 h8 z"/>
+      <text class="fa-s" x="58" y="60">negativo</text>
+      <text class="fa-rst" x="186" y="60">16 ou 18</text>
+      <text class="fa-s" x="305" y="60">outros</text>
+      <rect class="fa-box" x="8" y="70" width="88" height="30" rx="8"/>
+      <text class="fa-tc" x="52" y="90" text-anchor="middle">5 anos</text>
+      <rect class="fa-rsb" x="132" y="70" width="96" height="30" rx="8"/>
+      <text class="fa-rst" x="180" y="90" text-anchor="middle">colposcopia</text>
+      <rect class="fa-box" x="242" y="70" width="114" height="30" rx="8"/>
+      <text class="fa-m" x="299" y="90" text-anchor="middle">citologia reflexa</text>
+      <line class="fa-li" x1="299" y1="100" x2="299" y2="112"/>
+      <line class="fa-li" x1="246" y1="112" x2="324" y2="112"/>
+      <line class="fa-li" x1="246" y1="112" x2="246" y2="128"/><path class="fa-seta" d="M246 136 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="324" y1="112" x2="324" y2="128"/><path class="fa-seta" d="M324 136 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="204" y="136" width="84" height="30" rx="8"/>
+      <text class="fa-tc" x="246" y="156" text-anchor="middle">colposcopia</text>
+      <rect class="fa-box" x="294" y="136" width="60" height="30" rx="8"/>
+      <text class="fa-tc" x="324" y="156" text-anchor="middle">12 meses</text>
+      <text class="fa-s" x="246" y="182" text-anchor="middle">se alterada</text>
+      <text class="fa-s" x="324" y="182" text-anchor="middle">se normal</text>
+      <text class="fa-s" x="8" y="128">onde não há o teste:</text>
+      <text class="fa-s" x="8" y="144">citologia de 2016</text>
+    </svg>
+    <figcaption>Fluxo: o genótipo decide antes da citologia.<sup class="ref"><a href="#ref-20">20</a></sup></figcaption>
+  </figure>
+  <div class="banca"><span class="blbl">Qual diretriz a prova usa</span><p>As respostas de 2021 a 2025 seguiram a citologia de 2016. Questão que dá só a citologia: responda por 2016. Questão que dá o resultado do teste de HPV: responda pelo fluxo de 2025, em que citologia reflexa com ASC-US ou pior vai à colposcopia e normal repete o teste em 12 meses.<sup class="ref"><a href="#ref-1">1</a>, <a href="#ref-20">20</a></sup></p></div>
+  <h3>DMG (2021)</h3>
+  <ul class="tp">
+    <li>Sua dúvida era se o corte entrava: entra ("atingido ou ultrapassado"). Jejum de 92 ou mais, 1 h de 180 ou mais, 2 h de 153 ou mais; um valor basta. 95/140/120 são as metas do tratamento.<sup class="ref"><a href="#ref-19">19</a></sup></li>
+  </ul>
+  <h3>Pré-eclâmpsia (2023)</h3>
+  <ul class="tp">
+    <li>Você marcou "benzodiazepínico antes do sulfato" na eclâmpsia: essa etapa não existe. O <strong>sulfato de magnésio</strong> cessa a crise e previne a recorrência; benzodiazepínico só no estado de mal refratário.<sup class="ref"><a href="#ref-21">21</a></sup></li>
+  </ul>
+  <h3>Endometriose (2024)</h3>
+  <ul class="tp">
+    <li>Seu racional: "descartei o dienogeste por ser progestágeno isolado". Isolado não é fraco: o progestágeno contínuo bloqueia a ovulação e decidualiza e atrofia o implante. É 1ª linha, ao lado da pílula contínua.<sup class="ref"><a href="#ref-22">22</a></sup></li>
+    <li>O análogo do GnRH derruba o estrogênio a nível de menopausa, com perda óssea e fogacho. Por isso é 2ª linha, por tempo limitado e com add-back.<sup class="ref"><a href="#ref-22">22</a></sup></li>
+  </ul>
+  <p class="qc">O resto: aulão, parte 1, capítulo 4 (DMG e pré-eclâmpsia); parte 2, capítulos 15 (colo) e 18 (endometriose).</p>
+</section>
+
+<section class="sec" id="cap-6">
+  <span class="kick">06 · Pediatria · Aleitamento materno · caiu 3 vezes em 2021-2025 · você errou 2 (2023, 2024), mais APLV (2024) e HIV pelo leite (2025, com certeza)</span>
+  <h2>Aleitamento: o seio é a regra; HIV e HTLV são a exceção</h2>
+  <p class="lede">Os quatro erros têm o mesmo reflexo: mexer no seio diante de um problema, quando a regra é manter a mamada e corrigir em volta dela. A exceção real é curta, e nela o relógio corre.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O manejo da mama ingurgitada e da posição (2023).</li>
+    <li>A infecção materna que não contraindica o seio (2024).</li>
+    <li>A proctocolite alérgica no lactente em aleitamento exclusivo (2024).</li>
+    <li>A criança amamentada por mãe com HIV recém-descoberto (2025).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 8 · fluxo</span><b>Mãe com infecção: e o seio?</b></p>
+    <svg viewBox="0 0 360 214" role="img" aria-label="Infecção materna e conduta no seio. HIV ou HTLV, destacado: não amamenta. Herpes na mama: só a outra mama. Varicela no periparto: separar, leite ordenhado. Tuberculose bacilífera: amamenta com máscara. Hepatite C ou B: amamenta.">
+      <text class="fa-s" x="10" y="14">infecção materna</text>
+      <text class="fa-s" x="196" y="14">seio</text>
+      <rect class="fa-rsb" x="8" y="22" width="150" height="28" rx="8"/>
+      <text class="fa-rst" x="83" y="40" text-anchor="middle">HIV · HTLV</text>
+      <line class="fa-li" x1="158" y1="36" x2="188" y2="36"/><path class="fa-seta" d="M196 36 l-8 -4 v8 z"/>
+      <rect class="fa-rsb" x="196" y="22" width="158" height="28" rx="8"/>
+      <text class="fa-rst" x="275" y="40" text-anchor="middle">não amamenta</text>
+      <rect class="fa-box" x="8" y="60" width="150" height="28" rx="8"/>
+      <text class="fa-m" x="83" y="78" text-anchor="middle">herpes na mama</text>
+      <line class="fa-li" x1="158" y1="74" x2="188" y2="74"/><path class="fa-seta" d="M196 74 l-8 -4 v8 z"/>
+      <rect class="fa-box" x="196" y="60" width="158" height="28" rx="8"/>
+      <text class="fa-m" x="275" y="78" text-anchor="middle">só a outra mama</text>
+      <rect class="fa-box" x="8" y="98" width="150" height="28" rx="8"/>
+      <text class="fa-m" x="83" y="116" text-anchor="middle">varicela no periparto</text>
+      <line class="fa-li" x1="158" y1="112" x2="188" y2="112"/><path class="fa-seta" d="M196 112 l-8 -4 v8 z"/>
+      <rect class="fa-box" x="196" y="98" width="158" height="28" rx="8"/>
+      <text class="fa-m" x="275" y="116" text-anchor="middle">separar, leite ordenhado</text>
+      <rect class="fa-box" x="8" y="136" width="150" height="28" rx="8"/>
+      <text class="fa-m" x="83" y="154" text-anchor="middle">TB bacilífera</text>
+      <line class="fa-li" x1="158" y1="150" x2="188" y2="150"/><path class="fa-seta" d="M196 150 l-8 -4 v8 z"/>
+      <rect class="fa-box" x="196" y="136" width="158" height="28" rx="8"/>
+      <text class="fa-m" x="275" y="154" text-anchor="middle">amamenta com máscara</text>
+      <rect class="fa-box" x="8" y="174" width="150" height="28" rx="8"/>
+      <text class="fa-m" x="83" y="192" text-anchor="middle">hepatite C · hepatite B</text>
+      <line class="fa-li" x1="158" y1="188" x2="188" y2="188"/><path class="fa-seta" d="M196 188 l-8 -4 v8 z"/>
+      <rect class="fa-box" x="196" y="174" width="158" height="28" rx="8"/>
+      <text class="fa-m" x="275" y="192" text-anchor="middle">amamenta</text>
+    </svg>
+    <figcaption>Fluxo: só a primeira linha tira o seio de vez.<sup class="ref"><a href="#ref-23">23</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Suspende de vez: <span class="chave">HIV e HTLV</span> maternos, e galactosemia na criança. Hepatite C e hepatite B amamentam; na B, o RN recebe vacina e imunoglobulina.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>Suspende em parte: herpes com lesão na mama (só aquele lado); varicela de 5 dias antes a 2 dias depois do parto (separar até as crostas, imunoglobulina no RN, leite ordenhado liberado). TB bacilífera amamenta com máscara.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>Técnica: na mama ingurgitada, a ordenha de alívio antes da mamada amolece a aréola e permite a pega profunda. Fissura se trata corrigindo a pega. Amamentar deitada é permitido: a otite é da mamadeira dada deitada.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+    <li>APLV no lactente amamentado (raias de sangue, eczema, bebê crescendo bem): mantém o seio e tira leite e derivados da dieta da mãe. Fórmula extensamente hidrolisada só sem leite materno. Galactosemia daria icterícia, vômitos e falha de crescimento.<sup class="ref"><a href="#ref-24">24</a></sup></li>
+    <li>HIV descoberto na lactação: teste negativo no pré-natal e no parto quer dizer infecção materna recente, e o leite é a exposição. Suspender já, colher <strong>carga viral</strong> da criança (o anticorpo pode ainda não ter aparecido) e iniciar PEP se a última mamada foi há até 72 h.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Varicela pode passar grave ao bebê" soa certa, mas só afasta a mãe na janela de 5 dias antes a 2 dias depois do parto. E o prazo da PEP conta da última mamada, não do dia do diagnóstico da mãe.</p></div>
+</section>
+
+<section class="sec" id="cap-7">
+  <span class="kick">07 · Pediatria · Cuidados neonatais · caiu 3 vezes em 2021-2025 · você errou 2 (2022, 2024)</span>
+  <h2>Recém-nascido: o cateter que vira varizes, o cordão que vira pletora</h2>
+  <p class="lede">Os dois casos esconderam a causa num gesto do nascimento: o cateter umbilical, que meses depois trombosa a porta, e o clampeamento tardio, que no 2º dia dá policitemia.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>A causa da melena volumosa num lactente de 6 meses, ex-UTI, com Doppler hepatofugal (2022).</li>
+    <li>O tratamento da policitemia sintomática depois de um parto no carro (2024).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 9 · esquema</span><b>Trombose da porta: o sangue foge</b></p>
+    <svg viewBox="0 0 360 214" role="img" aria-label="Fígado no alto, veia porta descendo dele até se unir à veia esplênica, que vem do baço. Um trombo destacado obstrui a veia porta. O cateter umbilical, que entra pelo umbigo, chega ao fígado. O sangue foge do fígado, em fluxo hepatofugal destacado, e sobe por uma colateral até o estômago e o esôfago, onde formam-se varizes; delas vem a melena.">
+      <path class="fa-figado" d="M24 52 C40 26 150 18 214 40 C222 62 196 84 150 92 C100 100 52 96 30 80 C22 72 20 62 24 52 Z"/>
+      <text class="fa-tc" x="104" y="62" text-anchor="middle">fígado</text>
+      <path class="fa-v1" d="M140 94 L156 150 L285 150"/>
+      <path class="fa-v2" d="M140 94 L156 150 L285 150"/>
+      <ellipse class="fa-rs" cx="147" cy="118" rx="5" ry="9" transform="rotate(-16 147 118)"/>
+      <text class="fa-rst" x="160" y="114">trombo</text>
+      <text class="fa-m" x="166" y="134">veia porta</text>
+      <ellipse class="fa-corpo" cx="306" cy="150" rx="22" ry="15"/>
+      <text class="fa-m" x="306" y="182" text-anchor="middle">baço</text>
+      <path class="fa-rs" d="M212 150 L203 145.5 L203 154.5 Z"/>
+      <text class="fa-rst" x="200" y="174" text-anchor="middle">fluxo hepatofugal</text>
+      <path class="fa-li" d="M232 146 C232 134 238 127 246.7 123.1"/>
+      <path class="fa-e1" d="M250 14 L250 107"/>
+      <path class="fa-e2" d="M250 14 L250 107"/>
+      <ellipse class="fa-corpo" cx="262" cy="116" rx="20" ry="11"/>
+      <circle class="fa-variz" cx="256" cy="44" r="4.5"/>
+      <circle class="fa-variz" cx="244" cy="58" r="4.5"/>
+      <circle class="fa-variz" cx="256" cy="72" r="4.5"/>
+      <circle class="fa-variz" cx="244" cy="86" r="4.5"/>
+      <text class="fa-m" x="266" y="64">varizes</text>
+      <text class="fa-s" x="262" y="22">esôfago</text>
+      <text class="fa-m" x="290" y="120">melena</text>
+      <line class="fa-li" x1="62" y1="194" x2="124.8" y2="95"/>
+      <circle class="fa-pt" cx="62" cy="194" r="3.5"/>
+      <text class="fa-m" x="72" y="206">cateter umbilical</text>
+    </svg>
+    <figcaption>Esquema: bloqueio antes do fígado; o sangue sai pelas colaterais.<sup class="ref"><a href="#ref-25">25</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li><span class="chave">Fluxo hepatofugal</span> é o sangue portal fugindo do fígado: há hipertensão portal. Com fígado normal, o bloqueio é pré-hepático.</li>
+    <li>O cateter na veia umbilical chega ao sistema porta e lesa o endotélio: a veia trombosa, forma-se um cavernoma, e as colaterais abrem varizes de esôfago, que sangram como melena volumosa numa criança que está bem.</li>
+    <li>Na criança, a obstrução extra-hepática da porta é a 2ª causa de hipertensão portal, atrás da atresia biliar, e a que cursa com fígado normal.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+    <li>O que exclui os concorrentes: enterocolite necrosante é do período neonatal, com distensão e pneumatose no raio X (aqui, 6 meses e raio X normal); APLV dá raias de sangue; diarreia invasiva, sangue vivo com muco.</li>
+    <li>Policitemia: hematócrito venoso acima de 65%. O clampeamento muito tardio transfunde sangue da placenta, e a hiperviscosidade dá pletora, icterícia (mais hemácia para hemolisar) e hipoglicemia.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+    <li>Sintomática: <strong>exsanguinotransfusão parcial</strong> com soro fisiológico, que baixa o hematócrito sem tirar volume. Hidratação só no assintomático limítrofe.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>A UTI neonatal puxa para enterocolite. Aos 6 meses, com raio X normal, quem decide é o Doppler: hepatofugal é porta.</p></div>
+</section>
+
+<section class="sec" id="cap-8">
+  <span class="kick">08 · Pediatria · temas do aulão · meningite (caiu 5 vezes em 2021-2025; você errou 1, com certeza), ITU (4; 2), infecções congênitas (4; 2, a do HIV no capítulo 6), glomerulares (5; 1), mais a febre sem foco (2021, com certeza) e a mielomeningocele (2023)</span>
+  <h2>Meningite, ITU, congênitas e nefrótica: só o degrau</h2>
+  <p class="lede">O aulão cobre meningite, ITU, congênitas e glomerulares e já cita estes erros; a mielomeningocele entra aqui porque o caminho dela termina no mesmo rim da ITU de repetição. O degrau comum é a régua certa para o caso: o critério da TC, os sinais vitais pela idade, o Gram que exclui.</p>
+  <h3>Meningite (2024)</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 10 · fluxo</span><b>TC antes da punção: só com critério</b></p>
+    <svg viewBox="0 0 360 214" role="img" aria-label="Fluxo da suspeita de meningite. Algum critério: déficit focal, papiledema, crise, rebaixamento, imunossupressão? Se não, destacado: punção já, e antibiótico logo após a coleta. Se sim: hemocultura e antibiótico, depois TC e então punção.">
+      <rect class="fa-box" x="90" y="6" width="180" height="26" rx="8"/>
+      <text class="fa-tc" x="180" y="24" text-anchor="middle">suspeita de meningite</text>
+      <line class="fa-li" x1="180" y1="32" x2="180" y2="40"/><path class="fa-seta" d="M180 48 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="50" y="48" width="260" height="58" rx="8"/>
+      <text class="fa-tc" x="180" y="66" text-anchor="middle">algum critério?</text>
+      <text class="fa-s" x="180" y="82" text-anchor="middle">déficit focal · papiledema · crise</text>
+      <text class="fa-s" x="180" y="96" text-anchor="middle">rebaixamento · imunossupressão</text>
+      <line class="fa-li" x1="180" y1="106" x2="180" y2="116"/>
+      <line class="fa-li" x1="88" y1="116" x2="272" y2="116"/>
+      <line class="fa-li" x1="88" y1="116" x2="88" y2="128"/><path class="fa-seta" d="M88 136 l-4 -8 h8 z"/>
+      <line class="fa-li" x1="272" y1="116" x2="272" y2="128"/><path class="fa-seta" d="M272 136 l-4 -8 h8 z"/>
+      <text class="fa-s" x="82" y="130" text-anchor="end">não</text>
+      <text class="fa-s" x="278" y="130">sim</text>
+      <rect class="fa-rsb" x="16" y="136" width="144" height="30" rx="8"/>
+      <text class="fa-rst" x="88" y="156" text-anchor="middle">punção já</text>
+      <text class="fa-s" x="88" y="184" text-anchor="middle">antibiótico logo após</text>
+      <text class="fa-s" x="88" y="198" text-anchor="middle">a coleta</text>
+      <rect class="fa-box" x="200" y="136" width="144" height="40" rx="8"/>
+      <text class="fa-m" x="272" y="152" text-anchor="middle">hemocultura +</text>
+      <text class="fa-m" x="272" y="168" text-anchor="middle">antibiótico</text>
+      <line class="fa-li" x1="272" y1="176" x2="272" y2="180"/><path class="fa-seta" d="M272 188 l-4 -8 h8 z"/>
+      <rect class="fa-box" x="200" y="188" width="144" height="24" rx="8"/>
+      <text class="fa-tc" x="272" y="204" text-anchor="middle">TC, depois punção</text>
+    </svg>
+    <figcaption>Fluxo: sem critério, a punção não espera a TC.<sup class="ref"><a href="#ref-9">9</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Seu racional: "lembrava que antes da punção se faz TC para evitar herniação". A regra tem condição: TC antes só com <span class="chave">critério</span> (déficit focal, papiledema, crise recente, rebaixamento, imunossupressão, doença prévia do SNC). Com critério, hemocultura e antibiótico não esperam a TC.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    <li>O líquor do caso (polimorfonucleares, proteína 90, glicose 40 para sérica 90) é bacteriano; acima de 3 meses, a UERJ seguiu o Nelson: cefalosporina de 3ª + vancomicina.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+  </ul>
+  <h3>ITU e febre sem foco (2021, 2022, 2023)</h3>
+  <ul class="tp">
+    <li>qSOFA é régua de adulto. Aos 8 meses, FC 120 é normal e FR 40 fica abaixo do corte de taquipneia da OMS (50 ou mais de 2 a 11 meses).<sup class="ref"><a href="#ref-6">6</a></sup></li>
+    <li>Vacinada, bem, aceitando líquido: EAS e urocultura, antibiótico oral em casa e reavaliação em 48-72 h. A via oral rende o mesmo que a venosa.<sup class="ref"><a href="#ref-7">7</a></sup></li>
+    <li>Coco Gram-positivo com nitrito negativo exclui enterobactéria (Proteus é bacilo Gram-negativo): com refluxo, é <strong>Enterococcus</strong>.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+    <li>PA de 128/86 aos 7 anos é hipertensão. Com ITU febril de repetição, anemia de RDW normal e baixa estatura, fecha DRC por nefropatia de refluxo: pedir função renal, não mielograma.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+  </ul>
+  <h3>Mielomeningocele: a lesão sacral mora na bexiga (2023)</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 11 · esquema</span><b>Da raiz sacral ao rim</b></p>
+    <svg viewBox="0 0 360 212" role="img" aria-label="Coluna em perfil com a medula. Na região lombossacra, a lesão, um saco que faz protrusão posterior. Dali saem as raízes S2 a S4, destacadas, para o detrusor da bexiga e para o esfíncter. Da bexiga, o ureter sobe até o rim: refluxo.">
+      <rect class="fa-osso" x="88" y="8" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="26" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="44" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="62" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="80" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="98" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="116" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="134" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="152" width="26" height="14" rx="3"/>
+      <rect class="fa-osso" x="88" y="170" width="26" height="14" rx="3"/>
+      <path class="fa-medula" d="M66 4 L66 112 Q73 128 80 112 L80 4"/>
+      <path class="fa-zt" d="M68 132 C40 128 28 148 34 164 C40 180 60 180 68 172 Z"/>
+      <text class="fa-m" x="30" y="122">lesão</text>
+      <text class="fa-s" x="62" y="30" text-anchor="end">medula</text>
+      <path class="fa-nervo" d="M73 124 L74 186"/>
+      <path class="fa-rsf" d="M74 168 C110 168 170 152 226 150"/>
+      <path class="fa-rsf" d="M74 186 C140 196 214 196 254.5 185"/>
+      <text class="fa-rst" x="120" y="150">S2-S4</text>
+      <ellipse class="fa-detr" cx="262" cy="150" rx="36" ry="30"/>
+      <text class="fa-m" x="262" y="154" text-anchor="middle">detrusor</text>
+      <ellipse class="fa-vaso" cx="262" cy="184" rx="7.5" ry="4"/>
+      <line class="fa-li" x1="262" y1="188" x2="262" y2="206"/>
+      <text class="fa-m" x="274" y="202">esfíncter</text>
+      <ellipse class="fa-rim" cx="306" cy="40" rx="16" ry="24"/>
+      <text class="fa-s" x="326" y="44">rim</text>
+      <path class="fa-li" d="M288 129 C300 110 300 86 304 64"/>
+      <path class="fa-seta" d="M304 66 L300 74 L308 74 Z"/>
+      <text class="fa-m" x="306" y="102">refluxo</text>
+    </svg>
+    <figcaption>Esquema: a mesma raiz manda no detrusor e no esfíncter.<sup class="ref"><a href="#ref-26">26</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>A lesão lombossacra interrompe as raízes <span class="chave">S2-S4</span>, que inervam o detrusor e o esfíncter. Resultado: bexiga neurogênica, muitas vezes com dissinergia (o detrusor contrai contra o esfíncter fechado).</li>
+    <li>Pressão alta na bexiga -&gt; resíduo, refluxo, ITU de repetição, hidronefrose e doença renal crônica: é o rim que define a morbidade tardia. Por isso o cateterismo intermitente limpo começa cedo, guiado pela urodinâmica.<sup class="ref"><a href="#ref-26">26</a></sup></li>
+    <li>O complexo é Chiari II, hidrocefalia (com derivação) e pé torto. Defeito do septo atrioventricular é da síndrome de Down, não da mielomeningocele.</li>
+  </ul>
+  <h3>Congênitas e nefrótica (2024, 2021)</h3>
+  <ul class="tp">
+    <li>Surdez é de CMV e de rubéola; a persistência do canal arterial denuncia a rubéola. Pênfigo palmoplantar e síndrome nefrótica são da sífilis.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+    <li>Peritonite primária na criança nefrótica = pneumococo (a urina leva IgG e fator B). EAS sem piúria afasta o agente urinário.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+  </ul>
+  <p class="qc">O resto: aulão, parte 1, capítulos 7 (HIV) e 8 (meningites); parte 2, capítulos 17 (glomerulares), 19 (congênitas) e 20 (ITU).</p>
+</section>
+
+<section class="sec" id="cap-9">
+  <span class="kick">09 · MFC · Raciocínio diagnóstico quantitativo · caiu 7 vezes em 2021-2025 · você errou 3 (2022, 2023, 2025), mais covid (2022) e TOTG (2024)</span>
+  <h2>Teste diagnóstico: o pré-teste manda no negativo</h2>
+  <p class="lede">Em quatro dos cinco erros você leu um resultado negativo como "não tem a doença". O negativo só exclui quando o teste é sensível e o pré-teste não é alto.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>Qual resultado decide em teste sensível e em teste específico (2022).</li>
+    <li>Se TE submáximo e Framingham baixo afastam angina típica (2023); o que fazer com TE negativo de S70/E90 num idoso diabético com angina típica (2025).</li>
+    <li>RT-PCR negativo num profissional sintomático no pico da pandemia (2022); o teste mais sensível para diabetes (2024).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 12 · cálculo</span><b>O mesmo negativo, dois pacientes</b></p>
+    <svg viewBox="0 0 360 176" role="img" aria-label="Barras de probabilidade de doença antes e depois de um teste ergométrico negativo com sensibilidade de 70% e especificidade de 90%. Homem idoso com angina típica: 90% antes, 75% depois, destacado. Jovem com dor atípica: 10% antes, cerca de 4% depois.">
+      <text class="fa-tc" x="8" y="18">angina típica, homem idoso</text>
+      <text class="fa-m" x="8" y="40">antes</text>
+      <rect class="fa-trk" x="112" y="28" width="200" height="14" rx="7"/>
+      <rect class="fa-barra" x="112" y="28" width="180" height="14" rx="7"/>
+      <text class="fa-tc" x="318" y="40">90%</text>
+      <text class="fa-m" x="8" y="64">após TE negativo</text>
+      <rect class="fa-trk" x="112" y="52" width="200" height="14" rx="7"/>
+      <rect class="fa-rsbar" x="112" y="52" width="150" height="14" rx="7"/>
+      <text class="fa-rst" x="318" y="64">75%</text>
+      <text class="fa-tc" x="8" y="100">dor atípica, jovem</text>
+      <text class="fa-m" x="8" y="122">antes</text>
+      <rect class="fa-trk" x="112" y="110" width="200" height="14" rx="7"/>
+      <rect class="fa-barra" x="112" y="110" width="20" height="14" rx="7"/>
+      <text class="fa-tc" x="318" y="122">10%</text>
+      <text class="fa-m" x="8" y="146">após TE negativo</text>
+      <rect class="fa-trk" x="112" y="134" width="200" height="14" rx="7"/>
+      <rect class="fa-barra" x="112" y="134" width="8" height="14" rx="4"/>
+      <text class="fa-tc" x="318" y="146">4%</text>
+      <text class="fa-s" x="8" y="170">ilustrativo · S70 e E90 da questão de 2025</text>
+    </svg>
+    <figcaption>Cálculo por Bayes: o negativo derruba pouco o pré-teste alto.<sup class="ref"><a href="#ref-27">27</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>Sensível = poucos falsos negativos: o <strong>negativo</strong> exclui. Específico = poucos falsos positivos: o positivo confirma. Cada teste decide pelo resultado oposto ao erro que ele evita; o negativo de um teste específico pode ser falso negativo.</li>
+    <li>O valor preditivo negativo cai quando o pré-teste sobe. Com pré-teste perto de 90% e S70/E90, o TE negativo ainda deixa cerca de 75% de chance de doença: <span class="chave">3 em cada 4 negativos têm DAC</span>.</li>
+    <li>O pré-teste vem de idade, sexo e tipo de dor. Angina típica = 3 de 3: aperto retroesternal, desencadeado por esforço, aliviado por repouso ou nitrato. Homem acima de 60 com dor típica = pré-teste alto.<sup class="ref"><a href="#ref-27">27</a></sup></li>
+    <li>O TE diagnóstico serve à pré-teste intermediária. Na alta, trata-se a síndrome coronariana crônica (AAS, betabloqueador, antianginoso, estatina) e se estratifica. Em 2025, "inconclusivo, cintilografia e só depois tratar" errou pela conduta: outro teste funcional antes de tratar só atrasa.<sup class="ref"><a href="#ref-28">28</a>, <a href="#ref-29">29</a></sup></li>
+    <li>TE que não atinge 85% da FC prevista não estressou o miocárdio: não é negativo, é ineficaz. A sensibilidade de cerca de 70% só vale com esforço suficiente.<sup class="ref"><a href="#ref-28">28</a></sup></li>
+    <li>Framingham estima risco de evento em 10 anos no assintomático, para prevenção primária. Não mede a chance de doença em quem já tem angina.<sup class="ref"><a href="#ref-29">29</a></sup></li>
+    <li>Covid (2022): sintomático, profissional de saúde, pico da pandemia = pré-teste alto; o RT-PCR negativo pode ser falso negativo. Isolar e vigiar, sem "confirmar que não tem".</li>
+    <li>TOTG (2024): é o mais sensível para diabetes, porque pega a hiperglicemia pós-carga que o jejum e a HbA1c deixam passar. A HbA1c é prática e específica, porém menos sensível.<sup class="ref"><a href="#ref-30">30</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>"Má adaptação à esteira", "paciente muito nervoso" e "risco baixo no escore" são analgésicos: empurram para inconclusivo ou ansiedade. Quem decide é o pré-teste alto, que faz do negativo um provável falso negativo.</p></div>
+</section>
+
+<section class="sec" id="cap-10">
+  <span class="kick">10 · MFC · rastreamento (caiu 6 vezes em 2021-2025), prevenção quaternária (6) e crônicas na APS (5) · você errou 1 em cada (2024 com certeza, 2023, 2023)</span>
+  <h2>Rastreamento e prevenção: o momento da história natural decide</h2>
+  <p class="lede">Os três erros classificaram a ação pela cara dela (técnica, preventiva, diagnóstica), e não pelo momento da história natural em que ela age nem pelo que os dados sustentam.</p>
+  <h3>O que a UERJ pergunta aqui</h3>
+  <ul class="tp">
+    <li>O que um programa de rastreamento precisa ter (2024).</li>
+    <li>Qual ação é prevenção terciária (2023).</li>
+    <li>Que rótulos os dados de um homem de 34 anos sustentam (2023).</li>
+  </ul>
+  <h3>O degrau que faltou</h3>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 13 · esquema</span><b>Níveis de prevenção na história natural</b></p>
+    <svg viewBox="0 0 360 168" role="img" aria-label="História natural em três blocos: sem doença, doença sem sintoma e doença instalada. A linha que marca o início da doença está destacada. Embaixo de cada bloco, o nível: primária, que inclui o alto risco; secundária, o rastreamento; terciária, evitar complicação. Uma chave sob tudo marca a quaternária, em qualquer ponto, contra o excesso.">
+      <rect class="fa-trk" x="8" y="40" width="120" height="24" rx="6"/>
+      <rect class="fa-zdmg" x="128" y="40" width="110" height="24"/>
+      <rect class="fa-q4" x="238" y="40" width="112" height="24" rx="6"/>
+      <text class="fa-m" x="68" y="56" text-anchor="middle">sem doença</text>
+      <text class="fa-m" x="183" y="56" text-anchor="middle">sem sintoma</text>
+      <text class="fa-m" x="294" y="56" text-anchor="middle">doença instalada</text>
+      <line class="fa-rsk" x1="128" y1="28" x2="128" y2="74"/>
+      <text class="fa-rst" x="128" y="20" text-anchor="middle">a doença começa</text>
+      <text class="fa-tc" x="68" y="92" text-anchor="middle">primária</text>
+      <text class="fa-tc" x="183" y="92" text-anchor="middle">secundária</text>
+      <text class="fa-tc" x="294" y="92" text-anchor="middle">terciária</text>
+      <text class="fa-s" x="68" y="108" text-anchor="middle">inclui alto risco</text>
+      <text class="fa-s" x="183" y="108" text-anchor="middle">rastreamento</text>
+      <text class="fa-s" x="294" y="108" text-anchor="middle">evitar complicação</text>
+      <line class="fa-li" x1="8" y1="130" x2="350" y2="130"/>
+      <line class="fa-li" x1="8" y1="124" x2="8" y2="136"/>
+      <line class="fa-li" x1="350" y1="124" x2="350" y2="136"/>
+      <text class="fa-m" x="179" y="152" text-anchor="middle">quaternária: em qualquer ponto, contra o excesso</text>
+    </svg>
+    <figcaption>Esquema: o nível sai do momento, não da cara da ação.<sup class="ref"><a href="#ref-31">31</a></sup></figcaption>
+  </figure>
+  <ul class="tp">
+    <li>O nível sai do momento: primária age antes da doença, no fator de risco (<span class="chave">alto risco ainda é primária</span>); secundária, na doença sem sintoma (detecção precoce); terciária, na doença instalada (evitar complicação, reabilitar); quaternária protege do excesso de intervenção.<sup class="ref"><a href="#ref-31">31</a></sup></li>
+    <li>A estratégia sai do alvo: clínica, um paciente por vez; comunitária, a população, pela organização do serviço ou por política. Garantir acesso a vulneráveis que já adoeceram = terciária comunitária.<sup class="ref"><a href="#ref-31">31</a></sup></li>
+    <li>Wilson e Jungner (OMS, 1968): doença importante, história natural conhecida, fase latente detectável, teste adequado e aceitável pela população, tratamento eficaz na fase precoce, estrutura para diagnosticar e tratar, custo equilibrado e processo contínuo.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+    <li>Por isso a frase certa de 2024 era a da população disposta a seguir a investigação e o tratamento: sem adesão, o programa não entrega benefício. O teste de rastreio privilegia sensibilidade; a especificidade entra na confirmação.<sup class="ref"><a href="#ref-31">31</a></sup></li>
+    <li>Rótulo exige persistência: hipertensão = PA alta em 2 ocasiões ou confirmada por MAPA/MRPA; glicemia de jejum limítrofe pede 2ª amostra; obesidade só com IMC de 30 ou mais (118 kg em 2,00 m = 29,5 = sobrepeso). Ansiedade eleva a PA da consulta.<sup class="ref"><a href="#ref-32">32</a></sup></li>
+    <li>Atualização: a diretriz brasileira de hipertensão de 2025 chama 120-139/80-89 de pré-hipertensão; hipertensão continua sendo 140/90 ou mais.<sup class="ref"><a href="#ref-32">32</a></sup></li>
+  </ul>
+  <div class="trap"><span class="albl">Armadilha</span><p>A alternativa que mais soa preventiva (mudar estilo de vida em quem tem alto risco) é primária. Terciária age em quem já adoeceu, mesmo quando a ação parece só "política de saúde".</p></div>
+</section>
+
+<section class="sec" id="cap-11">
+  <span class="kick">11 · MFC · temas do aulão · avaliação do idoso (caiu 5 vezes em 2021-2025; você errou 1) e polifarmácia (5; 2, uma com certeza)</span>
+  <h2>Idoso e polifarmácia: só o degrau</h2>
+  <p class="lede">O aulão cobre os dois temas e cita os três erros. O degrau comum é ler a palavra exata do comando e julgar cada item da alternativa composta.</p>
+  <ul class="tp">
+    <li>"Mimetizar" (2023) é produzir o quadro por mecanismo próprio e reverter ao tratar a causa: <span class="chave">hipotireoidismo e hipercalcemia</span> (hiperparatireoidismo). Alzheimer e diabetes coexistem com a depressão e são fator de risco, mas não a imitam. O par só vale se os dois itens servirem.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>Antes de rotular depressão no idoso: TSH, cálcio, B12, sódio, função renal, hemograma e revisão da receita.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    <li>RAM (2024): as classes que mais levam o idoso à emergência são cardiovasculares e anticoagulantes, insulina e sulfonilureia, psicotrópicos e AINE. Na alternativa composta, um item fora da lista derruba a frase inteira.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    <li>Desprescrição (2025): não existe número seguro de remédios. A retirada de anti-hipertensivo (80 anos ou mais), de estatina (doença avançada) e de IBP foi segura em boa parte dos pacientes.<sup class="ref"><a href="#ref-33">33</a>, <a href="#ref-34">34</a>, <a href="#ref-35">35</a></sup></li>
+  </ul>
+  <p class="qc">O resto: aulão, parte 1, capítulos 5 (idoso) e 9 (polifarmácia).</p>
+</section>
+
+<section class="sec" id="um-erro">
+  <span class="kick">Temas de um erro só · 26 erros</span>
+  <h2>Temas de prevalência média ou baixa, um erro cada</h2>
+  <p class="lede">Uma linha por erro: o que você marcou e a correção. BI-RADS 3, escore Z aos 4 anos, sífilis exposta e demanda da APS estão em <a href="#certeza">o que você errou com certeza</a>.</p>
+  <details class="lote">
+    <summary>GO · 12 temas</summary>
+    <div class="tw"><table>
+      <tr><th>Tema (ano)</th><th>O seu erro</th><th>A correção</th></tr>
+      <tr><td>Aborto legal após estupro (2023)</td><td>Exigir boletim de ocorrência</td><td>Nenhum documento é exigido (nem BO, nem IML, nem juiz): relato e consentimento registrados em prontuário (Código Penal, art. 128, II).<sup class="ref"><a href="#ref-36">36</a></sup></td></tr>
+      <tr><td>Hiperplasia com atipia e desejo de gestar (2023)</td><td>Ablação endometrial</td><td>SIU de levonorgestrel 52 mg + histeroscopia e biópsia seriadas; a ablação destrói o endométrio e impede a vigilância.<sup class="ref"><a href="#ref-37">37</a></sup></td></tr>
+      <tr><td>Bexiga hiperativa (2025)</td><td>Antiadrenérgico</td><td>Relaxar o detrusor: antimuscarínico ou agonista beta-3; refratária, toxina botulínica intradetrusor. Alfabloqueador é da obstrução prostática.<sup class="ref"><a href="#ref-38">38</a></sup></td></tr>
+      <tr><td>Reserva ovariana em qualquer dia (2024)</td><td>FSH</td><td>Hormônio antimülleriano; FSH e estradiol só no início da fase folicular.<sup class="ref"><a href="#ref-39">39</a></sup></td></tr>
+      <tr><td>Úlcera genital sem laboratório (2023)</td><td>Dor</td><td>1º nó do fluxograma: vesícula, atual ou na história. Sim: herpes; não: sífilis + cancroide.<sup class="ref"><a href="#ref-40">40</a></sup></td></tr>
+      <tr><td>Câncer de colo de 6 cm, restrito ao colo (2023)</td><td>Conização</td><td>FIGO IB3 (4 cm ou mais): quimiorradiação com cisplatina + braquiterapia. A questão foi anulada; a regra vale.<sup class="ref"><a href="#ref-41">41</a></sup></td></tr>
+      <tr><td>Esteroidogênese ovariana (2021)</td><td>DHEA e progesterona</td><td>Os androgênios da teca difundem para a granulosa, onde a aromatase faz androstenediona -&gt; estrona e testosterona -&gt; estradiol.</td></tr>
+      <tr><td>Prolapso apical, POP-Q sem ponto D (2024)</td><td>Histerectomia vaginal</td><td>Sem ponto D = histerectomizada; C é a cúpula. Com vida sexual: sacrocolpopexia; colpocleise só sem vida sexual.<sup class="ref"><a href="#ref-42">42</a>, <a href="#ref-43">43</a></sup></td></tr>
+      <tr><td>Doppler na centralização (2021)</td><td>Umbilical e cerebral média com resistência aumentada</td><td>Umbilical aumentada (placenta lesada); cerebral média diminuída (vasodilatação que poupa o cérebro).</td></tr>
+      <tr><td>CTG com bolsa rota há 2 h (2023)</td><td>Compressão do polo cefálico</td><td>Sem o coxim de líquido, o cordão é comprimido: desaceleração variável. Compressão cefálica dá a precoce; insuficiência placentária, a tardia.<sup class="ref"><a href="#ref-44">44</a></sup></td></tr>
+      <tr><td>Confusão, ataxia e nistagmo após hiperêmese (2023)</td><td>Miastenia</td><td>Encefalopatia de Wernicke (falta de tiamina): tiamina parenteral antes de qualquer glicose.</td></tr>
+      <tr><td>Colestase gestacional e risco fetal (2024)</td><td>Fosfatase alcalina</td><td>Ácidos biliares (100 micromol/L ou mais = risco de natimorto). A fosfatase alcalina sobe pela placenta na gestação normal.<sup class="ref"><a href="#ref-45">45</a>, <a href="#ref-46">46</a></sup></td></tr>
+    </table></div>
+  </details>
+  <details class="lote">
+    <summary>Pediatria · 14 temas</summary>
+    <div class="tw"><table>
+      <tr><th>Tema (ano)</th><th>O seu erro</th><th>A correção</th></tr>
+      <tr><td>Dermatite de fralda com satélites (2023)</td><td>Trichophyton</td><td>Candida: invade as pregas e faz lesões satélites; a irritativa poupa as pregas. Trichophyton tonsurans é da tinea capitis.</td></tr>
+      <tr><td>SHU por E. coli O157:H7 (2023)</td><td>"A maioria precisa de diálise"</td><td>Antibiótico na colite por STEC aumenta o risco de SHU; o tratamento é suporte. A sua opção também é defensável: questão contestável.<sup class="ref"><a href="#ref-47">47</a></sup></td></tr>
+      <tr><td>Coreia após amigdalites de repetição, sopro mitral (2021)</td><td>"Não responde a sedativo nem anticonvulsivante"</td><td>Coreia de Sydenham: autolimitada, surto de 2 a 3 meses em média, até 1 ano, sem sequela; responde a haloperidol, ácido valproico ou carbamazepina, reservados às formas graves.<sup class="ref"><a href="#ref-48">48</a></sup></td></tr>
+      <tr><td>Diarreia com sangue há 3 semanas + artrite + calprotectina alta (2023)</td><td>Artrite idiopática juvenil</td><td>DII: só ela explica a colite, a calprotectina (neutrófilo na mucosa) e a artrite de grandes articulações, que pode vir semanas antes da diarreia.<sup class="ref"><a href="#ref-49">49</a></sup></td></tr>
+      <tr><td>Enantema posterior febril aos 11 meses (2024)</td><td>Adenovírus</td><td>Herpangina, por coxsackie A: úlceras em palato mole e pilares. Adenovírus dá exsudato e conjuntivite.</td></tr>
+      <tr><td>Urticária + broncoespasmo após amendoim (2024)</td><td>Anti-histamínico IM</td><td>Pele + respiratório = anafilaxia: adrenalina IM 0,01 mg/kg na coxa (máximo de 0,3 mg na criança). Anti-histamínico é adjuvante.<sup class="ref"><a href="#ref-50">50</a></sup></td></tr>
+      <tr><td>RN com Na 124, K 6,5 e genitália atípica (2022)</td><td>Metilprednisolona</td><td>HAC perdedora de sal: soro fisiológico + hidrocortisona, que tem efeito mineralocorticoide.<sup class="ref"><a href="#ref-51">51</a></sup></td></tr>
+      <tr><td>Hemangioma subglótico com estridor (2021)</td><td>Corticoide por 2 semanas</td><td>Propranolol 2-3 mg/kg/dia por 6 meses ou mais; corticoide é 2ª linha.<sup class="ref"><a href="#ref-52">52</a></sup></td></tr>
+      <tr><td>Paralisia com K 2,0 e acidose hiperclorêmica (2022)</td><td>Líquor</td><td>Ânion gap de 8 (normal) + pH urinário 6 na acidose = ATR distal. K urinário alto confirma a perda renal; K de 2,0 já explica a fraqueza.</td></tr>
+      <tr><td>ROP estágio 3 em zona I (2021)</td><td>"Agonista de VEGF"</td><td>ROP tipo 1: tratar, com laser ou anti-VEGF intravítreo (antagonista). Agonista não existe como tratamento.<sup class="ref"><a href="#ref-53">53</a></sup></td></tr>
+      <tr><td>Neutropenia febril com espessamento do ceco (2023)</td><td>Vancomicina oral</td><td>Tiflite: piperacilina-tazobactam (antipseudomonas e anaerobicida). Sem antibiótico prévio, C. difficile não se sustenta.</td></tr>
+      <tr><td>Hipoglicemia de jejum sem cetose, insulina 10 (2022)</td><td>Glicogenose</td><td>Insulina detectável com glicose de 46 = hiperinsulinismo (tumor secretor de insulina). Glicogenose teria hepatomegalia e insulina suprimida.</td></tr>
+      <tr><td>Uretrite com diplococo Gram-negativo (2023)</td><td>Ciprofloxacino</td><td>PCDT: ceftriaxona 500 mg IM + azitromicina 1 g VO. Sem ceftriaxona nas opções, a azitromicina foi a menos errada: questão contestável.<sup class="ref"><a href="#ref-40">40</a></sup></td></tr>
+      <tr><td>Anorexia nervosa (2023)</td><td>"Hipercalemia e alcalose"</td><td>Vômito dá hipocalemia com alcalose; a frase composta caía pela 1ª metade. As causas de morte são a complicação clínica e o suicídio.</td></tr>
+    </table></div>
+  </details>
+</section>
+
+<section class="sec" id="gatilhos">
+  <span class="kick">Fechamento</span>
+  <h2>Os gatilhos</h2>
+  <p class="lede">Uma linha por capítulo: o que lembrar na hora da prova.</p>
+  <div class="tw"><table>
+    <tr><th>Capítulo</th><th>Na hora da prova</th></tr>
+    <tr><td>Sangramento da 1ª metade</td><td>Útero vazio? Primeiro o beta: abaixo de 1.500-2.000, repetir; acima, ectópica.</td></tr>
+    <tr><td>Gêmeos</td><td>Placenta única = STFF, TAPS, TRAP; bolsa única = acolados. Córion se vê em 11-14 semanas.</td></tr>
+    <tr><td>Parto</td><td>Bacteriúria por EGB = profilaxia sempre; bolsa rota de 18 h. Ocitocina ejeta, prolactina produz.</td></tr>
+    <tr><td>Pré-natal</td><td>Influenza em qualquer IG; dTpa de 20 semanas; VSR de 28. CMV não é rotina.</td></tr>
+    <tr><td>Colo e companhia</td><td>LSIL: um corte (25 anos); ASC-US: três. Questão com teste de HPV = diretriz de 2025.</td></tr>
+    <tr><td>Aleitamento</td><td>Só HIV e HTLV param o seio. Na APLV, sai o leite da dieta da mãe, não o seio.</td></tr>
+    <tr><td>Recém-nascido</td><td>Ex-UTI com cateter umbilical + hepatofugal = porta. Pletora após clampeamento tardio = exsanguinotransfusão parcial.</td></tr>
+    <tr><td>Meningite e ITU</td><td>TC só com critério. Sinais vitais pela idade. Coco Gram-positivo na ITU com refluxo = Enterococcus. Lesão sacral -&gt; bexiga -&gt; rim.</td></tr>
+    <tr><td>Teste diagnóstico</td><td>Pré-teste alto: o negativo não exclui. Trate; não peça outro teste funcional antes.</td></tr>
+    <tr><td>Prevenção</td><td>Classifique pelo momento: alto risco é primária, doente é terciária. Rótulo exige persistência.</td></tr>
+    <tr><td>Idoso</td><td>Mimetizar = causa que reverte. Nenhum número de remédios é seguro.</td></tr>
+  </table></div>
+</section>
+<section class="sec refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Instituto Nacional de Câncer José Alencar Gomes da Silva (INCA). Diretrizes brasileiras para o rastreamento do câncer do colo do útero. 2ª ed. Rio de Janeiro: INCA; 2016.</li>
+    <li id="ref-2">Brasil. Ministério da Saúde. Atenção ao pré-natal de baixo risco. Cadernos de Atenção Básica nº 32. Brasília: MS; 2012.</li>
+    <li id="ref-3">Brasil. Ministério da Saúde, Departamento do Programa Nacional de Imunizações. Calendário Nacional de Vacinação: ciclo de vida, gestante. Versão vigente, atualizada em fevereiro, acesso em 30 de outubro (influenza e covid-19 em qualquer fase gestacional; dTpa a partir da 20ª semana, a cada gestação, até 45 dias pós-parto; vacina VSR a partir da 28ª semana).</li>
+    <li id="ref-4">D'Orsi CJ, Sickles EA, Mendelson EB, Morris EA, et al. ACR BI-RADS Atlas: Breast Imaging Reporting and Data System. 5th ed. Reston: American College of Radiology; 2013.</li>
+    <li id="ref-5">FEBRASGO. Gravidez ectópica. Protocolo FEBRASGO de Obstetrícia nº 22. São Paulo: FEBRASGO; 2018 (zona discriminatória de 1.500-2.000 mUI/mL). Ver também: American College of Obstetricians and Gynecologists. ACOG Practice Bulletin No. 193: Tubal Ectopic Pregnancy. Obstet Gynecol. 2018;131(3):e91-e103.</li>
+    <li id="ref-6">World Health Organization. Revised WHO classification and treatment of pneumonia in children at health facilities: evidence summaries. Geneva: WHO; 2014 (taquipneia de 50 ou mais incursões por minuto de 2 a 11 meses).</li>
+    <li id="ref-7">Roberts KB; Subcommittee on Urinary Tract Infection, Steering Committee on Quality Improvement and Management. Urinary tract infection: clinical practice guideline for the diagnosis and management of the initial UTI in febrile infants and children 2 to 24 months. Pediatrics. 2011;128(3):595-610.</li>
+    <li id="ref-8">World Health Organization. WHO Child Growth Standards: BMI-for-age, 0-5 anos (2006), e WHO Growth Reference: BMI-for-age, 5-19 anos (2007). Cortes de 5-19 anos conferidos na página da OMS (who.int/tools/growth-reference-data-for-5to19-years); de 0-5 anos, em resumo secundário (knowledge4policy.ec.europa.eu); acesso em 30 de outubro.</li>
+    <li id="ref-9">Tunkel AR, Hartman BJ, Kaplan SL, et al. Practice guidelines for the management of bacterial meningitis. Clin Infect Dis. 2004;39(9):1267-1284. doi:10.1086/425368 (TC antes da punção só com critério).</li>
+    <li id="ref-10">Kliegman RM, St Geme JW III, Blum NJ, et al. Nelson Textbook of Pediatrics. 22ª ed. Philadelphia: Elsevier; 2024 (bibliografia de Pediatria do edital UERJ): meningite após o período neonatal, policitemia neonatal, infecções congênitas, ITU (Enterococcus, nefropatia de refluxo) e síndrome nefrótica. Não conferido no original.</li>
+    <li id="ref-11">Brasil. Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Prevenção da Transmissão Vertical de HIV, Sífilis e Hepatites Virais. Brasília: MS; 2022 (criança exposta à sífilis; contraindicação do aleitamento no HIV). Conduta na exposição pelo leite (suspender, carga viral, PEP até 72 h da última mamada) conferida em nota informativa da SMS de Porto Alegre e no protocolo de PEP da SMS de Guarulhos, que seguem o PCDT (acesso em 30 de outubro).</li>
+    <li id="ref-12">Wilson JMG, Jungner G. Principles and practice of screening for disease. Geneva: World Health Organization; 1968 (Public Health Papers, 34).</li>
+    <li id="ref-13">2023 American Geriatrics Society Beers Criteria Update Expert Panel. American Geriatrics Society 2023 updated AGS Beers Criteria for potentially inappropriate medication use in older adults. J Am Geriatr Soc. 2023;71(7):2052-2081. doi:10.1111/jgs.18372.</li>
+    <li id="ref-14">Gusso G, Lopes JMC, Dias LC (org.). Tratado de Medicina de Família e Comunidade: princípios, formação e prática. 2ª ed. Porto Alegre: Artmed; 2019 (bibliografia de MFC do edital UERJ). Não conferido no original; a demanda da APS segue o gabarito da UERJ 2025.</li>
+    <li id="ref-15">Cunningham FG, Leveno KJ, Dashe JS, Hoffman BL, Spong CY, Casey BM. Williams Obstetrics. 26th ed. New York: McGraw Hill; 2022 (bibliografia de GO do edital UERJ): ectópica e abortamento, fisiologia materna, lactação e usos da ocitocina. Não conferido no original.</li>
+    <li id="ref-16">ESHRE Guideline Group on RPL, Bender Atik R, Christiansen OB, et al. ESHRE guideline: recurrent pregnancy loss: an update in 2022. Hum Reprod Open. 2023;2023(1):hoad002.</li>
+    <li id="ref-17">Khalil A, Rodgers M, Baschat A, et al. ISUOG Practice Guidelines: role of ultrasound in twin pregnancy. Ultrasound Obstet Gynecol. 2016;47(2):247-263. doi:10.1002/uog.15821 (corionicidade em 11-13+6 semanas, STFF, TAPS, TRAP, monoamnióticos e acolados).</li>
+    <li id="ref-18">American College of Obstetricians and Gynecologists. Prevention of Group B Streptococcal Early-Onset Disease in Newborns: ACOG Committee Opinion No. 797. Obstet Gynecol. 2020;135(2):e51-e72. doi:10.1097/AOG.0000000000003668 (rastreio de 36 0/7 a 37 6/7 semanas; indicações com status desconhecido conferidas em resumos secundários).</li>
+    <li id="ref-19">Organização Pan-Americana da Saúde, Ministério da Saúde, FEBRASGO, Sociedade Brasileira de Diabetes. Rastreamento e diagnóstico de diabetes mellitus gestacional no Brasil. Brasília: OPAS; 2016.</li>
+    <li id="ref-20">Instituto Nacional de Câncer (INCA). Diretrizes brasileiras para o rastreamento do câncer do colo do útero. 3ª ed. rev., atual. e ampl. Volume 1: rastreamento organizado com teste molecular para detecção de DNA-HPV oncogênico. Rio de Janeiro: INCA; 2025 (recomendações 9, 18-25 e 28; aprovada pela Portaria Conjunta SAES/SECTICS nº 13, de 29/07/2025).</li>
+    <li id="ref-21">FEBRASGO. Pré-eclâmpsia/eclâmpsia. Protocolo FEBRASGO de Obstetrícia nº 8. São Paulo: FEBRASGO; 2018 (sulfato de magnésio na eclâmpsia).</li>
+    <li id="ref-22">Becker CM, Bokor A, Heikinheimo O, et al. ESHRE guideline: endometriosis. Hum Reprod Open. 2022;2022(2):hoac009. doi:10.1093/hropen/hoac009.</li>
+    <li id="ref-23">Brasil. Ministério da Saúde. Saúde da criança: aleitamento materno e alimentação complementar. Cadernos de Atenção Básica nº 23. 2ª ed. Brasília: MS; 2015.</li>
+    <li id="ref-24">Solé D, Silva LR, Cocco RR, et al. Consenso Brasileiro sobre Alergia Alimentar: 2018. Parte 2: diagnóstico, tratamento e prevenção. Arq Asma Alerg Imunol. 2018;2(1):39-82.</li>
+    <li id="ref-25">Kim SJ, Kim KM. Recent trends in the endoscopic management of variceal bleeding in children. Pediatr Gastroenterol Hepatol Nutr. 2013;16(1):1-9. doi:10.5223/pghn.2013.16.1.1 (atresia biliar como 1ª causa e obstrução extra-hepática da porta como 2ª causa de hipertensão portal na criança).</li>
+    <li id="ref-26">Stein R, Bogaert G, Dogan HS, et al. EAU/ESPU guidelines on the management of neurogenic bladder in children and adolescent part I: diagnostics and conservative treatment. Neurourol Urodyn. 2020;39(1):45-57. doi:10.1002/nau.24211.</li>
+    <li id="ref-27">Diamond GA, Forrester JS. Analysis of probability as an aid in the clinical diagnosis of coronary-artery disease. N Engl J Med. 1979;300(24):1350-1358.</li>
+    <li id="ref-28">Carvalho T, Freitas OGA, Chalela WA, Hossri CAC, Milani M, et al. Diretriz Brasileira de Ergometria em População Adulta 2024. Arq Bras Cardiol. 2024;121(3):e20240110. doi:10.36660/abc.20240110 (TE diagnóstico na probabilidade pré-teste intermediária; sensibilidade média de 69%; resposta adequada com 85% ou mais da FC máxima prevista).</li>
+    <li id="ref-29">Sociedade Brasileira de Cardiologia. Cesar LA, Ferreira JF, Armaganijan D, et al. Diretriz de Doença Coronária Estável. Arq Bras Cardiol. 2014;103(2 supl 2):1-59.</li>
+    <li id="ref-30">Sociedade Brasileira de Diabetes. Diretriz da SBD 2024: diagnóstico do diabetes mellitus. Disponível em diretriz.diabetes.org.br. Ver também: American Diabetes Association. 2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes-2024. Diabetes Care. 2024;47(Suppl 1):S20-S42.</li>
+    <li id="ref-31">Brasil. Ministério da Saúde. Rastreamento. Cadernos de Atenção Primária nº 29. Brasília: MS; 2010 (níveis de prevenção, prevenção quaternária e critérios de rastreamento).</li>
+    <li id="ref-32">Sociedade Brasileira de Cardiologia, Sociedade Brasileira de Hipertensão, Sociedade Brasileira de Nefrologia. Diretriz Brasileira de Hipertensão Arterial 2025. Arq Bras Cardiol. 2025 (pré-hipertensão de 120-139/80-89; diagnóstico com 140/90 ou mais em 2 ocasiões ou por MAPA/MRPA). Conferida por resumos secundários, não no texto original.</li>
+    <li id="ref-33">Sheppard JP, Burt J, Lown M, et al. Effect of antihypertensive medication reduction vs usual care on short-term blood pressure control in patients with hypertension aged 80 years and older: the OPTIMISE randomized clinical trial. JAMA. 2020;323(20):2039-2051.</li>
+    <li id="ref-34">Kutner JS, Blatchford PJ, Taylor DH Jr, et al. Safety and benefit of discontinuing statin therapy in the setting of advanced, life-limiting illness: a randomized clinical trial. JAMA Intern Med. 2015;175(5):691-700.</li>
+    <li id="ref-35">Farrell B, Pottie K, Thompson W, et al. Deprescribing proton pump inhibitors: evidence-based clinical practice guideline. Can Fam Physician. 2017;63(5):354-364.</li>
+    <li id="ref-36">Brasil. Ministério da Saúde. Prevenção e tratamento dos agravos resultantes da violência sexual contra mulheres e adolescentes: norma técnica. 3ª ed. atual. e ampl. Brasília: MS; 2012; e Brasil. Código Penal (Decreto-Lei nº 2.848/1940), art. 128, II.</li>
+    <li id="ref-37">American College of Obstetricians and Gynecologists. Management of Endometrial Intraepithelial Neoplasia or Atypical Endometrial Hyperplasia: ACOG Clinical Consensus No. 5. Obstet Gynecol. 2023;142(3):735-744. doi:10.1097/AOG.0000000000005297.</li>
+    <li id="ref-38">Cameron AP, Chung DE, Dielubanza EJ, et al. The AUA/SUFU Guideline on the Diagnosis and Treatment of Idiopathic Overactive Bladder. J Urol. 2024;212(1):11-20.</li>
+    <li id="ref-39">Practice Committee of the American Society for Reproductive Medicine. Testing and interpreting measures of ovarian reserve: a committee opinion. Fertil Steril. 2020;114(6):1151-1157.</li>
+    <li id="ref-40">Brasil. Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas para Atenção Integral às Pessoas com Infecções Sexualmente Transmissíveis (IST). Brasília: MS; 2022 (fluxograma de úlcera genital; tratamento da uretrite gonocócica).</li>
+    <li id="ref-41">Bhatla N, Berek JS, Cuello Fredes M, et al. Revised FIGO staging for carcinoma of the cervix uteri. Int J Gynaecol Obstet. 2019;145(1):129-135.</li>
+    <li id="ref-42">Bump RC, Mattiasson A, Bø K, et al. The standardization of terminology of female pelvic organ prolapse and pelvic floor dysfunction. Am J Obstet Gynecol. 1996;175(1):10-17.</li>
+    <li id="ref-43">Maher C, Feiner B, Baessler K, Christmann-Schmid C, Haya N, Brown J. Surgery for women with apical vaginal prolapse. Cochrane Database Syst Rev. 2016;10:CD012376.</li>
+    <li id="ref-44">Ayres-de-Campos D, Spong CY, Chandraharan E; FIGO Intrapartum Fetal Monitoring Expert Consensus Panel. FIGO consensus guidelines on intrapartum fetal monitoring: cardiotocography. Int J Gynaecol Obstet. 2015;131(1):13-24.</li>
+    <li id="ref-45">Ovadia C, Seed PT, Sklavounos A, et al. Association of adverse perinatal outcomes of intrahepatic cholestasis of pregnancy with biochemical markers: results of aggregate and individual patient data meta-analyses. Lancet. 2019;393(10174):899-909.</li>
+    <li id="ref-46">Girling J, Knight CL, Chappell L; Royal College of Obstetricians and Gynaecologists. Intrahepatic cholestasis of pregnancy: Green-top Guideline No. 43. BJOG. 2022;129(13):e95-e114.</li>
+    <li id="ref-47">Freedman SB, Xie J, Neufeld MS, et al. Shiga toxin-producing Escherichia coli infection, antibiotics, and risk of developing hemolytic uremic syndrome: a meta-analysis. Clin Infect Dis. 2016;62(10):1251-1258. doi:10.1093/cid/ciw099.</li>
+    <li id="ref-48">Sociedade Brasileira de Cardiologia, Sociedade Brasileira de Pediatria, Sociedade Brasileira de Reumatologia. Diretrizes Brasileiras para o Diagnóstico, Tratamento e Prevenção da Febre Reumática. Arq Bras Cardiol. 2009;93(3 supl 4):1-18 (coreia: surto de 2 a 3 meses em média, até 1 ano; haloperidol, ácido valproico, carbamazepina).</li>
+    <li id="ref-49">Levine A, Koletzko S, Turner D, et al. ESPGHAN revised Porto criteria for the diagnosis of inflammatory bowel disease in children and adolescents. J Pediatr Gastroenterol Nutr. 2014;58(6):795-806. doi:10.1097/MPG.0000000000000239.</li>
+    <li id="ref-50">Cardona V, Ansotegui IJ, Ebisawa M, et al. World Allergy Organization Anaphylaxis Guidance 2020. World Allergy Organ J. 2020;13(10):100472. doi:10.1016/j.waojou.2020.100472.</li>
+    <li id="ref-51">Speiser PW, Arlt W, Auchus RJ, et al. Congenital adrenal hyperplasia due to steroid 21-hydroxylase deficiency: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2018;103(11):4043-4088.</li>
+    <li id="ref-52">Krowchuk DP, Frieden IJ, Mancini AJ, et al. Clinical practice guideline for the management of infantile hemangiomas. Pediatrics. 2019;143(1):e20183475. doi:10.1542/peds.2018-3475.</li>
+    <li id="ref-53">Early Treatment for Retinopathy of Prematurity Cooperative Group. Revised indications for the treatment of retinopathy of prematurity: results of the early treatment for retinopathy of prematurity randomized trial. Arch Ophthalmol. 2003;121(12):1684-1694.</li>
+  </ol>
+</section>
+</div>

@@ -1,0 +1,411 @@
+<title>Tuberculose: o esquema certo para cada contexto e o PPD sem confusão</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 72px}
+strong{color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;font-size:13px;color:var(--ink3)}
+.top h1{margin:0 0 10px;font-size:clamp(26px,5vw,36px);line-height:1.18}
+.top .sub{margin:0 0 10px;color:var(--ink2);line-height:1.55}
+.sec{padding:28px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;font-size:13px;color:var(--ink3)}
+.sec h2{margin:0 0 8px;font-size:clamp(20px,3.2vw,24px);line-height:1.22}
+.lede{margin:0 0 10px;color:var(--ink);line-height:1.55}
+.pede{margin:0 0 14px;color:var(--ink2);line-height:1.55}
+.pede b{color:var(--plum-ink);font-weight:600}
+ol.esc{list-style:none;margin:0;padding:0}
+ol.esc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;padding:10px 0;border-top:1px solid var(--line);line-height:1.55;color:var(--ink2)}
+ol.esc li:first-child{border-top:0}
+ol.esc .n{font-size:24px;line-height:1.1;font-weight:300;color:var(--plum)}
+ul.pt{margin:0 0 10px;padding-left:20px}
+ul.pt li{margin-bottom:6px;line-height:1.55;color:var(--ink2)}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line2);border-radius:var(--raio)}
+table{border-collapse:collapse;width:100%;min-width:0}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;line-height:1.45}
+th{background:var(--sunk);color:var(--ink3);font-weight:600}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td.v{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+.trap{margin:14px 0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);line-height:1.55}
+.rem{margin:8px 0 0;font-size:14px;color:var(--ink3);line-height:1.5}
+.q{margin-top:14px;padding:12px 14px;border:1px solid var(--line2);border-radius:var(--raio);background:var(--card)}
+.q p{margin:0 0 6px;line-height:1.5}
+.q .tag{display:block;margin-bottom:2px;font-size:12px;color:var(--ink3)}
+.q summary{cursor:pointer;color:var(--teal-ink);font-weight:600}
+.q details div{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2);color:var(--ink2);line-height:1.5}
+.chave{color:var(--rosa);font-weight:650}
+
+/* Figura (molde /anima das RDs: Fig n + titulo; SVG estatico so com tokens do tema) */
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:26rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+@media(max-width:520px){.fig-an{padding:10px 6px 8px}}
+.fa-t{fill:var(--ink);font-size:13px;font-weight:650}
+.fa-s{fill:var(--ink3);font-size:11.5px}
+.fa-o{fill:var(--ink2);font-size:11.5px}
+.fa-pt{fill:var(--plum-ink);font-size:12px;font-weight:650}
+.fa-av{fill:var(--amber-ink);font-size:12px;font-weight:650}
+.fa-ro{fill:var(--rosa);font-size:12.5px;font-weight:700}
+.fa-rof{fill:var(--rosa)}
+.fa-rol{fill:none;stroke:var(--rosa);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-row{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+.fa-pn{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-reg{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-cd{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-cd2{fill:var(--card);stroke:var(--ink2);stroke-width:1.3;stroke-linejoin:round}
+.fa-sk2{fill:var(--sunk);stroke:var(--ink2);stroke-width:1.3;stroke-linejoin:round}
+.fa-ag{fill:var(--plum-wash)}
+.fa-i3{fill:var(--ink3)}
+.fa-pl{fill:var(--plum)}
+.fa-plw{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-pll{fill:none;stroke:var(--plum);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fa-amw{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.2}
+.fa-ln{fill:none;stroke:var(--ink3);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-ln2{fill:none;stroke:var(--ink2);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.fa-tk{stroke:var(--ink3);stroke-width:1}
+.fa-tkf{stroke:var(--line2);stroke-width:1}
+.fa-veto{fill:none;stroke:var(--carmine);stroke-width:2.2;stroke-linecap:round}
+
+sup.ref{font-size:12px;margin-left:1px}
+sup.ref a{text-decoration:none;color:var(--teal-ink)}
+.refs{padding:24px 0 0}
+.refs h2{margin:0 0 10px;font-size:20px}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Tuberculose · lista TB 360 (t1797), 30/10</p>
+  <h1>Tuberculose: o esquema certo para cada contexto e o PPD sem confusão</h1>
+  <p class="sub">11 de 20. Dos nove erros, dois você declarou desatenção (Q12 e Q18) e um você declarou com todos os elos em Sim (Q6, conflito aberto). Os outros seis foram fato que faltava: o esquema pelo contexto (Q20, Q8), o PPD e o IGRA (Q15, Q14), o escore da criança (Q19) e a história natural (Q7). Duas certas tinham elo em Não: o BPaL (Q3) e o abandono (Q4).</p>
+  <p class="sub">Tuberculose caiu 9 vezes nas 5 provas UERJ de 2021 a 2025, em CM, PED, CIR e MFC. O buraco é o que você nomeou: dar a cada contexto o seu esquema, e ler o PPD pelo perfil do paciente. Cada corte, idade e esquema abaixo saiu de documento do MS conferido hoje.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">01 · Contexto -&gt; esquema · Q20, Q16, Q12, Q3, Q4</span>
+  <h2>O contexto escolhe o esquema</h2>
+  <p class="lede">Antes do nome do remédio, leia quatro dados: idade e peso, se engole comprimido, HIV e TARV, resistência.</p>
+  <p class="pede"><b>A questão pedia:</b> a ILTB de uma criança que não engole comprimido (Q20), a de outra com HIV em TARV (Q12) e o esquema da TB resistente à rifampicina (Q3).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div><strong>ILTB abaixo de 10 anos: quem decide é o comprimido.</strong> Não engole (4 a 25 kg): <strong class="chave">3RH</strong>, rifampicina + isoniazida em comprimido dispersível, 90 doses diárias. Engole, acima de 2 anos e sem HIV: <strong>3HP</strong>, rifapentina + isoniazida, 12 doses semanais<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
+    <li><span class="n">2</span><div><strong>4R na criança</strong> (rifampicina em suspensão) fica para quem tem menos de 4 kg ou é contato de TB monorresistente à isoniazida. <strong>6H ou 9H</strong>, só quando nenhum outro serve<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
+    <li><span class="n">3</span><div><strong>Criança com HIV em TARV</strong> com inibidor de protease, raltegravir, dolutegravir ou nevirapina: <strong class="chave">9H</strong> (270 doses). A rifampicina interage, e a rifapentina não tem segurança estabelecida nesse grupo<sup class="ref"><a href="#ref-1">1</a></sup>.</div></li>
+    <li><span class="n">4</span><div><strong>Adulto e adolescente:</strong> 3HP é o preferencial, inclusive na PVHIV, menos com IP, nevirapina ou tenofovir alafenamida. 4R acima de 50 anos, no hepatopata e no contato de monorresistente à isoniazida<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">5</span><div><strong>TB resistente à rifampicina no TRM</strong>, 14 anos ou mais: <strong>BPaL</strong> = bedaquilina + pretomanida + <strong class="chave">linezolida</strong>, 6 meses. Fora gestante, lactante e TB do SNC, osteoarticular ou miliar<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+    <li><span class="n">6</span><div><strong>Volta após abandono</strong> (30 dias seguidos ou mais sem remédio): baciloscopia + TRM + cultura com TS e reinício do <strong>esquema básico</strong>. Esquema de TB resistente só com resistência detectada<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+  </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 1 · esquema</span><b>A forma decide a ILTB da criança</b></p>
+    <svg viewBox="0 0 344 300" role="img" aria-label="Quatro quadros. Criança que não engole comprimido: copo de água com comprimido dispersível, esquema 3RH, 90 doses. Criança acima de 2 anos que engole: dois comprimidos e doze marcas semanais, esquema 3HP. Abaixo de 4 kg: frasco de suspensão, esquema 4R. Criança com HIV em TARV: comprimido de isoniazida e a rifamicina vetada, esquema 9H, 270 doses.">
+      <g transform="translate(2,4)">
+        <rect class="fa-pn" x="0" y="0" width="168" height="144" rx="8"/>
+        <text class="fa-ro" x="10" y="18">não engole</text>
+        <path class="fa-cd2" d="M56 34 L112 34 L106 108 L62 108 Z"/>
+        <path class="fa-ag" d="M57.6 54 L110.4 54 L106 108 L62 108 Z"/>
+        <path class="fa-ln2" d="M56 34 L62 108 L106 108 L112 34"/>
+        <ellipse class="fa-ln2" cx="84" cy="34" rx="28" ry="3.5"/>
+        <line class="fa-tk" x1="57.6" y1="54" x2="110.4" y2="54"/>
+        <ellipse class="fa-i3" cx="84" cy="104.6" rx="13" ry="3.4"/>
+        <circle class="fa-cd" cx="78" cy="93" r="2.2"/>
+        <circle class="fa-cd" cx="90" cy="86" r="1.8"/>
+        <circle class="fa-cd" cx="82" cy="76" r="2.4"/>
+        <circle class="fa-cd" cx="93" cy="68" r="1.6"/>
+        <circle class="fa-cd" cx="86" cy="61" r="1.4"/>
+        <text class="fa-t" x="84" y="127" text-anchor="middle">3RH</text>
+        <text class="fa-s" x="84" y="140" text-anchor="middle">dispersível · 90 doses</text>
+      </g>
+      <g transform="translate(174,4)">
+        <rect class="fa-pn" x="0" y="0" width="168" height="144" rx="8"/>
+        <text class="fa-ro" x="10" y="18">engole · &gt; 2 anos</text>
+        <g transform="rotate(-18 70 62)"><rect class="fa-cd2" x="48" y="52" width="44" height="20" rx="10"/><line class="fa-tk" x1="70" y1="52" x2="70" y2="72"/></g>
+        <g transform="rotate(14 104 78)"><rect class="fa-cd2" x="82" y="68" width="44" height="20" rx="10"/><line class="fa-tk" x1="104" y1="68" x2="104" y2="88"/></g>
+        <circle class="fa-pl" cx="29" cy="104" r="3.2"/><circle class="fa-pl" cx="39" cy="104" r="3.2"/><circle class="fa-pl" cx="49" cy="104" r="3.2"/><circle class="fa-pl" cx="59" cy="104" r="3.2"/><circle class="fa-pl" cx="69" cy="104" r="3.2"/><circle class="fa-pl" cx="79" cy="104" r="3.2"/><circle class="fa-pl" cx="89" cy="104" r="3.2"/><circle class="fa-pl" cx="99" cy="104" r="3.2"/><circle class="fa-pl" cx="109" cy="104" r="3.2"/><circle class="fa-pl" cx="119" cy="104" r="3.2"/><circle class="fa-pl" cx="129" cy="104" r="3.2"/><circle class="fa-pl" cx="139" cy="104" r="3.2"/>
+        <text class="fa-t" x="84" y="127" text-anchor="middle">3HP</text>
+        <text class="fa-s" x="84" y="140" text-anchor="middle">sem HIV · 12 semanais</text>
+      </g>
+      <g transform="translate(2,152)">
+        <rect class="fa-pn" x="0" y="0" width="168" height="144" rx="8"/>
+        <text class="fa-t" x="10" y="18">&lt; 4 kg</text>
+        <ellipse class="fa-cd2" cx="84" cy="36" rx="8" ry="9"/>
+        <rect class="fa-cd2" x="74" y="43" width="20" height="10" rx="2"/>
+        <rect class="fa-sk2" x="76" y="53" width="16" height="9"/>
+        <rect class="fa-sk2" x="60" y="62" width="48" height="48" rx="9"/>
+        <rect class="fa-cd" x="68" y="72" width="32" height="26" rx="3"/>
+        <line class="fa-tk" x1="72" y1="79" x2="96" y2="79"/>
+        <line class="fa-tk" x1="72" y1="85" x2="96" y2="85"/>
+        <line class="fa-tk" x1="72" y1="91" x2="90" y2="91"/>
+        <text class="fa-t" x="84" y="127" text-anchor="middle">4R</text>
+        <text class="fa-s" x="84" y="140" text-anchor="middle">suspensão</text>
+      </g>
+      <g transform="translate(174,152)">
+        <rect class="fa-pn" x="0" y="0" width="168" height="144" rx="8"/>
+        <text class="fa-t" x="10" y="18">HIV em TARV</text>
+        <circle class="fa-cd2" cx="56" cy="68" r="20"/>
+        <line class="fa-tk" x1="36" y1="68" x2="76" y2="68"/>
+        <text class="fa-pt" x="56" y="62" text-anchor="middle">H</text>
+        <g transform="rotate(-30 116 68)"><rect class="fa-sk2" x="96" y="59" width="40" height="18" rx="9"/><line class="fa-tk" x1="116" y1="59" x2="116" y2="77"/></g>
+        <circle class="fa-veto" cx="116" cy="68" r="24"/>
+        <line class="fa-veto" x1="99" y1="51" x2="133" y2="85"/>
+        <text class="fa-s" x="56" y="106" text-anchor="middle">isoniazida</text>
+        <text class="fa-s" x="116" y="106" text-anchor="middle">rifamicina</text>
+        <text class="fa-t" x="84" y="127" text-anchor="middle">9H</text>
+        <text class="fa-s" x="84" y="140" text-anchor="middle">270 doses</text>
+      </g>
+    </svg>
+    <figcaption>Abaixo de 10 anos, engolir comprimido separa 3RH de 3HP; HIV em TARV, 9H.<sup class="ref"><a href="#ref-1">1</a></sup></figcaption>
+  </figure>
+  <div class="trap">Q20: 6H parece o caminho seguro, mas isoniazida isolada é o último recurso na criança. Q16: "3RH preferencial" era falso porque a criança engolia comprimido. Q3: o BPaL até pode ir a 9 meses, se a cultura não converter entre o 4º e o 6º mês, mas o "L" é sempre linezolida, nunca etambutol<sup class="ref"><a href="#ref-3">3</a></sup>.</div>
+  <p class="rem">Na aula TB 360: degraus 2 (resistência) e 18 (esquemas da ILTB).</p>
+  <div class="q"><span class="tag">Teste agora</span><p>Criança de 4 anos, 16 kg, com ILTB, que não engole comprimido. Qual o esquema?</p><details><summary>ver resposta</summary><div>3RH: rifampicina + isoniazida em comprimido dispersível, 90 doses diárias.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · PPD, IGRA e conversão · Q15, Q18, Q12, Q14</span>
+  <h2>O PPD tem um corte e uma conta</h2>
+  <p class="lede">No contato, a 1ª leitura usa o corte de 5 mm; a 2ª, o quanto subiu.</p>
+  <p class="pede"><b>A questão pedia:</b> ler o PPD repetido de uma criança, 4 -&gt; 10 mm (Q15), e o PPD de 7 mm de um lactente vacinado ao nascer (Q18).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Contato, adulto ou criança: <strong class="chave">PPD de 5 mm ou mais</strong> com Rx normal = ILTB, <strong>qualquer que seja o tempo desde a BCG</strong>. A BCG dada no 1º ano de vida perde efeito sobre a leitura com o tempo<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">2</span><div>PPD abaixo de 5 mm: <strong>repetir em 8 semanas</strong><sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Na 2ª leitura vale o <strong class="chave">incremento</strong>: conversão = subir 10 mm ou mais sobre o 1º PPD, e aí tratar ILTB. Menos que isso: alta com orientação<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">4</span><div>Por que 10 e não 5: a 1ª aplicação pode reativar a resposta à BCG; só um salto grande indica infecção nova<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">5</span><div>Contato vivendo com HIV: <strong>trata ILTB sem depender do PPD</strong>, depois de afastar TB ativa. O "repetir em 8 semanas" não vale para ele<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">6</span><div>IGRA no lugar do PPD só a partir de <strong>2 anos</strong>. No SUS: contato de 2 a menos de 10 anos, PVHIV com CD4 acima de 350 e candidato a transplante de células-tronco<sup class="ref"><a href="#ref-2">2</a></sup><sup class="ref"><a href="#ref-5">5</a></sup>.</div></li>
+  </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 2 · esquema</span><b>Na 2ª leitura, vale o quanto subiu</b></p>
+    <svg viewBox="0 0 344 172" role="img" aria-label="Régua em milímetros sob duas leituras do PPD no antebraço. A primeira enduração mede 4 mm; a segunda, oito semanas depois, 10 mm. A subida é de 6 mm. A linha de conversão fica em 14 mm, 10 acima da primeira leitura: a segunda não a alcança.">
+      <text class="fa-ro" x="336" y="12" text-anchor="end">conversão: 14 mm</text>
+      <text class="fa-o" x="8" y="40">1ª PT</text>
+      <rect class="fa-reg" x="56" y="24" width="272" height="24" rx="12"/>
+      <rect class="fa-plw" x="56" y="28" width="68" height="16" rx="8"/>
+      <text class="fa-pt" x="130" y="40">4 mm</text>
+      <line class="fa-tkf" x1="124" y1="48" x2="124" y2="66"/>
+      <text class="fa-o" x="8" y="80">2ª PT</text>
+      <text class="fa-s" x="8" y="93">8 sem</text>
+      <rect class="fa-reg" x="56" y="66" width="272" height="24" rx="12"/>
+      <rect class="fa-plw" x="56" y="70" width="170" height="16" rx="8"/>
+      <text class="fa-pt" x="232" y="82">10 mm</text>
+      <path class="fa-pll" d="M124 90 L124 100 L226 100 L226 90"/>
+      <text class="fa-pt" x="175" y="115" text-anchor="middle">+6 mm</text>
+      <line class="fa-rol" x1="294" y1="20" x2="294" y2="128"/>
+      <circle class="fa-rof" cx="294" cy="20" r="2.6"/>
+      <rect class="fa-cd" x="56" y="128" width="272" height="18" rx="2"/>
+      <line class="fa-tk" x1="56" y1="128" x2="56" y2="137"/><line class="fa-tk" x1="73" y1="128" x2="73" y2="132"/><line class="fa-tk" x1="90" y1="128" x2="90" y2="132"/><line class="fa-tk" x1="107" y1="128" x2="107" y2="132"/><line class="fa-tk" x1="124" y1="128" x2="124" y2="132"/><line class="fa-tk" x1="141" y1="128" x2="141" y2="137"/><line class="fa-tk" x1="158" y1="128" x2="158" y2="132"/><line class="fa-tk" x1="175" y1="128" x2="175" y2="132"/><line class="fa-tk" x1="192" y1="128" x2="192" y2="132"/><line class="fa-tk" x1="209" y1="128" x2="209" y2="132"/><line class="fa-tk" x1="226" y1="128" x2="226" y2="137"/><line class="fa-tk" x1="243" y1="128" x2="243" y2="132"/><line class="fa-tk" x1="260" y1="128" x2="260" y2="132"/><line class="fa-tk" x1="277" y1="128" x2="277" y2="132"/><line class="fa-tk" x1="311" y1="128" x2="311" y2="137"/><line class="fa-tk" x1="328" y1="128" x2="328" y2="132"/>
+      <text class="fa-s" x="56" y="160" text-anchor="middle">0</text>
+      <text class="fa-s" x="141" y="160" text-anchor="middle">5</text>
+      <text class="fa-s" x="226" y="160" text-anchor="middle">10</text>
+      <text class="fa-s" x="311" y="160" text-anchor="middle">15</text>
+      <text class="fa-s" x="8" y="141">mm</text>
+    </svg>
+    <figcaption>Subiu 6 mm, menos que os 10 da conversão: alta com orientação.<sup class="ref"><a href="#ref-2">2</a></sup></figcaption>
+  </figure>
+  <div class="trap">Q18: 7 mm num lactente vacinado ao nascer é ILTB. O corte de 10 mm para vacinado há menos de 2 anos é do Manual de 2011<sup class="ref"><a href="#ref-6">6</a></sup> e caiu na edição de 2019<sup class="ref"><a href="#ref-4">4</a></sup>. Q15: 4 -&gt; 10 mm passou de 5, mas subiu 6: não converteu.</div>
+  <p class="rem">Na aula TB 360: degraus 16 e 17.</p>
+  <div class="q"><span class="tag">Teste agora</span><p>Criança contato: PPD de 3 mm; 8 semanas depois, 11 mm. Conduta?</p><details><summary>ver resposta</summary><div>Subiu 8 mm, menos de 10: não converteu. Alta com orientação.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Contato e TB ativa · Q14, Q12, Q6</span>
+  <h2>Primeiro o sintoma, depois o Rx, só então o PPD</h2>
+  <p class="lede">ILTB é o que sobra quando não há sintoma e o Rx é normal.</p>
+  <p class="pede"><b>A questão pedia:</b> os exames iniciais de um lactente de 1 ano e 8 meses, contato da mãe, sem sintomas (Q14).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Todo contato passa por consulta. <strong>Com sintoma</strong>: investigar TB ativa, na criança com o escore<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Abaixo de 10 anos, sem sintoma: <strong class="chave">Rx de tórax e PPD juntos</strong>, já na 1ª consulta. Rx alterado: investigar TB<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">3</span><div>Com 10 anos ou mais, sem sintoma: PPD primeiro; o Rx entra quando o PPD dá 5 mm ou mais, ou converte<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">4</span><div>Na fila, primeiro: menores de 5 anos, PVHIV, imunossuprimidos e quem tem sintoma<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">5</span><div>Adulto com tosse, emagrecimento e sudorese na APS (Q6): o 1º exame é o escarro para <strong>TRM-TB</strong>, que já mostra a resistência à rifampicina. TC, PPD e hospital não vêm antes<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+  </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 3 · fluxo</span><b>Contato de TB abaixo de 10 anos</b></p>
+    <svg viewBox="0 0 344 304" role="img" aria-label="Fluxo do contato com menos de 10 anos. Com sintoma: investigar TB ativa. Sem sintoma: Rx e PT juntos. Rx alterado: investigar TB. Rx normal e PT de 5 mm ou mais: tratar ILTB. PT abaixo de 5 mm: repetir em 8 semanas; subiu 10 mm ou mais, tratar ILTB; subiu menos, alta com orientação. Contato com HIV trata ILTB sem PT.">
+      <rect class="fa-cd2" x="8" y="8" width="170" height="40" rx="8"/>
+      <text class="fa-t" x="93" y="25" text-anchor="middle">Contato de TB</text>
+      <text class="fa-s" x="93" y="40" text-anchor="middle">consulta</text>
+      <rect class="fa-cd2" x="226" y="8" width="110" height="40" rx="8"/>
+      <text class="fa-t" x="281" y="25" text-anchor="middle">investigar</text>
+      <text class="fa-t" x="281" y="40" text-anchor="middle">TB ativa</text>
+      <line class="fa-ln" x1="178" y1="28" x2="219" y2="28"/>
+      <polygon class="fa-i3" points="226,28 218,24 218,32"/>
+      <text class="fa-o" x="202" y="21" text-anchor="middle">sintoma</text>
+
+      <line class="fa-ln" x1="93" y1="48" x2="93" y2="63"/>
+      <polygon class="fa-i3" points="93,70 89,62 97,62"/>
+      <text class="fa-o" x="101" y="62">sem sintoma</text>
+      <rect class="fa-row" x="8" y="70" width="170" height="40" rx="8"/>
+      <text class="fa-t" x="93" y="87" text-anchor="middle">&lt; 10 anos</text>
+      <text class="fa-ro" x="93" y="102" text-anchor="middle">Rx + PT juntos</text>
+      <path class="fa-ln" d="M178 90 L281 90 L281 55"/>
+      <polygon class="fa-i3" points="281,48 277,56 285,56"/>
+      <text class="fa-o" x="230" y="84" text-anchor="middle">Rx alterado</text>
+
+      <line class="fa-ln" x1="93" y1="110" x2="93" y2="125"/>
+      <polygon class="fa-i3" points="93,132 89,124 97,124"/>
+      <text class="fa-o" x="101" y="124">Rx normal</text>
+      <rect class="fa-cd2" x="8" y="132" width="170" height="40" rx="8"/>
+      <text class="fa-t" x="93" y="149" text-anchor="middle">PT &gt;= 5 mm?</text>
+      <text class="fa-s" x="93" y="164" text-anchor="middle">qualquer BCG</text>
+      <rect class="fa-plw" x="226" y="132" width="110" height="40" rx="8"/>
+      <text class="fa-t" x="281" y="149" text-anchor="middle">ILTB</text>
+      <text class="fa-s" x="281" y="164" text-anchor="middle">tratar</text>
+      <line class="fa-ln" x1="178" y1="152" x2="219" y2="152"/>
+      <polygon class="fa-i3" points="226,152 218,148 218,156"/>
+      <text class="fa-o" x="202" y="145" text-anchor="middle">sim</text>
+
+      <line class="fa-ln" x1="93" y1="172" x2="93" y2="187"/>
+      <polygon class="fa-i3" points="93,194 89,186 97,186"/>
+      <text class="fa-o" x="101" y="186">&lt; 5 mm</text>
+      <rect class="fa-cd2" x="8" y="194" width="170" height="40" rx="8"/>
+      <text class="fa-t" x="93" y="211" text-anchor="middle">repetir PT</text>
+      <text class="fa-s" x="93" y="226" text-anchor="middle">em 8 semanas</text>
+      <path class="fa-ln" d="M178 214 L281 214 L281 179"/>
+      <polygon class="fa-i3" points="281,172 277,180 285,180"/>
+      <text class="fa-o" x="230" y="208" text-anchor="middle">subiu &gt;= 10</text>
+
+      <line class="fa-ln" x1="93" y1="234" x2="93" y2="249"/>
+      <polygon class="fa-i3" points="93,256 89,248 97,248"/>
+      <text class="fa-o" x="101" y="248">subiu &lt; 10</text>
+      <rect class="fa-cd2" x="8" y="256" width="170" height="40" rx="8"/>
+      <text class="fa-t" x="93" y="273" text-anchor="middle">alta</text>
+      <text class="fa-s" x="93" y="288" text-anchor="middle">com orientação</text>
+
+      <rect class="fa-reg" x="226" y="256" width="110" height="40" rx="8"/>
+      <text class="fa-t" x="281" y="273" text-anchor="middle">com HIV</text>
+      <text class="fa-s" x="281" y="288" text-anchor="middle">ILTB sem PT</text>
+    </svg>
+    <figcaption>Sem sintoma e abaixo de 10 anos, Rx e PT saem juntos na 1ª consulta.<sup class="ref"><a href="#ref-4">4</a></sup></figcaption>
+  </figure>
+  <div class="trap">Q14: "só PPD, inicialmente" é o fluxo de quem tem 10 anos ou mais. IGRA (A) não vale antes dos 2 anos; lavado gástrico (D) é para a criança com sintoma.</div>
+  <div class="q"><span class="tag">Teste agora</span><p>Contato de 1 ano e 8 meses, sem sintomas. Quais os exames iniciais?</p><details><summary>ver resposta</summary><div>Rx de tórax + PPD, juntos.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Escore da criança · Q19</span>
+  <h2>O escore se soma item por item</h2>
+  <p class="lede">Na criança com bacteriologia negativa, cada dado do caso é um item de peso fixo.</p>
+  <p class="pede"><b>A questão pedia:</b> o total de um lactente com febre e tosse há 1 mês, adenomegalia hilar, mãe bacilífera, PPD de 9 mm e peso abaixo do escore-z -3.</p>
+  <div class="tw"><table>
+    <tr><th>Item</th><th>Pontos</th></tr>
+    <tr><td>Febre ou tosse, adinamia, emagrecimento, sudorese por 2 semanas ou mais</td><td class="v">15</td></tr>
+    <tr><td>Rx: adenomegalia hilar ou miliar; ou condensação de 2 semanas ou mais sem melhora com antibiótico</td><td class="v">15</td></tr>
+    <tr><td>Contato próximo com adulto com TB nos últimos 2 anos</td><td class="v">10</td></tr>
+    <tr><td>PPD de 10 mm ou mais, ou IGRA reagente ou indeterminado</td><td class="v">10</td></tr>
+    <tr><td>PPD de 5 a 9 mm</td><td class="v">5</td></tr>
+    <tr><td>Desnutrição grave: peso &lt; percentil 0,1 ou escore-z &lt; -3</td><td class="v">5</td></tr>
+    <tr><td>Rx normal</td><td class="v">-5</td></tr>
+    <tr><td>Infecção respiratória que melhorou com antibiótico comum</td><td class="v">-10</td></tr>
+  </table></div>
+  <ol class="esc">
+    <li><span class="n">1</span><div>Vale para criança e adolescente com baciloscopia negativa ou TRM não detectado<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Transforme cada dado do caso em item antes de somar: os de 5 pontos e os negativos são os que somem.</div></li>
+    <li><span class="n">3</span><div><strong class="chave">40 ou mais</strong>: muito provável, tratar. 30 a 35: possível, tratar a critério médico. 25 ou menos: pouco provável, seguir investigando<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+  </ol>
+  <figure class="fig-an">
+    <p class="fa-cab"><span>Fig 4 · esquema</span><b>A conta da Q19</b></p>
+    <svg viewBox="0 0 344 156" role="img" aria-label="Barra empilhada até 50 pontos: clínica 15, Rx 15, contato 10, PPD 5 e desnutrição grave 5. Marcas em 25, na faixa de 30 a 35 e em 40, o corte que manda tratar. Os dois itens de 5 pontos ficam depois do 40.">
+      <text class="fa-ro" x="262" y="14" text-anchor="middle">40: tratar</text>
+      <circle class="fa-rof" cx="262" cy="22" r="2.6"/>
+      <line class="fa-rol" x1="262" y1="22" x2="262" y2="52"/>
+      <line class="fa-tk" x1="172" y1="42" x2="172" y2="52"/>
+      <text class="fa-s" x="172" y="37" text-anchor="middle">25</text>
+      <path class="fa-ln" d="M202 52 L202 44 L232 44 L232 52"/>
+      <text class="fa-s" x="217" y="37" text-anchor="middle">30-35</text>
+      <rect class="fa-plw" x="22" y="52" width="90" height="30"/>
+      <rect class="fa-plw" x="112" y="52" width="90" height="30"/>
+      <rect class="fa-plw" x="202" y="52" width="60" height="30"/>
+      <rect class="fa-amw" x="262" y="52" width="30" height="30"/>
+      <rect class="fa-amw" x="292" y="52" width="30" height="30"/>
+      <text class="fa-pt" x="67" y="71" text-anchor="middle">15</text>
+      <text class="fa-pt" x="157" y="71" text-anchor="middle">15</text>
+      <text class="fa-pt" x="232" y="71" text-anchor="middle">10</text>
+      <text class="fa-av" x="277" y="71" text-anchor="middle">5</text>
+      <text class="fa-av" x="307" y="71" text-anchor="middle">5</text>
+      <text class="fa-s" x="67" y="97" text-anchor="middle">clínica</text>
+      <text class="fa-s" x="157" y="97" text-anchor="middle">Rx</text>
+      <text class="fa-s" x="232" y="97" text-anchor="middle">contato</text>
+      <text class="fa-s" x="277" y="97" text-anchor="middle">PPD</text>
+      <text class="fa-s" x="307" y="97" text-anchor="middle">nutr.</text>
+      <line class="fa-tk" x1="22" y1="110" x2="322" y2="110"/>
+      <line class="fa-tk" x1="22" y1="110" x2="22" y2="115"/><line class="fa-tk" x1="82" y1="110" x2="82" y2="115"/><line class="fa-tk" x1="142" y1="110" x2="142" y2="115"/><line class="fa-tk" x1="202" y1="110" x2="202" y2="115"/><line class="fa-tk" x1="262" y1="110" x2="262" y2="115"/><line class="fa-tk" x1="322" y1="110" x2="322" y2="115"/>
+      <text class="fa-s" x="22" y="128" text-anchor="middle">0</text>
+      <text class="fa-s" x="82" y="128" text-anchor="middle">10</text>
+      <text class="fa-s" x="142" y="128" text-anchor="middle">20</text>
+      <text class="fa-s" x="202" y="128" text-anchor="middle">30</text>
+      <text class="fa-s" x="262" y="128" text-anchor="middle">40</text>
+      <text class="fa-s" x="322" y="128" text-anchor="middle">50</text>
+      <text class="fa-t" x="322" y="148" text-anchor="end">Q19 = 50</text>
+    </svg>
+    <figcaption>Os dois itens de 5 pontos são os que somem da conta.<sup class="ref"><a href="#ref-2">2</a></sup></figcaption>
+  </figure>
+  <div class="trap">B (35) perdeu um item de 15; C (40) esqueceu os dois de 5. PPD de 9 mm vale 5, não 10.</div>
+  <p class="rem">Na aula TB 360: degrau 8.</p>
+  <div class="q"><span class="tag">Teste agora</span><p>Febre há 3 semanas, Rx normal, mãe bacilífera, PPD de 12 mm, peso adequado. Quantos pontos e qual a conduta?</p><details><summary>ver resposta</summary><div>15 - 5 + 10 + 10 = 30: possível, tratar a critério médico.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">05 · Gestante · Q8, Q7</span>
+  <h2>Gestante com TB trata já, com o esquema inteiro</h2>
+  <p class="lede">O risco é a TB sem tratamento; os quatro fármacos do esquema básico são seguros na gravidez.</p>
+  <p class="pede"><b>A questão pedia:</b> a conduta numa gestante de 35 semanas com TB pulmonar bacilífera (Q8).</p>
+  <ol class="esc">
+    <li><span class="n">1</span><div>TB ativa: <strong class="chave">esquema básico (RHZE) completo</strong>, nas doses habituais, <strong>sem adiar</strong>, com piridoxina 50 mg/dia, pelo risco de toxicidade neurológica da isoniazida no recém-nascido<sup class="ref"><a href="#ref-4">4</a></sup><sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">2</span><div>Evitar na gestação: estreptomicina e amicacina (surdez congênita) e etionamida (teratogênica em animais). Quinolona, só quando essencial<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+    <li><span class="n">3</span><div>BPaL: não em gestante nem lactante<sup class="ref"><a href="#ref-3">3</a></sup>.</div></li>
+    <li><span class="n">4</span><div>ILTB na gestante: tratar depois do parto; com HIV, depois do 3º mês. Quando tratar, rifampicina primeiro; rifapentina (3HP), não<sup class="ref"><a href="#ref-2">2</a></sup>.</div></li>
+    <li><span class="n">5</span><div>Amamentação mantida, com máscara cirúrgica enquanto a baciloscopia for positiva; só a mastite tuberculosa a contraindica<sup class="ref"><a href="#ref-4">4</a></sup>.</div></li>
+  </ol>
+  <div class="trap">Q8: as cinco alternativas tinham piridoxina. O que separava era o esquema completo contra a monoterapia, que seleciona resistência, ou contra adiar.</div>
+  <div class="q"><span class="tag">Teste agora</span><p>Gestante HIV-negativa, contato de TB, PPD de 12 mm, Rx normal, sem sintomas. Quando tratar a ILTB?</p><details><summary>ver resposta</summary><div>Depois do parto.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">06 · Fora da cadeia · Q6, Q7</span>
+  <h2>O que nenhum elo cobria</h2>
+  <p class="lede">Duas erradas por um dado que a cadeia não tinha.</p>
+  <ul class="pt">
+    <li><strong>Q6:</strong> você declarou tudo Sim e marcou "encaminhar ao hospital" pelo nível hidroaéreo. O gabarito não manda drenar nem internar: suspeita de TB pulmonar na APS -&gt; escarro para <strong>TRM-TB</strong><sup class="ref"><a href="#ref-2">2</a></sup>.</li>
+    <li><strong>Q7:</strong> sem tratamento preventivo, cerca de <strong class="chave">10%</strong> dos infectados adoecem: 5% nos 2 primeiros anos e 5% no resto da vida. Por isso o contato recente é prioridade<sup class="ref"><a href="#ref-4">4</a></sup>.</li>
+    <li><strong>Q7, A</strong> (marcada com certeza sólida): ADA alta no líquido pleural é critério diagnóstico de TB pleural<sup class="ref"><a href="#ref-4">4</a></sup>. Falência é bacteriológica: baciloscopia positiva no fim do tratamento, ou ++/+++ mantida até o 4º mês<sup class="ref"><a href="#ref-2">2</a></sup>.</li>
+    <li><strong>Q7, B:</strong> a pleural é a extrapulmonar mais comum sem HIV; na PVHIV e na criança, a ganglionar periférica<sup class="ref"><a href="#ref-4">4</a></sup>.</li>
+  </ul>
+  <div class="q"><span class="tag">Teste agora</span><p>Sem tratamento preventivo, quanto dos infectados adoece nos 2 primeiros anos após a infecção?</p><details><summary>ver resposta</summary><div>5%, e outros 5% no resto da vida.</div></details></div>
+</section>
+
+<section class="sec">
+  <span class="kick">Desatenção · Q12, Q18</span>
+  <h2>Desatenção: o que fazer na prova</h2>
+  <ul class="pt">
+    <li>Antes do número do PPD, sublinhe o perfil: idade, BCG, HIV ou imunossupressão, sintoma, Rx. Na Q12 o HIV estava na 2ª frase; na Q18, a idade e a BCG decidiam.</li>
+    <li>Leia o corte contra o perfil: contato = 5 mm com qualquer BCG; contato com HIV = não usa PPD; PPD repetido = incremento de 10 mm.</li>
+    <li>"Assinale a correta" com afirmativas longas (Q7): rotule V ou F cada uma, conferindo o sujeito da frase. ADA diagnostica; não define falência.</li>
+    <li>Resposta em 12-25 s com certeza sólida num tema de corte: releia o comando uma vez antes de marcar. Q12 e Q18 saíram assim.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Fechamento</span>
+  <h2>Gatilhos</h2>
+  <div class="tw"><table>
+    <tr><th>Seção</th><th>Gatilho</th></tr>
+    <tr><td>01 Esquema</td><td>Não engole: 3RH. Engole, &gt; 2 anos, sem HIV: 3HP. HIV em TARV: 9H. TB-RR: BPaL, 6 meses</td></tr>
+    <tr><td>02 PPD</td><td>1ª leitura: 5 mm, qualquer BCG. 2ª leitura: subiu 10 mm ou mais</td></tr>
+    <tr><td>03 Contato</td><td>Sintoma: TB ativa. &lt; 10 anos: Rx + PPD juntos. IGRA só a partir de 2 anos</td></tr>
+    <tr><td>04 Escore</td><td>15, 15, 10, 5, 5. 40 trata</td></tr>
+    <tr><td>05 Gestante</td><td>RHZE completo já + piridoxina 50 mg. ILTB depois do parto</td></tr>
+    <tr><td>06 Fora da cadeia</td><td>10% = 5% + 5%. ADA = diagnóstico, não falência</td></tr>
+  </table></div>
+</section>
+
+<section class="refs" id="refs"><h2>Referências</h2><ol>
+<li id="ref-1">Ministério da Saúde (CGTM/DATHI/SVSA). Nota Informativa nº 6/2024-CGTM/DATHI/SVSA/MS: disponibilização dos comprimidos dispersíveis rifampicina 75 mg + isoniazida 50 mg para o tratamento da infecção latente pelo M. tuberculosis em crianças menores de 10 anos, com 4 a 25 kg. Brasília: MS; 16 maio 2024. Cópia da SES-MG: https://www.saude.mg.gov.br/wp-content/uploads/2025/01/08-08-SEI_0040770060_Nota_Informativa_6.pdf</li>
+<li id="ref-2">Ministério da Saúde. Guia de Vigilância em Saúde, volume 2. 6ª ed. revisada. Brasília: MS; 2024. Capítulo Tuberculose (Quadros 2, 12 e 13; Figuras 3, 5 e 6). https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/svsa/vigilancia/guia-de-vigilancia-em-saude-volume-2-6a-edicao/view</li>
+<li id="ref-3">Ministério da Saúde (CGTM/DATHI/SVSA). Nota Informativa nº 1/2025-CGTM/DATHI/SVSA/MS: atualização das recomendações de tratamento da tuberculose drogarresistente com a disponibilização da pretomanida (esquema BPaL). Brasília: MS; 2025. https://www.gov.br/aids/pt-br/central-de-conteudo/notas-informativas/2025/nota-informativa-no1-2025-cgtm-dathi-svsa-ms.pdf/view</li>
+<li id="ref-4">Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 2ª ed. atualizada. Brasília: MS; 2019 (história natural, p. 29; formas extrapulmonares, p. 48-49; escore pediátrico, Quadro 11; gestação, 4.4.1 e Anexo I; ILTB, cap. 8; controle de contatos, Figuras 11 e 12).</li>
+<li id="ref-5">Ministério da Saúde (CGTM/DATHI/SVSA). Nota Informativa nº 4/2024-CGTM/DATHI/SVSA/MS: recomendações para a indicação do tratamento da ILTB e algoritmos de rastreio (IGRA de 2 a 10 anos; conversão = incremento de 10 mm). Brasília: MS; 2024. Cópia da SES-MG: https://www.saude.mg.gov.br/wp-content/uploads/2025/01/2-NOTA-INFORMATIVA-No-42024-CGTM.DATHISVSA-1.pdf</li>
+<li id="ref-6">Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 1ª ed. Brasília: MS; 2011. Critério antigo (PT &gt;= 10 mm na criança vacinada com BCG há menos de 2 anos) reproduzido pela BVS Atenção Primária: https://aps-repo.bvs.br/aps/e-necessario-realizar-ppd-em-criancas-contatos-de-tuberculose-menores-de-2-anos-com-radiografia-de-torax-sem-alteracoes/ ; não conferido no original.</li>
+</ol></section>
+</div>

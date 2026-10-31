@@ -11,6 +11,18 @@
         ],
         "createdAt": "2026-10-30T22:07:54.524Z",
         "reason": "DESIGN.md Components: filete a esquerda (neutro/ambar) nas seccoes do card e no aviso e decisao documentada do tema v4 (s227), nunca caixa dentro do card; pre-existente, nao regressao da s236"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "artifacts/aula-erros-uerj-1.html",
+          "artifacts/aula-erros-uerj-2.html",
+          "artifacts/aula-rd-tb-3010.html",
+          "artifacts/aula-sprint-uerj.html"
+        ],
+        "createdAt": "2026-10-31T02:32:13.646Z",
+        "reason": "aula-base.md 2b + DESIGN.md (decisao do tema v4, s227): callout de armadilha = filete a esquerda + lavagem ambar, o mesmo .trap do aulao publicado; nao e cartao com aba"
       }
     ]
   }

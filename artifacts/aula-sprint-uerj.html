@@ -1,0 +1,1577 @@
+<title>Sprint UERJ: as 250 inéditas com o nosso gabarito</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink)}
+.wrap{max-width:46rem;margin:0 auto;padding:0 20px 96px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+h1,h2,h3{margin:0;color:var(--ink)}
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{margin:0 0 10px;color:var(--ink3)}
+.top h1{margin-bottom:12px}
+.top .sub{margin:0;color:var(--ink2)}
+.sec{padding:30px 0;border-bottom:1px solid var(--line)}
+.kick{display:block;margin-bottom:4px;color:var(--ink3);font-size:14px}
+.sec h2{margin-bottom:10px}
+.sec h3{margin:22px 0 6px;font-size:1.05rem}
+.lede{margin:0 0 12px;color:var(--ink2)}
+.sec p{min-width:0}
+ul.tp{margin:0 0 8px;padding-left:20px}
+ul.tp li{margin-bottom:8px;color:var(--ink2);min-width:0}
+ol.toc{margin:4px 0 0;padding-left:24px;color:var(--ink2)}
+ol.toc li{margin-bottom:8px;min-width:0}
+ol.toc a{color:var(--teal-ink);text-decoration:none}
+.tw{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:420px}
+table.t-v,table.t30,table.dv{min-width:0}
+table.t30,table.dv{font-size:14px}
+.t30 th,.t30 td,.dv th,.dv td{padding:8px 6px}
+th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:8px 8px 8px 0;color:var(--ink2)}
+th{color:var(--ink3);font-weight:600}
+td:first-child{color:var(--ink);font-weight:600}
+td.n,th.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.qc{color:var(--ink3);font-size:13px}
+.trap{margin:16px 0;padding:12px 14px;border-left:3px solid var(--amber);background:var(--amber-wash);border-radius:0 var(--raio,10px) var(--raio,10px) 0}
+.trap p{margin:4px 0 0;color:var(--ink2)}
+.albl{color:var(--amber-ink);font-weight:600;font-size:14px}
+.chave{color:var(--rosa);font-weight:650}
+details.cap>summary{display:block;cursor:pointer;list-style:none;min-width:0}
+details.cap>summary::-webkit-details-marker{display:none}
+details.cap>summary h2{margin:0 0 6px}
+details.cap>summary .sm{display:block;color:var(--ink2);min-width:0}
+details.cap>summary .ab{display:inline-flex;align-items:center;min-height:36px;margin-top:4px;color:var(--teal-ink);font-weight:600;font-size:14px}
+details.cap>summary .ab::before{content:"abrir"}
+details.cap[open]>summary .ab::before{content:"fechar"}
+details.cap>summary:focus-visible{outline:2px solid var(--teal);outline-offset:4px;border-radius:var(--raio-p,6px)}
+.meta{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.err{color:var(--carmine-ink);font-weight:600}
+ul.ql{list-style:none;margin:6px 0 12px;padding:0}
+ul.ql li{padding:7px 0;border-top:1px solid var(--line);color:var(--ink2);min-width:0}
+ul.ql li:last-child{border-bottom:1px solid var(--line)}
+.qn,.lt{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.lt{display:inline-block;min-width:1.1em;text-align:center}
+.cfm{margin-left:4px;color:var(--amber-ink);font-weight:600;font-size:13px}
+.nota{display:block;margin-top:2px;font-size:14px;color:var(--ink3)}
+p.gl{margin:16px 0 0;font-size:14px;font-weight:600;color:var(--ink3)}
+.gab{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;margin:6px 0 18px}
+.gab span{display:flex;flex-direction:column;align-items:center;min-width:0;padding:4px 0 5px;border-radius:var(--raio-p,6px);background:var(--sunk);color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25}
+.gab i{font-style:normal;font-weight:400;font-size:12px;color:var(--ink3)}
+.gab .cf{background:var(--amber-wash);color:var(--amber-ink)}
+.gab .cf i{color:var(--amber-ink)}
+.fig-an{margin:16px 0;padding:12px 12px 10px;border:1px solid var(--line2);border-radius:var(--raio,10px);background:var(--card)}
+.fa-cab{display:flex;justify-content:space-between;gap:12px;margin:0 0 8px;font-size:12.5px;color:var(--ink3)}
+.fa-cab b{color:var(--ink2);font-weight:600;text-align:right}
+.fig-an svg{display:block;width:100%;max-width:30rem;height:auto;margin:0 auto}
+.fig-an figcaption{margin-top:8px;font-size:13px;line-height:1.45;color:var(--ink2)}
+.fa-t{fill:var(--ink);font-size:13px;font-weight:650}
+.fa-tc{fill:var(--ink);font-size:12px;font-weight:650}
+.fa-m{fill:var(--ink2);font-size:11.5px}
+.fa-s{fill:var(--ink3);font-size:11px}
+.fa-li{stroke:var(--ink3);stroke-width:1.2;fill:none}
+.fa-seta{fill:var(--ink3)}
+.fa-box{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-q4{fill:var(--plum-wash);stroke:var(--plum);stroke-width:1.2}
+.fa-trk{fill:var(--card);stroke:var(--line2);stroke-width:1}
+.fa-barra{fill:var(--plum)}
+.fa-ref{stroke:var(--line2);stroke-width:1.2;fill:none}
+.fa-pt{fill:var(--ink2)}
+.fa-tk{stroke:var(--ink2);stroke-width:1.8;stroke-linecap:round}
+.fa-plaq{fill:var(--card);stroke:var(--ink2);stroke-width:1.4}
+.fa-endo{fill:var(--card);stroke:var(--ink3);stroke-width:1}
+.fa-sub{fill:var(--sunk);stroke:var(--line2);stroke-width:1}
+.fa-col{stroke:var(--ink3);stroke-width:1.1;fill:none}
+.fa-rs{fill:var(--rosa)}
+.fa-rsf{stroke:var(--rosa);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fa-rst{fill:var(--rosa);font-size:12px;font-weight:650}
+.fa-rss{fill:var(--rosa);font-size:11px;font-weight:650}
+.fa-rsb{fill:var(--rosa-fraco);stroke:var(--rosa);stroke-width:1.4}
+sup.ref a{text-decoration:none}
+.refs ol{padding-left:22px;color:var(--ink2)}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Véspera · Sprint UERJ da Estratégia MED · gabarito do MedHub</p>
+  <h1>Sprint UERJ: as 250 inéditas com o nosso gabarito</h1>
+  <p class="sub">Se o caderno vale a véspera, as 30 que mais rendem e o gabarito comentado por bloco.</p>
+</header>
+
+<nav class="sec" id="indice" aria-label="Índice">
+  <span class="kick">Índice</span>
+  <h2>O caminho</h2>
+  <ol class="toc">
+    <li><a href="#veredito">O veredito: quanto o caderno tem de UERJ</a></li>
+    <li><a href="#top30">Se der tempo para 30</a></li>
+    <li><a href="#capitulos">Gabarito comentado, bloco a bloco</a></li>
+    <li><a href="#divergencias">Onde o nosso gabarito pode divergir do deles</a></li>
+    <li><a href="#grade">As 250 letras em grade</a></li>
+  </ol>
+</nav>
+
+<section class="sec" id="veredito">
+  <span class="kick">01 · O veredito</span>
+  <h2>Vale a véspera? Pouco, e só em partes</h2>
+  <p class="lede">Amostra gratuita (250 de 500) de questões inéditas que a Estratégia MED escreveu "no estilo UERJ", sem gabarito; a letra aqui é nossa. Contra o mapa das 5 provas UERJ 2021-2025 (420 questões), ele confirma a sua intuição: mira menos o que a UERJ cobra do que as provas antigas dela.</p>
+  <div class="tw"><table class="t-v">
+    <tr><th>Bloco</th><th class="n">Sprint</th><th class="n">UERJ real</th><th>Em tema de prevalência alta</th></tr>
+    <tr><td>CM</td><td class="n">94 (38%)</td><td class="n">20</td><td class="n">9 (10%)</td></tr>
+    <tr><td>CIR</td><td class="n">52 (21%)</td><td class="n">20</td><td class="n">17 (33%)</td></tr>
+    <tr><td>GO</td><td class="n">44 (18%)</td><td class="n">20</td><td class="n">7 (16%)</td></tr>
+    <tr><td>PED</td><td class="n">35 (14%)</td><td class="n">20</td><td class="n">5 (14%)</td></tr>
+    <tr><td>MFC</td><td class="n">25 (10%)</td><td class="n">20</td><td class="n">11 (44%)</td></tr>
+    <tr><td>Total</td><td class="n">250</td><td class="n">100</td><td class="n">49 (20%)</td></tr>
+  </table></div>
+  <ul class="tp">
+    <li>Proporção: <strong class="chave">quase o dobro de CM</strong> e metade de MFC; a prova real tem 20 por bloco.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    <li>Mira: 20% das questões caem em tema de prevalência alta na UERJ, contra <strong class="chave">34%</strong> na própria UERJ (142 de 420); em tema de prevalência média, 43% (108) contra 46%. CIR e MFC são os blocos mais alinhados; CM, o menos.</li>
+    <li>Buracos: 5 dos 27 temas de prevalência alta da UERJ ficaram de fora: temas gerais em cirurgia, rastreamento, avaliação multidimensional do idoso, polifarmácia e condições crônicas na APS. Vários estão no Aulão.</li>
+    <li>Forma: muita "assinale a correta" decorada, cerca de 15 questões de ORL, oftalmo e neuro dentro de Cirurgia, caso obstétrico de cursinho e atualização muito recente em Pediatria.</li>
+    <li>Nosso gabarito: 83% com confiança alta; 33 questões com defeito; uma amostra cega de 9, refeita do zero, bateu 9 de 9.</li>
+  </ul>
+  <h3>O que fazer com ele</h3>
+  <ul class="tp">
+    <li>Vale: as 30 da tabela seguinte, se sobrar tempo depois do Aulão; abrir o bloco só depois de resolver.</li>
+    <li>Não vale: fazer as 250. Seus 137 erros nas 5 UERJ estão espalhados (nenhum tema passa de 4): o problema é cobertura, e cobertura o caderno dá menos que as provas antigas.</li>
+  </ul>
+  <div class="trap"><span class="albl">Não estude por estas</span><p>42, 63, 102, 142, 169, 181, 183 e 186: gabarito de confiança baixa ou dois itens defensáveis. Divergir delas não diz nada sobre você.</p></div>
+</section>
+
+<section class="sec" id="top30">
+  <span class="kick">02 · Se der tempo</span>
+  <h2>As 30 que mais rendem</h2>
+  <p class="lede">Ordem de valor: peso do tema na UERJ vezes os seus erros nele. Só gabarito de confiança alta ou média, sem defeito, no máximo 2 por tema. A letra fica no capítulo do bloco.</p>
+  <div class="tw"><table class="t30">
+    <tr><th class="n">Q</th><th class="n">pág.</th><th>bloco</th><th>tema</th><th>por que esta</th></tr>
+    <tr><td class="n">67</td><td class="n">15</td><td>CM</td><td>Tuberculose</td><td>caiu 9 · errou 4</td></tr>
+    <tr><td class="n">220</td><td class="n">40</td><td>PED</td><td>Tuberculose</td><td>caiu 9 · errou 4</td></tr>
+    <tr><td class="n">233</td><td class="n">43</td><td>MFC</td><td>Raciocínio diagnóstico</td><td>caiu 7 · errou 3</td></tr>
+    <tr><td class="n">235</td><td class="n">43</td><td>MFC</td><td>Raciocínio diagnóstico</td><td>caiu 7 · errou 3</td></tr>
+    <tr><td class="n">184</td><td class="n">33</td><td>GO</td><td>Rastreamento do colo</td><td>caiu 5 · errou 3</td></tr>
+    <tr><td class="n">108</td><td class="n">21</td><td>CIR</td><td>REMIT e cicatrização</td><td>caiu 5 · errou 3</td></tr>
+    <tr><td class="n">121</td><td class="n">23</td><td>CIR</td><td>REMIT e cicatrização</td><td>caiu 5 · errou 3</td></tr>
+    <tr><td class="n">10</td><td class="n">5</td><td>CM</td><td>Glomerulopatias</td><td>caiu 5 · errou 3</td></tr>
+    <tr><td class="n">23</td><td class="n">8</td><td>CM</td><td>Meningites</td><td>caiu 5 · errou 2</td></tr>
+    <tr><td class="n">126</td><td class="n">23-24</td><td>CIR</td><td>Meningites</td><td>caiu 5 · errou 2</td></tr>
+    <tr><td class="n">8</td><td class="n">5</td><td>CM</td><td>DRGE e esôfago</td><td>caiu 5 · errou 2</td></tr>
+    <tr><td class="n">14</td><td class="n">6</td><td>CM</td><td>DRGE e esôfago</td><td>caiu 5 · errou 2</td></tr>
+    <tr><td class="n">149</td><td class="n">28</td><td>GO</td><td>Sangramento da 1ª metade</td><td>caiu 3 · errou 3</td></tr>
+    <tr><td class="n">173</td><td class="n">32</td><td>GO</td><td>Aleitamento</td><td>caiu 3 · errou 2</td></tr>
+    <tr><td class="n">216</td><td class="n">39</td><td>PED</td><td>Aleitamento</td><td>caiu 3 · errou 2</td></tr>
+    <tr><td class="n">163</td><td class="n">30-31</td><td>GO</td><td>Gestação múltipla</td><td>caiu 3 · errou 3</td></tr>
+    <tr><td class="n">125</td><td class="n">23</td><td>CIR</td><td>Hérnias</td><td>caiu 6 · errou 1</td></tr>
+    <tr><td class="n">143</td><td class="n">26</td><td>CIR</td><td>Hérnias</td><td>caiu 6 · errou 1</td></tr>
+    <tr><td class="n">205</td><td class="n">37</td><td>PED</td><td>Asma</td><td>caiu 5 · errou 1</td></tr>
+    <tr><td class="n">206</td><td class="n">37-38</td><td>PED</td><td>Asma</td><td>caiu 5 · errou 1</td></tr>
+    <tr><td class="n">29</td><td class="n">9</td><td>CM</td><td>Complicações pós-operatórias</td><td>caiu 4 · errou 2</td></tr>
+    <tr><td class="n">95</td><td class="n">18-19</td><td>CIR</td><td>Complicações pós-operatórias</td><td>caiu 4 · errou 2</td></tr>
+    <tr><td class="n">165</td><td class="n">31</td><td>GO</td><td>Diabetes na gestação</td><td>caiu 6 · errou 1</td></tr>
+    <tr><td class="n">36</td><td class="n">10</td><td>CM</td><td>Estômago e esôfago</td><td>caiu 4 · errou 3</td></tr>
+    <tr><td class="n">68</td><td class="n">15</td><td>CM</td><td>Estômago e esôfago</td><td>caiu 4 · errou 3</td></tr>
+    <tr><td class="n">154</td><td class="n">29</td><td>GO</td><td>Síndromes hipertensivas</td><td>caiu 5 · errou 1 · gabarito de confiança média</td></tr>
+    <tr><td class="n">171</td><td class="n">32</td><td>GO</td><td>Síndromes hipertensivas</td><td>caiu 5 · errou 1</td></tr>
+    <tr><td class="n">238</td><td class="n">43</td><td>MFC</td><td>Níveis de prevenção</td><td>caiu 6 · errou 1</td></tr>
+    <tr><td class="n">194</td><td class="n">35-36</td><td>PED</td><td>Infecção urinária</td><td>caiu 4 · errou 2</td></tr>
+    <tr><td class="n">201</td><td class="n">37</td><td>PED</td><td>Infecções congênitas</td><td>caiu 4 · errou 2</td></tr>
+  </table></div>
+  <p class="qc">"Caiu" = questões do tema nas 5 provas UERJ 2021-2025 (420 questões); "errou" = os seus erros nelas.</p>
+</section>
+
+<section class="sec" id="capitulos">
+  <span class="kick">03 · Gabarito comentado</span>
+  <h2>Os cinco blocos</h2>
+  <p class="lede">Abra o bloco depois de resolver. Os temas seguem o peso na UERJ; em cada um, o ponto que o Sprint cobra e as questões com a nossa letra. No fim de cada bloco ficam os temas de peso baixo ou fora do mapa.</p>
+  <ul class="tp">
+    <li>"UERJ 5" = 5 questões do tema nas 5 provas UERJ 2021-2025 (420 questões). <span class="err">você já errou isto na UERJ</span> = errou o tema nessas provas.</li>
+    <li><span class="cfm">conferir</span> = nosso gabarito com confiança média ou baixa, ou questão com defeito; a linha seguinte diz por quê.</li>
+  </ul>
+</section>
+
+<section class="sec" id="cap-cm">
+  <span class="kick">Bloco 1 · questões 1-94</span>
+  <details class="cap">
+    <summary><h2>Clínica Médica</h2><span class="sm">94 questões; repete von Willebrand (5), DII e DM2 (4 cada), HIV e HDA varicosa (3 cada); só 9 em tema de prevalência alta.</span><span class="ab"></span></summary>
+
+    <h3>Tuberculose</h3>
+    <p class="meta">UERJ 9 · <span class="err">você já errou isto na UERJ (4 vezes)</span></p>
+    <ul class="tp">
+      <li>ILTB na criança: contato sem sintoma, RX normal e PT de 5 mm ou mais -&gt; tratar, com ou sem BCG. Abaixo de 10 anos, <strong class="chave">3RH dispersível</strong>; o 3HP exige engolir comprimido.<sup class="ref"><a href="#ref-2">2</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q67</b> · <b class="lt">C</b> · 3RH dispersível. Isoniazida isolada seria 6-9 meses, nunca 3; BCG não trata infecção.</li>
+    </ul>
+
+    <h3>Trauma: avaliação inicial e tórax</h3>
+    <p class="meta">UERJ 6</p>
+    <ul class="tp">
+      <li>Pneumotórax hipertensivo se trata antes do dreno: descomprimir já (punção; o ATLS 10 aceita toracostomia digital) e drenar em seguida.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q5</b> · <b class="lt">A</b> · hemitórax sem trama, mediastino desviado e PA 80/40: punção agora.</li>
+    </ul>
+
+    <h3>Glomerulopatias</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>GNPE: nefrítica semanas após amigdalite, ASLO alto, C3 consumido. Tratamento de suporte (sal, água, diurético, anti-hipertensivo); sem corticoide e sem biópsia de início.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q10</b> · <b class="lt">D</b> · suporte.</li>
+    </ul>
+
+    <h3>DRGE, Barrett e corpo estranho</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Hérnia de hiato tipo I = deslizamento (a junção sobe); tipo II = paraesofágica (a junção fica). Barrett = mucosa salmão no esôfago distal, confirmada por metaplasia intestinal na biópsia.</li>
+      <li>Bateria de botão tem <strong class="chave">duplo halo</strong> no RX (moeda não tem) e sai por endoscopia de emergência; pneumomediastino, enfisema e febre = perfuração.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q8</b> · <b class="lt">B</b> · linha Z 3 cm acima do pinçamento + línguas salmão: deslizamento e Barrett.</li>
+      <li><b class="qn">Q14</b> · <b class="lt">B</b> · bateria com sinais de perfuração: TC e preparo cirúrgico.</li>
+    </ul>
+
+    <h3>Meningites</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Quimioprofilaxia do meningococo: contatos íntimos e o próprio caso, se tratado com penicilina ou ampicilina (não erradicam o portador da nasofaringe). Profissional de saúde só entra se exposto a secreção sem proteção.<sup class="ref"><a href="#ref-4">4</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q23</b> · <b class="lt">C</b> · os domiciliares e o próprio caso; o médico fica de fora.</li>
+    </ul>
+
+    <h3>Neoplasias de estômago e esôfago</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>Lauren: antro, idoso, moderadamente diferenciado = tipo intestinal (H. pylori, cascata de Correa). Úlcera com borda elevada e infiltração = Borrmann III; tumor distal = gastrectomia subtotal.</li>
+      <li>Leiomioma é o tumor benigno mais comum do esôfago: lesão subepitelial do terço médio e distal.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q36</b> · <b class="lt">A</b> · tipo intestinal.</li>
+      <li><b class="qn">Q68</b> · <b class="lt">D</b> · leiomioma.</li>
+    </ul>
+
+    <h3>Complicações pós-operatórias</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Classe da ferida: colecistectomia eletiva = limpa-contaminada; colecistite aguda sem pus = contaminada; pus na cavidade = infectada.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q29</b> · <b class="lt">B</b> · pus = infectada.</li>
+    </ul>
+
+    <h3>Hemostasia: von Willebrand e PTI</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span> · o tema que o Sprint mais repete em CM</p>
+    <figure class="fig-an">
+      <p class="fa-cab"><span>Fig 1 · esquema</span><b>FvW: a ponte e o carregador</b></p>
+      <svg viewBox="0 0 360 262" role="img" aria-label="Esquema de um vaso com o endotélio interrompido e o colágeno exposto. O fator de von Willebrand, destacado, forma uma corrente que liga o receptor GPIb da plaqueta ao colágeno: é a ponte da adesão; sem ela, sangram pele e mucosa. À direita, o mesmo fator carrega o fator VIII; sem o fator de von Willebrand, o VIII cai e o TTPa fica longo, destacado.">
+        <text class="fa-s" x="8" y="18">luz do vaso</text>
+        <ellipse class="fa-plaq" cx="125" cy="62" rx="52" ry="17"/>
+        <circle class="fa-pt" cx="88" cy="60" r="2"/><circle class="fa-pt" cx="96" cy="68" r="1.6"/><circle class="fa-pt" cx="158" cy="57" r="2"/><circle class="fa-pt" cx="164" cy="66" r="1.6"/>
+        <text class="fa-tc" x="125" y="66" text-anchor="middle">plaqueta</text>
+        <line class="fa-tk" x1="125" y1="79" x2="125" y2="88"/>
+        <rect class="fa-box" x="119" y="88" width="12" height="6" rx="2"/>
+        <text class="fa-s" x="138" y="94">GPIb</text>
+        <rect class="fa-endo" x="8" y="150" width="28" height="14" rx="6"/>
+        <rect class="fa-endo" x="40" y="150" width="28" height="14" rx="6"/>
+        <rect class="fa-endo" x="72" y="150" width="28" height="14" rx="6"/>
+        <rect class="fa-endo" x="150" y="150" width="28" height="14" rx="6"/>
+        <rect class="fa-endo" x="182" y="150" width="28" height="14" rx="6"/>
+        <rect class="fa-endo" x="214" y="150" width="26" height="14" rx="6"/>
+        <text class="fa-s" x="8" y="144">endotélio</text>
+        <rect class="fa-sub" x="8" y="164" width="232" height="24"/>
+        <path class="fa-col" d="M8 171 q7.25 -3 14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0"/>
+        <path class="fa-col" d="M8 177 q7.25 3 14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0"/>
+        <path class="fa-col" d="M8 183 q7.25 -3 14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0 t14.5 0"/>
+        <polyline class="fa-rsf" points="125,94 125,98 132,106 118,114 132,122 118,130 132,138 118,146 132,154 121,162 125,170"/>
+        <circle class="fa-rs" cx="125" cy="98" r="3.2"/><circle class="fa-rs" cx="132" cy="106" r="3.2"/><circle class="fa-rs" cx="118" cy="114" r="3.2"/><circle class="fa-rs" cx="132" cy="122" r="3.2"/><circle class="fa-rs" cx="118" cy="130" r="3.2"/><circle class="fa-rs" cx="132" cy="138" r="3.2"/><circle class="fa-rs" cx="118" cy="146" r="3.2"/><circle class="fa-rs" cx="132" cy="154" r="3.2"/><circle class="fa-rs" cx="121" cy="162" r="3.2"/><circle class="fa-rs" cx="125" cy="170" r="3.2"/>
+        <text class="fa-rst" x="108" y="122" text-anchor="end">FvW</text>
+        <text class="fa-s" x="108" y="136" text-anchor="end">a ponte</text>
+        <text class="fa-m" x="125" y="204" text-anchor="middle">colágeno exposto</text>
+        <line class="fa-li" x1="40" y1="188" x2="40" y2="207"/><path class="fa-seta" d="M40 214 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="214" width="232" height="42" rx="8"/>
+        <text class="fa-tc" x="124" y="232" text-anchor="middle">falta a ponte</text>
+        <text class="fa-m" x="124" y="249" text-anchor="middle">sangra pele e mucosa</text>
+        <text class="fa-tc" x="302" y="44" text-anchor="middle">carrega o VIII</text>
+        <polyline class="fa-rsf" points="258,66 268,72 278,66 288,72 298,66 308,72 318,66"/>
+        <circle class="fa-rs" cx="258" cy="66" r="3.2"/><circle class="fa-rs" cx="268" cy="72" r="3.2"/><circle class="fa-rs" cx="278" cy="66" r="3.2"/><circle class="fa-rs" cx="288" cy="72" r="3.2"/><circle class="fa-rs" cx="298" cy="66" r="3.2"/><circle class="fa-rs" cx="308" cy="72" r="3.2"/><circle class="fa-rs" cx="318" cy="66" r="3.2"/>
+        <circle class="fa-q4" cx="333" cy="66" r="12"/>
+        <text class="fa-s" x="333" y="70" text-anchor="middle">VIII</text>
+        <circle class="fa-pt" cx="302" cy="86" r="2"/>
+        <line class="fa-li" x1="302" y1="88" x2="302" y2="207"/><path class="fa-seta" d="M302 214 l-4 -7 h8 z"/>
+        <text class="fa-s" x="296" y="140" text-anchor="end">sem FvW</text>
+        <text class="fa-s" x="296" y="154" text-anchor="end">o VIII cai</text>
+        <rect class="fa-box" x="252" y="214" width="100" height="42" rx="8"/>
+        <text class="fa-tc" x="302" y="232" text-anchor="middle">falta o VIII</text>
+        <text class="fa-rst" x="302" y="249" text-anchor="middle">TTPa longo</text>
+      </svg>
+      <figcaption>Esquema: o FvW cola a plaqueta e carrega o VIII.<sup class="ref"><a href="#ref-5">5</a></sup></figcaption>
+    </figure>
+    <ul class="tp">
+      <li>O FvW faz duas coisas. Cola a plaqueta ao colágeno: o defeito é de hemostasia primária e sangra pele e mucosa (epistaxe, gengiva, menorragia). Carrega o fator VIII: o VIII cai e o <strong class="chave">TTPa alarga com TP e plaquetas normais</strong>. Hemartrose é de hemofilia.<sup class="ref"><a href="#ref-5">5</a></sup></li>
+      <li>Tipos 1 e 3 = falta (quantitativo); tipo 2 = defeito (qualitativo). Multímero gigante por falta de ADAMTS13 é PTT.</li>
+      <li>PTI: plaquetopenia isolada semanas após infecção viral; corticoide ou imunoglobulina. A plaqueta transfundida também é destruída: só no sangramento grave.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q40</b> · <b class="lt">A</b> · PTI: corticoide ou imunoglobulina.</li>
+      <li><b class="qn">Q46</b> · <b class="lt">D</b> · sangramento mucoso + TTPa longo = von Willebrand.</li>
+      <li><b class="qn">Q78</b> · <b class="lt">B</b> · FvW = adesão: sangramento cutaneomucoso.</li>
+      <li><b class="qn">Q92</b> · <b class="lt">A</b> · FvW baixo derruba o VIII.</li>
+      <li><b class="qn">Q93</b> · <b class="lt">B</b> · defeito quantitativo ou qualitativo do FvW.</li>
+    </ul>
+
+    <h3>HDA varicosa</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Profilaxia primária = betabloqueador não seletivo <strong class="chave">ou</strong> ligadura; secundária = os dois juntos. Escleroterapia saiu das profilaxias.<sup class="ref"><a href="#ref-6">6</a></sup></li>
+      <li>Sangramento agudo: um vasoativo (terlipressina ou octreotide, não os dois), ceftriaxona e transfusão restritiva. O limiar de Hb 7 não vale para o coronariopata com isquemia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q13</b> · <b class="lt">D</b> · a única que transfunde o coronariopata isquêmico. <span class="cfm">conferir</span><span class="nota">D junta octreotide e terlipressina e omite a ceftriaxona; vence por eliminação.</span></li>
+      <li><b class="qn">Q16</b> · <b class="lt">D</b> · primária: um ou outro.</li>
+      <li><b class="qn">Q27</b> · <b class="lt">D</b> · secundária: os dois.</li>
+    </ul>
+
+    <h3>Valvopatias</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Insuficiência aórtica: PA divergente, pulso em martelo d'água, sopro diastólico aspirativo que aumenta com a preensão palmar (sobe a pós-carga).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q31</b> · <b class="lt">B</b> · insuficiência aórtica, provável endocardite.</li>
+    </ul>
+
+    <h3>Diabetes tipo 2</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Assinaturas: GLP-1 = náusea; iSGLT2 = cetoacidose euglicêmica; pioglitazona = piora da IC; insulina e sulfonilureia = ganho de peso.</li>
+      <li>Metas: HbA1c abaixo de 7%, PA abaixo de 130 x 80, LDL pelo risco; HDL não é alvo. HbA1c de 7,5-9% pede terapia dupla; com obesidade e HAS, GLP-1 + iSGLT2. Retinopatia: no DM2, rastrear já no diagnóstico; no DM1, após 5 anos de doença.<sup class="ref"><a href="#ref-7">7</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q26</b> · <b class="lt">A</b> · náusea.</li>
+      <li><b class="qn">Q30</b> · <b class="lt">B</b> · DM2 no diagnóstico; DM1 após 5 anos.</li>
+      <li><b class="qn">Q38</b> · <b class="lt">D</b> · HbA1c abaixo de 7%.</li>
+      <li><b class="qn">Q43</b> · <b class="lt">B</b> · GLP-1 + iSGLT2. <span class="cfm">conferir</span><span class="nota">a opção vem sem metformina; é a única defensável.</span></li>
+    </ul>
+
+    <h3>Endocardite</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Prótese com menos de 1 ano = endocardite precoce, estafilocócica: vancomicina + gentamicina + rifampicina.<sup class="ref"><a href="#ref-8">8</a></sup> S. gallolyticus (antigo S. bovis) obriga colonoscopia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q6</b> · <b class="lt">C</b> · esquema da prótese precoce.</li>
+      <li><b class="qn">Q90</b> · <b class="lt">B</b> · S. gallolyticus -&gt; cólon.</li>
+    </ul>
+
+    <h3>Anemias hemolíticas</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Falciforme tem asplenia funcional: febre alta é emergência por germe encapsulado (hemocultura, ceftriaxona EV, internar). Haptoglobina baixa e Howell-Jolly são achados basais.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q70</b> · <b class="lt">B</b> · febre = ceftriaxona e internação.</li>
+    </ul>
+
+    <h3>Sífilis</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Lesão palmoplantar + sintomas sistêmicos = sífilis secundária (recente). No alérgico não gestante, doxiciclina 100 mg de 12/12 h por 15 dias; dessensibilizar é regra só na gestante.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q84</b> · <b class="lt">D</b> · doxiciclina. <span class="cfm">conferir</span><span class="nota">ceftriaxona aparece em nota do MS de 2018 e no CDC.</span></li>
+    </ul>
+
+    <h3>HIV</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>Profilaxias pelo CD4: abaixo de 200, SMX-TMP; abaixo de 100, cobre também toxoplasmose; até 350, tratar ILTB sem PT (depois de excluir TB ativa); MAC só abaixo de 50 sem TARV efetiva.<sup class="ref"><a href="#ref-10">10</a></sup></li>
+      <li>CD4 abaixo de 100 + lesão com realce anelar e déficit focal = neurotoxoplasmose: tratar empiricamente; biópsia só se não melhorar em 10-14 dias.</li>
+      <li>RN de mãe em TARV com carga viral indetectável no 3º trimestre = baixo risco: só AZT por 4 semanas.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q3</b> · <b class="lt">C</b> · neurotoxoplasmose: tratar sem biópsia.</li>
+      <li><b class="qn">Q37</b> · <b class="lt">A</b> · AZT por 4 semanas.</li>
+      <li><b class="qn">Q66</b> · <b class="lt">C</b> · SMX-TMP + ILTB.</li>
+    </ul>
+
+    <h3>Pancreatite</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>Dor típica + amilase ou lipase acima de 3 vezes o normal já fecham o diagnóstico, sem imagem. Causas: litíase, álcool, hipertrigliceridemia (xantoma eruptivo).</li>
+      <li>Varizes só de fundo gástrico, fígado normal e pancreatites de repetição = trombose da veia esplênica (hipertensão portal segmentar).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q4</b> · <b class="lt">C</b> · trombose da veia esplênica.</li>
+      <li><b class="qn">Q39</b> · <b class="lt">D</b> · três causas no mesmo caso.</li>
+    </ul>
+
+    <h3>Planejamento familiar</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>LES com antifosfolípide positivo = categoria 4 para estrogênio, mesmo sem trombose; DIU de cobre = categoria 1; progestágeno isolado = categoria 3.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q75</b> · <b class="lt">D</b> · DIU de cobre.</li>
+    </ul>
+
+    <h3>Doença inflamatória intestinal</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Crohn é transmural e fistuliza (fístula perianal); a RCU não. Uveíte e lombalgia inflamatória cabem nas duas. RCU + colestase = colangite esclerosante primária.</li>
+      <li>Megacólon tóxico: corticoide EV, antibiótico e cirurgião juntos, <strong class="chave">sem colonoscopia</strong>; falha -&gt; colectomia subtotal com ileostomia. Atividade se mede por calprotectina, PCR/VHS e Mayo; o pioderma corre por fora.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q9</b> · <b class="lt">C</b> · megacólon tóxico: tratamento clínico com o cirurgião junto.</li>
+      <li><b class="qn">Q45</b> · <b class="lt">B</b> · colangite esclerosante primária.</li>
+      <li><b class="qn">Q73</b> · <b class="lt">B</b> · fístula perianal = Crohn.</li>
+      <li><b class="qn">Q91</b> · <b class="lt">D</b> · pioderma gangrenoso não mede atividade.</li>
+    </ul>
+
+    <h3>Osteoporose</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>DXA com T-score de -2,5 ou menos confirma. O FRAX usa idade, sexo, IMC, fratura prévia, fratura de quadril nos pais, tabagismo, corticoide, AR, causa secundária, álcool e DMO do colo; uso de cálcio não entra.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q22</b> · <b class="lt">B</b> · DXA.</li>
+      <li><b class="qn">Q28</b> · <b class="lt">C</b> · uso de cálcio fora do FRAX.</li>
+    </ul>
+
+    <h3>Pericárdio e Takotsubo</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Troponina alta na pericardite = miopericardite; não descarta o diagnóstico. ECG: supra difuso com infra de PR; AINE + colchicina.</li>
+      <li>Takotsubo: mulher, estresse emocional, coronárias sem obstrução e balonamento apical que se recupera em semanas.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q25</b> · <b class="lt">B</b> · Takotsubo.</li>
+      <li><b class="qn">Q49</b> · <b class="lt">C</b> · troponina não descarta pericardite.</li>
+    </ul>
+
+    <h3>Cálcio: hiperparatireoidismo e pós-paratireoidectomia</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Hiperparatireoidismo primário: cálcio alto, fósforo baixo, hipercalciúria, cálculo e osteoporose (o PTH espolia fósforo). Metástase suprime o PTH; Paget sobe a fosfatase alcalina com cálcio normal.</li>
+      <li>Hipocalcemia após paratireoidectomia: fome óssea; o magnésio baixo piora (reduz secreção e ação do PTH) e precisa ser corrigido.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q51</b> · <b class="lt">A</b> · hiperparatireoidismo primário.</li>
+      <li><b class="qn">Q63</b> · <b class="lt">D</b> · o magnésio que piora é o baixo. <span class="cfm">conferir</span><span class="nota">a hipermagnesemia também suprime o PTH; a letra depende da intenção do autor.</span></li>
+    </ul>
+
+    <h3>Disfagia e motilidade</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Gastroparesia: padrão-ouro = cintilografia de esvaziamento gástrico (a endoscopia só exclui obstrução). Megaesôfago chagásico: padrão-ouro = manometria; o esofagograma estadia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q56</b> · <b class="lt">C</b> · cintilografia de esvaziamento.</li>
+      <li><b class="qn">Q71</b> · <b class="lt">D</b> · megaesôfago: manometria.</li>
+    </ul>
+
+    <h3>Ventilação protetora</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Platô acima de 30 ou driving pressure acima de 15 = não protetora, mesmo com VC de 7 mL/kg: baixar o VC e subir a FR.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q7</b> · <b class="lt">B</b> · reduzir o volume corrente.</li>
+    </ul>
+
+    <h3>Escabiose</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Benzoato de benzila e monossulfiram são os tópicos clássicos; ivermectina só acima de 15 kg; lindano é neurotóxico.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q17</b> · <b class="lt">C</b> · benzoato e monossulfiram.</li>
+    </ul>
+
+    <h3>IAM com supra: complicação mecânica</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Choque súbito + sopro holossistólico novo em borda esternal esquerda baixa dias após IAM anterior = ruptura do septo. Músculo papilar dá sopro apical; parede livre, tamponamento.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q60</b> · <b class="lt">A</b> · ruptura do septo interventricular.</li>
+    </ul>
+
+    <h3>B12, reticulócitos e policitemia</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>B12: anemia + cordão posterior (ataxia, perda vibratória) + déficit cognitivo; dosar B12 antes de rotular demência.</li>
+      <li>Índice de produção reticulocitária abaixo de 2 = medula que não responde (a megaloblástica); hemólise passa de 2. Policitemia vera mata por trombose: flebotomia (Ht abaixo de 45%) e AAS.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q62</b> · <b class="lt">B</b> · deficiência de B12.</li>
+      <li><b class="qn">Q65</b> · <b class="lt">B</b> · índice 0,6: megaloblástica.</li>
+      <li><b class="qn">Q82</b> · <b class="lt">C</b> · trombose arterial e venosa.</li>
+    </ul>
+
+    <h3>Álcool</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Abstinência começa 6-24 h após a última dose (pico em 24-72 h); delirium tremens em cerca de 5%; benzodiazepínico e tiamina. CAGE rastreia álcool: 2 ou mais respostas positivas.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q74</b> · <b class="lt">A</b> · início em 6-24 h.</li>
+      <li><b class="qn">Q87</b> · <b class="lt">C</b> · CAGE: álcool, 4 perguntas.</li>
+    </ul>
+
+    <h3>Cirurgia bariátrica</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Doença psiquiátrica descompensada (depressão grave com tentativa recente) contraindica. Mais de 65 anos pede avaliação individual, não proíbe.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q33</b> · <b class="lt">C</b> · depressão grave descompensada.</li>
+    </ul>
+
+    <h3>Hipertensão: exames de rotina</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Rotina: urina tipo 1, potássio, creatinina com TFG, glicemia ou HbA1c, lipídios, ácido úrico e ECG. Eco, hemograma, ureia e PCR não são rotina.<sup class="ref"><a href="#ref-13">13</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q58</b> · <b class="lt">C</b> · a lista da diretriz.</li>
+    </ul>
+
+    <h3>Arboviroses</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Chikungunya crônica: hidroxicloroquina (com ou sem sulfassalazina ou metotrexato). Na fase aguda, corticoide é contraindicado e o AINE é evitado; não há antiviral.<sup class="ref"><a href="#ref-14">14</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q89</b> · <b class="lt">C</b> · fase crônica: hidroxicloroquina.</li>
+    </ul>
+
+    <h3>Peso baixo ou fora do mapa</h3>
+    <p class="meta">1 questão ou nenhuma nas provas UERJ 2021-2025; só se sobrar tempo.</p>
+    <p class="gl">Cardiologia</p>
+    <ul class="ql">
+      <li><b class="qn">Q1</b> · <b class="lt">D</b> · BAVT sintomático: marcapasso definitivo.</li>
+      <li><b class="qn">Q18</b> · <b class="lt">D</b> · creatinina que dispara com IECA + EAP de repetição: estenose de artéria renal (Doppler).</li>
+      <li><b class="qn">Q20</b> · <b class="lt">B</b> · pós-IAM: estatina de alta intensidade.</li>
+      <li><b class="qn">Q42</b> · <b class="lt">B</b> · TV polimórfica instável: terapia elétrica já. <span class="cfm">conferir</span><span class="nota">torsades com QT longo "sempre" é a leitura clássica, mas há variante com QT normal; o exato seria desfibrilação.</span></li>
+      <li><b class="qn">Q53</b> · <b class="lt">A</b> · choque cardiogênico: débito baixo, enchimento e resistência altos.</li>
+      <li><b class="qn">Q80</b> · <b class="lt">C</b> · HAS resistente + hipocalemia: hiperaldosteronismo primário.</li>
+    </ul>
+    <p class="gl">Reumatologia</p>
+    <ul class="ql">
+      <li><b class="qn">Q12</b> · <b class="lt">D</b> · polimialgia reumática.</li>
+      <li><b class="qn">Q32</b> · <b class="lt">C</b> · psoríase + IFD = artrite psoriásica.</li>
+      <li><b class="qn">Q34</b> · <b class="lt">B</b> · LES com nefrite: FAN nuclear homogêneo.</li>
+      <li><b class="qn">Q35</b> · <b class="lt">C</b> · SAF é trombótica: tempo de sangramento fora.</li>
+      <li><b class="qn">Q44</b> · <b class="lt">D</b> · osteoartrite: erosão marginal é da AR.</li>
+      <li><b class="qn">Q50</b> · <b class="lt">B</b> · hiperparatireoidismo -&gt; pirofosfato de cálcio.</li>
+      <li><b class="qn">Q52</b> · <b class="lt">A</b> · suspeita de artrite séptica: puncionar sempre.</li>
+      <li><b class="qn">Q83</b> · <b class="lt">C</b> · anti-Ro: eco fetal seriado de 16 a 26 semanas.</li>
+    </ul>
+    <p class="gl">Nefrologia e ácido-base</p>
+    <ul class="ql">
+      <li><b class="qn">Q11</b> · <b class="lt">B</b> · oligúria refratária + hipervolemia + K 6,1 + acidose: diálise.</li>
+      <li><b class="qn">Q61</b> · <b class="lt">C</b> · AG normal + K baixo após aminoglicosídeo: ATR proximal.</li>
+      <li><b class="qn">Q69</b> · <b class="lt">C</b> · hipercalemia: T apiculada, P some, QRS alarga; onda U é da hipocalemia.</li>
+      <li><b class="qn">Q76</b> · <b class="lt">D</b> · Bartter = hipercalciúria; Gitelman = hipocalciúria e hipomagnesemia.</li>
+      <li><b class="qn">Q79</b> · <b class="lt">A</b> · AG 26: cetoacidose.</li>
+    </ul>
+    <p class="gl">Gastro e fígado</p>
+    <ul class="ql">
+      <li><b class="qn">Q19</b> · <b class="lt">C</b> · cisto com CEA alto e amilase baixa: neoplasia cística mucinosa.</li>
+      <li><b class="qn">Q24</b> · <b class="lt">D</b> · Child C fora de Milão: suporte.</li>
+      <li><b class="qn">Q41</b> · <b class="lt">A</b> · dermatite herpetiforme: antitransglutaminase.</li>
+      <li><b class="qn">Q64</b> · <b class="lt">B</b> · CEA alto + amilase alta: IPMN.</li>
+      <li><b class="qn">Q72</b> · <b class="lt">B</b> · Courvoisier: cabeça de pâncreas.</li>
+      <li><b class="qn">Q81</b> · <b class="lt">C</b> · anti-HCV positivo: HCV-RNA.</li>
+      <li><b class="qn">Q85</b> · <b class="lt">D</b> · C. difficile.</li>
+    </ul>
+    <p class="gl">Infectologia</p>
+    <ul class="ql">
+      <li><b class="qn">Q21</b> · <b class="lt">D</b> · fasceíte necrosante: desbridar já.</li>
+      <li><b class="qn">Q55</b> · <b class="lt">A</b> · sepse. <span class="cfm">conferir</span><span class="nota">o enunciado usa qSOFA como critério; pelo Sepsis-3 é SOFA &gt;= 2. A letra não muda.<sup class="ref"><a href="#ref-15">15</a></sup></span></li>
+      <li><b class="qn">Q57</b> · <b class="lt">B</b> · PAC com hipoxemia em situação de rua: internar e colher culturas, com BK. <span class="cfm">conferir</span><span class="nota">a hemocultura, que separa B de C, fica para a PAC grave na SBPT.<sup class="ref"><a href="#ref-16">16</a></sup></span></li>
+      <li><b class="qn">Q59</b> · <b class="lt">C</b> · neutropenia febril instável: cefepima + vancomicina.</li>
+      <li><b class="qn">Q77</b> · <b class="lt">B</b> · anafilaxia à penicilina: clindamicina. <span class="cfm">conferir</span><span class="nota">a alergologia atual tolera cefazolina; a prova ainda cobra clindamicina.</span></li>
+      <li><b class="qn">Q86</b> · <b class="lt">C</b> · bacteriúria assintomática: tratar só gestante e antes de RTU.</li>
+      <li><b class="qn">Q94</b> · <b class="lt">C</b> · uretrite: ceftriaxona 500 mg + azitromicina 1 g.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+    </ul>
+    <p class="gl">Endocrinologia e pneumologia</p>
+    <ul class="ql">
+      <li><b class="qn">Q2</b> · <b class="lt">D</b> · DPOC grupo A: broncodilatador de longa ação.</li>
+      <li><b class="qn">Q15</b> · <b class="lt">B</b> · CAD: SF 0,45% + K com a insulina mantida; o glicosado entra quando a glicemia cai (abaixo de 250 no consenso de 2024).<sup class="ref"><a href="#ref-17">17</a></sup></li>
+      <li><b class="qn">Q47</b> · <b class="lt">C</b> · Hashimoto dá bradicardia.</li>
+      <li><b class="qn">Q48</b> · <b class="lt">C</b> · incidentaloma de 4 cm ou mais: adrenalectomia.</li>
+      <li><b class="qn">Q54</b> · <b class="lt">D</b> · derrame parapneumônico: toracocentese antes de drenar.</li>
+      <li><b class="qn">Q88</b> · <b class="lt">C</b> · TSH com amiodarona, Down e hiperprolactinemia.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="sec" id="cap-cir">
+  <span class="kick">Bloco 2 · questões 95-146</span>
+  <details class="cap">
+    <summary><h2>Cirurgia</h2><span class="sm">52 questões; repete vias biliares (7), hérnias, REMIT e tireoide (3 cada); 17 em tema de prevalência alta e cerca de 15 fora da cirurgia geral.</span><span class="ab"></span></summary>
+
+    <h3>Hérnias da parede</h3>
+    <p class="meta">UERJ 6 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>O vaso epigástrico inferior separa: a indireta sai lateral a ele (anel interno); a direta, medial (triângulo de Hesselbach). Abaixo do ligamento inguinal = femoral. Spiegel = linha semilunar, muitas vezes sem massa; Littré contém o Meckel.</li>
+      <li>Estrangulada não se reduz: inguinotomia de urgência com inventário da alça.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q119</b> · <b class="lt">D</b> · femoral estrangulada: inguinotomia. <span class="cfm">conferir</span><span class="nota">com descompressão dolorosa há quem indique laparotomia mediana.</span></li>
+      <li><b class="qn">Q125</b> · <b class="lt">A</b> · lateral x medial aos epigástricos.</li>
+      <li><b class="qn">Q143</b> · <b class="lt">C</b> · Spiegel.</li>
+    </ul>
+
+    <h3>Trauma: via aérea e tórax</h3>
+    <p class="meta">UERJ 6</p>
+    <ul class="tp">
+      <li>Hematoma cervical em expansão é sinal duro e ameaça a via aérea: intubar cedo (o A vem antes), depois centro cirúrgico.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+      <li>Jugular túrgida + hipotensão: hipertimpanismo e murmúrio reduzido = pneumotórax hipertensivo; murmúrio preservado = tamponamento; macicez = hemotórax.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q105</b> · <b class="lt">A</b> · intubação precoce. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+      <li><b class="qn">Q117</b> · <b class="lt">C</b> · pneumotórax hipertensivo.</li>
+    </ul>
+
+    <h3>REMIT e cicatrização</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>REMIT: sobem catecolaminas, cortisol (CRH-ACTH), GH, ADH e renina-angiotensina-aldosterona; cresce a resistência à insulina.</li>
+      <li>Uma célula por fase: inflamação = <strong class="chave">macrófago</strong> (o neutrófilo chega antes, mas não é essencial); proliferação = fibroblasto; maturação = miofibroblasto. Queloide prefere área de tensão: pré-esternal, ombros, lóbulo da orelha, dorso.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q108</b> · <b class="lt">B</b> · as direções da REMIT.</li>
+      <li><b class="qn">Q121</b> · <b class="lt">D</b> · sítios de queloide.</li>
+      <li><b class="qn">Q127</b> · <b class="lt">D</b> · macrófago, fibroblasto, miofibroblasto.</li>
+    </ul>
+
+    <h3>Pares cranianos na meningite basal</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Sem abdução nos dois olhos = VI bilateral (meningite basal crônica, como a tuberculosa). Hemiface inteira paralisada, testa incluída = VII periférico. O III daria ptose e midríase.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q126</b> · <b class="lt">C</b> · VI bilateral + VII periférico.</li>
+    </ul>
+
+    <h3>Complicações pós-operatórias</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Distensão no 2º dia com sinais vitais normais e PCR caindo = íleo: jejum, hidratação, SNG. Coleção citrina sem flogose = seroma: aspiração estéril e compressão; abrir a ferida é conduta de infecção.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q95</b> · <b class="lt">B</b> · íleo pós-operatório.</li>
+      <li><b class="qn">Q110</b> · <b class="lt">D</b> · seroma: aspirar. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+    </ul>
+
+    <h3>Vias biliares: colecistite, colangite e câncer</h3>
+    <p class="meta">UERJ 4 + 2 (dois temas do mapa) · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <figure class="fig-an">
+      <p class="fa-cab"><span>Fig 2 · fluxo</span><b>Dor biliar: o quadro escolhe a pressa</b></p>
+      <svg viewBox="0 0 360 312" role="img" aria-label="Fluxo da dor biliar em três colunas. Dor que cede, sem febre: cólica, USG e colecistectomia eletiva por vídeo. Dor que persiste, com Murphy e febre: colecistite, USG primeiro e colecistectomia por vídeo precoce; com suspeita de câncer, via aberta. Icterícia com febre e dor, Charcot: colangite, antibiótico e CPRE precoce; se surgem choque e confusão, Reynolds, destacado, drenar já, destacado.">
+        <rect class="fa-box" x="100" y="6" width="160" height="28" rx="8"/>
+        <text class="fa-t" x="180" y="25" text-anchor="middle">dor biliar</text>
+        <line class="fa-li" x1="180" y1="34" x2="180" y2="42"/><line class="fa-li" x1="62" y1="42" x2="298" y2="42"/>
+        <line class="fa-li" x1="62" y1="42" x2="62" y2="45"/><path class="fa-seta" d="M62 52 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="42" x2="180" y2="45"/><path class="fa-seta" d="M180 52 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="42" x2="298" y2="45"/><path class="fa-seta" d="M298 52 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="52" width="108" height="44" rx="8"/>
+        <text class="fa-tc" x="62" y="70" text-anchor="middle">cede</text>
+        <text class="fa-m" x="62" y="86" text-anchor="middle">sem febre</text>
+        <rect class="fa-box" x="126" y="52" width="108" height="44" rx="8"/>
+        <text class="fa-tc" x="180" y="70" text-anchor="middle">persiste</text>
+        <text class="fa-m" x="180" y="86" text-anchor="middle">Murphy, febre</text>
+        <rect class="fa-box" x="244" y="52" width="108" height="44" rx="8"/>
+        <text class="fa-tc" x="298" y="70" text-anchor="middle">icterícia</text>
+        <text class="fa-m" x="298" y="86" text-anchor="middle">febre e dor</text>
+        <line class="fa-li" x1="62" y1="96" x2="62" y2="105"/><path class="fa-seta" d="M62 112 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="96" x2="180" y2="105"/><path class="fa-seta" d="M180 112 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="96" x2="298" y2="105"/><path class="fa-seta" d="M298 112 l-4 -7 h8 z"/>
+        <rect class="fa-q4" x="8" y="112" width="108" height="28" rx="8"/>
+        <text class="fa-t" x="62" y="131" text-anchor="middle">cólica</text>
+        <rect class="fa-q4" x="126" y="112" width="108" height="28" rx="8"/>
+        <text class="fa-t" x="180" y="131" text-anchor="middle">colecistite</text>
+        <rect class="fa-q4" x="244" y="112" width="108" height="28" rx="8"/>
+        <text class="fa-t" x="298" y="131" text-anchor="middle">colangite</text>
+        <line class="fa-li" x1="62" y1="140" x2="62" y2="149"/><path class="fa-seta" d="M62 156 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="140" x2="180" y2="149"/><path class="fa-seta" d="M180 156 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="140" x2="298" y2="149"/><path class="fa-seta" d="M298 156 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="156" width="108" height="50" rx="8"/>
+        <text class="fa-m" x="62" y="177" text-anchor="middle">USG</text>
+        <text class="fa-m" x="62" y="194" text-anchor="middle">vídeo eletiva</text>
+        <rect class="fa-box" x="126" y="156" width="108" height="50" rx="8"/>
+        <text class="fa-m" x="180" y="177" text-anchor="middle">USG primeiro</text>
+        <text class="fa-tc" x="180" y="194" text-anchor="middle">vídeo precoce</text>
+        <rect class="fa-box" x="244" y="156" width="108" height="50" rx="8"/>
+        <text class="fa-m" x="298" y="177" text-anchor="middle">antibiótico</text>
+        <text class="fa-tc" x="298" y="194" text-anchor="middle">CPRE precoce</text>
+        <line class="fa-li" x1="180" y1="206" x2="180" y2="215"/><path class="fa-seta" d="M180 222 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="126" y="222" width="108" height="40" rx="8"/>
+        <text class="fa-m" x="180" y="238" text-anchor="middle">suspeita de câncer</text>
+        <text class="fa-tc" x="180" y="254" text-anchor="middle">via aberta</text>
+        <line class="fa-li" x1="298" y1="206" x2="298" y2="215"/><path class="fa-seta" d="M298 222 l-4 -7 h8 z"/>
+        <rect class="fa-rsb" x="244" y="222" width="108" height="40" rx="8"/>
+        <text class="fa-rst" x="298" y="238" text-anchor="middle">Reynolds</text>
+        <text class="fa-s" x="298" y="254" text-anchor="middle">choque, confusão</text>
+        <line class="fa-li" x1="298" y1="262" x2="298" y2="271"/><path class="fa-seta" d="M298 278 l-4 -7 h8 z"/>
+        <rect class="fa-rsb" x="244" y="278" width="108" height="28" rx="8"/>
+        <text class="fa-rst" x="298" y="297" text-anchor="middle">drenar já</text>
+      </svg>
+      <figcaption>Esquema: o quadro escolhe o exame e a pressa.<sup class="ref"><a href="#ref-18">18</a></sup></figcaption>
+    </figure>
+    <ul class="tp">
+      <li>Colecistite: USG primeiro (cálculo, parede espessa); colangio-RM só se suspeitar de coledocolitíase. O tratamento é a colecistectomia por vídeo precoce; analgesia e antibiótico são suporte.<sup class="ref"><a href="#ref-18">18</a></sup></li>
+      <li>Colangite com Charcot e sem choque: antibiótico primeiro e CPRE em 24-48 h. Reynolds (choque, confusão) ou falha = <strong class="chave">drenagem urgente</strong>.</li>
+      <li>Câncer de vesícula T1a (lâmina própria) com cístico livre: a colecistectomia basta; de T1b em diante, hepatectomia IVb/V + linfadenectomia. Lesão de via biliar: Strasberg E4 = confluência destruída; E3 = hilar com confluência preservada.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q104</b> · <b class="lt">C</b> · E4.</li>
+      <li><b class="qn">Q107</b> · <b class="lt">D</b> · T1a: estadiar e seguir.</li>
+      <li><b class="qn">Q111</b> · <b class="lt">B</b> · USG.</li>
+      <li><b class="qn">Q122</b> · <b class="lt">A</b> · colecistectomia por vídeo precoce. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+      <li><b class="qn">Q138</b> · <b class="lt">D</b> · suspeita de câncer: via aberta.</li>
+      <li><b class="qn">Q140</b> · <b class="lt">A</b> · Charcot sem Reynolds: antibiótico primeiro.</li>
+      <li><b class="qn">Q142</b> · <b class="lt">D</b> · gestante de 28 semanas: antibiótico e cirurgia após o parto. <span class="cfm">conferir</span><span class="nota">a SAGES aceita vídeo em qualquer trimestre; a chave pode vir com a A.<sup class="ref"><a href="#ref-19">19</a></sup></span></li>
+    </ul>
+
+    <h3>Tireoide</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>TSH baixo -&gt; cintilografia antes da PAAF: nódulo quente quase nunca é maligno. Microcarcinoma de baixo risco sem linfonodo = lobectomia (ou vigilância ativa).<sup class="ref"><a href="#ref-20">20</a></sup></li>
+      <li>Pós-tireoidectomia: dispneia com abaulamento cervical = hematoma -&gt; abrir a ferida no leito. Voz aguda = laríngeo superior; tetania = hipocalcemia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q103</b> · <b class="lt">C</b> · hematoma: abrir no leito.</li>
+      <li><b class="qn">Q114</b> · <b class="lt">B</b> · lobectomia. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+      <li><b class="qn">Q131</b> · <b class="lt">C</b> · cintilografia primeiro.</li>
+    </ul>
+
+    <h3>Proctologia</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Hinchey: I = abscesso pericólico; II = pélvico ou distante; III = peritonite purulenta; IV = fecal. Fístula colovesical é mais comum no homem (na mulher, o útero se interpõe).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q132</b> · <b class="lt">A</b> · Hinchey I.</li>
+      <li><b class="qn">Q139</b> · <b class="lt">A</b> · mais comum no homem.</li>
+    </ul>
+
+    <h3>Doenças neuromusculares</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>Guillain-Barré = neurônio motor inferior: arreflexia, fraqueza ascendente. Babinski é de neurônio motor superior e aponta para mielopatia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q130</b> · <b class="lt">C</b> · Babinski não é de SGB.</li>
+    </ul>
+
+    <h3>Trauma: choque hemorrágico</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>Classes de hemorragia do ATLS: a IV (perda acima de 40%) junta FC acima de 140, PA baixa, diurese mínima e rebaixamento; a III fica com FC de 120-140.<sup class="ref"><a href="#ref-3">3</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q109</b> · <b class="lt">A</b> · classe IV. <span class="cfm">conferir</span><span class="nota">"FR 323" é digitação e os rótulos não são os do ATLS.</span></li>
+    </ul>
+
+    <h3>Apendicite</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>A apendicite começa pela obstrução da luz do apêndice; a causa mais citada é o fecalito, e a hiperplasia linfoide predomina na criança.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q141</b> · <b class="lt">B</b> · fecalito. <span class="cfm">conferir</span><span class="nota">parte da literatura dá hiperplasia linfoide no adulto jovem.</span></li>
+    </ul>
+
+    <h3>Abdome agudo obstrutivo</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Brida sem peritonite nem sofrimento de alça = conservador (jejum, hidratação, SNG, contraste hidrossolúvel); operar se peritonite, estrangulamento ou falha em 48-72 h. Delgado: gás central, pregas coniventes, vômito precoce.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q100</b> · <b class="lt">A</b> · conservador.</li>
+      <li><b class="qn">Q101</b> · <b class="lt">D</b> · padrão de delgado.</li>
+    </ul>
+
+    <h3>Cirurgia bariátrica</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Scopinaro tem o canal comum mais curto: a mais disabsortiva. GLP-1 e GIP saem com o nutriente; o GLP-1 retarda o esvaziamento; o efeito incretina cai no obeso.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q120</b> · <b class="lt">D</b> · Scopinaro.</li>
+      <li><b class="qn">Q137</b> · <b class="lt">A</b> · saem com o nutriente. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+    </ul>
+
+    <h3>Cirurgia pediátrica</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>ECN no prematuro: pneumatose intestinal no RX (Bell II). Neuroblastoma metastatiza para medula óssea e osso (dor óssea, equimose periorbitária).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q123</b> · <b class="lt">A</b> · pneumatose.</li>
+      <li><b class="qn">Q124</b> · <b class="lt">A</b> · medula óssea e osso.</li>
+    </ul>
+
+    <h3>Peso baixo ou fora do mapa</h3>
+    <p class="meta">1 questão ou nenhuma nas provas UERJ 2021-2025. ORL, oftalmo e neuro somam cerca de um quarto do bloco.</p>
+    <p class="gl">Otorrino e oftalmo</p>
+    <ul class="ql">
+      <li><b class="qn">Q96</b> · <b class="lt">A</b> · OMA não grave acima de 2 anos: observar 48 h. <span class="cfm">conferir</span><span class="nota">a AAP aceita também amoxicilina; duas corretas.<sup class="ref"><a href="#ref-21">21</a></sup></span></li>
+      <li><b class="qn">Q102</b> · <b class="lt">A</b> · PFAPA: prednisona. <span class="cfm">conferir</span><span class="nota">o caso registra 37 graus, e PFAPA exige febre.</span></li>
+      <li><b class="qn">Q106</b> · <b class="lt">C</b> · otite externa maligna: antipseudomonas. <span class="cfm">conferir</span><span class="nota">ceftazidima não é oral e a letra omite internação.</span></li>
+      <li><b class="qn">Q112</b> · <b class="lt">A</b> · úlcera dendrítica: antiviral tópico. <span class="cfm">conferir</span><span class="nota">aciclovir pomada é 5 vezes ao dia, não 3.</span></li>
+      <li><b class="qn">Q116</b> · <b class="lt">D</b> · VPPB de canal posterior: Epley.</li>
+      <li><b class="qn">Q134</b> · <b class="lt">D</b> · sarcoidose: uveíte anterior granulomatosa.</li>
+    </ul>
+    <p class="gl">Neuro e coluna</p>
+    <ul class="ql">
+      <li><b class="qn">Q97</b> · <b class="lt">A</b> · início súbito, sinal focal e curso estável: demência vascular.</li>
+      <li><b class="qn">Q99</b> · <b class="lt">D</b> · HPN: marcha + incontinência + demência, sem papiledema.</li>
+      <li><b class="qn">Q118</b> · <b class="lt">C</b> · West: hipsarritmia.</li>
+      <li><b class="qn">Q128</b> · <b class="lt">A</b> · lombalgia aos 17 anos: RX primeiro. <span class="cfm">conferir</span><span class="nota">sem outro alarme, há quem trate direto com exercício.</span></li>
+      <li><b class="qn">Q145</b> · <b class="lt">A</b> · migrânea com 4 ou mais crises por mês: profilaxia.</li>
+      <li><b class="qn">Q146</b> · <b class="lt">B</b> · patelar diminuído = L4.</li>
+    </ul>
+    <p class="gl">Abdome, vascular, trauma e plástica</p>
+    <ul class="ql">
+      <li><b class="qn">Q98</b> · <b class="lt">A</b> · neuroendócrino de apêndice menor que 1 cm na ponta: a apendicectomia basta.</li>
+      <li><b class="qn">Q113</b> · <b class="lt">D</b> · dor desproporcional + lactato: isquemia mesentérica.</li>
+      <li><b class="qn">Q115</b> · <b class="lt">B</b> · pneumoperitônio + bile: úlcera perfurada.</li>
+      <li><b class="qn">Q129</b> · <b class="lt">A</b> · esplenectomia de urgência: vacinar a partir do 14º dia. <span class="cfm">conferir</span><span class="nota">o texto da letra inverte o prazo; a intenção é a partir de 14 dias.</span></li>
+      <li><b class="qn">Q133</b> · <b class="lt">D</b> · lipossarcoma, entre as opções.</li>
+      <li><b class="qn">Q135</b> · <b class="lt">A</b> · nervo, vaso e músculo conduzem mais corrente.</li>
+      <li><b class="qn">Q136</b> · <b class="lt">D</b> · hematoma retroperitoneal: penetrante explora qualquer zona; contuso, a zona I sempre e a II se expande.</li>
+      <li><b class="qn">Q144</b> · <b class="lt">A</b> · desmoide: quimioterapia intraperitoneal não existe no arsenal.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="sec" id="cap-go">
+  <span class="kick">Bloco 3 · questões 147-190</span>
+  <details class="cap">
+    <summary><h2>Ginecologia e Obstetrícia</h2><span class="sm">44 questões; síndromes hipertensivas e anatomia (3 cada), o resto 1-2 por tema; 7 em tema de prevalência alta.</span><span class="ab"></span></summary>
+
+    <h3>Diabetes na gestação</h3>
+    <p class="meta">UERJ 6 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>DM1 descompensado na concepção: cardiopatia congênita e regressão caudal; ao nascer, hipoglicemia. Rh negativo com Coombs indireto negativo = não sensibilizada: sem anemia hemolítica fetal.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q165</b> · <b class="lt">A</b> · anemia hemolítica fetal não é risco aqui.</li>
+    </ul>
+
+    <h3>Rastreamento do câncer do colo</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>HSIL na citologia -&gt; <strong class="chave">colposcopia direto</strong>, sem repetir. Gardnerella em assintomática não gestante não se trata nem atrasa a colposcopia.<sup class="ref"><a href="#ref-22">22</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q184</b> · <b class="lt">B</b> · colposcopia.</li>
+    </ul>
+
+    <h3>Síndromes hipertensivas</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <figure class="fig-an">
+      <p class="fa-cab"><span>Fig 3 · fluxo</span><b>Pré-eclâmpsia sem proteinúria</b></p>
+      <svg viewBox="0 0 360 256" role="img" aria-label="Fluxo do diagnóstico. Pressão de 140 por 90 ou mais após 20 semanas leva à pergunta: há algum destes? Proteinúria; lesão materna de rim, fígado ou sistema nervoso; ou disfunção placentária, destacada, com restrição de crescimento ou Doppler alterado. Se sim, pré-eclâmpsia, e na convulsão o sulfato de magnésio. Se nenhum, hipertensão gestacional.">
+        <rect class="fa-box" x="70" y="6" width="220" height="40" rx="8"/>
+        <text class="fa-t" x="180" y="23" text-anchor="middle">PA &gt;= 140 x 90</text>
+        <text class="fa-m" x="180" y="39" text-anchor="middle">após 20 semanas</text>
+        <line class="fa-li" x1="180" y1="46" x2="180" y2="53"/><path class="fa-seta" d="M180 60 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="60" width="344" height="74" rx="8"/>
+        <text class="fa-tc" x="180" y="78" text-anchor="middle">algum destes?</text>
+        <rect class="fa-trk" x="16" y="88" width="104" height="38" rx="8"/>
+        <text class="fa-m" x="68" y="111" text-anchor="middle">proteinúria</text>
+        <rect class="fa-trk" x="128" y="88" width="104" height="38" rx="8"/>
+        <text class="fa-m" x="180" y="104" text-anchor="middle">lesão materna</text>
+        <text class="fa-s" x="180" y="119" text-anchor="middle">rim, fígado, SNC</text>
+        <rect class="fa-rsb" x="240" y="88" width="104" height="38" rx="8"/>
+        <text class="fa-rst" x="292" y="104" text-anchor="middle">placenta</text>
+        <text class="fa-s" x="292" y="119" text-anchor="middle">RCF, Doppler</text>
+        <line class="fa-li" x1="110" y1="134" x2="110" y2="141"/><path class="fa-seta" d="M110 148 l-4 -7 h8 z"/>
+        <text class="fa-s" x="118" y="145">sim</text>
+        <line class="fa-li" x1="270" y1="134" x2="270" y2="141"/><path class="fa-seta" d="M270 148 l-4 -7 h8 z"/>
+        <text class="fa-s" x="278" y="145">nenhum</text>
+        <rect class="fa-q4" x="30" y="148" width="160" height="42" rx="8"/>
+        <text class="fa-t" x="110" y="174" text-anchor="middle">pré-eclâmpsia</text>
+        <rect class="fa-box" x="200" y="148" width="140" height="42" rx="8"/>
+        <text class="fa-tc" x="270" y="166" text-anchor="middle">hipertensão</text>
+        <text class="fa-tc" x="270" y="182" text-anchor="middle">gestacional</text>
+        <line class="fa-li" x1="110" y1="190" x2="110" y2="199"/><path class="fa-seta" d="M110 206 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="30" y="206" width="160" height="44" rx="8"/>
+        <text class="fa-tc" x="110" y="224" text-anchor="middle">convulsão</text>
+        <text class="fa-m" x="110" y="241" text-anchor="middle">sulfato de magnésio</text>
+      </svg>
+      <figcaption>Esquema: a placenta também fecha o diagnóstico.<sup class="ref"><a href="#ref-23">23</a>,<a href="#ref-24">24</a></sup></figcaption>
+    </figure>
+    <ul class="tp">
+      <li>Proteinúria não é obrigatória: hipertensão após 20 semanas + lesão de órgão materno ou <strong class="chave">disfunção placentária (RCF)</strong> já é pré-eclâmpsia; sem nenhum dos três, hipertensão gestacional.<sup class="ref"><a href="#ref-23">23</a>,<a href="#ref-24">24</a></sup></li>
+      <li>Pré-eclâmpsia grave em gestação anterior = alto risco: AAS 100-150 mg à noite, de 12-16 até 36 semanas.<sup class="ref"><a href="#ref-23">23</a></sup></li>
+      <li>Eclâmpsia: sulfato de magnésio cessa e previne a recorrência; hidralazina trata a PA, não a convulsão.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q154</b> · <b class="lt">B</b> · pré-eclâmpsia pela RCF. <span class="cfm">conferir</span><span class="nota">pelo ACOG seria hipertensão gestacional.</span></li>
+      <li><b class="qn">Q171</b> · <b class="lt">B</b> · AAS em dose baixa.</li>
+      <li><b class="qn">Q174</b> · <b class="lt">D</b> · sulfato de magnésio.</li>
+    </ul>
+
+    <h3>Endometriose</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Útero fixo retrovertido com uterossacros espessados = endometriose profunda: 1ª linha é progestagênio ou ACO contínuo; análogo de GnRH é 2ª linha. Endometrioma acima de 4 cm na infértil: cistectomia por vídeo (só puncionar recidiva).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q159</b> · <b class="lt">C</b> · progestagênio ou ACO contínuo.</li>
+      <li><b class="qn">Q189</b> · <b class="lt">D</b> · cistectomia por vídeo.</li>
+    </ul>
+
+    <h3>Gestação múltipla e datação</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>STFF (mono/diamniótica): oligoâmnio no doador (MBV abaixo de 2 cm) e polidrâmnio no receptor (acima de 8 cm). Peso discordante = RCF seletiva; ACM discordante = TAPS.</li>
+      <li>Antes de 9 semanas, diferença acima de 5 dias entre DUM e USG -&gt; vale a USG.<sup class="ref"><a href="#ref-25">25</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q151</b> · <b class="lt">C</b> · redatar pela USG. <span class="cfm">conferir</span><span class="nota">pela regra de 7 dias, a DUM ficaria.</span></li>
+      <li><b class="qn">Q163</b> · <b class="lt">C</b> · STFF.</li>
+    </ul>
+
+    <h3>Sangramento da 1ª metade</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <ul class="tp">
+      <li>Diferença de mais de 1 semana entre DUM e CCN = discordante. Sem BCF com CCN abaixo de 7 mm não fecha aborto retido; colo impérvio + sangramento leve = ameaça de abortamento.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q149</b> · <b class="lt">C</b> · ameaça, ainda sem diagnóstico de retido.</li>
+    </ul>
+
+    <h3>Aleitamento</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Mama edemaciada, quente e brilhante, sem febre nem hiperemia = ingurgitamento: pega, ordenha, analgésico e compressa fria; não suspender nem dar antibiótico.<sup class="ref"><a href="#ref-26">26</a></sup></li>
+      <li>HTLV confirmado contraindica amamentar (fórmula, inibir a lactação) e, pela nota do MS de 2025, indica cesárea eletiva com 38 semanas.<sup class="ref"><a href="#ref-27">27</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q173</b> · <b class="lt">B</b> · ingurgitamento.</li>
+      <li><b class="qn">Q187</b> · <b class="lt">B</b> · HTLV passa pelo leite. <span class="cfm">conferir</span><span class="nota">com só a triagem reagente, a via segue a obstetrícia e a amamentação pode seguir até confirmar.</span></li>
+    </ul>
+
+    <h3>Assistência ao parto</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>1 cm por hora é progressão normal; analgesia se ela quiser. Fase ativa: toque a cada 4 h, BCF a cada 15-30 min (5 min é do expulsivo), sem amniotomia de rotina.<sup class="ref"><a href="#ref-28">28</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q166</b> · <b class="lt">B</b> · analgesia se desejar; nada de rotina a mais.</li>
+    </ul>
+
+    <h3>Pré-natal</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Anti-HBs positivo com HBsAg e anti-HBc negativos = vacinada: não vacinar. dTpa em toda gestação (a partir de 20 semanas); tríplice viral é contraindicada.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q167</b> · <b class="lt">D</b> · imune por vacina.</li>
+    </ul>
+
+    <h3>Anatomia e vulva</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>A ilíaca interna dá ramos parietais (obturatória, pudenda interna, glútea inferior); a ovariana sai da aorta; a veia ovariana direita drena na cava, a esquerda na renal.</li>
+      <li>Líquen escleroso (prurido crônico, placa em ampulheta na idosa) = clobetasol 0,05%.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q177</b> · <b class="lt">B</b> · ramos parietais da ilíaca interna.</li>
+      <li><b class="qn">Q180</b> · <b class="lt">B</b> · corticoide tópico de alta potência.</li>
+      <li><b class="qn">Q182</b> · <b class="lt">C</b> · diafragma urogenital = transversos. <span class="cfm">conferir</span><span class="nota">isquiocavernoso e transverso superficial são do plano superficial.</span></li>
+    </ul>
+
+    <h3>Climatério</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>Menopausa é diagnóstico clínico (12 meses sem menstruar, na idade esperada): dosar FSH, LH ou estradiol é desnecessário. Antes da terapia hormonal: mamografia, avaliação do endométrio e da massa óssea.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q161</b> · <b class="lt">B</b> · menopausa é clínica. <span class="cfm">conferir</span><span class="nota">vence por exclusão.</span></li>
+    </ul>
+
+    <h3>Sangramento da 2ª metade</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>DPP com feto morto e mãe estável: parto vaginal, idealmente em até 4-6 h; cesárea só se a mãe instabiliza. O diagnóstico é clínico: a USG não deve atrasar a conduta.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q169</b> · <b class="lt">A</b> · a cesárea contraria o caso. <span class="cfm">conferir</span><span class="nota">há duas condutas inadequadas nas opções.</span></li>
+    </ul>
+
+    <h3>Planejamento familiar</h3>
+    <p class="meta">UERJ 3</p>
+    <ul class="tp">
+      <li>LES afasta estrogênio; com plaquetopenia, o DIU de cobre piora o fluxo: SIU de levonorgestrel.<sup class="ref"><a href="#ref-12">12</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q176</b> · <b class="lt">D</b> · SIU de levonorgestrel.</li>
+    </ul>
+
+    <h3>Endométrio</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Sangramento pós-menopausa: a causa mais comum é atrofia; o câncer (cerca de 10%) é o que se precisa excluir. Endométrio acima de 4 mm com sangramento -&gt; biópsia (histeroscopia). O tipo I costuma invadir menos de 50% do miométrio ao diagnóstico.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q160</b> · <b class="lt">D</b> · invasão menor que 50%.</li>
+      <li><b class="qn">Q170</b> · <b class="lt">D</b> · atrofia.</li>
+    </ul>
+
+    <h3>Infertilidade</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Turner = falência ovariana: FIV com óvulo doado; avaliar a aorta antes (risco de dissecção).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q185</b> · <b class="lt">D</b> · óvulo doado.</li>
+    </ul>
+
+    <h3>Violência sexual</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Aborto legal no estupro: sem BO e sem juiz, até 20-22 semanas; o serviço exige os 5 termos (relato circunstanciado, parecer técnico, aprovação, responsabilidade e TCLE).<sup class="ref"><a href="#ref-29">29</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q150</b> · <b class="lt">D</b> · os 5 termos.</li>
+    </ul>
+
+    <h3>Ovário</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Mais ovulações na vida = mais risco (nuliparidade, menarca precoce, menopausa tardia); ACO e gestação protegem.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q153</b> · <b class="lt">D</b> · ovulação incessante.</li>
+    </ul>
+
+    <h3>Mama</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>HER2 superexpresso -&gt; trastuzumabe; sem receptor hormonal, hormonioterapia não tem alvo. Descarga suspeita: espontânea, unilateral, uniductal, sanguinolenta ou cristalina.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q148</b> · <b class="lt">B</b> · anti-HER2.</li>
+      <li><b class="qn">Q179</b> · <b class="lt">A</b> · descarga benigna.</li>
+    </ul>
+
+    <h3>Prematuridade e rotura de membranas</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>TPP com 33 semanas: nifedipino + corticoide + profilaxia para estreptococo B se o status é desconhecido; sulfato de magnésio neuroprotetor só abaixo de 32 semanas.</li>
+      <li>O líquido amniótico é alcalino: nitrazina com pH abaixo de 6 não confirma rotura.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q168</b> · <b class="lt">C</b> · tocólise, corticoide e profilaxia para EGB.</li>
+      <li><b class="qn">Q186</b> · <b class="lt">C</b> · nitrazina ácida não confirma. <span class="cfm">conferir</span><span class="nota">duas não confirmam: no Iannetta o líquido seca branco, e marrom é muco.</span></li>
+    </ul>
+
+    <h3>Miomatose</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Mioma submucoso: G0 pediculado; G1 com menos de 50% intramural; G2 com 50% ou mais. G2 pequeno (até cerca de 3 cm) ainda é histeroscópico em mãos experientes.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q178</b> · <b class="lt">C</b> · G2 pequeno: histeroscopia. <span class="cfm">conferir</span><span class="nota">a via do G2 depende da banca.</span></li>
+    </ul>
+
+    <h3>Peso baixo ou fora do mapa</h3>
+    <p class="meta">1 questão ou nenhuma nas provas UERJ 2021-2025; só se sobrar tempo.</p>
+    <ul class="ql">
+      <li><b class="qn">Q147</b> · <b class="lt">C</b> · fórceps: dilatação total, bolsa rota, +3 e variedade conhecida (transversa -&gt; Kielland).</li>
+      <li><b class="qn">Q152</b> · <b class="lt">B</b> · cervicite mucopurulenta: a clamídia é o agente mais frequente.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+      <li><b class="qn">Q155</b> · <b class="lt">B</b> · DIP: critérios menores = febre e secreção cervical.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+      <li><b class="qn">Q156</b> · <b class="lt">A</b> · perimenopausa anovulatória.</li>
+      <li><b class="qn">Q157</b> · <b class="lt">A</b> · centralização: umbilical sobe, cerebral média cai.</li>
+      <li><b class="qn">Q158</b> · <b class="lt">B</b> · gestante com sífilis: VDRL mensal.<sup class="ref"><a href="#ref-9">9</a></sup></li>
+      <li><b class="qn">Q162</b> · <b class="lt">B</b> · congestão pélvica: embolização.</li>
+      <li><b class="qn">Q164</b> · <b class="lt">B</b> · SAF com trombose na gestação: heparina plena + AAS.</li>
+      <li><b class="qn">Q172</b> · <b class="lt">C</b> · vaginose: Amsel, 3 de 4 (corrimento homogêneo, pH acima de 4,5, aminas, clue cells).</li>
+      <li><b class="qn">Q175</b> · <b class="lt">D</b> · teca produz androgênio (LH); granulosa aromatiza (FSH).</li>
+      <li><b class="qn">Q181</b> · <b class="lt">B</b> · HPP: metilergometrina antes do misoprostol. <span class="cfm">conferir</span><span class="nota">se a banca vir a via EV como erro, vira A.<sup class="ref"><a href="#ref-30">30</a></sup></span></li>
+      <li><b class="qn">Q183</b> · <b class="lt">D</b> · taquicardia não é categoria III. <span class="cfm">conferir</span><span class="nota">com variabilidade mínima, as quatro seriam categoria II.<sup class="ref"><a href="#ref-31">31</a></sup></span></li>
+      <li><b class="qn">Q188</b> · <b class="lt">A</b> · HPV quadrivalente em dose única de 9 a 14 anos (MS, 2024).<sup class="ref"><a href="#ref-32">32</a></sup></li>
+      <li><b class="qn">Q190</b> · <b class="lt">C</b> · SUA: beta-hCG primeiro. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+    </ul>
+  </details>
+</section>
+
+<section class="sec" id="cap-ped">
+  <span class="kick">Bloco 4 · questões 191-225</span>
+  <details class="cap">
+    <summary><h2>Pediatria</h2><span class="sm">35 questões; imunizações (5), febre sem sinais e coqueluche (4), asma e aleitamento (2 cada); 5 em tema de prevalência alta.</span><span class="ab"></span></summary>
+
+    <h3>Tuberculose</h3>
+    <p class="meta">UERJ 9 · <span class="err">você já errou isto na UERJ (4 vezes)</span></p>
+    <ul class="tp">
+      <li>A régua e o esquema estão na Q67 (Clínica Médica). O que muda aqui: PT de 4 mm é negativa, e contato com sintoma respiratório investiga TB doença, não ILTB.<sup class="ref"><a href="#ref-33">33</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q220</b> · <b class="lt">D</b> · assintomático + RX normal + PT de 5 mm ou mais.</li>
+    </ul>
+
+    <h3>Asma</h3>
+    <p class="meta">UERJ 5 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Sugerem asma: sibilância fora de vírus (exercício, riso, choro), atopia pessoal ou familiar e crises recorrentes. Tabagismo passivo piora a sibilância, mas não aumenta a probabilidade do diagnóstico.</li>
+      <li>CI em dose baixa com sintoma e SABA 2-3 vezes por semana = sem controle: subir para CI baixa + LABA (STEP 3, 6-11 anos).<sup class="ref"><a href="#ref-34">34</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q205</b> · <b class="lt">A</b> · tabagismo passivo não sugere asma.</li>
+      <li><b class="qn">Q206</b> · <b class="lt">B</b> · CI baixa + LABA.</li>
+    </ul>
+
+    <h3>Infecção urinária</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>O EAS sugere; só a urocultura confirma (jato médio: 100.000 UFC/mL de um agente). Sem cultura não há ITU de repetição nem profilaxia.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q194</b> · <b class="lt">B</b> · urocultura confirma.</li>
+    </ul>
+
+    <h3>HIV no recém-nascido</h3>
+    <p class="meta">UERJ 4 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Mãe sem pré-natal nem TARV = RN de alto risco; com 37 semanas ou mais, AZT + 3TC + raltegravir por 28 dias; SMX-TMP a partir de 4-6 semanas.<sup class="ref"><a href="#ref-11">11</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q201</b> · <b class="lt">B</b> · esquema triplo.</li>
+    </ul>
+
+    <h3>Cuidados neonatais</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Oximetria alterada = abaixo de 95% em algum membro ou diferença de 3% ou mais: repetir em 1 h; eco só se persistir.</li>
+      <li>RN de risco assintomático, entre 4 e 24 h, com glicemia abaixo de 35: amamentar e repetir em 1 h; glicose EV se sintomático ou se seguir baixa.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q195</b> · <b class="lt">B</b> · repetir em 1 h.</li>
+      <li><b class="qn">Q222</b> · <b class="lt">A</b> · amamentar e repetir.</li>
+    </ul>
+
+    <h3>Aleitamento</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (2 vezes)</span></p>
+    <ul class="tp">
+      <li>Ganho baixo com bebê bem = técnica: corrigir a pega e repesar em 2-3 dias; fórmula só se falhar. Pega boa: boca bem aberta, lábio inferior evertido, queixo na mama, mais aréola visível acima da boca.<sup class="ref"><a href="#ref-26">26</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q216</b> · <b class="lt">D</b> · corrigir a pega.</li>
+      <li><b class="qn">Q225</b> · <b class="lt">D</b> · mais aréola acima da boca.</li>
+    </ul>
+
+    <h3>Diarreia</h3>
+    <p class="meta">UERJ 3 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Lactente bem e hidratado = Plano A. Salmonella não tifoide no hígido não leva antibiótico (prolonga o portador); antibiótico só na disenteria com estado geral comprometido ou na cólera grave.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q209</b> · <b class="lt">B</b> · Plano A, sem antibiótico.</li>
+    </ul>
+
+    <h3>Febre sem sinais localizatórios e coqueluche</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <figure class="fig-an">
+      <p class="fa-cab"><span>Fig 4 · fluxo</span><b>Febre sem foco: a idade decide</b></p>
+      <svg viewBox="0 0 360 234" role="img" aria-label="Fluxo da febre sem foco em três faixas de idade. Até 28 dias: internar, culturas e líquor, ampicilina e gentamicina. De 29 a 90 dias: critérios de Rochester, destacados, com leucócitos entre 5 e 15 mil; fora deles, líquor e ceftriaxona; dentro, reavaliar. De 3 a 36 meses com 39 graus ou mais: a pergunta é a vacinação completa, destacada; se sim, urina 1 e urocultura; se não, soma o hemograma.">
+        <rect class="fa-box" x="90" y="6" width="180" height="28" rx="8"/>
+        <text class="fa-t" x="180" y="25" text-anchor="middle">febre sem foco</text>
+        <line class="fa-li" x1="180" y1="34" x2="180" y2="42"/><line class="fa-li" x1="62" y1="42" x2="298" y2="42"/>
+        <line class="fa-li" x1="62" y1="42" x2="62" y2="45"/><path class="fa-seta" d="M62 52 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="42" x2="180" y2="45"/><path class="fa-seta" d="M180 52 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="42" x2="298" y2="45"/><path class="fa-seta" d="M298 52 l-4 -7 h8 z"/>
+        <rect class="fa-q4" x="8" y="52" width="108" height="28" rx="8"/>
+        <text class="fa-tc" x="62" y="70" text-anchor="middle">até 28 dias</text>
+        <rect class="fa-q4" x="126" y="52" width="108" height="28" rx="8"/>
+        <text class="fa-tc" x="180" y="70" text-anchor="middle">29-90 dias</text>
+        <rect class="fa-q4" x="244" y="52" width="108" height="28" rx="8"/>
+        <text class="fa-tc" x="298" y="70" text-anchor="middle">3-36 meses</text>
+        <line class="fa-li" x1="62" y1="80" x2="62" y2="89"/><path class="fa-seta" d="M62 96 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="80" x2="180" y2="89"/><path class="fa-seta" d="M180 96 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="80" x2="298" y2="89"/><path class="fa-seta" d="M298 96 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="96" width="108" height="52" rx="8"/>
+        <text class="fa-tc" x="62" y="117" text-anchor="middle">internar</text>
+        <text class="fa-s" x="62" y="134" text-anchor="middle">culturas, líquor</text>
+        <rect class="fa-rsb" x="126" y="96" width="108" height="52" rx="8"/>
+        <text class="fa-rst" x="180" y="117" text-anchor="middle">Rochester</text>
+        <text class="fa-s" x="180" y="134" text-anchor="middle">leuco 5-15 mil</text>
+        <rect class="fa-box" x="244" y="96" width="108" height="52" rx="8"/>
+        <text class="fa-tc" x="298" y="117" text-anchor="middle">&gt;= 39 graus</text>
+        <text class="fa-rss" x="298" y="134" text-anchor="middle">vacina completa?</text>
+        <line class="fa-li" x1="62" y1="148" x2="62" y2="157"/><path class="fa-seta" d="M62 164 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="180" y1="148" x2="180" y2="157"/><path class="fa-seta" d="M180 164 l-4 -7 h8 z"/>
+        <line class="fa-li" x1="298" y1="148" x2="298" y2="157"/><path class="fa-seta" d="M298 164 l-4 -7 h8 z"/>
+        <rect class="fa-box" x="8" y="164" width="108" height="62" rx="8"/>
+        <text class="fa-m" x="62" y="190" text-anchor="middle">ampicilina</text>
+        <text class="fa-m" x="62" y="206" text-anchor="middle">+ gentamicina</text>
+        <rect class="fa-box" x="126" y="164" width="108" height="62" rx="8"/>
+        <text class="fa-m" x="180" y="183" text-anchor="middle">fora: líquor</text>
+        <text class="fa-m" x="180" y="198" text-anchor="middle">+ ceftriaxona</text>
+        <text class="fa-s" x="180" y="215" text-anchor="middle">dentro: reavaliar</text>
+        <rect class="fa-box" x="244" y="164" width="108" height="62" rx="8"/>
+        <text class="fa-m" x="298" y="183" text-anchor="middle">sim: urina 1</text>
+        <text class="fa-m" x="298" y="198" text-anchor="middle">+ urocultura</text>
+        <text class="fa-s" x="298" y="215" text-anchor="middle">não: + hemograma</text>
+      </svg>
+      <figcaption>Esquema: a idade escolhe o roteiro.<sup class="ref"><a href="#ref-35">35</a></sup></figcaption>
+    </figure>
+    <ul class="tp">
+      <li>Até 3 meses, hemograma e urina são a triagem de todos. Fora de Rochester (leucócitos fora de <strong class="chave">5.000-15.000</strong>) = alto risco: culturas, líquor, ceftriaxona; acima de 20.000, RX (pneumonia oculta).<sup class="ref"><a href="#ref-35">35</a></sup></li>
+      <li>3-36 meses, 39 graus ou mais, vacinação completa e bom estado: o risco é ITU -&gt; urina 1 e urocultura. Hemograma só se a vacinação estiver incompleta; internar só se toxemia.</li>
+      <li>Coqueluche: tosse paroxística por 14 dias ou mais, leucocitose com linfocitose, infiltrado paracardíaco ("coração felpudo").</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q202</b> · <b class="lt">C</b> · coqueluche.</li>
+      <li><b class="qn">Q219</b> · <b class="lt">A</b> · leucócitos fora do critério: alto risco.</li>
+      <li><b class="qn">Q221</b> · <b class="lt">A</b> · urina 1 e urocultura.</li>
+      <li><b class="qn">Q223</b> · <b class="lt">C</b> · triagem de todos, culturas no alto risco. <span class="cfm">conferir</span><span class="nota">a letra é mais incompleta que falsa; vence por eliminação.</span></li>
+    </ul>
+
+    <h3>Celíaca e febre reumática</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Celíaca: anti-tTG IgA alto com IgA total normal -&gt; a biópsia duodenal confirma; dispensa-se só com anti-tTG de 10 vezes o normal ou mais + EMA positivo.<sup class="ref"><a href="#ref-36">36</a></sup></li>
+      <li>Coreia de Sydenham: some no sono, é autolimitada e regride sem sequela.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q192</b> · <b class="lt">C</b> · celíaca: biópsia duodenal.</li>
+      <li><b class="qn">Q203</b> · <b class="lt">A</b> · a coreia regride.</li>
+    </ul>
+
+    <h3>Obesidade</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>A partir de 5 anos, IMC acima de z +2 já é obesidade (risco de sobrepeso só existe abaixo de 5 anos); grave acima de z +3.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q191</b> · <b class="lt">C</b> · obesidade: rastrear comorbidades.</li>
+    </ul>
+
+    <h3>Exantemáticas</h3>
+    <p class="meta">UERJ 2 · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Sarampo: febre alta com tosse, coriza e conjuntivite; exantema que desce da face; vacina atrasada. Vitamina A, notificação, bloqueio dos contatos.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q204</b> · <b class="lt">C</b> · sarampo.</li>
+    </ul>
+
+    <h3>Síndromes genéticas e erros inatos</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>X-frágil: macro-orquidia, face alongada, orelhas grandes, prolapso mitral. Hipoglicemia de repetição + hepatomegalia + acidose sem dismorfia = erro inato: espectrometria em tandem.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q193</b> · <b class="lt">A</b> · X-frágil.</li>
+      <li><b class="qn">Q197</b> · <b class="lt">C</b> · erro inato.</li>
+    </ul>
+
+    <h3>Cardiopatias congênitas</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Sopro contínuo em maquinária infraclavicular + pulsos amplos no prematuro = PCA. Sopro inocente: sistólico, até 2+/6, sem irradiação, muda com a posição (o de Still diminui em pé).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q198</b> · <b class="lt">C</b> · PCA.</li>
+      <li><b class="qn">Q213</b> · <b class="lt">D</b> · Still diminui em pé.</li>
+    </ul>
+
+    <h3>Pneumonia</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Piora após 48 h de antibiótico + submacicez e seio costofrênico velado = derrame parapneumônico: toracocentese.</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q224</b> · <b class="lt">D</b> · toracocentese.</li>
+    </ul>
+
+    <h3>Imunizações</h3>
+    <p class="meta">UERJ 1 · o tema que o Sprint mais repete (6 questões, com a de GO)</p>
+    <ul class="tp">
+      <li>Sem registro escrito, a dose não conta. Tríplice viral: 2 doses até 29 anos, intervalo mínimo de 30 dias.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+      <li>12 meses no calendário atual do PNI: tríplice viral, reforço da pneumocócica 20 e meningocócica ACWY; tetra viral aos 15. Febre amarela atrasada antes de 2 anos: 30 dias depois da tríplice.<sup class="ref"><a href="#ref-37">37</a></sup></li>
+      <li>Abscesso frio na BCG: notificar e dar isoniazida até regredir.</li>
+      <li>VSR: o SUS trocou o palivizumabe pelo nirsevimabe neste ano (prematuro até 36s6d no 1º ano); as questões ainda cobram o palivizumabe.<sup class="ref"><a href="#ref-38">38</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q207</b> · <b class="lt">C</b> · considerar não vacinado: 2 doses.</li>
+      <li><b class="qn">Q208</b> · <b class="lt">A</b> · tríplice, pneumo 20 e ACWY.</li>
+      <li><b class="qn">Q210</b> · <b class="lt">C</b> · cardiopatia cianótica até 2 anos. <span class="cfm">conferir</span><span class="nota">pelo nirsevimabe, a A também teria indicação.</span></li>
+      <li><b class="qn">Q211</b> · <b class="lt">D</b> · notificar e isoniazida.</li>
+      <li><b class="qn">Q217</b> · <b class="lt">D</b> · displasia broncopulmonar até 2 anos. <span class="cfm">conferir</span><span class="nota">idem Q210.</span></li>
+    </ul>
+
+    <h3>Peso baixo ou fora do mapa</h3>
+    <p class="meta">1 questão ou nenhuma nas provas UERJ 2021-2025; só se sobrar tempo.</p>
+    <ul class="ql">
+      <li><b class="qn">Q196</b> · <b class="lt">B</b> · altura-alvo da menina: (pai + mãe - 13) / 2.</li>
+      <li><b class="qn">Q199</b> · <b class="lt">A</b> · ferro profilático aos 6 meses; aos 4 só com leite de vaca. <span class="cfm">conferir</span><span class="nota">pela SBP 2021, fator de risco anteciparia o ferro.</span></li>
+      <li><b class="qn">Q200</b> · <b class="lt">C</b> · realimentação = hipofosfatemia.</li>
+      <li><b class="qn">Q212</b> · <b class="lt">D</b> · proctocolite alérgica: dieta materna sem leite de vaca; fórmula extensamente hidrolisada.</li>
+      <li><b class="qn">Q214</b> · <b class="lt">C</b> · puberdade precoce: antes de 8 anos (menina) ou 9 (menino).</li>
+      <li><b class="qn">Q215</b> · <b class="lt">B</b> · ferropriva confirmada: ferro 3-6 mg/kg/dia e tirar o leite de vaca.<sup class="ref"><a href="#ref-39">39</a></sup></li>
+      <li><b class="qn">Q218</b> · <b class="lt">C</b> · icterícia da baixa ingesta: glicuronil-transferase diminuída.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="sec" id="cap-prev">
+  <span class="kick">Bloco 5 · questões 226-250</span>
+  <details class="cap">
+    <summary><h2>Preventiva e MFC</h2><span class="sm">25 questões; medidas de associação (5), raciocínio diagnóstico (4), família (3); 11 em tema de prevalência alta.</span><span class="ab"></span></summary>
+
+    <h3>Raciocínio diagnóstico quantitativo</h3>
+    <p class="meta">UERJ 7 · <span class="err">você já errou isto na UERJ (3 vezes)</span></p>
+    <figure class="fig-an">
+      <p class="fa-cab"><span>Fig 5 · esquema</span><b>A tabela 2 x 2: coluna e linha</b></p>
+      <svg viewBox="0 0 360 252" role="img" aria-label="Tabela dois por dois: colunas doente e não doente pelo padrão-ouro; linhas teste positivo e negativo; células verdadeiro positivo, falso positivo, falso negativo e verdadeiro negativo. Sob as colunas, sensibilidade igual a VP sobre VP mais FN e especificidade igual a VN sobre VN mais FP. Ao lado das linhas, destacados, VPP e VPN, que mudam com a prevalência. Embaixo, razão de verossimilhança positiva igual a S sobre 1 menos E, e chance pré-teste vezes RV dá o pós-teste.">
+        <text class="fa-s" x="170" y="16" text-anchor="middle">padrão-ouro</text>
+        <text class="fa-tc" x="125" y="38" text-anchor="middle">doente</text>
+        <text class="fa-tc" x="215" y="38" text-anchor="middle">não doente</text>
+        <text class="fa-tc" x="72" y="80" text-anchor="end">teste +</text>
+        <text class="fa-tc" x="72" y="136" text-anchor="end">teste -</text>
+        <rect class="fa-q4" x="80" y="48" width="90" height="56"/>
+        <text class="fa-t" x="125" y="81" text-anchor="middle">VP</text>
+        <rect class="fa-box" x="170" y="48" width="90" height="56"/>
+        <text class="fa-t" x="215" y="81" text-anchor="middle">FP</text>
+        <rect class="fa-box" x="80" y="104" width="90" height="56"/>
+        <text class="fa-t" x="125" y="137" text-anchor="middle">FN</text>
+        <rect class="fa-q4" x="170" y="104" width="90" height="56"/>
+        <text class="fa-t" x="215" y="137" text-anchor="middle">VN</text>
+        <rect class="fa-barra" x="84" y="168" width="82" height="4" rx="2"/>
+        <rect class="fa-barra" x="174" y="168" width="82" height="4" rx="2"/>
+        <text class="fa-s" x="125" y="188" text-anchor="middle">S = VP/(VP+FN)</text>
+        <text class="fa-s" x="215" y="188" text-anchor="middle">E = VN/(VN+FP)</text>
+        <rect class="fa-rs" x="266" y="52" width="4" height="48" rx="2"/>
+        <rect class="fa-rs" x="266" y="108" width="4" height="48" rx="2"/>
+        <text class="fa-tc" x="276" y="74">VPP</text>
+        <text class="fa-s" x="276" y="90">VP/(VP+FP)</text>
+        <text class="fa-tc" x="276" y="130">VPN</text>
+        <text class="fa-s" x="276" y="146">VN/(VN+FN)</text>
+        <text class="fa-rst" x="276" y="174">muda com a</text>
+        <text class="fa-rst" x="276" y="190">prevalência</text>
+        <text class="fa-tc" x="180" y="222" text-anchor="middle">RV+ = S / (1 - E)</text>
+        <text class="fa-s" x="180" y="240" text-anchor="middle">chance pré-teste x RV = pós-teste</text>
+      </svg>
+      <figcaption>Esquema: S e E na coluna; VPP e VPN na linha.<sup class="ref"><a href="#ref-40">40</a></sup></figcaption>
+    </figure>
+    <ul class="tp">
+      <li>S e E se leem na coluna; VPP e VPN, na linha. <strong class="chave">Só a linha muda com a prevalência.</strong> RV+ = S / (1 - E): quanto o positivo é mais provável no doente que no não doente.<sup class="ref"><a href="#ref-40">40</a></sup></li>
+      <li>A probabilidade pré-teste manda: pré-teste alto + negativo = provável falso-negativo; pré-teste baixo + positivo inespecífico (como o D-dímero) = provável falso-positivo.</li>
+      <li>Alta especificidade = poucos falso-positivos (o positivo confirma); alta sensibilidade = poucos falso-negativos (o negativo exclui).</li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q233</b> · <b class="lt">A</b> · o pré-teste de cada paciente.</li>
+      <li><b class="qn">Q235</b> · <b class="lt">A</b> · S = VP/(VP+FN); os distratores são E e VPP da mesma tabela.</li>
+      <li><b class="qn">Q242</b> · <b class="lt">B</b> · RV+ = S/(1-E).</li>
+      <li><b class="qn">Q250</b> · <b class="lt">A</b> · especificidade = VN/(VN+FP).</li>
+    </ul>
+
+    <h3>Níveis de prevenção e prevenção quaternária</h3>
+    <p class="meta">UERJ 6 + 1 (dois temas do mapa) · <span class="err">você já errou isto na UERJ (1 vez)</span></p>
+    <ul class="tp">
+      <li>Rastrear = secundária; reabilitar sequela = terciária; evitar o dano da intervenção desnecessária = quaternária (Jamoulle).<sup class="ref"><a href="#ref-41">41</a></sup></li>
+      <li>Estatina no cardiopata é "secundária" na cardiologia e terciária na MFC; a bibliografia de MFC do edital é o Gusso.<sup class="ref"><a href="#ref-1">1</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q236</b> · <b class="lt">A</b> · rastreamento = secundária. <span class="cfm">conferir</span><span class="nota">a leitura da cardiologia faria a estatina também secundária.</span></li>
+      <li><b class="qn">Q237</b> · <b class="lt">C</b> · terciária.</li>
+      <li><b class="qn">Q238</b> · <b class="lt">D</b> · quaternária.</li>
+    </ul>
+
+    <h3>Método clínico centrado na pessoa</h3>
+    <p class="meta">UERJ 6</p>
+    <ul class="tp">
+      <li>Medos, ideias e expectativas sobre o adoecer = SIFE, o 1º componente (a experiência da doença). A história da família é contexto.<sup class="ref"><a href="#ref-42">42</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q226</b> · <b class="lt">C</b> · componente 1.</li>
+    </ul>
+
+    <h3>Pesquisa epidemiológica e medidas de associação</h3>
+    <p class="meta">UERJ 4</p>
+    <ul class="tp">
+      <li>NNT = 1/RAR (o NNH é para dano). Estudo transversal mede exposição e desfecho juntos: causalidade reversa. Hawthorne = mudar por ser observado.</li>
+      <li>Eficácia = condição ideal; efetividade = mundo real; eficiência = efetividade pesada pelo custo.<sup class="ref"><a href="#ref-40">40</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q228</b> · <b class="lt">B</b> · NNT.</li>
+      <li><b class="qn">Q245</b> · <b class="lt">B</b> · causalidade reversa.</li>
+      <li><b class="qn">Q246</b> · <b class="lt">C</b> · eficiência. <span class="cfm">conferir</span><span class="nota">a definição inclui "riscos"; a chave é a palavra custos.</span></li>
+      <li><b class="qn">Q248</b> · <b class="lt">A</b> · efetividade.</li>
+      <li><b class="qn">Q249</b> · <b class="lt">D</b> · Hawthorne.</li>
+    </ul>
+
+    <h3>Abordagem familiar</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Ciclo de vida: rever a relação com filhos adolescentes, refocar o casal e começar a cuidar dos avós = família com filhos adolescentes. Recasamento com filho do casamento anterior = família reconstituída.</li>
+      <li>Suspeita de negligência ao idoso: genograma para entender a família; notificar e comunicar fazem parte da apuração, sem pular a avaliação.<sup class="ref"><a href="#ref-43">43</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q227</b> · <b class="lt">B</b> · família com filhos adolescentes.</li>
+      <li><b class="qn">Q229</b> · <b class="lt">B</b> · genograma. <span class="cfm">conferir</span><span class="nota">confiança média.</span></li>
+      <li><b class="qn">Q230</b> · <b class="lt">D</b> · reconstituída.</li>
+    </ul>
+
+    <h3>Atenção primária</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Starfield: essenciais = primeiro contato, longitudinalidade, integralidade, coordenação; derivados = orientação familiar, orientação comunitária e competência cultural.<sup class="ref"><a href="#ref-44">44</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q231</b> · <b class="lt">A</b> · os três derivados.</li>
+      <li><b class="qn">Q234</b> · <b class="lt">D</b> · o mesmo médico ao longo do tempo = longitudinalidade.</li>
+    </ul>
+
+    <h3>Cuidados paliativos</h3>
+    <p class="meta">UERJ 2</p>
+    <ul class="tp">
+      <li>Para o CFM, a ortotanásia é ética: limitar suporte no terminal com consentimento.<sup class="ref"><a href="#ref-45">45</a></sup></li>
+    </ul>
+    <ul class="ql">
+      <li><b class="qn">Q244</b> · <b class="lt">B</b> · a falsa diz que o CFM a vê como antiética.</li>
+    </ul>
+
+    <h3>Peso baixo ou fora do mapa</h3>
+    <p class="meta">1 questão ou nenhuma nas provas UERJ 2021-2025. Ética e violência: a UERJ quase não cobra ética no bloco de MFC.</p>
+    <ul class="ql">
+      <li><b class="qn">Q232</b> · <b class="lt">D</b> · recusa de adulto capaz em cirurgia eletiva: válida; objeção de consciência e encaminhar.<sup class="ref"><a href="#ref-46">46</a></sup></li>
+      <li><b class="qn">Q239</b> · <b class="lt">D</b> · aborto legal no estupro: sem BO nem juiz. <span class="cfm">conferir</span><span class="nota">a portaria que mandava avisar a polícia caiu em 2023, mas a lei de 2019 manda comunicar a violência contra a mulher em 24 h.<sup class="ref"><a href="#ref-47">47</a>,<a href="#ref-48">48</a></sup></span></li>
+      <li><b class="qn">Q240</b> · <b class="lt">A</b> · causa básica em causa externa = a circunstância (a queda).</li>
+      <li><b class="qn">Q241</b> · <b class="lt">A</b> · injúria racial = violência moral. <span class="cfm">conferir</span><span class="nota">"social" se defende numa leitura frouxa da OMS.</span></li>
+      <li><b class="qn">Q243</b> · <b class="lt">D</b> · omissão de cuidado básico = negligência.</li>
+      <li><b class="qn">Q247</b> · <b class="lt">C</b> · autonomia, beneficência, não maleficência e justiça.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="sec" id="divergencias">
+  <span class="kick">04 · Para o dia da chave oficial</span>
+  <h2>Onde o nosso gabarito pode divergir do deles</h2>
+  <p class="lede">As 33 questões com defeito e as 8 que dependem da banca ou da data da diretriz. Se a chave oficial trouxer a outra leitura, a questão era ambígua; não é sinal de raciocínio errado.</p>
+  <div class="tw"><table class="dv">
+    <tr><th class="n">Q</th><th>nossa</th><th>a outra leitura</th><th>por que ficamos com a nossa</th></tr>
+    <tr><td class="n">13</td><td>D</td><td>anulação: D associa octreotide e terlipressina e omite a ceftriaxona</td><td>é a única que transfunde o coronariopata com isquemia</td></tr>
+    <tr><td class="n">15</td><td>B</td><td>glicosado já, pelo corte de 250 do consenso de 2024<sup class="ref"><a href="#ref-17">17</a></sup></td><td>nenhuma opção junta glicosado e insulina; a que tira a insulina é pior</td></tr>
+    <tr><td class="n">42</td><td>B</td><td>A, se o autor tomar torsades como QT longo sempre</td><td>há torsades de acoplamento curto com QT normal; instável = choque (a rigor, desfibrilação)</td></tr>
+    <tr><td class="n">43</td><td>B</td><td>metformina + 2ª droga, que não está nas opções</td><td>GLP-1 + iSGLT2 é a única defensável com obesidade e HAS<sup class="ref"><a href="#ref-7">7</a></sup></td></tr>
+    <tr><td class="n">55</td><td>A</td><td>nenhuma: o enunciado usa qSOFA como critério</td><td>a letra não muda; o critério do Sepsis-3 é SOFA &gt;= 2<sup class="ref"><a href="#ref-15">15</a></sup></td></tr>
+    <tr><td class="n">57</td><td>B</td><td>C, sem hemocultura (a SBPT a reserva à PAC grave)<sup class="ref"><a href="#ref-16">16</a></sup></td><td>hipoxemia e situação de rua: internar e colher, com pesquisa de BK</td></tr>
+    <tr><td class="n">63</td><td>D</td><td>B, que generaliza cálcio EV a toda hipocalcemia</td><td>o autor parece trocar hipo por hipermagnesemia; as duas suprimem o PTH, daí a dúvida</td></tr>
+    <tr><td class="n">67</td><td>C</td><td>isoniazida (gabarito anterior a 2024)</td><td>3RH dispersível na criança desde as Notas Informativas de 2024<sup class="ref"><a href="#ref-2">2</a></sup></td></tr>
+    <tr><td class="n">77</td><td>B</td><td>cefazolina, que a alergologia atual tolera</td><td>a prova ainda cobra clindamicina na anafilaxia à penicilina</td></tr>
+    <tr><td class="n">84</td><td>D</td><td>ceftriaxona por 8-10 dias (nota do MS de 2018, CDC)</td><td>o PCDT de 2022 dá doxiciclina fora da gestação<sup class="ref"><a href="#ref-9">9</a></sup></td></tr>
+    <tr><td class="n">96</td><td>A</td><td>C, amoxicilina 90 mg/kg/dia<sup class="ref"><a href="#ref-21">21</a></sup></td><td>acima de 2 anos e sem gravidade, a AAP aceita as duas; o caso desenha "não grave"</td></tr>
+    <tr><td class="n">102</td><td>A</td><td>B, faringite viral: o caso registra 37 graus</td><td>aftas + faringite + adenite + recorrência + ASLO normal = PFAPA</td></tr>
+    <tr><td class="n">106</td><td>C</td><td>anulação: ceftazidima não é oral e falta internar</td><td>otite externa maligna; as outras não explicam o conduto</td></tr>
+    <tr><td class="n">109</td><td>A</td><td>rótulos que não são do ATLS e "FR 323" (digitação)</td><td>FC acima de 140, PAS 76, anúria e rebaixamento = classe IV<sup class="ref"><a href="#ref-3">3</a></sup></td></tr>
+    <tr><td class="n">112</td><td>A</td><td>anulação: aciclovir pomada é 5 vezes ao dia</td><td>é a única com o antiviral tópico</td></tr>
+    <tr><td class="n">119</td><td>D</td><td>C, laparotomia mediana, pela descompressão dolorosa</td><td>inguinotomia de urgência com inventário da alça é a linha clássica</td></tr>
+    <tr><td class="n">128</td><td>A</td><td>C, exercício direto</td><td>abaixo de 18 anos é sinal de alarme: RX primeiro</td></tr>
+    <tr><td class="n">129</td><td>A</td><td>a letra inverte o prazo da vacina</td><td>a intenção é vacinar a partir do 14º dia</td></tr>
+    <tr><td class="n">141</td><td>B</td><td>A, hiperplasia linfoide no adulto jovem</td><td>fecalito é a causa mais citada; a obstrução é da luz apendicular</td></tr>
+    <tr><td class="n">142</td><td>D</td><td>A, vídeo já: a SAGES aceita em qualquer trimestre<sup class="ref"><a href="#ref-19">19</a></sup></td><td>D é o ensino clássico; é a que mais pode vir trocada</td></tr>
+    <tr><td class="n">151</td><td>C</td><td>DUM (14s1d), pela regra de 7 dias</td><td>antes de 9 semanas, mais de 5 dias de diferença redata pela USG<sup class="ref"><a href="#ref-25">25</a></sup></td></tr>
+    <tr><td class="n">154</td><td>B</td><td>hipertensão gestacional (ACOG)</td><td>RBEHG e ISSHP: RCF por disfunção placentária fecha pré-eclâmpsia<sup class="ref"><a href="#ref-23">23</a>,<a href="#ref-24">24</a></sup></td></tr>
+    <tr><td class="n">161</td><td>B</td><td>nenhuma perfeita: USG e densitometria não são para todas</td><td>as outras dosam FSH, desnecessário aos 52 anos com 13 meses sem menstruar</td></tr>
+    <tr><td class="n">169</td><td>A</td><td>C também é inadequada (USG antes de agir)</td><td>duas inadequadas; o caso foi montado para parto vaginal</td></tr>
+    <tr><td class="n">178</td><td>C</td><td>laparoscopia (ensino antigo: histeroscopia só G0 e G1)</td><td>G2 pequeno é histeroscópico em mãos experientes</td></tr>
+    <tr><td class="n">181</td><td>B</td><td>A, se a banca vir a metilergometrina EV como erro<sup class="ref"><a href="#ref-30">30</a></sup></td><td>sem hipertensão, a ergometrina vem antes do misoprostol</td></tr>
+    <tr><td class="n">182</td><td>C</td><td>anulação: isquiocavernoso e transverso superficial são do plano superficial</td><td>é a única com os transversos</td></tr>
+    <tr><td class="n">183</td><td>D</td><td>anulação: com variabilidade mínima, as quatro seriam categoria II<sup class="ref"><a href="#ref-31">31</a></sup></td><td>D é categoria II em qualquer leitura</td></tr>
+    <tr><td class="n">186</td><td>C</td><td>D: no Iannetta o líquido seca branco; marrom é muco</td><td>o erro mais provável do autor é a cor</td></tr>
+    <tr><td class="n">187</td><td>B</td><td>só triagem reagente: via obstétrica e amamentar até confirmar<sup class="ref"><a href="#ref-27">27</a></sup></td><td>com HTLV confirmado, sem amamentação e com cesárea eletiva</td></tr>
+    <tr><td class="n">199</td><td>A</td><td>C, pela SBP 2021 (fator de risco antecipa o ferro)</td><td>a recomendação atual da SBP liga os 4 meses só ao leite de vaca<sup class="ref"><a href="#ref-39">39</a></sup></td></tr>
+    <tr><td class="n">201</td><td>B</td><td>AZT + nevirapina (material antigo)</td><td>PCDT 2022: AZT + 3TC + raltegravir no RN de alto risco<sup class="ref"><a href="#ref-11">11</a></sup></td></tr>
+    <tr><td class="n">208</td><td>A</td><td>meningocócica C no reforço (calendário antigo)</td><td>calendário atual do PNI: ACWY e pneumocócica 20 aos 12 meses<sup class="ref"><a href="#ref-37">37</a></sup></td></tr>
+    <tr><td class="n">210</td><td>C</td><td>A também, pelo nirsevimabe (até 36s6d no 1º ano)<sup class="ref"><a href="#ref-38">38</a></sup></td><td>a questão pergunta palivizumabe</td></tr>
+    <tr><td class="n">217</td><td>D</td><td>A também, pelo nirsevimabe</td><td>a questão pergunta palivizumabe</td></tr>
+    <tr><td class="n">223</td><td>C</td><td>D, discutível abaixo de 3 meses</td><td>C é mais incompleta que falsa; vence por eliminação</td></tr>
+    <tr><td class="n">229</td><td>B</td><td>comunicar à polícia antes de avaliar</td><td>a suspeita pede entender a família; comunicar vem com a apuração<sup class="ref"><a href="#ref-43">43</a></sup></td></tr>
+    <tr><td class="n">236</td><td>A</td><td>estatina no cardiopata também "secundária" (cardiologia, Leavell-Clark)</td><td>na MFC é terciária; a bibliografia de MFC do edital é o Gusso<sup class="ref"><a href="#ref-41">41</a></sup></td></tr>
+    <tr><td class="n">239</td><td>D</td><td>a Lei 13.931/2019 manda comunicar à polícia em 24 h<sup class="ref"><a href="#ref-48">48</a></sup></td><td>D acerta no aborto legal: a portaria que exigia avisar a polícia caiu em 2023<sup class="ref"><a href="#ref-47">47</a></sup></td></tr>
+    <tr><td class="n">241</td><td>A</td><td>"social", numa leitura frouxa da OMS</td><td>injúria racial = violência moral ou psicológica</td></tr>
+    <tr><td class="n">246</td><td>C</td><td>a definição traz "riscos", que é da eficácia</td><td>a chave é "custos": eficiência</td></tr>
+  </table></div>
+</section>
+
+<section class="sec" id="grade">
+  <span class="kick">05 · Consulta rápida</span>
+  <details class="cap">
+    <summary><h2>As 250 letras em grade</h2><span class="sm">Por bloco, 10 por linha. Em âmbar e com * = conferir (43 questões).</span><span class="ab"></span></summary>
+    <p class="gl">Clínica Médica · 1-94</p>
+    <div class="gab"><span><i>1</i>D</span><span><i>2</i>D</span><span><i>3</i>C</span><span><i>4</i>C</span><span><i>5</i>A</span><span><i>6</i>C</span><span><i>7</i>B</span><span><i>8</i>B</span><span><i>9</i>C</span><span><i>10</i>D</span><span><i>11</i>B</span><span><i>12</i>D</span><span class="cf"><i>13</i>D*</span><span><i>14</i>B</span><span><i>15</i>B</span><span><i>16</i>D</span><span><i>17</i>C</span><span><i>18</i>D</span><span><i>19</i>C</span><span><i>20</i>B</span><span><i>21</i>D</span><span><i>22</i>B</span><span><i>23</i>C</span><span><i>24</i>D</span><span><i>25</i>B</span><span><i>26</i>A</span><span><i>27</i>D</span><span><i>28</i>C</span><span><i>29</i>B</span><span><i>30</i>B</span><span><i>31</i>B</span><span><i>32</i>C</span><span><i>33</i>C</span><span><i>34</i>B</span><span><i>35</i>C</span><span><i>36</i>A</span><span><i>37</i>A</span><span><i>38</i>D</span><span><i>39</i>D</span><span><i>40</i>A</span><span><i>41</i>A</span><span class="cf"><i>42</i>B*</span><span class="cf"><i>43</i>B*</span><span><i>44</i>D</span><span><i>45</i>B</span><span><i>46</i>D</span><span><i>47</i>C</span><span><i>48</i>C</span><span><i>49</i>C</span><span><i>50</i>B</span><span><i>51</i>A</span><span><i>52</i>A</span><span><i>53</i>A</span><span><i>54</i>D</span><span class="cf"><i>55</i>A*</span><span><i>56</i>C</span><span class="cf"><i>57</i>B*</span><span><i>58</i>C</span><span><i>59</i>C</span><span><i>60</i>A</span><span><i>61</i>C</span><span><i>62</i>B</span><span class="cf"><i>63</i>D*</span><span><i>64</i>B</span><span><i>65</i>B</span><span><i>66</i>C</span><span><i>67</i>C</span><span><i>68</i>D</span><span><i>69</i>C</span><span><i>70</i>B</span><span><i>71</i>D</span><span><i>72</i>B</span><span><i>73</i>B</span><span><i>74</i>A</span><span><i>75</i>D</span><span><i>76</i>D</span><span class="cf"><i>77</i>B*</span><span><i>78</i>B</span><span><i>79</i>A</span><span><i>80</i>C</span><span><i>81</i>C</span><span><i>82</i>C</span><span><i>83</i>C</span><span class="cf"><i>84</i>D*</span><span><i>85</i>D</span><span><i>86</i>C</span><span><i>87</i>C</span><span><i>88</i>C</span><span><i>89</i>C</span><span><i>90</i>B</span><span><i>91</i>D</span><span><i>92</i>A</span><span><i>93</i>B</span><span><i>94</i>C</span></div>
+    <p class="gl">Cirurgia · 95-146</p>
+    <div class="gab"><span><i>95</i>B</span><span class="cf"><i>96</i>A*</span><span><i>97</i>A</span><span><i>98</i>A</span><span><i>99</i>D</span><span><i>100</i>A</span><span><i>101</i>D</span><span class="cf"><i>102</i>A*</span><span><i>103</i>C</span><span><i>104</i>C</span><span class="cf"><i>105</i>A*</span><span class="cf"><i>106</i>C*</span><span><i>107</i>D</span><span><i>108</i>B</span><span class="cf"><i>109</i>A*</span><span class="cf"><i>110</i>D*</span><span><i>111</i>B</span><span class="cf"><i>112</i>A*</span><span><i>113</i>D</span><span class="cf"><i>114</i>B*</span><span><i>115</i>B</span><span><i>116</i>D</span><span><i>117</i>C</span><span><i>118</i>C</span><span class="cf"><i>119</i>D*</span><span><i>120</i>D</span><span><i>121</i>D</span><span class="cf"><i>122</i>A*</span><span><i>123</i>A</span><span><i>124</i>A</span><span><i>125</i>A</span><span><i>126</i>C</span><span><i>127</i>D</span><span class="cf"><i>128</i>A*</span><span class="cf"><i>129</i>A*</span><span><i>130</i>C</span><span><i>131</i>C</span><span><i>132</i>A</span><span><i>133</i>D</span><span><i>134</i>D</span><span><i>135</i>A</span><span><i>136</i>D</span><span class="cf"><i>137</i>A*</span><span><i>138</i>D</span><span><i>139</i>A</span><span><i>140</i>A</span><span class="cf"><i>141</i>B*</span><span class="cf"><i>142</i>D*</span><span><i>143</i>C</span><span><i>144</i>A</span><span><i>145</i>A</span><span><i>146</i>B</span></div>
+    <p class="gl">Ginecologia e Obstetrícia · 147-190</p>
+    <div class="gab"><span><i>147</i>C</span><span><i>148</i>B</span><span><i>149</i>C</span><span><i>150</i>D</span><span class="cf"><i>151</i>C*</span><span><i>152</i>B</span><span><i>153</i>D</span><span class="cf"><i>154</i>B*</span><span><i>155</i>B</span><span><i>156</i>A</span><span><i>157</i>A</span><span><i>158</i>B</span><span><i>159</i>C</span><span><i>160</i>D</span><span class="cf"><i>161</i>B*</span><span><i>162</i>B</span><span><i>163</i>C</span><span><i>164</i>B</span><span><i>165</i>A</span><span><i>166</i>B</span><span><i>167</i>D</span><span><i>168</i>C</span><span class="cf"><i>169</i>A*</span><span><i>170</i>D</span><span><i>171</i>B</span><span><i>172</i>C</span><span><i>173</i>B</span><span><i>174</i>D</span><span><i>175</i>D</span><span><i>176</i>D</span><span><i>177</i>B</span><span class="cf"><i>178</i>C*</span><span><i>179</i>A</span><span><i>180</i>B</span><span class="cf"><i>181</i>B*</span><span class="cf"><i>182</i>C*</span><span class="cf"><i>183</i>D*</span><span><i>184</i>B</span><span><i>185</i>D</span><span class="cf"><i>186</i>C*</span><span class="cf"><i>187</i>B*</span><span><i>188</i>A</span><span><i>189</i>D</span><span class="cf"><i>190</i>C*</span></div>
+    <p class="gl">Pediatria · 191-225</p>
+    <div class="gab"><span><i>191</i>C</span><span><i>192</i>C</span><span><i>193</i>A</span><span><i>194</i>B</span><span><i>195</i>B</span><span><i>196</i>B</span><span><i>197</i>C</span><span><i>198</i>C</span><span class="cf"><i>199</i>A*</span><span><i>200</i>C</span><span><i>201</i>B</span><span><i>202</i>C</span><span><i>203</i>A</span><span><i>204</i>C</span><span><i>205</i>A</span><span><i>206</i>B</span><span><i>207</i>C</span><span><i>208</i>A</span><span><i>209</i>B</span><span class="cf"><i>210</i>C*</span><span><i>211</i>D</span><span><i>212</i>D</span><span><i>213</i>D</span><span><i>214</i>C</span><span><i>215</i>B</span><span><i>216</i>D</span><span class="cf"><i>217</i>D*</span><span><i>218</i>C</span><span><i>219</i>A</span><span><i>220</i>D</span><span><i>221</i>A</span><span><i>222</i>A</span><span class="cf"><i>223</i>C*</span><span><i>224</i>D</span><span><i>225</i>D</span></div>
+    <p class="gl">Preventiva e MFC · 226-250</p>
+    <div class="gab"><span><i>226</i>C</span><span><i>227</i>B</span><span><i>228</i>B</span><span class="cf"><i>229</i>B*</span><span><i>230</i>D</span><span><i>231</i>A</span><span><i>232</i>D</span><span><i>233</i>A</span><span><i>234</i>D</span><span><i>235</i>A</span><span class="cf"><i>236</i>A*</span><span><i>237</i>C</span><span><i>238</i>D</span><span class="cf"><i>239</i>D*</span><span><i>240</i>A</span><span class="cf"><i>241</i>A*</span><span><i>242</i>B</span><span><i>243</i>D</span><span><i>244</i>B</span><span><i>245</i>B</span><span class="cf"><i>246</i>C*</span><span><i>247</i>C</span><span><i>248</i>A</span><span><i>249</i>D</span><span><i>250</i>A</span></div>
+  </details>
+</section>
+
+<section class="refs" id="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li id="ref-1">Cepuerj/UERJ. Edital nº 15/2026: Processo Seletivo de Residência Médica UERJ 2027, Acesso Direto (estrutura da prova; Anexo II, bibliografia). Rio de Janeiro; 2026.</li>
+    <li id="ref-2">Ministério da Saúde. Notas Informativas nº 6/2024 e nº 15/2024 (tuberculose: infecção latente e esquemas na criança). Brasília: MS; 2024.</li>
+    <li id="ref-3">American College of Surgeons. ATLS: Advanced Trauma Life Support. 10ª ed. Chicago: ACS; 2018.</li>
+    <li id="ref-4">Ministério da Saúde. Guia de Vigilância em Saúde: doença meningocócica (quimioprofilaxia de contatos). 6ª ed. Brasília: MS; 2023.</li>
+    <li id="ref-5">James PD, et al. ASH ISTH NHF WFH 2021 guidelines on the diagnosis of von Willebrand disease. Blood Adv. 2021;5(1):280-300. doi:10.1182/bloodadvances.2020003265.</li>
+    <li id="ref-6">Baveno VII Faculty (de Franchis R, et al.). Baveno VII: renewing consensus in portal hypertension. J Hepatol. 2022.</li>
+    <li id="ref-7">Sociedade Brasileira de Diabetes. Diretriz da SBD 2024: tratamento do DM2, metas e rastreamento de complicações. 2024.</li>
+    <li id="ref-8">European Society of Cardiology. 2023 ESC Guidelines for the management of endocarditis. Eur Heart J. 2023.</li>
+    <li id="ref-9">Ministério da Saúde. PCDT para Atenção Integral às Pessoas com Infecções Sexualmente Transmissíveis (IST). Brasília: MS; 2022.</li>
+    <li id="ref-10">Ministério da Saúde. PCDT para Manejo da Infecção pelo HIV em Adultos. Módulo 2: coinfecções e infecções oportunistas. Brasília: MS; 2023.</li>
+    <li id="ref-11">Ministério da Saúde. PCDT para Prevenção da Transmissão Vertical de HIV, Sífilis e Hepatites Virais. Brasília: MS; 2022.</li>
+    <li id="ref-12">Organização Mundial da Saúde. Critérios médicos de elegibilidade para uso de métodos anticoncepcionais. 5ª ed. Genebra: OMS; 2015.</li>
+    <li id="ref-13">Sociedade Brasileira de Cardiologia. Diretrizes Brasileiras de Hipertensão Arterial 2020.</li>
+    <li id="ref-14">Ministério da Saúde. Chikungunya: manejo clínico. Brasília: MS; 2017.</li>
+    <li id="ref-15">Singer M, Deutschman CS, Seymour CW, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016;315:801-810.</li>
+    <li id="ref-16">Sociedade Brasileira de Pneumologia e Tisiologia. Recomendações para o manejo da pneumonia adquirida na comunidade 2018. J Bras Pneumol. 2018;44:405-423.</li>
+    <li id="ref-17">Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report (ADA, EASD, JBDS, AACE, DTS). Diabetes Care. 2024;47(8):1257-1275.</li>
+    <li id="ref-18">Mayumi T, et al. Tokyo Guidelines 2018: management bundles for acute cholangitis and cholecystitis. J Hepatobiliary Pancreat Sci. 2018;25(1):96-100.</li>
+    <li id="ref-19">SAGES (Society of American Gastrointestinal and Endoscopic Surgeons). Guidelines for the use of laparoscopy during pregnancy. 2017.</li>
+    <li id="ref-20">American Thyroid Association. 2015 ATA management guidelines for adult patients with thyroid nodules and differentiated thyroid cancer.</li>
+    <li id="ref-21">Lieberthal AS, et al. (American Academy of Pediatrics). The diagnosis and management of acute otitis media. Pediatrics. 2013.</li>
+    <li id="ref-22">Instituto Nacional de Câncer (INCA). Diretrizes brasileiras para o rastreamento do câncer do colo do útero. 2ª ed. Rio de Janeiro: INCA; 2016.</li>
+    <li id="ref-23">Peraçoli JC, Costa ML, Cavalli RC, et al. Pré-eclâmpsia: Protocolo 2023. Rede Brasileira de Estudos sobre Hipertensão na Gravidez (RBEHG); 2023.</li>
+    <li id="ref-24">Magee LA, Brown MA, Hall DR, et al. The 2021 ISSHP classification, diagnosis and management recommendations for international practice. Pregnancy Hypertens. 2022;27:148-169. doi:10.1016/j.preghy.2021.09.008.</li>
+    <li id="ref-25">American College of Obstetricians and Gynecologists. Committee Opinion nº 700: methods for estimating the due date. 2017.</li>
+    <li id="ref-26">Ministério da Saúde. Saúde da criança: aleitamento materno e alimentação complementar. Cadernos de Atenção Básica nº 23. Brasília: MS.</li>
+    <li id="ref-27">Ministério da Saúde. Nota Técnica Conjunta nº 6/2025: HTLV na gestação. Brasília: MS; 2025.</li>
+    <li id="ref-28">Ministério da Saúde. Diretrizes Nacionais de Assistência ao Parto Normal. Brasília: MS; 2017.</li>
+    <li id="ref-29">Ministério da Saúde. Prevenção e tratamento dos agravos resultantes da violência sexual contra mulheres e adolescentes: norma técnica. Brasília: MS; 2012.</li>
+    <li id="ref-30">Organização Pan-Americana da Saúde. Recomendações assistenciais para prevenção, diagnóstico e tratamento da hemorragia obstétrica. Brasília: OPAS; 2018.</li>
+    <li id="ref-31">Macones GA, et al. The 2008 National Institute of Child Health and Human Development workshop report on electronic fetal monitoring. Obstet Gynecol. 2008.</li>
+    <li id="ref-32">Ministério da Saúde. Vacina HPV quadrivalente em dose única para 9 a 14 anos. Brasília: MS; 2024.</li>
+    <li id="ref-33">Ministério da Saúde. Manual de Recomendações para o Controle da Tuberculose no Brasil. 2ª ed. Brasília: MS; 2019.</li>
+    <li id="ref-34">Global Initiative for Asthma (GINA). Global Strategy for Asthma Management and Prevention. 2025.</li>
+    <li id="ref-35">Jaskiewicz JA, McCarthy CA, Richardson AC, et al. Febrile infants at low risk for serious bacterial infection: an appraisal of the Rochester criteria and implications for management. Pediatrics. 1994;94(3):390-396.</li>
+    <li id="ref-36">Husby S, et al. European Society Paediatric Gastroenterology, Hepatology and Nutrition guidelines for diagnosing coeliac disease 2020. J Pediatr Gastroenterol Nutr. 2020.</li>
+    <li id="ref-37">Ministério da Saúde. Calendário Nacional de Vacinação da Criança. Brasília: MS; 2026.</li>
+    <li id="ref-38">Ministério da Saúde. Nota Técnica nº 31/2026-CGICI/DPNI/SVSA/MS: estratégia de resgate do nirsevimabe e transição do palivizumabe. Brasília: MS; 2026.</li>
+    <li id="ref-39">Sociedade Brasileira de Pediatria (Departamentos Científicos de Hematologia e de Nutrologia). Recomendações para tratamento e prevenção da deficiência de ferro e anemia ferropriva em lactentes. 2026.</li>
+    <li id="ref-40">Fletcher RH, Fletcher SW, Fletcher GS. Epidemiologia Clínica: elementos essenciais. Porto Alegre: Artmed.</li>
+    <li id="ref-41">Gusso G, Lopes JMC, Dias LC (org.). Tratado de Medicina de Família e Comunidade. 2ª ed. Porto Alegre: Artmed; 2019 (bibliografia de MFC do edital).</li>
+    <li id="ref-42">Stewart M, et al. Medicina Centrada na Pessoa: transformando o método clínico. 3ª ed. Porto Alegre: Artmed.</li>
+    <li id="ref-43">Brasil. Lei nº 10.741, de 1º de outubro de 2003: Estatuto da Pessoa Idosa (art. 19, notificação e comunicação da violência).</li>
+    <li id="ref-44">Starfield B. Atenção primária: equilíbrio entre necessidades de saúde, serviços e tecnologia. Brasília: UNESCO, Ministério da Saúde; 2002.</li>
+    <li id="ref-45">Conselho Federal de Medicina. Resolução CFM nº 1.805/2006 (ortotanásia); Código de Ética Médica, 2018, art. 41.</li>
+    <li id="ref-46">Conselho Federal de Medicina. Resolução CFM nº 2.232/2019: recusa terapêutica e objeção de consciência.</li>
+    <li id="ref-47">Ministério da Saúde. Portaria GM/MS nº 13/2023 (revoga a Portaria GM/MS nº 2.561/2020).</li>
+    <li id="ref-48">Brasil. Lei nº 13.931, de 10 de dezembro de 2019: altera a Lei nº 10.778/2003 (notificação compulsória e comunicação à autoridade policial, em 24 h, da violência contra a mulher atendida em serviço de saúde).</li>
+  </ol>
+</section>
+</div>

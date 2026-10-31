@@ -825,6 +825,97 @@
    "tarefas": [
     5426
    ]
+  },
+  "erros-uerj-1": {
+   "tipo": "aula",
+   "titulo": "Seus erros na UERJ, parte 1: Clínica e Cirurgia",
+   "disciplinas": [
+    "Cirurgia",
+    "Infectologia",
+    "Cardiologia",
+    "Pneumologia",
+    "Gastroenterologia",
+    "Hematologia",
+    "Nefrologia",
+    "Reumatologia",
+    "Endocrinologia",
+    "Neurologia"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "Clínica Médica/Infectologia/Meningites.md",
+    "Clínica Médica/Hematologia/Hemostasia.md",
+    "Clínica Médica/Hematologia/Anemias Hemolíticas.md",
+    "Cirurgia/Urologia.md",
+    "Clínica Médica/Nefrologia/Nefrolitíase.md"
+   ],
+   "tarefas": [
+    5426
+   ]
+  },
+  "erros-uerj-2": {
+   "tipo": "aula",
+   "titulo": "Seus erros na UERJ, parte 2: GO, Pediatria e MFC",
+   "disciplinas": [
+    "Obstetrícia",
+    "Ginecologia",
+    "Pediatria",
+    "Preventiva",
+    "Infectologia",
+    "Nefrologia",
+    "Gastroenterologia",
+    "Endocrinologia",
+    "Cardiologia"
+   ],
+   "resumos": [
+    "GO/[GIN] Rastreamento Colo.md",
+    "GO/Pré-Natal.md",
+    "Pediatria/Imunizações.md",
+    "Pediatria/Icterícia e Sepse Neonatal.md"
+   ],
+   "tarefas": [
+    5426
+   ]
+  },
+  "sprint-uerj": {
+   "tipo": "aula",
+   "titulo": "Sprint UERJ: as 250 inéditas com o nosso gabarito",
+   "disciplinas": [
+    "Cardiologia",
+    "Cirurgia",
+    "Endocrinologia",
+    "Gastroenterologia",
+    "Ginecologia",
+    "Hematologia",
+    "Infectologia",
+    "Nefrologia",
+    "Obstetrícia",
+    "Pediatria",
+    "Pneumologia",
+    "Preventiva"
+   ],
+   "resumos": [],
+   "tarefas": [
+    5426
+   ]
+  },
+  "rd-tb-3010": {
+   "tipo": "revisao",
+   "titulo": "Tuberculose: o esquema certo para cada contexto e o PPD sem confusão",
+   "disciplinas": [
+    "Infectologia",
+    "Pediatria",
+    "Obstetrícia",
+    "Preventiva"
+   ],
+   "resumos": [
+    "Clínica Médica/Infectologia/Tuberculose.md",
+    "Clínica Médica/Infectologia/HIV.md",
+    "Pediatria/Aleitamento Materno e Mastite Lactacional.md"
+   ],
+   "tarefas": [
+    5426
+   ]
   }
  }
 }

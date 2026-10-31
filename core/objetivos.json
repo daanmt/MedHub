@@ -355,7 +355,8 @@
     {
       "tema": "Medicina de Família e Comunidade",
       "listas": [
-        "t1"
+        "t1",
+        "t878"
       ],
       "objetivos": [
         "Princípios da MFC (atributos da APS)",
@@ -371,7 +372,8 @@
     {
       "tema": "Saúde do Idoso",
       "listas": [
-        "t3"
+        "t3",
+        "t876"
       ],
       "objetivos": [
         "Avaliação multidimensional e funcionalidade (AVD/AIVD)",
@@ -544,6 +546,23 @@
         "Câncer de colo: tratamento por estádio",
         "Câncer de colo: disseminação e prognóstico",
         "Câncer de colo: gestação e situações especiais"
+      ]
+    },
+    {
+      "tema": "Oncologia ortopédica e osteomielite",
+      "listas": [
+        "t740"
+      ],
+      "objetivos": [
+        "Osteomielite aguda hematogênica: agente por idade e comorbidade",
+        "Osteomielite: diagnóstico e imagem",
+        "Osteomielite: antibiótico empírico e duração",
+        "Espondilodiscite e osteomielite vertebral",
+        "Osteossarcoma",
+        "Sarcoma de Ewing",
+        "Metástase óssea, mieloma e compressão medular",
+        "Tumores ósseos benignos e lesões pseudotumorais",
+        "Padrão radiológico e estadiamento do tumor ósseo"
       ]
     }
   ]
